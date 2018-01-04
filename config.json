@@ -1,0 +1,27 @@
+{
+  "IDENTITY": {
+        "dev":  "https://cpaas.star2star.net/identity",
+        "test": "https://cpaas.star2star.net/identity",
+        "prod": "https://cpaas.star2star.com/api/identity"
+      },
+  "MESSAGING": {
+        "dev":  "https://cpaas.star2star.net/messaging",
+        "test": "https://cpaas.star2star.net/messaging",
+        "prod": "https://cpaas.star2star.com/api/messaging"
+      },
+  "OBJECTS": {
+        "dev":  "https://cpaas.star2star.net/objects",
+        "test": "https://cpaas.star2star.net/objects",
+        "prod": "https://cpaas.star2star.com/api/objects"
+      },
+  "LAMBDA": {
+        "dev":  "https://cpaas.star2star.net/lambda-proxy",
+        "test": "https://cpaas.star2star.net/lambda-proxy",
+        "prod": "https://cpaas.star2star.com/api/lambda-proxy"
+      },
+  "SHORTURLS": {
+    "dev":  "https://cpaas.star2star.net/shorturls",
+    "test": "https://cpaas.star2star.net/shorturls",
+    "prod": "https://cpaas.star2star.com/api/shorturls"
+  }
+}
