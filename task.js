@@ -11,7 +11,7 @@ const objectMerge = require('object-merge');
 * @returns object - containing status, message and tasks
 **/
 const validateTasks = (tasks=[]) =>{
-  const rStatus = {"status": 200, "message": "valid", "tasks": objectMerge(tasks)};
+  const rStatus = {"status": 200, "message": "valid", "tasks": [].concat(tasks)};
   //console.log(rStatus, tasks)
   if (tasks.length <= 0 ){
     return rStatus;
