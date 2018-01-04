@@ -2,6 +2,7 @@
 const request = require('request-promise');
 const utilities = require('./utilities');
 const Objects = require('./objects');
+const objectMerge = require('object-merge');
 
 /**
 * This function will ask the cpaas data object service for a specific object
@@ -10,7 +11,7 @@ const Objects = require('./objects');
 * @returns object - containing status, message and tasks
 **/
 const getValidEvent = (obj={}) =>{
-  let rReturn = { ...obj };
+  let rReturn = objectMerge({}, obj);
 
   !rReturn.hasOwnProperty('uuid') && (rReturn.uuid = utilities.createUUID());
   !rReturn.hasOwnProperty('type') && (rReturn.type = 'event_generic');
@@ -90,7 +91,7 @@ const getEvent  = (apiKey='null api key', userUUID='null user uuid', identityJWT
 **/
 const updateEvent  = (apiKey='null api key', userUUID='null user uuid', identityJWT='null jwt',
                               uuid="missing_uuid",  dataObj={} ) => {
-    const newEvent = { ...dataObj, content: getValidEvent(dataObj.content) };
+    const newEvent = objectMerge(dataObj, {content: getValidEvent(dataObj.content) });
 
     return Objects.updateDataObject(apiKey, userUUID, identityJWT, uuid, newEvent );
 }

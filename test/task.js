@@ -92,7 +92,7 @@ describe('Task', function() {
            z.title = 'lena';
             s2sMS.Task.updateTaskInTaskObject(creds.CPAAS_KEY, identityData.user_uuid, identityData.token,
              responseData.uuid, z ).then((newData)=>{
-               console.log('... taskobject: %j', newData)
+               //console.log('taskobject: %j', newData)
                assert(newData.content.tasks.length === 1 && newData.content.tasks[0].title === 'lena')
                done();
                s2sMS.Task.deleteTaskObject(creds.CPAAS_KEY, identityData.user_uuid, identityData.token,

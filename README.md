@@ -4,6 +4,7 @@ Micro Service SDK
 Changes
 -------
 
+-	1.0,12 - spread operator issues
 -	1.0.11 - config.json added
 -	1.0.10 - getObjectByTypeName
 -	1.0.7 - added refresh token

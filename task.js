@@ -2,6 +2,7 @@
 const request = require('request-promise');
 const utilities = require('./utilities');
 const Objects = require('./objects');
+const objectMerge = require('object-merge');
 
 /**
 * This function will ask the cpaas data object service for a specific object
@@ -10,7 +11,7 @@ const Objects = require('./objects');
 * @returns object - containing status, message and tasks
 **/
 const validateTasks = (tasks=[]) =>{
-  const rStatus = {"status": 200, "message": "valid", "tasks": [ ...tasks]};
+  const rStatus = {"status": 200, "message": "valid", "tasks": objectMerge(tasks)};
   //console.log(rStatus, tasks)
   if (tasks.length <= 0 ){
     return rStatus;
