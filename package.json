@@ -1,0 +1,25 @@
+{
+  "name": "star2star-js-ms-sdk",
+  "version": "1.0.10",
+  "description": "Star2Star javaScript Micro Service SDK",
+  "main": "index.js",
+  "scripts": {
+    "test": "mocha --timeout 10000"
+  },
+  "keywords": [
+    "micro service",
+    "sdk",
+    "ms",
+    "js"
+  ],
+  "author": "James Schimmoeller",
+  "license": "Apahce 2.0",
+  "dependencies": {
+    "request": "^2.83.0",
+    "request-promise": "^4.2.2"
+  },
+  "devDependencies": {
+    "assert": "^1.4.1",
+    "mocha": "^4.0.1"
+  }
+}
