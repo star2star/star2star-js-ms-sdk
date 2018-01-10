@@ -4,6 +4,8 @@ const utilities = require('./utilities');
 const Objects = require('./objects');
 const objectMerge = require('object-merge');
 
+const EVENT_TYPE = "app_event";
+
 /**
 * This function will ask the cpaas data object service for a specific object
 *
@@ -48,7 +50,7 @@ const listEvents = (apiKey='null api key', userUUID='null user uuid', identityJW
 **/
 const createEvent = (apiKey='null api key', userUUID='null user uuid', identityJWT='null jwt',
   event_name, event_object={} ) => {
-  return Objects.createDataObject(apiKey, userUUID, identityJWT, event_name, 'launchpad_event', getValidEvent(event_object) );
+  return Objects.createDataObject(apiKey, userUUID, identityJWT, event_name, EVENT_TYPE, getValidEvent(event_object) );
 }
 
 /**
