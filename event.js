@@ -48,7 +48,7 @@ const listEvents = (apiKey='null api key', userUUID='null user uuid', identityJW
 **/
 const createEvent = (apiKey='null api key', userUUID='null user uuid', identityJWT='null jwt',
   event_name, event_object={} ) => {
-  return Objects.createDataObject(apiKey, userUUID, identityJWT, event_name, 'event', getValidEvent(event_object) );
+  return Objects.createDataObject(apiKey, userUUID, identityJWT, event_name, 'launchpad_event', getValidEvent(event_object) );
 }
 
 /**

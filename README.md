@@ -17,13 +17,14 @@ import s2sMS from 'star2star-js-ms-sdk';
 s2s.Identity.getIdentity(creds.CPAAS_KEY, creds.email, creds.password).then((data)=>{
   //ok got data do something cool here
 }).catch((error)=>{
-  // houston we have an issue 
+  // houston we have an issue
 })
 ```
 
 Changes
 -------
 
+-	1.0.15 - event changing type
 -	1.0.13 - updated readme
 -	1.0,12 - spread operator issues
 -	1.0.11 - config.json added
