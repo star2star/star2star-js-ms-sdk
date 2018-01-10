@@ -35,7 +35,13 @@ describe('Lambda MS', function() {
 
     it('invoke default-all-notify lambda', function(done) {
       if (!creds.isValid) return done();
-      const params = {"params":{"title":"911: ","body":"Called from zone: SRQ Main extension: Room 2701 at Thu Nov 16 2017 16:10:19 GMT+0000 (UTC) ","contacts":[{"uuid":"1","name":"James","communication_modalities":[{"type":"sms","value":"+19418076677"}]}]},"cfg":{"_outDataSamples":["5a0db856818133001743490d"],"_selectedDataSamples":[],"_account":"59fcdca30f014f001733fda1","CPAAS_KEY":"588a5e9bf5612d00d8eb7df1e29a4b390b1448a66324533c29dce7ec","email":"jschimmoeller@schimmoeller.net","password":"2017star"},"config":config,"env":  "dev" };
+      const params = {
+        "params":{"title":"911: ","body":"Called from zone: SRQ Main extension: Room 2701 at Thu Nov 16 2017 16:10:19 GMT+0000 (UTC) "},
+        "cfg":{"_outDataSamples":["5a0db856818133001743490d"],"_selectedDataSamples":[],"_account":"59fcdca30f014f001733fda1","CPAAS_KEY":"588a5e9bf5612d00d8eb7df1e29a4b390b1448a66324533c29dce7ec","email":"jschimmoeller@schimmoeller.net","password":"2017star"},
+        "config":config,
+        "subscribers":[{"uuid":"1","name":"James","modality":"sms","value":"+19418076677"}],
+        "env":  "dev"
+    };
 
       s2sMS.invokeLambda(creds.CPAAS_KEY,  "default-all-notify", params).then((lambdaResponse)=>{
         //console.log('=======', lambdaResponse)
