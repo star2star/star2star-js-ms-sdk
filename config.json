@@ -1,4 +1,9 @@
 {
+  "GROUPS": {
+        "dev":  "https://cpaas.star2star.net/groups",
+        "test": "https://cpaas.star2star.net/groups",
+        "prod": "https://cpaas.star2star.com/api/groups"
+      },
   "IDENTITY": {
         "dev":  "https://cpaas.star2star.net/identity",
         "test": "https://cpaas.star2star.net/identity",

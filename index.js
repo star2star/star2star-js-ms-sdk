@@ -6,6 +6,7 @@ const Objects = require('./objects');
 const Util = require('./utilities');
 const Task = require('./task');
 const Event = require('./event');
+const Groups = require('./groups');
 
 let cpaasKey;
 
@@ -61,4 +62,4 @@ const getApplicationKey = () =>{
   return cpaasKey;
 }
 
-module.exports = {Lambda, Identity, Messaging, Objects, Util, Task, Event, setEnvironment,getEnvironment, setApplicationKey, getApplicationKey };
+module.exports = {Lambda, Identity, Messaging, Objects, Util, Task, Event, setEnvironment,getEnvironment, setApplicationKey, getApplicationKey, Groups };

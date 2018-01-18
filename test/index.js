@@ -22,7 +22,7 @@ beforeEach(function(){
 describe('MS SDK Index', function() {
 
   it('s2s-ms module exports', function(done){
-    const msKeys = ['Lambda', 'Identity', 'Messaging', 'Objects', 'Util', 'Task', 'Event', 'setEnvironment', 'getEnvironment', 'setApplicationKey', 'getApplicationKey' ]
+    const msKeys = ['Lambda', 'Identity', 'Messaging', 'Objects', 'Util', 'Task', 'Event', 'setEnvironment', 'getEnvironment', 'setApplicationKey', 'getApplicationKey', 'Groups' ]
     assert.deepEqual(Object.keys(s2sMS), msKeys);
     done();
   });
