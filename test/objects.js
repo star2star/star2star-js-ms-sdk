@@ -26,7 +26,7 @@ describe('Objects MS', function() {
       s2sMS.Objects.getDataObjectByType(creds.CPAAS_KEY, identityData.user_uuid, identityData.token,
         'all_notify_data_object', false).then((responseData)=>{
           //console.log(identityData.token)
-          console.log(responseData)
+          //console.log(responseData)
         assert(responseData.content !== null )
         done();
       }).catch((x)=>{

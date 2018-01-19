@@ -38,9 +38,9 @@ describe('Identity MS', function() {
   it('Refresh Token', function(done) {
     if (!creds.isValid) return done();
     s2sMS.getIdentity(creds.CPAAS_KEY, creds.email, creds.password).then((identityData)=>{
-      console.log('iiiii %j', identityData )
+      //console.log('iiiii %j', identityData )
       s2sMS.refreshToken(creds.CPAAS_KEY, identityData.refresh_token).then((refreshData)=>{
-        console.log('rrrrrr %j', refreshData )
+        //console.log('rrrrrr %j', refreshData )
         assert(refreshData !== null )
         done();
       })

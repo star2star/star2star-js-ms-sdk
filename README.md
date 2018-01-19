@@ -24,6 +24,7 @@ s2s.Identity.getIdentity(creds.CPAAS_KEY, creds.email, creds.password).then((dat
 Changes
 -------
 
+-	1.0.17 - shorturls, auth
 -	1.0.16 - added groups
 -	1.0.15 - event changing type
 -	1.0.13 - updated readme

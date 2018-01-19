@@ -87,7 +87,7 @@ describe('Task', function() {
     s2sMS.Identity.getIdentity(creds.CPAAS_KEY, creds.email, creds.password).then((identityData)=>{
       s2sMS.Task.createTaskObject(creds.CPAAS_KEY, identityData.user_uuid, identityData.token, 'title', [{'title': 'hello'}]
          ).then((responseData)=>{
-           console.log(responseData)
+           //console.log(responseData)
            const z = responseData.content.tasks[0];
            z.title = 'lena';
             s2sMS.Task.updateTaskInTaskObject(creds.CPAAS_KEY, identityData.user_uuid, identityData.token,
