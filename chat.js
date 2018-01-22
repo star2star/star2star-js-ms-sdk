@@ -247,5 +247,33 @@ const addMember = (apiKey='null api key', userUUID='null user uuid', identityJWT
 
   return request(requestOptions);
 }
+/**
+* This function will delete a member from room
+*
+* @param apiKey - api key for cpaas systems
+* @param userUUID - user UUID to be used
+* @param identityJWT - identity JWT
+* @param roomUUID - room uuid
+* @param memberUUID - member to remove
+* @returns data
+**/
+const deleteMember = (apiKey='null api key', userUUID='null user uuid', identityJWT='null jwt',
+                      roomUUID="no room uuid specified", memberUUID="empty" ) => {
+  const MS = util.getEndpoint(process.env.NODE_ENV, "chat");
 
-module.exports = { createRoom, deleteRoom, listRooms, getRoom, updateRoomInfo, updateRoomMeta, getRoomMembers, addMember  }
+  //console.log('mmmmmmm', meta)
+  const requestOptions = {
+      method: 'DELETE',
+      uri: `${MS}/rooms/${roomUUID}/members/${memberUUID}`,
+      headers: {
+          'application-key': apiKey,
+          'Content-type': 'application/json',
+          'Authorization': `Bearer ${identityJWT}`
+      },
+      json: true
+  };
+
+  return request(requestOptions);
+}
+
+module.exports = { createRoom, deleteRoom, listRooms, getRoom, updateRoomInfo, updateRoomMeta, getRoomMembers, addMember, deleteMember   }

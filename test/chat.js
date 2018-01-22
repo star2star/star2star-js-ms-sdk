@@ -187,10 +187,39 @@ describe('Chat', function() {
         //console.log('mmmmm', memberData)
         assert(  memberData.length > 0 );
         done();
-        s2sMS.Chat.deleteRoom(creds.CPAAS_KEY, idData.user_uuid, idData.token, roomStuf.uuid).then((x)=>{
-        });
-        s2sMS.Groups.deleteGroup(creds.CPAAS_KEY, idData.user_uuid, idData.token, roomStuf.group_uuid ).then((d)=>{
-        });
+      }).catch((xError)=>{
+        console.log('xxxxx', xError);
+        assert(false);
+        done();
+      }); // end update room info
+
+  }); // end it
+
+  it('delete a  Member', function(done) {
+    if (!creds.isValid) return done();
+      s2sMS.Chat.getRoomMembers(creds.CPAAS_KEY, idData.user_uuid, idData.token, roomStuf.uuid).then((memberData)=>{
+        //console.log('mmmmm', memberData)
+        s2sMS.Chat.deleteMember(creds.CPAAS_KEY, idData.user_uuid, idData.token, roomStuf.uuid, memberData[0].uuid ).then((memberData)=>{
+          s2sMS.Chat.getRoomMembers(creds.CPAAS_KEY, idData.user_uuid, idData.token, roomStuf.uuid).then((newMembers)=>{
+            assert(newMembers.length === 0);
+            done();
+            s2sMS.Chat.deleteRoom(creds.CPAAS_KEY, idData.user_uuid, idData.token, roomStuf.uuid);
+            s2sMS.Groups.deleteGroup(creds.CPAAS_KEY, idData.user_uuid, idData.token, roomStuf.group_uuid );
+          }).catch((e)=>{
+            console.log(e);
+            assert(false);
+            done();
+            s2sMS.Chat.deleteRoom(creds.CPAAS_KEY, idData.user_uuid, idData.token, roomStuf.uuid);
+            s2sMS.Groups.deleteGroup(creds.CPAAS_KEY, idData.user_uuid, idData.token, roomStuf.group_uuid );
+          })
+
+        }).catch((e1)=>{
+          console.log(e1);
+          assert(false);
+          done();
+          s2sMS.Chat.deleteRoom(creds.CPAAS_KEY, idData.user_uuid, idData.token, roomStuf.uuid);
+          s2sMS.Groups.deleteGroup(creds.CPAAS_KEY, idData.user_uuid, idData.token, roomStuf.group_uuid );
+        })
       }).catch((xError)=>{
         console.log('xxxxx', xError);
         assert(false);
