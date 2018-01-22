@@ -1,4 +1,9 @@
 {
+  "CHAT": {
+        "dev":  "https://cpaas.star2star.net/chat",
+        "test": "https://cpaas.star2star.net/chat",
+        "prod": "https://cpaas.star2star.com/api/chat"
+      },
   "AUTH": {
         "dev":  "https://cpaas.star2star.net/auth",
         "test": "https://cpaas.star2star.net/auth",
