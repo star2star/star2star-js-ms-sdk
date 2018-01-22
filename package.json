@@ -1,6 +1,6 @@
 {
   "name": "star2star-js-ms-sdk",
-  "version": "1.0.19",
+  "version": "1.0.20",
   "description": "Star2Star javaScript Micro Service SDK",
   "main": "index.js",
   "scripts": {

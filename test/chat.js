@@ -195,6 +195,35 @@ describe('Chat', function() {
 
   }); // end it
 
+  it("send Message", function(done) {
+    if (!creds.isValid) return done();
+      s2sMS.Chat.sendMessage(creds.CPAAS_KEY, idData.user_uuid, idData.token, roomStuf.uuid, "test").then((sendResponse)=>{
+        //console.log('send message data: ', sendResponse)
+        assert(  sendResponse.content.content ===  "test" );
+        done();
+      }).catch((xError)=>{
+        console.log('xxxxx', xError);
+        assert(false);
+        done();
+      }); // end update room info
+
+  }); // end it
+
+    it('get Messages', function(done) {
+      if (!creds.isValid) return done();
+        s2sMS.Chat.getMessages(creds.CPAAS_KEY, idData.user_uuid, idData.token, roomStuf.uuid).then((messageData)=>{
+          //console.log('message Data:', messageData)
+          assert(  messageData.data && messageData.data.length > 0 );
+          done();
+        }).catch((xError)=>{
+          console.log('xxxxx', xError);
+          assert(false);
+          done();
+        }); // end update room info
+
+    }); // end it
+
+
   it('delete a  Member', function(done) {
     if (!creds.isValid) return done();
       s2sMS.Chat.getRoomMembers(creds.CPAAS_KEY, idData.user_uuid, idData.token, roomStuf.uuid).then((memberData)=>{

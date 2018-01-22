@@ -276,4 +276,71 @@ const deleteMember = (apiKey='null api key', userUUID='null user uuid', identity
   return request(requestOptions);
 }
 
-module.exports = { createRoom, deleteRoom, listRooms, getRoom, updateRoomInfo, updateRoomMeta, getRoomMembers, addMember, deleteMember   }
+/**
+* This function will get room messages
+*
+* @param apiKey - api key for cpaas systems
+* @param userUUID - user UUID to be used
+* @param identityJWT - identity JWT
+* @param roomUUID - room uuid
+* @returns data
+**/
+const getMessages = (apiKey='null api key', userUUID='null user uuid', identityJWT='null jwt',
+                      roomUUID="no room uuid specified", memberUUID="empty" ) => {
+  const MS = util.getEndpoint(process.env.NODE_ENV, "chat");
+
+  //console.log('mmmmmmm', meta)
+  const requestOptions = {
+      method: 'GET',
+      uri: `${MS}/rooms/${roomUUID}/messages`,
+      headers: {
+          'application-key': apiKey,
+          'Content-type': 'application/json',
+          'Authorization': `Bearer ${identityJWT}`
+      },
+      json: true
+  };
+
+  return request(requestOptions);
+}
+
+/**
+* This function will add a new message to a room
+*
+* @param apiKey - api key for cpaas systems
+* @param userUUID - user UUID to be used
+* @param identityJWT - identity JWT
+* @param roomUUID - room uuid
+* @param message - string message
+* @returns data
+**/
+const sendMessage = (apiKey='null api key', userUUID='null user uuid', identityJWT='null jwt',
+                      roomUUID="no room uuid specified", message="missing text" ) => {
+  const MS = util.getEndpoint(process.env.NODE_ENV, "chat");
+
+  const b = {
+    "content": {
+      "contentType": "string",
+      "content": message
+    },
+    "user_uuid": userUUID
+  };
+
+  //console.log('mmmmmmm', meta)
+  const requestOptions = {
+      method: 'POST',
+      uri: `${MS}/rooms/${roomUUID}/messages`,
+      body: b,
+      headers: {
+          'application-key': apiKey,
+          'Content-type': 'application/json',
+          'Authorization': `Bearer ${identityJWT}`
+      },
+      json: true
+  };
+
+  return request(requestOptions);
+}
+
+module.exports = { createRoom, deleteRoom, listRooms, getRoom, updateRoomInfo, updateRoomMeta, getRoomMembers,
+                    addMember, deleteMember, getMessages, sendMessage }
