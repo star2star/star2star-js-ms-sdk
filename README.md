@@ -24,6 +24,7 @@ s2s.Identity.getIdentity(creds.CPAAS_KEY, creds.email, creds.password).then((dat
 Changes
 -------
 
+-	1.0.22 - error in auth - explicit permissions
 -	1.0.21 - error in auth - scope not defined
 -	1.0.20 - adding missing chat calls
 -	1.0.19 - added chat ms

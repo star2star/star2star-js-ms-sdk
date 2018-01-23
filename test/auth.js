@@ -47,7 +47,7 @@ describe('Auth MS', function() {
     s2sMS.Identity.getIdentity(creds.CPAAS_KEY, creds.email, creds.password).then((identityData)=>{
       //console.log('iiiii %j', identityData )
       s2sMS.Auth.listUserPermissions(creds.CPAAS_KEY, identityData.user_uuid, identityData.token, "object", 'global' ).then((responseData)=>{
-        //console.log('rrrrrr %j', responseData )
+        console.log('rrrrrr %j', responseData )
         assert(responseData.length > 0 )
         done();
       })

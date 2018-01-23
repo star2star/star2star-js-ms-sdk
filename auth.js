@@ -159,28 +159,30 @@ const addExplicitGroupPermissions = (apiKey='null api key', userUUID='null user 
     //2. get permissions
     getSpecificPermissions(apiKey, userUUID, identityJWT, resource_type, resource_scope, actions).then((pData)=>{
       // ok have permission object
-      // loop over them which will execute a promise ... assigning permission to group
-      const pPromise = pData.map((p)=>{
-        const requestOptions = {
-            method: 'POST',
-            uri: `${MS}/groups/${group_uuid}/permissions`,
-            body: {
-              "permissions":{
+      // loop over them which will build an array of permission objects to be posted
+      const arrayOfPermissions = pData.map((p)=>{
+        return {
                 "permission_uuid": p.uuid,
                 "resource_uuid": resource_uuid
-              }
-            },
-            headers: {
-                'application-key': apiKey,
-                'Content-type': 'application/json',
-                //'Authorization': `Bearer ${identityJWT}`
-            },
-            json: true
-        };
-        return request(requestOptions);
+              };
       });
+      const requestOptions = {
+          method: 'POST',
+          uri: `${MS}/groups/${group_uuid}/permissions`,
+          body: {
+            "permissions":arrayOfPermissions
+          },
+          headers: {
+              'application-key': apiKey,
+              'Content-type': 'application/json',
+              //'Authorization': `Bearer ${identityJWT}`
+          },
+          json: true
+      };
+      const pPromise = request(requestOptions);
+
       // ok i now have an array of promises
-      Promise.all(pPromise).then((aPData)=>{
+      pPromise.then((aPData)=>{
         // console.log(aPData)
         resolve(aPData)
       }).catch((pError)=>{
@@ -189,7 +191,7 @@ const addExplicitGroupPermissions = (apiKey='null api key', userUUID='null user 
     }).catch((pError)=>{
       reject(pError);
     });
-  })
+  }); //end of new Promse
 }
 
 /**
@@ -231,37 +233,37 @@ const addExplicitUserPermissions = (apiKey='null api key', userUUID='null user u
     //2. get permissions
     getSpecificPermissions(apiKey, userUUID, identityJWT, resource_type, resource_scope, actions).then((pData)=>{
       // ok have permission object
-      // loop over them which will execute a promise ... assigning permission to group
-      const pPromise = pData.map((p)=>{
-        const requestOptions = {
-            method: 'POST',
-            uri: `${MS}/users/${user_uuid}/permissions`,
-            body: {
-              "permissions":{
-                "permission_uuid": p.uuid,
-                "resource_uuid": resource_uuid
-              }
-            },
-            headers: {
-                'application-key': apiKey,
-                'Content-type': 'application/json',
-                //'Authorization': `Bearer ${identityJWT}`
-            },
-            json: true
-        };
-        return request(requestOptions);
+      // loop over them which will build an array of permission objects to be posted
+      const arrayOfPermissions = pData.map((p)=>{
+          return {
+            "permission_uuid": p.uuid,
+            "resource_uuid": resource_uuid
+          };
       });
-      // ok i now have an array of promises
-      Promise.all(pPromise).then((aPData)=>{
+
+      const requestOptions = {
+          method: 'POST',
+          uri: `${MS}/users/${user_uuid}/permissions`,
+          body: {
+            "permissions": arrayOfPermissions
+          },
+          headers: {
+              'application-key': apiKey,
+              'Content-type': 'application/json',
+              //'Authorization': `Bearer ${identityJWT}`
+          },
+          json: true
+      };
+      const pPromise = request(requestOptions);
+
+      pPromise.then((aPData)=>{
         // console.log(aPData)
         resolve(aPData)
       }).catch((pError)=>{
         reject(pError);
-      })
-    }).catch((pError)=>{
-      reject(pError);
-    });
-  })
+      });
+    })
+  }); // end promise
 }
 
 module.exports = { listUserPermissions, getSpecificPermissions, addExplicitGroupPermissions, addExplicitUserPermissions }
