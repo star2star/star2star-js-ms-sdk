@@ -147,7 +147,7 @@ const addExplicitGroupPermissions = (apiKey='null api key', userUUID='null user 
   if (resource_type === undefined || VALID_RT.indexOf(resource_type) === -1){
     return Promise.reject("resource_type must be specified and one of " + VALID_RT);
   }
-  if (scope === undefined || VALID_SCOPE.indexOf(scope) === -1){
+  if (resource_scope === undefined || VALID_SCOPE.indexOf(resource_scope) === -1){
     return Promise.reject("scope must be specified and one of " + VALID_SCOPE);
   }
   const missingActions = actions.filter((i)=>(VALID_ACTIONS.indexOf(i) === -1))
@@ -157,7 +157,7 @@ const addExplicitGroupPermissions = (apiKey='null api key', userUUID='null user 
 
   return new Promise((resolve, reject)=>{
     //2. get permissions
-    getSpecificPermissions(apiKey, userUUID, identityJWT, resource_type, scope, actions).then((pData)=>{
+    getSpecificPermissions(apiKey, userUUID, identityJWT, resource_type, resource_scope, actions).then((pData)=>{
       // ok have permission object
       // loop over them which will execute a promise ... assigning permission to group
       const pPromise = pData.map((p)=>{
@@ -219,7 +219,7 @@ const addExplicitUserPermissions = (apiKey='null api key', userUUID='null user u
   if (resource_type === undefined || VALID_RT.indexOf(resource_type) === -1){
     return Promise.reject("resource_type must be specified and one of " + VALID_RT);
   }
-  if (scope === undefined || VALID_SCOPE.indexOf(scope) === -1){
+  if (resource_scope === undefined || VALID_SCOPE.indexOf(resource_scope) === -1){
     return Promise.reject("scope must be specified and one of " + VALID_SCOPE);
   }
   const missingActions = actions.filter((i)=>(VALID_ACTIONS.indexOf(i) === -1))
@@ -229,7 +229,7 @@ const addExplicitUserPermissions = (apiKey='null api key', userUUID='null user u
 
   return new Promise((resolve, reject)=>{
     //2. get permissions
-    getSpecificPermissions(apiKey, userUUID, identityJWT, resource_type, scope, actions).then((pData)=>{
+    getSpecificPermissions(apiKey, userUUID, identityJWT, resource_type, resource_scope, actions).then((pData)=>{
       // ok have permission object
       // loop over them which will execute a promise ... assigning permission to group
       const pPromise = pData.map((p)=>{
