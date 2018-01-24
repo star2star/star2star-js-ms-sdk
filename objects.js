@@ -13,6 +13,32 @@ const request = require('request-promise');
 * @param loadContent - string boolean if the call should also return content of object; default false
 * @returns promise resolving to an array of data objects
 **/
+const getGlobalObjectsByType = (apiKey='null api key', userUUID='null user uuid', identityJWT='null jwt',
+                              dataObjectType='data_object', loadContent='false' ) => {
+  const MS = util.getEndpoint(process.env.NODE_ENV, "objects");
+  const requestOptions = {
+      method: 'GET',
+      uri: `${MS}/objects?type=${dataObjectType}&load_content=${loadContent}`,
+      headers: {
+          'Content-type': 'application/json',
+          'Authorization': `Bearer ${identityJWT}`
+      },
+      json: true
+  };
+  return request(requestOptions);
+}
+
+/**
+* This function will ask the cpaas data object service for a specific
+* type of object
+*
+* @param apiKey - api key for cpaas systems
+* @param userUUID - user UUID to be used
+* @param identityJWT - identity JWT
+* @param dataObjectType - data object type to be retrieved; default: dataObjectType
+* @param loadContent - string boolean if the call should also return content of object; default false
+* @returns promise resolving to an array of data objects
+**/
 const getDataObjectByType = (apiKey='null api key', userUUID='null user uuid', identityJWT='null jwt',
                               dataObjectType='data_object', loadContent='false' ) => {
   const MS = util.getEndpoint(process.env.NODE_ENV, "objects");
@@ -195,4 +221,5 @@ const updateDataObject = (apiKey='null api key', userUUID='null user uuid', iden
   };
   return request(requestOptions);
 }
-module.exports = { getDataObject, getDataObjectByType, getDataObjectByTypeAndName, createUserDataObject, createDataObject, deleteDataObject, updateDataObject }
+module.exports = { getDataObject, getDataObjectByType, getDataObjectByTypeAndName, getGlobalObjectsByType, 
+  createUserDataObject, createDataObject, deleteDataObject, updateDataObject }

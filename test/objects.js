@@ -34,6 +34,20 @@ describe('Objects MS', function() {
       })
     })
   });
+  it('Get Global Objects By Type - app_event', function(done) {
+    if (!creds.isValid) return done();
+    s2sMS.Identity.getIdentity(creds.CPAAS_KEY, creds.email, creds.password).then((identityData)=>{
+      s2sMS.Objects.getGlobalObjectsByType(creds.CPAAS_KEY, identityData.user_uuid, identityData.token,
+        'app_event', false).then((responseData)=>{
+          //console.log(identityData.token)
+          //console.log(responseData)
+        assert(responseData.content !== null )
+        done();
+      }).catch((x)=>{
+        console.error(x)
+      })
+    })
+  });
   it('create Object', function(done) {
     if (!creds.isValid) return done();
     s2sMS.Identity.getIdentity(creds.CPAAS_KEY, creds.email, creds.password).then((identityData)=>{
