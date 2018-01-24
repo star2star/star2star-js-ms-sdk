@@ -11,8 +11,10 @@ const ObjectMerge = require('object-merge');
 * @param identityJWT - identity JWT
 * @returns promise for list of groups for this user
 **/
-const listGroups = (apiKey='null api key', userUUID='null user uuid', identityJWT='null jwt' ) => {
+const listGroups = (apiKey='null api key', userUUID='null user uuid', identityJWT='null jwt', filter=undefined ) => {
   const MS = util.getEndpoint(process.env.NODE_ENV, "groups");
+
+
   const requestOptions = {
       method: 'GET',
       uri: `${MS}/groups`,
@@ -23,6 +25,10 @@ const listGroups = (apiKey='null api key', userUUID='null user uuid', identityJW
       },
       json: true
   };
+  if (filter){
+    // ok have filter build query string
+    requestOptions.qs = filter;
+  }
   return request(requestOptions);
 }
 

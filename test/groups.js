@@ -31,6 +31,18 @@ describe('Groups', function() {
       })
     })
   });
+  it('List Groups with filter', function(done) {
+    if (!creds.isValid) return done();
+    s2sMS.Identity.getIdentity(creds.CPAAS_KEY, creds.email, creds.password).then((identityData)=>{
+      //console.log(identityData)
+      const filter = { "group_type": "x" };
+      s2sMS.Groups.listGroups(creds.CPAAS_KEY, identityData.user_uuid, identityData.token, filter).then((responseData)=>{
+        //console.log(responseData)
+        assert(responseData.metadata !== null )
+        done();
+      })
+    })
+  });
 
   it('Create /  Delete Group ', function(done) {
     if (!creds.isValid) return done();
