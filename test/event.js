@@ -52,4 +52,22 @@ describe('Event', function() {
       })
     })
   });
+  it('Create and Get / Delete ', function(done) {
+    if (!creds.isValid) return done();
+    s2sMS.Identity.getIdentity(creds.CPAAS_KEY, creds.email, creds.password).then((identityData)=>{
+      s2sMS.Event.createEvent(creds.CPAAS_KEY, identityData.user_uuid, identityData.token, 'title', {a:1, b:2}
+         ).then((responseData)=>{
+         //console.log('1111 %j', responseData);
+         s2sMS.Event.getEvent(creds.CPAAS_KEY, identityData.user_uuid, identityData.token, responseData.uuid).then((getData)=>{
+           assert(getData.uuid === responseData.uuid)
+           done();
+           s2sMS.Event.deleteEvent(creds.CPAAS_KEY, identityData.user_uuid, identityData.token,
+             responseData.uuid).then((d)=>{
+               //console.log(d)
+             })
+         })
+       })
+    })
+  });
+
 });

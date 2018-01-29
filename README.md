@@ -24,6 +24,7 @@ s2s.Identity.getIdentity(creds.CPAAS_KEY, creds.email, creds.password).then((dat
 Changes
 -------
 
+-	1.0.26 - event objects created as user objects instead of global objects
 -	1.0.25 - removed uuid from the event content since it means nothing
 -	1.0.24 - added getGlobalObjectsByType
 -	1.0.23 - added filter to group list
