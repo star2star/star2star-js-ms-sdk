@@ -15,7 +15,7 @@ const EVENT_TYPE = "app_event";
 const getValidEvent = (obj={}) =>{
   let rReturn = objectMerge({}, obj);
 
-  !rReturn.hasOwnProperty('uuid') && (rReturn.uuid = utilities.createUUID());
+  //!rReturn.hasOwnProperty('uuid') && (rReturn.uuid = utilities.createUUID());
   !rReturn.hasOwnProperty('type') && (rReturn.type = 'event_generic');
   !rReturn.hasOwnProperty('title') && (rReturn.title = 'event_generic_title');
   !rReturn.hasOwnProperty('description') && (rReturn.description = 'event descriptions should go here');
