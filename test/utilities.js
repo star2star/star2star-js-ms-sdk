@@ -51,7 +51,12 @@ describe('Util', function() {
     assert(newString.length === 10 )
     done();
   });
-
+  it('replace static stuff concat ', function(done) {
+    const newString = util.replaceVariables('APPT_%YYYY%%MM%%DD%', {});
+    //console.log(newString.length)
+    assert(newString.length === 13 )
+    done();
+  });
 
   it('replace variables multiple', function(done) {
     const x = "now is the %time.1% for all %attribute-1% now %DUDE% was %Date1% could also be %diet_food%  how about %a/b% but not %/james%";

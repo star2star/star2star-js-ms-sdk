@@ -93,10 +93,15 @@ const getDataObjectByTypeAndName = (apiKey='null api key', userUUID='null user u
     arrayRequest.push(request(requestOptionsUser));
     Promise.all(arrayRequest).then((arrayData)=>{
       // need to build data to return
-      //console.log(JSON.stringify(arrayData));
+      //console.log('>>>>>>', JSON.stringify(arrayData));
       const returnItems = [];
       arrayData.forEach((i)=>{
-        i.items && i.items.forEach((x)=>returnItems.push(x))
+        //console.log('', i)
+        if (Array.isArray(i)){
+          i.forEach((x)=>returnItems.push(x))
+        } else {
+          i.items && i.items.forEach((x)=>returnItems.push(x))
+        }
       })
       resolve({"items": returnItems })
     }).catch((pError)=>{

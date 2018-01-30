@@ -24,6 +24,7 @@ s2s.Identity.getIdentity(creds.CPAAS_KEY, creds.email, creds.password).then((dat
 Changes
 -------
 
+-	1.0.28 - issue with object getDataObjectByTypeAndName - resolved and added test
 -	1.0.27 - utilities - static variables - added YYYY, MM, DD & getDataObjectByTypeAndName look at both global and user
 -	1.0.26 - event objects created as user objects instead of global objects
 -	1.0.25 - removed uuid from the event content since it means nothing

@@ -86,4 +86,18 @@ describe('Objects MS', function() {
       })
     })
   });
+  it('getDataObjectByTypeAndName dr_appt_list Appt_20180130', function(done) {
+    if (!creds.isValid) return done();
+    s2sMS.Identity.getIdentity(creds.CPAAS_KEY, creds.email, creds.password).then((identityData)=>{
+      s2sMS.Objects.getDataObjectByTypeAndName(creds.CPAAS_KEY, identityData.user_uuid, identityData.token,
+        'dr_appt_list', 'Appt_20180130', true).then((responseData)=>{
+          //console.log(identityData.token)
+          //console.log(JSON.stringify(responseData))
+        assert(responseData.items.length > 0  )
+        done();
+      }).catch((x)=>{
+        console.error(x)
+      })
+    })
+  });
 });
