@@ -45,6 +45,13 @@ describe('Util', function() {
     assert.equal(newString, 'value' )
     done();
   });
+  it('replace static stuff ONLY ', function(done) {
+    const newString = util.replaceVariables('%YYYY% %MM% %DD%', {});
+    //console.log(newString)
+    assert(newString.length === 10 )
+    done();
+  });
+
 
   it('replace variables multiple', function(done) {
     const x = "now is the %time.1% for all %attribute-1% now %DUDE% was %Date1% could also be %diet_food%  how about %a/b% but not %/james%";

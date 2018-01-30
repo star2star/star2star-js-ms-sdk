@@ -130,7 +130,7 @@ const getSpecificPermissions = (apiKey='null api key', userUUID='null user uuid'
 * @param resource_uuid - resource_uuid
 * @param resource_type - object, user, group
 * @param resource_scope - global, user
-* @param actions - array actions
+* @param actions - array actions ['create', 'read','update', 'delete', 'list']
 * @returns data
 **/
 const addExplicitGroupPermissions = (apiKey='null api key', userUUID='null user uuid', identityJWT='null jwt',

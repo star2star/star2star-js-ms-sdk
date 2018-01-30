@@ -26,9 +26,16 @@ const getEndpoint = (env="prod", microservice="NOTHING") =>{
  * @return value or undefined - will return you the string value or undefined
  */
 const replaceStaticValues = (matchString) => {
+  const TDATE = new Date();
+  const MONTH = ""+((TDATE).getMonth()+1);
+  const MYDAY = ""+((TDATE).getDate() );
   const aValues = {
-    'datetime': new Date()
+    'datetime': TDATE,
+    'YYYY': (TDATE).getFullYear(),
+    'MM': ("0"+MONTH).substring((MONTH.length+1 - 2)),
+    'DD': ("0"+MYDAY).substring((MYDAY.length+1 - 2))
   };
+  //console.log('matchstring:',("0"+DAY).substring((DAY.length+1 - 2)), matchString, DAY, aValues)
   return aValues[matchString];
 }
 

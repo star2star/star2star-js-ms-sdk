@@ -27,21 +27,7 @@ describe('Objects MS', function() {
         'all_notify_data_object', false).then((responseData)=>{
           //console.log(identityData.token)
           //console.log(responseData)
-        assert(responseData.content !== null )
-        done();
-      }).catch((x)=>{
-        console.error(x)
-      })
-    })
-  });
-  it('Get Global Objects By Type - app_event', function(done) {
-    if (!creds.isValid) return done();
-    s2sMS.Identity.getIdentity(creds.CPAAS_KEY, creds.email, creds.password).then((identityData)=>{
-      s2sMS.Objects.getGlobalObjectsByType(creds.CPAAS_KEY, identityData.user_uuid, identityData.token,
-        'app_event', false).then((responseData)=>{
-          //console.log(identityData.token)
-          //console.log(responseData)
-        assert(responseData.content !== null )
+        assert(responseData.items.length >=0 )
         done();
       }).catch((x)=>{
         console.error(x)
@@ -93,7 +79,7 @@ describe('Objects MS', function() {
         'launchpad_list', 'Subscribers', true).then((responseData)=>{
           //console.log(identityData.token)
           //console.log(responseData)
-        assert(responseData.content !== null )
+        assert(responseData.items.length > 0  )
         done();
       }).catch((x)=>{
         console.error(x)
