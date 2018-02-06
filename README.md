@@ -24,6 +24,7 @@ s2s.Identity.getIdentity(creds.CPAAS_KEY, creds.email, creds.password).then((dat
 Changes
 -------
 
+-	1.0.30 - fixed duplicate items
 -	1.0.29 - duplicate items in getDataObjectByTypeAndName - resolved
 -	1.0.28 - issue with object getDataObjectByTypeAndName - resolved and added test
 -	1.0.27 - utilities - static variables - added YYYY, MM, DD & getDataObjectByTypeAndName look at both global and user
