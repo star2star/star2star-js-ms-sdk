@@ -67,7 +67,7 @@ const createTaskTemplate = (apiKey='null api key', userUUID='null user uuid', id
 
   const vTasks = validateTasks(defaultTasks);
   if (vTasks.status === 200) {
-    return Objects.createDataObject(apiKey, userUUID, identityJWT, title, 'task_template', { tasks: vTasks.tasks }  );
+    return Objects.createUserDataObject(apiKey, userUUID, identityJWT, title, 'task_template', { tasks: vTasks.tasks }  );
   } else {
     return Promise.reject(vTasks);
   }
@@ -101,7 +101,7 @@ const createTaskObject  = (apiKey='null api key', userUUID='null user uuid', ide
                               title="Missing Task Title", defaultTasks=[] ) => {
     const vTasks = validateTasks(defaultTasks);
     if (vTasks.status === 200) {
-      return Objects.createDataObject(apiKey, userUUID, identityJWT, title, 'task_list', { tasks: vTasks.tasks} );
+      return Objects.createUserDataObject(apiKey, userUUID, identityJWT, title, 'task_list', { tasks: vTasks.tasks} );
     } else {
       return Promise.reject(vTasks);
     }
@@ -165,6 +165,7 @@ const addTaskToTaskObject  = (apiKey='null api key', userUUID='null user uuid', 
     const vTasks = validateTasks([task]);
     if (vTasks.status === 200){
       return Objects.getDataObject(apiKey, userUUID, identityJWT, taskObjectUUID, true).then((rData)=>{
+        //console.log(rData)
         rData.content.tasks = [].concat(rData.content.tasks, vTasks.tasks );
         return Objects.updateDataObject(apiKey, userUUID, identityJWT, taskObjectUUID, rData);
       });
