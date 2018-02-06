@@ -41,11 +41,31 @@ const getDataObjectByType = (apiKey='null api key', userUUID='null user uuid', i
     arrayRequest.push(request(requestOptionsUser));
     Promise.all(arrayRequest).then((arrayData)=>{
       // need to build data to return
-      //console.log(JSON.stringify(arrayData));
+      //console.log('>>>>>>', JSON.stringify(arrayData));
       const returnItems = [];
+      const isNotDuplicate = (item, dataArray) =>{
+        return dataArray.filter((i)=>{
+          return i.uuid === item.uuid;
+        }).length === 0;
+      }
       arrayData.forEach((i)=>{
-        i.items && i.items.forEach((x)=>returnItems.push(x))
-      })
+        //console.log('', i)
+        if (Array.isArray(i)){
+          i.forEach((x)=>{
+            // let us make sure this is not a duplicate
+            if ( isNotDuplicate(x, returnItems) ){
+              returnItems.push(x);
+            }
+          });
+        } else {
+          i.items && i.items.forEach((x)=>{
+            if ( isNotDuplicate(x, returnItems) ){
+              returnItems.push(x);
+            }
+          })
+        }
+      });
+
       resolve({"items": returnItems })
     }).catch((pError)=>{
       reject(pError);
