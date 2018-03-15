@@ -23,7 +23,7 @@
     "assert": "^1.4.1",
     "mocha": "^4.0.1"
   },
-  "publishConfig":{
-    "registry":"https://registry.npmjs.org"
+  "publishConfig": {
+    "registry": "https://registry.npmjs.org"
   }
 }
