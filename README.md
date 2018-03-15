@@ -23,6 +23,7 @@ s2s.Identity.getIdentity(creds.CPAAS_KEY, creds.email, creds.password).then((dat
 
 Changes
 -------
+- 2.0.1 - testing npm publishing
 - 2.0.0 - Now must set baseUrl for microservices to get anything other than 'https://cpaas.star2star.com/api'
 
 -	1.0.30 - fixed duplicate items
