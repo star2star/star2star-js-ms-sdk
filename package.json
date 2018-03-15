@@ -1,6 +1,6 @@
 {
   "name": "star2star-js-ms-sdk",
-  "version": "1.0.30",
+  "version": "2.0.0",
   "description": "Star2Star javaScript Micro Service SDK",
   "main": "index.js",
   "scripts": {
@@ -13,7 +13,7 @@
     "js"
   ],
   "author": "James Schimmoeller",
-  "license": "Apahce 2.0",
+  "license": "Apache 2.0",
   "dependencies": {
     "object-merge": "^2.5.1",
     "request": "^2.83.0",

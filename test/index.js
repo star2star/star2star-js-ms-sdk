@@ -12,6 +12,7 @@ var creds = {
 
 beforeEach(function(){
   process.env.NODE_ENV = 'dev';
+  process.baseUrl = 'https://cpaas.star2star.net';
   // file system uses full path so will do it like this
   if (fs.existsSync('./test/credentials.json')) {
     // do not need test folder here
@@ -22,8 +23,7 @@ beforeEach(function(){
 describe('MS SDK Index', function() {
 
   it('s2s-ms module exports', function(done){
-    const msKeys = ['Lambda', 'Identity', 'Messaging', 'Objects', 'Util', 'Task', 'Event', 'setEnvironment',
-      'getEnvironment', 'setApplicationKey', 'getApplicationKey', 'Groups', 'ShortUrls', 'Auth', 'Chat' ]
+    const msKeys = ['Lambda', 'Identity', 'Messaging', 'Objects', 'Util', 'Task', 'Event', 'setBaseUrl', 'getBaseUrl', 'setApplicationKey', 'getApplicationKey', 'Groups', 'ShortUrls', 'Auth', 'Chat' ]
     assert.deepEqual(Object.keys(s2sMS), msKeys);
     done();
   });
@@ -35,14 +35,14 @@ describe('MS SDK Index', function() {
     done();
   });
 
-  it('set/get Environment development  ', function(done){
-    assert.equal(s2sMS.getEnvironment(), 'dev' );
+  it('set/get baseUrl development  ', function(done){
+    assert.equal(s2sMS.getBaseUrl(), 'https://cpaas.star2star.net' );
     done();
   });
 
-  it('set/get Environment production ', function(done){
-    s2sMS.setEnvironment('prod');
-    assert.equal(s2sMS.getEnvironment(), 'prod' );
+  it('set/get baseurl production ', function(done){
+    s2sMS.setBaseUrl('https://cpaas.star2star.com/api');
+    assert.equal(s2sMS.getBaseUrl(), 'https://cpaas.star2star.com/api' );
     done();
   });
 });

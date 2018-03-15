@@ -12,6 +12,7 @@ var creds = {
 
 beforeEach(function(){
   process.env.NODE_ENV = 'dev';
+  process.baseUrl = 'https://cpaas.star2star.net';
   // file system uses full path so will do it like this
   if (fs.existsSync('./test/credentials.json')) {
     // do not need test folder here

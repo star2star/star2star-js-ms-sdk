@@ -16,7 +16,7 @@ const request = require('request-promise');
 const getDataObjectByType = (apiKey='null api key', userUUID='null user uuid', identityJWT='null jwt',
                               dataObjectType='data_object', loadContent='false' ) => {
   return new Promise((resolve, reject)=>{
-    const MS = util.getEndpoint(process.env.NODE_ENV, "objects");
+    const MS = util.getEndpoint("objects");
 
     const arrayRequest = [];
     const requestOptionsGlobal = {
@@ -88,7 +88,7 @@ const getDataObjectByTypeAndName = (apiKey='null api key', userUUID='null user u
                               dataObjectType='data_object', dataObjectName='noName', loadContent='false' ) => {
 
   return new Promise((resolve, reject)=>{
-    const MS = util.getEndpoint(process.env.NODE_ENV, "objects");
+    const MS = util.getEndpoint("objects");
 
     const arrayRequest = [];
     const requestOptionsGlobal = {
@@ -156,7 +156,7 @@ const getDataObjectByTypeAndName = (apiKey='null api key', userUUID='null user u
 **/
 const getDataObject = (apiKey='null api key', userUUID='null user uuid', identityJWT='null jwt',
                               dataObjectUUID='null uuid' ) => {
-  const MS = util.getEndpoint(process.env.NODE_ENV, "objects");
+  const MS = util.getEndpoint("objects");
   const requestOptions = {
       method: 'GET',
       uri: `${MS}/objects/${dataObjectUUID}`,
@@ -181,7 +181,7 @@ const getDataObject = (apiKey='null api key', userUUID='null user uuid', identit
 **/
 const createUserDataObject = (apiKey='null api key', userUUID='null user uuid', identityJWT='null jwt',
                         objectName, objectType, content={} ) => {
-  const MS = util.getEndpoint(process.env.NODE_ENV, "objects");
+  const MS = util.getEndpoint("objects");
 
   const b = {
     "name": objectName,
@@ -213,7 +213,7 @@ const createUserDataObject = (apiKey='null api key', userUUID='null user uuid', 
 **/
 const createDataObject = (apiKey='null api key', userUUID='null user uuid', identityJWT='null jwt',
                         objectName, objectType, content={} ) => {
-  const MS = util.getEndpoint(process.env.NODE_ENV, "objects");
+  const MS = util.getEndpoint("objects");
 
   const b = {
     "name": objectName,
@@ -245,7 +245,7 @@ const createDataObject = (apiKey='null api key', userUUID='null user uuid', iden
 **/
 const deleteDataObject = (apiKey='null api key', userUUID='null user uuid', identityJWT='null jwt',
                         data_uuid='not specified' ) => {
-  const MS = util.getEndpoint(process.env.NODE_ENV, "objects");
+  const MS = util.getEndpoint("objects");
 
   const requestOptions = {
       method: 'DELETE',
@@ -271,7 +271,7 @@ const deleteDataObject = (apiKey='null api key', userUUID='null user uuid', iden
 **/
 const updateDataObject = (apiKey='null api key', userUUID='null user uuid', identityJWT='null jwt',
                         data_uuid='not specified', data_object={} ) => {
-  const MS = util.getEndpoint(process.env.NODE_ENV, "objects");
+  const MS = util.getEndpoint("objects");
 
   const requestOptions = {
       method: 'PUT',

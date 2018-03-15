@@ -21,7 +21,7 @@ const ObjectMerge = require('object-merge');
 const createRoom = (apiKey='null api key', userUUID='null user uuid', identityJWT='null jwt',
                         name="no name specified for group", topic="no topic specified", description=undefined, groupUUID=undefined,
                       accountUUID=undefined, metadata={} ) => {
-  const MS = util.getEndpoint(process.env.NODE_ENV, "chat");
+  const MS = util.getEndpoint("chat");
 
   const b = {
   "name": name,
@@ -59,7 +59,7 @@ const createRoom = (apiKey='null api key', userUUID='null user uuid', identityJW
 **/
 const listRooms = (apiKey='null api key', userUUID='null user uuid', identityJWT='null jwt',
                       filter= undefined ) => {
-  const MS = util.getEndpoint(process.env.NODE_ENV, "chat");
+  const MS = util.getEndpoint("chat");
 
   const requestOptions = {
       method: 'GET',
@@ -88,7 +88,7 @@ const listRooms = (apiKey='null api key', userUUID='null user uuid', identityJWT
 **/
 const getRoom = (apiKey='null api key', userUUID='null user uuid', identityJWT='null jwt',
                       roomUUID="no room uuid specified" ) => {
-  const MS = util.getEndpoint(process.env.NODE_ENV, "chat");
+  const MS = util.getEndpoint("chat");
 
   const requestOptions = {
       method: 'GET',
@@ -115,7 +115,7 @@ const getRoom = (apiKey='null api key', userUUID='null user uuid', identityJWT='
 **/
 const deleteRoom = (apiKey='null api key', userUUID='null user uuid', identityJWT='null jwt',
                       roomUUID="no room uuid specified" ) => {
-  const MS = util.getEndpoint(process.env.NODE_ENV, "chat");
+  const MS = util.getEndpoint("chat");
 
   const requestOptions = {
       method: 'DELETE',
@@ -144,7 +144,7 @@ const deleteRoom = (apiKey='null api key', userUUID='null user uuid', identityJW
 **/
 const updateRoomInfo = (apiKey='null api key', userUUID='null user uuid', identityJWT='null jwt',
                       roomUUID="no room uuid specified", info={} ) => {
-  const MS = util.getEndpoint(process.env.NODE_ENV, "chat");
+  const MS = util.getEndpoint("chat");
 
   const requestOptions = {
       method: 'PUT',
@@ -173,7 +173,7 @@ const updateRoomInfo = (apiKey='null api key', userUUID='null user uuid', identi
 **/
 const updateRoomMeta = (apiKey='null api key', userUUID='null user uuid', identityJWT='null jwt',
                       roomUUID="no room uuid specified", meta={} ) => {
-  const MS = util.getEndpoint(process.env.NODE_ENV, "chat");
+  const MS = util.getEndpoint("chat");
 
   //console.log('mmmmmmm', meta)
   const requestOptions = {
@@ -202,7 +202,7 @@ const updateRoomMeta = (apiKey='null api key', userUUID='null user uuid', identi
 **/
 const getRoomMembers = (apiKey='null api key', userUUID='null user uuid', identityJWT='null jwt',
                       roomUUID="no room uuid specified" ) => {
-  const MS = util.getEndpoint(process.env.NODE_ENV, "chat");
+  const MS = util.getEndpoint("chat");
 
   //console.log('mmmmmmm', meta)
   const requestOptions = {
@@ -230,7 +230,7 @@ const getRoomMembers = (apiKey='null api key', userUUID='null user uuid', identi
 **/
 const addMember = (apiKey='null api key', userUUID='null user uuid', identityJWT='null jwt',
                       roomUUID="no room uuid specified", memberData ) => {
-  const MS = util.getEndpoint(process.env.NODE_ENV, "chat");
+  const MS = util.getEndpoint("chat");
 
   //console.log('mmmmmmm', meta)
   const requestOptions = {
@@ -259,7 +259,7 @@ const addMember = (apiKey='null api key', userUUID='null user uuid', identityJWT
 **/
 const deleteMember = (apiKey='null api key', userUUID='null user uuid', identityJWT='null jwt',
                       roomUUID="no room uuid specified", memberUUID="empty" ) => {
-  const MS = util.getEndpoint(process.env.NODE_ENV, "chat");
+  const MS = util.getEndpoint("chat");
 
   //console.log('mmmmmmm', meta)
   const requestOptions = {
@@ -287,7 +287,7 @@ const deleteMember = (apiKey='null api key', userUUID='null user uuid', identity
 **/
 const getMessages = (apiKey='null api key', userUUID='null user uuid', identityJWT='null jwt',
                       roomUUID="no room uuid specified", memberUUID="empty" ) => {
-  const MS = util.getEndpoint(process.env.NODE_ENV, "chat");
+  const MS = util.getEndpoint("chat");
 
   //console.log('mmmmmmm', meta)
   const requestOptions = {
@@ -316,7 +316,7 @@ const getMessages = (apiKey='null api key', userUUID='null user uuid', identityJ
 **/
 const sendMessage = (apiKey='null api key', userUUID='null user uuid', identityJWT='null jwt',
                       roomUUID="no room uuid specified", message="missing text" ) => {
-  const MS = util.getEndpoint(process.env.NODE_ENV, "chat");
+  const MS = util.getEndpoint("chat");
 
   const b = {
     "content": {

@@ -12,7 +12,7 @@ const request = require('request-promise');
 const getConvesationUUID = (apiKey, userUUID, toPhoneNumber ) => {
   return new Promise((resolve, reject)=>{
     const GET_CONVERSATION_CMD = `/users/${userUUID}/conversations`;
-    const MS = util.getEndpoint(process.env.NODE_ENV, "Messaging");
+    const MS = util.getEndpoint("Messaging");
     const REQUEST_OPTIONS = {
       method: 'POST',
       uri: `${MS}${GET_CONVERSATION_CMD}`,
@@ -57,7 +57,7 @@ const sendSMSMessage = (apiKey, convesationUUID, userUUID,  fromPhoneNumber, msg
             "body": `${msg}`
           }]
       };
-    const MS = util.getEndpoint(process.env.NODE_ENV, "Messaging");
+    const MS = util.getEndpoint("Messaging");
 
     const REQUEST_OPTIONS = {
       method: 'POST',
@@ -114,7 +114,7 @@ const sendSMS = (apiKey, userUUID, msg, fromPhoneNumber, toPhoneNumber ) =>{
 const getSMSNumber = (apiKey, userUUID) =>{
 
   return new Promise((resolve, reject)=>{
-      const MS = util.getEndpoint(process.env.NODE_ENV, "identity");
+      const MS = util.getEndpoint("identity");
 
       const SMS_REQ_OPTIONS = {
           method: 'GET',

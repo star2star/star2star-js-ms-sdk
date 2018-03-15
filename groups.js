@@ -12,7 +12,7 @@ const ObjectMerge = require('object-merge');
 * @returns promise for list of groups for this user
 **/
 const listGroups = (apiKey='null api key', userUUID='null user uuid', identityJWT='null jwt', filter=undefined ) => {
-  const MS = util.getEndpoint(process.env.NODE_ENV, "groups");
+  const MS = util.getEndpoint("groups");
 
 
   const requestOptions = {
@@ -43,7 +43,7 @@ const listGroups = (apiKey='null api key', userUUID='null user uuid', identityJW
 **/
 const getGroup = (apiKey='null api key', userUUID='null user uuid', identityJWT='null jwt',
                               groupUUID='null uuid' ) => {
-  const MS = util.getEndpoint(process.env.NODE_ENV, "groups");
+  const MS = util.getEndpoint("groups");
   const requestOptions = {
       method: 'GET',
       uri: `${MS}/groups/${groupUUID}`,
@@ -68,7 +68,7 @@ const getGroup = (apiKey='null api key', userUUID='null user uuid', identityJWT=
 **/
 const deleteGroup = (apiKey='null api key', userUUID='null user uuid', identityJWT='null jwt',
                         groupUUID ='not specified' ) => {
-  const MS = util.getEndpoint(process.env.NODE_ENV, "groups");
+  const MS = util.getEndpoint("groups");
 
   const requestOptions = {
       method: 'DELETE',
@@ -99,7 +99,7 @@ const deleteGroup = (apiKey='null api key', userUUID='null user uuid', identityJ
 const createGroup = (apiKey='null api key', userUUID='null user uuid', identityJWT='null jwt',
                         name="no name specified for group", description=undefined, groupType=undefined, members=[],
                       accountUUID=undefined ) => {
-  const MS = util.getEndpoint(process.env.NODE_ENV, "groups");
+  const MS = util.getEndpoint("groups");
 
   const b = {
     "name": name,
@@ -135,7 +135,7 @@ const createGroup = (apiKey='null api key', userUUID='null user uuid', identityJ
 **/
 const updateGroup = (apiKey='null api key', userUUID='null user uuid', identityJWT='null jwt',
                         group_uuid ='not specified', group_object={} ) => {
-  const MS = util.getEndpoint(process.env.NODE_ENV, "groups");
+  const MS = util.getEndpoint("groups");
 
   const requestOptions = {
       method: 'PUT',

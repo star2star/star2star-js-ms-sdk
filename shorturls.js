@@ -13,7 +13,7 @@ const ObjectMerge = require('object-merge');
 * @returns promise for list of short urls
 **/
 const list = (apiKey='null api key', userUUID='null user uuid', identityJWT='null jwt', options={} ) => {
-  const MS = util.getEndpoint(process.env.NODE_ENV, "shorturls");
+  const MS = util.getEndpoint("shorturls");
   const requestOptions = {
       method: 'GET',
       uri: `${MS}/shorturls`,
@@ -40,7 +40,7 @@ const list = (apiKey='null api key', userUUID='null user uuid', identityJWT='nul
 **/
 const create = (apiKey='null api key', userUUID='null user uuid', identityJWT='null jwt',
                 options={}) => {
-  const MS = util.getEndpoint(process.env.NODE_ENV, "shorturls");
+  const MS = util.getEndpoint("shorturls");
 
   const b = ObjectMerge({}, options);
   if (!b.hasOwnProperty('url')){
@@ -72,7 +72,7 @@ const create = (apiKey='null api key', userUUID='null user uuid', identityJWT='n
 * @returns no content
 **/
 const deleteShortCode = (apiKey='null api key', userUUID='null user uuid', identityJWT='null jwt', short_code='notdefined') => {
-  const MS = util.getEndpoint(process.env.NODE_ENV, "shorturls");
+  const MS = util.getEndpoint("shorturls");
 
 
   //console.log('bbbbbbbb', b)

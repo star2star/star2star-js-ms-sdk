@@ -11,7 +11,7 @@ const request = require('request-promise');
 * @returns promise
 **/
 const invokeLambda = (apiKey='null api key', lambdaName='not defined', params={} ) => {
-  const MS = util.getEndpoint(process.env.NODE_ENV, "lambda");
+  const MS = util.getEndpoint("lambda");
   const requestOptions = {
       method: 'POST',
       uri: `${MS}/actions/${lambdaName}/invoke`,

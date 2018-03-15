@@ -7,17 +7,11 @@ const config = require('./config.json');
  * @param matchString - the string that we are matching on
  * @return String or undefined - will return you the string value or undefined
  */
-const getEndpoint = (env="prod", microservice="NOTHING") =>{
+const getEndpoint = (microservice="NOTHING") =>{
   const upperMS = microservice.toUpperCase();
-  const validEnvs = ['dev', 'test', 'stage', 'prod'];
 
-  if (validEnvs.indexOf(env) === -1){
-    console.error(`Env is invalid: ${env}; not one of ${validEnvs}; setting to prod`);
-    env = validEnvs[3];
-  }
-
-  return config[upperMS] ? config[upperMS][env] : undefined;
-}
+  return config[upperMS] ? process.baseUrl + config[upperMS] : undefined;
+};
 
 /**
  * This function will lookup static items to be replaced

@@ -17,7 +17,7 @@ const VALID_SCOPE = ['global', 'user'];
 * @returns data
 **/
 const listUserPermissions = (apiKey='null api key', userUUID='null user uuid', identityJWT='null jwt',resource_type=undefined, scope=undefined, actions=['create', 'read','update', 'delete', 'list']) => {
-  const MS = util.getEndpoint(process.env.NODE_ENV, "auth");
+  const MS = util.getEndpoint("auth");
 
   const requestOptions = {
       method: 'GET',
@@ -86,7 +86,7 @@ const getSpecificPermissions = (apiKey='null api key', userUUID='null user uuid'
   }
 
   // ok all parameters valid
-  const MS = util.getEndpoint(process.env.NODE_ENV, "auth");
+  const MS = util.getEndpoint("auth");
 
   const requestOptions = {
       method: 'GET',
@@ -135,7 +135,7 @@ const getSpecificPermissions = (apiKey='null api key', userUUID='null user uuid'
 **/
 const addExplicitGroupPermissions = (apiKey='null api key', userUUID='null user uuid', identityJWT='null jwt',
   group_uuid=undefined, resource_uuid=undefined, resource_type=undefined, resource_scope=undefined, actions=[]) => {
-  const MS = util.getEndpoint(process.env.NODE_ENV, "auth");
+  const MS = util.getEndpoint("auth");
 
   // 1.  validate parameters
   if (group_uuid === undefined){
@@ -209,7 +209,7 @@ const addExplicitGroupPermissions = (apiKey='null api key', userUUID='null user 
 **/
 const addExplicitUserPermissions = (apiKey='null api key', userUUID='null user uuid', identityJWT='null jwt',
   user_uuid=undefined, resource_uuid=undefined, resource_type=undefined, resource_scope=undefined, actions=[]) => {
-  const MS = util.getEndpoint(process.env.NODE_ENV, "auth");
+  const MS = util.getEndpoint("auth");
 
   // 1.  validate parameters
   if (user_uuid === undefined){

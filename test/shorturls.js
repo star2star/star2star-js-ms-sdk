@@ -39,7 +39,7 @@ describe('ShortUrls', function() {
         "url": "http://www.google.com"
       }
       s2sMS.ShortUrls.create(creds.CPAAS_KEY, identityData.user_uuid, identityData.token, options).then((responseData)=>{
-        console.log(responseData);
+        // console.log(responseData);
         assert(responseData.short_code.length  > 0 )
         s2sMS.ShortUrls.deleteShortCode(creds.CPAAS_KEY, identityData.user_uuid, identityData.token, responseData.short_code);
         done();

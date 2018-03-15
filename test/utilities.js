@@ -13,6 +13,7 @@ var creds = {
 
 beforeEach(function(){
   process.env.NODE_ENV = 'dev';
+  process.baseUrl = 'https://cpaas.star2star.net';
   // file system uses full path so will do it like this
   if (fs.existsSync('./test/credentials.json')) {
     // do not need test folder here
@@ -102,39 +103,45 @@ describe('Util', function() {
     done();
   });
 
-  it('test getEndpoint valid - dev', function(done){
-    const prodEndPoint = util.getEndpoint("dev", 'IDENTITY');
+  it('test getEndpoint valid', function(done){
+    const prodEndPoint = util.getEndpoint('IDENTITY');
     assert.equal("https://cpaas.star2star.net/identity", prodEndPoint);
     done();
   });
 
-  it('test getEndpoint valid - test ', function(done){
-    const prodEndPoint = util.getEndpoint("test", 'IDENTITY');
-    assert.equal("https://cpaas.star2star.net/identity", prodEndPoint);
-    done();
-  });
-
-  it('test getEndpoint valid - prod ', function(done){
-    const prodEndPoint = util.getEndpoint('prod', 'IDENTITY');
-    assert.equal("https://cpaas.star2star.com/api/identity", prodEndPoint);
-    done();
-  });
-
-  it('test getEndpoint invalid env ', function(done){
-    const prodEndPoint = util.getEndpoint('foobar', 'IDENTITY');
-    assert.equal("https://cpaas.star2star.com/api/identity", prodEndPoint);
-    done();
-  });
+  // it('test getEndpoint valid - dev', function(done){
+  //   const prodEndPoint = util.getEndpoint("dev", 'IDENTITY');
+  //   assert.equal("https://cpaas.star2star.net/identity", prodEndPoint);
+  //   done();
+  // });
+  //
+  // it('test getEndpoint valid - test ', function(done){
+  //   const prodEndPoint = util.getEndpoint("test", 'IDENTITY');
+  //   assert.equal("https://cpaas.star2star.net/identity", prodEndPoint);
+  //   done();
+  // });
+  //
+  // it('test getEndpoint valid - prod ', function(done){
+  //   const prodEndPoint = util.getEndpoint('prod', 'IDENTITY');
+  //   assert.equal("https://cpaas.star2star.com/api/identity", prodEndPoint);
+  //   done();
+  // });
+  //
+  // it('test getEndpoint invalid env ', function(done){
+  //   const prodEndPoint = util.getEndpoint('foobar', 'IDENTITY');
+  //   assert.equal("https://cpaas.star2star.com/api/identity", prodEndPoint);
+  //   done();
+  // });
 
   it('test getEndpoint invalid service ', function(done){
-    const prodEndPoint = util.getEndpoint('prod', 'foo');
+    const prodEndPoint = util.getEndpoint('foo');
     assert.equal(undefined, prodEndPoint);
     done();
   });
 
   it('test getEndpoint valid - lowercase ', function(done){
-    const prodEndPoint = util.getEndpoint(undefined, 'identity');
-    assert.equal("https://cpaas.star2star.com/api/identity", prodEndPoint);
+    const prodEndPoint = util.getEndpoint('identity');
+    assert.equal("https://cpaas.star2star.net/identity", prodEndPoint);
     done();
   });
 

@@ -11,7 +11,7 @@ const request = require('request-promise');
 * @returns promise resolving to an identity data
 **/
 const getIdentity = (apiKey='null api key', email='null email', pwd='null pwd')=>{
-  const MS = util.getEndpoint(process.env.NODE_ENV, "identity");
+  const MS = util.getEndpoint("identity");
   const requestOptions = {
     method: 'POST',
     uri: `${MS}/users/login`,
@@ -37,7 +37,7 @@ const getIdentity = (apiKey='null api key', email='null email', pwd='null pwd')=
 * @returns promise resolving to an identity data
 **/
 const refreshToken = (apiKey='null api key', token='null token' )=>{
-  const MS = util.getEndpoint(process.env.NODE_ENV, "identity");
+  const MS = util.getEndpoint("identity");
   const requestOptions = {
     method: 'POST',
     uri: `${MS}/oauth/token`,
