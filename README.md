@@ -14,7 +14,9 @@ Usage
 ```javascript
 import s2sMS from 'star2star-js-ms-sdk';
 
-s2s.Identity.getIdentity(creds.CPAAS_KEY, creds.email, creds.password).then((data)=>{
+s2sMS.setBaseUrl('https://cpaas.star2star.net');
+
+s2sMS.Identity.getIdentity(creds.CPAAS_KEY, creds.email, creds.password).then((data)=>{
   //ok got data do something cool here
 }).catch((error)=>{
   // houston we have an issue

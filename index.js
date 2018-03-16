@@ -19,7 +19,7 @@ let cpaasKey;
 * @param environment String - dev, development, test, prod or production
 **/
 const setBaseUrl = (baseUrl="https://cpaas.star2star.com/api") =>{
-  process.baseUrl = baseUrl;
+  process.env.BASE_URL = baseUrl;
 };
 
 /**
@@ -28,8 +28,8 @@ const setBaseUrl = (baseUrl="https://cpaas.star2star.com/api") =>{
 * @returns string - environment of which it has been configured
 **/
 const getBaseUrl = () =>{
-  setBaseUrl(process.baseUrl);
-  return process.baseUrl;
+  setBaseUrl(process.env.BASE_URL);
+  return process.env.BASE_URL;
 };
 
 
