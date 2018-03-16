@@ -25,6 +25,7 @@ s2sMS.Identity.getIdentity(creds.CPAAS_KEY, creds.email, creds.password).then((d
 
 Changes
 -------
+- 2.0.2 - Move baseUrl to process.env.BASE_URL
 - 2.0.1 - testing npm publishing
 - 2.0.0 - Now must set baseUrl for microservices to get anything other than 'https://cpaas.star2star.com/api'
 

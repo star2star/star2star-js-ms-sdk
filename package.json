@@ -1,7 +1,7 @@
 {
   "name": "star2star-js-ms-sdk",
-  "version": "2.0.1",
-  "description": "Star2Star javaScript Micro Service SDK",
+  "version": "2.0.2",
+  "description": "Star2Star JavaScript Micro Service SDK",
   "main": "index.js",
   "scripts": {
     "test": "mocha --timeout 10000"
