@@ -36,7 +36,8 @@ describe("MS SDK Index", function() {
       "Groups",
       "ShortUrls",
       "Auth",
-      "Chat"
+      "Chat",
+      "Contacts"
     ];
     assert.deepEqual(Object.keys(s2sMS), msKeys);
     done();

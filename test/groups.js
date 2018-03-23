@@ -22,7 +22,7 @@ beforeEach(function() {
 describe("Groups", function() {
   it("List Groups", function(done) {
     if (!creds.isValid) return done();
-    s2sMS.Identity.getIdentity(
+    s2sMS.Identity.login(
       creds.CPAAS_KEY,
       creds.email,
       creds.password
@@ -41,29 +41,26 @@ describe("Groups", function() {
   });
   it("List Groups with filter", function(done) {
     if (!creds.isValid) return done();
-    s2sMS.Identity.getIdentity(
+    s2sMS.Identity.login(
       creds.CPAAS_KEY,
       creds.email,
       creds.password
     ).then(identityData => {
       //console.log(identityData)
       const filter = { group_type: "x" };
-      s2sMS.Groups.listGroups(
-        creds.CPAAS_KEY,
-        identityData.user_uuid,
-        identityData.token,
-        filter
-      ).then(responseData => {
-        //console.log(responseData)
-        assert(responseData.metadata !== null);
-        done();
-      });
+      s2sMS.Groups.listGroups(creds.CPAAS_KEY, identityData.token, filter).then(
+        responseData => {
+          //console.log(responseData)
+          assert(responseData.metadata !== null);
+          done();
+        }
+      );
     });
   });
 
   it("Create /  Delete Group ", function(done) {
     if (!creds.isValid) return done();
-    s2sMS.Identity.getIdentity(
+    s2sMS.Identity.login(
       creds.CPAAS_KEY,
       creds.email,
       creds.password
@@ -77,7 +74,6 @@ describe("Groups", function() {
       */
       s2sMS.Groups.createGroup(
         creds.CPAAS_KEY,
-        identityData.user_uuid,
         identityData.token,
         "foo",
         "desc",
@@ -90,24 +86,22 @@ describe("Groups", function() {
         done();
         s2sMS.Groups.deleteGroup(
           creds.CPAAS_KEY,
-          identityData.user_uuid,
-          identityData.token,
-          responseData.uuid
+          responseData.uuid,
+          identityData.token
         ).then(d => {});
       });
     });
   });
 
-  it("Create, update and  Delete Task", function(done) {
+  it("Create, update and  Delete Group", function(done) {
     if (!creds.isValid) return done();
-    s2sMS.Identity.getIdentity(
+    s2sMS.Identity.login(
       creds.CPAAS_KEY,
       creds.email,
       creds.password
     ).then(identityData => {
       s2sMS.Groups.createGroup(
         creds.CPAAS_KEY,
-        identityData.user_uuid,
         identityData.token,
         "foo",
         "desc",
@@ -119,18 +113,16 @@ describe("Groups", function() {
 
         s2sMS.Groups.updateGroup(
           creds.CPAAS_KEY,
-          identityData.user_uuid,
-          identityData.token,
           responseData.uuid,
+          identityData.token,
           responseData
         ).then(updatedData => {
           assert(updatedData.name === "james");
           done();
           s2sMS.Groups.deleteGroup(
             creds.CPAAS_KEY,
-            identityData.user_uuid,
-            identityData.token,
-            updatedData.uuid
+            responseData.uuid,
+            identityData.token
           ).then(d => {
             //console.log(d)
           });
@@ -138,16 +130,15 @@ describe("Groups", function() {
       });
     });
   });
-  it("Create, get and  Delete Task", function(done) {
+  it("Create, get and  Delete Group", function(done) {
     if (!creds.isValid) return done();
-    s2sMS.Identity.getIdentity(
+    s2sMS.Identity.login(
       creds.CPAAS_KEY,
       creds.email,
       creds.password
     ).then(identityData => {
       s2sMS.Groups.createGroup(
         creds.CPAAS_KEY,
-        identityData.user_uuid,
         identityData.token,
         "foo",
         "desc",
@@ -157,17 +148,15 @@ describe("Groups", function() {
         //console.log(responseData);
         s2sMS.Groups.getGroup(
           creds.CPAAS_KEY,
-          identityData.user_uuid,
-          identityData.token,
-          responseData.uuid
+          responseData.uuid,
+          identityData.token
         ).then(updatedData => {
           assert(updatedData.uuid === responseData.uuid);
           done();
           s2sMS.Groups.deleteGroup(
             creds.CPAAS_KEY,
-            identityData.user_uuid,
-            identityData.token,
-            updatedData.uuid
+            updatedData.uuid,
+            identityData.token
           ).then(d => {
             //console.log(d)
           });

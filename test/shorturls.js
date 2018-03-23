@@ -22,7 +22,7 @@ beforeEach(function() {
 describe("ShortUrls", function() {
   it("list", function(done) {
     if (!creds.isValid) return done();
-    s2sMS.Identity.getIdentity(
+    s2sMS.Identity.login(
       creds.CPAAS_KEY,
       creds.email,
       creds.password
@@ -41,7 +41,7 @@ describe("ShortUrls", function() {
   });
   it("create / delete ", function(done) {
     if (!creds.isValid) return done();
-    s2sMS.Identity.getIdentity(
+    s2sMS.Identity.login(
       creds.CPAAS_KEY,
       creds.email,
       creds.password

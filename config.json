@@ -6,5 +6,6 @@
   "MESSAGING": "/messaging",
   "OBJECTS": "/objects",
   "LAMBDA": "/lambda-proxy",
-  "SHORTURLS": "/shorturls"
+  "SHORTURLS": "/shorturls",
+  "CONTACTS": "/contacts"
 }

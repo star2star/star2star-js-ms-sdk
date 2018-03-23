@@ -10,6 +10,7 @@ const Groups = require('./groups');
 const ShortUrls = require('./shorturls');
 const Auth = require('./auth');
 const Chat = require('./chat');
+const Contacts = require('./contacts');
 
 let cpaasKey;
 
@@ -52,4 +53,4 @@ const getApplicationKey = () =>{
 };
 
 module.exports = {Lambda, Identity, Messaging, Objects, Util, Task, Event, setBaseUrl,
-  getBaseUrl, setApplicationKey, getApplicationKey, Groups, ShortUrls, Auth, Chat };
+  getBaseUrl, setApplicationKey, getApplicationKey, Groups, ShortUrls, Auth, Chat, Contacts };

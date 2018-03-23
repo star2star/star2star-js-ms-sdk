@@ -57,45 +57,42 @@ const createEvent = (apiKey='null api key', userUUID='null user uuid', identityJ
 * This function will delete event
 *
 * @param apiKey - api key for cpaas systems
-* @param userUUID - user UUID to be used
 * @param identityJWT - identity JWT
 * @param EventObjectUUUID - event UUID
 * @returns promise
 **/
-const deleteEvent  = (apiKey='null api key', userUUID='null user uuid', identityJWT='null jwt',
+const deleteEvent  = (apiKey='null api key',identityJWT='null jwt',
                               event_uuid ="missing task uuid" ) => {
-    return Objects.deleteDataObject(apiKey, userUUID, identityJWT, event_uuid );
+    return Objects.deleteDataObject(apiKey, identityJWT, event_uuid );
 }
 
 /**
 * This function will retrieve task list
 *
 * @param apiKey - api key for cpaas systems
-* @param userUUID - user UUID to be used
 * @param identityJWT - identity JWT
 * @param uuid - UUID
 * @returns promise
 **/
-const getEvent  = (apiKey='null api key', userUUID='null user uuid', identityJWT='null jwt',
+const getEvent  = (apiKey='null api key', identityJWT='null jwt',
                               uuid='null uuid' ) => {
-    return Objects.getDataObject(apiKey, userUUID, identityJWT, uuid, true);
+    return Objects.getDataObject(apiKey, identityJWT, uuid, true);
 }
 
 /**
 * This function will update event
 *
 * @param apiKey - api key for cpaas systems
-* @param userUUID - user UUID to be used
 * @param identityJWT - identity JWT
 * @param uuid -  UUID
 * @param event_object - event object
 * @returns promise
 **/
-const updateEvent  = (apiKey='null api key', userUUID='null user uuid', identityJWT='null jwt',
+const updateEvent  = (apiKey='null api key', identityJWT='null jwt',
                               uuid="missing_uuid",  dataObj={} ) => {
     const newEvent = objectMerge(dataObj, {content: getValidEvent(dataObj.content) });
 
-    return Objects.updateDataObject(apiKey, userUUID, identityJWT, uuid, newEvent );
+    return Objects.updateDataObject(apiKey, identityJWT, uuid, newEvent );
 }
 
 module.exports = { updateEvent, getEvent, deleteEvent, createEvent, listEvents }

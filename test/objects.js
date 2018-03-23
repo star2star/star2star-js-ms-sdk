@@ -22,148 +22,166 @@ beforeEach(function() {
 describe("Objects MS", function() {
   it("All Notify DO With Good Credentials", function(done) {
     if (!creds.isValid) return done();
-    s2sMS.Identity.getIdentity(
-      creds.CPAAS_KEY,
-      creds.email,
-      creds.password
-    ).then(identityData => {
-      s2sMS.Objects.getDataObjectByType(
-        creds.CPAAS_KEY,
-        identityData.user_uuid,
-        identityData.token,
-        "all_notify_data_object",
-        false
-      )
-        .then(responseData => {
-          //console.log(identityData.token)
-          //console.log(responseData)
-          assert(responseData.items.length >= 0);
-          done();
-        })
-        .catch(x => {
-          console.error(x);
-        });
-    });
+    s2sMS.Identity.login(creds.CPAAS_KEY, creds.email, creds.password).then(
+      identityData => {
+        s2sMS.Objects.getDataObjectByType(
+          creds.CPAAS_KEY,
+          identityData.user_uuid,
+          identityData.token,
+          "all_notify_data_object",
+          false
+        )
+          .then(responseData => {
+            //console.log(identityData.token)
+            //console.log(responseData)
+            assert(responseData.items.length >= 0);
+            done();
+          })
+          .catch(x => {
+            console.error(x);
+          });
+      }
+    );
   });
   it("create Object", function(done) {
     if (!creds.isValid) return done();
-    s2sMS.Identity.getIdentity(
-      creds.CPAAS_KEY,
-      creds.email,
-      creds.password
-    ).then(identityData => {
-      s2sMS.Objects.createDataObject(
-        creds.CPAAS_KEY,
-        identityData.user_uuid,
-        identityData.token,
-        "myName",
-        "foo_bar",
-        { a: 1 }
-      ).then(responseData => {
-        //console.log(identityData.token)
-        //console.log(responseData)
-        assert(responseData.content !== null);
-        done();
-        s2sMS.Objects.deleteDataObject(
+    s2sMS.Identity.login(creds.CPAAS_KEY, creds.email, creds.password).then(
+      identityData => {
+        s2sMS.Objects.createDataObject(
           creds.CPAAS_KEY,
           identityData.user_uuid,
           identityData.token,
-          responseData.uuid
-        ).then(d => {
-          //console.log(d)
-        });
-      });
-    });
-  });
-  it("update Object", function(done) {
-    if (!creds.isValid) return done();
-    s2sMS.Identity.getIdentity(
-      creds.CPAAS_KEY,
-      creds.email,
-      creds.password
-    ).then(identityData => {
-      s2sMS.Objects.createDataObject(
-        creds.CPAAS_KEY,
-        identityData.user_uuid,
-        identityData.token,
-        "myName",
-        "foo_bar",
-        { a: 1 }
-      ).then(responseData => {
-        //console.log(responseData);
-        responseData.content.a = 2;
-        s2sMS.Objects.updateDataObject(
-          creds.CPAAS_KEY,
-          identityData.user_uuid,
-          identityData.token,
-          responseData.uuid,
-          responseData
-        ).then(upObj => {
-          //console.log(upObj);
-          assert(upObj.content.a === 2);
+          "myName",
+          "foo_bar",
+          { a: 1 }
+        ).then(responseData => {
+          //console.log(identityData.token)
+          //console.log(responseData)
+          assert(responseData.content !== null);
           done();
           s2sMS.Objects.deleteDataObject(
             creds.CPAAS_KEY,
-            identityData.user_uuid,
             identityData.token,
-            upObj.uuid
+            responseData.uuid
           ).then(d => {
             //console.log(d)
           });
         });
-      });
-    });
+      }
+    );
+  });
+  it("Get Object", function(done) {
+    if (!creds.isValid) return done();
+    s2sMS.Identity.login(creds.CPAAS_KEY, creds.email, creds.password).then(
+      identityData => {
+        s2sMS.Objects.createDataObject(
+          creds.CPAAS_KEY,
+          identityData.user_uuid,
+          identityData.token,
+          "myName",
+          "foo_bar",
+          { a: 1 }
+        ).then(responseData => {
+          s2sMS.Objects.getDataObject(
+            creds.CPAAS_KEY,
+            identityData.token,
+            responseData.uuid
+          ).then(retrievedData => {
+            assert(retrievedData.content !== null);
+            done();
+            s2sMS.Objects.deleteDataObject(
+              creds.CPAAS_KEY,
+              identityData.token,
+              responseData.uuid
+            ).then(d => {
+              //console.log(d)
+            });
+          });
+        });
+      }
+    );
+  });
+  it("update Object", function(done) {
+    if (!creds.isValid) return done();
+    s2sMS.Identity.login(creds.CPAAS_KEY, creds.email, creds.password).then(
+      identityData => {
+        s2sMS.Objects.createDataObject(
+          creds.CPAAS_KEY,
+          identityData.user_uuid,
+          identityData.token,
+          "myName",
+          "foo_bar",
+          { a: 1 }
+        ).then(responseData => {
+          //console.log(responseData);
+          responseData.content = { myContent: "bluebirds are in the sky" };
+          s2sMS.Objects.updateDataObject(
+            creds.CPAAS_KEY,
+            identityData.token,
+            responseData.uuid,
+            responseData
+          ).then(upObj => {
+            // console.log(upObj);
+            assert(upObj.content.hasOwnProperty("myContent"));
+            done();
+            s2sMS.Objects.deleteDataObject(
+              creds.CPAAS_KEY,
+              identityData.token,
+              upObj.uuid
+            ).then(d => {
+              //console.log(d)
+            });
+          });
+        });
+      }
+    );
   });
   it("getDataObjectByTypeAndName", function(done) {
     if (!creds.isValid) return done();
-    s2sMS.Identity.getIdentity(
-      creds.CPAAS_KEY,
-      creds.email,
-      creds.password
-    ).then(identityData => {
-      s2sMS.Objects.getDataObjectByTypeAndName(
-        creds.CPAAS_KEY,
-        identityData.user_uuid,
-        identityData.token,
-        "launchpad_list",
-        "Subscribers",
-        true
-      )
-        .then(responseData => {
-          //console.log(identityData.token)
-          //console.log(responseData)
-          assert(responseData.items.length > 0);
-          done();
-        })
-        .catch(x => {
-          console.error(x);
-        });
-    });
+    s2sMS.Identity.login(creds.CPAAS_KEY, creds.email, creds.password).then(
+      identityData => {
+        s2sMS.Objects.getDataObjectByTypeAndName(
+          creds.CPAAS_KEY,
+          identityData.user_uuid,
+          identityData.token,
+          "launchpad_list",
+          "Subscribers",
+          true
+        )
+          .then(responseData => {
+            //console.log(identityData.token)
+            //console.log(responseData)
+            assert(responseData.items.length > 0);
+            done();
+          })
+          .catch(x => {
+            console.error(x);
+          });
+      }
+    );
   });
   it("getDataObjectByTypeAndName dr_appt_list Appt_20180130", function(done) {
     if (!creds.isValid) return done();
-    s2sMS.Identity.getIdentity(
-      creds.CPAAS_KEY,
-      creds.email,
-      creds.password
-    ).then(identityData => {
-      s2sMS.Objects.getDataObjectByTypeAndName(
-        creds.CPAAS_KEY,
-        identityData.user_uuid,
-        identityData.token,
-        "dr_appt_list",
-        "Appt_20180130",
-        true
-      )
-        .then(responseData => {
-          //console.log(identityData.token)
-          //console.log(JSON.stringify(responseData))
-          assert(responseData.items.length > 0);
-          done();
-        })
-        .catch(x => {
-          console.error(x);
-        });
-    });
+    s2sMS.Identity.login(creds.CPAAS_KEY, creds.email, creds.password).then(
+      identityData => {
+        s2sMS.Objects.getDataObjectByTypeAndName(
+          creds.CPAAS_KEY,
+          identityData.user_uuid,
+          identityData.token,
+          "dr_appt_list",
+          "Appt_20180130",
+          true
+        )
+          .then(responseData => {
+            //console.log(identityData.token)
+            //console.log(JSON.stringify(responseData))
+            assert(responseData.items.length > 0);
+            done();
+          })
+          .catch(x => {
+            console.error(x);
+          });
+      }
+    );
   });
 });

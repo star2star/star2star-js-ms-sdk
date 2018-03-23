@@ -9,6 +9,8 @@ var creds = {
   isValid: false
 };
 
+var test_roomUUID, test_roomOwner;
+
 beforeEach(function() {
   // process.env.NODE_ENV = 'dev';
   process.env.BASE_URL = "https://cpaas.star2star.net";
@@ -22,7 +24,7 @@ beforeEach(function() {
 describe("Chat", function() {
   it("List Rooms", function(done) {
     if (!creds.isValid) return done();
-    s2sMS.Identity.getIdentity(
+    s2sMS.Identity.login(
       creds.CPAAS_KEY,
       creds.email,
       creds.password
@@ -30,19 +32,48 @@ describe("Chat", function() {
       //console.log(identityData)
       s2sMS.Chat.listRooms(
         creds.CPAAS_KEY,
-        identityData.user_uuid,
         identityData.token
       ).then(responseData => {
-        //console.log(responseData)
+        // console.log(responseData);
+        // setup for getRoom test
+        test_roomUUID =
+          responseData.data.length > 0 ? responseData.data[0].uuid : undefined;
+        test_roomOwner =
+          responseData.data.length > 0
+            ? responseData.data[0].owner_uuid
+            : undefined;
+        // console.log("TTTTTTTT", test_roomUUID, test_roomOwner);
         console.log("number of rooms are: " + responseData.data.length);
         assert(responseData.data);
         done();
       });
     });
   });
+  it("Get Room", function(done) {
+    if (!creds.isValid && test_roomUUID !== undefined) return done();
+    s2sMS.Identity.login(
+      creds.CPAAS_KEY,
+      creds.email,
+      creds.password
+    ).then(identityData => {
+      s2sMS.Chat.getRoom(
+        creds.CPAAS_KEY,
+        identityData.token,
+        test_roomUUID
+      ).then(roomData => {
+        // console.log("Got Room Data", roomData);
+        assert(
+          roomData.uuid === test_roomUUID &&
+            roomData.owner_uuid === test_roomOwner
+        );
+        done();
+      });
+    });
+  });
+
   it("Create Room / Delete", function(done) {
     if (!creds.isValid) return done();
-    s2sMS.Identity.getIdentity(
+    s2sMS.Identity.login(
       creds.CPAAS_KEY,
       creds.email,
       creds.password
@@ -50,13 +81,13 @@ describe("Chat", function() {
       //console.log(identityData)
       s2sMS.Groups.createGroup(
         creds.CPAAS_KEY,
-        identityData.user_uuid,
         identityData.token,
         "foo",
         "desc",
         "footype",
         []
       ).then(groupData => {
+        // console.log('GroupData', groupData);
         s2sMS.Chat.createRoom(
           creds.CPAAS_KEY,
           identityData.user_uuid,
@@ -68,7 +99,7 @@ describe("Chat", function() {
           identityData.account_uuid,
           { foo: "bar" }
         ).then(roomData => {
-          //console.log('>>>>', roomData)
+          // console.log('roomData >>>>', roomData)
           assert(
             roomData.name === "name" &&
               roomData.topic === "topic" &&
@@ -76,19 +107,17 @@ describe("Chat", function() {
               roomData.owner_uuid === identityData.user_uuid &&
               roomData.group_uuid === groupData.uuid &&
               roomData.account_uuid === identityData.account_uuid
-          );
+        );
           done();
           s2sMS.Chat.deleteRoom(
             creds.CPAAS_KEY,
-            identityData.user_uuid,
             identityData.token,
             roomData.uuid
           ).then(x => {});
           s2sMS.Groups.deleteGroup(
             creds.CPAAS_KEY,
-            identityData.user_uuid,
+            groupData.uuid,
             identityData.token,
-            groupData.uuid
           ).then(d => {});
         });
       }); // end create group
@@ -97,7 +126,7 @@ describe("Chat", function() {
 
   it("Modify Room Info", function(done) {
     if (!creds.isValid) return done();
-    s2sMS.Identity.getIdentity(
+    s2sMS.Identity.login(
       creds.CPAAS_KEY,
       creds.email,
       creds.password
@@ -105,7 +134,6 @@ describe("Chat", function() {
       //console.log(identityData)
       s2sMS.Groups.createGroup(
         creds.CPAAS_KEY,
-        identityData.user_uuid,
         identityData.token,
         "foo",
         "desc",
@@ -149,29 +177,25 @@ describe("Chat", function() {
               done();
               s2sMS.Chat.deleteRoom(
                 creds.CPAAS_KEY,
-                identityData.user_uuid,
                 identityData.token,
                 roomData.uuid
               ).then(x => {});
               s2sMS.Groups.deleteGroup(
                 creds.CPAAS_KEY,
-                identityData.user_uuid,
-                identityData.token,
-                groupData.uuid
+                groupData.uuid,
+                identityData.token
               ).then(d => {});
             })
             .catch(() => {
               s2sMS.Chat.deleteRoom(
                 creds.CPAAS_KEY,
-                identityData.user_uuid,
                 identityData.token,
                 roomData.uuid
               ).then(x => {});
               s2sMS.Groups.deleteGroup(
                 creds.CPAAS_KEY,
-                identityData.user_uuid,
-                identityData.token,
-                groupData.uuid
+                groupData.uuid,
+                identityData.token
               ).then(d => {});
             }); // end update room info
         }); //end create room
@@ -181,7 +205,7 @@ describe("Chat", function() {
 
   it("Modify Room Metadata ", function(done) {
     if (!creds.isValid) return done();
-    s2sMS.Identity.getIdentity(
+    s2sMS.Identity.login(
       creds.CPAAS_KEY,
       creds.email,
       creds.password
@@ -189,7 +213,6 @@ describe("Chat", function() {
       //console.log(identityData)
       s2sMS.Groups.createGroup(
         creds.CPAAS_KEY,
-        identityData.user_uuid,
         identityData.token,
         "foo",
         "desc",
@@ -226,15 +249,13 @@ describe("Chat", function() {
               done();
               s2sMS.Chat.deleteRoom(
                 creds.CPAAS_KEY,
-                identityData.user_uuid,
                 identityData.token,
                 roomData.uuid
               ).then(x => {});
               s2sMS.Groups.deleteGroup(
                 creds.CPAAS_KEY,
-                identityData.user_uuid,
-                identityData.token,
-                groupData.uuid
+                groupData.uuid,
+                identityData.token
               ).then(d => {});
             })
             .catch(xError => {
@@ -243,15 +264,13 @@ describe("Chat", function() {
               done();
               s2sMS.Chat.deleteRoom(
                 creds.CPAAS_KEY,
-                identityData.user_uuid,
                 identityData.token,
                 roomData.uuid
               ).then(x => {});
               s2sMS.Groups.deleteGroup(
                 creds.CPAAS_KEY,
-                identityData.user_uuid,
-                identityData.token,
-                groupData.uuid
+                groupData.uuid,
+                identityData.token
               ).then(d => {});
             }); // end update room info
         }); //end create room
@@ -261,7 +280,7 @@ describe("Chat", function() {
 
   it("Modify Room Metadata which had old metadata ", function(done) {
     if (!creds.isValid) return done();
-    s2sMS.Identity.getIdentity(
+    s2sMS.Identity.login(
       creds.CPAAS_KEY,
       creds.email,
       creds.password
@@ -269,7 +288,6 @@ describe("Chat", function() {
       //console.log(identityData)
       s2sMS.Groups.createGroup(
         creds.CPAAS_KEY,
-        identityData.user_uuid,
         identityData.token,
         "foo",
         "desc",
@@ -306,15 +324,13 @@ describe("Chat", function() {
               done();
               s2sMS.Chat.deleteRoom(
                 creds.CPAAS_KEY,
-                identityData.user_uuid,
                 identityData.token,
                 roomData.uuid
               ).then(x => {});
               s2sMS.Groups.deleteGroup(
                 creds.CPAAS_KEY,
-                identityData.user_uuid,
+                groupData.uuid,
                 identityData.token,
-                groupData.uuid
               ).then(d => {});
             })
             .catch(xError => {
@@ -323,15 +339,13 @@ describe("Chat", function() {
               done();
               s2sMS.Chat.deleteRoom(
                 creds.CPAAS_KEY,
-                identityData.user_uuid,
                 identityData.token,
                 roomData.uuid
               ).then(x => {});
               s2sMS.Groups.deleteGroup(
                 creds.CPAAS_KEY,
-                identityData.user_uuid,
-                identityData.token,
-                groupData.uuid
+                groupData.uuid,
+                identityData.token
               ).then(d => {});
             }); // end update room info
         }); //end create room
@@ -343,7 +357,7 @@ describe("Chat", function() {
   let idData;
   it("add Member To Room", function(done) {
     if (!creds.isValid) return done();
-    s2sMS.Identity.getIdentity(
+    s2sMS.Identity.login(
       creds.CPAAS_KEY,
       creds.email,
       creds.password
@@ -352,7 +366,6 @@ describe("Chat", function() {
       idData = identityData;
       s2sMS.Groups.createGroup(
         creds.CPAAS_KEY,
-        identityData.user_uuid,
         identityData.token,
         "foo",
         "desc",
@@ -384,7 +397,7 @@ describe("Chat", function() {
               done();
             })
             .catch(xError => {
-              console.log("xxxxx", xError);
+              console.log("xxxxxaddMemberToRoom", xError);
               assert(false);
               done();
             }); // end update room info
@@ -407,7 +420,7 @@ describe("Chat", function() {
         done();
       })
       .catch(xError => {
-        console.log("xxxxx", xError);
+        console.log("xxxxxgetRoomMembers", xError);
         assert(false);
         done();
       }); // end update room info
@@ -428,7 +441,7 @@ describe("Chat", function() {
         done();
       })
       .catch(xError => {
-        console.log("xxxxx", xError);
+        console.log("xxxxxsendMessage", xError);
         assert(false);
         done();
       }); // end update room info
@@ -438,7 +451,6 @@ describe("Chat", function() {
     if (!creds.isValid) return done();
     s2sMS.Chat.getMessages(
       creds.CPAAS_KEY,
-      idData.user_uuid,
       idData.token,
       roomStuf.uuid
     )
@@ -448,11 +460,35 @@ describe("Chat", function() {
         done();
       })
       .catch(xError => {
-        console.log("xxxxx", xError);
+        console.log("xxxxxgetMessages", xError);
         assert(false);
         done();
       }); // end update room info
   }); // end it
+
+  it("get room info (data, members, messages)", function(done){
+    if (!creds.isValid) return done();
+    s2sMS.Chat.getRoomInfo(
+      creds.CPAAS_KEY,
+      idData.token,
+      roomStuf.uuid
+    ).then(roomInfo => {
+      // console.log('RoomInfo', JSON.stringify(roomInfo));
+      assert( roomInfo.info.uuid === roomStuf.uuid &&
+              roomInfo.info.owner_uuid === idData.user_uuid &&
+              roomInfo.members.length === 1 &&
+              roomInfo.messages.length === 1 &&
+              roomInfo.messages[0].content.content === 'test'
+            );
+      done();
+    }).catch(xError => {
+      console.log('xxxxxgetRoomInfo', xError);
+      done(xError);
+    });
+
+
+  });
+
 
   it("delete a  Member", function(done) {
     if (!creds.isValid) return done();
@@ -483,15 +519,13 @@ describe("Chat", function() {
                 done();
                 s2sMS.Chat.deleteRoom(
                   creds.CPAAS_KEY,
-                  idData.user_uuid,
                   idData.token,
                   roomStuf.uuid
                 );
                 s2sMS.Groups.deleteGroup(
                   creds.CPAAS_KEY,
-                  idData.user_uuid,
-                  idData.token,
-                  roomStuf.group_uuid
+                  roomStuf.group_uuid,
+                  idData.token
                 );
               })
               .catch(e => {
@@ -500,7 +534,6 @@ describe("Chat", function() {
                 done();
                 s2sMS.Chat.deleteRoom(
                   creds.CPAAS_KEY,
-                  idData.user_uuid,
                   idData.token,
                   roomStuf.uuid
                 );
@@ -518,7 +551,6 @@ describe("Chat", function() {
             done();
             s2sMS.Chat.deleteRoom(
               creds.CPAAS_KEY,
-              idData.user_uuid,
               idData.token,
               roomStuf.uuid
             );
@@ -536,7 +568,6 @@ describe("Chat", function() {
         done();
         s2sMS.Chat.deleteRoom(
           creds.CPAAS_KEY,
-          idData.user_uuid,
           idData.token,
           roomStuf.uuid
         ).then(x => {});

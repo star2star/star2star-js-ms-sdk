@@ -25,7 +25,7 @@ describe("Auth MS", function() {
       const err = new Error("Valid credentials must be provided");
       return done(err);
     }
-    s2sMS.Identity.getIdentity(
+    s2sMS.Identity.login(
       creds.CPAAS_KEY,
       creds.email,
       creds.password
@@ -44,7 +44,7 @@ describe("Auth MS", function() {
   });
   it("list permissions with resource type ", function(done) {
     if (!creds.isValid) return done();
-    s2sMS.Identity.getIdentity(
+    s2sMS.Identity.login(
       creds.CPAAS_KEY,
       creds.email,
       creds.password
@@ -67,7 +67,7 @@ describe("Auth MS", function() {
       const err = new Error("Valid credentials must be provided");
       return done(err);
     }
-    s2sMS.Identity.getIdentity(
+    s2sMS.Identity.login(
       creds.CPAAS_KEY,
       creds.email,
       creds.password
@@ -91,7 +91,7 @@ describe("Auth MS", function() {
       const err = new Error("Valid credentials must be provided");
       return done(err);
     }
-    s2sMS.Identity.getIdentity(
+    s2sMS.Identity.login(
       creds.CPAAS_KEY,
       creds.email,
       creds.password
@@ -116,7 +116,7 @@ describe("Auth MS", function() {
       const err = new Error("Valid credentials must be provided");
       return done(err);
     }
-    s2sMS.Identity.getIdentity(
+    s2sMS.Identity.login(
       creds.CPAAS_KEY,
       creds.email,
       creds.password
@@ -141,7 +141,7 @@ describe("Auth MS", function() {
       const err = new Error("Valid credentials must be provided");
       return done(err);
     }
-    s2sMS.Identity.getIdentity(
+    s2sMS.Identity.login(
       creds.CPAAS_KEY,
       creds.email,
       creds.password
@@ -166,7 +166,7 @@ describe("Auth MS", function() {
       const err = new Error("Valid credentials must be provided");
       return done(err);
     }
-    s2sMS.Identity.getIdentity(
+    s2sMS.Identity.login(
       creds.CPAAS_KEY,
       creds.email,
       creds.password
@@ -191,7 +191,7 @@ describe("Auth MS", function() {
       const err = new Error("Valid credentials must be provided");
       return done(err);
     }
-    s2sMS.Identity.getIdentity(
+    s2sMS.Identity.login(
       creds.CPAAS_KEY,
       creds.email,
       creds.password
@@ -216,7 +216,7 @@ describe("Auth MS", function() {
       const err = new Error("Valid credentials must be provided");
       return done(err);
     }
-    s2sMS.Identity.getIdentity(
+    s2sMS.Identity.login(
       creds.CPAAS_KEY,
       creds.email,
       creds.password

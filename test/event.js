@@ -22,7 +22,7 @@ beforeEach(function() {
 describe("Event", function() {
   it("list Events ", function(done) {
     if (!creds.isValid) return done();
-    s2sMS.Identity.getIdentity(
+    s2sMS.Identity.login(
       creds.CPAAS_KEY,
       creds.email,
       creds.password
@@ -41,7 +41,7 @@ describe("Event", function() {
   });
   it("Create, update and  Delete Event", function(done) {
     if (!creds.isValid) return done();
-    s2sMS.Identity.getIdentity(
+    s2sMS.Identity.login(
       creds.CPAAS_KEY,
       creds.email,
       creds.password
@@ -53,22 +53,19 @@ describe("Event", function() {
         "title",
         { a: 1, b: 2 }
       ).then(responseData => {
-        //console.log('1111 %j', responseData);
+        // console.log('1111 %j', responseData);
         responseData.name = "james";
-
         s2sMS.Event.updateEvent(
           creds.CPAAS_KEY,
-          identityData.user_uuid,
           identityData.token,
           responseData.uuid,
           responseData
         ).then(updatedData => {
-          //console.log('----- %j', updatedData)
+          // console.log('----- %j', updatedData)
           assert(updatedData.name === "james");
           done();
           s2sMS.Event.deleteEvent(
             creds.CPAAS_KEY,
-            identityData.user_uuid,
             identityData.token,
             updatedData.uuid
           ).then(d => {
@@ -80,7 +77,7 @@ describe("Event", function() {
   });
   it("Create and Get / Delete ", function(done) {
     if (!creds.isValid) return done();
-    s2sMS.Identity.getIdentity(
+    s2sMS.Identity.login(
       creds.CPAAS_KEY,
       creds.email,
       creds.password
@@ -95,7 +92,6 @@ describe("Event", function() {
         //console.log('1111 %j', responseData);
         s2sMS.Event.getEvent(
           creds.CPAAS_KEY,
-          identityData.user_uuid,
           identityData.token,
           responseData.uuid
         ).then(getData => {
@@ -103,7 +99,6 @@ describe("Event", function() {
           done();
           s2sMS.Event.deleteEvent(
             creds.CPAAS_KEY,
-            identityData.user_uuid,
             identityData.token,
             responseData.uuid
           ).then(d => {

@@ -1,17 +1,12 @@
 {
   "name": "star2star-js-ms-sdk",
-  "version": "2.0.2",
+  "version": "2.0.3",
   "description": "Star2Star JavaScript Micro Service SDK",
   "main": "index.js",
   "scripts": {
     "test": "mocha --timeout 10000"
   },
-  "keywords": [
-    "micro service",
-    "sdk",
-    "ms",
-    "js"
-  ],
+  "keywords": ["micro service", "sdk", "ms", "js"],
   "author": "James Schimmoeller",
   "license": "Apache 2.0",
   "dependencies": {
@@ -21,6 +16,9 @@
   },
   "devDependencies": {
     "assert": "^1.4.1",
+    "babel-eslint": "^8.2.2",
+    "eslint": "^4.19.0",
+    "eslint-plugin-react": "^7.7.0",
     "mocha": "^4.0.1"
   },
   "publishConfig": {
