@@ -1,3 +1,4 @@
+/* global require module*/
 "use strict";
 const util = require("./utilities");
 const request = require("request-promise");
@@ -75,7 +76,9 @@ const getDataObjectByType = (
           }
         });
 
-        resolve({ items: returnItems });
+        resolve({
+          items: returnItems
+        });
       })
       .catch(pError => {
         reject(pError);
@@ -157,7 +160,9 @@ const getDataObjectByTypeAndName = (
           }
         });
 
-        resolve({ items: returnItems });
+        resolve({
+          items: returnItems
+        });
       })
       .catch(pError => {
         reject(pError);
@@ -207,6 +212,7 @@ const createUserDataObject = (
   identityJWT = "null jwt",
   objectName,
   objectType,
+  objectDescription,
   content = {}
 ) => {
   const MS = util.getEndpoint("objects");
@@ -214,6 +220,7 @@ const createUserDataObject = (
   const b = {
     name: objectName,
     type: objectType,
+    description: objectDescription,
     content_type: "application/json",
     content: content
   };

@@ -9,7 +9,7 @@ var creds = {
   isValid: false
 };
 
-beforeEach(function() {
+beforeEach(function () {
   // process.env.NODE_ENV = 'dev';
   process.env.BASE_URL = "https://cpaas.star2star.net";
   // file system uses full path so will do it like this
@@ -19,8 +19,8 @@ beforeEach(function() {
   }
 });
 
-describe("Auth MS", function() {
-  it("list permissions", function(done) {
+describe("Auth MS", function () {
+  it("list permissions", function (done) {
     if (!creds.isValid) {
       const err = new Error("Valid credentials must be provided");
       return done(err);
@@ -42,7 +42,7 @@ describe("Auth MS", function() {
       });
     });
   });
-  it("list permissions with resource type ", function(done) {
+  it("list permissions with resource type ", function (done) {
     if (!creds.isValid) return done();
     s2sMS.Identity.login(
       creds.CPAAS_KEY,
@@ -62,7 +62,7 @@ describe("Auth MS", function() {
       });
     });
   });
-  it("list permissions with resource type with scope ", function(done) {
+  it("list permissions with resource type with scope ", function (done) {
     if (!creds.isValid) {
       const err = new Error("Valid credentials must be provided");
       return done(err);
@@ -86,7 +86,7 @@ describe("Auth MS", function() {
       });
     });
   });
-  it("list permissions with resource type with scope and action ", function(done) {
+  it("list permissions with resource type with scope and action ", function (done) {
     if (!creds.isValid) {
       const err = new Error("Valid credentials must be provided");
       return done(err);
@@ -102,8 +102,7 @@ describe("Auth MS", function() {
         identityData.user_uuid,
         identityData.token,
         "object",
-        "global",
-        ["read"]
+        "global", ["read"]
       ).then(responseData => {
         //console.log('rrrrrr %j', responseData )
         assert(responseData.length >= 0);
@@ -111,7 +110,7 @@ describe("Auth MS", function() {
       });
     });
   });
-  it("get Specific Permissions  ", function(done) {
+  it("get Specific Permissions  ", function (done) {
     if (!creds.isValid) {
       const err = new Error("Valid credentials must be provided");
       return done(err);
@@ -127,8 +126,7 @@ describe("Auth MS", function() {
         identityData.user_uuid,
         identityData.token,
         "object",
-        "global",
-        ["read"]
+        "global", ["read"]
       ).then(responseData => {
         //console.log('rrrrrr %j', responseData )
         assert(responseData.length === 1);
@@ -136,7 +134,7 @@ describe("Auth MS", function() {
       });
     });
   });
-  it("get Specific Permissions  multiple ", function(done) {
+  it("get Specific Permissions  multiple ", function (done) {
     if (!creds.isValid) {
       const err = new Error("Valid credentials must be provided");
       return done(err);
@@ -152,8 +150,7 @@ describe("Auth MS", function() {
         identityData.user_uuid,
         identityData.token,
         "object",
-        "global",
-        ["read", "list"]
+        "global", ["read", "list"]
       ).then(responseData => {
         //console.log('rrrrrr %j', responseData )
         assert(responseData.length === 2);
@@ -161,7 +158,7 @@ describe("Auth MS", function() {
       });
     });
   });
-  it("get Specific Permissions invalid action", function(done) {
+  it("get Specific Permissions invalid action", function (done) {
     if (!creds.isValid) {
       const err = new Error("Valid credentials must be provided");
       return done(err);
@@ -177,8 +174,7 @@ describe("Auth MS", function() {
         identityData.user_uuid,
         identityData.token,
         "object",
-        "global",
-        ["foo"]
+        "global", ["foo"]
       ).catch(errorData => {
         //console.log('rrrrrr %j', errorData )
         assert(errorData.indexOf("actions must be an array") > -1);
@@ -186,7 +182,7 @@ describe("Auth MS", function() {
       });
     });
   });
-  it("get Specific Permissions invalid resouce_type", function(done) {
+  it("get Specific Permissions invalid resouce_type", function (done) {
     if (!creds.isValid) {
       const err = new Error("Valid credentials must be provided");
       return done(err);
@@ -202,8 +198,7 @@ describe("Auth MS", function() {
         identityData.user_uuid,
         identityData.token,
         "bad",
-        "global",
-        ["foo"]
+        "global", ["foo"]
       ).catch(errorData => {
         //console.log('rrrrrr %j', errorData )
         assert(errorData.indexOf("resource_type must be") > -1);
@@ -211,7 +206,7 @@ describe("Auth MS", function() {
       });
     });
   });
-  it("get Specific Permissions invalid scope", function(done) {
+  it("get Specific Permissions invalid scope", function (done) {
     if (!creds.isValid) {
       const err = new Error("Valid credentials must be provided");
       return done(err);
@@ -227,8 +222,7 @@ describe("Auth MS", function() {
         identityData.user_uuid,
         identityData.token,
         "object",
-        "x",
-        ["foo"]
+        "x", ["foo"]
       ).catch(errorData => {
         //console.log('rrrrrr %j', errorData )
         assert(errorData.indexOf("scope must be") > -1);

@@ -1,3 +1,4 @@
+/*global module require */
 "use strict";
 const util = require("./utilities");
 const request = require("request-promise");
@@ -172,7 +173,7 @@ const listAccounts = (apiKey = "null api key") => {
  * @param includeIdentities - boolean to include identities in account or not
  * @returns promise resolving to an identity data
  **/
-const getAccount = (apiKey = "null api key", accountUUID = "null account uuid", includeIdentities=false) => {
+const getAccount = (apiKey = "null api key", accountUUID = "null account uuid", includeIdentities = false) => {
   const MS = util.getEndpoint("identity");
   const requestOptions = {
     method: "GET",

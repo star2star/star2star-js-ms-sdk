@@ -1,3 +1,4 @@
+/* global require module*/
 "use strict";
 const request = require("request-promise");
 const utilities = require("./utilities");
@@ -11,7 +12,11 @@ const objectMerge = require("object-merge");
  * @returns object - containing status, message and tasks
  **/
 const validateTasks = (tasks = []) => {
-  const rStatus = { status: 200, message: "valid", tasks: [].concat(tasks) };
+  const rStatus = {
+    status: 200,
+    message: "valid",
+    tasks: [].concat(tasks)
+  };
   //console.log(rStatus, tasks)
   if (tasks.length <= 0) {
     return rStatus;
@@ -85,8 +90,9 @@ const createTaskTemplate = (
       userUUID,
       identityJWT,
       title,
-      "task_template",
-      { tasks: vTasks.tasks }
+      "task_template", {
+        tasks: vTasks.tasks
+      }
     );
   } else {
     return Promise.reject(vTasks);
@@ -132,8 +138,9 @@ const createTaskObject = (
       userUUID,
       identityJWT,
       title,
-      "task_list",
-      { tasks: vTasks.tasks }
+      "task_list", {
+        tasks: vTasks.tasks
+      }
     );
   } else {
     return Promise.reject(vTasks);

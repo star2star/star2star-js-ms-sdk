@@ -53,6 +53,7 @@ describe("Objects MS", function() {
           identityData.token,
           "myName",
           "foo_bar",
+          "the description",
           { a: 1 }
         ).then(responseData => {
           //console.log(identityData.token)
@@ -80,6 +81,7 @@ describe("Objects MS", function() {
           identityData.token,
           "myName",
           "foo_bar",
+          "the description",
           { a: 1 }
         ).then(responseData => {
           s2sMS.Objects.getDataObject(
@@ -111,6 +113,7 @@ describe("Objects MS", function() {
           identityData.token,
           "myName",
           "foo_bar",
+          "the description",
           { a: 1 }
         ).then(responseData => {
           //console.log(responseData);
@@ -136,6 +139,7 @@ describe("Objects MS", function() {
       }
     );
   });
+  // TODO replace this test since it depends on an object existing that is not in test scope
   it("getDataObjectByTypeAndName", function(done) {
     if (!creds.isValid) return done();
     s2sMS.Identity.login(creds.CPAAS_KEY, creds.email, creds.password).then(
@@ -160,6 +164,7 @@ describe("Objects MS", function() {
       }
     );
   });
+  // TODO replace this test since it depends on an object existing that is not in test scope
   it("getDataObjectByTypeAndName dr_appt_list Appt_20180130", function(done) {
     if (!creds.isValid) return done();
     s2sMS.Identity.login(creds.CPAAS_KEY, creds.email, creds.password).then(

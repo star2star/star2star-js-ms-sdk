@@ -1,8 +1,8 @@
+/*global require module*/
 "use strict";
 const util = require("./utilities");
 const Groups = require("./groups");
 const request = require("request-promise");
-const ObjectMerge = require("object-merge");
 
 //create room
 /**
@@ -77,7 +77,7 @@ const listRooms = (
     method: "GET",
     uri: `${MS}/rooms`,
     headers: {
-      "application-key": apiKey,
+      // "application-key": apiKey,
       "Content-type": "application/json",
       Authorization: `Bearer ${identityJWT}`
     },
@@ -411,20 +411,24 @@ const getRoomInfo = (
   roomUUID = "no room uuid specified",
   max = 1000
 ) => {
-  return new Promise ((resolve, reject)=>{
+  return new Promise((resolve, reject) => {
     const pInfo = getRoom(apiKey, identityJWT, roomUUID);
-    const pMessages = getMessages(apiKey,identityJWT, roomUUID, max);
+    const pMessages = getMessages(apiKey, identityJWT, roomUUID, max);
 
-    Promise.all([pInfo, pMessages]).then((pData)=>{
+    Promise.all([pInfo, pMessages]).then((pData) => {
       // get group data
       Groups.getGroup(apiKey, pData[0].group_uuid, identityJWT)
-        .then((groupData)=>{
-          resolve({ "info": pData[0], "members": groupData.members, "messages": pData[1].data});
-        }).catch((groupError)=>{
+        .then((groupData) => {
+          resolve({
+            "info": pData[0],
+            "members": groupData.members,
+            "messages": pData[1].data
+          });
+        }).catch((groupError) => {
           console.log('##### Group Error in getRoomInfo', groupError);
           reject(groupError);
         });
-    }).catch((error)=>{
+    }).catch((error) => {
       console.log('##### Error getRoomInfo', error);
       reject(error);
     });

@@ -1,3 +1,4 @@
+/* global require module*/
 "use strict";
 const request = require("request-promise");
 const util = require("./utilities");
@@ -78,7 +79,7 @@ const getGroup = (
 const deleteGroup = (
   apiKey = "null api key",
   groupUUID = "not specified",
-  identityJWT = "null jwt",
+  identityJWT = "null jwt"
 ) => {
   const MS = util.getEndpoint("groups");
 
@@ -173,10 +174,44 @@ const updateGroup = (
   return request(requestOptions);
 };
 
+/**
+ * This function will add users to a user group
+ *
+ * @param apiKey - api key for cpaas systems
+ * @param identityJWT - identity JWT
+ * @param userUUID - user UUID to be used
+ * @param groupUUID - data object UUID
+ * @param members - array of objects containing 'uuid' (for known users)
+ * @returns data
+ **/
+const addMembersToGroup = (
+  apiKey = "null api key",
+  identityJWT = "null jwt",
+  groupUUID = "group uuid not specified",
+  members = []
+) => {
+  const MS = util.getEndpoint("groups");
+
+  const requestOptions = {
+    method: "POST",
+    uri: `${MS}/groups/${groupUUID}/members`,
+    body: members,
+    headers: {
+      "application-key": apiKey,
+      "Content-type": "application/json",
+      Authorization: `Bearer ${identityJWT}`
+    },
+    json: true
+  };
+  // console.log("request options", JSON.stringify(requestOptions));
+  return request(requestOptions);
+};
+
 module.exports = {
   listGroups,
   getGroup,
   deleteGroup,
   createGroup,
-  updateGroup
+  updateGroup,
+  addMembersToGroup
 };
