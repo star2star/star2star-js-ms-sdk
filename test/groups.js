@@ -9,9 +9,8 @@ var creds = {
   isValid: false
 };
 
-beforeEach(function() {
-  //process.env.NODE_ENV = 'dev';
-  process.env.BASE_URL = "https://cpaas.star2star.net";
+beforeEach(function () {
+  s2sMS.setMsHost("https://cpaas.star2starglobal.net");
   // file system uses full path so will do it like this
   if (fs.existsSync("./test/credentials.json")) {
     // do not need test folder here
@@ -19,8 +18,8 @@ beforeEach(function() {
   }
 });
 
-describe("Groups", function() {
-  it("List Groups", function(done) {
+describe("Groups", function () {
+  it("List Groups", function (done) {
     if (!creds.isValid) return done();
     s2sMS.Identity.login(creds.CPAAS_KEY, creds.email, creds.password).then(
       identityData => {
@@ -37,12 +36,14 @@ describe("Groups", function() {
       }
     );
   });
-  it("List Groups with filter", function(done) {
+  it("List Groups with filter", function (done) {
     if (!creds.isValid) return done();
     s2sMS.Identity.login(creds.CPAAS_KEY, creds.email, creds.password).then(
       identityData => {
         //console.log(identityData)
-        const filter = { group_type: "x" };
+        const filter = {
+          group_type: "x"
+        };
         s2sMS.Groups.listGroups(
           creds.CPAAS_KEY,
           identityData.token,
@@ -56,24 +57,23 @@ describe("Groups", function() {
     );
   });
 
-  it("Create /  Delete Group ", function(done) {
+  it("Create /  Delete Group ", function (done) {
     if (!creds.isValid) return done();
     s2sMS.Identity.login(creds.CPAAS_KEY, creds.email, creds.password).then(
       identityData => {
         /*
-      * @param name - String group Name
-      * @param description - description
-      * @param groupType = string group type
-      * @param members - array of type, uuid,
-      * @param accountUUID - account uuid optional
-      */
+         * @param name - String group Name
+         * @param description - description
+         * @param groupType = string group type
+         * @param members - array of type, uuid,
+         * @param accountUUID - account uuid optional
+         */
         s2sMS.Groups.createGroup(
           creds.CPAAS_KEY,
           identityData.token,
           "foo",
           "desc",
-          "footype",
-          []
+          "footype", []
         ).then(responseData => {
           //console.log(identityData.token)
           //console.log(responseData)
@@ -89,7 +89,7 @@ describe("Groups", function() {
     );
   });
 
-  it("Create, update and  Delete Group", function(done) {
+  it("Create, update and  Delete Group", function (done) {
     if (!creds.isValid) return done();
     s2sMS.Identity.login(creds.CPAAS_KEY, creds.email, creds.password).then(
       identityData => {
@@ -98,8 +98,7 @@ describe("Groups", function() {
           identityData.token,
           "foo",
           "desc",
-          "footype",
-          []
+          "footype", []
         ).then(responseData => {
           // console.log(responseData);
           responseData.name = "james";
@@ -124,7 +123,7 @@ describe("Groups", function() {
       }
     );
   });
-  it("Create, get and  Delete Group", function(done) {
+  it("Create, get and  Delete Group", function (done) {
     if (!creds.isValid) return done();
     s2sMS.Identity.login(creds.CPAAS_KEY, creds.email, creds.password).then(
       identityData => {
@@ -133,8 +132,7 @@ describe("Groups", function() {
           identityData.token,
           "foo",
           "desc",
-          "footype",
-          []
+          "footype", []
         ).then(responseData => {
           //console.log(responseData);
           s2sMS.Groups.getGroup(
@@ -156,7 +154,7 @@ describe("Groups", function() {
       }
     );
   });
-  it("Create, Add Members and  Delete Group", function(done) {
+  it("Create, Add Members and  Delete Group", function (done) {
     if (!creds.isValid) return done();
     s2sMS.Identity.login(creds.CPAAS_KEY, creds.email, creds.password).then(
       identityData => {
@@ -166,11 +164,12 @@ describe("Groups", function() {
           identityData.token,
           "foo",
           "desc",
-          "footype",
-          []
+          "footype", []
         ).then(responseData => {
           // console.log("responseData group uuid", responseData.uuid);
-          const testMembers = [{ uuid: identityData.user_uuid }];
+          const testMembers = [{
+            uuid: identityData.user_uuid
+          }];
           s2sMS.Groups.addMembersToGroup(
             creds.CPAAS_KEY,
             identityData.token,
@@ -180,8 +179,8 @@ describe("Groups", function() {
             // console.log("resolved -- add members %j", respData);
             assert(
               respData.total_members === 1 &&
-                respData.members[0].type === "user" &&
-                respData.members[0].uuid === identityData.user_uuid
+              respData.members[0].type === "user" &&
+              respData.members[0].uuid === identityData.user_uuid
             );
             done();
             s2sMS.Groups.deleteGroup(

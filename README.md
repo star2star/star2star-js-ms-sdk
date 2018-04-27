@@ -11,7 +11,11 @@ npm install star2star-js-ms-sdk --save
 ```javascript
 import s2sMS from "star2star-js-ms-sdk";
 
-s2sMS.setBaseUrl("https://cpaas.star2star.net");
+
+// You need to set base Url if you want to specify another endpoint than production(https://cpaas.star2star.com/api) 
+
+// This is the endpoint for development
+s2sMS.setMsHost("https://cpaas.star2starglobal.net");
 
 s2sMS.Identity.login(creds.CPAAS_KEY, creds.email, creds.password)
   .then(data => {
@@ -22,10 +26,103 @@ s2sMS.Identity.login(creds.CPAAS_KEY, creds.email, creds.password)
   });
 ```
 
+## Methods
+
+### Identity Microservice
+
+### **createIdentity** - creates a new user
+    
+- #### **Parameters**:
+
+  - Identity API Key: Provisioned key for organization to access Identity microservice   
+  - email: Email address of the new user
+  - identity_type_name: String with value 'guest'. TODO when is 'user' value valid?
+  - password: password string that user will use to authenticate to microservices.  Currently no rules for length/content TODO - will there be password rules?
+
+- #### **Returns**:
+  
+    A javascript promise that resolves into a create identity response object
+
+- #### **Usage**:
+
+    s2sMS.Identity.createIdentity()
+
+
+### **deleteIdentity** - Deletes the user object matching the user_uuid submitted 
+
+- #### **Parameters**:
+  - Identity API Key: Provisioned key for organization to access Identity microservice   
+  - userUuid: uuid for user to be deleted
+
+- #### **Returns**:
+    A javascript promise that resolves to a response status of 204
+
+- #### **Usage**:
+   s2sMS.Identity.deleteIdentity()
+
+
+### **login** - calls the identity microservice with the credentials provided.  If credentials are valid, response will contain user_uuid and other user details.
+
+- #### **Parameters**:
+  - Identity API Key: Provisioned key for organization to access Identity microservice   
+  - email: Email address of the user to login
+  - password: password string for authenticating user 
+
+- #### **Returns**:
+  
+    A javascript promise that resolves to identity user details
+
+- #### **Usage**:
+
+    s2sMS.Identity.login()
+
+
+### **lookupIdentity** - Retrieves identity details for submitted email in items array.  If no match exists, items array will be empty.
+
+- #### **Parameters**:
+  - Identity API Key: Provisioned key for organization to access Identity microservice   
+  - email: Email address of the user to lookup
+
+- #### **Returns**:
+  
+    A javascript promise that resolves to identity user lookup details
+
+- #### **Usage**:
+
+    s2sMS.Identity.lookupIdentity()
+
+###  **listAccounts** - retrieves list of accounts
+- #### **Parameters**:
+  - Identity API Key: Provisioned key for organization to access Identity microservice   
+
+- #### **Returns**:
+  
+    A javascript promise that resolves to list of accounts
+
+- #### **Usage**:
+
+    s2sMS.Identity.listAccounts()
+
+
+### **getAccount** - Retrieves account information for submitted accountUuid
+- #### **Parameters**:
+  - Identity API Key: Provisioned key for organization to access Identity microservice   
+  - accountUuid: uuid for the requested account
+
+- #### **Returns**:
+  
+    A javascript promise that resolves to object with requested account info
+
+- #### **Usage**:
+
+    s2sMS.Identity.getAccount()
+
+
+
 ## Changes
 
 * 2.0.3 - Adding new tests, and Contacts ms, removed unused params
-* 2.0.2 - Move baseUrl to process.env.BASE_URL
+* 2.0.2 - Move baseUrl to process.env.MS_HOST
 * 2.0.1 - testing npm publishing
 * 2.0.0 - Now must set baseUrl for microservices to get anything other than 'https://cpaas.star2star.com/api'
 

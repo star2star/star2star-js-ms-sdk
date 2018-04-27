@@ -39,7 +39,7 @@ const createIdentity = (
 
 /**
  * This function will call the identity microservice with the credentials and
- * api key you passed in
+ * api key you passed in and delete the user object matching the user_uuid submitted
  * @param apiKey - api key for cpaas systems
  * @param user_uuid - uuid for a star2star user
  * @returns promise resolving to a status of 204
@@ -111,31 +111,6 @@ const lookupIdentity = (
     headers: {
       "application-key": apiKey,
       "Content-type": "application/json"
-    },
-    json: true
-  };
-
-  return request(requestOptions);
-};
-
-/**
- * This function will call the identity microservice to refresh user based on token
- * @param apiKey - api key for cpaas systems
- * @param email - email address for an star2star account
- * @param pwd - passowrd for that account
- * @returns promise resolving to an identity data
- **/
-const refreshToken = (apiKey = "null api key", token = "null token") => {
-  const MS = util.getEndpoint("identity");
-  const requestOptions = {
-    method: "POST",
-    uri: `${MS}/oauth/token`,
-    headers: {
-      "application-key": apiKey,
-      "Content-type": "application/json"
-    },
-    body: {
-      refresh_token: token
     },
     json: true
   };

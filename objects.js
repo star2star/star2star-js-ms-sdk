@@ -7,17 +7,15 @@ const request = require("request-promise");
  * This function will ask the cpaas data object service for a specific
  * type of object
  *
- * @param apiKey - api key for cpaas systems
  * @param userUUID - user UUID to be used
- * @param identityJWT - identity JWT
+ * @param accessToken - Access Token
  * @param dataObjectType - data object type to be retrieved; default: dataObjectType
  * @param loadContent - string boolean if the call should also return content of object; default false
  * @returns promise resolving to an array of data objects
  **/
 const getDataObjectByType = (
-  apiKey = "null api key",
   userUUID = "null user uuid",
-  identityJWT = "null jwt",
+  accessToken = "null accessToken",
   dataObjectType = "data_object",
   loadContent = "false"
 ) => {
@@ -30,7 +28,7 @@ const getDataObjectByType = (
       uri: `${MS}/users/${userUUID}/allowed-objects?type=${dataObjectType}&load_content=${loadContent}`,
       headers: {
         "Content-type": "application/json",
-        Authorization: `Bearer ${identityJWT}`
+        Authorization: `Bearer ${accessToken}`
       },
       json: true
     };
@@ -40,7 +38,7 @@ const getDataObjectByType = (
       uri: `${MS}/users/${userUUID}/objects?type=${dataObjectType}&load_content=${loadContent}`,
       headers: {
         "Content-type": "application/json",
-        Authorization: `Bearer ${identityJWT}`
+        Authorization: `Bearer ${accessToken}`
       },
       json: true
     };
@@ -90,17 +88,16 @@ const getDataObjectByType = (
  * This function will ask the cpaas data object service for a specific
  * type of object with name
  *
- * @param apiKey - api key for cpaas systems
  * @param userUUID - user UUID to be used
- * @param identityJWT - identity JWT
- * @param dataObjectType - data object type to be retrieved; default: dataObjectType
+ * @param accessToken - Access Token
+ * @param dataObjectType - string - data object type to be retrieved; default: dataObjectType
+ * @param dataObjectName - string - data object name to be retrieved 
  * @param loadContent - string boolean if the call should also return content of object; default false
  * @returns promise resolving to an array of data objects
  **/
 const getDataObjectByTypeAndName = (
-  apiKey = "null api key",
   userUUID = "null user uuid",
-  identityJWT = "null jwt",
+  accessToken = "null accessToken",
   dataObjectType = "data_object",
   dataObjectName = "noName",
   loadContent = "false"
@@ -114,21 +111,23 @@ const getDataObjectByTypeAndName = (
       uri: `${MS}/users/${userUUID}/allowed-objects?type=${dataObjectType}&load_content=${loadContent}&name=${dataObjectName}`,
       headers: {
         "Content-type": "application/json",
-        Authorization: `Bearer ${identityJWT}`
+        Authorization: `Bearer ${accessToken}`
       },
       json: true
     };
     arrayRequest.push(request(requestOptionsGlobal));
+
     const requestOptionsUser = {
       method: "GET",
       uri: `${MS}/users/${userUUID}/objects?type=${dataObjectType}&load_content=${loadContent}&name=${dataObjectName}`,
       headers: {
         "Content-type": "application/json",
-        Authorization: `Bearer ${identityJWT}`
+        Authorization: `Bearer ${accessToken}`
       },
       json: true
     };
     arrayRequest.push(request(requestOptionsUser));
+
     Promise.all(arrayRequest)
       .then(arrayData => {
         // need to build data to return
@@ -174,13 +173,13 @@ const getDataObjectByTypeAndName = (
  * This function will ask the cpaas data object service for a specific object
  *
  * @param apiKey - api key for cpaas systems
- * @param identityJWT - identity JWT
+ * @param accessToken - Access Token
  * @param dataObjectUUID - data object UUID
  * @returns data
  **/
 const getDataObject = (
-  apiKey = "null api key",
-  identityJWT = "null jwt",
+  // apiKey = "null api key",
+  accessToken = "null accessToken",
   dataObjectUUID = "null uuid"
 ) => {
   const MS = util.getEndpoint("objects");
@@ -188,9 +187,9 @@ const getDataObject = (
     method: "GET",
     uri: `${MS}/objects/${dataObjectUUID}`,
     headers: {
-      "application-key": apiKey,
+      // "application-key": apiKey,
       "Content-type": "application/json",
-      Authorization: `Bearer ${identityJWT}`
+      Authorization: `Bearer ${accessToken}`
     },
     json: true
   };
@@ -200,16 +199,17 @@ const getDataObject = (
 /**
  * This function will create a new data object
  *
- * @param apiKey - api key for cpaas systems
  * @param userUUID - user UUID to be used
- * @param identityJWT - identity JWT
- * @param dataObjectUUID - data object UUID
+ * @param accessToken - Access Token
+ * @param objectName - string object name
+ * @param objectType - string object type (use '_' between words)
+ * @param objectDescription - string object description
+ * @param content - object with contents
  * @returns data
  **/
 const createUserDataObject = (
-  apiKey = "null api key",
   userUUID = "null user uuid",
-  identityJWT = "null jwt",
+  accessToken = "null accessToken",
   objectName,
   objectType,
   objectDescription,
@@ -231,7 +231,7 @@ const createUserDataObject = (
     body: b,
     headers: {
       "Content-type": "application/json",
-      Authorization: `Bearer ${identityJWT}`
+      Authorization: `Bearer ${accessToken}`
     },
     json: true
   };
@@ -240,18 +240,18 @@ const createUserDataObject = (
 /**
  * This function will create a new data object
  *
- * @param apiKey - api key for cpaas systems
- * @param userUUID - user UUID to be used
- * @param identityJWT - identity JWT
- * @param dataObjectUUID - data object UUID
+ * @param accessToken - Access Token
+ * @param objectName - string object name
+ * @param objectType - string object type (use '_' between words)
+ * @param objectDescription - string object description
+ * @param content - object with contents
  * @returns data
  **/
 const createDataObject = (
-  apiKey = "null api key",
-  userUUID = "null user uuid",
-  identityJWT = "null jwt",
+  accessToken = "null accessToken",
   objectName,
   objectType,
+  objectDescription,
   content = {}
 ) => {
   const MS = util.getEndpoint("objects");
@@ -259,6 +259,7 @@ const createDataObject = (
   const b = {
     name: objectName,
     type: objectType,
+    description: objectDescription,
     content_type: "application/json",
     content: content
   };
@@ -269,24 +270,22 @@ const createDataObject = (
     body: b,
     headers: {
       "Content-type": "application/json",
-      Authorization: `Bearer ${identityJWT}`
+      Authorization: `Bearer ${accessToken}`
     },
     json: true
   };
   return request(requestOptions);
 };
 /**
- * This function will create a new data object
+ * This function will delete a data object
  *
- * @param apiKey - api key for cpaas systems
  * @param userUUID - user UUID to be used
- * @param identityJWT - identity JWT
+ * @param accessToken - accessToken
  * @param dataObjectUUID - data object UUID
  * @returns data
  **/
 const deleteDataObject = (
-  apiKey = "null api key",
-  identityJWT = "null jwt",
+  accessToken = "null accessToken",
   data_uuid = "not specified"
 ) => {
   const MS = util.getEndpoint("objects");
@@ -295,9 +294,8 @@ const deleteDataObject = (
     method: "DELETE",
     uri: `${MS}/objects/${data_uuid}`,
     headers: {
-      "application-key": apiKey,
       "Content-type": "application/json",
-      Authorization: `Bearer ${identityJWT}`
+      Authorization: `Bearer ${accessToken}`
     },
     json: true
   };
@@ -305,18 +303,16 @@ const deleteDataObject = (
 };
 
 /**
- * This function will create a new data object
+ * This function will update an existing data object
  *
- * @param apiKey - api key for cpaas systems
  * @param userUUID - user UUID to be used
- * @param identityJWT - identity JWT
+ * @param accessToken - Access Token
  * @param dataObjectUUID - data object UUID
  * @returns data
  **/
 const updateDataObject = (
-  apiKey = "null api key",
-  identityJWT = "null jwt",
-  data_uuid = "not specified",
+  accessToken = "null accessToken",
+  data_uuid = "uuid not specified",
   data_object = {}
 ) => {
   const MS = util.getEndpoint("objects");
@@ -326,9 +322,8 @@ const updateDataObject = (
     uri: `${MS}/objects/${data_uuid}`,
     body: data_object,
     headers: {
-      "application-key": apiKey,
       "Content-type": "application/json",
-      Authorization: `Bearer ${identityJWT}`
+      Authorization: `Bearer ${accessToken}`
     },
     json: true
   };

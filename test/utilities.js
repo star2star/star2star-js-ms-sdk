@@ -10,9 +10,8 @@ var creds = {
   isValid: false
 };
 
-beforeEach(function() {
-  // process.env.NODE_ENV = "dev";
-  process.env.BASE_URL = "https://cpaas.star2star.net";
+beforeEach(function () {
+  s2sMS.setMsHost("https://cpaas.star2starglobal.net");
   // file system uses full path so will do it like this
   if (fs.existsSync("./test/credentials.json")) {
     // do not need test folder here
@@ -20,47 +19,53 @@ beforeEach(function() {
   }
 });
 
-describe("Util", function() {
-  it("config", function(done) {
+describe("Util", function () {
+  it("config", function (done) {
     const cfg = util.config;
     assert.deepEqual(config, cfg);
     done();
   });
 
-  it("replace variables", function(done) {
-    const newString = util.replaceVariables("%foo%", { foo: 1 });
+  it("replace variables", function (done) {
+    const newString = util.replaceVariables("%foo%", {
+      foo: 1
+    });
     assert(newString === "1");
     done();
   });
 
-  it("replace variables missing", function(done) {
-    const newString = util.replaceVariables("%foobar%", { foo: 1 });
+  it("replace variables missing", function (done) {
+    const newString = util.replaceVariables("%foobar%", {
+      foo: 1
+    });
     assert.equal(newString, "%foobar%");
     done();
   });
 
-  it("replace variables nested", function(done) {
+  it("replace variables nested", function (done) {
     const newString = util.replaceVariables("%foobar%", {
       foo: 1,
-      bar: { foobar: "value" }
+      bar: {
+        foobar: "value"
+      }
     });
     assert.equal(newString, "value");
     done();
   });
-  it("replace static stuff ONLY ", function(done) {
+  it("replace static stuff ONLY ", function (done) {
     const newString = util.replaceVariables("%YYYY% %MM% %DD%", {});
     //console.log(newString)
     assert(newString.length === 10);
     done();
   });
-  it("replace static stuff concat ", function(done) {
+  it("replace static stuff concat ", function (done) {
     const newString = util.replaceVariables("APPT_%YYYY%%MM%%DD%", {});
     //console.log(newString.length)
     assert(newString.length === 13);
     done();
   });
 
-  it("replace variables multiple", function(done) {
+  it("replace variables multiple", function (done) {
     const x =
       "now is the %time.1% for all %attribute-1% now %DUDE% was %Date1% could also be %diet_food%  how about %a/b% but not %/james%";
     const mValue =
@@ -84,7 +89,7 @@ describe("Util", function() {
     done();
   });
 
-  it("replace variables multiple one missing", function(done) {
+  it("replace variables multiple one missing", function (done) {
     const x =
       "now is the %time.1% for %missing% all %attribute-1% now %DUDE% was %Date1% could also be %diet_food%  how about %a/b% but not %/james%";
     const mValue =
@@ -108,7 +113,7 @@ describe("Util", function() {
     done();
   });
 
-  it("test getEndpoint valid", function(done) {
+  it("test getEndpoint valid", function (done) {
     const prodEndPoint = util.getEndpoint("IDENTITY");
     assert.equal("https://cpaas.star2star.net/identity", prodEndPoint);
     done();
@@ -138,19 +143,19 @@ describe("Util", function() {
   //   done();
   // });
 
-  it("test getEndpoint invalid service ", function(done) {
+  it("test getEndpoint invalid service ", function (done) {
     const prodEndPoint = util.getEndpoint("foo");
     assert.equal(undefined, prodEndPoint);
     done();
   });
 
-  it("test getEndpoint valid - lowercase ", function(done) {
+  it("test getEndpoint valid - lowercase ", function (done) {
     const prodEndPoint = util.getEndpoint("identity");
     assert.equal("https://cpaas.star2star.net/identity", prodEndPoint);
     done();
   });
 
-  it("test create UUID  ", function(done) {
+  it("test create UUID  ", function (done) {
     const uuid = util.createUUID();
     assert.equal(uuid.length, 36);
     done();

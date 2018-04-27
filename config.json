@@ -1,11 +1,14 @@
 {
-  "CHAT": "/chat",
-  "AUTH": "/auth",
-  "GROUPS": "/groups",
-  "IDENTITY": "/identity",
-  "MESSAGING": "/messaging",
-  "OBJECTS": "/objects",
-  "LAMBDA": "/lambda-proxy",
-  "SHORTURLS": "/shorturls",
-  "CONTACTS": "/contacts"
+  "microservices": {
+    "CHAT": "/chat",
+    "AUTH": "/auth",
+    "GROUPS": "/groups",
+    "IDENTITY": "/identity",
+    "MESSAGING": "/messaging",
+    "OBJECTS": "/objects",
+    "LAMBDA": "/lambda-proxy",
+    "SHORTURLS": "/shorturls",
+    "CONTACTS": "/contacts",
+    "OAUTH": "/oauth"
+  }
 }

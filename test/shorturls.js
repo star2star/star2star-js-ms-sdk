@@ -9,9 +9,8 @@ var creds = {
   isValid: false
 };
 
-beforeEach(function() {
-  // process.env.NODE_ENV = 'dev';
-  process.env.BASE_URL = "https://cpaas.star2star.net";
+beforeEach(function () {
+  s2sMS.setMsHost("https://cpaas.star2starglobal.net");
   // file system uses full path so will do it like this
   if (fs.existsSync("./test/credentials.json")) {
     // do not need test folder here
@@ -19,8 +18,8 @@ beforeEach(function() {
   }
 });
 
-describe("ShortUrls", function() {
-  it("list", function(done) {
+describe("ShortUrls", function () {
+  it("list", function (done) {
     if (!creds.isValid) return done();
     s2sMS.Identity.login(
       creds.CPAAS_KEY,
@@ -39,7 +38,7 @@ describe("ShortUrls", function() {
       });
     });
   });
-  it("create / delete ", function(done) {
+  it("create / delete ", function (done) {
     if (!creds.isValid) return done();
     s2sMS.Identity.login(
       creds.CPAAS_KEY,

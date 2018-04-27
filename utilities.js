@@ -11,7 +11,7 @@ const config = require('./config.json');
 const getEndpoint = (microservice = "NOTHING") => {
   const upperMS = microservice.toUpperCase();
 
-  return config[upperMS] ? process.env.BASE_URL + config[upperMS] : undefined;
+  return config.microservices[upperMS] ? process.env.MS_HOST + config.microservices[upperMS] : undefined;
 };
 
 /**

@@ -32,70 +32,67 @@ const getValidEvent = (obj = {}) => {
 /**
  * This function will ask the cpaas data object service for a list of event objects
  *
- * @param apiKey - api key for cpaas systems
  * @param userUUID - user UUID to be used
- * @param identityJWT - identity JWT
+ * @param accessToken - access Token
  * @returns promise for list of data object task templates with content
  **/
-const listEvents = (apiKey = 'null api key', userUUID = 'null user uuid', identityJWT = 'null jwt') => {
-  return Objects.getDataObjectByType(apiKey, userUUID, identityJWT, 'event', true);
+const listEvents = (userUUID = 'null user uuid', accessToken = 'null accessToken') => {
+  return Objects.getDataObjectByType(userUUID, accessToken, EVENT_TYPE, true);
 };
+
 /**
  * This function will create a new event object
  *
- * @param apiKey string - api key for cpaas systems
  * @param userUUID string - user UUID to be used
- * @param identityJWT string - identity JWT
- * @param event object - event object consisting of standard event object
+ * @param accessToken string - access Token
+ * @param eventName string - name for event object
+ * @param eventDescription string - description for event object
+ * @param eventObject - event object consisting of standard event object content
  * @returns promise for creating object
  **/
-const createEvent = (apiKey = 'null api key', userUUID = 'null user uuid', identityJWT = 'null jwt',
-  event_name, event_object = {}) => {
-  return Objects.createUserDataObject(apiKey, userUUID, identityJWT, event_name, EVENT_TYPE, getValidEvent(event_object));
+const createEvent = (userUUID = 'null user uuid', accessToken = 'null accessToken',
+  eventName, eventDescription, eventObject = {}) => {
+  return Objects.createUserDataObject(userUUID, accessToken, eventName, EVENT_TYPE, eventDescription, getValidEvent(eventObject));
 };
 
 /**
  * This function will delete event
  *
- * @param apiKey - api key for cpaas systems
- * @param identityJWT - identity JWT
- * @param EventObjectUUUID - event UUID
+ * @param accessToken - access Token
+ * @param EventObjectUUID - event UUID
  * @returns promise
  **/
-const deleteEvent = (apiKey = 'null api key', identityJWT = 'null jwt',
-  event_uuid = "missing task uuid") => {
-  return Objects.deleteDataObject(apiKey, identityJWT, event_uuid);
+const deleteEvent = (accessToken = 'null accessToken',
+  EventObjectUUID = "missing task uuid") => {
+  return Objects.deleteDataObject(accessToken, EventObjectUUID);
 };
 
 /**
  * This function will retrieve task list
  *
- * @param apiKey - api key for cpaas systems
- * @param identityJWT - identity JWT
+ * @param accessToken - access Token
  * @param uuid - UUID
  * @returns promise
  **/
-const getEvent = (apiKey = 'null api key', identityJWT = 'null jwt',
+const getEvent = (accessToken = 'null accessToken',
   uuid = 'null uuid') => {
-  return Objects.getDataObject(apiKey, identityJWT, uuid, true);
+  return Objects.getDataObject(accessToken, uuid, true);
 };
 
 /**
  * This function will update event
  *
- * @param apiKey - api key for cpaas systems
- * @param identityJWT - identity JWT
+ * @param accessToken - access Token
  * @param uuid -  UUID
- * @param event_object - event object
+ * @param eventObject - event object
  * @returns promise
  **/
-const updateEvent = (apiKey = 'null api key', identityJWT = 'null jwt',
-  uuid = "missing_uuid", dataObj = {}) => {
-  const newEvent = objectMerge(dataObj, {
-    content: getValidEvent(dataObj.content)
+const updateEvent = (accessToken = 'null jwt', uuid = "missing_uuid", eventObj = {}) => {
+  const newEvent = objectMerge(eventObj, {
+    content: getValidEvent(eventObj.content)
   });
 
-  return Objects.updateDataObject(apiKey, identityJWT, uuid, newEvent);
+  return Objects.updateDataObject(accessToken, uuid, newEvent);
 };
 
 module.exports = {

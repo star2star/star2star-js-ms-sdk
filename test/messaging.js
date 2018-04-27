@@ -9,9 +9,8 @@ var creds = {
   isValid: false
 };
 
-beforeEach(function() {
-  // process.env.NODE_ENV = "dev";
-  process.env.BASE_URL = "https://cpaas.star2star.net";
+beforeEach(function () {
+  s2sMS.setMsHost("https://cpaas.star2starglobal.net");
   // file system uses full path so will do it like this
   if (fs.existsSync("./test/credentials.json")) {
     // do not need test folder here
@@ -19,8 +18,8 @@ beforeEach(function() {
   }
 });
 
-describe("Messaging MS", function() {
-  it("Valid SMS Number", function(done) {
+describe("Messaging MS", function () {
+  it("Valid SMS Number", function (done) {
     if (!creds.isValid) return done();
     s2sMS
       .getSMSNumber(creds.CPAAS_KEY, "0904f8d5-627f-4ff5-b34d-68dc96487b1e")
@@ -29,14 +28,14 @@ describe("Messaging MS", function() {
         done();
       });
   });
-  it("Invalid USER UUID", function(done) {
+  it("Invalid USER UUID", function (done) {
     if (!creds.isValid) return done();
     s2sMS.getSMSNumber(creds.CPAAS_KEY, "bad").catch(() => {
       assert(true);
       done();
     });
   });
-  it("Send SMS", function(done) {
+  it("Send SMS", function (done) {
     if (!creds.isValid) return done();
     s2sMS
       .sendSMS(

@@ -1,3 +1,4 @@
+// TODO update tov1 API when available...
 var assert = require("assert");
 var s2sMS = require("../index");
 var fs = require("fs");
@@ -12,8 +13,7 @@ var creds = {
 var test_roomUUID, test_roomOwner;
 
 beforeEach(function () {
-  // process.env.NODE_ENV = 'dev';
-  process.env.BASE_URL = "https://cpaas.star2star.net";
+  s2sMS.setMsHost("https://cpaas.star2starglobal.net");
   // file system uses full path so will do it like this
   if (fs.existsSync("./test/credentials.json")) {
     // do not need test folder here

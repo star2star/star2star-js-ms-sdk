@@ -9,9 +9,8 @@ var creds = {
   isValid: false
 };
 
-beforeEach(function() {
-  //process.env.NODE_ENV = 'dev';
-  process.env.BASE_URL = "https://cpaas.star2star.net";
+beforeEach(function () {
+  s2sMS.setMsHost("https://cpaas.star2starglobal.net");
   // file system uses full path so will do it like this
   if (fs.existsSync("./test/credentials.json")) {
     // do not need test folder here
@@ -24,19 +23,17 @@ const testContact = {
     "first": "Test",
     "last": "User"
   },
-  "phone_numbers": [
-    {
-      "number": "941-999-8765",
-      "preferred": true,
-      "type": "Home"
-    }
-  ]
+  "phone_numbers": [{
+    "number": "941-999-8765",
+    "preferred": true,
+    "type": "Home"
+  }]
 };
 
 let testContactUUID;
 
-describe("Contacts", function() {
-  it("Create User Contact", function(done) {
+describe("Contacts", function () {
+  it("Create User Contact", function (done) {
     if (!creds.isValid) return done();
     s2sMS.Identity.login(
       creds.CPAAS_KEY,
@@ -56,18 +53,18 @@ describe("Contacts", function() {
       });
     });
   });
-  it("Delete Contact", function(done) {
+  it("Delete Contact", function (done) {
     if (!creds.isValid) return done();
     s2sMS.Contacts.deleteContact(
       creds.CPAAS_KEY,
       testContactUUID
     ).then(responseData => {
       // console.log('RRRRRR', responseData);
-      assert(typeof(responseData) === "undefined");
+      assert(typeof (responseData) === "undefined");
       done();
     });
   });
-  it("List All Contacts", function(done) {
+  it("List All Contacts", function (done) {
     if (!creds.isValid) return done();
     s2sMS.Identity.login(
       creds.CPAAS_KEY,

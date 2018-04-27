@@ -9,9 +9,8 @@ var creds = {
   isValid: false
 };
 
-beforeEach(function() {
-  // process.env.NODE_ENV = 'dev';
-  process.env.BASE_URL = "https://cpaas.star2star.net";
+beforeEach(function () {
+  s2sMS.setMsHost("https://cpaas.star2starglobal.net");
   // file system uses full path so will do it like this
   if (fs.existsSync("./test/credentials.json")) {
     // do not need test folder here
@@ -19,8 +18,8 @@ beforeEach(function() {
   }
 });
 
-describe("Task", function() {
-  it("Get Task Templates", function(done) {
+describe("Task", function () {
+  it("Get Task Templates", function (done) {
     if (!creds.isValid) return done();
     s2sMS.Identity.login(creds.CPAAS_KEY, creds.email, creds.password).then(
       identityData => {
@@ -37,7 +36,7 @@ describe("Task", function() {
       }
     );
   });
-  it("Create / Delete Task Template", function(done) {
+  it("Create / Delete Task Template", function (done) {
     if (!creds.isValid) return done();
     s2sMS.Identity.login(creds.CPAAS_KEY, creds.email, creds.password).then(
       identityData => {
@@ -45,8 +44,7 @@ describe("Task", function() {
           creds.CPAAS_KEY,
           identityData.user_uuid,
           identityData.token,
-          "foo",
-          []
+          "foo", []
         ).then(responseData => {
           //console.log(identityData.token)
           //console.log(responseData)
@@ -61,7 +59,7 @@ describe("Task", function() {
       }
     );
   });
-  it("Create, update and  Delete Task", function(done) {
+  it("Create, update and  Delete Task", function (done) {
     if (!creds.isValid) return done();
     s2sMS.Identity.login(creds.CPAAS_KEY, creds.email, creds.password).then(
       identityData => {
@@ -69,8 +67,9 @@ describe("Task", function() {
           creds.CPAAS_KEY,
           identityData.user_uuid,
           identityData.token,
-          "title",
-          [{ title: "hello" }]
+          "title", [{
+            title: "hello"
+          }]
         ).then(responseData => {
           //console.log(responseData);
           responseData.name = "james";
@@ -95,7 +94,7 @@ describe("Task", function() {
       }
     );
   });
-  it("add task to task object", function(done) {
+  it("add task to task object", function (done) {
     if (!creds.isValid) return done();
     s2sMS.Identity.login(creds.CPAAS_KEY, creds.email, creds.password).then(
       identityData => {
@@ -103,14 +102,16 @@ describe("Task", function() {
           creds.CPAAS_KEY,
           identityData.user_uuid,
           identityData.token,
-          "title",
-          [{ title: "hello" }]
+          "title", [{
+            title: "hello"
+          }]
         ).then(responseData => {
           s2sMS.Task.addTaskToTaskObject(
             creds.CPAAS_KEY,
             identityData.token,
-            responseData.uuid,
-            { title: "lena" }
+            responseData.uuid, {
+              title: "lena"
+            }
           ).then(newData => {
             assert(newData.content.tasks.length === 2);
             done();
@@ -126,7 +127,7 @@ describe("Task", function() {
       }
     );
   });
-  it("udpate task to task object", function(done) {
+  it("udpate task to task object", function (done) {
     if (!creds.isValid) return done();
     s2sMS.Identity.login(creds.CPAAS_KEY, creds.email, creds.password).then(
       identityData => {
@@ -134,23 +135,24 @@ describe("Task", function() {
           creds.CPAAS_KEY,
           identityData.user_uuid,
           identityData.token,
-          "title",
-          [{ title: "hello" }]
+          "title", [{
+            title: "hello"
+          }]
         ).then(responseData => {
           // console.log("rrrrr %j", responseData);
           const z = responseData.content.tasks[0];
           z.title = "lena";
           s2sMS.Task.updateTaskInTaskObject(
-            creds.CPAAS_KEY,
-            identityData.token,
-            responseData.uuid,
-            z
-          )
+              creds.CPAAS_KEY,
+              identityData.token,
+              responseData.uuid,
+              z
+            )
             .then(newData => {
               //console.log('taskobject: %j', newData)
               assert(
                 newData.content.tasks.length === 1 &&
-                  newData.content.tasks[0].title === "lena"
+                newData.content.tasks[0].title === "lena"
               );
               done();
               s2sMS.Task.deleteTaskObject(

@@ -6,20 +6,25 @@
   "scripts": {
     "test": "mocha --timeout 10000"
   },
-  "keywords": ["micro service", "sdk", "ms", "js"],
+  "keywords": [
+    "micro service",
+    "sdk",
+    "ms",
+    "js"
+  ],
   "author": "James Schimmoeller",
   "license": "Apache 2.0",
   "dependencies": {
     "object-merge": "^2.5.1",
-    "request": "^2.83.0",
+    "request": "^2.85.0",
     "request-promise": "^4.2.2"
   },
   "devDependencies": {
     "assert": "^1.4.1",
-    "babel-eslint": "^8.2.2",
-    "eslint": "^4.19.0",
+    "babel-eslint": "^8.2.3",
+    "eslint": "^4.19.1",
     "eslint-plugin-react": "^7.7.0",
-    "mocha": "^4.0.1"
+    "mocha": "^5.1.1"
   },
   "publishConfig": {
     "registry": "https://registry.npmjs.org"

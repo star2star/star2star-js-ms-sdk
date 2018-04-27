@@ -10,9 +10,8 @@ var creds = {
   isValid: false
 };
 
-beforeEach(function() {
-  process.env.NODE_ENV = "dev";
-  process.env.BASE_URL = "https://cpaas.star2star.net";
+beforeEach(function () {
+  s2sMS.setMsHost("https://cpaas.star2starglobal.net");
   // file system uses full path so will do it like this
   if (fs.existsSync("./test/credentials.json")) {
     // do not need test folder here
@@ -20,10 +19,12 @@ beforeEach(function() {
   }
 });
 
-describe("Lambda MS", function() {
-  it("invoke good lambda", function(done) {
+describe("Lambda MS", function () {
+  it("invoke good lambda", function (done) {
     if (!creds.isValid) return done();
-    const params = { a: 1 };
+    const params = {
+      a: 1
+    };
     params.env = process.env.NODE_ENV;
     s2sMS.invokeLambda(creds.CPAAS_KEY, "abc", params).then(lambdaResponse => {
       //console.log(lambdaResponse)
@@ -36,13 +37,12 @@ describe("Lambda MS", function() {
     });
   });
 
-  it("invoke default-all-notify lambda", function(done) {
+  it("invoke default-all-notify lambda", function (done) {
     if (!creds.isValid) return done();
     const params = {
       params: {
         title: "911: ",
-        body:
-          "Called from zone: SRQ Main extension: Room 2701 at Thu Nov 16 2017 16:10:19 GMT+0000 (UTC) "
+        body: "Called from zone: SRQ Main extension: Room 2701 at Thu Nov 16 2017 16:10:19 GMT+0000 (UTC) "
       },
       cfg: {
         _outDataSamples: ["5a0db856818133001743490d"],
@@ -53,9 +53,12 @@ describe("Lambda MS", function() {
         password: "2017star"
       },
       config: config,
-      subscribers: [
-        { uuid: "1", name: "James", modality: "sms", value: "+19418076677" }
-      ],
+      subscribers: [{
+        uuid: "1",
+        name: "James",
+        modality: "sms",
+        value: "+19418076677"
+      }],
       env: "dev"
     };
 
@@ -74,10 +77,12 @@ describe("Lambda MS", function() {
       });
   });
 
-  it("invoke bad lambda", function(done) {
+  it("invoke bad lambda", function (done) {
     if (!creds.isValid) return done();
     s2sMS
-      .invokeLambda(creds.CPAAS_KEY, "this one does not exists", { env: "dev" })
+      .invokeLambda(creds.CPAAS_KEY, "this one does not exists", {
+        env: "dev"
+      })
       .catch(lambdaResponse => {
         //console.log(lambdaResponse)
         assert.equal(lambdaResponse.statusCode, 404);

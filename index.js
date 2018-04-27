@@ -12,26 +12,27 @@ const ShortUrls = require('./shorturls');
 const Auth = require('./auth');
 const Chat = require('./chat');
 const Contacts = require('./contacts');
+const Oauth = require('./oauth');
 
 let cpaasKey;
 
 /**
- * This function set the _baseUrl variable you want hit for microservices
+ * This function sets the microservice host (MS_HOST) variable you want hit for microservices
  *
- * @param environment String - dev, development, test, prod or production
+ * @param msHost String - valid url for microservice host server
  **/
-const setBaseUrl = (baseUrl = "https://cpaas.star2star.com/api") => {
-  process.env.BASE_URL = baseUrl;
+const setMsHost = (msHost = "https://cpaas.star2star.com/api") => {
+  process.env.MS_HOST = msHost;
 };
 
 /**
- * This function set the environment variable you want to run in
+ * This function gets the microservice host variable you want to run in
  *
  * @returns string - environment of which it has been configured
  **/
-const getBaseUrl = () => {
-  setBaseUrl(process.env.BASE_URL);
-  return process.env.BASE_URL;
+const getMsHost = () => {
+  // setMsHost(process.env.MS_HOST);
+  return process.env.MS_HOST;
 };
 
 
@@ -61,13 +62,14 @@ module.exports = {
   Util,
   Task,
   Event,
-  setBaseUrl,
-  getBaseUrl,
+  setMsHost,
+  getMsHost,
   setApplicationKey,
   getApplicationKey,
   Groups,
   ShortUrls,
   Auth,
+  Oauth,
   Chat,
   Contacts
 };
