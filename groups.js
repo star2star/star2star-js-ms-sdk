@@ -7,15 +7,11 @@ const ObjectMerge = require("object-merge");
 /**
  * This function will ask the cpaas groups service for the list of groups
  *
- * @param apiKey - api key for cpaas systems
- * @param userUUID - user UUID to be used
- * @param identityJWT - identity JWT
+ * @param accessToken - access Token
  * @returns promise for list of groups for this user
  **/
 const listGroups = (
-  apiKey = "null api key",
-  // userUUID = "null user uuid",
-  identityJWT = "null jwt",
+  accessToken = "null accessToken",
   filter = undefined
 ) => {
   const MS = util.getEndpoint("groups");
@@ -24,9 +20,8 @@ const listGroups = (
     method: "GET",
     uri: `${MS}/groups`,
     headers: {
-      "application-key": apiKey,
       "Content-type": "application/json",
-      Authorization: `Bearer ${identityJWT}`
+      Authorization: `Bearer ${accessToken}`
     },
     json: true
   };
@@ -40,15 +35,13 @@ const listGroups = (
 /**
  * This function will ask the cpaas groups service for a specific group
  *
- * @param apiKey - api key for cpaas systems
+ * @param accessToken - access Token
  * @param groupUUID - group UUID
- * @param identityJWT - identity JWT
  * @returns group
  **/
 const getGroup = (
-  apiKey = "null api key",
-  groupUUID = "null uuid",
-  identityJWT = "null jwt"
+  accessToken = "null accessToken",
+  groupUUID = "null uuid"
 ) => {
   const MS = util.getEndpoint("groups");
   const requestOptions = {
@@ -58,9 +51,8 @@ const getGroup = (
       expand: "members.type"
     },
     headers: {
-      "application-key": apiKey,
       "Content-type": "application/json",
-      Authorization: `Bearer ${identityJWT}`
+      Authorization: `Bearer ${accessToken}`
     },
     json: true
   };
@@ -70,16 +62,13 @@ const getGroup = (
 /**
  * This function will delete a specific group
  *
- * @param apiKey - api key for cpaas systems
- * @param userUUID - user UUID to be used
- * @param identityJWT - identity JWT
+ * @param accessToken - access Token
  * @param groupUUID - group UUID
  * @returns No Content
  **/
 const deleteGroup = (
-  apiKey = "null api key",
-  groupUUID = "not specified",
-  identityJWT = "null jwt"
+  accessToken = "null accessToken",
+  groupUUID = "not specified"
 ) => {
   const MS = util.getEndpoint("groups");
 
@@ -87,9 +76,8 @@ const deleteGroup = (
     method: "DELETE",
     uri: `${MS}/groups/${groupUUID}`,
     headers: {
-      "application-key": apiKey,
       "Content-type": "application/json",
-      Authorization: `Bearer ${identityJWT}`
+      Authorization: `Bearer ${accessToken}`
     },
     json: true
   };
@@ -99,9 +87,7 @@ const deleteGroup = (
 /**
  * This function will create a new group
  *
- * @param apiKey - api key for cpaas systems
- * @param userUUID - user UUID to be used
- * @param identityJWT - identity JWT
+ * @param accessToken - access Token
  * @param name - String group Name
  * @param description - description
  * @param groupType = string group type
@@ -110,8 +96,7 @@ const deleteGroup = (
  * @returns data
  **/
 const createGroup = (
-  apiKey = "null api key",
-  identityJWT = "null jwt",
+  accessToken = "null accessToken",
   name = "no name specified for group",
   description = undefined,
   groupType = undefined,
@@ -133,9 +118,8 @@ const createGroup = (
     uri: `${MS}/groups`,
     body: b,
     headers: {
-      "application-key": apiKey,
       "Content-type": "application/json",
-      Authorization: `Bearer ${identityJWT}`
+      Authorization: `Bearer ${accessToken}`
     },
     json: true
   };
@@ -145,17 +129,14 @@ const createGroup = (
 /**
  * This function will update a group
  *
- * @param apiKey - api key for cpaas systems
- * @param userUUID - user UUID to be used
- * @param identityJWT - identity JWT
+ * @param accessToken - access Token
  * @param group_uuid - data object UUID
  * @param group_object - group object to be updated too
  * @returns data
  **/
 const updateGroup = (
-  apiKey = "null api key",
   group_uuid = "not specified",
-  identityJWT = "null jwt",
+  accessToken = "null accessToken",
   group_object = {}
 ) => {
   const MS = util.getEndpoint("groups");
@@ -165,9 +146,8 @@ const updateGroup = (
     uri: `${MS}/groups/${group_uuid}`,
     body: ObjectMerge({}, group_object),
     headers: {
-      "application-key": apiKey,
       "Content-type": "application/json",
-      Authorization: `Bearer ${identityJWT}`
+      Authorization: `Bearer ${accessToken}`
     },
     json: true
   };
@@ -177,16 +157,13 @@ const updateGroup = (
 /**
  * This function will add users to a user group
  *
- * @param apiKey - api key for cpaas systems
- * @param identityJWT - identity JWT
- * @param userUUID - user UUID to be used
+ * @param accessToken - access Token
  * @param groupUUID - data object UUID
  * @param members - array of objects containing 'uuid' (for known users)
  * @returns data
  **/
 const addMembersToGroup = (
-  apiKey = "null api key",
-  identityJWT = "null jwt",
+  accessToken = "null accessToken",
   groupUUID = "group uuid not specified",
   members = []
 ) => {
@@ -197,9 +174,8 @@ const addMembersToGroup = (
     uri: `${MS}/groups/${groupUUID}/members`,
     body: members,
     headers: {
-      "application-key": apiKey,
       "Content-type": "application/json",
-      Authorization: `Bearer ${identityJWT}`
+      Authorization: `Bearer ${accessToken}`
     },
     json: true
   };

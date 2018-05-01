@@ -5,15 +5,15 @@ const request = require("request-promise");
 
 /**
  * This function will call the identity microservice with the credentials and
- * api key you passed in
- * @param apiKey - api key for cpaas systems
+ * accessToken you passed in
+ * @param accessToken - access token
  * @param email - email address for an star2star account
  * @param identity_type_name - one of 'guest', 'user' TODO need to confirm possible values with Kranti
  * @param pwd - passowrd for that account.
  * @returns promise resolving to an identity data
  **/
 const createIdentity = (
-  apiKey = "null api key",
+  accessToken = "null accessToken",
   email = "null email",
   identity_type_name = "null_type_name",
   pwd = "null pwd"
@@ -23,7 +23,7 @@ const createIdentity = (
     method: "POST",
     uri: `${MS}/identities`,
     headers: {
-      "application-key": apiKey,
+      "Authorization": `Bearer ${accessToken}`,
       "Content-type": "application/json"
     },
     body: {
@@ -39,18 +39,18 @@ const createIdentity = (
 
 /**
  * This function will call the identity microservice with the credentials and
- * api key you passed in and delete the user object matching the user_uuid submitted
- * @param apiKey - api key for cpaas systems
- * @param user_uuid - uuid for a star2star user
+ * accessToken you passed in and delete the user object matching the user_uuid submitted
+ * @param accessToken - access token for cpaas systems
+ * @param userUuid - uuid for a star2star user
  * @returns promise resolving to a status of 204
  **/
-const deleteIdentity = (apiKey = "null api key", user_uuid = "null uuid") => {
+const deleteIdentity = (accessToken = "null accessToken", userUuid = "null uuid") => {
   const MS = util.getEndpoint("identity");
   const requestOptions = {
     method: "DELETE",
-    uri: `${MS}/identities/${user_uuid}`,
+    uri: `${MS}/identities/${userUuid}`,
     headers: {
-      "application-key": apiKey,
+      "Authorization": `Bearer ${accessToken}`,
       "Content-type": "application/json"
     }
   };
@@ -60,14 +60,14 @@ const deleteIdentity = (apiKey = "null api key", user_uuid = "null uuid") => {
 
 /**
  * This function will call the identity microservice with the credentials and
- * api key you passed in
- * @param apiKey - api key for cpaas systems
+ * accessToken you passed in
+ * @param accessToken - access token for cpaas systems
  * @param email - email address for an star2star account
  * @param pwd - passowrd for that account
  * @returns promise resolving to an identity data
  **/
 const login = (
-  apiKey = "null api key",
+  accessToken = "null access token",
   email = "null email",
   pwd = "null pwd"
 ) => {
@@ -76,7 +76,7 @@ const login = (
     method: "POST",
     uri: `${MS}/users/login`,
     headers: {
-      "application-key": apiKey,
+      "Authorization": `Bearer ${accessToken}`,
       "Content-type": "application/json"
     },
     body: {
@@ -91,14 +91,36 @@ const login = (
 
 /**
  * This function will call the identity microservice with the credentials and
- * api key you passed in
- * @param apiKey - api key for cpaas systems
+ * accessToken you passed in
+ * @param accessToken - access token for cpaas systems
+ * @param email - email address for an star2star account
+ * @param pwd - passowrd for that account
+ * @returns promise resolving to an identity data
+ **/
+const getMyIdentityData = (accessToken = "null access token") => {
+  const MS = util.getEndpoint("identity");
+  const requestOptions = {
+    method: "GET",
+    uri: `${MS}/users/me`,
+    headers: {
+      "Authorization": `Bearer ${accessToken}`,
+      "Content-type": "application/json"
+    }
+  };
+
+  return request(requestOptions);
+};
+
+/**
+ * This function will call the identity microservice with the credentials and
+ * accessToken you passed in
+ * @param accessToken - access token for cpaas systems
  * @param email - email address for an star2star account
  * @param pwd - passowrd for that account
  * @returns promise resolving to an identity data
  **/
 const lookupIdentity = (
-  apiKey = "null api key",
+  accessToken = "null accessToken",
   username = "null username"
 ) => {
   const MS = util.getEndpoint("identity");
@@ -109,7 +131,7 @@ const lookupIdentity = (
       username: username
     },
     headers: {
-      "application-key": apiKey,
+      "Authorization": `Bearer ${accessToken}`,
       "Content-type": "application/json"
     },
     json: true
@@ -120,10 +142,10 @@ const lookupIdentity = (
 
 /**
  * This function will call the identity microservice to get list of accounts
- * @param apiKey - api key for cpaas systems
+ * @param accessToken - access token for cpaas systems
  * @returns promise resolving to array of account data
  **/
-const listAccounts = (apiKey = "null api key") => {
+const listAccounts = (accessToken = "null accessToken") => {
   const MS = util.getEndpoint("identity");
   const requestOptions = {
     method: "GET",
@@ -132,7 +154,7 @@ const listAccounts = (apiKey = "null api key") => {
       include_identities: false
     },
     headers: {
-      "application-key": apiKey,
+      "Authorization": `Bearer ${accessToken}`,
       "Content-type": "application/json"
     },
     json: true
@@ -143,12 +165,12 @@ const listAccounts = (apiKey = "null api key") => {
 
 /**
  * This function will call the identity microservice to get account details
- * @param apiKey - api key for cpaas systems
+ * @param accessToken - access token for cpaas systems
  * @param accountUUID - account_uuid for an star2star account (customer)
  * @param includeIdentities - boolean to include identities in account or not
  * @returns promise resolving to an identity data
  **/
-const getAccount = (apiKey = "null api key", accountUUID = "null account uuid", includeIdentities = false) => {
+const getAccount = (accessToken = "null access token", accountUUID = "null account uuid", includeIdentities = false) => {
   const MS = util.getEndpoint("identity");
   const requestOptions = {
     method: "GET",
@@ -157,7 +179,7 @@ const getAccount = (apiKey = "null api key", accountUUID = "null account uuid", 
       include_identities: includeIdentities
     },
     headers: {
-      "application-key": apiKey,
+      "Authorization": `Bearer ${accessToken}`,
       "Content-type": "application/json"
     },
     json: true
@@ -170,6 +192,7 @@ module.exports = {
   createIdentity,
   deleteIdentity,
   login,
+  getMyIdentityData,
   lookupIdentity,
   listAccounts,
   getAccount

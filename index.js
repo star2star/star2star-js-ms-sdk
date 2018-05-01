@@ -6,7 +6,6 @@ const Messaging = require('./messaging');
 const Objects = require('./objects');
 const Util = require('./utilities');
 const Task = require('./task');
-const Event = require('./event');
 const Groups = require('./groups');
 const ShortUrls = require('./shorturls');
 const Auth = require('./auth');
@@ -61,7 +60,6 @@ module.exports = {
   Objects,
   Util,
   Task,
-  Event,
   setMsHost,
   getMsHost,
   setApplicationKey,

@@ -6,14 +6,14 @@ const util = require("./utilities");
 /**
  * This function will ask the cpaas contacts service to create a contact
  *
- * @param apiKey - api key for cpaas systems
- * @param userUUID - user UUID to be used
+ * @param accessToken - access token
+ * @param userUuid - user UUID to be used
  * @param contactData - objedt with contact data
  * @returns promise for list of groups for this user
  **/
 const createUserContact = (
-  apiKey = "null api key",
-  userUUID = "null user uuid",
+  accessToken = "null accessToken",
+  userUuid = "null user uuid",
   contactData = {}
 ) => {
   const MS = util.getEndpoint("contacts");
@@ -21,9 +21,9 @@ const createUserContact = (
 
   const requestOptions = {
     method: "POST",
-    uri: `${MS}/users/${userUUID}/contacts`,
+    uri: `${MS}/users/${userUuid}/contacts`,
     headers: {
-      "application-key": apiKey,
+      "Authorization": `Bearer ${accessToken}`,
       "Content-type": "application/json"
     },
     body: contactData,
@@ -36,12 +36,12 @@ const createUserContact = (
 /**
  * This function will ask the cpaas contacts service to delete a contact
  *
- * @param apiKey - api key for cpaas systems
+ * @param accessToken - access token
  * @param contactUUID - contact UUID to be used
  * @returns promise for list of groups for this user
  **/
 const deleteContact = (
-  apiKey = "null api key",
+  accessToken = "null accessToken",
   contactUUID = "null contact uuid"
 ) => {
   const MS = util.getEndpoint("contacts");
@@ -49,7 +49,7 @@ const deleteContact = (
     method: "DELETE",
     uri: `${MS}/contacts/${contactUUID}`,
     headers: {
-      "application-key": apiKey,
+      "Authorization": `Bearer ${accessToken}`,
       "Content-type": "application/json"
     },
     json: true
@@ -61,18 +61,18 @@ const deleteContact = (
  * This function will ask the cpaas contacts service to get user contacts based on input criteria
  *
  * @param apiKey - api key for cpaas systems
- * @param userUUID - user UUID to be used
+ * @param userUuid - user UUID to be used
  * @returns promise for list of groups for this user
  **/
 const getContacts = (
   apiKey = "null api key",
-  userUUID = "null user uuid",
+  userUuid = "null user uuid",
   params = {}
 ) => {
   const MS = util.getEndpoint("contacts");
   const requestOptions = {
     method: "GET",
-    uri: `${MS}/users/${userUUID}/contacts`,
+    uri: `${MS}/users/${userUuid}/contacts`,
     qs: { ...params
     },
     headers: {
@@ -89,19 +89,19 @@ const getContacts = (
  * This function will call getContacts one or more times to list all user contacts
  *
  * @param apiKey - api key for cpaas systems
- * @param userUUID - user UUID to be used
+ * @param userUuid - user UUID to be used
  * @returns promise for list of groups for this user
  **/
 const listContacts = (
   apiKey = "null api key",
-  userUUID = "null user uuid"
+  userUuid = "null user uuid"
 ) => {
   return new Promise((resolve, reject) => {
     // this array will accumulate the contact list
     let returnContacts = [];
     let parameters = {};
     // make initial call to get first contacts
-    getContacts(apiKey, userUUID).then((contactData) => {
+    getContacts(apiKey, userUuid).then((contactData) => {
       // add the contacts we got to the array
       returnContacts = returnContacts.concat(contactData.items);
 
@@ -119,7 +119,7 @@ const listContacts = (
           // need offset and limit
           newParams.offset = ((index + 1) * contactData.metadata.count) + 1;
           //newParams.limit = contactData.metadata.count;
-          return getContacts(apiKey, userUUID, newParams);
+          return getContacts(apiKey, userUuid, newParams);
         });
         // when all of the promises are resolved, push the contacts onto the array
         // then resolve the speak

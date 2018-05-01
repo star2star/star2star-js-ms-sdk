@@ -1,11 +1,9 @@
-var assert = require("assert");
-var s2sMS = require("../index");
-var fs = require("fs");
+const assert = require("assert");
+const s2sMS = require("../index");
+const fs = require("fs");
 
 
 var creds = {
-  CPAAS_KEY: "yourkeyhere",
-  CPAAS_IDENTITY_KEY: "id key here",
   CPAAS_OAUTH_KEY: "your oauth key here",
   CPAAS_OAUTH_TOKEN: "Basic your oauth token here",
   CPAAS_API_VERSION: "v1",
@@ -46,8 +44,9 @@ describe("Oauth MS", function () {
         );
         done();
       })
-      .catch((e) => {
-        console.log(e)
+      .catch((error) => {
+        console.log('Error getting access token [getAccessToken]', error);
+        done(new Error(error));
       });
   });
 
@@ -79,12 +78,14 @@ describe("Oauth MS", function () {
             );
             done();
           })
-          .catch((e) => {
-            console.log('Error refreshing token', e);
+          .catch((error) => {
+            console.log('Error refreshing token', error);
+            done(new Error(error));
           });
 
-      }).catch((e) => {
-        console.log('Failed to get access token in refresh token test', e);
-      })
+      }).catch((error) => {
+        console.log('Failed to get access token [refresh token]', error);
+        done(new Error(error));
+      });
   });
 });
