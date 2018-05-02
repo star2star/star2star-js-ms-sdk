@@ -7,21 +7,20 @@ const ObjectMerge = require('object-merge');
 /**
  * This function will get a list of all short urls
  *
- * @param userUUID - user UUID to be used
+ * @param userUuid - user UUID to be used
  * @param accessToken - access Token
  * @param options - object of options  --- see swagger
  * @returns promise for list of short urls
  **/
-const list = (userUUID = 'null user uuid', accessToken = 'null accessToken', options = {}) => {
+const listShortUrls = (userUuid = 'null user uuid', accessToken = 'null accessToken', options = {}) => {
     const MS = util.getEndpoint("shorturls");
     const requestOptions = {
         method: 'GET',
-        uri: `${MS}/shorturls`,
+        uri: `${MS}/shorturls?user_uuid=${userUuid}`,
         qs: options,
         headers: {
             'Content-type': 'application/json',
-            'Authorization': `Bearer ${accessToken}`,
-            'user_uuid': userUUID
+            'Authorization': `Bearer ${accessToken}`
         },
         json: true
     };
@@ -31,12 +30,12 @@ const list = (userUUID = 'null user uuid', accessToken = 'null accessToken', opt
 /**
  * This function will create a new short url
  *
- * @param userUUID - user UUID to be used
+ * @param userUuid - user UUID to be used
  * @param accessToken - access Token
  * @param options - options Object
  * @returns data
  **/
-const create = (userUUID = 'null user uuid', accessToken = 'null accessToken',
+const createShortUrl = (userUuid = 'null user uuid', accessToken = 'null accessToken',
     options = {}) => {
     const MS = util.getEndpoint("shorturls");
 
@@ -52,7 +51,7 @@ const create = (userUUID = 'null user uuid', accessToken = 'null accessToken',
         headers: {
             'Content-type': 'application/json',
             'Authorization': `Bearer ${accessToken}`,
-            'user_uuid': userUUID
+            'user_uuid': userUuid
         },
         json: true
     };
@@ -62,12 +61,12 @@ const create = (userUUID = 'null user uuid', accessToken = 'null accessToken',
 /**
  * This function will create a new short url
  *
- * @param userUUID - user UUID to be used
+ * @param userUuid - user UUID to be used
  * @param accessToken - access Token
  * @param short_code - short_code to delete
  * @returns no content
  **/
-const deleteShortCode = (userUUID = 'null user uuid', accessToken = 'null accessToken', short_code = 'notdefined') => {
+const deleteShortCode = (userUuid = 'null user uuid', accessToken = 'null accessToken', short_code = 'notdefined') => {
     const MS = util.getEndpoint("shorturls");
 
 
@@ -78,7 +77,7 @@ const deleteShortCode = (userUUID = 'null user uuid', accessToken = 'null access
         headers: {
             'Content-type': 'application/json',
             'Authorization': `Bearer ${accessToken}`,
-            'user_uuid': userUUID
+            'user_uuid': userUuid
         },
         json: true
     };
@@ -86,7 +85,7 @@ const deleteShortCode = (userUUID = 'null user uuid', accessToken = 'null access
 };
 
 module.exports = {
-    list,
-    create,
+    listShortUrls,
+    createShortUrl,
     deleteShortCode
 };

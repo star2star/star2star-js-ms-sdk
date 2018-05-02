@@ -6,7 +6,7 @@
     "IDENTITY": "/identity",
     "MESSAGING": "/messaging",
     "OBJECTS": "/objects",
-    "LAMBDA": "/lambda-proxy",
+    "LAMBDA": "/lambda",
     "SHORTURLS": "/shorturls",
     "CONTACTS": "/contacts",
     "OAUTH": "/oauth"

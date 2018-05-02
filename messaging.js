@@ -5,30 +5,29 @@ const request = require('request-promise');
 
 /**
  * This function will retrieve the conversation uuid for whom you are sending it to
- * @param apiKey - cpaas api key
- * @param userUUID - the user uuid making the request
+ * @param accessToken - cpaas access Token
+ * @param userUuid - the user uuid making the request
  * @param toPhoneNumber - a single string full phone number you will be sending the sms too
  * @return promise which will resolve to conversation uuid
  */
-const getConvesationUUID = (apiKey, userUUID, toPhoneNumber) => {
+const getConversationUuid = (accessToken, userUuid, toPhoneNumber) => {
   return new Promise((resolve, reject) => {
-    const GET_CONVERSATION_CMD = `/users/${userUUID}/conversations`;
     const MS = util.getEndpoint("Messaging");
-    const REQUEST_OPTIONS = {
+    const requestOptions = {
       method: 'POST',
-      uri: `${MS}${GET_CONVERSATION_CMD}`,
+      uri: `${MS}/users/${userUuid}/conversations`,
       body: {
         "phone_numbers": [toPhoneNumber]
       },
       headers: {
         'Content-Type': 'application/json',
-        'application-key': `${apiKey}`
+        'Authorization': `Bearer ${accessToken}`
       },
       json: true
     };
 
-    //console.log('RRRR:', REQUEST_OPTIONS)
-    request(REQUEST_OPTIONS).then((response) => {
+    //console.log('RRRR:', requestOptions)
+    request(requestOptions).then((response) => {
       //console.log('rrrr', response.context.uuid)
       resolve(response.context.uuid);
     }).catch((fetchError) => {
@@ -41,17 +40,16 @@ const getConvesationUUID = (apiKey, userUUID, toPhoneNumber) => {
 
 /**
  * This function will send an sms message
- * @param apiKey - cpaas api key
+ * @param accessToken - cpaas access Token
  * @param conversationUUID - uuid of conversation; see getConvesationUUID
- * @param userUUID - the user uuid making the request
+ * @param userUuid - the user uuid making the request
  * @param fromPhoneNumber - full phone number to use as the sender/reply too
  * @param msg - the message to send
  * @return promise which will resolve to  the response
  */
-const sendSMSMessage = (apiKey, convesationUUID, userUUID, fromPhoneNumber, msg) => {
+const sendSMSMessage = (accessToken, convesationUUID, userUuid, fromPhoneNumber, msg) => {
   return new Promise((resolve, reject) => {
-    const SEND_MSG_CMD = `/users/${userUUID}/messages`;
-    const OBJ_BODY = {
+    const objectBody = {
       "to": `${convesationUUID}`,
       "from": `${fromPhoneNumber}`,
       "channel": "sms",
@@ -61,19 +59,18 @@ const sendSMSMessage = (apiKey, convesationUUID, userUUID, fromPhoneNumber, msg)
       }]
     };
     const MS = util.getEndpoint("Messaging");
-
-    const REQUEST_OPTIONS = {
+    const requestOptions = {
       method: 'POST',
-      uri: `${MS}${SEND_MSG_CMD}`,
-      body: OBJ_BODY,
+      uri: `${MS}/users/${userUuid}/messages`,
+      body: objectBody,
       headers: {
         'Content-Type': 'application/json',
-        'application-key': apiKey
+        'Authorization': `Bearer ${accessToken}`
       },
       json: true
     };
 
-    request(REQUEST_OPTIONS).then((response) => {
+    request(requestOptions).then((response) => {
       //console.log('xxxxx', response)
       resolve(response);
     }).catch((e) => {
@@ -86,17 +83,17 @@ const sendSMSMessage = (apiKey, convesationUUID, userUUID, fromPhoneNumber, msg)
 
 /**
  * This function will send an sms message
- * @param apiKey - cpaas api key
- * @param userUUID - the user uuid making the request
+ * @param accessToken - cpaas access Token
+ * @param userUuid - the user uuid making the request
  * @param msg - the message to send
  * @param fromPhoneNumber - full phone number to use as the sender/reply too
  * @param toPhoneNumber - a single string full phone number you will be sending the sms too
  * @return promise which will resolve to  the response
  */
-const sendSMS = (apiKey, userUUID, msg, fromPhoneNumber, toPhoneNumber) => {
+const sendSMS = (accessToken, userUuid, msg, fromPhoneNumber, toPhoneNumber) => {
   return new Promise((resolve, reject) => {
-    getConvesationUUID(apiKey, userUUID, toPhoneNumber).then((conversationUUID) => {
-      sendSMSMessage(apiKey, conversationUUID, userUUID, fromPhoneNumber, msg).then((response) => {
+    getConvesationUUID(accessToken, userUuid, toPhoneNumber).then((conversationUUID) => {
+      sendSMSMessage(accessToken, conversationUUID, userUuid, fromPhoneNumber, msg).then((response) => {
         resolve(response);
       }).catch((sError) => {
         reject(sError);
@@ -110,27 +107,27 @@ const sendSMS = (apiKey, userUUID, msg, fromPhoneNumber, toPhoneNumber) => {
 
 /**
  * This function will get user sms number
- * @param apiKey - cpaas api key
- * @param userUUID - the user uuid making the request
+ * @param accessToken - cpaas access Token
+ * @param userUuid - the user uuid making the request
  * @return promise which will resolve to  the sms number or reject if empty
  */
-const getSMSNumber = (apiKey, userUUID) => {
+const getSMSNumber = (accessToken, userUuid) => {
 
   return new Promise((resolve, reject) => {
     const MS = util.getEndpoint("identity");
 
-    const SMS_REQ_OPTIONS = {
+    const requestOptions = {
       method: 'GET',
-      uri: `${MS}/identities/${userUUID}`,
+      uri: `${MS}/identities/${userUuid}`,
       headers: {
-        'application-key': apiKey,
+        'Authorization': `Bearer ${accessToken}`,
         'Content-type': 'application/json'
       },
       json: true
     };
-    request(SMS_REQ_OPTIONS).then((r) => {
-      if (r && r.aliases) {
-        const smsNbr = r.aliases.reduce((prev, curr) => {
+    request(requestOptions).then((smsResponse) => {
+      if (smsResponse && smsResponse.aliases) {
+        const smsNbr = smsResponse.aliases.reduce((prev, curr) => {
           if (!prev) {
             if (curr && curr.hasOwnProperty('sms')) {
               return curr['sms'];
@@ -141,13 +138,17 @@ const getSMSNumber = (apiKey, userUUID) => {
         if (smsNbr) {
           resolve(smsNbr);
         } else {
-          reject();
+          reject({
+            message: `No sms number in alias: ${smsResponse}`
+          });
         }
       } else {
-        reject();
+        reject({
+          message: `No aliases in sms response ${smsResponse}`
+        });
       }
-    }).catch((e) => {
-      reject();
+    }).catch((error) => {
+      reject(error);
     });
   });
 };
@@ -156,5 +157,5 @@ module.exports = {
   getSMSNumber,
   sendSMS,
   sendSMSMessage,
-  getConvesationUUID
+  getConversationUuid
 };

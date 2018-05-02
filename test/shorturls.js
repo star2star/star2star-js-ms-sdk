@@ -2,9 +2,7 @@ const assert = require("assert");
 const s2sMS = require("../index");
 const fs = require("fs");
 
-var creds = {
-  CPAAS_KEY: "yourkeyhere",
-  CPAAS_IDENTITY_KEY: "id key here",
+let creds = {
   CPAAS_OAUTH_KEY: "your oauth key here",
   CPAAS_OAUTH_TOKEN: "Basic your oauth token here",
   CPAAS_API_VERSION: "v1",
@@ -13,33 +11,9 @@ var creds = {
   isValid: false
 };
 
-const getPromiseArrayForUserLoginAndAccessToken = () => {
-  let promiseArray = [];
-
-  // get access token
-  promiseArray.push(s2sMS.Oauth.getAccessToken(
-    creds.CPAAS_OAUTH_KEY,
-    creds.CPAAS_OAUTH_TOKEN,
-    creds.CPAAS_API_VERSION,
-    creds.email,
-    creds.password
-  ));
-
-  promiseArray.push(s2sMS.Identity.login(
-    creds.CPAAS_IDENTITY_KEY,
-    creds.email,
-    creds.password
-  ));
-
-  return promiseArray;
-};
-
-
-
 describe("ShortUrls Test Suite", function () {
 
   let accessToken;
-  let user_uuid;
 
   before(function () {
     s2sMS.setMsHost("https://cpaas.star2starglobal.net");
@@ -49,31 +23,45 @@ describe("ShortUrls Test Suite", function () {
       creds = require("./credentials.json");
     }
 
-    // get accessToken and user_uuid to use in test cases
+    // get accessToken to use in test cases
     // Return promise so that test cases will not fire until it resolves.
-    return Promise.all(getPromiseArrayForUserLoginAndAccessToken())
-      .then(promiseData => {
-        const oauthData = promiseData[0];
-        const identityData = promiseData[1];
-
+    return s2sMS.Oauth.getAccessToken(
+        creds.CPAAS_OAUTH_KEY,
+        creds.CPAAS_OAUTH_TOKEN,
+        creds.CPAAS_API_VERSION,
+        creds.email,
+        creds.password
+      )
+      .then(oauthData => {
         const oData = JSON.parse(oauthData);
         // console.log('Got access token and identity data -[Get Object By Data Type] ', identityData, oData);
         accessToken = oData.access_token;
-        user_uuid = identityData.user_uuid;
       });
   });
 
-  it("list", function (done) {
+  it("list shorturls", function (done) {
     if (!creds.isValid) return done();
 
-    s2sMS.ShortUrls.list(
-      user_uuid,
-      accessToken
-    ).then(responseData => {
-      //console.log(responseData)
-      assert(responseData.metadata !== null);
-      done();
-    });
+    s2sMS.Identity.getMyIdentityData(accessToken)
+      .then((identityData) => {
+        const idData = JSON.parse(identityData);
+        s2sMS.ShortUrls.listShortUrls(
+            idData.user_uuid,
+            accessToken
+          ).then(responseData => {
+            console.log(responseData)
+            assert(responseData.metadata !== null);
+            done();
+          })
+          .catch((error) => {
+            console.log('Error getting shortUrl list', error);
+            done(new Error(error));
+          });
+      })
+      .catch((error) => {
+        console.log('Error getting identity data [get shorturl list]', error);
+        done(new Error(error));
+      })
   });
 
   it("create / delete ", function (done) {

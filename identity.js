@@ -39,6 +39,34 @@ const createIdentity = (
 
 /**
  * This function will call the identity microservice with the credentials and
+ * accessToken you passed in
+ * @param accessToken - access token
+ * @param userUuid - user_uuid for alias being created
+ * @param did - sms number to associate with the user
+ * @returns promise resolving to an identity object with alias
+ **/
+const updateAliasWithDID = (
+  accessToken = "null accessToken",
+  userUuid = "null user uuid",
+  did = "null DID"
+) => {
+  const MS = util.getEndpoint("identity");
+  const requestOptions = {
+    method: "PUT",
+    uri: `${MS}/identities/${userUuid}/aliases/${did}`,
+    headers: {
+      "Authorization": `Bearer ${accessToken}`,
+      "Content-type": "application/json"
+    }
+  };
+
+  return request(requestOptions);
+};
+
+
+
+/**
+ * This function will call the identity microservice with the credentials and
  * accessToken you passed in and delete the user object matching the user_uuid submitted
  * @param accessToken - access token for cpaas systems
  * @param userUuid - uuid for a star2star user
@@ -190,6 +218,7 @@ const getAccount = (accessToken = "null access token", accountUUID = "null accou
 
 module.exports = {
   createIdentity,
+  updateAliasWithDID,
   deleteIdentity,
   login,
   getMyIdentityData,

@@ -71,6 +71,48 @@ describe("Identity MS Unit Test Suite", function () {
       });
   });
 
+  it("Add DID Identity Alias", function (done) {
+    if (!creds.isValid) return done();
+    s2sMS.Identity.createIdentity(
+        accessToken,
+        "testEmail2@star2star.com",
+        "guest",
+        "pwd1"
+      )
+      .then((identityData) => {
+        // console.log('Created guest user [create Alias]', identityData.uuid);
+        const testSMSNumber = "941-999-8765";
+        s2sMS.Identity.updateAliasWithDID(
+            accessToken,
+            identityData.uuid,
+            testSMSNumber
+          ).then((aliasData) => {
+            // console.log('alias data', aliasData);
+            assert(JSON.parse(aliasData).sms === testSMSNumber);
+            done();
+            s2sMS.Identity.deleteIdentity(accessToken, identityData.uuid)
+              .then((d) => {
+                // console.log('Deleted guest user:', identityData.uuid);
+              })
+              .catch((error) => {
+                console.log('Error deleting user [create guest user]', error);
+                done(new Error(error));
+              });
+
+          })
+          .catch((error) => {
+            console.log('Error updating alias [create alias]', error);
+            done(new Error(error));
+          });
+      })
+      .catch((error) => {
+        console.log('Error create guest identity', error);
+        done(new Error(error));
+      });
+  });
+
+
+
   it("Delete Identity", function (done) {
     if (!creds.isValid) return done();
     s2sMS.Identity.createIdentity(
