@@ -6,27 +6,26 @@ const ObjectMerge = require('object-merge');
 
 const VALID_ACTIONS = ['create', 'read', 'update', 'delete', 'list'];
 const VALID_RT = ['object', 'account', 'user'];
-const VALID_SCOPE = ['global', 'user'];
+const VALID_SCOPE = ['global', 'account', 'user'];
 
 /**
  * This function will list all users permissions
  *
- * @param apiKey - api key for cpaas systems
- * @param userUUID - user UUID to be used
+ * @param accessToken - access Token for cpaas systems
+ * @param userUuid - user UUID to be used
  * @param accessToken - access Token
  * @param resource_type - filter if defined - string
  * @returns data
  **/
-const listUserPermissions = (apiKey = 'null api key', userUUID = 'null user uuid', resource_type = undefined, scope = undefined, actions = ['create', 'read', 'update', 'delete', 'list']) => {
+const listUserPermissions = (accessToken = 'null access Token', userUuid = 'null user uuid', resource_type = undefined, scope = undefined, actions = ['create', 'read', 'update', 'delete', 'list']) => {
   const MS = util.getEndpoint("auth");
 
   const requestOptions = {
     method: 'GET',
-    uri: `${MS}/users/${userUUID}/permissions`,
+    uri: `${MS}/users/${userUuid}/permissions`,
     headers: {
-      'application-key': apiKey,
-      'Content-type': 'application/json',
-      //'Authorization': `Bearer ${accessToken}`
+      'Authorization': `Bearer ${accessToken}`,
+      'Content-type': 'application/json'
     },
     json: true,
     // resolveWithFullResponse: true
@@ -36,22 +35,20 @@ const listUserPermissions = (apiKey = 'null api key', userUUID = 'null user uuid
     requestOptions.qs = {
       "resource_type": resource_type
     };
-  }
+  };
+
   return new Promise((resolve, reject) => {
     request(requestOptions).then((responseData) => {
-      console.log('responseData', responseData);
+      // console.log('responseData', responseData);
 
       let pItems = ObjectMerge([], responseData.items);
-
-
-
 
       if (scope !== undefined) {
         pItems = pItems.filter((i) => {
           return i.scope === scope;
         });
       }
-      //console.log('>>>', actions, actions !== undefined && Array.isArray(actions));
+      // console.log('>>>', pItems, actions, actions !== undefined && Array.isArray(actions));
 
       if (actions !== undefined && Array.isArray(actions)) {
         pItems = pItems.filter((i) => {
@@ -69,21 +66,20 @@ const listUserPermissions = (apiKey = 'null api key', userUUID = 'null user uuid
 /**
  * This function will GET specific permissions
  *
- * @param apiKey - api key for cpaas systems
- * @param userUUID - user UUID to be used
+ * @param accessToken - access Token for cpaas systems
+ * @param userUuid - user UUID to be used
  * @param accessToken - access Token
  * @param resource_type - filter if defined - string
  * @param scope - required
  * @param actions - array required
  * @returns arry of permission data
  **/
-const getSpecificPermissions = (apiKey = 'null api key', userUUID = 'null user uuid', accessToken = 'null jwt',
+const getSpecificPermissions = (accessToken = 'null access Token', userUuid = 'null user uuid',
   resource_type = undefined, scope = undefined, actions = []) => {
 
   if (resource_type === undefined || VALID_RT.indexOf(resource_type) === -1) {
     return Promise.reject("resource_type must be specified and one of " + VALID_RT);
   }
-
 
   if (scope === undefined || VALID_SCOPE.indexOf(scope) === -1) {
     return Promise.reject("scope must be specified and one of " + VALID_SCOPE);
@@ -91,7 +87,7 @@ const getSpecificPermissions = (apiKey = 'null api key', userUUID = 'null user u
 
   const missingActions = actions.filter((i) => (VALID_ACTIONS.indexOf(i) === -1));
   if (!Array.isArray(actions) || actions.length === 0 || missingActions.length > 0) {
-    return Promise.reject("actions must be an array consisting of the follow values  " + VALID_ACTIONS);
+    return Promise.reject("actions must be an array consisting of some or all of the follow values  " + VALID_ACTIONS);
   }
 
   // ok all parameters valid
@@ -104,16 +100,15 @@ const getSpecificPermissions = (apiKey = 'null api key', userUUID = 'null user u
       "resource_type": resource_type
     },
     headers: {
-      'application-key': apiKey,
+      'Authorization': `Bearer ${accessToken}`,
       'Content-type': 'application/json',
-      //'Authorization': `Bearer ${accessToken}`
     },
     json: true
   };
 
   return new Promise((resolve, reject) => {
     request(requestOptions).then((responseData) => {
-      let pItems = ObjectMerge([], responseData);
+      let pItems = ObjectMerge([], responseData.items);
 
       pItems = pItems.filter((i) => {
         return i.scope === scope;
@@ -134,8 +129,8 @@ const getSpecificPermissions = (apiKey = 'null api key', userUUID = 'null user u
 /**
  * This function will add permissions to a group
  *
- * @param apiKey - api key for cpaas systems
- * @param userUUID - user UUID to be used
+ * @param accessToken - access Token for cpaas systems
+ * @param userUuid - user UUID to be used
  * @param accessToken - access Token
  * @param group_uuid - group uuid
  * @param resource_uuid - resource_uuid
@@ -144,7 +139,7 @@ const getSpecificPermissions = (apiKey = 'null api key', userUUID = 'null user u
  * @param actions - array actions ['create', 'read','update', 'delete', 'list']
  * @returns data
  **/
-const addExplicitGroupPermissions = (apiKey = 'null api key', userUUID = 'null user uuid', accessToken = 'null jwt',
+const addExplicitGroupPermissions = (accessToken = 'null access Token', userUuid = 'null user uuid',
   group_uuid = undefined, resource_uuid = undefined, resource_type = undefined, resource_scope = undefined, actions = []) => {
   const MS = util.getEndpoint("auth");
 
@@ -168,7 +163,7 @@ const addExplicitGroupPermissions = (apiKey = 'null api key', userUUID = 'null u
 
   return new Promise((resolve, reject) => {
     //2. get permissions
-    getSpecificPermissions(apiKey, userUUID, accessToken, resource_type, resource_scope, actions).then((pData) => {
+    getSpecificPermissions(accessToken, userUuid, accessToken, resource_type, resource_scope, actions).then((pData) => {
       // ok have permission object
       // loop over them which will build an array of permission objects to be posted
       const arrayOfPermissions = pData.map((p) => {
@@ -184,9 +179,8 @@ const addExplicitGroupPermissions = (apiKey = 'null api key', userUUID = 'null u
           "permissions": arrayOfPermissions
         },
         headers: {
-          'application-key': apiKey,
+          'Authorization': `Bearer ${accessToken}`,
           'Content-type': 'application/json',
-          //'Authorization': `Bearer ${accessToken}`
         },
         json: true
       };
@@ -208,8 +202,8 @@ const addExplicitGroupPermissions = (apiKey = 'null api key', userUUID = 'null u
 /**
  * This function will add permissions to a group
  *
- * @param apiKey - api key for cpaas systems
- * @param userUUID - user UUID to be used
+ * @param accessToken - access Token for cpaas systems
+ * @param userUuid - user UUID to be used
  * @param accessToken - access Token
  * @param user_uuid - group uuid
  * @param resource_uuid - resource_uuid
@@ -218,7 +212,7 @@ const addExplicitGroupPermissions = (apiKey = 'null api key', userUUID = 'null u
  * @param actions - array actions
  * @returns data
  **/
-const addExplicitUserPermissions = (apiKey = 'null api key', userUUID = 'null user uuid', accessToken = 'null jwt',
+const addExplicitUserPermissions = (accessToken = 'null access Token', userUuid = 'null user uuid',
   user_uuid = undefined, resource_uuid = undefined, resource_type = undefined, resource_scope = undefined, actions = []) => {
   const MS = util.getEndpoint("auth");
 
@@ -242,7 +236,7 @@ const addExplicitUserPermissions = (apiKey = 'null api key', userUUID = 'null us
 
   return new Promise((resolve, reject) => {
     //2. get permissions
-    getSpecificPermissions(apiKey, userUUID, accessToken, resource_type, resource_scope, actions).then((pData) => {
+    getSpecificPermissions(accessToken, userUuid, accessToken, resource_type, resource_scope, actions).then((pData) => {
       // ok have permission object
       // loop over them which will build an array of permission objects to be posted
       const arrayOfPermissions = pData.map((p) => {
@@ -259,9 +253,8 @@ const addExplicitUserPermissions = (apiKey = 'null api key', userUUID = 'null us
           "permissions": arrayOfPermissions
         },
         headers: {
-          'application-key': apiKey,
+          'Authorization': `Bearer ${accessToken}`,
           'Content-type': 'application/json',
-          //'Authorization': `Bearer ${accessToken}`
         },
         json: true
       };
