@@ -1,6 +1,6 @@
 var assert = require("assert");
 var util = require("../utilities");
-var config = require("../config.json");
+var config = require("../src/config.json");
 var fs = require("fs");
 
 var creds = {

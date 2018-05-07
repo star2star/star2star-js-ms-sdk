@@ -1,0 +1,14 @@
+{
+  "microservices": {
+    "CHAT": "/chat",
+    "AUTH": "/auth",
+    "GROUPS": "/groups",
+    "IDENTITY": "/identity",
+    "MESSAGING": "/messaging",
+    "OBJECTS": "/objects",
+    "LAMBDA": "/lambda",
+    "SHORTURLS": "/shorturls",
+    "CONTACTS": "/contacts",
+    "OAUTH": "/oauth"
+  }
+}
