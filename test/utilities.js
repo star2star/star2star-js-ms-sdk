@@ -1,5 +1,6 @@
 var assert = require("assert");
-var util = require("../utilities");
+const s2sMS = require("../src/index");
+var util = require("../src/utilities");
 var config = require("../src/config.json");
 var fs = require("fs");
 
@@ -115,7 +116,7 @@ describe("Util", function () {
 
   it("test getEndpoint valid", function (done) {
     const prodEndPoint = util.getEndpoint("IDENTITY");
-    assert.equal("https://cpaas.star2star.net/identity", prodEndPoint);
+    assert.equal("https://cpaas.star2starglobal.net/identity", prodEndPoint);
     done();
   });
 
@@ -151,7 +152,7 @@ describe("Util", function () {
 
   it("test getEndpoint valid - lowercase ", function (done) {
     const prodEndPoint = util.getEndpoint("identity");
-    assert.equal("https://cpaas.star2star.net/identity", prodEndPoint);
+    assert.equal("https://cpaas.star2starglobal.net/identity", prodEndPoint);
     done();
   });
 

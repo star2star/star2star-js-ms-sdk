@@ -1,7 +1,7 @@
 // TODO - finish messaging unit testing
 
 const assert = require("assert");
-const s2sMS = require("../index");
+const s2sMS = require("../src/index");
 const fs = require("fs");
 
 let creds = {

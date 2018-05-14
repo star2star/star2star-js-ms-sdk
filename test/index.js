@@ -1,5 +1,5 @@
 var assert = require("assert");
-var s2sMS = require("../index");
+var s2sMS = require("../src/index");
 var fs = require("fs");
 
 var creds = {
@@ -27,7 +27,6 @@ describe("MS SDK Index", function () {
       "Objects",
       "Util",
       "Task",
-      "Event",
       "setMsHost",
       "getMsHost",
       "setApplicationKey",
@@ -35,8 +34,12 @@ describe("MS SDK Index", function () {
       "Groups",
       "ShortUrls",
       "Auth",
+      "Oauth",
       "Chat",
-      "Contacts"
+      "Contacts",
+      "getPermissions",
+      "Media",
+      "Pubsub"
     ];
     assert.deepEqual(Object.keys(s2sMS), msKeys);
     done();
@@ -50,7 +53,7 @@ describe("MS SDK Index", function () {
   });
 
   it("set/get baseUrl development  ", function (done) {
-    assert.equal(s2sMS.getMsHost(), "https://cpaas.star2star.net");
+    assert.equal(s2sMS.getMsHost(), "https://cpaas.star2starglobal.net");
     done();
   });
 

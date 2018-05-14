@@ -9,6 +9,8 @@
     "LAMBDA": "/lambda",
     "SHORTURLS": "/shorturls",
     "CONTACTS": "/contacts",
-    "OAUTH": "/oauth"
+    "OAUTH": "/oauth",
+    "MEDIA": "/media",
+    "PUBSUB": "/pubsub"
   }
 }

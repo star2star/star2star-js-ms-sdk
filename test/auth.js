@@ -1,9 +1,10 @@
 const assert = require("assert");
-const util = require("../utilities");
+const s2sMS = require("../src/index");
+const util = s2sMS.Util;
 const request = require('request-promise');
-const s2sMS = require("../index");
-const fs = require("fs");
 
+const fs = require("fs");
+console.log('xxxxxx', s2sMS)
 
 let creds = {
   CPAAS_OAUTH_KEY: "your oauth key here",

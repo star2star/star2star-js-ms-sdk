@@ -1,6 +1,6 @@
 // TODO update tov1 API when available...
 var assert = require("assert");
-var s2sMS = require("../index");
+var s2sMS = require("../src/index");
 var fs = require("fs");
 
 var creds = {

@@ -1,5 +1,5 @@
 const assert = require("assert");
-const s2sMS = require("../index");
+const s2sMS = require("../src/index");
 const fs = require("fs");
 
 let creds = {
@@ -18,7 +18,7 @@ const testContact = {
     "last": "User"
   },
   "phone_numbers": [{
-    "number": "941-999-8765",
+    "number": "9419998765",
     "preferred": true,
     "type": "Home"
   }]
@@ -119,4 +119,30 @@ describe("Contacts", function () {
         done(new Error(error));
       });
   });
+  it("List Contact", function (done) {
+    if (!creds.isValid) return done();
+    s2sMS.Identity.getMyIdentityData(accessToken)
+      .then((identityData) => {
+        const idData = JSON.parse(identityData);
+        s2sMS.Contacts.listContacts(
+            idData.user_uuid,
+            {}, 
+            accessToken
+          ).then(responseData => {
+            //console.log('list contact response', responseData);
+            assert(true);
+            done();
+          })
+          .catch((error) => {
+            console.log('Error listing contacts', error.message);
+            done(new Error(error));
+          });
+      })
+      .catch((error) => {
+        console.log('Error getting my identity data [list contacts]', error.message);
+        done(new Error(error));
+      });
+  });
+
+
 });

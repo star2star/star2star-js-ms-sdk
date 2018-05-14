@@ -1,6 +1,6 @@
 const assert = require("assert");
-const s2sMS = require("../index");
-const config = require("../utilities").config;
+const s2sMS = require("../src/index");
+const config = require("../src/utilities").config;
 const fs = require("fs");
 
 let creds = {

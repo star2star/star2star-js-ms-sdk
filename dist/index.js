@@ -13,6 +13,8 @@ var Auth = require('./auth');
 var Chat = require('./chat');
 var Contacts = require('./contacts');
 var Oauth = require('./oauth');
+var Media = require('./media');
+var Pubsub = require('./pubsub');
 
 var request = require('request-promise');
 
@@ -123,5 +125,7 @@ module.exports = {
   Oauth: Oauth,
   Chat: Chat,
   Contacts: Contacts,
-  getPermissions: getPermissions
+  getPermissions: getPermissions,
+  Media: Media,
+  Pubsub: Pubsub
 };
