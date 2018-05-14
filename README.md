@@ -121,6 +121,7 @@ s2sMS.Identity.login(creds.CPAAS_KEY, creds.email, creds.password)
 
 ## Changes
 
+* 2.0.4 - Added media service - files 
 * 2.0.3 - Adding new tests, and Contacts ms, removed unused params
 * 2.0.2 - Move baseUrl to process.env.MS_HOST
 * 2.0.1 - testing npm publishing
