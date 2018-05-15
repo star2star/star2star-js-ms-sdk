@@ -17,19 +17,19 @@ const request = require("request-promise");
 const getAccessToken = (
   oauthKey = "null oauth key",
   oauthToken = "null oauth token",
-  apiVersion = "null api version",
   email = "null email",
   pwd = "null pwd"
 ) => {
   const MS = util.getEndpoint("oauth");
+  const VERSION = util.getVersion();
   const requestOptions = {
     method: "POST",
     uri: `${MS}/oauth/token`,
     headers: {
       "application-key": oauthKey,
-      "Authorization": oauthToken,
-      "Content-type": "application/x-www-form-urlencoded",
-      "x-api-version": apiVersion
+      "Authorization": `Basic ${oauthToken}`,
+      'x-api-version': `${VERSION}`,
+      "Content-type": "application/x-www-form-urlencoded"
     },
     form: {
       grant_type: "password",
@@ -55,18 +55,18 @@ const getAccessToken = (
 const refreshAccessToken = (
   oauthKey = "null oauth key",
   oauthToken = "null oauth token",
-  apiVersion = "null api version",
   refreshToken = "null refresh token"
 ) => {
   const MS = util.getEndpoint("oauth");
+  const VERSION = util.getVersion();
   const requestOptions = {
     method: "POST",
     uri: `${MS}/oauth/token`,
     headers: {
       "application-key": oauthKey,
-      "Authorization": oauthToken,
-      "Content-type": "application/x-www-form-urlencoded",
-      "x-api-version": apiVersion
+      "Authorization": `Basic ${oauthToken}`,
+      'x-api-version': `${VERSION}`,
+      "Content-type": "application/x-www-form-urlencoded"
     },
     form: {
       grant_type: "refresh_token",

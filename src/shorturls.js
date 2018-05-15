@@ -19,8 +19,9 @@ const listShortUrls = (userUuid = 'null user uuid', accessToken = 'null accessTo
         uri: `${MS}/shorturls?user_uuid=${userUuid}`,
         qs: options,
         headers: {
+            'Authorization': `Bearer ${accessToken}`,
             'Content-type': 'application/json',
-            'Authorization': `Bearer ${accessToken}`
+            'x-api-version': `${util.getVersion()}`
         },
         json: true
     };
@@ -49,8 +50,9 @@ const createShortUrl = (userUuid = 'null user uuid', accessToken = 'null accessT
         uri: `${MS}/shorturls`,
         body: b,
         headers: {
-            'Content-type': 'application/json',
             'Authorization': `Bearer ${accessToken}`,
+            'Content-type': 'application/json',
+            'x-api-version': `${util.getVersion()}`,
             'user_uuid': userUuid
         },
         json: true
@@ -75,8 +77,9 @@ const deleteShortCode = (userUuid = 'null user uuid', accessToken = 'null access
         method: 'DELETE',
         uri: `${MS}/shorturls/${short_code}`,
         headers: {
-            'Content-type': 'application/json',
             'Authorization': `Bearer ${accessToken}`,
+            'Content-type': 'application/json',
+            'x-api-version': `${util.getVersion()}`,
             'user_uuid': userUuid
         },
         json: true

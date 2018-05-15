@@ -15,29 +15,42 @@ var creds = {
 
 describe("Identity MS Unit Test Suite", function () {
 
-  let accessToken;
+  let accessToken, identityData;
 
   before(function () {
-    // For tests, use the dev msHost
-    s2sMS.setMsHost("https://cpaas.star2starglobal.net");
-
     // file system uses full path so will do it like this
     if (fs.existsSync("./test/credentials.json")) {
       // do not need test folder here
       creds = require("./credentials.json");
     }
 
-    return s2sMS.Oauth.getAccessToken(
-      creds.CPAAS_OAUTH_KEY,
-      creds.CPAAS_OAUTH_TOKEN,
-      creds.CPAAS_API_VERSION,
-      creds.email,
-      creds.password
-    ).then((oauthData) => {
-      const oData = JSON.parse(oauthData);
-      // console.log('Got access token and identity data -[Get Object By Data Type] ', identityData, oData);
-      accessToken = oData.access_token;
-    });
+    // For tests, use the dev msHost
+    s2sMS.setMsHost("https://cpaas.star2starglobal.net");
+    s2sMS.setMSVersion(creds.CPAAS_API_VERSION);
+    // get accessToken to use in test cases
+    // Return promise so that test cases will not fire until it resolves.
+    return new Promise((resolve, reject)=>{
+      s2sMS.Oauth.getAccessToken(
+        creds.CPAAS_OAUTH_KEY,
+        creds.CPAAS_OAUTH_TOKEN,
+        creds.email,
+        creds.password
+      )
+      .then(oauthData => {
+        //console.log('Got access token and identity data -[Get Object By Data Type] ',  oauthData);
+        accessToken = oauthData.access_token;
+        s2sMS.Identity.getMyIdentityData(accessToken).then((idData)=>{
+          s2sMS.Identity.getIdentityDetails(accessToken, idData.user_uuid).then((identityDetails)=>{
+            identityData = identityDetails;
+            resolve();
+          }).catch((e1)=>{
+            reject(e1);
+          });
+        }).catch((e)=>{
+          reject(e);
+        });
+      });
+    })
   });
 
   it("Create Guest Identity", function (done) {
@@ -87,8 +100,8 @@ describe("Identity MS Unit Test Suite", function () {
             identityData.uuid,
             testSMSNumber
           ).then((aliasData) => {
-            // console.log('alias data', aliasData);
-            assert(JSON.parse(aliasData).sms === testSMSNumber);
+            console.log('alias data', aliasData);
+            assert(aliasData.sms === testSMSNumber);
             done();
             s2sMS.Identity.deleteIdentity(accessToken, identityData.uuid)
               .then((d) => {
@@ -172,7 +185,7 @@ describe("Identity MS Unit Test Suite", function () {
     s2sMS.Identity.getMyIdentityData(accessToken)
       .then((identityData) => {
         // console.log('get My Identity data response: %j', JSON.parse(identityData));
-        assert(JSON.parse(identityData).hasOwnProperty('user_uuid'));
+        identityData.hasOwnProperty('uuid');
         done();
       })
       .catch((error) => {

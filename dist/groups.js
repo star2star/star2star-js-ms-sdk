@@ -22,7 +22,8 @@ var listGroups = function listGroups() {
     uri: MS + "/groups",
     headers: {
       "Content-type": "application/json",
-      Authorization: "Bearer " + accessToken
+      "Authorization": "Bearer " + accessToken,
+      'x-api-version': "" + util.getVersion()
     },
     json: true
   };
@@ -53,7 +54,8 @@ var getGroup = function getGroup() {
     },
     headers: {
       "Content-type": "application/json",
-      Authorization: "Bearer " + accessToken
+      "Authorization": "Bearer " + accessToken,
+      'x-api-version': "" + util.getVersion()
     },
     json: true
   };
@@ -78,7 +80,8 @@ var deleteGroup = function deleteGroup() {
     uri: MS + "/groups/" + groupUUID,
     headers: {
       "Content-type": "application/json",
-      Authorization: "Bearer " + accessToken
+      "Authorization": "Bearer " + accessToken,
+      'x-api-version': "" + util.getVersion()
     },
     json: true
   };
@@ -120,7 +123,8 @@ var createGroup = function createGroup() {
     body: b,
     headers: {
       "Content-type": "application/json",
-      Authorization: "Bearer " + accessToken
+      "Authorization": "Bearer " + accessToken,
+      'x-api-version': "" + util.getVersion()
     },
     json: true
   };
@@ -148,7 +152,8 @@ var updateGroup = function updateGroup() {
     body: ObjectMerge({}, group_object),
     headers: {
       "Content-type": "application/json",
-      Authorization: "Bearer " + accessToken
+      "Authorization": "Bearer " + accessToken,
+      'x-api-version': "" + util.getVersion()
     },
     json: true
   };
@@ -176,7 +181,8 @@ var addMembersToGroup = function addMembersToGroup() {
     body: members,
     headers: {
       "Content-type": "application/json",
-      Authorization: "Bearer " + accessToken
+      "Authorization": "Bearer " + accessToken,
+      'x-api-version': "" + util.getVersion()
     },
     json: true
   };

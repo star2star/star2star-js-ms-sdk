@@ -32,6 +32,17 @@ var setMsHost = function setMsHost() {
 };
 
 /**
+ * This function sets the microservice version that will be used 
+ *
+ * @param msHost String - valid url for microservice host server
+ **/
+var setMSVersion = function setMSVersion() {
+  var version = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : "v1";
+
+  process.env.MS_VERSION = version;
+};
+
+/**
  * This function gets the microservice host variable you want to run in
  *
  * @returns string - environment of which it has been configured
@@ -82,7 +93,8 @@ var getPermissions = function getPermissions() {
       uri: getMsHost() + '/auth/permissions?resource_type=object',
       headers: {
         "Content-type": "application/json",
-        "Authorization": accessToken
+        "Authorization": 'Bearer ' + accessToken,
+        'x-api-version': '' + Util.getVersion()
       }
     };
     var permissionList = request(requestOptions);
@@ -127,5 +139,6 @@ module.exports = {
   Contacts: Contacts,
   getPermissions: getPermissions,
   Media: Media,
-  Pubsub: Pubsub
+  Pubsub: Pubsub,
+  setMSVersion: setMSVersion
 };

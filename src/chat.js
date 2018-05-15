@@ -9,9 +9,8 @@ const request = require("request-promise");
 /**
  * This function will create a new room
  *
- * @param apiKey - api key for cpaas systems
+ * @param access_token - access_token for cpaas systems
  * @param userUUID - user UUID to be used
- * @param identityJWT - identity JWT
  * @param name - String  Name
  * @param topic - topic string
  * @param description - description
@@ -21,9 +20,8 @@ const request = require("request-promise");
  * @returns data
  **/
 const createRoom = (
-  apiKey = "null api key",
+  access_token = "null access token",
   userUUID = "null user uuid",
-  identityJWT = "null jwt",
   name = "no name specified for group",
   topic = "no topic specified",
   description = undefined,
@@ -48,9 +46,9 @@ const createRoom = (
     uri: `${MS}/rooms`,
     body: b,
     headers: {
-      "application-key": apiKey,
       "Content-type": "application/json",
-      Authorization: `Bearer ${identityJWT}`
+      "Authorization": `Bearer ${access_token}`,
+      'x-api-version': `${util.getVersion()}`
     },
     json: true
   };
@@ -61,15 +59,12 @@ const createRoom = (
 /**
  * This function will list rooms
  *
- * @param apiKey - api key for cpaas systems
- * @param userUUID - user UUID to be used
- * @param identityJWT - identity JWT
+ * @param access token - access token for cpaas systems
  * @param filter - optional object
  * @returns data
  **/
 const listRooms = (
-  apiKey = "null api key",
-  identityJWT = "null jwt",
+  access_token = "null acess token",
   filter = undefined
 ) => {
   const MS = util.getEndpoint("chat");
@@ -78,9 +73,9 @@ const listRooms = (
     method: "GET",
     uri: `${MS}/rooms`,
     headers: {
-      // "application-key": apiKey,
       "Content-type": "application/json",
-      Authorization: `Bearer ${identityJWT}`
+      "Authorization": `Bearer ${access_token}`,
+      'x-api-version': `${util.getVersion()}`
     },
     json: true
   };
@@ -93,14 +88,12 @@ const listRooms = (
 /**
  * This function will get a specific room
  *
- * @param apiKey - api key for cpaas systems
- * @param identityJWT - identity JWT
- * @param filter - optional object
+ * @param access_token - identity JWT
+ * @param room UUID - optional object
  * @returns data
  **/
 const getRoom = (
-  apiKey = "null api key",
-  identityJWT = "null jwt",
+  access_token = "null access token",
   roomUUID = "no room uuid specified",
 ) => {
   const MS = util.getEndpoint("chat");
@@ -109,9 +102,9 @@ const getRoom = (
     method: "GET",
     uri: `${MS}/rooms/${roomUUID}`,
     headers: {
-      "application-key": apiKey,
       "Content-type": "application/json",
-      Authorization: `Bearer ${identityJWT}`
+      "Authorization": `Bearer ${access_token}`,
+      'x-api-version': `${util.getVersion()}`
     },
     json: true
   };
@@ -122,15 +115,12 @@ const getRoom = (
 /**
  * This function will delete room
  *
- * @param apiKey - api key for cpaas systems
- * @param userUUID - user UUID to be used
- * @param identityJWT - identity JWT
+ * @param access_token - access token for cpaas systems
  * @param roomUUID - room uuid
  * @returns no content
  **/
 const deleteRoom = (
-  apiKey = "null api key",
-  identityJWT = "null jwt",
+  access_token = "null acess token",
   roomUUID = "no room uuid specified"
 ) => {
   const MS = util.getEndpoint("chat");
@@ -139,9 +129,9 @@ const deleteRoom = (
     method: "DELETE",
     uri: `${MS}/rooms/${roomUUID}`,
     headers: {
-      "application-key": apiKey,
       "Content-type": "application/json",
-      Authorization: `Bearer ${identityJWT}`
+      "Authorization": `Bearer ${access_token}`,
+      'x-api-version': `${util.getVersion()}`
     },
     json: true
   };
@@ -153,17 +143,13 @@ const deleteRoom = (
 /**
  * This function will update room info
  *
- * @param apiKey - api key for cpaas systems
- * @param userUUID - user UUID to be used
- * @param identityJWT - identity JWT
+ * @param access_token - access_token for cpaas systems
  * @param roomUUID - room uuid
  * @param info - object
  * @returns no content
  **/
 const updateRoomInfo = (
-  apiKey = "null api key",
-  userUUID = "null user uuid",
-  identityJWT = "null jwt",
+  access_token = "null access_token",
   roomUUID = "no room uuid specified",
   info = {}
 ) => {
@@ -174,9 +160,9 @@ const updateRoomInfo = (
     uri: `${MS}/rooms/${roomUUID}/info`,
     body: info,
     headers: {
-      "application-key": apiKey,
       "Content-type": "application/json",
-      Authorization: `Bearer ${identityJWT}`
+      "Authorization": `Bearer ${access_token}`,
+      'x-api-version': `${util.getVersion()}`
     },
     json: true
   };
@@ -187,17 +173,13 @@ const updateRoomInfo = (
 /**
  * This function will udpate room meta
  *
- * @param apiKey - api key for cpaas systems
- * @param userUUID - user UUID to be used
- * @param identityJWT - identity JWT
+ * @param access_token - access_token for cpaas systems
  * @param roomUUID - room uuid
  * @param meta - object
  * @returns no content
  **/
 const updateRoomMeta = (
-  apiKey = "null api key",
-  userUUID = "null user uuid",
-  identityJWT = "null jwt",
+  access_token = "null access_token",
   roomUUID = "no room uuid specified",
   meta = {}
 ) => {
@@ -209,9 +191,9 @@ const updateRoomMeta = (
     uri: `${MS}/rooms/${roomUUID}/meta`,
     body: meta,
     headers: {
-      "application-key": apiKey,
       "Content-type": "application/json",
-      Authorization: `Bearer ${identityJWT}`
+      "Authorization": `Bearer ${access_token}`,
+      'x-api-version': `${util.getVersion()}`
     },
     json: true
   };
@@ -222,16 +204,12 @@ const updateRoomMeta = (
 /**
  * This function will udpate room meta
  *
- * @param apiKey - api key for cpaas systems
- * @param userUUID - user UUID to be used
- * @param identityJWT - identity JWT
+ * @param access_token - access_token for cpaas systems
  * @param roomUUID - room uuid
  * @returns data
  **/
 const getRoomMembers = (
-  apiKey = "null api key",
-  userUUID = "null user uuid",
-  identityJWT = "null jwt",
+  access_token = "null access_token",
   roomUUID = "no room uuid specified"
 ) => {
   const MS = util.getEndpoint("chat");
@@ -241,9 +219,9 @@ const getRoomMembers = (
     method: "GET",
     uri: `${MS}/rooms/${roomUUID}/members`,
     headers: {
-      "application-key": apiKey,
       "Content-type": "application/json",
-      Authorization: `Bearer ${identityJWT}`
+      "Authorization": `Bearer ${access_token}`,
+      'x-api-version': `${util.getVersion()}`
     },
     json: true
   };
@@ -254,16 +232,12 @@ const getRoomMembers = (
 /**
  * This function will udpate room meta
  *
- * @param apiKey - api key for cpaas systems
- * @param userUUID - user UUID to be used
- * @param identityJWT - identity JWT
+ * @param access_token - access_token for cpaas systems
  * @param roomUUID - room uuid
  * @returns data
  **/
 const addMember = (
-  apiKey = "null api key",
-  userUUID = "null user uuid",
-  identityJWT = "null jwt",
+  access_token = "null access_token",
   roomUUID = "no room uuid specified",
   memberData
 ) => {
@@ -275,9 +249,9 @@ const addMember = (
     uri: `${MS}/rooms/${roomUUID}/members`,
     body: memberData,
     headers: {
-      "application-key": apiKey,
       "Content-type": "application/json",
-      Authorization: `Bearer ${identityJWT}`
+      "Authorization": `Bearer ${access_token}`,
+      'x-api-version': `${util.getVersion()}`
     },
     json: true
   };
@@ -287,17 +261,13 @@ const addMember = (
 /**
  * This function will delete a member from room
  *
- * @param apiKey - api key for cpaas systems
- * @param userUUID - user UUID to be used
- * @param identityJWT - identity JWT
+ * @param access_token - access_token for cpaas systems
  * @param roomUUID - room uuid
  * @param memberUUID - member to remove
  * @returns data
  **/
 const deleteMember = (
-  apiKey = "null api key",
-  userUUID = "null user uuid",
-  identityJWT = "null jwt",
+  access_token = "null access_token",
   roomUUID = "no room uuid specified",
   memberUUID = "empty"
 ) => {
@@ -308,9 +278,9 @@ const deleteMember = (
     method: "DELETE",
     uri: `${MS}/rooms/${roomUUID}/members/${memberUUID}`,
     headers: {
-      "application-key": apiKey,
       "Content-type": "application/json",
-      Authorization: `Bearer ${identityJWT}`
+      "Authorization": `Bearer ${access_token}`,
+      'x-api-version': `${util.getVersion()}`
     },
     json: true
   };
@@ -321,15 +291,13 @@ const deleteMember = (
 /**
  * This function will get room messages
  *
- * @param apiKey - api key for cpaas systems
- * @param userUUID - user UUID to be used
- * @param identityJWT - identity JWT
+ * @param access_token - access_token for cpaas systems
  * @param roomUUID - room uuid
+ * @param message_count - number of messages 
  * @returns data
  **/
 const getMessages = (
-  apiKey = "null api key",
-  identityJWT = "null jwt",
+  access_token = "null access_token",
   roomUUID = "no room uuid specified",
   max = 100
 ) => {
@@ -343,9 +311,9 @@ const getMessages = (
       max: max
     },
     headers: {
-      "application-key": apiKey,
       "Content-type": "application/json",
-      Authorization: `Bearer ${identityJWT}`
+      "Authorization": `Bearer ${access_token}`,
+      'x-api-version': `${util.getVersion()}`
     },
     json: true
   };
@@ -356,17 +324,15 @@ const getMessages = (
 /**
  * This function will add a new message to a room
  *
- * @param apiKey - api key for cpaas systems
+ * @param access_token - access_token for cpaas systems
  * @param userUUID - user UUID to be used
- * @param identityJWT - identity JWT
  * @param roomUUID - room uuid
  * @param message - string message
  * @returns data
  **/
 const sendMessage = (
-  apiKey = "null api key",
+  access_token= "null access_token",
   userUUID = "null user uuid",
-  identityJWT = "null jwt",
   roomUUID = "no room uuid specified",
   message = "missing text"
 ) => {
@@ -380,15 +346,14 @@ const sendMessage = (
     user_uuid: userUUID
   };
 
-  //console.log('mmmmmmm', meta)
   const requestOptions = {
     method: "POST",
     uri: `${MS}/rooms/${roomUUID}/messages`,
     body: b,
     headers: {
-      "application-key": apiKey,
       "Content-type": "application/json",
-      Authorization: `Bearer ${identityJWT}`
+      "Authorization": `Bearer ${access_token}`,
+      'x-api-version': `${util.getVersion()}`
     },
     json: true
   };
@@ -399,31 +364,29 @@ const sendMessage = (
 /**
  * This function will get room info, messages, and members
  *
- * @param apiKey - api key for cpaas systems
- * @param userUUID - user UUID to be used
- * @param identityJWT - identity JWT
+ * @param access_token - access_token for cpaas systems
  * @param roomUUID - room uuid
  * @param message - string message
  * @returns data
  **/
 const getRoomInfo = (
-  apiKey = "null api key",
-  identityJWT = "null jwt",
+  access_token = "null access_token",
   roomUUID = "no room uuid specified",
-  max = 1000
+  message_count = 100
 ) => {
   return new Promise((resolve, reject) => {
-    const pInfo = getRoom(apiKey, identityJWT, roomUUID);
-    const pMessages = getMessages(apiKey, identityJWT, roomUUID, max);
+    const pInfo = getRoom(access_token, roomUUID);
+    const pMessages = getMessages(access_token, roomUUID, message_count);
 
     Promise.all([pInfo, pMessages]).then((pData) => {
+      //console.log('--------', pData)
       // get group data
-      Groups.getGroup(apiKey, pData[0].group_uuid, identityJWT)
+      Groups.getGroup(access_token, pData[0].group_uuid)
         .then((groupData) => {
           resolve({
             "info": pData[0],
             "members": groupData.members,
-            "messages": pData[1].data
+            "messages": pData[1].items
           });
         }).catch((groupError) => {
           console.log('##### Group Error in getRoomInfo', groupError);

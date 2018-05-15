@@ -21,8 +21,8 @@ const listUserMedia = (
     uri: `${MS}/users/${user_uuid}/media`,
     headers: {
       "Content-type": "application/json",
-      "Authorization": `Bearer ${accessToken}`, 
-      "x-api-version": 'v1'
+      "Authorization": `Bearer ${accessToken}`,
+      'x-api-version': `${util.getVersion()}`
     },
     json: true
   };
@@ -49,7 +49,7 @@ const uploadFile = (
     uri: `${MS}/users/${user_uuid}/media`,
     headers: {
       "Authorization": `Bearer ${accessToken}`,
-      "x-api-version": 'v1'
+      'x-api-version': `${util.getVersion()}`
     },
     formData:{
       "file": {
@@ -82,8 +82,8 @@ const deleteMedia = (
     method: "DELETE",
     uri: `${MS}/media/${file_id}`,
     headers: {
-      "Authorization": `Bearer ${accessToken}`, 
-      "x-api-version": 'v1'
+      "Authorization": `Bearer ${accessToken}`,
+      'x-api-version': `${util.getVersion()}`
     },
     json: true
   };

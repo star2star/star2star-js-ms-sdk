@@ -28,8 +28,9 @@ var getDataObjectByType = function getDataObjectByType() {
       method: "GET",
       uri: MS + "/users/" + userUUID + "/allowed-objects?type=" + dataObjectType + "&load_content=" + loadContent,
       headers: {
-        "Content-type": "application/json",
-        Authorization: "Bearer " + accessToken
+        'Authorization': "Bearer " + accessToken,
+        'Content-type': 'application/json',
+        'x-api-version': "" + util.getVersion()
       },
       json: true
     };
@@ -106,8 +107,9 @@ var getDataObjectByTypeAndName = function getDataObjectByTypeAndName() {
       method: "GET",
       uri: MS + "/users/" + userUUID + "/allowed-objects?type=" + dataObjectType + "&load_content=" + loadContent + "&name=" + dataObjectName,
       headers: {
-        "Content-type": "application/json",
-        Authorization: "Bearer " + accessToken
+        'Authorization': "Bearer " + accessToken,
+        'Content-type': 'application/json',
+        'x-api-version': "" + util.getVersion()
       },
       json: true
     };
@@ -177,9 +179,9 @@ var getDataObject = function getDataObject() {
     method: "GET",
     uri: MS + "/objects/" + dataObjectUUID,
     headers: {
-      // "application-key": apiKey,
-      "Content-type": "application/json",
-      Authorization: "Bearer " + accessToken
+      'Authorization': "Bearer " + accessToken,
+      'Content-type': 'application/json',
+      'x-api-version': "" + util.getVersion()
     },
     json: true
   };
@@ -220,8 +222,9 @@ var createUserDataObject = function createUserDataObject() {
     uri: MS + "/users/" + userUUID + "/objects",
     body: b,
     headers: {
-      "Content-type": "application/json",
-      Authorization: "Bearer " + accessToken
+      'Authorization': "Bearer " + accessToken,
+      'Content-type': 'application/json',
+      'x-api-version': "" + util.getVersion()
     },
     json: true
   };
@@ -259,8 +262,9 @@ var createDataObject = function createDataObject() {
     uri: MS + "/objects",
     body: b,
     headers: {
-      "Content-type": "application/json",
-      Authorization: "Bearer " + accessToken
+      'Authorization': "Bearer " + accessToken,
+      'Content-type': 'application/json',
+      'x-api-version': "" + util.getVersion()
     },
     json: true
   };
@@ -284,8 +288,9 @@ var deleteDataObject = function deleteDataObject() {
     method: "DELETE",
     uri: MS + "/objects/" + data_uuid,
     headers: {
-      "Content-type": "application/json",
-      Authorization: "Bearer " + accessToken
+      'Authorization': "Bearer " + accessToken,
+      'Content-type': 'application/json',
+      'x-api-version': "" + util.getVersion()
     },
     json: true
   };
@@ -312,8 +317,9 @@ var updateDataObject = function updateDataObject() {
     uri: MS + "/objects/" + data_uuid,
     body: data_object,
     headers: {
-      "Content-type": "application/json",
-      Authorization: "Bearer " + accessToken
+      'Authorization': "Bearer " + accessToken,
+      'Content-type': 'application/json',
+      'x-api-version': "" + util.getVersion()
     },
     json: true
   };

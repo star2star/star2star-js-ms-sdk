@@ -17,19 +17,19 @@ var request = require("request-promise");
 var getAccessToken = function getAccessToken() {
   var oauthKey = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : "null oauth key";
   var oauthToken = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : "null oauth token";
-  var apiVersion = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : "null api version";
-  var email = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : "null email";
-  var pwd = arguments.length > 4 && arguments[4] !== undefined ? arguments[4] : "null pwd";
+  var email = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : "null email";
+  var pwd = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : "null pwd";
 
   var MS = util.getEndpoint("oauth");
+  var VERSION = util.getVersion();
   var requestOptions = {
     method: "POST",
     uri: MS + "/oauth/token",
     headers: {
       "application-key": oauthKey,
-      "Authorization": oauthToken,
-      "Content-type": "application/x-www-form-urlencoded",
-      "x-api-version": apiVersion
+      "Authorization": "Basic " + oauthToken,
+      'x-api-version': "" + VERSION,
+      "Content-type": "application/x-www-form-urlencoded"
     },
     form: {
       grant_type: "password",
@@ -54,18 +54,18 @@ var getAccessToken = function getAccessToken() {
 var refreshAccessToken = function refreshAccessToken() {
   var oauthKey = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : "null oauth key";
   var oauthToken = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : "null oauth token";
-  var apiVersion = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : "null api version";
-  var refreshToken = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : "null refresh token";
+  var refreshToken = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : "null refresh token";
 
   var MS = util.getEndpoint("oauth");
+  var VERSION = util.getVersion();
   var requestOptions = {
     method: "POST",
     uri: MS + "/oauth/token",
     headers: {
       "application-key": oauthKey,
-      "Authorization": oauthToken,
-      "Content-type": "application/x-www-form-urlencoded",
-      "x-api-version": apiVersion
+      "Authorization": "Basic " + oauthToken,
+      'x-api-version': "" + VERSION,
+      "Content-type": "application/x-www-form-urlencoded"
     },
     form: {
       grant_type: "refresh_token",

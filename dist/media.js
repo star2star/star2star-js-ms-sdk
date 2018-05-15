@@ -23,7 +23,7 @@ var listUserMedia = function listUserMedia() {
     headers: {
       "Content-type": "application/json",
       "Authorization": "Bearer " + accessToken,
-      "x-api-version": 'v1'
+      'x-api-version': "" + util.getVersion()
     },
     json: true
   };
@@ -50,7 +50,7 @@ var uploadFile = function uploadFile() {
     uri: MS + "/users/" + user_uuid + "/media",
     headers: {
       "Authorization": "Bearer " + accessToken,
-      "x-api-version": 'v1'
+      'x-api-version': "" + util.getVersion()
     },
     formData: {
       "file": {
@@ -84,7 +84,7 @@ var deleteMedia = function deleteMedia() {
     uri: MS + "/media/" + file_id,
     headers: {
       "Authorization": "Bearer " + accessToken,
-      "x-api-version": 'v1'
+      'x-api-version': "" + util.getVersion()
     },
     json: true
   };

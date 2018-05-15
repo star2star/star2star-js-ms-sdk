@@ -10,9 +10,8 @@ var request = require("request-promise");
 /**
  * This function will create a new room
  *
- * @param apiKey - api key for cpaas systems
+ * @param access_token - access_token for cpaas systems
  * @param userUUID - user UUID to be used
- * @param identityJWT - identity JWT
  * @param name - String  Name
  * @param topic - topic string
  * @param description - description
@@ -22,15 +21,14 @@ var request = require("request-promise");
  * @returns data
  **/
 var createRoom = function createRoom() {
-  var apiKey = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : "null api key";
+  var access_token = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : "null access token";
   var userUUID = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : "null user uuid";
-  var identityJWT = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : "null jwt";
-  var name = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : "no name specified for group";
-  var topic = arguments.length > 4 && arguments[4] !== undefined ? arguments[4] : "no topic specified";
-  var description = arguments.length > 5 && arguments[5] !== undefined ? arguments[5] : undefined;
-  var groupUUID = arguments.length > 6 && arguments[6] !== undefined ? arguments[6] : undefined;
-  var accountUUID = arguments.length > 7 && arguments[7] !== undefined ? arguments[7] : undefined;
-  var metadata = arguments.length > 8 && arguments[8] !== undefined ? arguments[8] : {};
+  var name = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : "no name specified for group";
+  var topic = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : "no topic specified";
+  var description = arguments.length > 4 && arguments[4] !== undefined ? arguments[4] : undefined;
+  var groupUUID = arguments.length > 5 && arguments[5] !== undefined ? arguments[5] : undefined;
+  var accountUUID = arguments.length > 6 && arguments[6] !== undefined ? arguments[6] : undefined;
+  var metadata = arguments.length > 7 && arguments[7] !== undefined ? arguments[7] : {};
 
   var MS = util.getEndpoint("chat");
 
@@ -49,9 +47,9 @@ var createRoom = function createRoom() {
     uri: MS + "/rooms",
     body: b,
     headers: {
-      "application-key": apiKey,
       "Content-type": "application/json",
-      Authorization: "Bearer " + identityJWT
+      "Authorization": "Bearer " + access_token,
+      'x-api-version': "" + util.getVersion()
     },
     json: true
   };
@@ -62,16 +60,13 @@ var createRoom = function createRoom() {
 /**
  * This function will list rooms
  *
- * @param apiKey - api key for cpaas systems
- * @param userUUID - user UUID to be used
- * @param identityJWT - identity JWT
+ * @param access token - access token for cpaas systems
  * @param filter - optional object
  * @returns data
  **/
 var listRooms = function listRooms() {
-  var apiKey = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : "null api key";
-  var identityJWT = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : "null jwt";
-  var filter = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : undefined;
+  var access_token = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : "null acess token";
+  var filter = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : undefined;
 
   var MS = util.getEndpoint("chat");
 
@@ -79,9 +74,9 @@ var listRooms = function listRooms() {
     method: "GET",
     uri: MS + "/rooms",
     headers: {
-      // "application-key": apiKey,
       "Content-type": "application/json",
-      Authorization: "Bearer " + identityJWT
+      "Authorization": "Bearer " + access_token,
+      'x-api-version': "" + util.getVersion()
     },
     json: true
   };
@@ -94,15 +89,13 @@ var listRooms = function listRooms() {
 /**
  * This function will get a specific room
  *
- * @param apiKey - api key for cpaas systems
- * @param identityJWT - identity JWT
- * @param filter - optional object
+ * @param access_token - identity JWT
+ * @param room UUID - optional object
  * @returns data
  **/
 var getRoom = function getRoom() {
-  var apiKey = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : "null api key";
-  var identityJWT = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : "null jwt";
-  var roomUUID = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : "no room uuid specified";
+  var access_token = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : "null access token";
+  var roomUUID = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : "no room uuid specified";
 
   var MS = util.getEndpoint("chat");
 
@@ -110,9 +103,9 @@ var getRoom = function getRoom() {
     method: "GET",
     uri: MS + "/rooms/" + roomUUID,
     headers: {
-      "application-key": apiKey,
       "Content-type": "application/json",
-      Authorization: "Bearer " + identityJWT
+      "Authorization": "Bearer " + access_token,
+      'x-api-version': "" + util.getVersion()
     },
     json: true
   };
@@ -123,16 +116,13 @@ var getRoom = function getRoom() {
 /**
  * This function will delete room
  *
- * @param apiKey - api key for cpaas systems
- * @param userUUID - user UUID to be used
- * @param identityJWT - identity JWT
+ * @param access_token - access token for cpaas systems
  * @param roomUUID - room uuid
  * @returns no content
  **/
 var deleteRoom = function deleteRoom() {
-  var apiKey = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : "null api key";
-  var identityJWT = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : "null jwt";
-  var roomUUID = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : "no room uuid specified";
+  var access_token = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : "null acess token";
+  var roomUUID = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : "no room uuid specified";
 
   var MS = util.getEndpoint("chat");
 
@@ -140,9 +130,9 @@ var deleteRoom = function deleteRoom() {
     method: "DELETE",
     uri: MS + "/rooms/" + roomUUID,
     headers: {
-      "application-key": apiKey,
       "Content-type": "application/json",
-      Authorization: "Bearer " + identityJWT
+      "Authorization": "Bearer " + access_token,
+      'x-api-version': "" + util.getVersion()
     },
     json: true
   };
@@ -154,19 +144,15 @@ var deleteRoom = function deleteRoom() {
 /**
  * This function will update room info
  *
- * @param apiKey - api key for cpaas systems
- * @param userUUID - user UUID to be used
- * @param identityJWT - identity JWT
+ * @param access_token - access_token for cpaas systems
  * @param roomUUID - room uuid
  * @param info - object
  * @returns no content
  **/
 var updateRoomInfo = function updateRoomInfo() {
-  var apiKey = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : "null api key";
-  var userUUID = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : "null user uuid";
-  var identityJWT = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : "null jwt";
-  var roomUUID = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : "no room uuid specified";
-  var info = arguments.length > 4 && arguments[4] !== undefined ? arguments[4] : {};
+  var access_token = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : "null access_token";
+  var roomUUID = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : "no room uuid specified";
+  var info = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : {};
 
   var MS = util.getEndpoint("chat");
 
@@ -175,9 +161,9 @@ var updateRoomInfo = function updateRoomInfo() {
     uri: MS + "/rooms/" + roomUUID + "/info",
     body: info,
     headers: {
-      "application-key": apiKey,
       "Content-type": "application/json",
-      Authorization: "Bearer " + identityJWT
+      "Authorization": "Bearer " + access_token,
+      'x-api-version': "" + util.getVersion()
     },
     json: true
   };
@@ -188,19 +174,15 @@ var updateRoomInfo = function updateRoomInfo() {
 /**
  * This function will udpate room meta
  *
- * @param apiKey - api key for cpaas systems
- * @param userUUID - user UUID to be used
- * @param identityJWT - identity JWT
+ * @param access_token - access_token for cpaas systems
  * @param roomUUID - room uuid
  * @param meta - object
  * @returns no content
  **/
 var updateRoomMeta = function updateRoomMeta() {
-  var apiKey = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : "null api key";
-  var userUUID = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : "null user uuid";
-  var identityJWT = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : "null jwt";
-  var roomUUID = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : "no room uuid specified";
-  var meta = arguments.length > 4 && arguments[4] !== undefined ? arguments[4] : {};
+  var access_token = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : "null access_token";
+  var roomUUID = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : "no room uuid specified";
+  var meta = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : {};
 
   var MS = util.getEndpoint("chat");
 
@@ -210,9 +192,9 @@ var updateRoomMeta = function updateRoomMeta() {
     uri: MS + "/rooms/" + roomUUID + "/meta",
     body: meta,
     headers: {
-      "application-key": apiKey,
       "Content-type": "application/json",
-      Authorization: "Bearer " + identityJWT
+      "Authorization": "Bearer " + access_token,
+      'x-api-version': "" + util.getVersion()
     },
     json: true
   };
@@ -223,17 +205,13 @@ var updateRoomMeta = function updateRoomMeta() {
 /**
  * This function will udpate room meta
  *
- * @param apiKey - api key for cpaas systems
- * @param userUUID - user UUID to be used
- * @param identityJWT - identity JWT
+ * @param access_token - access_token for cpaas systems
  * @param roomUUID - room uuid
  * @returns data
  **/
 var getRoomMembers = function getRoomMembers() {
-  var apiKey = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : "null api key";
-  var userUUID = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : "null user uuid";
-  var identityJWT = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : "null jwt";
-  var roomUUID = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : "no room uuid specified";
+  var access_token = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : "null access_token";
+  var roomUUID = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : "no room uuid specified";
 
   var MS = util.getEndpoint("chat");
 
@@ -242,9 +220,9 @@ var getRoomMembers = function getRoomMembers() {
     method: "GET",
     uri: MS + "/rooms/" + roomUUID + "/members",
     headers: {
-      "application-key": apiKey,
       "Content-type": "application/json",
-      Authorization: "Bearer " + identityJWT
+      "Authorization": "Bearer " + access_token,
+      'x-api-version': "" + util.getVersion()
     },
     json: true
   };
@@ -255,18 +233,14 @@ var getRoomMembers = function getRoomMembers() {
 /**
  * This function will udpate room meta
  *
- * @param apiKey - api key for cpaas systems
- * @param userUUID - user UUID to be used
- * @param identityJWT - identity JWT
+ * @param access_token - access_token for cpaas systems
  * @param roomUUID - room uuid
  * @returns data
  **/
 var addMember = function addMember() {
-  var apiKey = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : "null api key";
-  var userUUID = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : "null user uuid";
-  var identityJWT = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : "null jwt";
-  var roomUUID = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : "no room uuid specified";
-  var memberData = arguments[4];
+  var access_token = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : "null access_token";
+  var roomUUID = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : "no room uuid specified";
+  var memberData = arguments[2];
 
   var MS = util.getEndpoint("chat");
 
@@ -276,9 +250,9 @@ var addMember = function addMember() {
     uri: MS + "/rooms/" + roomUUID + "/members",
     body: memberData,
     headers: {
-      "application-key": apiKey,
       "Content-type": "application/json",
-      Authorization: "Bearer " + identityJWT
+      "Authorization": "Bearer " + access_token,
+      'x-api-version': "" + util.getVersion()
     },
     json: true
   };
@@ -288,19 +262,15 @@ var addMember = function addMember() {
 /**
  * This function will delete a member from room
  *
- * @param apiKey - api key for cpaas systems
- * @param userUUID - user UUID to be used
- * @param identityJWT - identity JWT
+ * @param access_token - access_token for cpaas systems
  * @param roomUUID - room uuid
  * @param memberUUID - member to remove
  * @returns data
  **/
 var deleteMember = function deleteMember() {
-  var apiKey = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : "null api key";
-  var userUUID = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : "null user uuid";
-  var identityJWT = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : "null jwt";
-  var roomUUID = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : "no room uuid specified";
-  var memberUUID = arguments.length > 4 && arguments[4] !== undefined ? arguments[4] : "empty";
+  var access_token = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : "null access_token";
+  var roomUUID = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : "no room uuid specified";
+  var memberUUID = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : "empty";
 
   var MS = util.getEndpoint("chat");
 
@@ -309,9 +279,9 @@ var deleteMember = function deleteMember() {
     method: "DELETE",
     uri: MS + "/rooms/" + roomUUID + "/members/" + memberUUID,
     headers: {
-      "application-key": apiKey,
       "Content-type": "application/json",
-      Authorization: "Bearer " + identityJWT
+      "Authorization": "Bearer " + access_token,
+      'x-api-version': "" + util.getVersion()
     },
     json: true
   };
@@ -322,17 +292,15 @@ var deleteMember = function deleteMember() {
 /**
  * This function will get room messages
  *
- * @param apiKey - api key for cpaas systems
- * @param userUUID - user UUID to be used
- * @param identityJWT - identity JWT
+ * @param access_token - access_token for cpaas systems
  * @param roomUUID - room uuid
+ * @param message_count - number of messages 
  * @returns data
  **/
 var getMessages = function getMessages() {
-  var apiKey = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : "null api key";
-  var identityJWT = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : "null jwt";
-  var roomUUID = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : "no room uuid specified";
-  var max = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : 100;
+  var access_token = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : "null access_token";
+  var roomUUID = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : "no room uuid specified";
+  var max = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : 100;
 
   var MS = util.getEndpoint("chat");
 
@@ -344,9 +312,9 @@ var getMessages = function getMessages() {
       max: max
     },
     headers: {
-      "application-key": apiKey,
       "Content-type": "application/json",
-      Authorization: "Bearer " + identityJWT
+      "Authorization": "Bearer " + access_token,
+      'x-api-version': "" + util.getVersion()
     },
     json: true
   };
@@ -357,19 +325,17 @@ var getMessages = function getMessages() {
 /**
  * This function will add a new message to a room
  *
- * @param apiKey - api key for cpaas systems
+ * @param access_token - access_token for cpaas systems
  * @param userUUID - user UUID to be used
- * @param identityJWT - identity JWT
  * @param roomUUID - room uuid
  * @param message - string message
  * @returns data
  **/
 var sendMessage = function sendMessage() {
-  var apiKey = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : "null api key";
+  var access_token = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : "null access_token";
   var userUUID = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : "null user uuid";
-  var identityJWT = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : "null jwt";
-  var roomUUID = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : "no room uuid specified";
-  var message = arguments.length > 4 && arguments[4] !== undefined ? arguments[4] : "missing text";
+  var roomUUID = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : "no room uuid specified";
+  var message = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : "missing text";
 
   var MS = util.getEndpoint("chat");
 
@@ -381,15 +347,14 @@ var sendMessage = function sendMessage() {
     user_uuid: userUUID
   };
 
-  //console.log('mmmmmmm', meta)
   var requestOptions = {
     method: "POST",
     uri: MS + "/rooms/" + roomUUID + "/messages",
     body: b,
     headers: {
-      "application-key": apiKey,
       "Content-type": "application/json",
-      Authorization: "Bearer " + identityJWT
+      "Authorization": "Bearer " + access_token,
+      'x-api-version': "" + util.getVersion()
     },
     json: true
   };
@@ -400,30 +365,28 @@ var sendMessage = function sendMessage() {
 /**
  * This function will get room info, messages, and members
  *
- * @param apiKey - api key for cpaas systems
- * @param userUUID - user UUID to be used
- * @param identityJWT - identity JWT
+ * @param access_token - access_token for cpaas systems
  * @param roomUUID - room uuid
  * @param message - string message
  * @returns data
  **/
 var getRoomInfo = function getRoomInfo() {
-  var apiKey = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : "null api key";
-  var identityJWT = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : "null jwt";
-  var roomUUID = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : "no room uuid specified";
-  var max = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : 1000;
+  var access_token = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : "null access_token";
+  var roomUUID = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : "no room uuid specified";
+  var message_count = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : 100;
 
   return new Promise(function (resolve, reject) {
-    var pInfo = getRoom(apiKey, identityJWT, roomUUID);
-    var pMessages = getMessages(apiKey, identityJWT, roomUUID, max);
+    var pInfo = getRoom(access_token, roomUUID);
+    var pMessages = getMessages(access_token, roomUUID, message_count);
 
     Promise.all([pInfo, pMessages]).then(function (pData) {
+      //console.log('--------', pData)
       // get group data
-      Groups.getGroup(apiKey, pData[0].group_uuid, identityJWT).then(function (groupData) {
+      Groups.getGroup(access_token, pData[0].group_uuid).then(function (groupData) {
         resolve({
           "info": pData[0],
           "members": groupData.members,
-          "messages": pData[1].data
+          "messages": pData[1].items
         });
       }).catch(function (groupError) {
         console.log('##### Group Error in getRoomInfo', groupError);

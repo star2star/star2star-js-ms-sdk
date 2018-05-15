@@ -13,6 +13,15 @@ const getEndpoint = (microservice = "NOTHING") => {
 
   return config.microservices[upperMS] ? process.env.MS_HOST + config.microservices[upperMS] : undefined;
 };
+/**
+ * This function will determine microservice version
+ *
+ * @return String or undefined - will return you the string value or undefined
+ */
+const getVersion = () => {
+
+  return process.env.MS_VERSION ? process.env.MS_VERSION  : config.ms_version;
+};
 
 /**
  * This function will lookup static items to be replaced
@@ -110,6 +119,7 @@ const createUUID = () => {
 
 module.exports = {
   getEndpoint,
+  getVersion, 
   config,
   replaceVariables,
   createUUID

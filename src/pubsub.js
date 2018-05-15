@@ -19,9 +19,9 @@ const listUserSubscriptions = (
       method: "GET",
       uri: `${MS}/subscriptions`,
       headers: {
-        "Content-type": "application/json",
-        "Authorization": `Bearer ${accessToken}`, 
-        "x-api-version": 'v1'
+        'Authorization': `Bearer ${accessToken}`,
+        'Content-type': 'application/json',
+        'x-api-version': `${util.getVersion()}`
       },
       qs: {
           "user_uuid": user_uuid
@@ -47,9 +47,9 @@ const deleteSubscription = (
       method: "DELETE",
       uri: `${MS}/subscriptions/${subscription_uuid}`,
       headers: {
-        "Content-type": "application/json",
-        "Authorization": `Bearer ${accessToken}`, 
-        "x-api-version": 'v1'
+        'Authorization': `Bearer ${accessToken}`,
+        'Content-type': 'application/json',
+        'x-api-version': `${util.getVersion()}`
       },
 
       json: true
@@ -87,9 +87,9 @@ const addSubscription = (
         "events": subscriptions 
       }, 
       headers: {
-        "Content-type": "application/json",
-        "Authorization": `Bearer ${accessToken}`, 
-        "x-api-version": 'v1'
+        'Authorization': `Bearer ${accessToken}`,
+        'Content-type': 'application/json',
+        'x-api-version': `${util.getVersion()}`
       },
 
       json: true

@@ -39,7 +39,8 @@ describe("MS SDK Index", function () {
       "Contacts",
       "getPermissions",
       "Media",
-      "Pubsub"
+      "Pubsub",
+      "setMSVersion"
     ];
     assert.deepEqual(Object.keys(s2sMS), msKeys);
     done();

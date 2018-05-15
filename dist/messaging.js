@@ -22,7 +22,8 @@ var getConversationUuid = function getConversationUuid(accessToken, userUuid, to
       },
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': 'Bearer ' + accessToken
+        "Authorization": 'Bearer ' + accessToken,
+        'x-api-version': '' + util.getVersion()
       },
       json: true
     };
@@ -66,7 +67,8 @@ var sendSMSMessage = function sendSMSMessage(accessToken, convesationUUID, userU
       body: objectBody,
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': 'Bearer ' + accessToken
+        "Authorization": 'Bearer ' + accessToken,
+        'x-api-version': '' + util.getVersion()
       },
       json: true
     };
@@ -120,7 +122,8 @@ var getSMSNumber = function getSMSNumber(accessToken, userUuid) {
       method: 'GET',
       uri: MS + '/identities/' + userUuid,
       headers: {
-        'Authorization': 'Bearer ' + accessToken,
+        "Authorization": 'Bearer ' + accessToken,
+        'x-api-version': '' + util.getVersion(),
         'Content-type': 'application/json'
       },
       json: true

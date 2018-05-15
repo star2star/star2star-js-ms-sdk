@@ -52,39 +52,36 @@ var validateTasks = function validateTasks() {
 /**
  * This function will ask the cpaas data object service for a list of task_template objects
  *
- * @param apiKey - api key for cpaas systems
+ * @param access_token - access_token for cpaas systems
  * @param userUUID - user UUID to be used
- * @param identityJWT - identity JWT
  * @returns promise for list of data object task templates with content
  **/
 var getTaskTemplates = function getTaskTemplates() {
-  var apiKey = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : "null api key";
-  var userUUID = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : "null user uuid";
-  var identityJWT = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : "null jwt";
+  var userUUID = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : "null user uuid";
+  var access_token = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : "null access_token";
 
-  return Objects.getDataObjectByType(apiKey, userUUID, identityJWT, "task_template", true);
+  return Objects.getDataObjectByType(userUUID, access_token, "task_template", true);
 };
 
 /**
  * This function will create a new task template object
  *
- * @param apiKey string - api key for cpaas systems
  * @param userUUID string - user UUID to be used
- * @param identityJWT string - identity JWT
+ * @param access_token string - identity access_token
  * @param title string - title of task template
  * @param defaultTasks array objects - array of objects minimium is a title
  * @returns promise for creating object
  **/
 var createTaskTemplate = function createTaskTemplate() {
-  var apiKey = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : "null api key";
-  var userUUID = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : "null user uuid";
-  var identityJWT = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : "null jwt";
-  var title = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : "missing-stuff";
+  var userUUID = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : "null user uuid";
+  var access_token = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : "null access_token";
+  var title = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : "missing-stuff";
+  var description = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : "task template description";
   var defaultTasks = arguments.length > 4 && arguments[4] !== undefined ? arguments[4] : [];
 
   var vTasks = validateTasks(defaultTasks);
   if (vTasks.status === 200) {
-    return Objects.createUserDataObject(apiKey, userUUID, identityJWT, title, "task_template", {
+    return Objects.createUserDataObject(userUUID, access_token, title, "task_template", description, {
       tasks: vTasks.tasks
     });
   } else {
@@ -101,32 +98,30 @@ var createTaskTemplate = function createTaskTemplate() {
  * @returns promise
  **/
 var deleteTaskTemplate = function deleteTaskTemplate() {
-  var apiKey = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : "null api key";
-  var identityJWT = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : "null jwt";
-  var task_template_uuid = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : "missing task uuid";
+  var access_token = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : "null access_token";
+  var task_template_uuid = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : "missing task uuid";
 
-  return Objects.deleteDataObject(apiKey, identityJWT, task_template_uuid);
+  return Objects.deleteDataObject(access_token, task_template_uuid);
 };
 /**
  * This function will create a task object (task_list)
  *
- * @param apiKey string - api key for cpaas systems
  * @param userUUID string - user UUID to be used
- * @param identityJWT string - identity JWT
+ * @param access_token string - identity access_token
  * @param title string - title of task template
  * @param defaultTasks array objects - array of objects minimium is a title
  * @returns promise for creating object
  **/
 var createTaskObject = function createTaskObject() {
-  var apiKey = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : "null api key";
-  var userUUID = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : "null user uuid";
-  var identityJWT = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : "null jwt";
-  var title = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : "Missing Task Title";
+  var userUUID = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : "null user uuid";
+  var access_token = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : "null access_token";
+  var title = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : "Missing Task Title";
+  var description = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : "task description default";
   var defaultTasks = arguments.length > 4 && arguments[4] !== undefined ? arguments[4] : [];
 
   var vTasks = validateTasks(defaultTasks);
   if (vTasks.status === 200) {
-    return Objects.createUserDataObject(apiKey, userUUID, identityJWT, title, "task_list", {
+    return Objects.createUserDataObject(userUUID, access_token, title, "task_list", description, {
       tasks: vTasks.tasks
     });
   } else {
@@ -136,80 +131,72 @@ var createTaskObject = function createTaskObject() {
 /**
  * This function will delete task list
  *
- * @param apiKey - api key for cpaas systems
  * @param userUUID - user UUID to be used
- * @param identityJWT - identity JWT
+ * @param access_token - identity access_token
  * @param TaskObjectUUID - task list UUID
  * @returns promise
  **/
 var deleteTaskObject = function deleteTaskObject() {
-  var apiKey = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : "null api key";
-  var identityJWT = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : "null jwt";
-  var task_uuid = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : "missing task uuid";
+  var access_token = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : "null access_token";
+  var task_uuid = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : "missing task uuid";
 
-  return Objects.deleteDataObject(apiKey, identityJWT, task_uuid);
+  return Objects.deleteDataObject(access_token, task_uuid);
 };
 
 /**
  * This function will retrieve task list
  *
- * @param apiKey - api key for cpaas systems
  * @param userUUID - user UUID to be used
- * @param identityJWT - identity JWT
+ * @param access_token - identity access_token
  * @param TaskObjectUUID - task list UUID
  * @returns promise
  **/
 var getTaskObject = function getTaskObject() {
-  var apiKey = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : "null api key";
-  var userUUID = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : "null user uuid";
-  var identityJWT = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : "null jwt";
-  var taskObjectUUID = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : "null uuid";
+  var userUUID = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : "null user uuid";
+  var access_token = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : "null access_token";
+  var taskObjectUUID = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : "null uuid";
 
-  return Objects.getDataObject(apiKey, userUUID, identityJWT, taskObjectUUID, true);
+  return Objects.getDataObject(userUUID, access_token, taskObjectUUID, true);
 };
 
 /**
  * This function will update task list
  *
- * @param apiKey - api key for cpaas systems
  * @param userUUID - user UUID to be used
- * @param identityJWT - identity JWT
+ * @param access_token - identity access_token
  * @param TaskObjectUUID - task list UUID
  * @param TaskObject - task object
  * @returns promise
  **/
 var updateTaskObject = function updateTaskObject() {
-  var apiKey = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : "null api key";
-  var userUUID = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : "null user uuid";
-  var identityJWT = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : "null jwt";
-  var uuid = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : "missing_uuid";
-  var taskObject = arguments.length > 4 && arguments[4] !== undefined ? arguments[4] : {};
+  var userUUID = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : "null user uuid";
+  var access_token = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : "null access_token";
+  var uuid = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : "missing_uuid";
+  var taskObject = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : {};
 
-  return Objects.updateDataObject(apiKey, userUUID, identityJWT, uuid, taskObject);
+  return Objects.updateDataObject(userUUID, access_token, uuid, taskObject);
 };
 
 /**
  * This function will add task to a task object
  *
- * @param apiKey - api key for cpaas systems
  * @param userUUID - user UUID to be used
- * @param identityJWT - identity JWT
+ * @param access_token - identity access_token
  * @param TaskObjectUUID - task list UUID
  * @param Task - individual task which is an object
  * @returns promise
  **/
 var addTaskToTaskObject = function addTaskToTaskObject() {
-  var apiKey = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : "null api key";
-  var identityJWT = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : "null jwt";
-  var taskObjectUUID = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : "missing_uuid";
-  var task = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : {};
+  var access_token = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : "null access_token";
+  var taskObjectUUID = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : "missing_uuid";
+  var task = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : {};
 
   var vTasks = validateTasks([task]);
   if (vTasks.status === 200) {
-    return Objects.getDataObject(apiKey, identityJWT, taskObjectUUID, true).then(function (rData) {
+    return Objects.getDataObject(access_token, taskObjectUUID, true).then(function (rData) {
       //console.log(rData)
       rData.content.tasks = [].concat(rData.content.tasks, vTasks.tasks);
-      return Objects.updateDataObject(apiKey, identityJWT, taskObjectUUID, rData);
+      return Objects.updateDataObject(access_token, taskObjectUUID, rData);
     });
   } else {
     return Promise.reject(vTasks);
@@ -219,28 +206,26 @@ var addTaskToTaskObject = function addTaskToTaskObject() {
 /**
  * This function will update task in a task object
  *
- * @param apiKey - api key for cpaas systems
  * @param userUUID - user UUID to be used
- * @param identityJWT - identity JWT
+ * @param access_token - identity access_token
  * @param TaskObjectUUID - task list UUID
  * @param Task - individual task which is an object
  * @returns promise
  **/
 var updateTaskInTaskObject = function updateTaskInTaskObject() {
-  var apiKey = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : "null api key";
-  var identityJWT = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : "null jwt";
-  var taskObjectUUID = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : "missing_uuid";
-  var task = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : {};
+  var access_token = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : "null access_token";
+  var taskObjectUUID = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : "missing_uuid";
+  var task = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : {};
 
   var vTasks = validateTasks([task]);
   //console.log('----', vTasks)
   if (vTasks.status === 200) {
-    return Objects.getDataObject(apiKey, identityJWT, taskObjectUUID).then(function (rData) {
+    return Objects.getDataObject(access_token, taskObjectUUID).then(function (rData) {
       rData.content.tasks = rData.content.tasks.filter(function (t) {
         return t.uuid !== vTasks.tasks[0].uuid;
       });
       rData.content.tasks = [].concat(rData.content.tasks, vTasks.tasks);
-      return Objects.updateDataObject(apiKey, identityJWT, taskObjectUUID, rData);
+      return Objects.updateDataObject(access_token, taskObjectUUID, rData);
     });
   } else {
     return Promise.reject(vTasks);

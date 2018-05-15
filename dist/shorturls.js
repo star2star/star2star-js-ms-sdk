@@ -24,8 +24,9 @@ var listShortUrls = function listShortUrls() {
         uri: MS + '/shorturls?user_uuid=' + userUuid,
         qs: options,
         headers: {
+            'Authorization': 'Bearer ' + accessToken,
             'Content-type': 'application/json',
-            'Authorization': 'Bearer ' + accessToken
+            'x-api-version': '' + util.getVersion()
         },
         json: true
     };
@@ -57,8 +58,9 @@ var createShortUrl = function createShortUrl() {
         uri: MS + '/shorturls',
         body: b,
         headers: {
-            'Content-type': 'application/json',
             'Authorization': 'Bearer ' + accessToken,
+            'Content-type': 'application/json',
+            'x-api-version': '' + util.getVersion(),
             'user_uuid': userUuid
         },
         json: true
@@ -86,8 +88,9 @@ var deleteShortCode = function deleteShortCode() {
         method: 'DELETE',
         uri: MS + '/shorturls/' + short_code,
         headers: {
-            'Content-type': 'application/json',
             'Authorization': 'Bearer ' + accessToken,
+            'Content-type': 'application/json',
+            'x-api-version': '' + util.getVersion(),
             'user_uuid': userUuid
         },
         json: true

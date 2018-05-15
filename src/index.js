@@ -30,6 +30,15 @@ const setMsHost = (msHost = "https://cpaas.star2star.com/api") => {
 };
 
 /**
+ * This function sets the microservice version that will be used 
+ *
+ * @param msHost String - valid url for microservice host server
+ **/
+const setMSVersion = (version = "v1") => {
+  process.env.MS_VERSION = version;
+};
+
+/**
  * This function gets the microservice host variable you want to run in
  *
  * @returns string - environment of which it has been configured
@@ -77,7 +86,8 @@ const getPermissions = (accessToken = "null accessToken") => {
       uri: `${getMsHost()}/auth/permissions?resource_type=object`,
       headers: {
         "Content-type": "application/json",
-        "Authorization": accessToken
+        "Authorization": `Bearer ${accessToken}`,
+        'x-api-version': `${Util.getVersion()}`
       },
     };
     const permissionList = request(requestOptions);
@@ -122,5 +132,6 @@ module.exports = {
   Contacts,
   getPermissions,
   Media,
-  Pubsub
+  Pubsub,
+  setMSVersion
 };

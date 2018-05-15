@@ -13,29 +13,42 @@ var creds = {
 
 describe("Groups Test Suite", function () {
 
-  let accessToken;
+  let accessToken, identityData;
 
   before(function () {
-    s2sMS.setMsHost("https://cpaas.star2starglobal.net");
     // file system uses full path so will do it like this
     if (fs.existsSync("./test/credentials.json")) {
       // do not need test folder here
       creds = require("./credentials.json");
     }
+
+    // For tests, use the dev msHost
+    s2sMS.setMsHost("https://cpaas.star2starglobal.net");
+    s2sMS.setMSVersion(creds.CPAAS_API_VERSION);
     // get accessToken to use in test cases
     // Return promise so that test cases will not fire until it resolves.
-    return s2sMS.Oauth.getAccessToken(
+    return new Promise((resolve, reject)=>{
+      s2sMS.Oauth.getAccessToken(
         creds.CPAAS_OAUTH_KEY,
         creds.CPAAS_OAUTH_TOKEN,
-        creds.CPAAS_API_VERSION,
         creds.email,
         creds.password
       )
       .then(oauthData => {
-        const oData = JSON.parse(oauthData);
-        // console.log('Got access token and identity data -[Get Object By Data Type] ', identityData, oData);
-        accessToken = oData.access_token;
+        //console.log('Got access token and identity data -[Get Object By Data Type] ',  oauthData);
+        accessToken = oauthData.access_token;
+        s2sMS.Identity.getMyIdentityData(accessToken).then((idData)=>{
+          s2sMS.Identity.getIdentityDetails(accessToken, idData.user_uuid).then((identityDetails)=>{
+            identityData = identityDetails;
+            resolve();
+          }).catch((e1)=>{
+            reject(e1);
+          });
+        }).catch((e)=>{
+          reject(e);
+        });
       });
+    })
   });
 
   it("List Groups", function (done) {
@@ -271,10 +284,6 @@ describe("Groups Test Suite", function () {
     if (!creds.isValid) return done();
 
     const groupName = "GroupWithMembers " + Date.now();
-
-    s2sMS.Identity.getMyIdentityData(accessToken)
-      .then((identityData) => {
-        const idData = JSON.parse(identityData);
         s2sMS.Groups.createGroup(
             accessToken,
             groupName,
@@ -283,7 +292,7 @@ describe("Groups Test Suite", function () {
           ).then(responseData => {
             // console.log("responseData group uuid", responseData.uuid);
             const testMembers = [{
-              uuid: idData.user_uuid
+              uuid: identityData.uuid
             }];
             s2sMS.Groups.addMembersToGroup(
                 accessToken,
@@ -316,10 +325,5 @@ describe("Groups Test Suite", function () {
             console.log('Error creating group [create/add members/delete]', error);
             done(new Error(error));
           });
-      })
-      .catch((error) => {
-        console.log('Error getting my identity data [Create, Add Members and  Delete Group]', error);
-        done(new Error(error));
-      });
   });
 });

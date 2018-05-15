@@ -27,7 +27,8 @@ var createUserContact = function createUserContact() {
     uri: MS + "/users/" + userUuid + "/contacts",
     headers: {
       "Authorization": "Bearer " + accessToken,
-      "Content-type": "application/json"
+      "Content-type": "application/json",
+      'x-api-version': "" + util.getVersion()
     },
     body: contactData,
     json: true
@@ -52,7 +53,8 @@ var deleteContact = function deleteContact() {
     uri: MS + "/contacts/" + contactUUID,
     headers: {
       "Authorization": "Bearer " + accessToken,
-      "Content-type": "application/json"
+      "Content-type": "application/json",
+      'x-api-version': "" + util.getVersion()
     },
     json: true
   };
@@ -78,7 +80,8 @@ var getContacts = function getContacts() {
     qs: _extends({}, params),
     headers: {
       "Authorization": "Bearer " + accessToken,
-      "Content-type": "application/json"
+      "Content-type": "application/json",
+      'x-api-version': "" + util.getVersion()
     },
     json: true
   };

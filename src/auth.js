@@ -19,13 +19,14 @@ const VALID_SCOPE = ['global', 'account', 'user'];
  **/
 const listUserPermissions = (accessToken = 'null access Token', userUuid = 'null user uuid', resource_type = undefined, scope = undefined, actions = ['create', 'read', 'update', 'delete', 'list']) => {
   const MS = util.getEndpoint("auth");
-
+  const VERSION = util.getVersion();
   const requestOptions = {
     method: 'GET',
     uri: `${MS}/users/${userUuid}/permissions`,
     headers: {
       'Authorization': `Bearer ${accessToken}`,
-      'Content-type': 'application/json'
+      'Content-type': 'application/json',
+      'x-api-version': `${VERSION}`
     },
     json: true,
     // resolveWithFullResponse: true
@@ -92,7 +93,7 @@ const getSpecificPermissions = (accessToken = 'null access Token', userUuid = 'n
 
   // ok all parameters valid
   const MS = util.getEndpoint("auth");
-
+  const VERSION = util.getVersion();
   const requestOptions = {
     method: 'GET',
     uri: `${MS}/permissions`,
@@ -102,6 +103,7 @@ const getSpecificPermissions = (accessToken = 'null access Token', userUuid = 'n
     headers: {
       'Authorization': `Bearer ${accessToken}`,
       'Content-type': 'application/json',
+      'x-api-version': `${VERSION}`
     },
     json: true
   };
@@ -142,7 +144,7 @@ const getSpecificPermissions = (accessToken = 'null access Token', userUuid = 'n
 const addExplicitGroupPermissions = (accessToken = 'null access Token', userUuid = 'null user uuid',
   group_uuid = undefined, resource_uuid = undefined, resource_type = undefined, resource_scope = undefined, actions = []) => {
   const MS = util.getEndpoint("auth");
-
+  const VERSION = util.getVersion();
   // 1.  validate parameters
   if (group_uuid === undefined) {
     return Promise.reject("group uuid is missing");
@@ -181,6 +183,7 @@ const addExplicitGroupPermissions = (accessToken = 'null access Token', userUuid
         headers: {
           'Authorization': `Bearer ${accessToken}`,
           'Content-type': 'application/json',
+          'x-api-version': `${VERSION}`
         },
         json: true
       };
@@ -215,7 +218,7 @@ const addExplicitGroupPermissions = (accessToken = 'null access Token', userUuid
 const addExplicitUserPermissions = (accessToken = 'null access Token', userUuid = 'null user uuid',
   user_uuid = undefined, resource_uuid = undefined, resource_type = undefined, resource_scope = undefined, actions = []) => {
   const MS = util.getEndpoint("auth");
-
+  const VERSION = util.getVersion();
   // 1.  validate parameters
   if (user_uuid === undefined) {
     return Promise.reject("user uuid is missing");
@@ -255,6 +258,7 @@ const addExplicitUserPermissions = (accessToken = 'null access Token', userUuid 
         headers: {
           'Authorization': `Bearer ${accessToken}`,
           'Content-type': 'application/json',
+          'x-api-version': `${util.getVersion()}`
         },
         json: true
       };

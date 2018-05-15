@@ -21,7 +21,8 @@ const listGroups = (
     uri: `${MS}/groups`,
     headers: {
       "Content-type": "application/json",
-      Authorization: `Bearer ${accessToken}`
+      "Authorization": `Bearer ${accessToken}`,
+      'x-api-version': `${util.getVersion()}`
     },
     json: true
   };
@@ -52,7 +53,8 @@ const getGroup = (
     },
     headers: {
       "Content-type": "application/json",
-      Authorization: `Bearer ${accessToken}`
+      "Authorization": `Bearer ${accessToken}`,
+      'x-api-version': `${util.getVersion()}`
     },
     json: true
   };
@@ -77,7 +79,8 @@ const deleteGroup = (
     uri: `${MS}/groups/${groupUUID}`,
     headers: {
       "Content-type": "application/json",
-      Authorization: `Bearer ${accessToken}`
+      "Authorization": `Bearer ${accessToken}`,
+      'x-api-version': `${util.getVersion()}`
     },
     json: true
   };
@@ -119,7 +122,8 @@ const createGroup = (
     body: b,
     headers: {
       "Content-type": "application/json",
-      Authorization: `Bearer ${accessToken}`
+      "Authorization": `Bearer ${accessToken}`,
+      'x-api-version': `${util.getVersion()}`
     },
     json: true
   };
@@ -147,7 +151,8 @@ const updateGroup = (
     body: ObjectMerge({}, group_object),
     headers: {
       "Content-type": "application/json",
-      Authorization: `Bearer ${accessToken}`
+      "Authorization": `Bearer ${accessToken}`,
+      'x-api-version': `${util.getVersion()}`
     },
     json: true
   };
@@ -175,7 +180,8 @@ const addMembersToGroup = (
     body: members,
     headers: {
       "Content-type": "application/json",
-      Authorization: `Bearer ${accessToken}`
+      "Authorization": `Bearer ${accessToken}`,
+      'x-api-version': `${util.getVersion()}`
     },
     json: true
   };

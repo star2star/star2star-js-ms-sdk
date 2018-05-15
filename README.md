@@ -121,6 +121,8 @@ s2sMS.Identity.login(creds.CPAAS_KEY, creds.email, creds.password)
 
 ## Changes
 
+* 2.0.7 - bugs 
+* 2.0.6 - added method to identity to get identity details
 * 2.0.5 - bug in request missing json:true 
 * 2.0.4 - Added media service - files 
 * 2.0.3 - Adding new tests, and Contacts ms, removed unused params

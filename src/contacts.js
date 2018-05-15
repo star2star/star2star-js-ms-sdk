@@ -24,7 +24,8 @@ const createUserContact = (
     uri: `${MS}/users/${userUuid}/contacts`,
     headers: {
       "Authorization": `Bearer ${accessToken}`,
-      "Content-type": "application/json"
+      "Content-type": "application/json",
+      'x-api-version': `${util.getVersion()}`
     },
     body: contactData,
     json: true
@@ -50,7 +51,8 @@ const deleteContact = (
     uri: `${MS}/contacts/${contactUUID}`,
     headers: {
       "Authorization": `Bearer ${accessToken}`,
-      "Content-type": "application/json"
+      "Content-type": "application/json",
+      'x-api-version': `${util.getVersion()}`
     },
     json: true
   };
@@ -77,7 +79,8 @@ const getContacts = (
     },
     headers: {
       "Authorization": `Bearer ${accessToken}`,
-      "Content-type": "application/json"
+      "Content-type": "application/json",
+      'x-api-version': `${util.getVersion()}`
     },
     json: true
   };

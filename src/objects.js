@@ -27,8 +27,9 @@ const getDataObjectByType = (
       method: "GET",
       uri: `${MS}/users/${userUUID}/allowed-objects?type=${dataObjectType}&load_content=${loadContent}`,
       headers: {
-        "Content-type": "application/json",
-        Authorization: `Bearer ${accessToken}`
+        'Authorization': `Bearer ${accessToken}`,
+        'Content-type': 'application/json',
+        'x-api-version': `${util.getVersion()}`
       },
       json: true
     };
@@ -110,8 +111,9 @@ const getDataObjectByTypeAndName = (
       method: "GET",
       uri: `${MS}/users/${userUUID}/allowed-objects?type=${dataObjectType}&load_content=${loadContent}&name=${dataObjectName}`,
       headers: {
-        "Content-type": "application/json",
-        Authorization: `Bearer ${accessToken}`
+        'Authorization': `Bearer ${accessToken}`,
+        'Content-type': 'application/json',
+        'x-api-version': `${util.getVersion()}`
       },
       json: true
     };
@@ -187,9 +189,9 @@ const getDataObject = (
     method: "GET",
     uri: `${MS}/objects/${dataObjectUUID}`,
     headers: {
-      // "application-key": apiKey,
-      "Content-type": "application/json",
-      Authorization: `Bearer ${accessToken}`
+      'Authorization': `Bearer ${accessToken}`,
+      'Content-type': 'application/json',
+      'x-api-version': `${util.getVersion()}`
     },
     json: true
   };
@@ -230,8 +232,9 @@ const createUserDataObject = (
     uri: `${MS}/users/${userUUID}/objects`,
     body: b,
     headers: {
-      "Content-type": "application/json",
-      Authorization: `Bearer ${accessToken}`
+      'Authorization': `Bearer ${accessToken}`,
+      'Content-type': 'application/json',
+      'x-api-version': `${util.getVersion()}`
     },
     json: true
   };
@@ -269,8 +272,9 @@ const createDataObject = (
     uri: `${MS}/objects`,
     body: b,
     headers: {
-      "Content-type": "application/json",
-      Authorization: `Bearer ${accessToken}`
+      'Authorization': `Bearer ${accessToken}`,
+      'Content-type': 'application/json',
+      'x-api-version': `${util.getVersion()}`
     },
     json: true
   };
@@ -294,8 +298,9 @@ const deleteDataObject = (
     method: "DELETE",
     uri: `${MS}/objects/${data_uuid}`,
     headers: {
-      "Content-type": "application/json",
-      Authorization: `Bearer ${accessToken}`
+      'Authorization': `Bearer ${accessToken}`,
+      'Content-type': 'application/json',
+      'x-api-version': `${util.getVersion()}`
     },
     json: true
   };
@@ -322,8 +327,9 @@ const updateDataObject = (
     uri: `${MS}/objects/${data_uuid}`,
     body: data_object,
     headers: {
-      "Content-type": "application/json",
-      Authorization: `Bearer ${accessToken}`
+      'Authorization': `Bearer ${accessToken}`,
+      'Content-type': 'application/json',
+      'x-api-version': `${util.getVersion()}`
     },
     json: true
   };

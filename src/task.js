@@ -47,20 +47,17 @@ const validateTasks = (tasks = []) => {
 /**
  * This function will ask the cpaas data object service for a list of task_template objects
  *
- * @param apiKey - api key for cpaas systems
+ * @param access_token - access_token for cpaas systems
  * @param userUUID - user UUID to be used
- * @param identityJWT - identity JWT
  * @returns promise for list of data object task templates with content
  **/
 const getTaskTemplates = (
-  apiKey = "null api key",
   userUUID = "null user uuid",
-  identityJWT = "null jwt"
+  access_token = "null access_token"
 ) => {
   return Objects.getDataObjectByType(
-    apiKey,
     userUUID,
-    identityJWT,
+    access_token,
     "task_template",
     true
   );
@@ -69,28 +66,28 @@ const getTaskTemplates = (
 /**
  * This function will create a new task template object
  *
- * @param apiKey string - api key for cpaas systems
  * @param userUUID string - user UUID to be used
- * @param identityJWT string - identity JWT
+ * @param access_token string - identity access_token
  * @param title string - title of task template
  * @param defaultTasks array objects - array of objects minimium is a title
  * @returns promise for creating object
  **/
 const createTaskTemplate = (
-  apiKey = "null api key",
   userUUID = "null user uuid",
-  identityJWT = "null jwt",
+  access_token = "null access_token",
   title = "missing-stuff",
+  description = "task template description", 
   defaultTasks = []
 ) => {
   const vTasks = validateTasks(defaultTasks);
   if (vTasks.status === 200) {
     return Objects.createUserDataObject(
-      apiKey,
       userUUID,
-      identityJWT,
+      access_token,
       title,
-      "task_template", {
+      "task_template", 
+      description, 
+      {
         tasks: vTasks.tasks
       }
     );
@@ -108,37 +105,36 @@ const createTaskTemplate = (
  * @returns promise
  **/
 const deleteTaskTemplate = (
-  apiKey = "null api key",
-  identityJWT = "null jwt",
+  access_token = "null access_token",
   task_template_uuid = "missing task uuid"
 ) => {
-  return Objects.deleteDataObject(apiKey, identityJWT, task_template_uuid);
+  return Objects.deleteDataObject(access_token, task_template_uuid);
 };
 /**
  * This function will create a task object (task_list)
  *
- * @param apiKey string - api key for cpaas systems
  * @param userUUID string - user UUID to be used
- * @param identityJWT string - identity JWT
+ * @param access_token string - identity access_token
  * @param title string - title of task template
  * @param defaultTasks array objects - array of objects minimium is a title
  * @returns promise for creating object
  **/
 const createTaskObject = (
-  apiKey = "null api key",
   userUUID = "null user uuid",
-  identityJWT = "null jwt",
+  access_token = "null access_token",
   title = "Missing Task Title",
+  description = "task description default",
   defaultTasks = []
 ) => {
   const vTasks = validateTasks(defaultTasks);
   if (vTasks.status === 200) {
     return Objects.createUserDataObject(
-      apiKey,
       userUUID,
-      identityJWT,
+      access_token,
       title,
-      "task_list", {
+      "task_list",
+      description,
+      {
         tasks: vTasks.tasks
       }
     );
@@ -149,39 +145,34 @@ const createTaskObject = (
 /**
  * This function will delete task list
  *
- * @param apiKey - api key for cpaas systems
  * @param userUUID - user UUID to be used
- * @param identityJWT - identity JWT
+ * @param access_token - identity access_token
  * @param TaskObjectUUID - task list UUID
  * @returns promise
  **/
 const deleteTaskObject = (
-  apiKey = "null api key",
-  identityJWT = "null jwt",
+  access_token = "null access_token",
   task_uuid = "missing task uuid"
 ) => {
-  return Objects.deleteDataObject(apiKey, identityJWT, task_uuid);
+  return Objects.deleteDataObject(access_token, task_uuid);
 };
 
 /**
  * This function will retrieve task list
  *
- * @param apiKey - api key for cpaas systems
  * @param userUUID - user UUID to be used
- * @param identityJWT - identity JWT
+ * @param access_token - identity access_token
  * @param TaskObjectUUID - task list UUID
  * @returns promise
  **/
 const getTaskObject = (
-  apiKey = "null api key",
   userUUID = "null user uuid",
-  identityJWT = "null jwt",
+  access_token = "null access_token",
   taskObjectUUID = "null uuid"
 ) => {
   return Objects.getDataObject(
-    apiKey,
     userUUID,
-    identityJWT,
+    access_token,
     taskObjectUUID,
     true
   );
@@ -190,24 +181,21 @@ const getTaskObject = (
 /**
  * This function will update task list
  *
- * @param apiKey - api key for cpaas systems
  * @param userUUID - user UUID to be used
- * @param identityJWT - identity JWT
+ * @param access_token - identity access_token
  * @param TaskObjectUUID - task list UUID
  * @param TaskObject - task object
  * @returns promise
  **/
 const updateTaskObject = (
-  apiKey = "null api key",
   userUUID = "null user uuid",
-  identityJWT = "null jwt",
+  access_token = "null access_token",
   uuid = "missing_uuid",
   taskObject = {}
 ) => {
   return Objects.updateDataObject(
-    apiKey,
     userUUID,
-    identityJWT,
+    access_token,
     uuid,
     taskObject
   );
@@ -216,32 +204,28 @@ const updateTaskObject = (
 /**
  * This function will add task to a task object
  *
- * @param apiKey - api key for cpaas systems
  * @param userUUID - user UUID to be used
- * @param identityJWT - identity JWT
+ * @param access_token - identity access_token
  * @param TaskObjectUUID - task list UUID
  * @param Task - individual task which is an object
  * @returns promise
  **/
 const addTaskToTaskObject = (
-  apiKey = "null api key",
-  identityJWT = "null jwt",
+  access_token = "null access_token",
   taskObjectUUID = "missing_uuid",
   task = {}
 ) => {
   const vTasks = validateTasks([task]);
   if (vTasks.status === 200) {
     return Objects.getDataObject(
-      apiKey,
-      identityJWT,
+      access_token,
       taskObjectUUID,
       true
     ).then(rData => {
       //console.log(rData)
       rData.content.tasks = [].concat(rData.content.tasks, vTasks.tasks);
       return Objects.updateDataObject(
-        apiKey,
-        identityJWT,
+        access_token,
         taskObjectUUID,
         rData
       );
@@ -254,31 +238,28 @@ const addTaskToTaskObject = (
 /**
  * This function will update task in a task object
  *
- * @param apiKey - api key for cpaas systems
  * @param userUUID - user UUID to be used
- * @param identityJWT - identity JWT
+ * @param access_token - identity access_token
  * @param TaskObjectUUID - task list UUID
  * @param Task - individual task which is an object
  * @returns promise
  **/
 const updateTaskInTaskObject = (
-  apiKey = "null api key",
-  identityJWT = "null jwt",
+  access_token = "null access_token",
   taskObjectUUID = "missing_uuid",
   task = {}
 ) => {
   const vTasks = validateTasks([task]);
   //console.log('----', vTasks)
   if (vTasks.status === 200) {
-    return Objects.getDataObject(apiKey, identityJWT, taskObjectUUID).then(
+    return Objects.getDataObject(access_token, taskObjectUUID).then(
       rData => {
         rData.content.tasks = rData.content.tasks.filter(t => {
           return t.uuid !== vTasks.tasks[0].uuid;
         });
         rData.content.tasks = [].concat(rData.content.tasks, vTasks.tasks);
         return Objects.updateDataObject(
-          apiKey,
-          identityJWT,
+          access_token,
           taskObjectUUID,
           rData
         );

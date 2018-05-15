@@ -21,7 +21,8 @@ const getConversationUuid = (accessToken, userUuid, toPhoneNumber) => {
       },
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': `Bearer ${accessToken}`
+        "Authorization": `Bearer ${accessToken}`,
+        'x-api-version': `${util.getVersion()}`
       },
       json: true
     };
@@ -65,7 +66,8 @@ const sendSMSMessage = (accessToken, convesationUUID, userUuid, fromPhoneNumber,
       body: objectBody,
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': `Bearer ${accessToken}`
+        "Authorization": `Bearer ${accessToken}`,
+        'x-api-version': `${util.getVersion()}`
       },
       json: true
     };
@@ -120,7 +122,8 @@ const getSMSNumber = (accessToken, userUuid) => {
       method: 'GET',
       uri: `${MS}/identities/${userUuid}`,
       headers: {
-        'Authorization': `Bearer ${accessToken}`,
+        "Authorization": `Bearer ${accessToken}`,
+        'x-api-version': `${util.getVersion()}`,
         'Content-type': 'application/json'
       },
       json: true

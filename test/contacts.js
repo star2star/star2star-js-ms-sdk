@@ -25,76 +25,77 @@ const testContact = {
 };
 
 describe("Contacts", function () {
-
-  let accessToken;
+  let accessToken, identityData;
 
   before(function () {
-    s2sMS.setMsHost("https://cpaas.star2starglobal.net");
     // file system uses full path so will do it like this
     if (fs.existsSync("./test/credentials.json")) {
       // do not need test folder here
       creds = require("./credentials.json");
     }
 
+    // For tests, use the dev msHost
+    s2sMS.setMsHost("https://cpaas.star2starglobal.net");
+    s2sMS.setMSVersion(creds.CPAAS_API_VERSION);
     // get accessToken to use in test cases
     // Return promise so that test cases will not fire until it resolves.
-    return s2sMS.Oauth.getAccessToken(
+    return new Promise((resolve, reject)=>{
+      s2sMS.Oauth.getAccessToken(
         creds.CPAAS_OAUTH_KEY,
         creds.CPAAS_OAUTH_TOKEN,
-        creds.CPAAS_API_VERSION,
         creds.email,
         creds.password
       )
       .then(oauthData => {
-        const oData = JSON.parse(oauthData);
-        // console.log('Got access token and identity data -[Get Object By Data Type] ', identityData, oData);
-        accessToken = oData.access_token;
+        //console.log('Got access token and identity data -[Get Object By Data Type] ',  oauthData);
+        accessToken = oauthData.access_token;
+        s2sMS.Identity.getMyIdentityData(accessToken).then((idData)=>{
+          s2sMS.Identity.getIdentityDetails(accessToken, idData.user_uuid).then((identityDetails)=>{
+            identityData = identityDetails;
+            resolve();
+          }).catch((e1)=>{
+            reject(e1);
+          });
+        }).catch((e)=>{
+          reject(e);
+        });
       });
+    })
   });
 
 
   it("Create User Contact", function (done) {
     if (!creds.isValid) return done();
-    s2sMS.Identity.getMyIdentityData(accessToken)
-      .then((identityData) => {
-        const idData = JSON.parse(identityData);
-        s2sMS.Contacts.createUserContact(
+    //console.log('--------', identityData.uuid)
+    s2sMS.Contacts.createUserContact(
+        accessToken,
+        identityData.uuid,
+        testContact
+      ).then(responseData => {
+        // console.log('Create user contact response', responseData);
+        assert(responseData.name && responseData.name.first === "Test");
+        done();
+        s2sMS.Contacts.deleteContact(
             accessToken,
-            idData.user_uuid,
-            testContact
-          ).then(responseData => {
-            // console.log('Create user contact response', responseData);
-            assert(responseData.name && responseData.name.first === "Test");
-            done();
-            s2sMS.Contacts.deleteContact(
-                accessToken,
-                responseData.uuid
-              ).then((d) => {
-                // console.log('Deleted contact [Create User Contact]', responseData.uuid);
-              })
-              .catch((error) => {
-                console.log('Error deleting contact [Create User Contact]', responseData.uuid, error.message);
-              });
+            responseData.uuid
+          ).then((d) => {
+            // console.log('Deleted contact [Create User Contact]', responseData.uuid);
           })
           .catch((error) => {
-            console.log('Error creating user contact [Create User Contact]', error.message);
-            done(new Error(error));
+            console.log('Error deleting contact [Create User Contact]', responseData.uuid, error.message);
           });
       })
       .catch((error) => {
-        console.log('Error getting my identity data [Create User Contact]', error);
+        console.log('Error creating user contact [Create User Contact]', error.message);
         done(new Error(error));
       });
   });
 
   it("Delete Contact", function (done) {
     if (!creds.isValid) return done();
-    s2sMS.Identity.getMyIdentityData(accessToken)
-      .then((identityData) => {
-        const idData = JSON.parse(identityData);
         s2sMS.Contacts.createUserContact(
             accessToken,
-            idData.user_uuid,
+            identityData.uuid,
             testContact
           ).then(responseData => {
             // console.log('Create user contact response', responseData);
@@ -113,19 +114,13 @@ describe("Contacts", function () {
             console.log('Error creating user contact [Delete Contact]', error.message);
             done(new Error(error));
           });
-      })
-      .catch((error) => {
-        console.log('Error getting my identity data [Create User Contact]', error.message);
-        done(new Error(error));
-      });
   });
+
   it("List Contact", function (done) {
     if (!creds.isValid) return done();
-    s2sMS.Identity.getMyIdentityData(accessToken)
-      .then((identityData) => {
-        const idData = JSON.parse(identityData);
+
         s2sMS.Contacts.listContacts(
-            idData.user_uuid,
+            identityData.uuid,
             {}, 
             accessToken
           ).then(responseData => {
@@ -137,11 +132,7 @@ describe("Contacts", function () {
             console.log('Error listing contacts', error.message);
             done(new Error(error));
           });
-      })
-      .catch((error) => {
-        console.log('Error getting my identity data [list contacts]', error.message);
-        done(new Error(error));
-      });
+
   });
 
 

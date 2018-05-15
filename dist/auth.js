@@ -26,13 +26,14 @@ var listUserPermissions = function listUserPermissions() {
   var actions = arguments.length > 4 && arguments[4] !== undefined ? arguments[4] : ['create', 'read', 'update', 'delete', 'list'];
 
   var MS = util.getEndpoint("auth");
-
+  var VERSION = util.getVersion();
   var requestOptions = {
     method: 'GET',
     uri: MS + '/users/' + userUuid + '/permissions',
     headers: {
       'Authorization': 'Bearer ' + accessToken,
-      'Content-type': 'application/json'
+      'Content-type': 'application/json',
+      'x-api-version': '' + VERSION
     },
     json: true
     // resolveWithFullResponse: true
@@ -106,7 +107,7 @@ var getSpecificPermissions = function getSpecificPermissions() {
 
   // ok all parameters valid
   var MS = util.getEndpoint("auth");
-
+  var VERSION = util.getVersion();
   var requestOptions = {
     method: 'GET',
     uri: MS + '/permissions',
@@ -115,7 +116,8 @@ var getSpecificPermissions = function getSpecificPermissions() {
     },
     headers: {
       'Authorization': 'Bearer ' + accessToken,
-      'Content-type': 'application/json'
+      'Content-type': 'application/json',
+      'x-api-version': '' + VERSION
     },
     json: true
   };
@@ -163,7 +165,7 @@ var addExplicitGroupPermissions = function addExplicitGroupPermissions() {
   var actions = arguments.length > 6 && arguments[6] !== undefined ? arguments[6] : [];
 
   var MS = util.getEndpoint("auth");
-
+  var VERSION = util.getVersion();
   // 1.  validate parameters
   if (group_uuid === undefined) {
     return Promise.reject("group uuid is missing");
@@ -203,7 +205,8 @@ var addExplicitGroupPermissions = function addExplicitGroupPermissions() {
         },
         headers: {
           'Authorization': 'Bearer ' + accessToken,
-          'Content-type': 'application/json'
+          'Content-type': 'application/json',
+          'x-api-version': '' + VERSION
         },
         json: true
       };
@@ -245,7 +248,7 @@ var addExplicitUserPermissions = function addExplicitUserPermissions() {
   var actions = arguments.length > 6 && arguments[6] !== undefined ? arguments[6] : [];
 
   var MS = util.getEndpoint("auth");
-
+  var VERSION = util.getVersion();
   // 1.  validate parameters
   if (user_uuid === undefined) {
     return Promise.reject("user uuid is missing");
@@ -286,7 +289,8 @@ var addExplicitUserPermissions = function addExplicitUserPermissions() {
         },
         headers: {
           'Authorization': 'Bearer ' + accessToken,
-          'Content-type': 'application/json'
+          'Content-type': 'application/json',
+          'x-api-version': '' + util.getVersion()
         },
         json: true
       };

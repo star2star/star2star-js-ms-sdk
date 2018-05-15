@@ -4,7 +4,6 @@ const util = s2sMS.Util;
 const request = require('request-promise');
 
 const fs = require("fs");
-console.log('xxxxxx', s2sMS)
 
 let creds = {
   CPAAS_OAUTH_KEY: "your oauth key here",
@@ -21,36 +20,42 @@ let permissions = {};
 
 describe("Auth MS Test Suite", function () {
 
-  let accessToken;
+  let accessToken, identityData;
 
   before(function () {
-    // For tests, use the dev msHost
-    s2sMS.setMsHost("https://cpaas.star2starglobal.net");
-
     // file system uses full path so will do it like this
     if (fs.existsSync("./test/credentials.json")) {
       // do not need test folder here
       creds = require("./credentials.json");
     }
 
+    // For tests, use the dev msHost
+    s2sMS.setMsHost("https://cpaas.star2starglobal.net");
+    s2sMS.setMSVersion(creds.CPAAS_API_VERSION);
     // get accessToken to use in test cases
     // Return promise so that test cases will not fire until it resolves.
-    return s2sMS.Oauth.getAccessToken(
+    return new Promise((resolve, reject)=>{
+      s2sMS.Oauth.getAccessToken(
         creds.CPAAS_OAUTH_KEY,
         creds.CPAAS_OAUTH_TOKEN,
-        creds.CPAAS_API_VERSION,
         creds.email,
         creds.password
       )
       .then(oauthData => {
-        const oData = JSON.parse(oauthData);
-        // console.log('Got access token and identity data -[Get Object By Data Type] ', identityData, oData);
-        accessToken = oData.access_token;
-
-
-
-
+        //console.log('Got access token and identity data -[Get Object By Data Type] ',  oauthData);
+        accessToken = oauthData.access_token;
+        s2sMS.Identity.getMyIdentityData(accessToken).then((idData)=>{
+          s2sMS.Identity.getIdentityDetails(accessToken, idData.user_uuid).then((identityDetails)=>{
+            identityData = identityDetails;
+            resolve();
+          }).catch((e1)=>{
+            reject(e1);
+          });
+        }).catch((e)=>{
+          reject(e);
+        });
       });
+    })
   });
 
   it("Auth Pre-test setup", function (done) {
@@ -78,14 +83,12 @@ describe("Auth MS Test Suite", function () {
 
     s2sMS.Identity.getMyIdentityData(accessToken)
       .then((identityData) => {
-        // console.log('iiiii %j', identityData);
-        const idData = JSON.parse(identityData);
         const resourceType = 'object';
         const scope = 'user';
         const actions = ['create', 'read', 'list'];
         s2sMS.Auth.listUserPermissions(
           accessToken,
-          idData.user_uuid,
+          identityData.user_uuid,
           resourceType,
           scope,
           actions
@@ -106,13 +109,11 @@ describe("Auth MS Test Suite", function () {
 
     s2sMS.Identity.getMyIdentityData(accessToken)
       .then(identityData => {
-        //console.log('iiiii %j', identityData )
-        const idData = JSON.parse(identityData);
         const resourceTypeToMatch = 'object';
 
         s2sMS.Auth.listUserPermissions(
             accessToken,
-            idData.user_uuid,
+            identityData.user_uuid,
             resourceTypeToMatch
           ).then(responseData => {
             // console.log('rrrrrr %j', responseData);
@@ -141,14 +142,12 @@ describe("Auth MS Test Suite", function () {
     }
     s2sMS.Identity.getMyIdentityData(accessToken)
       .then((identityData) => {
-        //console.log('iiiii %j', identityData )
-        const idData = JSON.parse(identityData);
         const resourceTypeToMatch = "object";
         const scopeToMatch = "global";
 
         s2sMS.Auth.listUserPermissions(
             accessToken,
-            idData.user_uuid,
+            identityData.user_uuid,
             resourceTypeToMatch,
             scopeToMatch
           ).then(responseData => {
@@ -182,15 +181,13 @@ describe("Auth MS Test Suite", function () {
 
     s2sMS.Identity.getMyIdentityData(accessToken)
       .then((identityData) => {
-        //console.log('iiiii %j', identityData )
-        const idData = JSON.parse(identityData);
         const resourceTypeToMatch = "object";
         const scopeToMatch = "global";
         const actionToMatch = ["read"];
 
         s2sMS.Auth.listUserPermissions(
             accessToken,
-            idData.user_uuid,
+            identityData.user_uuid,
             resourceTypeToMatch,
             scopeToMatch,
             actionToMatch
@@ -223,11 +220,9 @@ describe("Auth MS Test Suite", function () {
     // TODO create test data and clean it up after testing
     s2sMS.Identity.getMyIdentityData(accessToken)
       .then((identityData) => {
-        //console.log('iiiii %j', identityData )
-        const idData = JSON.parse(identityData);
         s2sMS.Auth.getSpecificPermissions(
             accessToken,
-            idData.user_uuid,
+            identityData.user_uuid,
             "object",
             "global", ["list"]
           ).then(responseData => {
@@ -249,11 +244,9 @@ describe("Auth MS Test Suite", function () {
     }
     s2sMS.Identity.getMyIdentityData(accessToken)
       .then(identityData => {
-        //console.log('iiiii %j', identityData )
-        const idData = JSON.parse(identityData);
         s2sMS.Auth.getSpecificPermissions(
             accessToken,
-            idData.user_uuid,
+            identityData.user_uuid,
             "object",
             "global", ["read", "list"]
           ).then(responseData => {
@@ -275,11 +268,9 @@ describe("Auth MS Test Suite", function () {
     }
     s2sMS.Identity.getMyIdentityData(accessToken)
       .then(identityData => {
-        //console.log('iiiii %j', identityData )
-        const idData = JSON.parse(identityData);
         s2sMS.Auth.getSpecificPermissions(
           accessToken,
-          idData.user_uuid,
+          identityData.user_uuid,
           "object",
           "global", ["foo"]
         ).catch(errorData => {
@@ -297,11 +288,9 @@ describe("Auth MS Test Suite", function () {
     }
     s2sMS.Identity.getMyIdentityData(accessToken)
       .then(identityData => {
-        //console.log('iiiii %j', identityData )
-        const idData = JSON.parse(identityData);
         s2sMS.Auth.getSpecificPermissions(
           accessToken,
-          idData.user_uuid,
+          identityData.user_uuid,
           "bad",
           "global", ["foo"]
         ).catch(errorData => {
@@ -319,11 +308,9 @@ describe("Auth MS Test Suite", function () {
     }
     s2sMS.Identity.getMyIdentityData(accessToken)
       .then(identityData => {
-        //console.log('iiiii %j', identityData )
-        const idData = JSON.parse(identityData);
         s2sMS.Auth.getSpecificPermissions(
           accessToken,
-          idData.user_uuid,
+          identityData.user_uuid,
           "object",
           "x", ["foo"]
         ).catch(errorData => {

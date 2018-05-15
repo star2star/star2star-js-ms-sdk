@@ -22,7 +22,8 @@ var invokeLambda = function invokeLambda() {
         method: 'POST',
         uri: MS + '/actions/' + lambdaName + '/invoke',
         headers: {
-            'Authorization': accessToken,
+            "Authorization": 'Bearer ' + accessToken,
+            'x-api-version': '' + util.getVersion(),
             'Content-Type': 'application/json'
         },
         body: params,

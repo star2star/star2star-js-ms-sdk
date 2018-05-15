@@ -25,7 +25,8 @@ var createIdentity = function createIdentity() {
     uri: MS + "/identities",
     headers: {
       "Authorization": "Bearer " + accessToken,
-      "Content-type": "application/json"
+      "Content-type": "application/json",
+      'x-api-version': "" + util.getVersion()
     },
     body: {
       email: email,
@@ -57,7 +58,8 @@ var updateAliasWithDID = function updateAliasWithDID() {
     uri: MS + "/identities/" + userUuid + "/aliases/" + did,
     headers: {
       "Authorization": "Bearer " + accessToken,
-      "Content-type": "application/json"
+      "Content-type": "application/json",
+      'x-api-version': "" + util.getVersion()
     },
     json: true
   };
@@ -82,7 +84,8 @@ var deleteIdentity = function deleteIdentity() {
     uri: MS + "/identities/" + userUuid,
     headers: {
       "Authorization": "Bearer " + accessToken,
-      "Content-type": "application/json"
+      "Content-type": "application/json",
+      'x-api-version': "" + util.getVersion()
     },
     json: true
   };
@@ -109,7 +112,8 @@ var login = function login() {
     uri: MS + "/users/login",
     headers: {
       "Authorization": "Bearer " + accessToken,
-      "Content-type": "application/json"
+      "Content-type": "application/json",
+      'x-api-version': "" + util.getVersion()
     },
     body: {
       email: email,
@@ -138,7 +142,8 @@ var getMyIdentityData = function getMyIdentityData() {
     uri: MS + "/users/me",
     headers: {
       "Authorization": "Bearer " + accessToken,
-      "Content-type": "application/json"
+      "Content-type": "application/json",
+      'x-api-version': "" + util.getVersion()
     },
     json: true
   };
@@ -146,6 +151,31 @@ var getMyIdentityData = function getMyIdentityData() {
   return request(requestOptions);
 };
 
+/**
+ * This function will call the identity microservice with the credentials and
+ * accessToken you passed in
+ * @param accessToken - access token for cpaas systems
+ * @param user_uuid - user uuid to lookup
+ * @returns promise resolving to an identity data
+ **/
+var getIdentityDetails = function getIdentityDetails() {
+  var accessToken = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : "null access token";
+  var user_uuid = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : "null user uuid";
+
+  var MS = util.getEndpoint("identity");
+  var requestOptions = {
+    method: "GET",
+    uri: MS + "/identities/" + user_uuid,
+    headers: {
+      "Authorization": "Bearer " + accessToken,
+      "Content-type": "application/json",
+      'x-api-version': "" + util.getVersion()
+    },
+    json: true
+  };
+
+  return request(requestOptions);
+};
 /**
  * This function will call the identity microservice with the credentials and
  * accessToken you passed in
@@ -167,7 +197,8 @@ var lookupIdentity = function lookupIdentity() {
     },
     headers: {
       "Authorization": "Bearer " + accessToken,
-      "Content-type": "application/json"
+      "Content-type": "application/json",
+      'x-api-version': "" + util.getVersion()
     },
     json: true
   };
@@ -192,7 +223,8 @@ var listAccounts = function listAccounts() {
     },
     headers: {
       "Authorization": "Bearer " + accessToken,
-      "Content-type": "application/json"
+      "Content-type": "application/json",
+      'x-api-version': "" + util.getVersion()
     },
     json: true
   };
@@ -221,7 +253,8 @@ var getAccount = function getAccount() {
     },
     headers: {
       "Authorization": "Bearer " + accessToken,
-      "Content-type": "application/json"
+      "Content-type": "application/json",
+      'x-api-version': "" + util.getVersion()
     },
     json: true
   };
@@ -237,5 +270,6 @@ module.exports = {
   getMyIdentityData: getMyIdentityData,
   lookupIdentity: lookupIdentity,
   listAccounts: listAccounts,
-  getAccount: getAccount
+  getAccount: getAccount,
+  getIdentityDetails: getIdentityDetails
 };

@@ -13,29 +13,42 @@ let creds = {
 
 describe("Objects MS Test Suite", function () {
 
-  let accessToken;
+  let accessToken, identityData;
 
   before(function () {
-    s2sMS.setMsHost("https://cpaas.star2starglobal.net");
     // file system uses full path so will do it like this
     if (fs.existsSync("./test/credentials.json")) {
       // do not need test folder here
       creds = require("./credentials.json");
     }
+
+    // For tests, use the dev msHost
+    s2sMS.setMsHost("https://cpaas.star2starglobal.net");
+    s2sMS.setMSVersion(creds.CPAAS_API_VERSION);
     // get accessToken to use in test cases
     // Return promise so that test cases will not fire until it resolves.
-    return s2sMS.Oauth.getAccessToken(
+    return new Promise((resolve, reject)=>{
+      s2sMS.Oauth.getAccessToken(
         creds.CPAAS_OAUTH_KEY,
         creds.CPAAS_OAUTH_TOKEN,
-        creds.CPAAS_API_VERSION,
         creds.email,
         creds.password
       )
       .then(oauthData => {
-        const oData = JSON.parse(oauthData);
-        // console.log('Got access token and identity data -[Get Object By Data Type] ', identityData, oData);
-        accessToken = oData.access_token;
+        //console.log('Got access token and identity data -[Get Object By Data Type] ',  oauthData);
+        accessToken = oauthData.access_token;
+        s2sMS.Identity.getMyIdentityData(accessToken).then((idData)=>{
+          s2sMS.Identity.getIdentityDetails(accessToken, idData.user_uuid).then((identityDetails)=>{
+            identityData = identityDetails;
+            resolve();
+          }).catch((e1)=>{
+            reject(e1);
+          });
+        }).catch((e)=>{
+          reject(e);
+        });
       });
+    })
   });
 
 
@@ -44,6 +57,36 @@ describe("Objects MS Test Suite", function () {
 
     // create a data object
     s2sMS.Objects.createDataObject(
+      accessToken,
+      "myName",
+      "foo_bar",
+      "the description", {
+        a: 1
+      }
+    ).then(responseData => {
+      // console.log('Create data object response', responseData);
+      assert(responseData.content !== null);
+      done();
+      s2sMS.Objects.deleteDataObject(
+          accessToken,
+          responseData.uuid
+        ).then(d => {
+          // console.log('DELETED object ', responseData.uuid);
+        })
+        .catch((error) => {
+          //console.log('Error deleing data object [createGlobalObject]', error);
+        });
+    })
+    .catch((error) => {
+      console.log('Error creating object [createGlobalObject]', error);
+      done(new Error(error));
+    });
+  });
+
+  it("Create and Get User Object", function (done) {
+    if (!creds.isValid) return done();
+    s2sMS.Objects.createUserDataObject(
+      identityData.uuid,
         accessToken,
         "myName",
         "foo_bar",
@@ -51,74 +94,34 @@ describe("Objects MS Test Suite", function () {
           a: 1
         }
       ).then(responseData => {
-        // console.log('Create data object response', responseData);
-        assert(responseData.content !== null);
-        done();
-        s2sMS.Objects.deleteDataObject(
+        // console.log('create user data object response', responseData);
+        s2sMS.Objects.getDataObject(
             accessToken,
             responseData.uuid
-          ).then(d => {
-            // console.log('DELETED object ', responseData.uuid);
-          })
-          .catch((error) => {
-            console.log('Error deleing data object [createGlobalObject]', error);
-          });
-      })
-      .catch((error) => {
-        console.log('Error creating object [createGlobalObject]', error);
-        done(new Error(error));
-      });
-  });
-
-  it("Create and Get User Object", function (done) {
-    if (!creds.isValid) return done();
-
-    s2sMS.Identity.getMyIdentityData(accessToken)
-      .then((identityData) => {
-        // console.log('identity data [Create and Get User Object]', identityData);
-        const idData = JSON.parse(identityData);
-        s2sMS.Objects.createUserDataObject(
-            idData.user_uuid,
-            accessToken,
-            "myName",
-            "foo_bar",
-            "the description", {
-              a: 1
-            }
-          ).then(responseData => {
-            // console.log('create user data object response', responseData);
-            s2sMS.Objects.getDataObject(
+          )
+          .then(retrievedData => {
+            assert(
+              retrievedData.content !== null &&
+              retrievedData.content.hasOwnProperty('a')
+            );
+            done();
+            s2sMS.Objects.deleteDataObject(
                 accessToken,
                 responseData.uuid
-              )
-              .then(retrievedData => {
-                assert(
-                  retrievedData.content !== null &&
-                  retrievedData.content.hasOwnProperty('a')
-                );
-                done();
-                s2sMS.Objects.deleteDataObject(
-                    accessToken,
-                    responseData.uuid
-                  ).then(d => {
-                    //console.log(d)
-                  })
-                  .catch((error) => {
-                    console.log('Error deleting user data object [create and get user object]', error);
-                  });
+              ).then(d => {
+                //console.log(d)
               })
               .catch((error) => {
-                console.log('Error getting user data object [create and get user object]', error);
-                done(new Error(error));
+                console.log('Error deleting user data object [create and get user object]', error);
               });
           })
           .catch((error) => {
-            console.log('Error creating User Object [create and get user object]', error);
+            console.log('Error getting user data object [create and get user object]', error);
             done(new Error(error));
           });
       })
       .catch((error) => {
-        console.log('Error getting my identity data [Create and get user object]', error);
+        console.log('Error creating User Object [create and get user object]', error);
         done(new Error(error));
       });
   });
@@ -133,107 +136,89 @@ describe("Objects MS Test Suite", function () {
     const objContent = {
       test: "Test String"
     };
-
-    s2sMS.Identity.getMyIdentityData(accessToken)
-      .then((identityData) => {
-        const idData = JSON.parse(identityData);
-        s2sMS.Objects.createUserDataObject(
-          idData.user_uuid,
+    s2sMS.Objects.createUserDataObject(
+      identityData.uuid,
+      accessToken,
+      objName,
+      objType,
+      objDescription,
+      objContent
+    ).then((objData) => {
+      // console.log('New Data Object response', objData);
+      // get object that was just created
+      s2sMS.Objects.getDataObjectByType(
+          identityData.uuid,
           accessToken,
-          objName,
-          objType,
-          objDescription,
-          objContent
-        ).then((objData) => {
-          // console.log('New Data Object response', objData);
-          // get object that was just created
-          s2sMS.Objects.getDataObjectByType(
-              idData.user_uuid,
+          "unit_test_object",
+          false
+        )
+        .then(responseData => {
+          // console.log('Got objects by type', responseData.items)
+          assert(
+            responseData.items.length > 0 &&
+            responseData.items[0].type === "unit_test_object"
+          );
+          done();
+          // delete the data object(s)
+          responseData.items.forEach((item) => {
+            s2sMS.Objects.deleteDataObject(
               accessToken,
-              "unit_test_object",
-              false
-            )
-            .then(responseData => {
-              // console.log('Got objects by type', responseData.items)
-              assert(
-                responseData.items.length > 0 &&
-                responseData.items[0].type === "unit_test_object"
-              );
-              done();
-              // delete the data object(s)
-              responseData.items.forEach((item) => {
-                s2sMS.Objects.deleteDataObject(
-                  accessToken,
-                  item.uuid
-                ).then((d) => {
-                  // console.log('Deleting data object', item.uuid);
-                }).catch((error) => {
-                  console.log('Error deleting user data object [GetUserObjectByDataType]', error);
-                });
-              });
+              item.uuid
+            ).then((d) => {
+              // console.log('Deleting data object', item.uuid);
             }).catch((error) => {
-              console.error('Error getting object by type [GetUserObjectByDataType]', error);
-              done(new Error(error));
+              console.log('Error deleting user data object [GetUserObjectByDataType]', error);
             });
+          });
         }).catch((error) => {
-          console.log('error creating user data object [[GetUserObjectByDataType]]', error);
+          console.error('Error getting object by type [GetUserObjectByDataType]', error);
           done(new Error(error));
         });
-      })
-      .catch((error) => {
-        console.log('Error getting my identity data [GetUserObjectByDataType]', error);
-        done(new Error(error));
-      });
+    }).catch((error) => {
+      console.log('error creating user data object [[GetUserObjectByDataType]]', error);
+      done(new Error(error));
+    });
   });
 
   it("UpdateUserObject", function (done) {
     if (!creds.isValid) return done();
-
-    s2sMS.Identity.getMyIdentityData(accessToken)
-      .then((identityData) => {
-        const idData = JSON.parse(identityData);
-        s2sMS.Objects.createUserDataObject(
-          idData.user_uuid,
+    s2sMS.Objects.createUserDataObject(
+      identityData.uuid,
+      accessToken,
+      "myName",
+      "foo_bar",
+      "the description", {
+        a: 1
+      }
+    ).then(responseData => {
+      // console.log('createUserDAtaObject respons [UpdateUserObject]', responseData);
+      responseData.content = {
+        myContent: "bluebirds are in the sky"
+      };
+      s2sMS.Objects.updateDataObject(
+        accessToken,
+        responseData.uuid,
+        responseData
+      ).then(upObj => {
+        // console.log('User Object Update response', upObj);
+        assert(upObj.content.hasOwnProperty("myContent"));
+        done();
+        s2sMS.Objects.deleteDataObject(
           accessToken,
-          "myName",
-          "foo_bar",
-          "the description", {
-            a: 1
-          }
-        ).then(responseData => {
-          // console.log('createUserDAtaObject respons [UpdateUserObject]', responseData);
-          responseData.content = {
-            myContent: "bluebirds are in the sky"
-          };
-          s2sMS.Objects.updateDataObject(
-            accessToken,
-            responseData.uuid,
-            responseData
-          ).then(upObj => {
-            // console.log('User Object Update response', upObj);
-            assert(upObj.content.hasOwnProperty("myContent"));
-            done();
-            s2sMS.Objects.deleteDataObject(
-              accessToken,
-              upObj.uuid
-            ).then((d) => {
-              //console.log('Deleted object [UpdateUserObject]', upObj.uuid);
-            }).catch((error) => {
-              console.log('Error deleting data object [UpdateUserObject]', error);
-            });
-          }).catch((error) => {
-            console.log('Error updating data object [UpdateUserObject]', error);
-            done(new Error(error));
-          });
+          upObj.uuid
+        ).then((d) => {
+          //console.log('Deleted object [UpdateUserObject]', upObj.uuid);
         }).catch((error) => {
-          console.log('Error creating data object [UpdateUserObject]', error);
-          done(new Error(error));
+          console.log('Error deleting data object [UpdateUserObject]', error);
         });
-      })
-      .catch((error) => {
-        console.log('Error getting my identity data [UpdateUserObject]', error);
+      }).catch((error) => {
+        console.log('Error updating data object [UpdateUserObject]', error);
         done(new Error(error));
       });
+    }).catch((error) => {
+      console.log('Error creating data object [UpdateUserObject]', error);
+      done(new Error(error));
+    });
   });
 
 
@@ -251,66 +236,57 @@ describe("Objects MS Test Suite", function () {
       "myContent": "Unit testing is cool!"
     };
 
-    s2sMS.Identity.getMyIdentityData(accessToken)
-      .then((identityData) => {
-        const idData = JSON.parse(identityData);
-        // Push createObject promises to array
-        objNames.forEach((name) => {
-          objectPromisArray.push(
-            s2sMS.Objects.createUserDataObject(
-              idData.user_uuid,
-              accessToken,
-              name,
-              objType,
-              objDescription,
-              objContent
-            )
-          );
-        });
+    // Push createObject promises to array
+    objNames.forEach((name) => {
+      objectPromisArray.push(
+        s2sMS.Objects.createUserDataObject(
+          identityData.uuid,
+          accessToken,
+          name,
+          objType,
+          objDescription,
+          objContent
+        )
+      );
+    });
 
-        Promise.all(objectPromisArray)
-          .then((objectData) => {
-            const obj1 = objectData[0];
-            const obj2 = objectData[1];
+    Promise.all(objectPromisArray).then((objectData) => {
+        const obj1 = objectData[0];
+        const obj2 = objectData[1];
 
-            s2sMS.Objects.getDataObjectByTypeAndName(
-                idData.user_uuid,
-                accessToken,
-                objType,
-                objNames[1],
-                true // loadContent
-              )
-              .then(responseData => {
-                // console.log('GetObjectsByNameAndType response', responseData);
-                assert(
-                  responseData.items.length > 0 &&
-                  responseData.items[0].name === objNames[1]
-                );
-                done();
-              })
-              .catch((error) => {
-                console.log('Error getting data objects [getUserDataObjectByTypeAndName]', error);
-                done(new Error(error));
-              });
-
-            objectData.forEach((obj) => {
-              s2sMS.Objects.deleteDataObject(
-                accessToken,
-                obj.uuid
-              ).then((d) => {
-                // console.log('d', d);
-              }).catch((error) => {
-                console.log('Error deleting objects [getDataObjectsByTypeAndName]', error);
-              })
-            });
-          }).catch((error) => {
-            console.log('Error creating data objects [getUserDataObjectByTypeAndName]', error);
+        s2sMS.Objects.getDataObjectByTypeAndName(
+            identityData.uuid,
+            accessToken,
+            objType,
+            objNames[1],
+            true // loadContent
+          )
+          .then(responseData => {
+            // console.log('GetObjectsByNameAndType response', responseData);
+            assert(
+              responseData.items.length > 0 &&
+              responseData.items[0].name === objNames[1]
+            );
+            done();
+          })
+          .catch((error) => {
+            console.log('Error getting data objects [getUserDataObjectByTypeAndName]', error);
             done(new Error(error));
           });
-      })
-      .catch((error) => {
-        console.log('Error getting my identity data [getUserDataObjectByTypeAndName]', error);
+
+        objectData.forEach((obj) => {
+          s2sMS.Objects.deleteDataObject(
+            accessToken,
+            obj.uuid
+          ).then((d) => {
+            // console.log('d', d);
+          }).catch((error) => {
+            console.log('Error deleting objects [getDataObjectsByTypeAndName]', error);
+          })
+        });
+      }).catch((error) => { //
+        console.log('Error creating data objects [getUserDataObjectByTypeAndName]', error);
         done(new Error(error));
-      });
+      }); //promise all 
   });
 });
