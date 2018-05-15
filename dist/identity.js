@@ -58,7 +58,8 @@ var updateAliasWithDID = function updateAliasWithDID() {
     headers: {
       "Authorization": "Bearer " + accessToken,
       "Content-type": "application/json"
-    }
+    },
+    json: true
   };
 
   return request(requestOptions);
@@ -82,7 +83,8 @@ var deleteIdentity = function deleteIdentity() {
     headers: {
       "Authorization": "Bearer " + accessToken,
       "Content-type": "application/json"
-    }
+    },
+    json: true
   };
 
   return request(requestOptions);
@@ -137,7 +139,8 @@ var getMyIdentityData = function getMyIdentityData() {
     headers: {
       "Authorization": "Bearer " + accessToken,
       "Content-type": "application/json"
-    }
+    },
+    json: true
   };
 
   return request(requestOptions);

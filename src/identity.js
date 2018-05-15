@@ -57,7 +57,8 @@ const updateAliasWithDID = (
     headers: {
       "Authorization": `Bearer ${accessToken}`,
       "Content-type": "application/json"
-    }
+    },
+    json: true
   };
 
   return request(requestOptions);
@@ -80,7 +81,8 @@ const deleteIdentity = (accessToken = "null accessToken", userUuid = "null uuid"
     headers: {
       "Authorization": `Bearer ${accessToken}`,
       "Content-type": "application/json"
-    }
+    },
+    json: true
   };
 
   return request(requestOptions);
@@ -133,7 +135,8 @@ const getMyIdentityData = (accessToken = "null access token") => {
     headers: {
       "Authorization": `Bearer ${accessToken}`,
       "Content-type": "application/json"
-    }
+    },
+    json: true 
   };
 
   return request(requestOptions);

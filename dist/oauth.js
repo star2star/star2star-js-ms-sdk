@@ -36,7 +36,8 @@ var getAccessToken = function getAccessToken() {
       scope: "message.list",
       email: email,
       password: pwd
-    }
+    },
+    json: true
     // resolveWithFullResponse: true
   };
 
@@ -69,7 +70,8 @@ var refreshAccessToken = function refreshAccessToken() {
     form: {
       grant_type: "refresh_token",
       refresh_token: refreshToken
-    }
+    },
+    json: true
     // resolveWithFullResponse: true
   };
 

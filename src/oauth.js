@@ -37,6 +37,7 @@ const getAccessToken = (
       email: email,
       password: pwd
     },
+    json:true 
     // resolveWithFullResponse: true
   };
 
@@ -71,6 +72,7 @@ const refreshAccessToken = (
       grant_type: "refresh_token",
       refresh_token: refreshToken
     },
+    json:true 
     // resolveWithFullResponse: true
   };
 
