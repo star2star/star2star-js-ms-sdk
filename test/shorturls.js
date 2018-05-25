@@ -51,23 +51,7 @@ describe("ShortUrls Test Suite", function () {
     })
   });
 
-  it("list shorturls", function (done) {
-    if (!creds.isValid) return done();
-    s2sMS.ShortUrls.listShortUrls(
-        identityData.uuid,
-        accessToken
-      ).then(responseData => {
-        console.log(responseData)
-        assert(responseData.metadata !== null);
-        done();
-      })
-      .catch((error) => {
-        console.log('Error getting shortUrl list', error);
-        done(new Error(error));
-      });
-  });
-
-  it("create / delete ", function (done) {
+  it("create / list / delete ", function (done) {
     if (!creds.isValid) return done();
 
     const options = {
@@ -78,14 +62,40 @@ describe("ShortUrls Test Suite", function () {
       accessToken,
       options
     ).then(responseData => {
-      console.log(responseData);
-      assert(responseData.short_code.length > 0);
-      s2sMS.ShortUrls.deleteShortCode(
+      // ok list 
+      s2sMS.ShortUrls.listShortUrls(
         identityData.uuid,
-        accessToken,
-        responseData.short_code
-      );
-      done();
+        accessToken
+      ).then(listData => {
+        console.log(listData.metadata.count)
+
+        s2sMS.ShortUrls.deleteShortCode(
+          identityData.uuid,
+          accessToken,
+          responseData.short_code
+        ).then((d)=>{
+
+
+          if (responseData.short_code.length > 0){
+            done(new Error( "short code returned length is not greater than 0"));
+          } else if ( !(listData.hasOwnProperty('items')) || listData.items.length <1 ){
+            done(new Error( "list returned but does not contain items or item length is 0"));
+          } else {
+            done();
+          }
+
+        }).catch((de)=>{
+          console.log(de)
+          done(de)
+        });
+
+      })
+      .catch((error) => {
+        console.log('Error create shortUrl list', error);
+        done(error)
+      });
+
+
     })
     .catch((error) => {
       console.log('Error creating shortUrl ', error);

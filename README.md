@@ -121,6 +121,7 @@ s2sMS.Identity.login(creds.CPAAS_KEY, creds.email, creds.password)
 
 ## Changes
 
+*2.0.10 - bug fix for shorturl having wrong endpoint
 * 2.0.8 - ooops 
 * 2.0.7 - bugs 
 * 2.0.6 - added method to identity to get identity details

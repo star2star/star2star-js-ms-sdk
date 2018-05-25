@@ -8,7 +8,7 @@
     "MESSAGING": "/messaging",
     "OBJECTS": "/objects",
     "LAMBDA": "/lambda",
-    "SHORTURLS": "/shorturls",
+    "SHORTURLS": "/shorturl",
     "CONTACTS": "/contacts",
     "OAUTH": "/oauth",
     "MEDIA": "/media",
