@@ -308,14 +308,14 @@ var deleteDataObject = function deleteDataObject() {
 var updateDataObject = function updateDataObject() {
   var accessToken = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : "null accessToken";
   var data_uuid = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : "uuid not specified";
-  var data_object = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : {};
+  var body = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : {};
 
   var MS = util.getEndpoint("objects");
 
   var requestOptions = {
     method: "PUT",
     uri: MS + "/objects/" + data_uuid,
-    body: data_object,
+    body: body,
     headers: {
       'Authorization': "Bearer " + accessToken,
       'Content-type': 'application/json',
