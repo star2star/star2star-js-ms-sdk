@@ -63,31 +63,36 @@ describe("ShortUrls Test Suite", function () {
       options
     ).then(responseData => {
       // ok list 
+      //console.log('------->', responseData);
       s2sMS.ShortUrls.listShortUrls(
         identityData.uuid,
         accessToken
       ).then(listData => {
-        console.log(listData.metadata.count)
+        //console.log('xxxx', listData);
+        //TODO issue CSRVS-77 content rename to items 
 
-        s2sMS.ShortUrls.deleteShortCode(
-          identityData.uuid,
-          accessToken,
-          responseData.short_code
-        ).then((d)=>{
-
-
-          if (responseData.short_code.length > 0){
-            done(new Error( "short code returned length is not greater than 0"));
-          } else if ( !(listData.hasOwnProperty('items')) || listData.items.length <1 ){
-            done(new Error( "list returned but does not contain items or item length is 0"));
-          } else {
-            done();
-          }
-
-        }).catch((de)=>{
-          console.log(de)
-          done(de)
-        });
+        setTimeout(()=>{
+          s2sMS.ShortUrls.deleteShortCode(
+            identityData.uuid,
+            accessToken,
+            responseData.short_code
+          ).then((d)=>{
+            //
+  
+            if (responseData.short_code.length < 1 ){
+              done(new Error( "short code returned length is not greater than 0"));
+            } else if ( !(listData.hasOwnProperty('content')) || listData.content.length <1 ){
+              done(new Error( "list returned but does not contain items or item length is 0"));
+            } else {
+              done();
+            }
+  
+          }).catch((de)=>{
+            console.log(de)
+            done(de)
+          });
+        }, 1000)
+        
 
       })
       .catch((error) => {
