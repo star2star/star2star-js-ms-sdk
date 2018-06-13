@@ -318,14 +318,14 @@ const deleteDataObject = (
 const updateDataObject = (
   accessToken = "null accessToken",
   data_uuid = "uuid not specified",
-  data_object = {}
+  body = {}
 ) => {
   const MS = util.getEndpoint("objects");
 
   const requestOptions = {
     method: "PUT",
     uri: `${MS}/objects/${data_uuid}`,
-    body: data_object,
+    body: body,
     headers: {
       'Authorization': `Bearer ${accessToken}`,
       'Content-type': 'application/json',
