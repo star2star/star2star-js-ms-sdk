@@ -28,100 +28,11 @@ s2sMS.Identity.login(creds.CPAAS_KEY, creds.email, creds.password)
 
 ## Methods
 
-### Identity Microservice
-
-### **createIdentity** - creates a new user
-    
-- #### **Parameters**:
-
-  - Identity API Key: Provisioned key for organization to access Identity microservice   
-  - email: Email address of the new user
-  - identity_type_name: String with value 'guest'. TODO when is 'user' value valid?
-  - password: password string that user will use to authenticate to microservices.  Currently no rules for length/content TODO - will there be password rules?
-
-- #### **Returns**:
-  
-    A javascript promise that resolves into a create identity response object
-
-- #### **Usage**:
-
-    s2sMS.Identity.createIdentity()
-
-
-### **deleteIdentity** - Deletes the user object matching the user_uuid submitted 
-
-- #### **Parameters**:
-  - Identity API Key: Provisioned key for organization to access Identity microservice   
-  - userUuid: uuid for user to be deleted
-
-- #### **Returns**:
-    A javascript promise that resolves to a response status of 204
-
-- #### **Usage**:
-   s2sMS.Identity.deleteIdentity()
-
-
-### **login** - calls the identity microservice with the credentials provided.  If credentials are valid, response will contain user_uuid and other user details.
-
-- #### **Parameters**:
-  - Identity API Key: Provisioned key for organization to access Identity microservice   
-  - email: Email address of the user to login
-  - password: password string for authenticating user 
-
-- #### **Returns**:
-  
-    A javascript promise that resolves to identity user details
-
-- #### **Usage**:
-
-    s2sMS.Identity.login()
-
-
-### **lookupIdentity** - Retrieves identity details for submitted email in items array.  If no match exists, items array will be empty.
-
-- #### **Parameters**:
-  - Identity API Key: Provisioned key for organization to access Identity microservice   
-  - email: Email address of the user to lookup
-
-- #### **Returns**:
-  
-    A javascript promise that resolves to identity user lookup details
-
-- #### **Usage**:
-
-    s2sMS.Identity.lookupIdentity()
-
-###  **listAccounts** - retrieves list of accounts
-- #### **Parameters**:
-  - Identity API Key: Provisioned key for organization to access Identity microservice   
-
-- #### **Returns**:
-  
-    A javascript promise that resolves to list of accounts
-
-- #### **Usage**:
-
-    s2sMS.Identity.listAccounts()
-
-
-### **getAccount** - Retrieves account information for submitted accountUuid
-- #### **Parameters**:
-  - Identity API Key: Provisioned key for organization to access Identity microservice   
-  - accountUuid: uuid for the requested account
-
-- #### **Returns**:
-  
-    A javascript promise that resolves to object with requested account info
-
-- #### **Usage**:
-
-    s2sMS.Identity.getAccount()
-
-
+[Please click here for our documentation pages.](https://star2star.github.io/star2star-js-ms-sdk/ "Star2Star Micro Service SDK Documentation")
 
 ## Changes
-
-*2.0.10 - bug fix for shorturl having wrong endpoint
+* 2.1.0 - Added documentationjs
+* 2.0.10 - bug fix for shorturl having wrong endpoint
 * 2.0.8 - ooops 
 * 2.0.7 - bugs 
 * 2.0.6 - added method to identity to get identity details
