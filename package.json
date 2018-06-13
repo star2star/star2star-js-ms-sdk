@@ -1,6 +1,6 @@
 {
   "name": "star2star-js-ms-sdk",
-  "version": "2.0.11",
+  "version": "2.1.0",
   "description": "Star2Star JavaScript Micro Service SDK",
   "main": "./dist/index.js",
   "scripts": {
@@ -9,7 +9,7 @@
     "test": "mocha --timeout 10000",
     "prebuild": "npm run clean && npm run init",
     "build": "babel src -d dist --presets es2015",
-    "postbuild": "cp src/config.json dist/config.json"
+    "postbuild": "cp src/config.json dist/config.json && documentation build src/index.js -f \"html\" -o ."
   },
   "keywords": [
     "micro service",
@@ -20,6 +20,7 @@
   "author": "James Schimmoeller",
   "license": "Apache 2.0",
   "dependencies": {
+    "documentation": "^8.0.0",
     "object-merge": "^2.5.1",
     "request": "^2.87.0",
     "request-promise": "^4.2.2"
