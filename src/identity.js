@@ -249,6 +249,28 @@ const getAccount = (accessToken = "null access token", accountUUID = "null accou
   return request(requestOptions);
 };
 
+/**
+ * This function will call the identity microservice to get account details
+ * @param accessToken - access token for cpaas systems
+ * @param accountUUID - account_uuid for an star2star account (customer)
+ * @returns promise resolving to an identity data
+ **/
+const getAccountAvailProps = (accessToken = "null access token", accountUUID = "null account uuid", includeIdentities = false) => {
+  const MS = util.getEndpoint("identity");
+  const requestOptions = {
+    method: "GET",
+    uri: `${MS}/accounts/${accountUUID}/availableProperties`,
+    headers: {
+      "Authorization": `Bearer ${accessToken}`,
+      "Content-type": "application/json",
+      'x-api-version': `${util.getVersion()}`
+    },
+    json: true
+  };
+
+  return request(requestOptions);
+};
+
 module.exports = {
   createIdentity,
   updateAliasWithDID,
@@ -258,5 +280,6 @@ module.exports = {
   lookupIdentity,
   listAccounts,
   getAccount,
+  getAccountAvailProps,
   getIdentityDetails
 };

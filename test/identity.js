@@ -242,13 +242,13 @@ describe("Identity MS Unit Test Suite", function () {
       });
   });
 
-  it("GetAccountData", function (done) {
+  it("Get Account Data", function (done) {
     if (!creds.isValid) return done();
 
     s2sMS.Identity
       .listAccounts(accessToken)
       .then((accountList) => {
-        // console.log("accountList -- getAccountData", accountList);
+         // console.log("accountList -- getAccountData", accountList);
 
         s2sMS.Identity
           .getAccount(accessToken, accountList.items[0].uuid)
@@ -258,7 +258,33 @@ describe("Identity MS Unit Test Suite", function () {
             done();
           })
           .catch((error) => {
-            console.log("error in getting account data", error);
+            // console.log("error in getting account data", error);
+            done(new Error(error));
+          });
+      })
+      .catch((error) => {
+        //console.log("error in getting account list [getAccountData]", error);
+        done(new Error(error));
+      });
+  });
+
+  it("Get Account Available Properties", function (done) {
+    if (!creds.isValid) return done();
+
+    s2sMS.Identity
+      .listAccounts(accessToken)
+      .then((accountList) => {
+         //console.log("accountList -- getAccountData", accountList);
+
+        s2sMS.Identity
+          .getAccountAvailProps(accessToken, accountList.items[0].uuid)
+          .then(accountProps => {
+            //console.log("accountProps", accountProps);
+            assert(accountProps.items instanceof Array);
+            done();
+          })
+          .catch((error) => {
+            console.log("error in getting account available properties", error);
             done(new Error(error));
           });
       })

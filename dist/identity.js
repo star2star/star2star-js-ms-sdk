@@ -262,6 +262,32 @@ var getAccount = function getAccount() {
   return request(requestOptions);
 };
 
+/**
+ * This function will call the identity microservice to get account details
+ * @param accessToken - access token for cpaas systems
+ * @param accountUUID - account_uuid for an star2star account (customer)
+ * @returns promise resolving to an identity data
+ **/
+var getAccountAvailProps = function getAccountAvailProps() {
+  var accessToken = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : "null access token";
+  var accountUUID = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : "null account uuid";
+  var includeIdentities = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : false;
+
+  var MS = util.getEndpoint("identity");
+  var requestOptions = {
+    method: "GET",
+    uri: MS + "/accounts/" + accountUUID + "/availableProperties",
+    headers: {
+      "Authorization": "Bearer " + accessToken,
+      "Content-type": "application/json",
+      'x-api-version': "" + util.getVersion()
+    },
+    json: true
+  };
+
+  return request(requestOptions);
+};
+
 module.exports = {
   createIdentity: createIdentity,
   updateAliasWithDID: updateAliasWithDID,
@@ -271,5 +297,6 @@ module.exports = {
   lookupIdentity: lookupIdentity,
   listAccounts: listAccounts,
   getAccount: getAccount,
+  getAccountAvailProps: getAccountAvailProps,
   getIdentityDetails: getIdentityDetails
 };
