@@ -2,7 +2,7 @@
 <html>
 <head>
   <meta charset='utf-8' />
-  <title>star2star-js-ms-sdk 2.1.1 | Documentation</title>
+  <title>star2star-js-ms-sdk 2.1.2 | Documentation</title>
   <meta name='viewport' content='width=device-width,initial-scale=1'>
   <link href='assets/bass.css' type='text/css' rel='stylesheet' />
   <link href='assets/style.css' type='text/css' rel='stylesheet' />
@@ -14,7 +14,7 @@
       <div id='split-left' class='overflow-auto fs0 height-viewport-100'>
         <div class='py1 px2'>
           <h3 class='mb0 no-anchor'>star2star-js-ms-sdk</h3>
-          <div class='mb1'><code>2.1.1</code></div>
+          <div class='mb1'><code>2.1.2</code></div>
           <input
             placeholder='Filter'
             id='filter-input'
@@ -178,6 +178,16 @@
                   href='#getaccount'
                   class="">
                   getAccount
+                  
+                </a>
+                
+                </li>
+              
+                
+                <li><a
+                  href='#getaccountavailprops'
+                  class="">
+                  getAccountAvailProps
                   
                 </a>
                 
@@ -2048,6 +2058,94 @@ accessToken you passed in</p>
             <span class='code bold'>includeIdentities</span> <code class='quiet'>(any)</code>
 	    boolean to include identities in account or not
 
+          </div>
+          
+        </div>
+      
+    </div>
+  
+
+  
+
+  
+    
+      <div class='py1 quiet mt1 prose-big'>Returns</div>
+      <code>any</code>:
+        promise resolving to an identity data
+*
+
+      
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+</section>
+
+          
+        
+          
+            <section class='p2 mb2 clearfix bg-white minishadow'>
+
+  
+  <div class='clearfix'>
+    
+    <h3 class='fl m0' id='getaccountavailprops'>
+      getAccountAvailProps
+    </h3>
+    
+    
+  </div>
+  
+
+  <p>This function will call the identity microservice to get account details</p>
+
+
+  <div class='pre p1 fill-light mt0'>getAccountAvailProps</div>
+  
+  
+
+  
+  
+  
+  
+  
+  
+
+  
+    <div class='py1 quiet mt1 prose-big'>Parameters</div>
+    <div class='prose'>
+      
+        <div class='space-bottom0'>
+          <div>
+            <span class='code bold'>accessToken</span> <code class='quiet'>(any)</code>
+	    access token for cpaas systems
+
+          </div>
+          
+        </div>
+      
+        <div class='space-bottom0'>
+          <div>
+            <span class='code bold'>accountUUID</span> <code class='quiet'>(any)</code>
+	    account_uuid for an star2star account (customer)
+
+          </div>
+          
+        </div>
+      
+        <div class='space-bottom0'>
+          <div>
+            <span class='code bold'>includeIdentities</span> <code class='quiet'>(any
+            = <code>false</code>)</code>
+	    
           </div>
           
         </div>
