@@ -1,0 +1,116 @@
+toc:
+  - name: Auth
+    children:
+      - addExplicitGroupPermissions
+      - addExplicitUserPermissions
+      - getSpecificPermissions
+      - listUserPermissions
+  - name: Chat
+    children:
+      - addMember
+      - createRoom
+      - deleteMember
+      - deleteRoom
+      - getMessages
+      - getRoom
+      - getRoomInfo
+      - getRoomMembers
+      - listRooms
+      - sendMessage
+      - updateRoomInfo
+      - updateRoomMeta
+  - name: Contacts
+    children:
+      - createUserContact
+      - deleteContact
+      - getContacts
+      - listContacts
+  - name: Groups
+    children:
+      - addMembersToGroup
+      - createGroup
+      - deleteGroup
+      - getGroup 
+      - listGroups
+      - updateGroup
+  - name: Identity
+    children:
+      - createIdentity
+      - updateAliasWithDID
+      - deleteIdentity
+      - login
+      - getMyIdentityData
+      - getIdentityDetails
+      - lookupIdentity
+      - listAccounts
+      - getAccount
+      - getAccountAvailProps
+  - name: Index
+    children:
+      - getApplicationKey
+      - getMsHost
+      - getPermissions
+      - setApplicationKey
+      - setMsHost
+      - setMSVersion    
+  - name: Lambda
+    children:
+      - invokeLambda
+  - name: Media
+    children:
+      - deleteMedia
+      - listUserMedia
+      - uploadFile
+  - name: Messaging
+    children: 
+      - getSMSNumber
+      - getConversationUuid
+      - sendSMS
+      - sendSMSMessage
+  - name: Oauth
+    children: 
+      - getAccessToken
+      - refreshAccessToken
+  - name: Objects
+    children:
+      - getDataObject
+      - createDataObject
+      - deleteDataObject
+      - updateDataObject
+      - getDataObjectByType
+      - getDataObjectByTypeAndName
+      - createUserDataObject
+  - name: Pubsub
+    children: 
+      - addSubscription
+      - deleteSubscription
+      - listUserSubscriptions
+  - name: ShortUrls
+    children:
+      - createShortUrl
+      - deleteShortCode
+      - listShortUrls
+  - name: Task
+    children:
+      - addTaskToTaskObject
+      - createTaskObject
+      - createTaskTemplate
+      - deleteTaskObject
+      - deleteTaskTemplate
+      - getTaskObject
+      - getTaskTemplates
+      - updateTaskObject
+      - updateTaskInTaskObject
+      - validateTasks 
+  - name: Util
+    children:
+      - createUUID
+      - getEndpoint
+      - getVersion
+      - getValueFromObjectTree
+      - replaceStaticValues
+      - replaceVariables
+      
+
+
+

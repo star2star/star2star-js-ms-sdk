@@ -6,10 +6,10 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 var config = require('./config.json');
 
 /**
- * This function will determine microservice endpoint URI
  *
- * @param matchString - the string that we are matching on
- * @return String or undefined - will return you the string value or undefined
+ * @description This function will determine microservice endpoint URI.
+ * @param {string} [microservice="NOTHING"] - the string that we are matching on
+ * @returns {string} - the configured value or undefined
  */
 var getEndpoint = function getEndpoint() {
   var microservice = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : "NOTHING";
@@ -18,10 +18,11 @@ var getEndpoint = function getEndpoint() {
 
   return config.microservices[upperMS] ? process.env.MS_HOST + config.microservices[upperMS] : undefined;
 };
+
 /**
- * This function will determine microservice version
  *
- * @return String or undefined - will return you the string value or undefined
+ * @description This function will determine microservice version.
+ * @returns {string} - the configured string value or undefined
  */
 var getVersion = function getVersion() {
 
@@ -29,10 +30,10 @@ var getVersion = function getVersion() {
 };
 
 /**
- * This function will lookup static items to be replaced
  *
- * @param matchString - the string that we are matching on
- * @return value or undefined - will return you the string value or undefined
+ * @description This function will lookup static items to be replaced.
+ * @param {string} matchString - the string that we are matching on.
+ * @returns {string} - the string value or undefined
  */
 var replaceStaticValues = function replaceStaticValues(matchString) {
   var TDATE = new Date();
@@ -49,10 +50,11 @@ var replaceStaticValues = function replaceStaticValues(matchString) {
 };
 
 /**
- * This function will get the value from the object tree; recursive
- * @param matchString - the string that we are matching on
- * @param objectTree - the json object to search
- * @return value or undefined - will return you the string value or undefined
+ *
+ * @description This function will get the value from the object tree, recursively.
+ * @param {string} [matchString=""] - the string that we are matching on
+ * @param {object} [objectTree={}] - the json object to search
+ * @returns {string} - the string value or undefined
  */
 var getValueFromObjectTree = function getValueFromObjectTree() {
   var matchString = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : "";
@@ -84,13 +86,14 @@ var getValueFromObjectTree = function getValueFromObjectTree() {
   //console.log('bbbb', matchString, xReturn)
   return xReturn;
 };
+
 /**
- * This function will take in an inputValue String and replace variables from objectTree
  *
- * @param inputValue - what to look for
- * @param objectTree - json Object to search
- * @returns String - replaced inputValue
- **/
+ * @description This function will take in an inputValue String and replace variables from objectTree.
+ * @param {string} [inputValue=""] - what to look for
+ * @param {*} [objectTree={}] - json Object to search
+ * @returns {string} - replaced inputValue
+ */
 var replaceVariables = function replaceVariables() {
   var inputValue = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : "";
   var objectTree = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
@@ -109,11 +112,12 @@ var replaceVariables = function replaceVariables() {
 
   return returnString;
 };
+
 /**
- * This function will take a new UUID
  *
- * @returns String - in the UUID format
- **/
+ * @description This function will create a new UUID
+ * @returns {string} - new UUID
+ */
 var createUUID = function createUUID() {
   var d = new Date().getTime();
   if (typeof performance !== 'undefined' && typeof performance.now === 'function') {

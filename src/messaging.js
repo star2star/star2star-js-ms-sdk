@@ -4,11 +4,12 @@ const util = require('./utilities');
 const request = require('request-promise');
 
 /**
- * This function will retrieve the conversation uuid for whom you are sending it to
- * @param accessToken - cpaas access Token
- * @param userUuid - the user uuid making the request
- * @param toPhoneNumber - a single string full phone number you will be sending the sms too
- * @return promise which will resolve to conversation uuid
+ * @async
+ * @description This function will retrieve the conversation uuid for whom you are sending it to.
+ * @param {string} accessToken - Access token for cpaas systems
+ * @param {string} userUuid - The user uuid making the request
+ * @param {string} toPhoneNumber - A full phone number you will be sending the sms too
+ * @returns {Promise<object>} - Promise resolving to a conversation uuid data object
  */
 const getConversationUuid = (accessToken, userUuid, toPhoneNumber) => {
   return new Promise((resolve, reject) => {
@@ -40,13 +41,14 @@ const getConversationUuid = (accessToken, userUuid, toPhoneNumber) => {
 }; // end function getConversation UUID
 
 /**
- * This function will send an sms message
- * @param accessToken - cpaas access Token
- * @param conversationUUID - uuid of conversation; see getConvesationUUID
- * @param userUuid - the user uuid making the request
- * @param fromPhoneNumber - full phone number to use as the sender/reply too
- * @param msg - the message to send
- * @return promise which will resolve to  the response
+ * @async
+ * @description This function will send an sms message.
+ * @param {string} accessToken - cpaas access Token
+ * @param {string} convesationUUID - uuid of conversation; see getConvesationUUID
+ * @param {string} userUuid - the user uuid making the request
+ * @param {string} fromPhoneNumber - full phone number to use as the sender/reply too
+ * @param {string} msg - the message to send
+ * @returns {Promise<object>} - Promise resolving to a response confirmation data object
  */
 const sendSMSMessage = (accessToken, convesationUUID, userUuid, fromPhoneNumber, msg) => {
   return new Promise((resolve, reject) => {
@@ -84,13 +86,14 @@ const sendSMSMessage = (accessToken, convesationUUID, userUuid, fromPhoneNumber,
 };
 
 /**
- * This function will send an sms message
- * @param accessToken - cpaas access Token
- * @param userUuid - the user uuid making the request
- * @param msg - the message to send
- * @param fromPhoneNumber - full phone number to use as the sender/reply too
- * @param toPhoneNumber - a single string full phone number you will be sending the sms too
- * @return promise which will resolve to  the response
+ * @async
+ * @description This function will send an sms message.
+ * @param {string} accessToken - cpaas access Token
+ * @param {string} userUuid - the user uuid making the request
+ * @param {string} msg - the message to send
+ * @param {string} fromPhoneNumber - full phone number to use as the sender/reply too
+ * @param {string} toPhoneNumber - full phone number you will be sending the sms too
+ * @returns {Promise<object>} - Promise resolving to a response confirmation data object
  */
 const sendSMS = (accessToken, userUuid, msg, fromPhoneNumber, toPhoneNumber) => {
   return new Promise((resolve, reject) => {
@@ -108,10 +111,11 @@ const sendSMS = (accessToken, userUuid, msg, fromPhoneNumber, toPhoneNumber) => 
 };
 
 /**
- * This function will get user sms number
- * @param accessToken - cpaas access Token
- * @param userUuid - the user uuid making the request
- * @return promise which will resolve to  the sms number or reject if empty
+ * @async
+ * @description This function will get user sms number.
+ * @param {string} accessToken - cpaas access Token
+ * @param {string} userUuid - the user uuid making the request
+ * @returns {Promise<object>} - Promise resolving to a data object containing the sms number
  */
 const getSMSNumber = (accessToken, userUuid) => {
 

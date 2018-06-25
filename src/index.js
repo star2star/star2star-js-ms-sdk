@@ -21,60 +21,59 @@ const request = require('request-promise');
 let cpaasKey;
 
 /**
- * This function sets the microservice host (MS_HOST) variable you want hit for microservices
- *
- * @param msHost String - valid url for microservice host server
- **/
+ * 
+ * @description This function sets the microservice target host (MS_HOST) variable.
+ * @param {string} [msHost="https://cpaas.star2star.com/api"] - valid url for microservice host server
+ */
 const setMsHost = (msHost = "https://cpaas.star2star.com/api") => {
   process.env.MS_HOST = msHost;
 };
 
 /**
- * This function sets the microservice version that will be used 
  *
- * @param msHost String - valid url for microservice host server
- **/
+ * @description This function sets the microservice version that will be used.
+ * @param {string} [version="v1"] - configured microservice version
+ */
 const setMSVersion = (version = "v1") => {
   process.env.MS_VERSION = version;
 };
 
 /**
- * This function gets the microservice host variable you want to run in
  *
- * @returns string - environment of which it has been configured
- **/
+ * @description This function gets the configured microservice host variable.
+ * @returns {string} - configured host URL
+ */
 const getMsHost = () => {
   // setMsHost(process.env.MS_HOST);
   return process.env.MS_HOST;
 };
 
-
 /**
- * This function set the environment variable you want to run in
  *
- * @param key String - valid cpaas application key
- **/
+ *@description This function sets the application key.
+ * @param {string} [key="missing"] - valid cpaas application key
+ */
 const setApplicationKey = (key = "missing") => {
   cpaasKey = key;
 };
 
 /**
- * This function set the environment variable you want to run in
  *
- * @returns app key string which was set
- **/
+ * @description This function returns the previously set app key.
+ * @returns {string} - app key
+ */
 const getApplicationKey = () => {
   return cpaasKey;
 };
 
 /**
- * This function will get permissions from microservice and
- * return object with constants refering to the permission uuid
- *
- *  @param accessToken - access token
- * 
- * @returns object - key in form of {scope}_{action}_{resource_type}, value is uuid
- **/
+ * @async
+ * @description This function will get permissions from microservice and
+ * return object with constants refering to the permission uuid.
+ * @param {string} [accessToken="null accessToken"]
+ * @returns {Promise<object>} - Promise resolving to a data object containing key in 
+ * form of {scope}_{action}_{resource_type}, value is uuid
+ */
 const getPermissions = (accessToken = "null accessToken") => {
 
   return new Promise((resolve, reject) => {

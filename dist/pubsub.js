@@ -4,12 +4,14 @@
 var request = require("request-promise");
 var util = require("./utilities");
 var ObjectMerge = require("object-merge");
+
 /**
- * This function will ask the cpaas pubsub service for the list of user's subscriptions
- *
- * @param accessToken - access Token
- * @returns promise for list of groups for this user
- **/
+ * @async
+ * @description This function will ask the cpaas pubsub service for the list of user's subscriptions.
+ * @param {string} [user_uuid="no user uuid provided"] - uuid for a star2star user
+ * @param {string} [accessToken="null accessToken"] - access token for cpaas systems
+ * @returns {Promise<object>} - Promise resolving to a data object containing a list of subscriptions for this user
+ */
 var listUserSubscriptions = function listUserSubscriptions() {
   var user_uuid = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : "no user uuid provided";
   var accessToken = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : "null accessToken";
@@ -32,12 +34,14 @@ var listUserSubscriptions = function listUserSubscriptions() {
 
   return request(requestOptions);
 };
+
 /**
- * This function will delete a user subscriptions based on subscription id 
- *
- * @param accessToken - access Token
- * @returns promise for list of groups for this user
- **/
+ * @async
+ * @description This function will delete a user subscriptions based on subscription id.
+ * @param {string} [subscription_uuid="no subscription uuid provided"] - uuid for a star2star user
+ * @param {string} [accessToken="null accessToken"] - access token for cpaas systems
+ * @returns {Promise<empty>} - Promise resolving success or failure.
+ */
 var deleteSubscription = function deleteSubscription() {
   var subscription_uuid = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : "no subscription uuid provided";
   var accessToken = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : "null accessToken";
@@ -60,11 +64,16 @@ var deleteSubscription = function deleteSubscription() {
 };
 
 /**
- * This function will add a subscription 
- *
- * @param accessToken - access Token
- * @returns promise for list of groups for this user
- **/
+ * @async
+ * @description This function will add a subscription.
+ * @param {string} [user_uuid="no user uuid provided"] - uuid for a star2star user
+ * @param {string} [account_uuid="account uuid not provided "] - account to subscribe to
+ * @param {string} [callback_url="not set callback"] - callback URL
+ * @param {array} [callback_headers=[]] - callback headers
+ * @param {object} [subscriptions={}] - events to subscribe to (voice, fax, conferencing, messagin, sms,  presence)
+ * @param {string} [accessToken="null accessToken"] - access token for cpaas systems
+ * @returns {Promise<object>} - Promise resolving to a data object containing a list of subscriptions for this user
+ */
 var addSubscription = function addSubscription() {
   var user_uuid = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : "no user uuid provided";
   var account_uuid = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : "account uuid not provided ";

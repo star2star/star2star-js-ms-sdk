@@ -4,15 +4,16 @@ const util = require("./utilities");
 const request = require("request-promise");
 
 /**
- * This function will ask the cpaas data object service for a specific
- * type of object
- *
- * @param userUUID - user UUID to be used
- * @param accessToken - Access Token
- * @param dataObjectType - data object type to be retrieved; default: dataObjectType
- * @param loadContent - string boolean if the call should also return content of object; default false
- * @returns promise resolving to an array of data objects
- **/
+ * @async
+ * @name Get Data Object By Type
+ * @description This function will ask the cpaas data object service for a specific
+ * type of object.
+ * @param {string} userUUID - user UUID to be used
+ * @param {string} accessToken - Access Token
+ * @param {string} dataObjectType - Data object type to be retrieved; default: dataObjectType
+ * @param {boolean} [loadContent] - String boolean if the call should also return content of object; default false
+ * @returns {Promise<array>} Promise resolving to an array of data objects
+ */
 const getDataObjectByType = (
   userUUID = "null user uuid",
   accessToken = "null accessToken",
@@ -86,16 +87,15 @@ const getDataObjectByType = (
 };
 
 /**
- * This function will ask the cpaas data object service for a specific
- * type of object with name
- *
- * @param userUUID - user UUID to be used
- * @param accessToken - Access Token
- * @param dataObjectType - string - data object type to be retrieved; default: dataObjectType
- * @param dataObjectName - string - data object name to be retrieved 
- * @param loadContent - string boolean if the call should also return content of object; default false
- * @returns promise resolving to an array of data objects
- **/
+ * @async
+ * @description This function will ask the cpaas data object service for a specific
+ * type of object with name.
+ * @param {string} userUUID - user UUID to be used
+ * @param {string} accessToken - Access Token
+ * @param {string} dataObjectType - Data object type to be retrieved; default: dataObjectType
+ * @param {boolean} [loadContent] - String boolean if the call should also return content of object; default false
+ * @returns {Promise<array>} Promise resolving to an array of data objects
+ */
 const getDataObjectByTypeAndName = (
   userUUID = "null user uuid",
   accessToken = "null accessToken",
@@ -172,15 +172,13 @@ const getDataObjectByTypeAndName = (
 };
 
 /**
- * This function will ask the cpaas data object service for a specific object
- *
- * @param apiKey - api key for cpaas systems
- * @param accessToken - Access Token
- * @param dataObjectUUID - data object UUID
- * @returns data
- **/
+ * @async 
+ * @description This function will ask the cpaas data object service for a specific object.
+ * @param {string} [accessToken="null accessToken"] - Access Token
+ * @param {string} [dataObjectUUID="null uuid"] - data object UUID
+ * @returns {Promise<object>} Promise resolving to a data object
+ */
 const getDataObject = (
-  // apiKey = "null api key",
   accessToken = "null accessToken",
   dataObjectUUID = "null uuid"
 ) => {
@@ -199,16 +197,16 @@ const getDataObject = (
 };
 
 /**
- * This function will create a new data object
- *
- * @param userUUID - user UUID to be used
- * @param accessToken - Access Token
- * @param objectName - string object name
- * @param objectType - string object type (use '_' between words)
- * @param objectDescription - string object description
- * @param content - object with contents
- * @returns data
- **/
+ * @async
+ * @description This function will create a new user data object.
+ * @param {string} [userUUID="null user uuid"] - user UUID to be used
+ * @param {string} [accessToken="null accessToken"] - Access Token
+ * @param {string} objectName - object name
+ * @param {string} objectType - object type (use '_' between words)
+ * @param {string} objectDescription - object description
+ * @param {object} [content={}] - object to be created
+ * @returns {Promise<object>} Promise resolving to a data object
+ */
 const createUserDataObject = (
   userUUID = "null user uuid",
   accessToken = "null accessToken",
@@ -240,16 +238,17 @@ const createUserDataObject = (
   };
   return request(requestOptions);
 };
+
 /**
- * This function will create a new data object
- *
- * @param accessToken - Access Token
- * @param objectName - string object name
- * @param objectType - string object type (use '_' between words)
- * @param objectDescription - string object description
- * @param content - object with contents
- * @returns data
- **/
+ * @async
+ * @description This function will create a new data object.
+ * @param {string} [accessToken="null accessToken"] - Access Token
+ * @param {string} objectName - string object name
+ * @param {string} objectType - string object type (use '_' between words)
+ * @param {string} objectDescription - string object description
+ * @param {object} [content={}] - object with contents
+ * @returns {Promise<object>} Promise resolving to a data object
+ */
 const createDataObject = (
   accessToken = "null accessToken",
   objectName,
@@ -280,14 +279,14 @@ const createDataObject = (
   };
   return request(requestOptions);
 };
+
 /**
- * This function will delete a data object
- *
- * @param userUUID - user UUID to be used
- * @param accessToken - accessToken
- * @param dataObjectUUID - data object UUID
- * @returns data
- **/
+ * @async 
+ * @description This function will delete a data object.
+ * @param {string} [accessToken="null accessToken"] - accessToken
+ * @param {string} [data_uuid="not specified"] - data object UUID
+ * @returns {Promise<object>} Promise resolving to a data object
+ */
 const deleteDataObject = (
   accessToken = "null accessToken",
   data_uuid = "not specified"
@@ -308,13 +307,13 @@ const deleteDataObject = (
 };
 
 /**
- * This function will update an existing data object
- *
- * @param userUUID - user UUID to be used
- * @param accessToken - Access Token
- * @param dataObjectUUID - data object UUID
- * @returns data
- **/
+ * @async
+ * @description This function will update an existing data object.
+ * @param {string} [accessToken="null accessToken"] - Access Token
+ * @param {string} [data_uuid="uuid not specified"] - data object UUID
+ * @param {object} [body={}] - data object replacement
+ * @returns {Promise<object>} Promise resolving to a data object
+ */
 const updateDataObject = (
   accessToken = "null accessToken",
   data_uuid = "uuid not specified",

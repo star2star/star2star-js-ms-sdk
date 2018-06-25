@@ -4,13 +4,13 @@ const request = require("request-promise");
 const util = require("./utilities");
 
 /**
- * This function will ask the cpaas contacts service to create a contact
- *
- * @param accessToken - access token
- * @param userUuid - user UUID to be used
- * @param contactData - objedt with contact data
- * @returns promise for list of groups for this user
- **/
+ * @async
+ * @description This function will ask the cpaas contacts service to create a contact.
+ * @param {string} [accessToken="null accessToken"] - access token
+ * @param {string} [userUuid="null user uuid"] - user UUID to be used
+ * @param {*} [contactData={}] - contact data object
+ * @returns {Promise<object>} - Promise resolving to a contact data object
+ */
 const createUserContact = (
   accessToken = "null accessToken",
   userUuid = "null user uuid",
@@ -33,14 +33,13 @@ const createUserContact = (
   return request(requestOptions);
 };
 
-
 /**
- * This function will ask the cpaas contacts service to delete a contact
- *
- * @param accessToken - access token
- * @param contactUUID - contact UUID to be used
- * @returns promise for list of groups for this user
- **/
+ * @async
+ * @description This function will ask the cpaas contacts service to delete a contact
+ * @param {string} [accessToken="null accessToken"] - access token
+ * @param {string} [contactUUID="null contact uuid"] - contact UUID to be used
+ * @returns {Promise} - Promise resolving to a data object
+ */
 const deleteContact = (
   accessToken = "null accessToken",
   contactUUID = "null contact uuid"
@@ -60,12 +59,13 @@ const deleteContact = (
 };
 
 /**
- * This function will ask the cpaas contacts service to get user contacts based on input criteria
- *
- * @param apiKey - api key for cpaas systems
- * @param userUuid - user UUID to be used
- * @returns promise for list of groups for this user
- **/
+ * @async
+ * @description This function will ask the cpaas contacts service to get user contacts based on input criteria
+ * @param {string} [user_uuid="null user uuid"]
+ * @param {object} [params={}] - object containing query params
+ * @param {*} accessToken - access token
+ * @returns {Promise<object>} - Promise resolving to a data object containing collection of user contacts
+ */
 const getContacts = (
   user_uuid = "null user uuid",
   params = {},
@@ -89,12 +89,13 @@ const getContacts = (
 
 
 /**
- * This function will call getContacts one or more times to list all user contacts
- *
- * @param apiKey - api key for cpaas systems
- * @param userUuid - user UUID to be used
- * @returns promise for list of groups for this user
- **/
+ * @async
+ * @description This function will call getContacts one or more times to list all user contacts
+ * @param {string} [user_uuid="null user uuid"]
+ * @param {object} [params={}] - object containing query params
+ * @param {*} accessToken - access token
+ * @returns {Promise<object>} - Promise resolving to a data object containing collection of user contacts
+ */
 const listContacts = (user_uuid="missing uuid", params, accessToken) => {
   return new Promise((resolve, reject) => {
     // this array will accumulate the contact list

@@ -6,13 +6,13 @@ var util = require('./utilities');
 var ObjectMerge = require('object-merge');
 
 /**
- * This function will get a list of all short urls
- *
- * @param userUuid - user UUID to be used
- * @param accessToken - access Token
- * @param options - object of options  --- see swagger
- * @returns promise for list of short urls
- **/
+ * @async
+ * @description This function will get a list of all short urls.
+ * @param {string} [userUuid='null user uuid'] - account_uuid
+ * @param {string} [accessToken='null accessToken'] - access token for cpaas systems
+ * @param {object} [options={}] - object of options
+ * @returns {Promise<object>} - Promise resolving to a data object containing a list of short urls
+ */
 var listShortUrls = function listShortUrls() {
     var userUuid = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 'null user uuid';
     var accessToken = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 'null accessToken';
@@ -34,13 +34,28 @@ var listShortUrls = function listShortUrls() {
 };
 
 /**
- * This function will create a new short url
- *
- * @param userUuid - user UUID to be used
- * @param accessToken - access Token
- * @param options - options Object
- * @returns data
- **/
+ * @async
+ * @description This function will create a new short url.
+ * @param {string} [userUuid='null user uuid'] - account_uuid
+ * @param {string} [accessToken='null accessToken'] - access token for cpaas systems
+ * @param {object} [options={}] - {
+  "account_uuid": "string",
+  "analyze_content": false,
+  "expires_after": 0,
+  "max_view_count": 0,
+  "mode": "Proxy",
+  "save_content": false,
+  "save_preview": false,
+  "secure_pin": "string",
+  "secure_view": "None",
+  "short_code": "string",
+  "short_domain": "string",
+  "thumbnail": false,
+  "url": "string",
+  "user_uuid": "string"
+ }
+ * @returns {Promise<object>} - Promise resolving to a data object containing a list of short urls
+ */
 var createShortUrl = function createShortUrl() {
     var userUuid = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 'null user uuid';
     var accessToken = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 'null accessToken';
@@ -69,13 +84,13 @@ var createShortUrl = function createShortUrl() {
 };
 
 /**
- * This function will create a new short url
- *
- * @param userUuid - user UUID to be used
- * @param accessToken - access Token
- * @param short_code - short_code to delete
- * @returns no content
- **/
+ * @async
+ * @description This function will delete a short url.
+ * @param {string} [userUuid='null user uuid'] - account_uuid
+ * @param {string} [accessToken='null accessToken'] - access token for cpaas systems
+ * @param {string} [short_code='notdefined'] - short code for url to delete
+ * @returns {Promise<empty>} - Promise resolving success or failure.
+ */
 var deleteShortCode = function deleteShortCode() {
     var userUuid = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 'null user uuid';
     var accessToken = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 'null accessToken';

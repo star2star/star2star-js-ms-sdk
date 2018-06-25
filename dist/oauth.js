@@ -5,15 +5,15 @@ var util = require("./utilities");
 var request = require("request-promise");
 
 /**
- * This function will call the oauth microservice with the credentials and
- * outh key and basic token you passed in
- * @param oauthKey -  key for oauth cpaas system
- * @param oauthToken - token for authentication to cpaas oauth system
- * @param apiVersion - string with api version to specify in header
- * @param email - email address for a star2star account
- * @param pwd - passowrd for that account
- * @returns promise resolving to an oauth token data
- **/
+ * @async
+ * @description This function will call the oauth microservice with the credentials and
+ * outh key and basic token you passed in.
+ * @param {string} [oauthKey="null oauth key"] -  key for oauth cpaas system
+ * @param {string} [oauthToken="null oauth token"] - token for authentication to cpaas oauth system
+ * @param {string} [email="null email"] - email address for a star2star account
+ * @param {string} [pwd="null pwd"] - password for that account
+ * @returns {Promise<object>} - Promise resolving to an oauth token data object
+ */
 var getAccessToken = function getAccessToken() {
   var oauthKey = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : "null oauth key";
   var oauthToken = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : "null oauth token";
@@ -45,12 +45,13 @@ var getAccessToken = function getAccessToken() {
 };
 
 /**
- * This function will call the identity microservice to refresh user based on token
- * @param apiKey - api key for cpaas systems
- * @param email - email address for an star2star account
- * @param pwd - passowrd for that account
- * @returns promise resolving to an identity data
- **/
+ * @async
+ * @description This function will call the identity microservice to refresh user based on token.
+ * @param {string} [oauthKey="null oauth key"] - key for oauth cpaas system
+ * @param {string} [oauthToken="null oauth token"] - token for authentication to cpaas oauth system
+ * @param {string} [refreshToken="null refresh token"] - refresh token for oauth token.
+ * @returns {Promise<object>} - Promise resolving to an identity data object
+ */
 var refreshAccessToken = function refreshAccessToken() {
   var oauthKey = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : "null oauth key";
   var oauthToken = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : "null oauth token";

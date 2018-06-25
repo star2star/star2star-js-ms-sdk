@@ -4,14 +4,14 @@ const util = require("./utilities");
 const request = require("request-promise");
 
 /**
- * This function will call the identity microservice with the credentials and
- * accessToken you passed in
- * @param accessToken - access token
- * @param email - email address for an star2star account
- * @param identity_type_name - one of 'guest', 'user' TODO need to confirm possible values with Kranti
- * @param pwd - passowrd for that account.
- * @returns promise resolving to an identity data
- **/
+ * @async
+ * @description This function will call the identity microservice with the credentials and accessToken you passed in.
+ * @param {string} [accessToken="null accessToken"] - access token
+ * @param {string} [email="null email"] - email address for an star2star account
+ * @param {string} [identity_type_name="null_type_name"]- one of 'guest', 'user' TODO need to confirm possible values
+ * @param {string} [pwd="null pwd"] - passowrd for that account.
+ * @returns {Promise<object>} - Promise resolving to an identity data object
+ */
 const createIdentity = (
   accessToken = "null accessToken",
   email = "null email",
@@ -39,13 +39,13 @@ const createIdentity = (
 };
 
 /**
- * This function will call the identity microservice with the credentials and
- * accessToken you passed in
- * @param accessToken - access token
- * @param userUuid - user_uuid for alias being created
- * @param did - sms number to associate with the user
- * @returns promise resolving to an identity object with alias
- **/
+ * @async
+ * @description This function will call the identity microservice with the credentials and accessToken you passed in.
+ * @param {string} [accessToken="null accessToken"] - access token
+ * @param {string} [userUuid="null user uuid"] - user_uuid for alias being created
+ * @param {string} [did="null DID"] - sms number to associate with the user
+ * @returns {Promise<object>} - Promise resolving to an identity data object with alias
+ */
 const updateAliasWithDID = (
   accessToken = "null accessToken",
   userUuid = "null user uuid",
@@ -66,15 +66,14 @@ const updateAliasWithDID = (
   return request(requestOptions);
 };
 
-
-
 /**
- * This function will call the identity microservice with the credentials and
- * accessToken you passed in and delete the user object matching the user_uuid submitted
- * @param accessToken - access token for cpaas systems
- * @param userUuid - uuid for a star2star user
- * @returns promise resolving to a status of 204
- **/
+ * @async
+ * @description This function will call the identity microservice with the credentials and 
+ * accessToken you passed in and delete the user object matching the user_uuid submitted.
+ * @param {string} [accessToken="null accessToken"] - access token for cpaas systems
+ * @param {string} [userUuid="null uuid"] - uuid for a star2star user
+ * @returns {Promise<empty>} - Promise resolving success or failure.
+ */
 const deleteIdentity = (accessToken = "null accessToken", userUuid = "null uuid") => {
   const MS = util.getEndpoint("identity");
   const requestOptions = {
@@ -92,13 +91,14 @@ const deleteIdentity = (accessToken = "null accessToken", userUuid = "null uuid"
 };
 
 /**
- * This function will call the identity microservice with the credentials and
- * accessToken you passed in
- * @param accessToken - access token for cpaas systems
- * @param email - email address for an star2star account
- * @param pwd - passowrd for that account
- * @returns promise resolving to an identity data
- **/
+ * @async
+ * @description This function will call the identity microservice with the credentials and
+ * accessToken you passed in.
+ * @param {string} [accessToken="null access token"] - access token for cpaas systems
+ * @param {string} [email="null email"] - email address for an star2star account
+ * @param {string} [pwd="null pwd"] - passowrd for that account
+ * @returns {Promise<object>} - Promise resolving to an identity data object
+ */
 const login = (
   accessToken = "null access token",
   email = "null email",
@@ -123,14 +123,13 @@ const login = (
   return request(requestOptions);
 };
 
+//TODO not seeing this call in Tyk...investigate.
 /**
- * This function will call the identity microservice with the credentials and
- * accessToken you passed in
- * @param accessToken - access token for cpaas systems
- * @param email - email address for an star2star account
- * @param pwd - passowrd for that account
- * @returns promise resolving to an identity data
- **/
+ * @async
+ * @description This function will return the identity data for the authenticated user.
+ * @param {string} [accessToken="null access token"] - access token for cpaas systems
+ * @returns {Promise<object>} - Promise resolving to an identity data object
+ */
 const getMyIdentityData = (accessToken = "null access token") => {
   const MS = util.getEndpoint("identity");
   const requestOptions = {
@@ -148,12 +147,13 @@ const getMyIdentityData = (accessToken = "null access token") => {
 };
 
 /**
- * This function will call the identity microservice with the credentials and
- * accessToken you passed in
- * @param accessToken - access token for cpaas systems
- * @param user_uuid - user uuid to lookup
- * @returns promise resolving to an identity data
- **/
+ * @async
+ * @description This function will call the identity microservice with the credentials and
+ * accessToken you passed in.
+ * @param {string} [accessToken="null access token"] - access token for cpaas systems
+ * @param {string} [user_uuid="null user uuid"] - user uuid to lookup
+ * @returns {Promise<object>} - Promise resolving to an identity data object
+ */
 const getIdentityDetails = (accessToken = "null access token", user_uuid="null user uuid") => {
   const MS = util.getEndpoint("identity");
   const requestOptions = {
@@ -169,14 +169,14 @@ const getIdentityDetails = (accessToken = "null access token", user_uuid="null u
 
   return request(requestOptions);
 };
+
 /**
- * This function will call the identity microservice with the credentials and
- * accessToken you passed in
- * @param accessToken - access token for cpaas systems
- * @param email - email address for an star2star account
- * @param pwd - passowrd for that account
- * @returns promise resolving to an identity data
- **/
+ * @async
+ * @description This function will look up an identity by username.
+ * @param {string} [accessToken="null accessToken"] - access token for cpaas systems
+ * @param {string} [username="null username"] - query by username
+ * @returns {Promise<object>} - Promise resolving to an identity data object
+ */
 const lookupIdentity = (
   accessToken = "null accessToken",
   username = "null username"
@@ -200,10 +200,11 @@ const lookupIdentity = (
 };
 
 /**
- * This function will call the identity microservice to get list of accounts
- * @param accessToken - access token for cpaas systems
- * @returns promise resolving to array of account data
- **/
+ * @async
+ * @description This function returns all available accounts.
+ * @param {string} [accessToken="null accessToken"] - access token for cpaas system
+ * @returns {Promise<object>} - Promise resolving to a data object containing a list of accounts
+ */
 const listAccounts = (accessToken = "null accessToken") => {
   const MS = util.getEndpoint("identity");
   const requestOptions = {
@@ -224,12 +225,13 @@ const listAccounts = (accessToken = "null accessToken") => {
 };
 
 /**
- * This function will call the identity microservice to get account details
- * @param accessToken - access token for cpaas systems
- * @param accountUUID - account_uuid for an star2star account (customer)
- * @param includeIdentities - boolean to include identities in account or not
- * @returns promise resolving to an identity data
- **/
+ * @async
+ * @description This function will return an account by UUID.
+ * @param {string} [accessToken="null access token"] - access token for cpaas systems
+ * @param {string} [accountUUID="null account uuid"] - account_uuid for an star2star account (customer)
+ * @param {boolean} [includeIdentities=false] - boolean to include identities in account or not
+ * @returns {Promise<object>} - Promise resolving to an identity data object
+ */
 const getAccount = (accessToken = "null access token", accountUUID = "null account uuid", includeIdentities = false) => {
   const MS = util.getEndpoint("identity");
   const requestOptions = {
@@ -250,12 +252,13 @@ const getAccount = (accessToken = "null access token", accountUUID = "null accou
 };
 
 /**
- * This function will call the identity microservice to get account details
- * @param accessToken - access token for cpaas systems
- * @param accountUUID - account_uuid for an star2star account (customer)
- * @returns promise resolving to an identity data
- **/
-const getAccountAvailProps = (accessToken = "null access token", accountUUID = "null account uuid", includeIdentities = false) => {
+ * @async
+ * @description This function returns all possible properties to be assigned to account.
+ * @param {string} [accessToken="null access token"] - access token for cpaas systems
+ * @param {string} [accountUUID="null account uuid"] - account_uuid for a star2star account (customer)
+ * @returns {Promise<object>} - Promise resolving to a data object containing all possible properties.
+ */
+const getAccountAvailProps = (accessToken = "null access token", accountUUID = "null account uuid") => {
   const MS = util.getEndpoint("identity");
   const requestOptions = {
     method: "GET",
