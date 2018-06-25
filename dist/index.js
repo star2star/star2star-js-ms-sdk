@@ -21,10 +21,10 @@ var request = require('request-promise');
 var cpaasKey = void 0;
 
 /**
- * This function sets the microservice host (MS_HOST) variable you want hit for microservices
- *
- * @param msHost String - valid url for microservice host server
- **/
+ * 
+ * @description This function sets the microservice target host (MS_HOST) variable.
+ * @param {string} [msHost="https://cpaas.star2star.com/api"] - valid url for microservice host server
+ */
 var setMsHost = function setMsHost() {
   var msHost = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : "https://cpaas.star2star.com/api";
 
@@ -32,10 +32,10 @@ var setMsHost = function setMsHost() {
 };
 
 /**
- * This function sets the microservice version that will be used 
  *
- * @param msHost String - valid url for microservice host server
- **/
+ * @description This function sets the microservice version that will be used.
+ * @param {string} [version="v1"] - configured microservice version
+ */
 var setMSVersion = function setMSVersion() {
   var version = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : "v1";
 
@@ -43,20 +43,20 @@ var setMSVersion = function setMSVersion() {
 };
 
 /**
- * This function gets the microservice host variable you want to run in
  *
- * @returns string - environment of which it has been configured
- **/
+ * @description This function gets the configured microservice host variable.
+ * @returns {string} - configured host URL
+ */
 var getMsHost = function getMsHost() {
   // setMsHost(process.env.MS_HOST);
   return process.env.MS_HOST;
 };
 
 /**
- * This function set the environment variable you want to run in
  *
- * @param key String - valid cpaas application key
- **/
+ *@description This function sets the application key.
+ * @param {string} [key="missing"] - valid cpaas application key
+ */
 var setApplicationKey = function setApplicationKey() {
   var key = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : "missing";
 
@@ -64,22 +64,22 @@ var setApplicationKey = function setApplicationKey() {
 };
 
 /**
- * This function set the environment variable you want to run in
  *
- * @returns app key string which was set
- **/
+ * @description This function returns the previously set app key.
+ * @returns {string} - app key
+ */
 var getApplicationKey = function getApplicationKey() {
   return cpaasKey;
 };
 
 /**
- * This function will get permissions from microservice and
- * return object with constants refering to the permission uuid
- *
- *  @param accessToken - access token
- * 
- * @returns object - key in form of {scope}_{action}_{resource_type}, value is uuid
- **/
+ * @async
+ * @description This function will get permissions from microservice and
+ * return object with constants refering to the permission uuid.
+ * @param {string} [accessToken="null accessToken"]
+ * @returns {Promise<object>} - Promise resolving to a data object containing key in 
+ * form of {scope}_{action}_{resource_type}, value is uuid
+ */
 var getPermissions = function getPermissions() {
   var accessToken = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : "null accessToken";
 

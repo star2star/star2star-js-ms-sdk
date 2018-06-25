@@ -5,13 +5,13 @@ var util = require('./utilities');
 var request = require('request-promise');
 
 /**
- * This function will ask the cpaas data object service for a specific object
- *
- * @param accessToken - access Token for cpaas systems
- * @param lambdaName - string representing the lambda name
- * @param params - json object of parameters to be passed to the lambda function
- * @returns promise
- **/
+ * @async
+ * @description This function will ask the cpaas data object service for a specific object.
+ * @param {string} [accessToken='null access Token'] - access Token for cpaas systems
+ * @param {string} [lambdaName='not defined'] - string representing the lambda name
+ * @param {object} [params={}] - json object of parameters to be passed to the lambda function
+ * @returns {Promise<object>} - Promise resolving to a data object
+ */
 var invokeLambda = function invokeLambda() {
     var accessToken = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 'null access Token';
     var lambdaName = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 'not defined';

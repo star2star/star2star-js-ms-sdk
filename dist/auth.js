@@ -10,14 +10,15 @@ var VALID_RT = ['object', 'account', 'user'];
 var VALID_SCOPE = ['global', 'account', 'user'];
 
 /**
- * This function will list all users permissions
- *
- * @param accessToken - access Token for cpaas systems
- * @param userUuid - user UUID to be used
- * @param accessToken - access Token
- * @param resource_type - filter if defined - string
- * @returns data
- **/
+ * @async
+ * @description This function will list all user's permissions
+ * @param {string} [accessToken='null access Token'] - access Token for cpaas systems
+ * @param {string} [userUuid='null user uuid'] - user UUID to be used
+ * @param {string} [resource_type=undefined] - filter if defined - 'object', 'account', 'user' 
+ * @param {string} [scope=undefined] - required - 'global', 'account', 'user'
+ * @param {array} [actions=['create', 'read', 'update', 'delete', 'list']]
+ * @returns {Promise<object>} - Promise resolving to a data object
+ */
 var listUserPermissions = function listUserPermissions() {
   var accessToken = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 'null access Token';
   var userUuid = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 'null user uuid';
@@ -72,16 +73,15 @@ var listUserPermissions = function listUserPermissions() {
 };
 
 /**
- * This function will GET specific permissions
- *
- * @param accessToken - access Token for cpaas systems
- * @param userUuid - user UUID to be used
- * @param accessToken - access Token
- * @param resource_type - filter if defined - string
- * @param scope - required
- * @param actions - array required
- * @returns arry of permission data
- **/
+ * @async
+ * @description This function will GET specific permissions.
+ * @param {string} [accessToken='null access Token'] - access Token for cpaas systems
+ * @param {string} [userUuid='null user uuid'] - user UUID to be used
+ * @param {string} [resource_type=undefined] - filter if defined - 'object', 'account', 'user' 
+ * @param {string} [scope=undefined] - required - 'global', 'account', 'user'
+ * @param {array} [actions=['create', 'read', 'update', 'delete', 'list']]
+ * @returns {Promise<object>} - Promise resolving to a data object
+ */
 var getSpecificPermissions = function getSpecificPermissions() {
   var accessToken = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 'null access Token';
   var userUuid = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 'null user uuid';
@@ -143,18 +143,17 @@ var getSpecificPermissions = function getSpecificPermissions() {
 };
 
 /**
- * This function will add permissions to a group
- *
- * @param accessToken - access Token for cpaas systems
- * @param userUuid - user UUID to be used
- * @param accessToken - access Token
- * @param group_uuid - group uuid
- * @param resource_uuid - resource_uuid
- * @param resource_type - object, user, group
- * @param resource_scope - global, user
- * @param actions - array actions ['create', 'read','update', 'delete', 'list']
- * @returns data
- **/
+ * @async
+ * @description This function will add permissions to a group.
+ * @param {string} [accessToken='null access Token'] - access Token for cpaas systems
+ * @param {string} [userUuid='null user uuid'] - user UUID to be used for auth
+ * @param {string} [group_uuid=undefined] - group uuid receiving permissions
+ * @param {string} [resource_uuid=undefined] - resource uuid
+ * @param {string} [resource_type=undefined] - filter if defined - 'object', 'account', 'user' 
+ * @param {string} [resource_scope=undefined] - required - 'global', 'account', 'user'
+ * @param {array} [actions=['create', 'read', 'update', 'delete', 'list']]
+ * @returns {Promise<object>} - Promise resolving to a data object
+ */
 var addExplicitGroupPermissions = function addExplicitGroupPermissions() {
   var accessToken = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 'null access Token';
   var userUuid = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 'null user uuid';
@@ -226,18 +225,17 @@ var addExplicitGroupPermissions = function addExplicitGroupPermissions() {
 };
 
 /**
- * This function will add permissions to a group
- *
- * @param accessToken - access Token for cpaas systems
- * @param userUuid - user UUID to be used
- * @param accessToken - access Token
- * @param user_uuid - group uuid
- * @param resource_uuid - resource_uuid
- * @param resource_type - object, user, group
- * @param resource_scope - global, user
- * @param actions - array actions
- * @returns data
- **/
+ * @async 
+ * @description This function will add permissions to a user.
+ * @param {string} [accessToken='null access Token'] - access Token for cpaas systems
+ * @param {string} [userUuid='null user uuid'] - user UUID to be used for auth
+ * @param {string} [user_uuid=undefined] - user UUID receiving permissions
+ * @param {string} [resource_scope=undefined] - 'global', 'user'
+ * @param {string} [resource_uuid=undefined] - resource uuid
+ * @param {string} [resource_type=undefined] - filter if defined - 'object', 'group', 'user' 
+ * @param {array} [actions=['create', 'read', 'update', 'delete', 'list']]
+ * @returns {Promise<object>} - Promise resolving to a data object.
+ */
 var addExplicitUserPermissions = function addExplicitUserPermissions() {
   var accessToken = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 'null access Token';
   var userUuid = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 'null user uuid';

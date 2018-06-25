@@ -5,11 +5,12 @@ const util = require("./utilities");
 const ObjectMerge = require("object-merge");
 
 /**
- * This function will ask the cpaas media service for the list of user's files they have uploaded 
- *
- * @param accessToken - access Token
- * @returns promise for list of groups for this user
- **/
+ * @async
+ * @description This function will ask the cpaas media service for the list of user's files they have uploaded.
+ * @param {string} [user_uuid="no user uuid provided"] - UUID for user
+ * @param {string} [accessToken="null accessToken"] - Access token for cpaas systems
+ * @returns {Promise<object>} - Promise resolving to a data object containing a list of groups for this user
+ */
 const listUserMedia = (
   user_uuid = "no user uuid provided",
   accessToken = "null accessToken"
@@ -31,11 +32,14 @@ const listUserMedia = (
 };
 
 /**
- * This function will upload a file to the cpaas media service for the user 
- *
- * @param accessToken - access Token
- * @returns promise for list of groups for this user
- **/
+ * @async
+ * @description This function will upload a file to the cpaas media service for the user.
+ * @param {string} [file_name=Date.now()] - File name.
+ * @param {formData} file - File to be uploaded
+ * @param {string} [user_uuid="not specified user uuid "]
+ * @param {string} [accessToken="null accessToken"] - Access token for cpaas systems
+ * @returns {Promise<object>} - Promise resolving to a data object containing upload attributes.
+ */
 const uploadFile = (
   file_name = Date.now(), 
   file, 
@@ -67,11 +71,12 @@ const uploadFile = (
 };
 
 /**
- * This function will ask the cpaas media service to delete a specific user file 
- *
- * @param accessToken - access Token
- * @returns promise for list of groups for this user
- **/
+ * @async
+ * @description This function will ask the cpaas media service to delete a specific user file.
+ * @param {string} [file_id="no file_id provided"] - File ID
+ * @param {string} [accessToken="null accessToken"] - Access token for cpaas systems
+ * @returns {Promise<empty>} - Promise resolving success or failure.
+ */
 const deleteMedia = (
   file_id = "no file_id provided",
   accessToken = "null accessToken"

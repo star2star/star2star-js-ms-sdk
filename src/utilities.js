@@ -3,20 +3,21 @@
 const config = require('./config.json');
 
 /**
- * This function will determine microservice endpoint URI
  *
- * @param matchString - the string that we are matching on
- * @return String or undefined - will return you the string value or undefined
+ * @description This function will determine microservice endpoint URI.
+ * @param {string} [microservice="NOTHING"] - the string that we are matching on
+ * @returns {string} - the configured value or undefined
  */
 const getEndpoint = (microservice = "NOTHING") => {
   const upperMS = microservice.toUpperCase();
 
   return config.microservices[upperMS] ? process.env.MS_HOST + config.microservices[upperMS] : undefined;
 };
+
 /**
- * This function will determine microservice version
  *
- * @return String or undefined - will return you the string value or undefined
+ * @description This function will determine microservice version.
+ * @returns {string} - the configured string value or undefined
  */
 const getVersion = () => {
 
@@ -24,10 +25,10 @@ const getVersion = () => {
 };
 
 /**
- * This function will lookup static items to be replaced
  *
- * @param matchString - the string that we are matching on
- * @return value or undefined - will return you the string value or undefined
+ * @description This function will lookup static items to be replaced.
+ * @param {string} matchString - the string that we are matching on.
+ * @returns {string} - the string value or undefined
  */
 const replaceStaticValues = (matchString) => {
   const TDATE = new Date();
@@ -44,10 +45,11 @@ const replaceStaticValues = (matchString) => {
 };
 
 /**
- * This function will get the value from the object tree; recursive
- * @param matchString - the string that we are matching on
- * @param objectTree - the json object to search
- * @return value or undefined - will return you the string value or undefined
+ *
+ * @description This function will get the value from the object tree, recursively.
+ * @param {string} [matchString=""] - the string that we are matching on
+ * @param {object} [objectTree={}] - the json object to search
+ * @returns {string} - the string value or undefined
  */
 const getValueFromObjectTree = (matchString = "", objectTree = {}) => {
 
@@ -77,13 +79,14 @@ const getValueFromObjectTree = (matchString = "", objectTree = {}) => {
   //console.log('bbbb', matchString, xReturn)
   return xReturn;
 };
+
 /**
- * This function will take in an inputValue String and replace variables from objectTree
  *
- * @param inputValue - what to look for
- * @param objectTree - json Object to search
- * @returns String - replaced inputValue
- **/
+ * @description This function will take in an inputValue String and replace variables from objectTree.
+ * @param {string} [inputValue=""] - what to look for
+ * @param {*} [objectTree={}] - json Object to search
+ * @returns {string} - replaced inputValue
+ */
 const replaceVariables = (inputValue = "", objectTree = {}) => {
   // will search for %xxxxx%
   const myRegex = /(\%[\w|\d|\.\-\*\/]+\%)/g;
@@ -99,11 +102,12 @@ const replaceVariables = (inputValue = "", objectTree = {}) => {
 
   return returnString;
 };
+
 /**
- * This function will take a new UUID
  *
- * @returns String - in the UUID format
- **/
+ * @description This function will create a new UUID
+ * @returns {string} - new UUID
+ */
 const createUUID = () => {
   let d = new Date().getTime();
   if (typeof performance !== 'undefined' && typeof performance.now === 'function') {

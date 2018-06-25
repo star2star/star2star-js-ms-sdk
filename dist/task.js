@@ -9,11 +9,11 @@ var Objects = require("./objects");
 var objectMerge = require("object-merge");
 
 /**
- * This function will ask the cpaas data object service for a specific object
  *
- * @param array tasks objects - takes in an array of tasks objects
- * @returns object - containing status, message and tasks
- **/
+ * @description This function will ask the cpaas data object service for a specific object.
+ * @param {array} [tasks=[]] - array of tasks objects
+ * @returns {object} - object containing status, message and tasks
+ */
 var validateTasks = function validateTasks() {
   var tasks = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : [];
 
@@ -49,13 +49,14 @@ var validateTasks = function validateTasks() {
 
   return rStatus;
 };
+
 /**
- * This function will ask the cpaas data object service for a list of task_template objects
- *
- * @param access_token - access_token for cpaas systems
- * @param userUUID - user UUID to be used
- * @returns promise for list of data object task templates with content
- **/
+ * @async
+ * @description This function will ask the cpaas data object service for a list of task_template objects.
+ * @param {string} [userUUID="null user uuid"] - user UUID to be used
+ * @param {string} [access_token="null access_token"] - access_token for cpaas systems
+ * @returns {Promise<object>} - Promise resolving to a list of data object task templates with content
+ */
 var getTaskTemplates = function getTaskTemplates() {
   var userUUID = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : "null user uuid";
   var access_token = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : "null access_token";
@@ -64,14 +65,15 @@ var getTaskTemplates = function getTaskTemplates() {
 };
 
 /**
- * This function will create a new task template object
- *
- * @param userUUID string - user UUID to be used
- * @param access_token string - identity access_token
- * @param title string - title of task template
- * @param defaultTasks array objects - array of objects minimium is a title
- * @returns promise for creating object
- **/
+ * @async
+ * @description This function will create a new task template object.
+ * @param {string} [userUUID="null user uuid"] - user UUID to be used
+ * @param {string} [access_token="null access_token"] - access_token for cpaas systems
+ * @param {string} [title="missing-stuff"] - title of task template
+ * @param {string} [description="task template description"] - description of task template 
+ * @param {array} [defaultTasks=[]] - array of objects; minimium is a title
+ * @returns
+ */
 var createTaskTemplate = function createTaskTemplate() {
   var userUUID = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : "null user uuid";
   var access_token = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : "null access_token";
@@ -88,30 +90,31 @@ var createTaskTemplate = function createTaskTemplate() {
     return Promise.reject(vTasks);
   }
 };
+
 /**
- * This function will delete the task template object
- *
- * @param apiKey - api key for cpaas systems
- * @param userUUID - user UUID to be used
- * @param identityJWT - identity JWT
- * @param TaskTemplateUUID - data object UUID
- * @returns promise
- **/
+ * @async
+ * @description This function will delete the task template object.
+ * @param {string} [access_token="null access_token"] - access token for cpaas systems
+ * @param {string} [task_template_uuid="missing task uuid"] - data object UUID
+ * @returns {Promise<object>} - Promise resolving to an identity data object
+ */
 var deleteTaskTemplate = function deleteTaskTemplate() {
   var access_token = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : "null access_token";
   var task_template_uuid = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : "missing task uuid";
 
   return Objects.deleteDataObject(access_token, task_template_uuid);
 };
+
 /**
- * This function will create a task object (task_list)
- *
- * @param userUUID string - user UUID to be used
- * @param access_token string - identity access_token
- * @param title string - title of task template
- * @param defaultTasks array objects - array of objects minimium is a title
- * @returns promise for creating object
- **/
+ * @async
+ * @description This function will create a task object (task_list).
+ * @param {string} [userUUID="null user uuid"] - user UUID to be used
+ * @param {string} [access_token="null access_token"] - access token for cpaas systems
+ * @param {string} [title="Missing Task Title"] - title of task object
+ * @param {string} [description="task description default"] - title of task object
+ * @param {array} [defaultTasks=[]] - array of objects; minimium is a title
+ * @returns {Promise<object>} - Promise resolving to a task data object
+ */
 var createTaskObject = function createTaskObject() {
   var userUUID = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : "null user uuid";
   var access_token = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : "null access_token";
@@ -128,14 +131,14 @@ var createTaskObject = function createTaskObject() {
     return Promise.reject(vTasks);
   }
 };
+
 /**
- * This function will delete task list
- *
- * @param userUUID - user UUID to be used
- * @param access_token - identity access_token
- * @param TaskObjectUUID - task list UUID
- * @returns promise
- **/
+ * @async
+ * @description This function will delete task list.
+ * @param {string} [access_token="null access_token"] - access token for cpaas systems
+ * @param {string} [task_uuid="missing task uuid"] - task list UUID
+ * @returns {Promise<object>} - Promise resolving to a data object
+ */
 var deleteTaskObject = function deleteTaskObject() {
   var access_token = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : "null access_token";
   var task_uuid = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : "missing task uuid";
@@ -144,13 +147,13 @@ var deleteTaskObject = function deleteTaskObject() {
 };
 
 /**
- * This function will retrieve task list
- *
- * @param userUUID - user UUID to be used
- * @param access_token - identity access_token
- * @param TaskObjectUUID - task list UUID
- * @returns promise
- **/
+ * @async
+ * @description This function will retrieve task list.
+ * @param {string} [userUUID="null user uuid"] - user UUID
+ * @param {string} [access_token="null access_token"] - access token for cpaas systems
+ * @param {string} [taskObjectUUID="null uuid" - task list UUID
+ * @returns {Promise<object>} - Promise resolving to a task data object
+ */
 var getTaskObject = function getTaskObject() {
   var userUUID = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : "null user uuid";
   var access_token = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : "null access_token";
@@ -160,14 +163,14 @@ var getTaskObject = function getTaskObject() {
 };
 
 /**
- * This function will update task list
- *
- * @param userUUID - user UUID to be used
- * @param access_token - identity access_token
- * @param TaskObjectUUID - task list UUID
- * @param TaskObject - task object
- * @returns promise
- **/
+ * @async
+ * @description This function will update task list.
+ * @param {string} [userUUID="null user uuid"] - user UUID
+ * @param {string} [access_token="null access_token"] - access token for cpaas systems
+ * @param {string} [uuid="missing_uuid"] - task list UUID
+ * @param {object} [taskObject={}]
+ * @returns {Promise<object>} - Promise resolving to a task data object
+ */
 var updateTaskObject = function updateTaskObject() {
   var userUUID = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : "null user uuid";
   var access_token = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : "null access_token";
@@ -178,14 +181,13 @@ var updateTaskObject = function updateTaskObject() {
 };
 
 /**
- * This function will add task to a task object
- *
- * @param userUUID - user UUID to be used
- * @param access_token - identity access_token
- * @param TaskObjectUUID - task list UUID
- * @param Task - individual task which is an object
- * @returns promise
- **/
+ * @async
+ * @description This function will add task to a task object.
+ * @param {string} [access_token="null access_token"] - access token for cpaas systems
+ * @param {string} [taskObjectUUID="missing_uuid"] - task object UUID
+ * @param {object} [task={}] - individual task
+ * @returns {Promise<object>} - Promise resolving to a task data object
+ */
 var addTaskToTaskObject = function addTaskToTaskObject() {
   var access_token = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : "null access_token";
   var taskObjectUUID = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : "missing_uuid";
@@ -204,14 +206,13 @@ var addTaskToTaskObject = function addTaskToTaskObject() {
 };
 
 /**
- * This function will update task in a task object
- *
- * @param userUUID - user UUID to be used
- * @param access_token - identity access_token
- * @param TaskObjectUUID - task list UUID
- * @param Task - individual task which is an object
- * @returns promise
- **/
+ * @async
+ * @description This function will update a task in a task object.
+ * @param {string} [access_token="null access_token"] - access token for cpaas systems
+ * @param {string} [taskObjectUUID="missing_uuid"] - task object UUID
+ * @param {object} [task={}] - updated task object
+ * @returns {Promise<object>} - Promise resolving to a task data object
+ */
 var updateTaskInTaskObject = function updateTaskInTaskObject() {
   var access_token = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : "null access_token";
   var taskObjectUUID = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : "missing_uuid";

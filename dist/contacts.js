@@ -7,13 +7,13 @@ var request = require("request-promise");
 var util = require("./utilities");
 
 /**
- * This function will ask the cpaas contacts service to create a contact
- *
- * @param accessToken - access token
- * @param userUuid - user UUID to be used
- * @param contactData - objedt with contact data
- * @returns promise for list of groups for this user
- **/
+ * @async
+ * @description This function will ask the cpaas contacts service to create a contact.
+ * @param {string} [accessToken="null accessToken"] - access token
+ * @param {string} [userUuid="null user uuid"] - user UUID to be used
+ * @param {*} [contactData={}] - contact data object
+ * @returns {Promise<object>} - Promise resolving to a contact data object
+ */
 var createUserContact = function createUserContact() {
   var accessToken = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : "null accessToken";
   var userUuid = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : "null user uuid";
@@ -37,12 +37,12 @@ var createUserContact = function createUserContact() {
 };
 
 /**
- * This function will ask the cpaas contacts service to delete a contact
- *
- * @param accessToken - access token
- * @param contactUUID - contact UUID to be used
- * @returns promise for list of groups for this user
- **/
+ * @async
+ * @description This function will ask the cpaas contacts service to delete a contact
+ * @param {string} [accessToken="null accessToken"] - access token
+ * @param {string} [contactUUID="null contact uuid"] - contact UUID to be used
+ * @returns {Promise} - Promise resolving to a data object
+ */
 var deleteContact = function deleteContact() {
   var accessToken = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : "null accessToken";
   var contactUUID = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : "null contact uuid";
@@ -62,12 +62,13 @@ var deleteContact = function deleteContact() {
 };
 
 /**
- * This function will ask the cpaas contacts service to get user contacts based on input criteria
- *
- * @param apiKey - api key for cpaas systems
- * @param userUuid - user UUID to be used
- * @returns promise for list of groups for this user
- **/
+ * @async
+ * @description This function will ask the cpaas contacts service to get user contacts based on input criteria
+ * @param {string} [user_uuid="null user uuid"]
+ * @param {object} [params={}] - object containing query params
+ * @param {*} accessToken - access token
+ * @returns {Promise<object>} - Promise resolving to a data object containing collection of user contacts
+ */
 var getContacts = function getContacts() {
   var user_uuid = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : "null user uuid";
   var params = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
@@ -89,12 +90,13 @@ var getContacts = function getContacts() {
 };
 
 /**
- * This function will call getContacts one or more times to list all user contacts
- *
- * @param apiKey - api key for cpaas systems
- * @param userUuid - user UUID to be used
- * @returns promise for list of groups for this user
- **/
+ * @async
+ * @description This function will call getContacts one or more times to list all user contacts
+ * @param {string} [user_uuid="null user uuid"]
+ * @param {object} [params={}] - object containing query params
+ * @param {*} accessToken - access token
+ * @returns {Promise<object>} - Promise resolving to a data object containing collection of user contacts
+ */
 var listContacts = function listContacts() {
   var user_uuid = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : "missing uuid";
   var params = arguments[1];
