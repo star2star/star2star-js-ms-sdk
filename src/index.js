@@ -1,5 +1,6 @@
 /*global require process module*/
 "use strict";
+const Accounts = require('./accounts');
 const Lambda = require('./lambda');
 const Identity = require('./identity');
 const Messaging = require('./messaging');
@@ -27,6 +28,15 @@ let cpaasKey;
  */
 const setMsHost = (msHost = "https://cpaas.star2star.com/api") => {
   process.env.MS_HOST = msHost;
+};
+
+/**
+ * 
+ * @description This function sets the microservice target authentication host (AUTH_HOST) variable.
+ * @param {string} [msHost="https://auth.star2starglobal.net"] - valid url for microservice host server
+ */
+const setMsAuthHost = (authHost = "https://auth.star2starglobal.net") => {
+  process.env.AUTH_HOST = authHost;
 };
 
 /**
@@ -113,6 +123,7 @@ const getPermissions = (accessToken = "null accessToken") => {
 };
 
 module.exports = {
+  Accounts,
   Lambda,
   Identity,
   Messaging,
@@ -121,6 +132,7 @@ module.exports = {
   Task,
   setMsHost,
   getMsHost,
+  setMsAuthHost,
   setApplicationKey,
   getApplicationKey,
   Groups,

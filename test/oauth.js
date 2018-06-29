@@ -2,9 +2,7 @@ const assert = require("assert");
 const s2sMS = require("../src/index");
 const fs = require("fs");
 
-
-var creds = {
-  CPAAS_OAUTH_KEY: "your oauth key here",
+let creds = {
   CPAAS_OAUTH_TOKEN: "Basic your oauth token here",
   CPAAS_API_VERSION: "v1",
   email: "email@email.com",
@@ -23,12 +21,12 @@ describe("Oauth MS", function () {
     }
     s2sMS.setMsHost("https://cpaas.star2starglobal.net");
     s2sMS.setMSVersion(creds.CPAAS_API_VERSION);
+    s2sMS.setMsAuthHost("https://auth.star2starglobal.net");
   });
 
   it("Get Access Token", function (done) {
     if (!creds.isValid) return done();
     s2sMS.Oauth.getAccessToken(
-        creds.CPAAS_OAUTH_KEY,
         creds.CPAAS_OAUTH_TOKEN,
         creds.email,
         creds.password
@@ -53,7 +51,6 @@ describe("Oauth MS", function () {
     if (!creds.isValid) return done();
     // get access token
     s2sMS.Oauth.getAccessToken(
-        creds.CPAAS_OAUTH_KEY,
         creds.CPAAS_OAUTH_TOKEN,
         creds.email,
         creds.password
@@ -61,8 +58,7 @@ describe("Oauth MS", function () {
       .then(oauthData => {
         const oData = oauthData;
         // Use new refresh token to test refreshAccessToken()
-        s2sMS.Oauth.refreshAccessToken(creds.CPAAS_OAUTH_KEY,
-            creds.CPAAS_OAUTH_TOKEN,
+        s2sMS.Oauth.refreshAccessToken(creds.CPAAS_OAUTH_TOKEN,
             oData.refresh_token
           )
           .then(refreshData => {

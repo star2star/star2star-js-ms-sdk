@@ -4,7 +4,6 @@ const config = require("../src/utilities").config;
 const fs = require("fs");
 
 let creds = {
-  CPAAS_OAUTH_KEY: "your oauth key here",
   CPAAS_OAUTH_TOKEN: "Basic your oauth token here",
   CPAAS_API_VERSION: "v1",
   email: "email@email.com",
@@ -23,33 +22,33 @@ describe("Lambda MS", function () {
       creds = require("./credentials.json");
     }
 
-    // For tests, use the dev msHost
-    s2sMS.setMsHost("https://cpaas.star2starglobal.net");
-    s2sMS.setMSVersion(creds.CPAAS_API_VERSION);
-    // get accessToken to use in test cases
-    // Return promise so that test cases will not fire until it resolves.
-    return new Promise((resolve, reject)=>{
-      s2sMS.Oauth.getAccessToken(
-        creds.CPAAS_OAUTH_KEY,
-        creds.CPAAS_OAUTH_TOKEN,
-        creds.email,
-        creds.password
-      )
-      .then(oauthData => {
-        //console.log('Got access token and identity data -[Get Object By Data Type] ',  oauthData);
-        accessToken = oauthData.access_token;
-        s2sMS.Identity.getMyIdentityData(accessToken).then((idData)=>{
-          s2sMS.Identity.getIdentityDetails(accessToken, idData.user_uuid).then((identityDetails)=>{
-            identityData = identityDetails;
-            resolve();
-          }).catch((e1)=>{
-            reject(e1);
-          });
-        }).catch((e)=>{
-          reject(e);
-        });
-      });
-    })
+     // For tests, use the dev msHost
+     s2sMS.setMsHost("https://cpaas.star2starglobal.net");
+     s2sMS.setMSVersion(creds.CPAAS_API_VERSION);
+     s2sMS.setMsAuthHost("https://auth.star2starglobal.net");
+     // get accessToken to use in test cases
+     // Return promise so that test cases will not fire until it resolves.
+     return new Promise((resolve, reject)=>{
+       s2sMS.Oauth.getAccessToken(
+         creds.CPAAS_OAUTH_TOKEN,
+         creds.email,
+         creds.password
+       )
+       .then(oauthData => {
+         //console.log('Got access token and identity data -[Get Object By Data Type] ',  oauthData);
+         accessToken = oauthData.access_token;
+         s2sMS.Identity.getMyIdentityData(accessToken).then((idData)=>{
+           s2sMS.Identity.getIdentityDetails(accessToken, idData.user_uuid).then((identityDetails)=>{
+             identityData = identityDetails;
+             resolve();
+           }).catch((e1)=>{
+             reject(e1);
+           });
+         }).catch((e)=>{
+           reject(e);
+         });
+       });
+     })
   });
 
   it("invokeGoodLambda", function (done) {

@@ -1,6 +1,7 @@
 /*global require process module*/
 "use strict";
 
+var Accounts = require('./accounts');
 var Lambda = require('./lambda');
 var Identity = require('./identity');
 var Messaging = require('./messaging');
@@ -32,6 +33,17 @@ var setMsHost = function setMsHost() {
 };
 
 /**
+ * 
+ * @description This function sets the microservice target authentication host (AUTH_HOST) variable.
+ * @param {string} [msHost="https://auth.star2starglobal.net/oauth/token"] - valid url for microservice host server
+ */
+var setMsAuthHost = function setMsAuthHost() {
+  var authHost = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : "https://auth.star2starglobal.net";
+
+  process.env.AUTH_HOST = authHost;
+};
+
+/**
  *
  * @description This function sets the microservice version that will be used.
  * @param {string} [version="v1"] - configured microservice version
@@ -40,16 +52,6 @@ var setMSVersion = function setMSVersion() {
   var version = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : "v1";
 
   process.env.MS_VERSION = version;
-};
-
-/**
- *
- * @description This function gets the configured microservice host variable.
- * @returns {string} - configured host URL
- */
-var getMsHost = function getMsHost() {
-  // setMsHost(process.env.MS_HOST);
-  return process.env.MS_HOST;
 };
 
 /**
@@ -90,7 +92,7 @@ var getPermissions = function getPermissions() {
     var permissions = {};
     var requestOptions = {
       method: "GET",
-      uri: getMsHost() + '/auth/permissions?resource_type=object',
+      uri: Util.getEndpoint + '/auth/permissions?resource_type=object',
       headers: {
         "Content-type": "application/json",
         "Authorization": 'Bearer ' + accessToken,
@@ -121,6 +123,7 @@ var getPermissions = function getPermissions() {
 };
 
 module.exports = {
+  Accounts: Accounts,
   Lambda: Lambda,
   Identity: Identity,
   Messaging: Messaging,
@@ -128,7 +131,6 @@ module.exports = {
   Util: Util,
   Task: Task,
   setMsHost: setMsHost,
-  getMsHost: getMsHost,
   setApplicationKey: setApplicationKey,
   getApplicationKey: getApplicationKey,
   Groups: Groups,

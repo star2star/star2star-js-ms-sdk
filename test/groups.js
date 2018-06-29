@@ -2,8 +2,7 @@ var assert = require("assert");
 var s2sMS = require("../src/index");
 var fs = require("fs");
 
-var creds = {
-  CPAAS_OAUTH_KEY: "your oauth key here",
+let creds = {
   CPAAS_OAUTH_TOKEN: "Basic your oauth token here",
   CPAAS_API_VERSION: "v1",
   email: "email@email.com",
@@ -25,11 +24,11 @@ describe("Groups Test Suite", function () {
     // For tests, use the dev msHost
     s2sMS.setMsHost("https://cpaas.star2starglobal.net");
     s2sMS.setMSVersion(creds.CPAAS_API_VERSION);
+    s2sMS.setMsAuthHost("https://auth.star2starglobal.net");
     // get accessToken to use in test cases
     // Return promise so that test cases will not fire until it resolves.
     return new Promise((resolve, reject)=>{
       s2sMS.Oauth.getAccessToken(
-        creds.CPAAS_OAUTH_KEY,
         creds.CPAAS_OAUTH_TOKEN,
         creds.email,
         creds.password

@@ -4,8 +4,9 @@ var util = require("../src/utilities");
 var config = require("../src/config.json");
 var fs = require("fs");
 
-var creds = {
-  CPAAS_KEY: "yourkeyhere",
+let creds = {
+  CPAAS_OAUTH_TOKEN: "Basic your oauth token here",
+  CPAAS_API_VERSION: "v1",
   email: "email@email.com",
   password: "pwd",
   isValid: false
@@ -13,6 +14,7 @@ var creds = {
 
 beforeEach(function () {
   s2sMS.setMsHost("https://cpaas.star2starglobal.net");
+  s2sMS.setMsAuthHost("https://auth.star2starglobal.net");
   // file system uses full path so will do it like this
   if (fs.existsSync("./test/credentials.json")) {
     // do not need test folder here
@@ -153,6 +155,12 @@ describe("Util", function () {
   it("test getEndpoint valid - lowercase ", function (done) {
     const prodEndPoint = util.getEndpoint("identity");
     assert.equal("https://cpaas.star2starglobal.net/identity", prodEndPoint);
+    done();
+  });
+
+  it("test getAuthHost valid - lowercase ", function (done) {
+    const prodAuthHost = util.getAuthHost();
+    assert.equal("https://auth.star2starglobal.net", prodAuthHost);
     done();
   });
 
