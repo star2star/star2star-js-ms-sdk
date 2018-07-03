@@ -318,4 +318,87 @@ describe("Auth MS Test Suite", function () {
         });
       });
   });
+
+  it("Add Role to User", function (done) {
+    if (!creds.isValid) 
+    return done(err);
+ 
+    body = {
+      "role_uuid": [
+        "0d781753-5f10-4928-9608-696663b0d378"
+      ]
+    };
+    s2sMS.Identity.getMyIdentityData(accessToken)
+      .then(identityData => {
+        s2sMS.Auth.addRoleToUser(
+          accessToken,
+          identityData.user_uuid,
+          body)
+          .then(status => {
+            //console.log("status",status);
+            assert(status.status === "ok");
+            done();
+          })
+          .catch((error) => {
+            console.log("error in assigning test role", error);
+            done(new Error(error));
+          });
+      })
+      .catch((error) => {
+        console.log("error in getting user_uuid", error);
+        done(new Error(error));
+      });
+  });
+
+  it("Detatch Role From User", function (done) {
+    if (!creds.isValid) 
+    return done(err);
+ 
+    s2sMS.Identity.getMyIdentityData(accessToken)
+      .then(identityData => {
+        role_uuid = "0d781753-5f10-4928-9608-696663b0d378";
+        s2sMS.Auth.detachUserRole(
+          accessToken,
+          identityData.user_uuid,
+          role_uuid)
+          .then(status => {
+            //console.log("status",status);
+            assert(status.status === "ok");
+            done();
+          })
+          .catch((error) => {
+            console.log("error in assigning test role", error);
+            done(new Error(error));
+          });
+      })
+      .catch((error) => {
+        console.log("error in getting user_uuid", error);
+        done(new Error(error));
+      });
+  });
+
+  it("Get User Roles", function (done) {
+    if (!creds.isValid) {
+      const err = new Error("Valid credentials must be provided");
+      return done(err);
+    }
+    s2sMS.Identity.getMyIdentityData(accessToken)
+      .then(identityData => {
+        s2sMS.Auth.getUserRoles(
+          accessToken,
+          identityData.user_uuid)
+          .then(response=> {
+            assert(response.hasOwnProperty("items"));
+            done();
+          })
+          .catch(error => {
+            console.log("error in getting roles", error);
+            done(new Error(error));
+          });
+      })
+      .catch(error => {
+        console.log("error in getting user_uuid", error);
+        done(new Error(error));
+      });
+    });
 });

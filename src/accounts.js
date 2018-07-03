@@ -5,6 +5,30 @@ const request = require("request-promise");
 
 /**
  * @async
+ * @description This function will create a relationship between two accounts.
+ * @param {string} [accessToken="null access token"]
+ * @param {string} [body="null body"]
+ * @returns {Promise<object>} - Promise resolving to a data object containing new relationship
+ */
+const createRelationship = (accessToken = "null access token", body = "null body") => {
+  const MS = util.getEndpoint("accounts");
+  const requestOptions = {
+    method: "POST",
+    uri: `${MS}/relationships`,
+    body: body,
+    resolveWithFullResponse: true,
+    json: true,
+    headers: {
+      "Authorization": `Bearer ${accessToken}`,
+      "Content-type": "application/json",
+      'x-api-version': `${util.getVersion()}`
+    }
+  };
+  return request(requestOptions);
+};
+
+/**
+ * @async
  * @description This function returns all available accounts.
  * @param {string} [accessToken="null accessToken"] - access token for cpaas system
  * @returns {Promise<object>} - Promise resolving to a data object containing a list of accounts
@@ -55,30 +79,16 @@ const listAccounts = (accessToken = "null accessToken") => {
     };
     return request(requestOptions);
   };
-  
+
   /**
    * @async
-   * @description This function returns all possible properties to be assigned to account.
+   * @description This function will modify an account.
    * @param {string} [accessToken="null access token"] - access token for cpaas systems
-   * @param {string} [accountUUID="null account uuid"] - account_uuid for a star2star account (customer)
-   * @returns {Promise<object>} - Promise resolving to a data object containing all possible properties.
+   * @param {string} [accountUUID="null account uuid"]
+   * @param {string} [body="null body"]
+   * @param {string} [property=""]
+   * @returns {Promise<object>} - Promise resolving to a status data object
    */
-  const getAccountAvailProps = (accessToken = "null access token", accountUUID = "null account uuid") => {
-    const MS = util.getEndpoint("accounts");
-    const requestOptions = {
-      method: "GET",
-      uri: `${MS}/accounts/${accountUUID}/availableProperties`,
-      headers: {
-        "Authorization": `Bearer ${accessToken}`,
-        "Content-type": "application/json",
-        'x-api-version': `${util.getVersion()}`
-      },
-      json: true
-    };
-  
-    return request(requestOptions);
-  };
-
   const modifyAccount = (accessToken = "null access token", accountUUID = "null account uuid", body = "null body", property = "") => {
     //body = JSON.stringify(body);
     const MS = util.getEndpoint("accounts");
@@ -92,7 +102,7 @@ const listAccounts = (accessToken = "null accessToken") => {
         "Authorization": `Bearer ${accessToken}`,
         "Content-type": "application/json",
         'x-api-version': `${util.getVersion()}`
-      },
+      }
     };
 
     return new Promise (function (resolve, reject){
@@ -105,8 +115,8 @@ const listAccounts = (accessToken = "null accessToken") => {
   };
 
   module.exports = {
+    createRelationship,
     listAccounts,
     getAccount,
-    getAccountAvailProps,
     modifyAccount
   };

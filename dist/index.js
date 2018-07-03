@@ -35,7 +35,7 @@ var setMsHost = function setMsHost() {
 /**
  * 
  * @description This function sets the microservice target authentication host (AUTH_HOST) variable.
- * @param {string} [msHost="https://auth.star2starglobal.net/oauth/token"] - valid url for microservice host server
+ * @param {string} [msHost="https://auth.star2starglobal.net"] - valid url for microservice host server
  */
 var setMsAuthHost = function setMsAuthHost() {
   var authHost = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : "https://auth.star2starglobal.net";
@@ -52,6 +52,16 @@ var setMSVersion = function setMSVersion() {
   var version = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : "v1";
 
   process.env.MS_VERSION = version;
+};
+
+/**
+ *
+ * @description This function gets the configured microservice host variable.
+ * @returns {string} - configured host URL
+ */
+var getMsHost = function getMsHost() {
+  // setMsHost(process.env.MS_HOST);
+  return process.env.MS_HOST;
 };
 
 /**
@@ -92,7 +102,7 @@ var getPermissions = function getPermissions() {
     var permissions = {};
     var requestOptions = {
       method: "GET",
-      uri: Util.getEndpoint + '/auth/permissions?resource_type=object',
+      uri: getMsHost() + '/auth/permissions?resource_type=object',
       headers: {
         "Content-type": "application/json",
         "Authorization": 'Bearer ' + accessToken,
@@ -131,6 +141,8 @@ module.exports = {
   Util: Util,
   Task: Task,
   setMsHost: setMsHost,
+  getMsHost: getMsHost,
+  setMsAuthHost: setMsAuthHost,
   setApplicationKey: setApplicationKey,
   getApplicationKey: getApplicationKey,
   Groups: Groups,

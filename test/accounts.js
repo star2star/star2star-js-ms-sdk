@@ -50,6 +50,37 @@ describe("Identity MS Unit Test Suite", function () {
     })
   });
 
+  it("Create Relationship", function (done) {
+    if (!creds.isValid) return done();
+    
+    //Test Partial Update -- Address
+    body = {
+      "source": {
+        "name": "MR1 Corp",
+        "type": "MasterReseller",
+        "uuid": "c6e34c50-05f3-44a8-8b0e-b993292ec891"
+      },
+      "target": {
+        "name": "R11 Corp",
+        "type": "Reseller",
+        "uuid": "ff591bba-630b-43e0-9f5b-3c110ade3bdf"
+      },
+      "type": "parent"
+    };
+
+    s2sMS.Accounts
+      .createRelationship(accessToken, body)
+      .then(response => {
+        //We are testing for a specific failure here since we cannot duplicate the relationship creation.
+        //Confirming the validation failure message as his should not work.
+        done(new Error(response));
+      })
+      .catch((error) => {
+        assert(error.error.message === "Such account already has parent account");
+        done();
+      });
+  });
+
   it("List Accounts", function (done) {
     if (!creds.isValid) return done();
 
@@ -83,32 +114,6 @@ describe("Identity MS Unit Test Suite", function () {
           })
           .catch((error) => {
             // console.log("error in getting account data", error);
-            done(new Error(error));
-          });
-      })
-      .catch((error) => {
-        //console.log("error in getting account list [getAccountData]", error);
-        done(new Error(error));
-      });
-  });
-
-  it("Get Account Available Properties", function (done) {
-    if (!creds.isValid) return done();
-
-    s2sMS.Accounts
-      .listAccounts(accessToken)
-      .then((accountList) => {
-         //console.log("accountList -- getAccountData", accountList);
-
-        s2sMS.Accounts
-          .getAccountAvailProps(accessToken, accountList.items[0].uuid)
-          .then(accountProps => {
-            //console.log("accountProps", accountProps);
-            assert(accountProps.items instanceof Array);
-            done();
-          })
-          .catch((error) => {
-            //console.log("error in getting account available properties", error);
             done(new Error(error));
           });
       })
