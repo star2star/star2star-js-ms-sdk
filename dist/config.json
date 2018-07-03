@@ -12,6 +12,7 @@
     "CONTACTS": "/contacts",
     "OAUTH": "/oauth",
     "MEDIA": "/media",
-    "PUBSUB": "/pubsub"
+    "PUBSUB": "/pubsub",
+    "ACCOUNTS": "/accounts"
   }
 }

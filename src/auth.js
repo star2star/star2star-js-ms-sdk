@@ -272,9 +272,98 @@ const addExplicitUserPermissions = (accessToken = 'null access Token', userUuid 
   }); // end promise
 };
 
+/**
+ * @async
+ * @description This function will add a role or list of roles to a user.
+ * @param {string} [accessToken="null access token"] - access token for cpaas systems
+ * @param {string} [user_uuid="null user_uuid"] - user uuid
+ * @param {string} [body="null body"] - JSON object defining roles to add to user
+ * @returns {Promise<object>} - Promise resolving to a status data object
+ */
+const addRoleToUser = (accessToken = "null access token", user_uuid = "null user_uuid", body = "null body") => {
+  const MS = util.getEndpoint("auth");
+  const requestOptions = {
+    method: "POST",
+    uri: `${MS}/users/${user_uuid}/roles`,
+    body: body,
+    resolveWithFullResponse: true,
+    json: true,
+    headers: {
+      "Authorization": `Bearer ${accessToken}`,
+      "Content-type": "application/json",
+      'x-api-version': `${util.getVersion()}`
+    }
+  };
+
+  return new Promise (function (resolve, reject){
+      request(requestOptions).then(function(responseData){
+          responseData.statusCode === 204 ?  resolve({"status":"ok"}): reject({"status":"failed"});
+      }).catch(function(error){
+          reject(error);
+      })
+  }); 
+};
+
+/**
+ * @async
+ * @description This function will remove a role from a user.
+ * @param {string} [accessToken="null access token"] - access token for cpaas systems
+ * @param {string} [user_uuid="null user_uuid"] - user uuid
+ * @param {string} [role_uuid="null role_uuid"] - role uuid to detach
+ * @returns {Promise<object>} - Promise resolving to a status data object
+ */
+const detachUserRole = (accessToken = "null access token", user_uuid = "null user_uuid", role_uuid = "null role_uuid") => {
+  const MS = util.getEndpoint("auth");
+  const requestOptions = {
+    method: "DELETE",
+    uri: `${MS}/users/${user_uuid}/roles/${role_uuid}`,
+    resolveWithFullResponse: true,
+    json: true,
+    headers: {
+      "Authorization": `Bearer ${accessToken}`,
+      "Content-type": "application/json",
+      'x-api-version': `${util.getVersion()}`
+    }
+  };
+
+  return new Promise (function (resolve, reject){
+      request(requestOptions).then(function(responseData){
+          responseData.statusCode === 204 ?  resolve({"status":"ok"}): reject({"status":"failed"});
+      }).catch(function(error){
+          reject(error);
+      })
+  }); 
+};
+
+/**
+ * @async
+ * @description This function will return the roles associated with a user.
+ * @param {string} [accessToken="null accessToken"] - access token for cpaas systems
+ * @param {string} [user_uuid="null user_uuid"] - user uuid
+ * @returns {Promise<object>} - Promise resolving to a data object containing a list of roles.
+ */
+const  getUserRoles = (accessToken = "null accessToken", user_uuid = "null user_uuid") => {
+  const MS = util.getEndpoint("auth");
+  const requestOptions = {
+    method: "GET",
+    uri: `${MS}/users/${user_uuid}/roles`,
+    headers: {
+      "Authorization": `Bearer ${accessToken}`,
+      "Content-type": "application/json",
+      'x-api-version': `${util.getVersion()}`
+    },
+    json: true
+   
+  };
+  return request(requestOptions);
+};
+
 module.exports = {
   listUserPermissions,
   getSpecificPermissions,
   addExplicitGroupPermissions,
-  addExplicitUserPermissions
+  addExplicitUserPermissions,
+  addRoleToUser,
+  detachUserRole,
+  getUserRoles
 };

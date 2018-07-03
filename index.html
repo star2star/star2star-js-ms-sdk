@@ -2,7 +2,7 @@
 <html>
 <head>
   <meta charset='utf-8' />
-  <title>star2star-js-ms-sdk 2.1.3 | Documentation</title>
+  <title>star2star-js-ms-sdk 2.1.5 | Documentation</title>
   <meta name='viewport' content='width=device-width,initial-scale=1'>
   <link href='assets/bass.css' type='text/css' rel='stylesheet' />
   <link href='assets/style.css' type='text/css' rel='stylesheet' />
@@ -14,7 +14,7 @@
       <div id='split-left' class='overflow-auto fs0 height-viewport-100'>
         <div class='py1 px2'>
           <h3 class='mb0 no-anchor'>star2star-js-ms-sdk</h3>
-          <div class='mb1'><code>2.1.3</code></div>
+          <div class='mb1'><code>2.1.5</code></div>
           <input
             placeholder='Filter'
             id='filter-input'
@@ -22,6 +22,52 @@
             type='text' />
           <div id='toc'>
             <ul class='list-reset h5 py1-ul'>
+              
+                
+                <li><a
+                  href='#accounts'
+                  class="h5 bold black caps toggle-sibling">
+                  Accounts
+                  <span class='icon'>▸</span>
+                </a>
+                
+                <div class='toggle-target display-none'>
+                  
+                  <ul class='list-reset py1-ul pl1'>
+                    <li class='h5'><span>Static members</span></li>
+                    
+                      <li><a
+                        href='#createrelationship'
+                        class='regular pre-open'>
+                        .createRelationship
+                      </a></li>
+                    
+                      <li><a
+                        href='#listaccounts'
+                        class='regular pre-open'>
+                        .listAccounts
+                      </a></li>
+                    
+                      <li><a
+                        href='#getaccount'
+                        class='regular pre-open'>
+                        .getAccount
+                      </a></li>
+                    
+                      <li><a
+                        href='#modifyaccount'
+                        class='regular pre-open'>
+                        .modifyAccount
+                      </a></li>
+                    
+                    </ul>
+                  
+                  
+                  
+                  
+                </div>
+                
+                </li>
               
                 
                 <li><a
@@ -49,9 +95,27 @@
                       </a></li>
                     
                       <li><a
+                        href='#addroletouser'
+                        class='regular pre-open'>
+                        .addRoleToUser
+                      </a></li>
+                    
+                      <li><a
+                        href='#detachuserrole'
+                        class='regular pre-open'>
+                        .detachUserRole
+                      </a></li>
+                    
+                      <li><a
                         href='#getspecificpermissions'
                         class='regular pre-open'>
                         .getSpecificPermissions
+                      </a></li>
+                    
+                      <li><a
+                        href='#getuserroles'
+                        class='regular pre-open'>
+                        .getUserRoles
                       </a></li>
                     
                       <li><a
@@ -320,24 +384,6 @@
                         href='#lookupidentity'
                         class='regular pre-open'>
                         .lookupIdentity
-                      </a></li>
-                    
-                      <li><a
-                        href='#listaccounts'
-                        class='regular pre-open'>
-                        .listAccounts
-                      </a></li>
-                    
-                      <li><a
-                        href='#getaccount'
-                        class='regular pre-open'>
-                        .getAccount
-                      </a></li>
-                    
-                      <li><a
-                        href='#getaccountavailprops'
-                        class='regular pre-open'>
-                        .getAccountAvailProps
                       </a></li>
                     
                     </ul>
@@ -839,6 +885,26 @@
                 
                 </li>
               
+                
+                <li><a
+                  href='#setmsauthhost'
+                  class="">
+                  setMsAuthHost
+                  
+                </a>
+                
+                </li>
+              
+                
+                <li><a
+                  href='#getauthhost'
+                  class="">
+                  getAuthHost
+                  
+                </a>
+                
+                </li>
+              
             </ul>
           </div>
           <div class='mt1 h6 quiet'>
@@ -847,6 +913,399 @@
         </div>
       </div>
       <div id='split-right' class='relative overflow-auto height-viewport-100'>
+        
+          
+            <div class='keyline-top-not py2'></div>
+          
+          <section class='p2 mb2 clearfix bg-white minishadow'>
+
+  
+  <div class='clearfix'>
+    
+    <h3 class='fl m0' id='accounts'>
+      Accounts
+    </h3>
+    
+    
+  </div>
+  
+
+  
+
+ 
+   
+  
+  
+
+  
+  
+  
+  
+  
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    <div class='py1 quiet mt1 prose-big'>Static Members</div>
+    <div class="clearfix">
+  
+    <div class='border-bottom' id='createrelationship'>
+      <div class="clearfix small pointer toggle-sibling">
+        <div class="py1 contain">
+            <a class='icon pin-right py1 dark-link caret-right'>▸</a>
+            <span class='code strong strong truncate'>createRelationship</span>
+        </div>
+      </div>
+      <div class="clearfix display-none toggle-target">
+        <section class='p2 mb2 clearfix bg-white minishadow'>
+
+  
+
+  <p>This function will create a relationship between two accounts.</p>
+
+ 
+  
+    <div class='pre p1 fill-light mt0'>createRelationship</div>
+   
+  
+  
+
+  
+  
+  
+  
+  
+  
+
+  
+    <div class='py1 quiet mt1 prose-big'>Parameters</div>
+    <div class='prose'>
+      
+        <div class='space-bottom0'>
+          <div>
+            <span class='code bold'>accessToken</span> <code class='quiet'>(<a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String">string</a>
+            = <code>&quot;null access token&quot;</code>)</code>
+	    
+          </div>
+          
+        </div>
+      
+        <div class='space-bottom0'>
+          <div>
+            <span class='code bold'>body</span> <code class='quiet'>(<a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String">string</a>
+            = <code>&quot;null body&quot;</code>)</code>
+	    
+          </div>
+          
+        </div>
+      
+    </div>
+  
+
+  
+
+  
+    
+      <div class='py1 quiet mt1 prose-big'>Returns</div>
+      <code><a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise">Promise</a>&#x3C;<a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object">object</a>></code>:
+        Promise resolving to a data object containing new relationship
+
+      
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+</section>
+
+      </div>
+    </div>
+  
+    <div class='border-bottom' id='listaccounts'>
+      <div class="clearfix small pointer toggle-sibling">
+        <div class="py1 contain">
+            <a class='icon pin-right py1 dark-link caret-right'>▸</a>
+            <span class='code strong strong truncate'>listAccounts</span>
+        </div>
+      </div>
+      <div class="clearfix display-none toggle-target">
+        <section class='p2 mb2 clearfix bg-white minishadow'>
+
+  
+
+  <p>This function returns all available accounts.</p>
+
+ 
+  
+    <div class='pre p1 fill-light mt0'>listAccounts</div>
+   
+  
+  
+
+  
+  
+  
+  
+  
+  
+
+  
+    <div class='py1 quiet mt1 prose-big'>Parameters</div>
+    <div class='prose'>
+      
+        <div class='space-bottom0'>
+          <div>
+            <span class='code bold'>accessToken</span> <code class='quiet'>(<a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String">string</a>
+            = <code>&quot;null accessToken&quot;</code>)</code>
+	    access token for cpaas system
+
+          </div>
+          
+        </div>
+      
+    </div>
+  
+
+  
+
+  
+    
+      <div class='py1 quiet mt1 prose-big'>Returns</div>
+      <code><a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise">Promise</a>&#x3C;<a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object">object</a>></code>:
+        Promise resolving to a data object containing a list of accounts
+
+      
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+</section>
+
+      </div>
+    </div>
+  
+    <div class='border-bottom' id='getaccount'>
+      <div class="clearfix small pointer toggle-sibling">
+        <div class="py1 contain">
+            <a class='icon pin-right py1 dark-link caret-right'>▸</a>
+            <span class='code strong strong truncate'>getAccount</span>
+        </div>
+      </div>
+      <div class="clearfix display-none toggle-target">
+        <section class='p2 mb2 clearfix bg-white minishadow'>
+
+  
+
+  <p>This function will return an account by UUID.</p>
+
+ 
+  
+    <div class='pre p1 fill-light mt0'>getAccount</div>
+   
+  
+  
+
+  
+  
+  
+  
+  
+  
+
+  
+    <div class='py1 quiet mt1 prose-big'>Parameters</div>
+    <div class='prose'>
+      
+        <div class='space-bottom0'>
+          <div>
+            <span class='code bold'>accessToken</span> <code class='quiet'>(<a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String">string</a>
+            = <code>&quot;null access token&quot;</code>)</code>
+	    access token for cpaas systems
+
+          </div>
+          
+        </div>
+      
+        <div class='space-bottom0'>
+          <div>
+            <span class='code bold'>accountUUID</span> <code class='quiet'>(<a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String">string</a>
+            = <code>&quot;null account uuid&quot;</code>)</code>
+	    account_uuid for an star2star account (customer)
+
+          </div>
+          
+        </div>
+      
+        <div class='space-bottom0'>
+          <div>
+            <span class='code bold'>includeIdentities</span> <code class='quiet'>(<a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Boolean">boolean</a>
+            = <code>false</code>)</code>
+	    boolean to include identities in account or not
+
+          </div>
+          
+        </div>
+      
+    </div>
+  
+
+  
+
+  
+    
+      <div class='py1 quiet mt1 prose-big'>Returns</div>
+      <code><a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise">Promise</a>&#x3C;<a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object">object</a>></code>:
+        Promise resolving to an identity data object
+
+      
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+</section>
+
+      </div>
+    </div>
+  
+    <div class='border-bottom' id='modifyaccount'>
+      <div class="clearfix small pointer toggle-sibling">
+        <div class="py1 contain">
+            <a class='icon pin-right py1 dark-link caret-right'>▸</a>
+            <span class='code strong strong truncate'>modifyAccount</span>
+        </div>
+      </div>
+      <div class="clearfix display-none toggle-target">
+        <section class='p2 mb2 clearfix bg-white minishadow'>
+
+  
+
+  <p>This function will modify an account.</p>
+
+ 
+  
+    <div class='pre p1 fill-light mt0'>modifyAccount</div>
+   
+  
+  
+
+  
+  
+  
+  
+  
+  
+
+  
+    <div class='py1 quiet mt1 prose-big'>Parameters</div>
+    <div class='prose'>
+      
+        <div class='space-bottom0'>
+          <div>
+            <span class='code bold'>accessToken</span> <code class='quiet'>(<a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String">string</a>
+            = <code>&quot;null access token&quot;</code>)</code>
+	    access token for cpaas systems
+
+          </div>
+          
+        </div>
+      
+        <div class='space-bottom0'>
+          <div>
+            <span class='code bold'>accountUUID</span> <code class='quiet'>(<a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String">string</a>
+            = <code>&quot;null account uuid&quot;</code>)</code>
+	    
+          </div>
+          
+        </div>
+      
+        <div class='space-bottom0'>
+          <div>
+            <span class='code bold'>body</span> <code class='quiet'>(<a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String">string</a>
+            = <code>&quot;null body&quot;</code>)</code>
+	    
+          </div>
+          
+        </div>
+      
+        <div class='space-bottom0'>
+          <div>
+            <span class='code bold'>property</span> <code class='quiet'>(<a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String">string</a>
+            = <code>&quot;&quot;</code>)</code>
+	    
+          </div>
+          
+        </div>
+      
+    </div>
+  
+
+  
+
+  
+    
+      <div class='py1 quiet mt1 prose-big'>Returns</div>
+      <code><a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise">Promise</a>&#x3C;<a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object">object</a>></code>:
+        Promise resolving to a status data object
+
+      
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+</section>
+
+      </div>
+    </div>
+  
+</div>
+
+  
+
+  
+
+  
+</section>
+
         
           
             <div class='keyline-top-not py2'></div>
@@ -867,6 +1326,7 @@
   
 
  
+   
   
   
 
@@ -906,6 +1366,9 @@
   <p>This function will add permissions to a group.</p>
 
  
+  
+    <div class='pre p1 fill-light mt0'>addExplicitGroupPermissions</div>
+   
   
   
 
@@ -1034,6 +1497,9 @@
 
  
   
+    <div class='pre p1 fill-light mt0'>addExplicitUserPermissions</div>
+   
+  
   
 
   
@@ -1145,6 +1611,188 @@
       </div>
     </div>
   
+    <div class='border-bottom' id='addroletouser'>
+      <div class="clearfix small pointer toggle-sibling">
+        <div class="py1 contain">
+            <a class='icon pin-right py1 dark-link caret-right'>▸</a>
+            <span class='code strong strong truncate'>addRoleToUser</span>
+        </div>
+      </div>
+      <div class="clearfix display-none toggle-target">
+        <section class='p2 mb2 clearfix bg-white minishadow'>
+
+  
+
+  <p>This function will add a role or list of roles to a user.</p>
+
+ 
+  
+    <div class='pre p1 fill-light mt0'>addRoleToUser</div>
+   
+  
+  
+
+  
+  
+  
+  
+  
+  
+
+  
+    <div class='py1 quiet mt1 prose-big'>Parameters</div>
+    <div class='prose'>
+      
+        <div class='space-bottom0'>
+          <div>
+            <span class='code bold'>accessToken</span> <code class='quiet'>(<a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String">string</a>
+            = <code>&quot;null access token&quot;</code>)</code>
+	    access token for cpaas systems
+
+          </div>
+          
+        </div>
+      
+        <div class='space-bottom0'>
+          <div>
+            <span class='code bold'>user_uuid</span> <code class='quiet'>(<a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String">string</a>
+            = <code>&quot;null user_uuid&quot;</code>)</code>
+	    user uuid
+
+          </div>
+          
+        </div>
+      
+        <div class='space-bottom0'>
+          <div>
+            <span class='code bold'>body</span> <code class='quiet'>(<a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String">string</a>
+            = <code>&quot;null body&quot;</code>)</code>
+	    JSON object defining roles to add to user
+
+          </div>
+          
+        </div>
+      
+    </div>
+  
+
+  
+
+  
+    
+      <div class='py1 quiet mt1 prose-big'>Returns</div>
+      <code><a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise">Promise</a>&#x3C;<a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object">object</a>></code>:
+        Promise resolving to a status data object
+
+      
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+</section>
+
+      </div>
+    </div>
+  
+    <div class='border-bottom' id='detachuserrole'>
+      <div class="clearfix small pointer toggle-sibling">
+        <div class="py1 contain">
+            <a class='icon pin-right py1 dark-link caret-right'>▸</a>
+            <span class='code strong strong truncate'>detachUserRole</span>
+        </div>
+      </div>
+      <div class="clearfix display-none toggle-target">
+        <section class='p2 mb2 clearfix bg-white minishadow'>
+
+  
+
+  <p>This function will remove a role from a user.</p>
+
+ 
+  
+    <div class='pre p1 fill-light mt0'>detachUserRole</div>
+   
+  
+  
+
+  
+  
+  
+  
+  
+  
+
+  
+    <div class='py1 quiet mt1 prose-big'>Parameters</div>
+    <div class='prose'>
+      
+        <div class='space-bottom0'>
+          <div>
+            <span class='code bold'>accessToken</span> <code class='quiet'>(<a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String">string</a>
+            = <code>&quot;null access token&quot;</code>)</code>
+	    access token for cpaas systems
+
+          </div>
+          
+        </div>
+      
+        <div class='space-bottom0'>
+          <div>
+            <span class='code bold'>user_uuid</span> <code class='quiet'>(<a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String">string</a>
+            = <code>&quot;null user_uuid&quot;</code>)</code>
+	    user uuid
+
+          </div>
+          
+        </div>
+      
+        <div class='space-bottom0'>
+          <div>
+            <span class='code bold'>role_uuid</span> <code class='quiet'>(<a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String">string</a>
+            = <code>&quot;null role_uuid&quot;</code>)</code>
+	    role uuid to detach
+
+          </div>
+          
+        </div>
+      
+    </div>
+  
+
+  
+
+  
+    
+      <div class='py1 quiet mt1 prose-big'>Returns</div>
+      <code><a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise">Promise</a>&#x3C;<a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object">object</a>></code>:
+        Promise resolving to a status data object
+
+      
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+</section>
+
+      </div>
+    </div>
+  
     <div class='border-bottom' id='getspecificpermissions'>
       <div class="clearfix small pointer toggle-sibling">
         <div class="py1 contain">
@@ -1160,6 +1808,9 @@
   <p>This function will GET specific permissions.</p>
 
  
+  
+    <div class='pre p1 fill-light mt0'>getSpecificPermissions</div>
+   
   
   
 
@@ -1252,6 +1903,87 @@
       </div>
     </div>
   
+    <div class='border-bottom' id='getuserroles'>
+      <div class="clearfix small pointer toggle-sibling">
+        <div class="py1 contain">
+            <a class='icon pin-right py1 dark-link caret-right'>▸</a>
+            <span class='code strong strong truncate'>getUserRoles</span>
+        </div>
+      </div>
+      <div class="clearfix display-none toggle-target">
+        <section class='p2 mb2 clearfix bg-white minishadow'>
+
+  
+
+  <p>This function will return the roles associated with a user.</p>
+
+ 
+  
+    <div class='pre p1 fill-light mt0'>getUserRoles</div>
+   
+  
+  
+
+  
+  
+  
+  
+  
+  
+
+  
+    <div class='py1 quiet mt1 prose-big'>Parameters</div>
+    <div class='prose'>
+      
+        <div class='space-bottom0'>
+          <div>
+            <span class='code bold'>accessToken</span> <code class='quiet'>(<a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String">string</a>
+            = <code>&quot;null accessToken&quot;</code>)</code>
+	    access token for cpaas systems
+
+          </div>
+          
+        </div>
+      
+        <div class='space-bottom0'>
+          <div>
+            <span class='code bold'>user_uuid</span> <code class='quiet'>(<a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String">string</a>
+            = <code>&quot;null user_uuid&quot;</code>)</code>
+	    user uuid
+
+          </div>
+          
+        </div>
+      
+    </div>
+  
+
+  
+
+  
+    
+      <div class='py1 quiet mt1 prose-big'>Returns</div>
+      <code><a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise">Promise</a>&#x3C;<a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object">object</a>></code>:
+        Promise resolving to a data object containing a list of roles.
+
+      
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+</section>
+
+      </div>
+    </div>
+  
     <div class='border-bottom' id='listuserpermissions'>
       <div class="clearfix small pointer toggle-sibling">
         <div class="py1 contain">
@@ -1267,6 +1999,9 @@
   <p>This function will list all user's permissions</p>
 
  
+  
+    <div class='pre p1 fill-light mt0'>listUserPermissions</div>
+   
   
   
 
@@ -1388,6 +2123,7 @@
   
 
  
+   
   
   
 
@@ -1427,6 +2163,9 @@
   <p>This function will add a member to a room.</p>
 
  
+  
+    <div class='pre p1 fill-light mt0'>addMember</div>
+   
   
   
 
@@ -1514,6 +2253,9 @@
   <p>This function will create a new room.</p>
 
  
+  
+    <div class='pre p1 fill-light mt0'>createRoom</div>
+   
   
   
 
@@ -1653,6 +2395,9 @@
 
  
   
+    <div class='pre p1 fill-light mt0'>deleteMember</div>
+   
+  
   
 
   
@@ -1741,6 +2486,9 @@
 
  
   
+    <div class='pre p1 fill-light mt0'>deleteRoom</div>
+   
+  
   
 
   
@@ -1816,6 +2564,9 @@
   <p>This function will get room messages.</p>
 
  
+  
+    <div class='pre p1 fill-light mt0'>getMessages</div>
+   
   
   
 
@@ -1905,6 +2656,9 @@
 
  
   
+    <div class='pre p1 fill-light mt0'>getRoom</div>
+   
+  
   
 
   
@@ -1982,6 +2736,9 @@
   <p>This function will get room info, messages, and members.</p>
 
  
+  
+    <div class='pre p1 fill-light mt0'>getRoomInfo</div>
+   
   
   
 
@@ -2070,6 +2827,9 @@
 
  
   
+    <div class='pre p1 fill-light mt0'>getRoomMembers</div>
+   
+  
   
 
   
@@ -2145,6 +2905,9 @@
   <p>This function will list rooms.</p>
 
  
+  
+    <div class='pre p1 fill-light mt0'>listRooms</div>
+   
   
   
 
@@ -2223,6 +2986,9 @@
   <p>This function will post a message to a room.</p>
 
  
+  
+    <div class='pre p1 fill-light mt0'>sendMessage</div>
+   
   
   
 
@@ -2322,6 +3088,9 @@
 
  
   
+    <div class='pre p1 fill-light mt0'>updateRoomInfo</div>
+   
+  
   
 
   
@@ -2407,6 +3176,9 @@
   <p>This function will udpate room meta</p>
 
  
+  
+    <div class='pre p1 fill-light mt0'>updateRoomMeta</div>
+   
   
   
 
@@ -2509,6 +3281,7 @@
   
 
  
+   
   
   
 
@@ -2548,6 +3321,9 @@
   <p>This function will ask the cpaas contacts service to create a contact.</p>
 
  
+  
+    <div class='pre p1 fill-light mt0'>createUserContact</div>
+   
   
   
 
@@ -2637,6 +3413,9 @@
 
  
   
+    <div class='pre p1 fill-light mt0'>deleteContact</div>
+   
+  
   
 
   
@@ -2714,6 +3493,9 @@
   <p>This function will ask the cpaas contacts service to get user contacts based on input criteria</p>
 
  
+  
+    <div class='pre p1 fill-light mt0'>getContacts</div>
+   
   
   
 
@@ -2800,6 +3582,9 @@
   <p>This function will call getContacts one or more times to list all user contacts</p>
 
  
+  
+    <div class='pre p1 fill-light mt0'>listContacts</div>
+   
   
   
 
@@ -2900,6 +3685,7 @@
   
 
  
+   
   
   
 
@@ -2939,6 +3725,9 @@
   <p>This function will add users to a user group.</p>
 
  
+  
+    <div class='pre p1 fill-light mt0'>addMembersToGroup</div>
+   
   
   
 
@@ -3027,6 +3816,9 @@
   <p>This function will create a new group.</p>
 
  
+  
+    <div class='pre p1 fill-light mt0'>createGroup</div>
+   
   
   
 
@@ -3146,6 +3938,9 @@
 
  
   
+    <div class='pre p1 fill-light mt0'>deleteGroup</div>
+   
+  
   
 
   
@@ -3223,6 +4018,9 @@
   <p>This function will ask the cpaas groups service for a specific group.</p>
 
  
+  
+    <div class='pre p1 fill-light mt0'>getGroup</div>
+   
   
   
 
@@ -3302,6 +4100,9 @@
 
  
   
+    <div class='pre p1 fill-light mt0'>listGroups</div>
+   
+  
   
 
   
@@ -3379,6 +4180,9 @@
   <p>This function will update a group</p>
 
  
+  
+    <div class='pre p1 fill-light mt0'>updateGroup</div>
+   
   
   
 
@@ -3481,6 +4285,7 @@
   
 
  
+   
   
   
 
@@ -3520,6 +4325,9 @@
   <p>This function will call the identity microservice with the credentials and accessToken you passed in.</p>
 
  
+  
+    <div class='pre p1 fill-light mt0'>createIdentity</div>
+   
   
   
 
@@ -3619,6 +4427,9 @@
 
  
   
+    <div class='pre p1 fill-light mt0'>updateAliasWithDID</div>
+   
+  
   
 
   
@@ -3708,6 +4519,9 @@ accessToken you passed in and delete the user object matching the user_uuid subm
 
  
   
+    <div class='pre p1 fill-light mt0'>deleteIdentity</div>
+   
+  
   
 
   
@@ -3786,6 +4600,9 @@ accessToken you passed in and delete the user object matching the user_uuid subm
 accessToken you passed in.</p>
 
  
+  
+    <div class='pre p1 fill-light mt0'>login</div>
+   
   
   
 
@@ -3875,6 +4692,9 @@ accessToken you passed in.</p>
 
  
   
+    <div class='pre p1 fill-light mt0'>getMyIdentityData</div>
+   
+  
   
 
   
@@ -3943,6 +4763,9 @@ accessToken you passed in.</p>
 accessToken you passed in.</p>
 
  
+  
+    <div class='pre p1 fill-light mt0'>getIdentityDetails</div>
+   
   
   
 
@@ -4022,6 +4845,9 @@ accessToken you passed in.</p>
 
  
   
+    <div class='pre p1 fill-light mt0'>lookupIdentity</div>
+   
+  
   
 
   
@@ -4084,240 +4910,6 @@ accessToken you passed in.</p>
       </div>
     </div>
   
-    <div class='border-bottom' id='listaccounts'>
-      <div class="clearfix small pointer toggle-sibling">
-        <div class="py1 contain">
-            <a class='icon pin-right py1 dark-link caret-right'>▸</a>
-            <span class='code strong strong truncate'>listAccounts</span>
-        </div>
-      </div>
-      <div class="clearfix display-none toggle-target">
-        <section class='p2 mb2 clearfix bg-white minishadow'>
-
-  
-
-  <p>This function returns all available accounts.</p>
-
- 
-  
-  
-
-  
-  
-  
-  
-  
-  
-
-  
-    <div class='py1 quiet mt1 prose-big'>Parameters</div>
-    <div class='prose'>
-      
-        <div class='space-bottom0'>
-          <div>
-            <span class='code bold'>accessToken</span> <code class='quiet'>(<a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String">string</a>
-            = <code>&quot;null accessToken&quot;</code>)</code>
-	    access token for cpaas system
-
-          </div>
-          
-        </div>
-      
-    </div>
-  
-
-  
-
-  
-    
-      <div class='py1 quiet mt1 prose-big'>Returns</div>
-      <code><a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise">Promise</a>&#x3C;<a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object">object</a>></code>:
-        Promise resolving to a data object containing a list of accounts
-
-      
-    
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-</section>
-
-      </div>
-    </div>
-  
-    <div class='border-bottom' id='getaccount'>
-      <div class="clearfix small pointer toggle-sibling">
-        <div class="py1 contain">
-            <a class='icon pin-right py1 dark-link caret-right'>▸</a>
-            <span class='code strong strong truncate'>getAccount</span>
-        </div>
-      </div>
-      <div class="clearfix display-none toggle-target">
-        <section class='p2 mb2 clearfix bg-white minishadow'>
-
-  
-
-  <p>This function will return an account by UUID.</p>
-
- 
-  
-  
-
-  
-  
-  
-  
-  
-  
-
-  
-    <div class='py1 quiet mt1 prose-big'>Parameters</div>
-    <div class='prose'>
-      
-        <div class='space-bottom0'>
-          <div>
-            <span class='code bold'>accessToken</span> <code class='quiet'>(<a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String">string</a>
-            = <code>&quot;null access token&quot;</code>)</code>
-	    access token for cpaas systems
-
-          </div>
-          
-        </div>
-      
-        <div class='space-bottom0'>
-          <div>
-            <span class='code bold'>accountUUID</span> <code class='quiet'>(<a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String">string</a>
-            = <code>&quot;null account uuid&quot;</code>)</code>
-	    account_uuid for an star2star account (customer)
-
-          </div>
-          
-        </div>
-      
-        <div class='space-bottom0'>
-          <div>
-            <span class='code bold'>includeIdentities</span> <code class='quiet'>(<a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Boolean">boolean</a>
-            = <code>false</code>)</code>
-	    boolean to include identities in account or not
-
-          </div>
-          
-        </div>
-      
-    </div>
-  
-
-  
-
-  
-    
-      <div class='py1 quiet mt1 prose-big'>Returns</div>
-      <code><a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise">Promise</a>&#x3C;<a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object">object</a>></code>:
-        Promise resolving to an identity data object
-
-      
-    
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-</section>
-
-      </div>
-    </div>
-  
-    <div class='border-bottom' id='getaccountavailprops'>
-      <div class="clearfix small pointer toggle-sibling">
-        <div class="py1 contain">
-            <a class='icon pin-right py1 dark-link caret-right'>▸</a>
-            <span class='code strong strong truncate'>getAccountAvailProps</span>
-        </div>
-      </div>
-      <div class="clearfix display-none toggle-target">
-        <section class='p2 mb2 clearfix bg-white minishadow'>
-
-  
-
-  <p>This function returns all possible properties to be assigned to account.</p>
-
- 
-  
-  
-
-  
-  
-  
-  
-  
-  
-
-  
-    <div class='py1 quiet mt1 prose-big'>Parameters</div>
-    <div class='prose'>
-      
-        <div class='space-bottom0'>
-          <div>
-            <span class='code bold'>accessToken</span> <code class='quiet'>(<a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String">string</a>
-            = <code>&quot;null access token&quot;</code>)</code>
-	    access token for cpaas systems
-
-          </div>
-          
-        </div>
-      
-        <div class='space-bottom0'>
-          <div>
-            <span class='code bold'>accountUUID</span> <code class='quiet'>(<a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String">string</a>
-            = <code>&quot;null account uuid&quot;</code>)</code>
-	    account_uuid for a star2star account (customer)
-
-          </div>
-          
-        </div>
-      
-    </div>
-  
-
-  
-
-  
-    
-      <div class='py1 quiet mt1 prose-big'>Returns</div>
-      <code><a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise">Promise</a>&#x3C;<a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object">object</a>></code>:
-        Promise resolving to a data object containing all possible properties.
-
-      
-    
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-</section>
-
-      </div>
-    </div>
-  
 </div>
 
   
@@ -4347,6 +4939,7 @@ accessToken you passed in.</p>
   
 
  
+   
   
   
 
@@ -4386,6 +4979,9 @@ accessToken you passed in.</p>
   <p>This function returns the previously set app key.</p>
 
  
+  
+    <div class='pre p1 fill-light mt0'>getApplicationKey</div>
+   
   
   
 
@@ -4440,6 +5036,9 @@ accessToken you passed in.</p>
 
  
   
+    <div class='pre p1 fill-light mt0'>getMsHost</div>
+   
+  
   
 
   
@@ -4493,6 +5092,9 @@ accessToken you passed in.</p>
 return object with constants refering to the permission uuid.</p>
 
  
+  
+    <div class='pre p1 fill-light mt0'>getPermissions</div>
+   
   
   
 
@@ -4564,6 +5166,9 @@ form of {scope}
 
  
   
+    <div class='pre p1 fill-light mt0'>setApplicationKey</div>
+   
+  
   
 
   
@@ -4624,6 +5229,9 @@ form of {scope}
 
  
   
+    <div class='pre p1 fill-light mt0'>setMsHost</div>
+   
+  
   
 
   
@@ -4683,6 +5291,9 @@ form of {scope}
   <p>This function sets the microservice version that will be used.</p>
 
  
+  
+    <div class='pre p1 fill-light mt0'>setMSVersion</div>
+   
   
   
 
@@ -4757,6 +5368,7 @@ form of {scope}
   
 
  
+   
   
   
 
@@ -4796,6 +5408,9 @@ form of {scope}
   <p>This function will ask the cpaas data object service for a specific object.</p>
 
  
+  
+    <div class='pre p1 fill-light mt0'>invokeLambda</div>
+   
   
   
 
@@ -4898,6 +5513,7 @@ form of {scope}
   
 
  
+   
   
   
 
@@ -4937,6 +5553,9 @@ form of {scope}
   <p>This function will ask the cpaas media service to delete a specific user file.</p>
 
  
+  
+    <div class='pre p1 fill-light mt0'>deleteMedia</div>
+   
   
   
 
@@ -5016,6 +5635,9 @@ form of {scope}
 
  
   
+    <div class='pre p1 fill-light mt0'>listUserMedia</div>
+   
+  
   
 
   
@@ -5093,6 +5715,9 @@ form of {scope}
   <p>This function will upload a file to the cpaas media service for the user.</p>
 
  
+  
+    <div class='pre p1 fill-light mt0'>uploadFile</div>
+   
   
   
 
@@ -5203,6 +5828,7 @@ form of {scope}
   
 
  
+   
   
   
 
@@ -5242,6 +5868,9 @@ form of {scope}
   <p>This function will get user sms number.</p>
 
  
+  
+    <div class='pre p1 fill-light mt0'>getSMSNumber</div>
+   
   
   
 
@@ -5318,6 +5947,9 @@ form of {scope}
   <p>This function will retrieve the conversation uuid for whom you are sending it to.</p>
 
  
+  
+    <div class='pre p1 fill-light mt0'>getConversationUuid</div>
+   
   
   
 
@@ -5403,6 +6035,9 @@ form of {scope}
   <p>This function will send an sms message.</p>
 
  
+  
+    <div class='pre p1 fill-light mt0'>sendSMS</div>
+   
   
   
 
@@ -5506,6 +6141,9 @@ form of {scope}
   <p>This function will send an sms message.</p>
 
  
+  
+    <div class='pre p1 fill-light mt0'>sendSMSMessage</div>
+   
   
   
 
@@ -5623,6 +6261,7 @@ form of {scope}
   
 
  
+   
   
   
 
@@ -5664,6 +6303,9 @@ outh key and basic token you passed in.</p>
 
  
   
+    <div class='pre p1 fill-light mt0'>getAccessToken</div>
+   
+  
   
 
   
@@ -5676,16 +6318,6 @@ outh key and basic token you passed in.</p>
   
     <div class='py1 quiet mt1 prose-big'>Parameters</div>
     <div class='prose'>
-      
-        <div class='space-bottom0'>
-          <div>
-            <span class='code bold'>oauthKey</span> <code class='quiet'>(<a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String">string</a>
-            = <code>&quot;null oauth key&quot;</code>)</code>
-	     key for oauth cpaas system
-
-          </div>
-          
-        </div>
       
         <div class='space-bottom0'>
           <div>
@@ -5712,6 +6344,16 @@ outh key and basic token you passed in.</p>
             <span class='code bold'>pwd</span> <code class='quiet'>(<a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String">string</a>
             = <code>&quot;null pwd&quot;</code>)</code>
 	    password for that account
+
+          </div>
+          
+        </div>
+      
+        <div class='space-bottom0'>
+          <div>
+            <span class='code bold'>oauthKey</span> <code class='quiet'>(<a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String">string</a>
+            = <code>&quot;null oauth key&quot;</code>)</code>
+	     key for oauth cpaas system
 
           </div>
           
@@ -5762,6 +6404,9 @@ outh key and basic token you passed in.</p>
 
  
   
+    <div class='pre p1 fill-light mt0'>refreshAccessToken</div>
+   
+  
   
 
   
@@ -5774,16 +6419,6 @@ outh key and basic token you passed in.</p>
   
     <div class='py1 quiet mt1 prose-big'>Parameters</div>
     <div class='prose'>
-      
-        <div class='space-bottom0'>
-          <div>
-            <span class='code bold'>oauthKey</span> <code class='quiet'>(<a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String">string</a>
-            = <code>&quot;null oauth key&quot;</code>)</code>
-	    key for oauth cpaas system
-
-          </div>
-          
-        </div>
       
         <div class='space-bottom0'>
           <div>
@@ -5800,6 +6435,16 @@ outh key and basic token you passed in.</p>
             <span class='code bold'>refreshToken</span> <code class='quiet'>(<a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String">string</a>
             = <code>&quot;null refresh token&quot;</code>)</code>
 	    refresh token for oauth token.
+
+          </div>
+          
+        </div>
+      
+        <div class='space-bottom0'>
+          <div>
+            <span class='code bold'>oauthKey</span> <code class='quiet'>(<a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String">string</a>
+            = <code>&quot;null oauth key&quot;</code>)</code>
+	    key for oauth cpaas system
 
           </div>
           
@@ -5863,6 +6508,7 @@ outh key and basic token you passed in.</p>
   
 
  
+   
   
   
 
@@ -5902,6 +6548,9 @@ outh key and basic token you passed in.</p>
   <p>This function will ask the cpaas data object service for a specific object.</p>
 
  
+  
+    <div class='pre p1 fill-light mt0'>getDataObject</div>
+   
   
   
 
@@ -5980,6 +6629,9 @@ outh key and basic token you passed in.</p>
   <p>This function will create a new data object.</p>
 
  
+  
+    <div class='pre p1 fill-light mt0'>createDataObject</div>
+   
   
   
 
@@ -6086,6 +6738,9 @@ outh key and basic token you passed in.</p>
 
  
   
+    <div class='pre p1 fill-light mt0'>deleteDataObject</div>
+   
+  
   
 
   
@@ -6163,6 +6818,9 @@ outh key and basic token you passed in.</p>
   <p>This function will update an existing data object.</p>
 
  
+  
+    <div class='pre p1 fill-light mt0'>updateDataObject</div>
+   
   
   
 
@@ -6252,6 +6910,9 @@ outh key and basic token you passed in.</p>
 type of object.</p>
 
  
+  
+    <div class='pre p1 fill-light mt0'>getDataObjectByType</div>
+   
   
   
 
@@ -6351,6 +7012,9 @@ type of object.</p>
 type of object with name.</p>
 
  
+  
+    <div class='pre p1 fill-light mt0'>getDataObjectByTypeAndName</div>
+   
   
   
 
@@ -6458,6 +7122,9 @@ type of object with name.</p>
   <p>This function will create a new user data object.</p>
 
  
+  
+    <div class='pre p1 fill-light mt0'>createUserDataObject</div>
+   
   
   
 
@@ -6587,6 +7254,7 @@ type of object with name.</p>
   
 
  
+   
   
   
 
@@ -6626,6 +7294,9 @@ type of object with name.</p>
   <p>This function will add a subscription.</p>
 
  
+  
+    <div class='pre p1 fill-light mt0'>addSubscription</div>
+   
   
   
 
@@ -6745,6 +7416,9 @@ type of object with name.</p>
 
  
   
+    <div class='pre p1 fill-light mt0'>deleteSubscription</div>
+   
+  
   
 
   
@@ -6822,6 +7496,9 @@ type of object with name.</p>
   <p>This function will ask the cpaas pubsub service for the list of user's subscriptions.</p>
 
  
+  
+    <div class='pre p1 fill-light mt0'>listUserSubscriptions</div>
+   
   
   
 
@@ -6914,6 +7591,7 @@ type of object with name.</p>
   
 
  
+   
   
   
 
@@ -6953,6 +7631,9 @@ type of object with name.</p>
   <p>This function will create a new short url.</p>
 
  
+  
+    <div class='pre p1 fill-light mt0'>createShortUrl</div>
+   
   
   
 
@@ -7057,6 +7738,9 @@ type of object with name.</p>
 
  
   
+    <div class='pre p1 fill-light mt0'>deleteShortCode</div>
+   
+  
   
 
   
@@ -7144,6 +7828,9 @@ type of object with name.</p>
   <p>This function will get a list of all short urls.</p>
 
  
+  
+    <div class='pre p1 fill-light mt0'>listShortUrls</div>
+   
   
   
 
@@ -7246,6 +7933,7 @@ type of object with name.</p>
   
 
  
+   
   
   
 
@@ -7285,6 +7973,9 @@ type of object with name.</p>
   <p>This function will add task to a task object.</p>
 
  
+  
+    <div class='pre p1 fill-light mt0'>addTaskToTaskObject</div>
+   
   
   
 
@@ -7373,6 +8064,9 @@ type of object with name.</p>
   <p>This function will create a task object (task_list).</p>
 
  
+  
+    <div class='pre p1 fill-light mt0'>createTaskObject</div>
+   
   
   
 
@@ -7482,6 +8176,9 @@ type of object with name.</p>
 
  
   
+    <div class='pre p1 fill-light mt0'>createTaskTemplate</div>
+   
+  
   
 
   
@@ -7582,6 +8279,9 @@ type of object with name.</p>
 
  
   
+    <div class='pre p1 fill-light mt0'>deleteTaskObject</div>
+   
+  
   
 
   
@@ -7660,6 +8360,9 @@ type of object with name.</p>
 
  
   
+    <div class='pre p1 fill-light mt0'>deleteTaskTemplate</div>
+   
+  
   
 
   
@@ -7737,6 +8440,9 @@ type of object with name.</p>
   <p>This function will retrieve task list.</p>
 
  
+  
+    <div class='pre p1 fill-light mt0'>getTaskObject</div>
+   
   
   
 
@@ -7833,6 +8539,9 @@ type of object with name.</p>
 
  
   
+    <div class='pre p1 fill-light mt0'>getTaskTemplates</div>
+   
+  
   
 
   
@@ -7910,6 +8619,9 @@ type of object with name.</p>
   <p>This function will update task list.</p>
 
  
+  
+    <div class='pre p1 fill-light mt0'>updateTaskObject</div>
+   
   
   
 
@@ -8008,6 +8720,9 @@ type of object with name.</p>
 
  
   
+    <div class='pre p1 fill-light mt0'>updateTaskInTaskObject</div>
+   
+  
   
 
   
@@ -8096,6 +8811,9 @@ type of object with name.</p>
 
  
   
+    <div class='pre p1 fill-light mt0'>validateTasks</div>
+   
+  
   
 
   
@@ -8177,6 +8895,7 @@ type of object with name.</p>
   
 
  
+   
   
   
 
@@ -8216,6 +8935,9 @@ type of object with name.</p>
   <p>This function will create a new UUID</p>
 
  
+  
+    <div class='pre p1 fill-light mt0'>createUUID</div>
+   
   
   
 
@@ -8269,6 +8991,9 @@ type of object with name.</p>
   <p>This function will determine microservice endpoint URI.</p>
 
  
+  
+    <div class='pre p1 fill-light mt0'>getEndpoint</div>
+   
   
   
 
@@ -8338,6 +9063,9 @@ type of object with name.</p>
 
  
   
+    <div class='pre p1 fill-light mt0'>getVersion</div>
+   
+  
   
 
   
@@ -8390,6 +9118,9 @@ type of object with name.</p>
   <p>This function will get the value from the object tree, recursively.</p>
 
  
+  
+    <div class='pre p1 fill-light mt0'>getValueFromObjectTree</div>
+   
   
   
 
@@ -8469,6 +9200,9 @@ type of object with name.</p>
 
  
   
+    <div class='pre p1 fill-light mt0'>replaceStaticValues</div>
+   
+  
   
 
   
@@ -8536,6 +9270,9 @@ type of object with name.</p>
 
  
   
+    <div class='pre p1 fill-light mt0'>replaceVariables</div>
+   
+  
   
 
   
@@ -8599,6 +9336,149 @@ type of object with name.</p>
     </div>
   
 </div>
+
+  
+
+  
+
+  
+</section>
+
+        
+          
+          <section class='p2 mb2 clearfix bg-white minishadow'>
+
+  
+  <div class='clearfix'>
+    
+    <h3 class='fl m0' id='setmsauthhost'>
+      setMsAuthHost
+    </h3>
+    
+    
+  </div>
+  
+
+  <p>This function sets the microservice target authentication host (AUTH_HOST) variable.</p>
+
+ 
+  
+    <div class='pre p1 fill-light mt0'>setMsAuthHost</div>
+   
+  
+  
+
+  
+  
+  
+  
+  
+  
+
+  
+    <div class='py1 quiet mt1 prose-big'>Parameters</div>
+    <div class='prose'>
+      
+        <div class='space-bottom0'>
+          <div>
+            <span class='code bold'>authHost</span> <code class='quiet'>(any
+            = <code>&quot;https://auth.star2starglobal.net&quot;</code>)</code>
+	    
+          </div>
+          
+        </div>
+      
+        <div class='space-bottom0'>
+          <div>
+            <span class='code bold'>msHost</span> <code class='quiet'>(<a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String">string</a>
+            = <code>&quot;https://auth.star2starglobal.net&quot;</code>)</code>
+	    valid url for microservice host server
+
+          </div>
+          
+        </div>
+      
+    </div>
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+</section>
+
+        
+          
+          <section class='p2 mb2 clearfix bg-white minishadow'>
+
+  
+  <div class='clearfix'>
+    
+    <h3 class='fl m0' id='getauthhost'>
+      getAuthHost
+    </h3>
+    
+    
+  </div>
+  
+
+  <p>This function will determine microservice authentication endpoint URI.</p>
+
+ 
+  
+    <div class='pre p1 fill-light mt0'>getAuthHost</div>
+   
+  
+  
+
+  
+  
+  
+  
+  
+  
+
+  
+    <div class='py1 quiet mt1 prose-big'>Parameters</div>
+    <div class='prose'>
+      
+        <div class='space-bottom0'>
+          <div>
+            <span class='code bold'>microservice</span> <code class='quiet'>(<a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String">string</a>
+            = <code>&quot;NOTHING&quot;</code>)</code>
+	    the string that we are matching on
+
+          </div>
+          
+        </div>
+      
+    </div>
+  
+
+  
+
+  
+    
+      <div class='py1 quiet mt1 prose-big'>Returns</div>
+      <code><a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String">string</a></code>:
+        the configured value or undefined
+
+      
+    
+  
+
+  
+
+  
 
   
 

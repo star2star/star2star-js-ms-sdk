@@ -6,9 +6,7 @@ const request = require('request-promise');
 const fs = require("fs");
 
 let creds = {
-  CPAAS_OAUTH_KEY: "your oauth key here",
   CPAAS_OAUTH_TOKEN: "Basic your oauth token here",
-  CPAAS_PERMISSIONS_KEY: "your permissions key here",
   CPAAS_API_VERSION: "v1",
   email: "email@email.com",
   password: "pwd",
@@ -29,33 +27,33 @@ describe("Auth MS Test Suite", function () {
       creds = require("./credentials.json");
     }
 
-    // For tests, use the dev msHost
-    s2sMS.setMsHost("https://cpaas.star2starglobal.net");
-    s2sMS.setMSVersion(creds.CPAAS_API_VERSION);
-    // get accessToken to use in test cases
-    // Return promise so that test cases will not fire until it resolves.
-    return new Promise((resolve, reject)=>{
-      s2sMS.Oauth.getAccessToken(
-        creds.CPAAS_OAUTH_KEY,
-        creds.CPAAS_OAUTH_TOKEN,
-        creds.email,
-        creds.password
-      )
-      .then(oauthData => {
-        //console.log('Got access token and identity data -[Get Object By Data Type] ',  oauthData);
-        accessToken = oauthData.access_token;
-        s2sMS.Identity.getMyIdentityData(accessToken).then((idData)=>{
-          s2sMS.Identity.getIdentityDetails(accessToken, idData.user_uuid).then((identityDetails)=>{
-            identityData = identityDetails;
-            resolve();
-          }).catch((e1)=>{
-            reject(e1);
+        // For tests, use the dev msHost
+        s2sMS.setMsHost("https://cpaas.star2starglobal.net");
+        s2sMS.setMSVersion(creds.CPAAS_API_VERSION);
+        s2sMS.setMsAuthHost("https://auth.star2starglobal.net");
+        // get accessToken to use in test cases
+        // Return promise so that test cases will not fire until it resolves.
+        return new Promise((resolve, reject)=>{
+          s2sMS.Oauth.getAccessToken(
+            creds.CPAAS_OAUTH_TOKEN,
+            creds.email,
+            creds.password
+          )
+          .then(oauthData => {
+            //console.log('Got access token and identity data -[Get Object By Data Type] ',  oauthData);
+            accessToken = oauthData.access_token;
+            s2sMS.Identity.getMyIdentityData(accessToken).then((idData)=>{
+              s2sMS.Identity.getIdentityDetails(accessToken, idData.user_uuid).then((identityDetails)=>{
+                identityData = identityDetails;
+                resolve();
+              }).catch((e1)=>{
+                reject(e1);
+              });
+            }).catch((e)=>{
+              reject(e);
+            });
           });
-        }).catch((e)=>{
-          reject(e);
-        });
-      });
-    })
+        })
   });
 
   it("Auth Pre-test setup", function (done) {
@@ -320,4 +318,87 @@ describe("Auth MS Test Suite", function () {
         });
       });
   });
+
+  it("Add Role to User", function (done) {
+    if (!creds.isValid) 
+    return done(err);
+ 
+    body = {
+      "role_uuid": [
+        "0d781753-5f10-4928-9608-696663b0d378"
+      ]
+    };
+    s2sMS.Identity.getMyIdentityData(accessToken)
+      .then(identityData => {
+        s2sMS.Auth.addRoleToUser(
+          accessToken,
+          identityData.user_uuid,
+          body)
+          .then(status => {
+            //console.log("status",status);
+            assert(status.status === "ok");
+            done();
+          })
+          .catch((error) => {
+            console.log("error in assigning test role", error);
+            done(new Error(error));
+          });
+      })
+      .catch((error) => {
+        console.log("error in getting user_uuid", error);
+        done(new Error(error));
+      });
+  });
+
+  it("Detatch Role From User", function (done) {
+    if (!creds.isValid) 
+    return done(err);
+ 
+    s2sMS.Identity.getMyIdentityData(accessToken)
+      .then(identityData => {
+        role_uuid = "0d781753-5f10-4928-9608-696663b0d378";
+        s2sMS.Auth.detachUserRole(
+          accessToken,
+          identityData.user_uuid,
+          role_uuid)
+          .then(status => {
+            //console.log("status",status);
+            assert(status.status === "ok");
+            done();
+          })
+          .catch((error) => {
+            console.log("error in assigning test role", error);
+            done(new Error(error));
+          });
+      })
+      .catch((error) => {
+        console.log("error in getting user_uuid", error);
+        done(new Error(error));
+      });
+  });
+
+  it("Get User Roles", function (done) {
+    if (!creds.isValid) {
+      const err = new Error("Valid credentials must be provided");
+      return done(err);
+    }
+    s2sMS.Identity.getMyIdentityData(accessToken)
+      .then(identityData => {
+        s2sMS.Auth.getUserRoles(
+          accessToken,
+          identityData.user_uuid)
+          .then(response=> {
+            assert(response.hasOwnProperty("items"));
+            done();
+          })
+          .catch(error => {
+            console.log("error in getting roles", error);
+            done(new Error(error));
+          });
+      })
+      .catch(error => {
+        console.log("error in getting user_uuid", error);
+        done(new Error(error));
+      });
+    });
 });

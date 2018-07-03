@@ -14,18 +14,16 @@ const request = require("request-promise");
  * @returns {Promise<object>} - Promise resolving to an oauth token data object
  */
 const getAccessToken = (
-  oauthKey = "null oauth key",
   oauthToken = "null oauth token",
   email = "null email",
   pwd = "null pwd"
 ) => {
-  const MS = util.getEndpoint("oauth");
+  const MS = util.getAuthHost();
   const VERSION = util.getVersion();
   const requestOptions = {
     method: "POST",
     uri: `${MS}/oauth/token`,
     headers: {
-      "application-key": oauthKey,
       "Authorization": `Basic ${oauthToken}`,
       'x-api-version': `${VERSION}`,
       "Content-type": "application/x-www-form-urlencoded"
@@ -52,17 +50,15 @@ const getAccessToken = (
  * @returns {Promise<object>} - Promise resolving to an identity data object
  */
 const refreshAccessToken = (
-  oauthKey = "null oauth key",
   oauthToken = "null oauth token",
   refreshToken = "null refresh token"
 ) => {
-  const MS = util.getEndpoint("oauth");
+  const MS = util.getAuthHost();
   const VERSION = util.getVersion();
   const requestOptions = {
     method: "POST",
     uri: `${MS}/oauth/token`,
     headers: {
-      "application-key": oauthKey,
       "Authorization": `Basic ${oauthToken}`,
       'x-api-version': `${VERSION}`,
       "Content-type": "application/x-www-form-urlencoded"
@@ -74,7 +70,7 @@ const refreshAccessToken = (
     json:true 
     // resolveWithFullResponse: true
   };
-
+  
   return request(requestOptions);
 };
 

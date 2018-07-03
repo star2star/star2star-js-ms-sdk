@@ -2,8 +2,9 @@ var assert = require("assert");
 var s2sMS = require("../src/index");
 var fs = require("fs");
 
-var creds = {
-  CPAAS_KEY: "yourkeyhere",
+let creds = {
+  CPAAS_OAUTH_TOKEN: "Basic your oauth token here",
+  CPAAS_API_VERSION: "v1",
   email: "email@email.com",
   password: "pwd",
   isValid: false
@@ -21,6 +22,7 @@ beforeEach(function () {
 describe("MS SDK Index", function () {
   it("s2s-ms module exports", function (done) {
     const msKeys = [
+      "Accounts",
       "Lambda",
       "Identity",
       "Messaging",
@@ -29,6 +31,7 @@ describe("MS SDK Index", function () {
       "Task",
       "setMsHost",
       "getMsHost",
+      "setMsAuthHost",
       "setApplicationKey",
       "getApplicationKey",
       "Groups",

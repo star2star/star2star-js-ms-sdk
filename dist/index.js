@@ -1,6 +1,7 @@
 /*global require process module*/
 "use strict";
 
+var Accounts = require('./accounts');
 var Lambda = require('./lambda');
 var Identity = require('./identity');
 var Messaging = require('./messaging');
@@ -29,6 +30,17 @@ var setMsHost = function setMsHost() {
   var msHost = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : "https://cpaas.star2star.com/api";
 
   process.env.MS_HOST = msHost;
+};
+
+/**
+ * 
+ * @description This function sets the microservice target authentication host (AUTH_HOST) variable.
+ * @param {string} [msHost="https://auth.star2starglobal.net"] - valid url for microservice host server
+ */
+var setMsAuthHost = function setMsAuthHost() {
+  var authHost = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : "https://auth.star2starglobal.net";
+
+  process.env.AUTH_HOST = authHost;
 };
 
 /**
@@ -121,6 +133,7 @@ var getPermissions = function getPermissions() {
 };
 
 module.exports = {
+  Accounts: Accounts,
   Lambda: Lambda,
   Identity: Identity,
   Messaging: Messaging,
@@ -129,6 +142,7 @@ module.exports = {
   Task: Task,
   setMsHost: setMsHost,
   getMsHost: getMsHost,
+  setMsAuthHost: setMsAuthHost,
   setApplicationKey: setApplicationKey,
   getApplicationKey: getApplicationKey,
   Groups: Groups,

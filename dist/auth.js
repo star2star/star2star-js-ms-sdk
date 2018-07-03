@@ -304,9 +304,109 @@ var addExplicitUserPermissions = function addExplicitUserPermissions() {
   }); // end promise
 };
 
+/**
+ * @async
+ * @description This function will add a role or list of roles to a user.
+ * @param {string} [accessToken="null access token"] - access token for cpaas systems
+ * @param {string} [user_uuid="null user_uuid"] - user uuid
+ * @param {string} [body="null body"] - JSON object defining roles to add to user
+ * @returns {Promise<object>} - Promise resolving to a status data object
+ */
+var addRoleToUser = function addRoleToUser() {
+  var accessToken = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : "null access token";
+  var user_uuid = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : "null user_uuid";
+  var body = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : "null body";
+
+  var MS = util.getEndpoint("auth");
+  var requestOptions = {
+    method: "POST",
+    uri: MS + '/users/' + user_uuid + '/roles',
+    body: body,
+    resolveWithFullResponse: true,
+    json: true,
+    headers: {
+      "Authorization": 'Bearer ' + accessToken,
+      "Content-type": "application/json",
+      'x-api-version': '' + util.getVersion()
+    }
+  };
+
+  return new Promise(function (resolve, reject) {
+    request(requestOptions).then(function (responseData) {
+      responseData.statusCode === 204 ? resolve({ "status": "ok" }) : reject({ "status": "failed" });
+    }).catch(function (error) {
+      reject(error);
+    });
+  });
+};
+
+/**
+ * @async
+ * @description This function will remove a role from a user.
+ * @param {string} [accessToken="null access token"] - access token for cpaas systems
+ * @param {string} [user_uuid="null user_uuid"] - user uuid
+ * @param {string} [role_uuid="null role_uuid"] - role uuid to detach
+ * @returns {Promise<object>} - Promise resolving to a status data object
+ */
+var detachUserRole = function detachUserRole() {
+  var accessToken = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : "null access token";
+  var user_uuid = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : "null user_uuid";
+  var role_uuid = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : "null role_uuid";
+
+  var MS = util.getEndpoint("auth");
+  var requestOptions = {
+    method: "DELETE",
+    uri: MS + '/users/' + user_uuid + '/roles/' + role_uuid,
+    resolveWithFullResponse: true,
+    json: true,
+    headers: {
+      "Authorization": 'Bearer ' + accessToken,
+      "Content-type": "application/json",
+      'x-api-version': '' + util.getVersion()
+    }
+  };
+
+  return new Promise(function (resolve, reject) {
+    request(requestOptions).then(function (responseData) {
+      responseData.statusCode === 204 ? resolve({ "status": "ok" }) : reject({ "status": "failed" });
+    }).catch(function (error) {
+      reject(error);
+    });
+  });
+};
+
+/**
+ * @async
+ * @description This function will return the roles associated with a user.
+ * @param {string} [accessToken="null accessToken"] - access token for cpaas systems
+ * @param {string} [user_uuid="null user_uuid"] - user uuid
+ * @returns {Promise<object>} - Promise resolving to a data object containing a list of roles.
+ */
+var getUserRoles = function getUserRoles() {
+  var accessToken = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : "null accessToken";
+  var user_uuid = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : "null user_uuid";
+
+  var MS = util.getEndpoint("auth");
+  var requestOptions = {
+    method: "GET",
+    uri: MS + '/users/' + user_uuid + '/roles',
+    headers: {
+      "Authorization": 'Bearer ' + accessToken,
+      "Content-type": "application/json",
+      'x-api-version': '' + util.getVersion()
+    },
+    json: true
+
+  };
+  return request(requestOptions);
+};
+
 module.exports = {
   listUserPermissions: listUserPermissions,
   getSpecificPermissions: getSpecificPermissions,
   addExplicitGroupPermissions: addExplicitGroupPermissions,
-  addExplicitUserPermissions: addExplicitUserPermissions
+  addExplicitUserPermissions: addExplicitUserPermissions,
+  addRoleToUser: addRoleToUser,
+  detachUserRole: detachUserRole,
+  getUserRoles: getUserRoles
 };

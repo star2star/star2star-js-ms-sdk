@@ -15,18 +15,16 @@ var request = require("request-promise");
  * @returns {Promise<object>} - Promise resolving to an oauth token data object
  */
 var getAccessToken = function getAccessToken() {
-  var oauthKey = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : "null oauth key";
-  var oauthToken = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : "null oauth token";
-  var email = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : "null email";
-  var pwd = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : "null pwd";
+  var oauthToken = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : "null oauth token";
+  var email = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : "null email";
+  var pwd = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : "null pwd";
 
-  var MS = util.getEndpoint("oauth");
+  var MS = util.getAuthHost();
   var VERSION = util.getVersion();
   var requestOptions = {
     method: "POST",
     uri: MS + "/oauth/token",
     headers: {
-      "application-key": oauthKey,
       "Authorization": "Basic " + oauthToken,
       'x-api-version': "" + VERSION,
       "Content-type": "application/x-www-form-urlencoded"
@@ -53,17 +51,15 @@ var getAccessToken = function getAccessToken() {
  * @returns {Promise<object>} - Promise resolving to an identity data object
  */
 var refreshAccessToken = function refreshAccessToken() {
-  var oauthKey = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : "null oauth key";
-  var oauthToken = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : "null oauth token";
-  var refreshToken = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : "null refresh token";
+  var oauthToken = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : "null oauth token";
+  var refreshToken = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : "null refresh token";
 
-  var MS = util.getEndpoint("oauth");
+  var MS = util.getAuthHost();
   var VERSION = util.getVersion();
   var requestOptions = {
     method: "POST",
     uri: MS + "/oauth/token",
     headers: {
-      "application-key": oauthKey,
       "Authorization": "Basic " + oauthToken,
       'x-api-version': "" + VERSION,
       "Content-type": "application/x-www-form-urlencoded"

@@ -2,10 +2,7 @@ const assert = require("assert");
 const s2sMS = require("../src/index");
 const fs = require("fs");
 
-
-var creds = {
-  CPAAS_KEY: "yourkeyhere",
-  CPAAS_OAUTH_KEY: "your oauth key here",
+let creds = {
   CPAAS_OAUTH_TOKEN: "Basic your oauth token here",
   CPAAS_API_VERSION: "v1",
   email: "email@email.com",
@@ -24,33 +21,33 @@ describe("Identity MS Unit Test Suite", function () {
       creds = require("./credentials.json");
     }
 
-    // For tests, use the dev msHost
-    s2sMS.setMsHost("https://cpaas.star2starglobal.net");
-    s2sMS.setMSVersion(creds.CPAAS_API_VERSION);
-    // get accessToken to use in test cases
-    // Return promise so that test cases will not fire until it resolves.
-    return new Promise((resolve, reject)=>{
-      s2sMS.Oauth.getAccessToken(
-        creds.CPAAS_OAUTH_KEY,
-        creds.CPAAS_OAUTH_TOKEN,
-        creds.email,
-        creds.password
-      )
-      .then(oauthData => {
-        //console.log('Got access token and identity data -[Get Object By Data Type] ',  oauthData);
-        accessToken = oauthData.access_token;
-        s2sMS.Identity.getMyIdentityData(accessToken).then((idData)=>{
-          s2sMS.Identity.getIdentityDetails(accessToken, idData.user_uuid).then((identityDetails)=>{
-            identityData = identityDetails;
-            resolve();
-          }).catch((e1)=>{
-            reject(e1);
-          });
-        }).catch((e)=>{
-          reject(e);
-        });
-      });
-    })
+     // For tests, use the dev msHost
+     s2sMS.setMsHost("https://cpaas.star2starglobal.net");
+     s2sMS.setMSVersion(creds.CPAAS_API_VERSION);
+     s2sMS.setMsAuthHost("https://auth.star2starglobal.net");
+     // get accessToken to use in test cases
+     // Return promise so that test cases will not fire until it resolves.
+     return new Promise((resolve, reject)=>{
+       s2sMS.Oauth.getAccessToken(
+         creds.CPAAS_OAUTH_TOKEN,
+         creds.email,
+         creds.password
+       )
+       .then(oauthData => {
+         //console.log('Got access token and identity data -[Get Object By Data Type] ',  oauthData);
+         accessToken = oauthData.access_token;
+         s2sMS.Identity.getMyIdentityData(accessToken).then((idData)=>{
+           s2sMS.Identity.getIdentityDetails(accessToken, idData.user_uuid).then((identityDetails)=>{
+             identityData = identityDetails;
+             resolve();
+           }).catch((e1)=>{
+             reject(e1);
+           });
+         }).catch((e)=>{
+           reject(e);
+         });
+       });
+     })
   });
 
   it("Create Guest Identity", function (done) {
@@ -223,74 +220,6 @@ describe("Identity MS Unit Test Suite", function () {
       .catch(e => {
         console.log("error in lookupIdentity", e);
         done();
-      });
-  });
-
-  it("List Accounts", function (done) {
-    if (!creds.isValid) return done();
-
-    s2sMS.Identity
-      .listAccounts(accessToken)
-      .then(accountList => {
-        // console.log("accountList", accountList);
-        assert(accountList.items.length > 0);
-        done();
-      })
-      .catch((error) => {
-        console.log("error in getting account list", error);
-        done(new Error(error));
-      });
-  });
-
-  it("Get Account Data", function (done) {
-    if (!creds.isValid) return done();
-
-    s2sMS.Identity
-      .listAccounts(accessToken)
-      .then((accountList) => {
-         // console.log("accountList -- getAccountData", accountList);
-
-        s2sMS.Identity
-          .getAccount(accessToken, accountList.items[0].uuid)
-          .then(accountData => {
-            // console.log("accountData", accountData);
-            assert(accountData.uuid === accountList.items[0].uuid);
-            done();
-          })
-          .catch((error) => {
-            // console.log("error in getting account data", error);
-            done(new Error(error));
-          });
-      })
-      .catch((error) => {
-        //console.log("error in getting account list [getAccountData]", error);
-        done(new Error(error));
-      });
-  });
-
-  it("Get Account Available Properties", function (done) {
-    if (!creds.isValid) return done();
-
-    s2sMS.Identity
-      .listAccounts(accessToken)
-      .then((accountList) => {
-         //console.log("accountList -- getAccountData", accountList);
-
-        s2sMS.Identity
-          .getAccountAvailProps(accessToken, accountList.items[0].uuid)
-          .then(accountProps => {
-            //console.log("accountProps", accountProps);
-            assert(accountProps.items instanceof Array);
-            done();
-          })
-          .catch((error) => {
-            console.log("error in getting account available properties", error);
-            done(new Error(error));
-          });
-      })
-      .catch((error) => {
-        console.log("error in getting account list [getAccountData]", error);
-        done(new Error(error));
       });
   });
 });

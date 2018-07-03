@@ -16,6 +16,16 @@ const getEndpoint = (microservice = "NOTHING") => {
 
 /**
  *
+ * @description This function will determine microservice authentication endpoint URI.
+ * @param {string} [microservice="NOTHING"] - the string that we are matching on
+ * @returns {string} - the configured value or undefined
+ */
+const getAuthHost = () => {
+  return process.env.AUTH_HOST;
+};
+
+/**
+ *
  * @description This function will determine microservice version.
  * @returns {string} - the configured string value or undefined
  */
@@ -123,6 +133,7 @@ const createUUID = () => {
 
 module.exports = {
   getEndpoint,
+  getAuthHost,
   getVersion, 
   config,
   replaceVariables,

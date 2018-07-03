@@ -1,9 +1,18 @@
 toc:
+  - name : Accounts
+    children:
+      - createRelationship
+      - listAccounts
+      - getAccount
+      - modifyAccount
   - name: Auth
     children:
       - addExplicitGroupPermissions
       - addExplicitUserPermissions
+      - addRoleToUser
+      - detachUserRole
       - getSpecificPermissions
+      - getUserRoles
       - listUserPermissions
   - name: Chat
     children:
@@ -42,9 +51,6 @@ toc:
       - getMyIdentityData
       - getIdentityDetails
       - lookupIdentity
-      - listAccounts
-      - getAccount
-      - getAccountAvailProps
   - name: Index
     children:
       - getApplicationKey
