@@ -159,4 +159,19 @@ describe("Identity MS Unit Test Suite", function () {
         done(new Error(error));
       });
   });
+  it("List Account Relationships", function (done) {
+    if (!creds.isValid) return done();
+
+    s2sMS.Accounts
+      .listAccountRelationships(accessToken, "2af40dde-5492-4a54-a99c-25a067532a89")
+      .then(accountList => {
+        //console.log("accountList", accountList);
+        assert(accountList.items.length > 0);
+        done();
+      })
+      .catch((error) => {
+        //console.log("error in getting account list", error);
+        done(new Error(error));
+      });
+  });
 });
