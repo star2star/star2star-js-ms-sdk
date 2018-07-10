@@ -35,17 +35,17 @@ var createRelationship = function createRelationship() {
  * @async
  * @description This function returns all available accounts.
  * @param {string} [accessToken="null accessToken"] - access token for cpaas system
- * @param {string} [accountType=""] - optional; "Reseller, MasterReseller, Customer"
  * @param {number} [offset=0] - optional; return the list starting at a specified index
  * @param {number} [limit=10] - optional; return a specified number of accounts
+ * @param {string} [accountType=""] - optional; "Reseller, MasterReseller, Customer"
  * @param {string} [expand=""] optional; expand="relationships"
  * @returns {Promise<object>} - Promise resolving to a data object containing a list of accounts
  */
 var listAccounts = function listAccounts() {
   var accessToken = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : "null accessToken";
-  var accountType = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : "";
-  var offset = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : 0;
-  var limit = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : 10;
+  var offset = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 0;
+  var limit = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : 10;
+  var accountType = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : "";
   var expand = arguments.length > 4 && arguments[4] !== undefined ? arguments[4] : "";
 
   var MS = util.getEndpoint("accounts");
@@ -76,7 +76,7 @@ var listAccounts = function listAccounts() {
  * @description This function creates a new account.
  * @param {string} [accessToken="null accessToken"] - access token for cpaas systems
  * @param {string} [body="null body"] - object containing account details
- * @returns
+* @returns {Promise<object>} - Promise resolving to an account data object
  */
 var createAccount = function createAccount() {
   var accessToken = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : "null accessToken";
@@ -181,9 +181,9 @@ var modifyAccount = function modifyAccount() {
 var listAccountRelationships = function listAccountRelationships() {
   var accessToken = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : "null accessToken";
   var accountUUID = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : "null account uuid";
-  var account_type = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : "";
-  var offset = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : 0;
-  var limit = arguments.length > 4 && arguments[4] !== undefined ? arguments[4] : 10;
+  var offset = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : 0;
+  var limit = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : 10;
+  var account_type = arguments.length > 4 && arguments[4] !== undefined ? arguments[4] : "";
 
   var MS = util.getEndpoint("accounts");
   var requestOptions = {

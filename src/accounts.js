@@ -31,13 +31,13 @@ const createRelationship = (accessToken = "null access token", body = "null body
  * @async
  * @description This function returns all available accounts.
  * @param {string} [accessToken="null accessToken"] - access token for cpaas system
- * @param {string} [accountType=""] - optional; "Reseller, MasterReseller, Customer"
  * @param {number} [offset=0] - optional; return the list starting at a specified index
  * @param {number} [limit=10] - optional; return a specified number of accounts
+ * @param {string} [accountType=""] - optional; "Reseller, MasterReseller, Customer"
  * @param {string} [expand=""] optional; expand="relationships"
  * @returns {Promise<object>} - Promise resolving to a data object containing a list of accounts
  */
-const listAccounts = (accessToken = "null accessToken", accountType = "", offset = 0, limit = 10, expand = "") => {
+const listAccounts = (accessToken = "null accessToken", offset = 0, limit = 10, accountType = "", expand = "") => {
     const MS = util.getEndpoint("accounts");
     const requestOptions = {
       method: "GET",
@@ -157,7 +157,7 @@ const createAccount = (accessToken = "null accessToken", body = "null body") => 
  * @returns {Promise<object>} - Promise resolving to a data object containing a list of accounts
  */
 //TODO add sort order also 
-const listAccountRelationships = (accessToken = "null accessToken", accountUUID = "null account uuid", account_type="", offset=0, limit=10 ) => {
+const listAccountRelationships = (accessToken = "null accessToken", accountUUID = "null account uuid", offset=0, limit=10, account_type="") => {
   const MS = util.getEndpoint("accounts");
   const requestOptions = {
     method: "GET",
