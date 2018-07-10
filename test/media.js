@@ -53,7 +53,7 @@ describe("Media Test Suite", function () {
   it("List user Media", function (done) {
     if (!creds.isValid) return done();
     s2sMS.Media.listUserMedia(
-        "0904f8d5-627f-4ff5-b34d-68dc96487b1e",
+        "d189eae7-712f-4599-bac6-f45967bc4859",
         accessToken
       ).then(responseData => {
         //console.log(responseData);
@@ -71,13 +71,13 @@ describe("Media Test Suite", function () {
   });
   
   let file_id = undefined; 
-  it("Upload user Media", function (done) {
+ it("Upload user Media", function (done) {
     if (!creds.isValid) return done();
     const fileName = "git-cheat-sheet.png";
     s2sMS.Media.uploadFile(
         fileName,
         fs.createReadStream('./test/media.js'), 
-        "0904f8d5-627f-4ff5-b34d-68dc96487b1e",
+        "d189eae7-712f-4599-bac6-f45967bc4859",
         accessToken
       ).then(responseData => {
         //console.log(responseData);
@@ -94,6 +94,7 @@ describe("Media Test Suite", function () {
         done(new Error(error));
       });
   });
+
   it("delete user Media", function (done) {
     if (!creds.isValid) return done();
     s2sMS.Media.deleteMedia(file_id, accessToken)

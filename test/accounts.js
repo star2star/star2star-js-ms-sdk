@@ -10,7 +10,7 @@ let creds = {
   isValid: false
 };
 
-describe("Identity MS Unit Test Suite", function () {
+describe("Accounts MS Unit Test Suite", function () {
 
   let accessToken, identityData;
 
@@ -50,6 +50,48 @@ describe("Identity MS Unit Test Suite", function () {
     })
   });
 
+  it("Create Account", function (done) {
+    if (!creds.isValid) return done();
+    
+    body = {
+      "name": "MR1 Corp",
+      "number": "111111",
+      "type": "MasterReseller",
+      "description": "Free form text",
+      "address": {
+        "line1": "123 ABC St",
+        "line2": "Optional text",
+        "city": "Sarasota",
+        "state": "FL",
+        "postal_code": "12345",
+        "country": "US"
+      },
+      "contacts": [{
+        "id":1,
+        "type":"primary",
+        "first_name": "First",
+        "last_name": "Last",
+        "email": "abc@test.com",
+        "phone": "1112223333"
+      }],
+      "reference": "Free form text",
+      "status": "Active"
+    };
+
+    s2sMS.Accounts
+      .createAccount(accessToken, body)
+      .then(response => {
+        //We are testing for a specific failure here since we cannot duplicate the account creation.
+        //Confirming the validation failure message as his should not work.
+        done(new Error(response));
+      })
+      .catch((error) => {
+        //console.log("ERROR",error.error.details[0].number);
+        assert(error.error.details[0].number === "Account with such number already exists");
+        done();
+      });
+  });
+  
   it("Create Relationship", function (done) {
     if (!creds.isValid) return done();
     
@@ -85,10 +127,11 @@ describe("Identity MS Unit Test Suite", function () {
     if (!creds.isValid) return done();
 
     s2sMS.Accounts
-      .listAccounts(accessToken)
+      // .listAccounts(accessToken, accountType, expand, offset, limit)
+      .listAccounts(accessToken, "Reseller", 1, 1, "accounts")
       .then(accountList => {
         // console.log("accountList", accountList);
-        assert(accountList.items.length > 0);
+        assert(accountList.items.length === 1);
         done();
       })
       .catch((error) => {
@@ -156,6 +199,22 @@ describe("Identity MS Unit Test Suite", function () {
       })
       .catch((error) => {
         console.log("error in getting account list [getAccountData]", error);
+        done(new Error(error));
+      });
+  });
+
+  it("List Account Relationships", function (done) {
+    if (!creds.isValid) return done();
+
+    s2sMS.Accounts
+      .listAccountRelationships(accessToken, "2af40dde-5492-4a54-a99c-25a067532a89")
+      .then(accountList => {
+        //console.log("accountList", accountList);
+        assert(accountList.items.length > 0);
+        done();
+      })
+      .catch((error) => {
+        //console.log("error in getting account list", error);
         done(new Error(error));
       });
   });

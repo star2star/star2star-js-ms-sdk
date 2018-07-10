@@ -7,7 +7,6 @@ const request = require("request-promise");
  * @async
  * @description This function will call the oauth microservice with the credentials and
  * outh key and basic token you passed in.
- * @param {string} [oauthKey="null oauth key"] -  key for oauth cpaas system
  * @param {string} [oauthToken="null oauth token"] - token for authentication to cpaas oauth system
  * @param {string} [email="null email"] - email address for a star2star account
  * @param {string} [pwd="null pwd"] - password for that account

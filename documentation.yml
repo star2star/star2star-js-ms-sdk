@@ -1,6 +1,7 @@
 toc:
   - name : Accounts
     children:
+      - createAccount
       - createRelationship
       - listAccounts
       - getAccount

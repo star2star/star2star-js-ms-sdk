@@ -31,6 +31,8 @@ s2sMS.Identity.login(creds.CPAAS_KEY, creds.email, creds.password)
 [Please click here for our documentation pages.](https://star2star.github.io/star2star-js-ms-sdk/ "Star2Star Micro Service SDK Documentation")
 
 ## Changes
+* 2.1.7 - Add create account, lmit and offset, and tweaks to unit tests
+* 2.1.6 - add account list relationship endpoint.
 * 2.1.5 - Add roles and relationships endpoints.
 * 2.1.4 - Expose new Accounts API and updated auth
 * 2.1.3 - Grouped and updated documentation
