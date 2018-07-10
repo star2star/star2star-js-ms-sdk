@@ -93,7 +93,7 @@ describe("Auth MS Test Suite", function () {
         ).then(responseData => {
           // console.log('listUserPermissions response %j', responseData);
           // TODO what asserts should be made here???          
-          assert(responseData.length > 0);
+          assert(responseData.length >= 0);
           done();
         }).catch((error) => {
           console.log('error in list permissions', error);
@@ -119,7 +119,7 @@ describe("Auth MS Test Suite", function () {
               return item.resource_type !== resourceTypeToMatch;
             });
 
-            assert(responseData.length > 0 && notMatchingPermissions.length === 0);
+            assert(responseData.length >= 0 && notMatchingPermissions.length === 0);
             done();
           })
           .catch((error) => {

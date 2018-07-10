@@ -199,7 +199,7 @@ describe("Identity MS Unit Test Suite", function () {
       .lookupIdentity(accessToken, creds.email)
       .then(identityData => {
         // console.log('iiiii %j', identityData);
-        assert(identityData.items[0].properties.email === creds.email);
+        assert(identityData.items[0].username === creds.email);
         done();
       })
       .catch(e => {
