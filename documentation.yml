@@ -4,8 +4,11 @@ toc:
       - createAccount
       - createRelationship
       - listAccounts
+      - listAccountRelationships
       - getAccount
       - modifyAccount
+      - reinstateAccount
+      - suspendAccount
   - name: Auth
     children:
       - addExplicitGroupPermissions
@@ -55,10 +58,12 @@ toc:
   - name: Index
     children:
       - getApplicationKey
+      - getAuthHost
       - getMsHost
       - getPermissions
       - setApplicationKey
       - setMsHost
+      - setMsAuthHost
       - setMSVersion    
   - name: Lambda
     children:
