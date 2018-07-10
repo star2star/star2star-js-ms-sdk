@@ -66,7 +66,7 @@ const listAccounts = (accessToken = "null accessToken", accountType = "", offset
  * @description This function creates a new account.
  * @param {string} [accessToken="null accessToken"] - access token for cpaas systems
  * @param {string} [body="null body"] - object containing account details
- * @returns
+* @returns {Promise<object>} - Promise resolving to an account data object
  */
 const createAccount = (accessToken = "null accessToken", body = "null body") => {
   const MS = util.getEndpoint("accounts");
