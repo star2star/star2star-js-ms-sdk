@@ -45,18 +45,18 @@ var listAccounts = function listAccounts() {
   var accessToken = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : "null accessToken";
   var offset = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 0;
   var limit = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : 10;
-  var accountType = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : "";
-  var expand = arguments.length > 4 && arguments[4] !== undefined ? arguments[4] : "";
+  var accountType = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : undefined;
+  var expand = arguments.length > 4 && arguments[4] !== undefined ? arguments[4] : undefined;
 
   var MS = util.getEndpoint("accounts");
   var requestOptions = {
     method: "GET",
     uri: MS + "/accounts",
     qs: {
-      type: accountType,
-      expand: expand,
       offset: offset,
-      limit: limit
+      limit: limit,
+      type: accountType,
+      expand: expand
     },
     headers: {
       "Authorization": "Bearer " + accessToken,
@@ -66,6 +66,14 @@ var listAccounts = function listAccounts() {
     json: true
 
   };
+
+  if (accountType) {
+    requestOptions.qs.type = accountType;
+  }
+
+  if (expand) {
+    requestOptions.qs.expand = expand;
+  }
   //console.log("REQUEST_OPTIONS",requestOptions);
 
   return request(requestOptions);
@@ -221,11 +229,77 @@ var listAccountRelationships = function listAccountRelationships() {
   });
 };
 
+/**
+ * @async
+ * @description This function will set an account status to "Active"
+ * @param {string} [accessToken="null access token"] - cpaas access token
+ * @param {string} [accountUUID="null account uuid"] - account uuid
+ * @returns {Promise<object>} - Promise resolving to a status data object
+ */
+var reinstateAccount = function reinstateAccount() {
+  var accessToken = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : "null access token";
+  var accountUUID = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : "null account uuid";
+
+  var MS = util.getEndpoint("accounts");
+  var requestOptions = {
+    method: "POST",
+    uri: MS + "/accounts/" + accountUUID + "/reinstate",
+    headers: {
+      "Authorization": "Bearer " + accessToken,
+      "Content-type": "application/json",
+      'x-api-version': "" + util.getVersion()
+    },
+    resolveWithFullResponse: true,
+    json: true
+  };
+  return new Promise(function (resolve, reject) {
+    request(requestOptions).then(function (responseData) {
+      responseData.statusCode === 200 ? resolve({ "status": "ok" }) : reject({ "status": "failed" });
+    }).catch(function (error) {
+      reject(error);
+    });
+  });
+};
+
+/**
+ * @async
+ * @description This function will set an account status to "Inactive"
+ * @param {string} [accessToken="null access token"] - cpaas access token
+ * @param {string} [accountUUID="null account uuid"] - account uuid
+ * @returns {Promise<object>} - Promise resolving to a status data object
+ */
+var suspendAccount = function suspendAccount() {
+  var accessToken = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : "null access token";
+  var accountUUID = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : "null account uuid";
+
+  var MS = util.getEndpoint("accounts");
+  var requestOptions = {
+    method: "POST",
+    uri: MS + "/accounts/" + accountUUID + "/suspend",
+    headers: {
+      "Authorization": "Bearer " + accessToken,
+      "Content-type": "application/json",
+      'x-api-version': "" + util.getVersion()
+    },
+    resolveWithFullResponse: true,
+    json: true
+  };
+  return new Promise(function (resolve, reject) {
+    request(requestOptions).then(function (responseData) {
+      responseData.statusCode === 200 ? resolve({ "status": "ok" }) : reject({ "status": "failed" });
+    }).catch(function (error) {
+      reject(error);
+    });
+  });
+};
+
 module.exports = {
   createRelationship: createRelationship,
   createAccount: createAccount,
   listAccountRelationships: listAccountRelationships,
   listAccounts: listAccounts,
   getAccount: getAccount,
-  modifyAccount: modifyAccount
+  modifyAccount: modifyAccount,
+  reinstateAccount: reinstateAccount,
+  suspendAccount: suspendAccount
 };

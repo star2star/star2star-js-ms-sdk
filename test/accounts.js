@@ -127,10 +127,10 @@ describe("Accounts MS Unit Test Suite", function () {
     if (!creds.isValid) return done();
 
     s2sMS.Accounts
-      // .listAccounts(accessToken, accountType, expand, offset, limit)
-      .listAccounts(accessToken, "Reseller", 1, 1, "accounts")
+      // .listAccounts(accessToken, offset, limit, accountType, expand)
+      .listAccounts(accessToken, 1, 1, "Reseller", "relationships")
       .then(accountList => {
-        // console.log("accountList", accountList);
+        //console.log("accountList", accountList);
         assert(accountList.items.length === 1);
         done();
       })
@@ -218,4 +218,53 @@ describe("Accounts MS Unit Test Suite", function () {
         done(new Error(error));
       });
   });
+
+  it("Suspend Account", function (done) {
+    if (!creds.isValid) return done();
+
+    s2sMS.Accounts
+      .listAccounts(accessToken)
+      .then((accountList) => {
+        // console.log("accountList -- getAccountData", accountList);
+        s2sMS.Accounts
+          .suspendAccount(accessToken, accountList.items[0].uuid)
+          .then(response => {
+            assert(response.status === "ok")
+            done();
+          })
+          .catch((error) => {
+            done(new Error(error));
+          });
+      })
+      .catch((error) => {
+        //console.log("error in getting account list [getAccountData]", error);
+        done(new Error(error));
+      });
+  });
+
+  it("Reinstate Account", function (done) {
+    if (!creds.isValid) return done();
+
+    s2sMS.Accounts
+      .listAccounts(accessToken)
+      .then((accountList) => {
+         // console.log("accountList -- getAccountData", accountList);
+
+        s2sMS.Accounts
+          .reinstateAccount(accessToken, accountList.items[0].uuid)
+          .then(response => {
+            assert(response.status === "ok")
+            done();
+          })
+          .catch((error) => {
+            // console.log("error in getting account data", error);
+            done(new Error(error));
+          });
+      })
+      .catch((error) => {
+        //console.log("error in getting account list [getAccountData]", error);
+        done(new Error(error));
+      });
+  });
+
 });

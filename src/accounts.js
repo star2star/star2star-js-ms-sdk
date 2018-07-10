@@ -37,16 +37,16 @@ const createRelationship = (accessToken = "null access token", body = "null body
  * @param {string} [expand=""] optional; expand="relationships"
  * @returns {Promise<object>} - Promise resolving to a data object containing a list of accounts
  */
-const listAccounts = (accessToken = "null accessToken", offset = 0, limit = 10, accountType = "", expand = "") => {
+const listAccounts = (accessToken = "null accessToken", offset = 0, limit = 10, accountType = undefined, expand = undefined) => {
     const MS = util.getEndpoint("accounts");
     const requestOptions = {
       method: "GET",
       uri: `${MS}/accounts`,
       qs: {
-        type: accountType,
-        expand: expand,
         offset: offset,
-        limit: limit
+        limit: limit,
+        type: accountType,
+        expand: expand
       },
       headers: {
         "Authorization": `Bearer ${accessToken}`,
@@ -56,6 +56,14 @@ const listAccounts = (accessToken = "null accessToken", offset = 0, limit = 10, 
       json: true
      
     };
+    
+    if (accountType) {
+      requestOptions.qs.type = accountType;
+    }
+    
+    if (expand) {
+      requestOptions.qs.expand = expand;
+    }
     //console.log("REQUEST_OPTIONS",requestOptions);
   
     return request(requestOptions);
@@ -194,11 +202,71 @@ const listAccountRelationships = (accessToken = "null accessToken", accountUUID 
   });
 };
 
+/**
+ * @async
+ * @description This function will set an account status to "Active"
+ * @param {string} [accessToken="null access token"] - cpaas access token
+ * @param {string} [accountUUID="null account uuid"] - account uuid
+ * @returns {Promise<object>} - Promise resolving to a status data object
+ */
+const reinstateAccount = (accessToken = "null access token", accountUUID = "null account uuid") => {
+  const MS = util.getEndpoint("accounts");
+  const requestOptions = {
+    method: "POST",
+    uri: `${MS}/accounts/${accountUUID}/reinstate`,
+    headers: {
+      "Authorization": `Bearer ${accessToken}`,
+      "Content-type": "application/json",
+      'x-api-version': `${util.getVersion()}`
+    },
+    resolveWithFullResponse: true,
+    json: true
+  };
+  return new Promise (function (resolve, reject){
+    request(requestOptions).then(function(responseData){
+        responseData.statusCode === 200 ?  resolve({"status":"ok"}): reject({"status":"failed"});
+    }).catch(function(error){
+        reject(error);
+    })
+  });
+};
+
+/**
+ * @async
+ * @description This function will set an account status to "Inactive"
+ * @param {string} [accessToken="null access token"] - cpaas access token
+ * @param {string} [accountUUID="null account uuid"] - account uuid
+ * @returns {Promise<object>} - Promise resolving to a status data object
+ */
+const suspendAccount = (accessToken = "null access token", accountUUID = "null account uuid") => {
+  const MS = util.getEndpoint("accounts");
+  const requestOptions = {
+    method: "POST",
+    uri: `${MS}/accounts/${accountUUID}/suspend`,
+    headers: {
+      "Authorization": `Bearer ${accessToken}`,
+      "Content-type": "application/json",
+      'x-api-version': `${util.getVersion()}`
+    },
+    resolveWithFullResponse: true,
+    json: true
+  };
+  return new Promise (function (resolve, reject){
+    request(requestOptions).then(function(responseData){
+        responseData.statusCode === 200 ?  resolve({"status":"ok"}): reject({"status":"failed"});
+    }).catch(function(error){
+        reject(error);
+    })
+  });
+};
+
   module.exports = {
     createRelationship,
     createAccount,
     listAccountRelationships,
     listAccounts,
     getAccount,
-    modifyAccount
+    modifyAccount,
+    reinstateAccount,
+    suspendAccount
   };
