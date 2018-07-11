@@ -127,10 +127,10 @@ describe("Accounts MS Unit Test Suite", function () {
     if (!creds.isValid) return done();
 
     s2sMS.Accounts
-      // .listAccounts(accessToken, accountType, expand, offset, limit)
-      .listAccounts(accessToken, "Reseller", 1, 1, "accounts")
+      // .listAccounts(accessToken, offset, limit, accountType, expand)
+      .listAccounts(accessToken, 1, 1, "Reseller", "relationships")
       .then(accountList => {
-        // console.log("accountList", accountList);
+        //console.log("accountList", accountList);
         assert(accountList.items.length === 1);
         done();
       })
@@ -171,22 +171,39 @@ describe("Accounts MS Unit Test Suite", function () {
     
     //Test Partial Update -- Address
     body = {
-      "line1": "456 XYZ St",
-      "line2": "Optional text",
-      "city": "Orlando",
-      "state": "FL",
-      "postal_code": "67890",
-      "country": "US"
+      "type": "Reseller",
+      "description": "Free form text modified",
+      "reference": "Free form text",
+      "address": {
+          "line1": "456 XYZ St",
+          "line2": "Optional text modified",
+          "city": "Orlando",
+          "state": "FL",
+          "country": "US",
+          "postal_code": "67890"
+      },
+      "contacts": [
+          {
+              "uuid": "f1f45521-4501-4874-94be-3067498ee0b6",
+              "type": "primary",
+              "email": "abcmodified@test.com",
+              "phone": "1112223333",
+              "first_name": "First",
+              "last_name": "Last"
+          }
+      ],
+      "uuid": "ff591bba-630b-43e0-9f5b-3c110ade3bdf",
+      "name": "R11 Corp",
+      "number": "22222"
     };
-    property = "address"
-
+    
     s2sMS.Accounts
       .listAccounts(accessToken)
       .then((accountList) => {
         //console.log("accountList", accountList);
 
         s2sMS.Accounts
-          .modifyAccount(accessToken, accountList.items[0].uuid, body, property)
+          .modifyAccount(accessToken, accountList.items[0].uuid, body)
           .then(status => {
             //console.log("status",status);
             assert(status.status === "ok");
@@ -218,4 +235,53 @@ describe("Accounts MS Unit Test Suite", function () {
         done(new Error(error));
       });
   });
+
+  it("Suspend Account", function (done) {
+    if (!creds.isValid) return done();
+
+    s2sMS.Accounts
+      .listAccounts(accessToken)
+      .then((accountList) => {
+        // console.log("accountList -- getAccountData", accountList);
+        s2sMS.Accounts
+          .suspendAccount(accessToken, accountList.items[0].uuid)
+          .then(response => {
+            assert(response.status === "ok")
+            done();
+          })
+          .catch((error) => {
+            done(new Error(error));
+          });
+      })
+      .catch((error) => {
+        //console.log("error in getting account list [getAccountData]", error);
+        done(new Error(error));
+      });
+  });
+
+  it("Reinstate Account", function (done) {
+    if (!creds.isValid) return done();
+
+    s2sMS.Accounts
+      .listAccounts(accessToken)
+      .then((accountList) => {
+         // console.log("accountList -- getAccountData", accountList);
+
+        s2sMS.Accounts
+          .reinstateAccount(accessToken, accountList.items[0].uuid)
+          .then(response => {
+            assert(response.status === "ok")
+            done();
+          })
+          .catch((error) => {
+            // console.log("error in getting account data", error);
+            done(new Error(error));
+          });
+      })
+      .catch((error) => {
+        //console.log("error in getting account list [getAccountData]", error);
+        done(new Error(error));
+      });
+  });
+
 });
