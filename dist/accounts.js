@@ -150,13 +150,12 @@ var modifyAccount = function modifyAccount() {
   var accessToken = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : "null access token";
   var accountUUID = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : "null account uuid";
   var body = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : "null body";
-  var property = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : "";
 
   //body = JSON.stringify(body);
   var MS = util.getEndpoint("accounts");
   var requestOptions = {
     method: "PUT",
-    uri: MS + "/accounts/" + accountUUID + "/" + property,
+    uri: MS + "/accounts/" + accountUUID,
     body: body,
     resolveWithFullResponse: true,
     json: true,

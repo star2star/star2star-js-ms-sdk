@@ -171,22 +171,39 @@ describe("Accounts MS Unit Test Suite", function () {
     
     //Test Partial Update -- Address
     body = {
-      "line1": "456 XYZ St",
-      "line2": "Optional text",
-      "city": "Orlando",
-      "state": "FL",
-      "postal_code": "67890",
-      "country": "US"
+      "type": "Reseller",
+      "description": "Free form text modified",
+      "reference": "Free form text",
+      "address": {
+          "line1": "456 XYZ St",
+          "line2": "Optional text modified",
+          "city": "Orlando",
+          "state": "FL",
+          "country": "US",
+          "postal_code": "67890"
+      },
+      "contacts": [
+          {
+              "uuid": "f1f45521-4501-4874-94be-3067498ee0b6",
+              "type": "primary",
+              "email": "abcmodified@test.com",
+              "phone": "1112223333",
+              "first_name": "First",
+              "last_name": "Last"
+          }
+      ],
+      "uuid": "ff591bba-630b-43e0-9f5b-3c110ade3bdf",
+      "name": "R11 Corp",
+      "number": "22222"
     };
-    property = "address"
-
+    
     s2sMS.Accounts
       .listAccounts(accessToken)
       .then((accountList) => {
         //console.log("accountList", accountList);
 
         s2sMS.Accounts
-          .modifyAccount(accessToken, accountList.items[0].uuid, body, property)
+          .modifyAccount(accessToken, accountList.items[0].uuid, body)
           .then(status => {
             //console.log("status",status);
             assert(status.status === "ok");
