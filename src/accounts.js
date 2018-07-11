@@ -130,12 +130,12 @@ const createAccount = (accessToken = "null accessToken", body = "null body") => 
    * @param {string} [property=""]
    * @returns {Promise<object>} - Promise resolving to a status data object
    */
-  const modifyAccount = (accessToken = "null access token", accountUUID = "null account uuid", body = "null body", property = "") => {
+  const modifyAccount = (accessToken = "null access token", accountUUID = "null account uuid", body = "null body") => {
     //body = JSON.stringify(body);
     const MS = util.getEndpoint("accounts");
     const requestOptions = {
       method: "PUT",
-      uri: `${MS}/accounts/${accountUUID}/${property}`,
+      uri: `${MS}/accounts/${accountUUID}`,
       body: body,
       resolveWithFullResponse: true,
       json: true,
