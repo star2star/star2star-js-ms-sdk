@@ -173,20 +173,27 @@ const getIdentityDetails = (accessToken = "null access token", user_uuid="null u
 /**
  * @async
  * @description This function will look up an identity by username.
- * @param {string} [accessToken="null accessToken"] - access token for cpaas systems
- * @param {string} [username="null username"] - query by username
+ * @param {string} [accessToken="null accessToken"]
+ * @param {number} [offset=0] - list offset
+ * @param {number} [limit=10] - number of items to return
+ * @param {string} [filterType=undefined] - optional "username" or "sms" 
+ * @param {string} [filterValue=undefined] - value of username or sms
  * @returns {Promise<object>} - Promise resolving to an identity data object
  */
 const lookupIdentity = (
   accessToken = "null accessToken",
-  username = "null username"
+  offset = 0,
+  limit = 10,
+  filterType = undefined,
+  filterValue = undefined
 ) => {
   const MS = util.getEndpoint("identity");
   const requestOptions = {
     method: "GET",
     uri: `${MS}/identities`,
     qs: {
-      username: username
+      "offset": offset,
+      "limit": limit,
     },
     headers: {
       "Authorization": `Bearer ${accessToken}`,
@@ -195,7 +202,10 @@ const lookupIdentity = (
     },
     json: true
   };
-
+  if(filterType && filterValue) {
+    requestOptions.qs[filterType] = filterValue;
+  }
+  // console.log("REQUEST********",requestOptions);
   return request(requestOptions);
 };
 
