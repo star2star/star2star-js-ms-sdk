@@ -70,6 +70,7 @@ var deleteSubscription = function deleteSubscription() {
  * @param {string} [account_uuid="account uuid not provided "] - account to subscribe to
  * @param {string} [callback_url="not set callback"] - callback URL
  * @param {array} [callback_headers=[]] - callback headers
+ * @param {array} [criteria=[]] - filter criteria
  * @param {object} [subscriptions={}] - events to subscribe to (voice, fax, conferencing, messagin, sms,  presence)
  * @param {string} [accessToken="null accessToken"] - access token for cpaas systems
  * @returns {Promise<object>} - Promise resolving to a data object containing a list of subscriptions for this user
@@ -79,8 +80,9 @@ var addSubscription = function addSubscription() {
   var account_uuid = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : "account uuid not provided ";
   var callback_url = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : "not set callback";
   var callback_headers = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : [];
-  var subscriptions = arguments.length > 4 && arguments[4] !== undefined ? arguments[4] : {};
-  var accessToken = arguments.length > 5 && arguments[5] !== undefined ? arguments[5] : "null accessToken";
+  var criteria = arguments.length > 4 && arguments[4] !== undefined ? arguments[4] : [];
+  var subscriptions = arguments.length > 5 && arguments[5] !== undefined ? arguments[5] : {};
+  var accessToken = arguments.length > 6 && arguments[6] !== undefined ? arguments[6] : "null accessToken";
 
   var MS = util.getEndpoint("pubsub");
 
@@ -94,6 +96,7 @@ var addSubscription = function addSubscription() {
         "url": callback_url,
         "headers": callback_headers
       },
+      "criteria": criteria,
       "events": subscriptions
     },
     headers: {
