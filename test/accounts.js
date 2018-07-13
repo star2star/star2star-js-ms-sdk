@@ -86,7 +86,7 @@ describe("Accounts MS Unit Test Suite", function () {
         done(new Error(response));
       })
       .catch((error) => {
-        //console.log("ERROR",error.error.details[0].number);
+        console.log("ERROR",error);
         assert(error.error.details[0].number === "Account with such number already exists");
         done();
       });

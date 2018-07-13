@@ -218,6 +218,104 @@ var lookupIdentity = function lookupIdentity() {
   return request(requestOptions);
 };
 
+/** 
+ * @async
+ * @description This function will update a user's password.
+ * @param {string} [accessToken="null access token"] - access token for cpaas systems
+ * @param {string} [password_token="null passwordToken"] - Reset token received via email
+ * @param {object} [body="null body"] - object containing email address and new password
+ * @returns {Promise<object>} - Promise resolving to a as status message; "ok" or "failed"
+ */
+var resetPassword = function resetPassword() {
+  var accessToken = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : "null access token";
+  var passwordToken = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : "null passwordToken";
+  var body = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : "null body";
+
+  var MS = util.getEndpoint("identity");
+  var requestOptions = {
+    method: "PUT",
+    uri: MS + "/users/password-tokens/" + passwordToken,
+    body: body,
+    headers: {
+      "Authorization": "Bearer " + accessToken,
+      "Content-type": "application/json",
+      'x-api-version': "" + util.getVersion()
+    },
+    resolveWithFullResponse: true,
+    json: true
+  };
+
+  return new Promise(function (resolve, reject) {
+    request(requestOptions).then(function (responseData) {
+      responseData.statusCode === 202 ? resolve({ "status": "ok" }) : reject({ "status": "failed" });
+    }).catch(function (error) {
+      reject(error);
+    });
+  });
+};
+
+/**
+ * @async
+ * @description This function will initiate a request for a password reset token via the user email account.
+ * @param {string} [accessToken="null access token"] - access token for cpaas systems
+ * @param {string} [emailAddress="null emailAddress"] - target email address
+ * @returns {Promise<object>} - Promise resolving to a as status message; "ok" or "failed"
+ */
+var generatePasswordToken = function generatePasswordToken() {
+  var accessToken = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : "null access token";
+  var emailAddress = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : "null emailAddress";
+
+  var MS = util.getEndpoint("identity");
+  var requestOptions = {
+    method: "POST",
+    uri: MS + "/users/password-tokens",
+    body: {
+      email: emailAddress
+    },
+    headers: {
+      "Authorization": "Bearer " + accessToken,
+      "Content-type": "application/json",
+      'x-api-version': "" + util.getVersion()
+    },
+    resolveWithFullResponse: true,
+    json: true
+  };
+
+  return new Promise(function (resolve, reject) {
+    request(requestOptions).then(function (responseData) {
+      responseData.statusCode === 202 ? resolve({ "status": "ok" }) : reject({ "status": "failed" });
+    }).catch(function (error) {
+      reject(error);
+    });
+  });
+};
+
+/**
+ * @async
+ * @description This function will validate a password reset token received from email.
+ * @param {string} [accessToken="null access token"] - access token for cpaas systems
+ * @param {string} [password_token="null password token"] - password reset token received via email
+ * @returns {Promise<object>} - Promise resolving to an object confirming the token and target email
+ */
+var validatePasswordToken = function validatePasswordToken() {
+  var accessToken = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : "null access token";
+  var password_token = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : "null password token";
+
+  var MS = util.getEndpoint("identity");
+  var requestOptions = {
+    method: "GET",
+    uri: MS + "/users/password-tokens/" + password_token,
+    headers: {
+      "Authorization": "Bearer " + accessToken,
+      "Content-type": "application/json",
+      'x-api-version': "" + util.getVersion()
+    },
+    json: true
+  };
+
+  return request(requestOptions);
+};
+
 module.exports = {
   createIdentity: createIdentity,
   updateAliasWithDID: updateAliasWithDID,
@@ -225,5 +323,8 @@ module.exports = {
   login: login,
   getMyIdentityData: getMyIdentityData,
   lookupIdentity: lookupIdentity,
-  getIdentityDetails: getIdentityDetails
+  getIdentityDetails: getIdentityDetails,
+  generatePasswordToken: generatePasswordToken,
+  resetPassword: resetPassword,
+  validatePasswordToken: validatePasswordToken
 };
