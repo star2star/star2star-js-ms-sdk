@@ -69,6 +69,7 @@ const deleteSubscription = (
  * @param {string} [account_uuid="account uuid not provided "] - account to subscribe to
  * @param {string} [callback_url="not set callback"] - callback URL
  * @param {array} [callback_headers=[]] - callback headers
+ * @param {array} [criteria=[]] - filter criteria
  * @param {object} [subscriptions={}] - events to subscribe to (voice, fax, conferencing, messagin, sms,  presence)
  * @param {string} [accessToken="null accessToken"] - access token for cpaas systems
  * @returns {Promise<object>} - Promise resolving to a data object containing a list of subscriptions for this user
@@ -77,7 +78,8 @@ const addSubscription = (
     user_uuid = "no user uuid provided",
     account_uuid = "account uuid not provided ",
     callback_url="not set callback",
-    callback_headers=[], 
+    callback_headers=[],
+    criteria=[], 
     subscriptions = {}, 
     accessToken = "null accessToken"
   ) => {
@@ -93,6 +95,7 @@ const addSubscription = (
             "url": callback_url, 
             "headers": callback_headers
         },
+        "criteria": criteria, 
         "events": subscriptions 
       }, 
       headers: {

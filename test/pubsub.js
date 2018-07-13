@@ -77,12 +77,16 @@ describe("PubSub Test Suite", function () {
     const subscriptions = {
         identity: ["identity_property_change"]
     }
+    const criteria = [{
+       user_uuid: "0904f8d5-627f-4ff5-b34d-68dc96487b1e"
+    }]
 
     s2sMS.Pubsub.addSubscription( 
         "0904f8d5-627f-4ff5-b34d-68dc96487b1e",
         "47113ee7-ddbe-4388-aade-717c36ec17c7",
         "http://localhost:8001/foo",
         [],
+        criteria,
         subscriptions, 
         accessToken
       ).then(responseData => {
