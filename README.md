@@ -31,6 +31,7 @@ s2sMS.Identity.login(creds.CPAAS_KEY, creds.email, creds.password)
 [Please click here for our documentation pages.](https://star2star.github.io/star2star-js-ms-sdk/ "Star2Star Micro Service SDK Documentation")
 
 ## Changes
+* 2.1.15 - Add password reset
 * 2.1.14 - Fix add subscriptions
 * 2.1.13 - Update lookup identity
 * 2.1.12 - Fix missing commit

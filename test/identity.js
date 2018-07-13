@@ -222,4 +222,62 @@ describe("Identity MS Unit Test Suite", function () {
         done();
       });
   });
+
+  it("Generate Password Token", function (done) {
+    if (!creds.isValid) return done();
+    s2sMS.Identity
+      .generatePasswordToken(accessToken, creds.email)
+      .then(response => {
+        assert(response.status === "ok");
+        done();
+      })
+      .catch(e => {
+        console.log("error in generate password token", e);
+        done();
+      });
+  });
+
+  it("Reset Password", function (done) {
+    if (!creds.isValid) return done();
+    // This token is expired
+    const token = "7cf8f1f5-ee79-4303-aa40-7036d031f700"
+    const body = {
+      email : creds.email,
+      password: creds.password
+    }
+    s2sMS.Identity
+      .resetPassword(accessToken, token, body)
+      .then(response => {
+        //If this is successful, we have a problem.
+        console.log("Unexpected Response!",response)
+        assert(1 === 0);
+        done();
+      })
+      .catch(error => {
+        // Expecting a specific error as this token is expired.
+        // console.log("error in reset password", error.message);
+        const expected = "Identity email cannot be null"
+        assert(error.message.includes(expected));
+        done();
+      });
+  });
+
+  it("Validate Password Token", function (done) {
+    if (!creds.isValid) return done();
+
+    // This token is expired, but we get a different response if the token was never valid or the call failed.
+    const token = "7cf8f1f5-ee79-4303-aa40-7036d031f700"
+    
+    s2sMS.Identity
+      .validatePasswordToken(accessToken, token)
+      .then(tokenData => {
+        // console.log("iiiii %j", identityData);
+        assert(tokenData.hasOwnProperty("token"));
+        done();
+      })
+      .catch(e => {
+        console.log("error in validate token", e);
+        done();
+      });
+  });
 });
