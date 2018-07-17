@@ -83,10 +83,11 @@ describe("Accounts MS Unit Test Suite", function () {
       .then(response => {
         //We are testing for a specific failure here since we cannot duplicate the account creation.
         //Confirming the validation failure message as his should not work.
+        console.log("UNEXPECTED RESPONSE. THIS SHOULD NOT WORK", response);
         done(new Error(response));
       })
       .catch((error) => {
-        console.log("ERROR",error);
+        //console.log("ERROR",error);
         assert(error.error.details[0].number === "Account with such number already exists");
         done();
       });

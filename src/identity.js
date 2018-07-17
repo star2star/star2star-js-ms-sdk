@@ -7,16 +7,12 @@ const request = require("request-promise");
  * @async
  * @description This function will call the identity microservice with the credentials and accessToken you passed in.
  * @param {string} [accessToken="null accessToken"] - access token
- * @param {string} [email="null email"] - email address for an star2star account
- * @param {string} [identity_type_name="null_type_name"]- one of 'guest', 'user' TODO need to confirm possible values
- * @param {string} [pwd="null pwd"] - passowrd for that account.
+ * @param {object} [body="null body"] - JSON object containing new user info
  * @returns {Promise<object>} - Promise resolving to an identity data object
  */
 const createIdentity = (
   accessToken = "null accessToken",
-  email = "null email",
-  identity_type_name = "null_type_name",
-  pwd = "null pwd"
+  body = "null body"
 ) => {
   const MS = util.getEndpoint("identity");
   const requestOptions = {
@@ -27,15 +23,106 @@ const createIdentity = (
       "Content-type": "application/json",
       'x-api-version': `${util.getVersion()}`
     },
-    body: {
-      email: email,
-      identity_type_name: identity_type_name,
-      password: pwd
-    },
+    body: body,
     json: true
   };
 
   return request(requestOptions);
+};
+
+/**
+ * @async
+ * @description This function will allow you to modify all details of identity except account_uuid, username and external_id, password and provider.
+ * @param {string} [accessToken="null accessToken"]
+ * @param {string} [userUuid="null userUuid"]
+ * @param {object} [body="null body"]
+ * @returns {Promise<object>} - Promise resolving to an identity data object
+ */
+const modifyIdentity = (
+  accessToken = "null accessToken",
+  userUuid = "null userUuid",
+  body = "null body"
+) => {
+  const MS = util.getEndpoint("identity");
+  const requestOptions = {
+    method: "POST",
+    uri: `${MS}/identities/${userUuid}/modify`,
+    headers: {
+      "Authorization": `Bearer ${accessToken}`,
+      "Content-type": "application/json",
+      'x-api-version': `${util.getVersion()}`
+    },
+    body: body,
+    json: true
+  };
+
+  return request(requestOptions);
+};
+
+/**
+ * @async
+ * @description This function will deactivate a user/identity.
+ * @param {string} [accessToken="null accessToken"]
+ * @param {string} [userUuid="null userUuid"]
+ * @returns {Promise<object>} - Promise resolving to an status data object
+ */
+const deactivateIdentity = (
+  accessToken = "null accessToken",
+  userUuid = "null userUuid"
+) => {
+  const MS = util.getEndpoint("identity");
+  const requestOptions = {
+    method: "POST",
+    uri: `${MS}/identities/${userUuid}/deactivate`,
+    headers: {
+      "Authorization": `Bearer ${accessToken}`,
+      "Content-type": "application/json",
+      'x-api-version': `${util.getVersion()}`
+    },
+    json: true,
+    resolveWithFullResponse: true
+  };
+
+  return new Promise (function (resolve, reject){
+    request(requestOptions).then(function(responseData){
+        responseData.statusCode === 204 ?  resolve({"status":"ok"}): reject({"status":"failed"});
+    }).catch(function(error){
+        reject(error);
+    })
+  });
+};
+
+/**
+ * @async
+ * @description This function will reactivate a user/identity.
+ * @param {string} [accessToken="null accessToken"]
+ * @param {string} [userUuid="null userUuid"]
+ * @returns {Promise<object>} - Promise resolving to an status data object
+ */
+const reactivateIdentity = (
+  accessToken = "null accessToken",
+  userUuid = "null userUuid"
+) => {
+  const MS = util.getEndpoint("identity");
+  const requestOptions = {
+    method: "POST",
+    uri: `${MS}/identities/${userUuid}/reactivate`,
+    headers: {
+      "Authorization": `Bearer ${accessToken}`,
+      "Content-type": "application/json",
+      'x-api-version': `${util.getVersion()}`
+    },
+    json: true,
+    resolveWithFullResponse: true
+  };
+
+  return new Promise (function (resolve, reject){
+    request(requestOptions).then(function(responseData){
+        responseData.statusCode === 204 ?  resolve({"status":"ok"}): reject({"status":"failed"});
+    }).catch(function(error){
+        reject(error);
+    })
+  });
 };
 
 /**
@@ -84,10 +171,17 @@ const deleteIdentity = (accessToken = "null accessToken", userUuid = "null uuid"
       "Content-type": "application/json",
       'x-api-version': `${util.getVersion()}`
     },
-    json: true
+    json: true,
+    resolveWithFullResponse: true
   };
 
-  return request(requestOptions);
+  return new Promise (function (resolve, reject){
+    request(requestOptions).then(function(responseData){
+        responseData.statusCode === 204 ?  resolve({"status":"ok"}): reject({"status":"failed"});
+    }).catch(function(error){
+        reject(error);
+    })
+  });
 };
 
 /**
@@ -299,6 +393,9 @@ const validatePasswordToken = (accessToken = "null access token", password_token
 
 module.exports = {
   createIdentity,
+  modifyIdentity,
+  reactivateIdentity,
+  deactivateIdentity,
   updateAliasWithDID,
   deleteIdentity,
   login,
