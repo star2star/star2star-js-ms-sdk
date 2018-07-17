@@ -319,7 +319,7 @@ describe("Auth MS Test Suite", function () {
       });
   });
 
-  it("Add Role to User", function (done) {
+  /*it("Add Role to User", function (done) {
     if (!creds.isValid) 
     return done(err);
  
@@ -375,7 +375,7 @@ describe("Auth MS Test Suite", function () {
         console.log("error in getting user_uuid", error);
         done(new Error(error));
       });
-  });
+  });*/
 
   it("Get User Roles", function (done) {
     if (!creds.isValid) {

@@ -12,7 +12,7 @@ let creds = {
 
 describe("Identity MS Unit Test Suite", function () {
 
-  let accessToken, identityData;
+  let accessToken, identityData, testUUID, time;
 
   before(function () {
     // file system uses full path so will do it like this
@@ -50,112 +50,128 @@ describe("Identity MS Unit Test Suite", function () {
      })
   });
 
-  it("Create Guest Identity", function (done) {
+  it("Create Identity", function (done) {
     if (!creds.isValid) return done();
-    s2sMS.Identity.createIdentity(
-        accessToken,
-        "testEmail@star2star.com",
-        "guest",
-        "pwd1"
-      )
-      .then(identityData => {
-        // console.log('Created guest user', identityData.uuid);
-        assert(
-          identityData.uuid !== undefined &&
-          identityData.username === "testEmail@star2star.com" &&
-          identityData.type.guest !== undefined
-        );
+    time = new Date().getTime(); //FIXME Temporary until DELETE is fixed
+    console.log 
+    const body = {
+      "account_uuid": identityData.account_uuid,
+      "type": "user",
+      "first_name": "Larry",
+      "middle_name": "The",
+      "last_name": "CableGuy",
+      "username": "larry"+time+"@fake.email",
+      "status": "Active",
+      "provider": "local",
+      "email": "larry"+time+"@fake.email",
+      "phone": "1112223333",
+      "address": {
+        "city": "Somewhere",
+        "state": "AK",
+        "postal_code": "12345",
+        "country": "US"
+      },
+      "reference": "Free form text"
+    }
+    s2sMS.Identity.createIdentity(accessToken, body)
+      .then(identity => {
+        console.log('Created user', identity.uuid);
+        testUUID = identity.uuid;
+        assert(identity.uuid !== undefined);
         done();
-        s2sMS.Identity.deleteIdentity(accessToken, identityData.uuid)
-          .then((d) => {
-            // console.log('Deleted guest user:', identityData.uuid);
-          })
-          .catch((error) => {
-            console.log('Error deleting user [create guest user]', error);
-            done(new Error(error));
-          });
       })
       .catch((error) => {
-        console.log('Error create guest identity', error);
+        console.log('Error creating identity', error);
         done(new Error(error));
       });
   });
 
   it("Add DID Identity Alias", function (done) {
     if (!creds.isValid) return done();
-    s2sMS.Identity.createIdentity(
+    // console.log('Created guest user [create Alias]', identityData.uuid);
+    const testSMSNumber = time.toString().slice(-10); //FIXME Temporary until DELETE is fixed
+    s2sMS.Identity.updateAliasWithDID(
         accessToken,
-        "testEmail2@star2star.com",
-        "guest",
-        "pwd1"
-      )
-      .then((identityData) => {
-        // console.log('Created guest user [create Alias]', identityData.uuid);
-        const testSMSNumber = "941-999-8765";
-        s2sMS.Identity.updateAliasWithDID(
-            accessToken,
-            identityData.uuid,
-            testSMSNumber
-          ).then((aliasData) => {
-            console.log('alias data', aliasData);
-            assert(aliasData.sms === testSMSNumber);
-            done();
-            s2sMS.Identity.deleteIdentity(accessToken, identityData.uuid)
-              .then((d) => {
-                // console.log('Deleted guest user:', identityData.uuid);
-              })
-              .catch((error) => {
-                console.log('Error deleting user [create guest user]', error);
-                done(new Error(error));
-              });
-
-          })
-          .catch((error) => {
-            console.log('Error updating alias [create alias]', error);
-            done(new Error(error));
-          });
+        testUUID,
+        testSMSNumber
+      ).then((aliasData) => {
+        //console.log('alias data', aliasData);
+        assert(aliasData.sms === testSMSNumber);
+        done();
       })
       .catch((error) => {
-        console.log('Error create guest identity', error);
+        console.log('Error updating alias [create alias]', error);
         done(new Error(error));
       });
   });
 
-
-
-  it("Delete Identity", function (done) {
+  it("Modify Identity", function (done) {
     if (!creds.isValid) return done();
-    s2sMS.Identity.createIdentity(
+    // console.log('Created guest user [create Alias]', identityData.uuid);
+    const body = {properties: {first_name: "Bob"}};
+    s2sMS.Identity.modifyIdentity(
         accessToken,
-        "testEmailForDelete@star2star.com",
-        "guest",
-        "pwd1"
-      )
-      .then(identityData => {
-        // console.log('Created guest user [delete user]', identityData.uuid);
-        s2sMS.Identity.deleteIdentity(accessToken, identityData.uuid)
-          .then((d) => {
-            // console.log('Deleted guest user [delete user]:', identityData.uuid);
-            // done when delete resolves
+        testUUID,
+        body
+      ).then((response) => {
+        //console.log('alias data', aliasData);
+        assert(response.properties.first_name === "Bob");
+        done();
+      })
+      .catch((error) => {
+        console.log('Error updating alias [create alias]', error);
+        done(new Error(error));
+      });
+  });
+
+  it("Deactivate Identity", function (done) {
+    if (!creds.isValid) return done();
+    s2sMS.Identity.deactivateIdentity(accessToken, testUUID)
+          .then((response) => {
+            //console.log('Deleted guest user:', testUUID);
+            assert(response.status === "ok");
             done();
           })
           .catch((error) => {
-            console.log('Error deleting user [delete user]', error);
+            console.log('Error deleting user [create user]', error);
             done(new Error(error));
           });
-      })
-      .catch((error) => {
-        console.log('Error create guest identity [delete user]', error);
-        done(new Error(error));
-      });
+  });
+
+  it("Reactivate Identity", function (done) {
+    if (!creds.isValid) return done();
+    s2sMS.Identity.reactivateIdentity(accessToken, testUUID)
+          .then((response) => {
+            //console.log('Deleted guest user:', testUUID);
+            assert(response.status === "ok");
+            done();
+          })
+          .catch((error) => {
+            console.log('Error deleting user [create user]', error);
+            done(new Error(error));
+          });
+  });
+
+  it("Delete Identity", function (done) {
+    if (!creds.isValid) return done();
+    s2sMS.Identity.deleteIdentity(accessToken, testUUID)
+          .then((response) => {
+            //console.log('Deleted guest user:', testUUID);
+            assert(response.status === "ok");
+            done();
+          })
+          .catch((error) => {
+            console.log('Error deleting user [create user]', error);
+            done(new Error(error));
+          });
   });
 
   it("Login with Good Credentials", function (done) {
     if (!creds.isValid) return done();
     s2sMS.Identity
       .login(accessToken, creds.email, creds.password)
-      .then(identityData => {
-        assert(identityData !== null);
+      .then(login => {
+        assert(login !== null);
         done();
       })
       .catch((error) => {
@@ -166,9 +182,9 @@ describe("Identity MS Unit Test Suite", function () {
 
   it("Login with Bad Credentials", function (done) {
     if (!creds.isValid) return done();
-    s2sMS.Identity.login(accessToken, creds.email, "bad").catch(identityData => {
+    s2sMS.Identity.login(accessToken, creds.email, "bad").catch(login => {
         // console.log('Bad Creds login status code: %j', identityData);
-        assert(identityData.statusCode === 401);
+        assert(login.statusCode === 401);
         done();
       })
       .catch((error) => {
@@ -180,9 +196,9 @@ describe("Identity MS Unit Test Suite", function () {
   it("Get My Identity Data", function (done) {
     if (!creds.isValid) return done();
     s2sMS.Identity.getMyIdentityData(accessToken)
-      .then((identityData) => {
+      .then((response) => {
         // console.log('get My Identity data response: %j', JSON.parse(identityData));
-        identityData.hasOwnProperty('uuid');
+        response.hasOwnProperty('uuid');
         done();
       })
       .catch((error) => {
@@ -197,9 +213,9 @@ describe("Identity MS Unit Test Suite", function () {
     if (!creds.isValid) return done();
     s2sMS.Identity
       .lookupIdentity(accessToken, 0, 10, "username", "kpancharathi@star2star.com")
-      .then(identityData => {
-        // console.log('iiiii %j', identityData);
-        assert(identityData.items.length === 1);
+      .then(response => {
+        // console.log('iiiii %j', response);
+        assert(response.items.length === 1);
         done();
       })
       .catch(e => {
@@ -212,9 +228,9 @@ describe("Identity MS Unit Test Suite", function () {
     if (!creds.isValid) return done();
     s2sMS.Identity
       .lookupIdentity(accessToken, 1, 10, "username", "test333@test.com")
-      .then(identityData => {
-        // console.log("iiiii %j", identityData);
-        assert(identityData.items.length === 0);
+      .then(response => {
+        // console.log("iiiii %j", response);
+        assert(response.items.length === 0);
         done();
       })
       .catch(e => {

@@ -8,16 +8,12 @@ var request = require("request-promise");
  * @async
  * @description This function will call the identity microservice with the credentials and accessToken you passed in.
  * @param {string} [accessToken="null accessToken"] - access token
- * @param {string} [email="null email"] - email address for an star2star account
- * @param {string} [identity_type_name="null_type_name"]- one of 'guest', 'user' TODO need to confirm possible values
- * @param {string} [pwd="null pwd"] - passowrd for that account.
+ * @param {object} [body="null body"] - JSON object containing new user info
  * @returns {Promise<object>} - Promise resolving to an identity data object
  */
 var createIdentity = function createIdentity() {
   var accessToken = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : "null accessToken";
-  var email = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : "null email";
-  var identity_type_name = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : "null_type_name";
-  var pwd = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : "null pwd";
+  var body = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : "null body";
 
   var MS = util.getEndpoint("identity");
   var requestOptions = {
@@ -28,15 +24,106 @@ var createIdentity = function createIdentity() {
       "Content-type": "application/json",
       'x-api-version': "" + util.getVersion()
     },
-    body: {
-      email: email,
-      identity_type_name: identity_type_name,
-      password: pwd
-    },
+    body: body,
     json: true
   };
 
   return request(requestOptions);
+};
+
+/**
+ * @async
+ * @description This function will allow you to modify all details of identity except account_uuid, username and external_id, password and provider.
+ * @param {string} [accessToken="null accessToken"]
+ * @param {string} [userUuid="null userUuid"]
+ * @param {object} [body="null body"]
+ * @returns {Promise<object>} - Promise resolving to an identity data object
+ */
+var modifyIdentity = function modifyIdentity() {
+  var accessToken = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : "null accessToken";
+  var userUuid = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : "null userUuid";
+  var body = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : "null body";
+
+  var MS = util.getEndpoint("identity");
+  var requestOptions = {
+    method: "POST",
+    uri: MS + "/identities/" + userUuid + "/modify",
+    headers: {
+      "Authorization": "Bearer " + accessToken,
+      "Content-type": "application/json",
+      'x-api-version': "" + util.getVersion()
+    },
+    body: body,
+    json: true
+  };
+
+  return request(requestOptions);
+};
+
+/**
+ * @async
+ * @description This function will deactivate a user/identity.
+ * @param {string} [accessToken="null accessToken"]
+ * @param {string} [userUuid="null userUuid"]
+ * @returns {Promise<object>} - Promise resolving to an status data object
+ */
+var deactivateIdentity = function deactivateIdentity() {
+  var accessToken = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : "null accessToken";
+  var userUuid = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : "null userUuid";
+
+  var MS = util.getEndpoint("identity");
+  var requestOptions = {
+    method: "POST",
+    uri: MS + "/identities/" + userUuid + "/deactivate",
+    headers: {
+      "Authorization": "Bearer " + accessToken,
+      "Content-type": "application/json",
+      'x-api-version': "" + util.getVersion()
+    },
+    json: true,
+    resolveWithFullResponse: true
+  };
+
+  return new Promise(function (resolve, reject) {
+    request(requestOptions).then(function (responseData) {
+      responseData.statusCode === 204 ? resolve({ "status": "ok" }) : reject({ "status": "failed" });
+    }).catch(function (error) {
+      reject(error);
+    });
+  });
+};
+
+/**
+ * @async
+ * @description This function will reactivate a user/identity.
+ * @param {string} [accessToken="null accessToken"]
+ * @param {string} [userUuid="null userUuid"]
+ * @returns {Promise<object>} - Promise resolving to an status data object
+ */
+var reactivateIdentity = function reactivateIdentity() {
+  var accessToken = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : "null accessToken";
+  var userUuid = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : "null userUuid";
+
+  var MS = util.getEndpoint("identity");
+  var requestOptions = {
+    method: "POST",
+    uri: MS + "/identities/" + userUuid + "/reactivate",
+    headers: {
+      "Authorization": "Bearer " + accessToken,
+      "Content-type": "application/json",
+      'x-api-version': "" + util.getVersion()
+    },
+    json: true,
+    resolveWithFullResponse: true
+  };
+
+  return new Promise(function (resolve, reject) {
+    request(requestOptions).then(function (responseData) {
+      responseData.statusCode === 204 ? resolve({ "status": "ok" }) : reject({ "status": "failed" });
+    }).catch(function (error) {
+      reject(error);
+    });
+  });
 };
 
 /**
@@ -88,10 +175,17 @@ var deleteIdentity = function deleteIdentity() {
       "Content-type": "application/json",
       'x-api-version': "" + util.getVersion()
     },
-    json: true
+    json: true,
+    resolveWithFullResponse: true
   };
 
-  return request(requestOptions);
+  return new Promise(function (resolve, reject) {
+    request(requestOptions).then(function (responseData) {
+      responseData.statusCode === 204 ? resolve({ "status": "ok" }) : reject({ "status": "failed" });
+    }).catch(function (error) {
+      reject(error);
+    });
+  });
 };
 
 /**
@@ -318,6 +412,9 @@ var validatePasswordToken = function validatePasswordToken() {
 
 module.exports = {
   createIdentity: createIdentity,
+  modifyIdentity: modifyIdentity,
+  reactivateIdentity: reactivateIdentity,
+  deactivateIdentity: deactivateIdentity,
   updateAliasWithDID: updateAliasWithDID,
   deleteIdentity: deleteIdentity,
   login: login,

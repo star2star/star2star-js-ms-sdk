@@ -49,14 +49,17 @@ toc:
   - name: Identity
     children:
       - createIdentity
-      - updateAliasWithDID
+      - deactivateIdentity
       - deleteIdentity
-      - login
+      - generatePasswordToken
       - getMyIdentityData
       - getIdentityDetails
+      - login
       - lookupIdentity
-      - generatePasswordToken
+      - modifyIdentity
+      - reactivateIdentity
       - resetPassword
+      - updateAliasWithDID
       - validatePasswordToken
   - name: Index
     children:
