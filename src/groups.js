@@ -334,7 +334,7 @@ const deleteUserGroup = (
  * @param {string} [userUuid="null userUuid"] - user uuid
  * @param {number} [offset=0] - page number
  * @param {number} [limit=10] - page size
- * @param {string} [expand=undefined] - optional; values are "members" or "members.type"
+ * @param {array} [filters=undefined] - optional array of key-value pairs to filter response.
  * @param {string} [members_limit=undefined] - optional; specify the number of members to return. Default is 20
  * @returns {Promise<object>} - Promise resolving to a list of user groups.
  */
@@ -343,8 +343,7 @@ const listUserGroups = (
   userUuid = "null userUuid",
   offset = 0,
   limit = 10,
-  expand = undefined,
-  members_limit = undefined
+  filters = undefined
 ) => {
   const MS = util.getEndpoint("groups");
   const requestOptions = {
@@ -362,11 +361,10 @@ const listUserGroups = (
     json: true
   };
   
-  if(expand){
-    requestOptions.qs.expand = expand;
-  }
-  if(members_limit){
-    requestOptions.qs.members_limit = members_limit;
+  if(filters) {
+    Object.keys(filters).forEach(filter => {
+      requestOptions.qs[filter] = filters[filter];
+    });
   }
   return request(requestOptions);
 };

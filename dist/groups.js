@@ -335,7 +335,7 @@ var deleteUserGroup = function deleteUserGroup() {
  * @param {string} [userUuid="null userUuid"] - user uuid
  * @param {number} [offset=0] - page number
  * @param {number} [limit=10] - page size
- * @param {string} [expand=undefined] - optional; values are "members" or "members.type"
+ * @param {array} [filters=undefined] - optional array of key-value pairs to filter response.
  * @param {string} [members_limit=undefined] - optional; specify the number of members to return. Default is 20
  * @returns {Promise<object>} - Promise resolving to a list of user groups.
  */
@@ -344,8 +344,7 @@ var listUserGroups = function listUserGroups() {
   var userUuid = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : "null userUuid";
   var offset = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : 0;
   var limit = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : 10;
-  var expand = arguments.length > 4 && arguments[4] !== undefined ? arguments[4] : undefined;
-  var members_limit = arguments.length > 5 && arguments[5] !== undefined ? arguments[5] : undefined;
+  var filters = arguments.length > 4 && arguments[4] !== undefined ? arguments[4] : undefined;
 
   var MS = util.getEndpoint("groups");
   var requestOptions = {
@@ -363,11 +362,10 @@ var listUserGroups = function listUserGroups() {
     json: true
   };
 
-  if (expand) {
-    requestOptions.qs.expand = expand;
-  }
-  if (members_limit) {
-    requestOptions.qs.members_limit = members_limit;
+  if (filters) {
+    Object.keys(filters).forEach(function (filter) {
+      requestOptions.qs[filter] = filters[filter];
+    });
   }
   return request(requestOptions);
 };

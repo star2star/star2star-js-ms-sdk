@@ -279,16 +279,14 @@ var getIdentityDetails = function getIdentityDetails() {
  * @param {string} [accessToken="null accessToken"]
  * @param {number} [offset=0] - list offset
  * @param {number} [limit=10] - number of items to return
- * @param {string} [filterType=undefined] - optional "username" or "sms" 
- * @param {string} [filterValue=undefined] - value of username or sms
+ * @param {array} [filters=undefined] - optional array of key-value pairs to filter response.
  * @returns {Promise<object>} - Promise resolving to an identity data object
  */
 var lookupIdentity = function lookupIdentity() {
   var accessToken = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : "null accessToken";
   var offset = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 0;
   var limit = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : 10;
-  var filterType = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : undefined;
-  var filterValue = arguments.length > 4 && arguments[4] !== undefined ? arguments[4] : undefined;
+  var filters = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : undefined;
 
   var MS = util.getEndpoint("identity");
   var requestOptions = {
@@ -305,10 +303,12 @@ var lookupIdentity = function lookupIdentity() {
     },
     json: true
   };
-  if (filterType && filterValue) {
-    requestOptions.qs[filterType] = filterValue;
+  if (filters) {
+    Object.keys(filters).forEach(function (filter) {
+      requestOptions.qs[filter] = filters[filter];
+    });
   }
-  // console.log("REQUEST********",requestOptions);
+  //console.log("REQUEST********",requestOptions);
   return request(requestOptions);
 };
 

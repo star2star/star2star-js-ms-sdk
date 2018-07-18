@@ -270,16 +270,14 @@ const getIdentityDetails = (accessToken = "null access token", user_uuid="null u
  * @param {string} [accessToken="null accessToken"]
  * @param {number} [offset=0] - list offset
  * @param {number} [limit=10] - number of items to return
- * @param {string} [filterType=undefined] - optional "username" or "sms" 
- * @param {string} [filterValue=undefined] - value of username or sms
+ * @param {array} [filters=undefined] - optional array of key-value pairs to filter response.
  * @returns {Promise<object>} - Promise resolving to an identity data object
  */
 const lookupIdentity = (
   accessToken = "null accessToken",
   offset = 0,
   limit = 10,
-  filterType = undefined,
-  filterValue = undefined
+  filters = undefined
 ) => {
   const MS = util.getEndpoint("identity");
   const requestOptions = {
@@ -296,10 +294,12 @@ const lookupIdentity = (
     },
     json: true
   };
-  if(filterType && filterValue) {
-    requestOptions.qs[filterType] = filterValue;
+  if(filters) {
+    Object.keys(filters).forEach(filter => {
+      requestOptions.qs[filter] = filters[filter];
+    });
   }
-  // console.log("REQUEST********",requestOptions);
+  //console.log("REQUEST********",requestOptions);
   return request(requestOptions);
 };
 

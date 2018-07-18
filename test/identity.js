@@ -211,8 +211,11 @@ describe("Identity MS Unit Test Suite", function () {
 
   it("Lookup Identity with known user", function (done) {
     if (!creds.isValid) return done();
+    filters = [];
+    filters["username"] = "kpancharathi@star2star.com";
+
     s2sMS.Identity
-      .lookupIdentity(accessToken, 0, 10, "username", "kpancharathi@star2star.com")
+      .lookupIdentity(accessToken, 0, 10, filters)
       .then(response => {
         // console.log('iiiii %j', response);
         assert(response.items.length === 1);
@@ -226,8 +229,10 @@ describe("Identity MS Unit Test Suite", function () {
 
   it("Lookup Identity with unknown user", function (done) {
     if (!creds.isValid) return done();
+    filters = [];
+    filters["username"] = "test333@test.com";
     s2sMS.Identity
-      .lookupIdentity(accessToken, 1, 10, "username", "test333@test.com")
+      .lookupIdentity(accessToken, 1, 10, filters)
       .then(response => {
         // console.log("iiiii %j", response);
         assert(response.items.length === 0);

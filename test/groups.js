@@ -347,13 +347,16 @@ describe("Groups Test Suite", function () {
 
   it("List User Groups", function (done) {
     if (!creds.isValid) return done();
+    filters = [];
+    filters["expand"] = "member",
+    filters["member_limit"] = 5;
+
     s2sMS.Groups.listUserGroups(
         accessToken,
         identityData.uuid,
         0, //offset
         10, //limit
-        "member", //expand
-        5 //member_limit
+        filters
       ).then(responseData => {
         // console.log(responseData);
         assert(
