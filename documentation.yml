@@ -41,10 +41,16 @@ toc:
   - name: Groups
     children:
       - addMembersToGroup
+      - assignGroupsToUser
       - createGroup
+      - createUserGroup
       - deleteGroup
+      - deleteGroupMembers
+      - deleteUserGroup
       - getGroup 
       - listGroups
+      - listUserGroups
+      - modifyUserGroup
       - updateGroup
   - name: Identity
     children:

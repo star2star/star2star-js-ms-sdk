@@ -190,11 +190,229 @@ const addMembersToGroup = (
   return request(requestOptions);
 };
 
+/***********************************************
+ * Begin user-controller
+ ***********************************************/
+
+/**
+ * @async
+ * @description This function will assign one or more groups to a user.
+ * @param {string} [accessToken="null accessToken"] - cpaas access token
+ * @param {string} [userUuid="null userUuid"] - user being assigned to groups
+ * @param {object} [body="null body"] - object containing array of groups
+ * @returns {Promise<array>} - Promise resolving to an array of groups added to user
+ */
+const assignGroupsToUser = (
+  accessToken = "null accessToken",
+  userUuid = "null userUuid",
+  body = "null body"
+) => {
+  const MS = util.getEndpoint("groups");
+  const requestOptions = {
+    method: "POST",
+    uri: `${MS}/users/${userUuid}/groups/assign`,
+    headers: {
+      "Content-type": "application/json",
+      "Authorization": `Bearer ${accessToken}`,
+      'x-api-version': `${util.getVersion()}`
+    },
+    body: body,
+    json: true
+  };
+  
+  return request(requestOptions);
+};
+
+/**
+ * @async
+ * @description This function will create a new group associated with a user
+ * @param {string} [accessToken="null accessToken"] - cpaas access token
+ * @param {string} [userUuid="null userUuid"] - user_uuid
+ * @param {string} [body="null body"] - object conatining group data
+ * @returns
+ */
+const createUserGroup = (
+  accessToken = "null accessToken",
+  userUuid = "null userUuid",
+  body = "null body"
+) => {
+  const MS = util.getEndpoint("groups");
+  const requestOptions = {
+    method: "POST",
+    uri: `${MS}/users/${userUuid}/groups`,
+    headers: {
+      "Content-type": "application/json",
+      "Authorization": `Bearer ${accessToken}`,
+      'x-api-version': `${util.getVersion()}`
+    },
+    body: body,
+    json: true
+  };
+  
+  return request(requestOptions);
+};
+
+/**
+ * @async
+ * @description This function will remove one or more members from a group
+ * @param {string} [accessToken="null accessToken"] - cpaas access token
+ * @param {string} [userUuid="null userUuid"] - group owner uuid
+ * @param {string} [groupUuid="null groupUuid"] - group to remove users from
+ * @param {array} [body="null body"] - array of objects containing member uuids to remove from group
+ * @returns {Promise<empty>} - Promise resolving success or failure status object.
+ */
+const deleteGroupMembers = (
+  accessToken = "null accessToken",
+  userUuid = "null userUuid",
+  groupUuid = "null groupUuid",
+  body = "null body"
+) => {
+  const MS = util.getEndpoint("groups");
+  const requestOptions = {
+    method: "DELETE",
+    uri: `${MS}/users/${userUuid}/groups/${groupUuid}/members`,
+    headers: {
+      "Content-type": "application/json",
+      "Authorization": `Bearer ${accessToken}`,
+      'x-api-version': `${util.getVersion()}`
+    },
+    body: body,
+    resolveWithFullResponse: true,
+    json: true,
+    
+  };
+
+  return new Promise (function (resolve, reject){
+    request(requestOptions).then(function(responseData){
+        responseData.statusCode === 204 ?  resolve({"status":"ok"}): reject({"status":"failed"});
+    }).catch(function(error){
+        reject(error);
+    })
+  });
+};
+
+/**
+ * @async
+ * @description This function will delete a group created by a specific user
+ * @param {string} [accessToken="null accessToken"] - cpaas access token
+ * @param {string} [userUuid="null userUuid"] - group owner uuid
+ * @param {string} [groupUuid="null groupUuid"] - group uuid
+ * @returns {Promise<empty>} - Promise resolving success or failure status object.
+ */
+const deleteUserGroup = (
+  accessToken = "null accessToken",
+  userUuid = "null userUuid",
+  groupUuid = "null groupUuid",
+) => {
+  const MS = util.getEndpoint("groups");
+  const requestOptions = {
+    method: "DELETE",
+    uri: `${MS}/users/${userUuid}/groups/${groupUuid}`,
+    headers: {
+      "Content-type": "application/json",
+      "Authorization": `Bearer ${accessToken}`,
+      'x-api-version': `${util.getVersion()}`
+    },
+    resolveWithFullResponse: true,
+    json: true,
+    
+  };
+
+  return new Promise (function (resolve, reject){
+    request(requestOptions).then(function(responseData){
+        responseData.statusCode === 204 ?  resolve({"status":"ok"}): reject({"status":"failed"});
+    }).catch(function(error){
+        reject(error);
+    })
+  });
+};
+
+/**
+ * @async
+ * @description This function will return the groups associated with a user
+ * @param {string} [accessToken="null accessToken"] - cpaas access otken
+ * @param {string} [userUuid="null userUuid"] - user uuid
+ * @param {number} [offset=0] - page number
+ * @param {number} [limit=10] - page size
+ * @param {string} [expand=undefined] - optional; values are "members" or "members.type"
+ * @param {string} [members_limit=undefined] - optional; specify the number of members to return. Default is 20
+ * @returns {Promise<object>} - Promise resolving to a list of user groups.
+ */
+const listUserGroups = (
+  accessToken = "null accessToken",
+  userUuid = "null userUuid",
+  offset = 0,
+  limit = 10,
+  expand = undefined,
+  members_limit = undefined
+) => {
+  const MS = util.getEndpoint("groups");
+  const requestOptions = {
+    method: "GET",
+    uri: `${MS}/users/${userUuid}/groups`,
+    headers: {
+      "Content-type": "application/json",
+      "Authorization": `Bearer ${accessToken}`,
+      'x-api-version': `${util.getVersion()}`
+    },
+    qs: {
+      offset,
+      limit
+    },
+    json: true
+  };
+  
+  if(expand){
+    requestOptions.qs.expand = expand;
+  }
+  if(members_limit){
+    requestOptions.qs.members_limit = members_limit;
+  }
+  return request(requestOptions);
+};
+
+/**
+ * @async
+ * @description This method will change the group name and/or description
+ * @param {string} [accessToken="null accessToken"] - cpaas access token
+ * @param {string} [userUuid="null userUuid"] - user owning group
+ * @param {string} [groupUuid="null groupUuid"] - group to modify
+ * @param {string} [body="null body] - object containing new name and/or description
+ * @returns {Promise<object>} - Promise resolving to a group object.
+ */
+const modifyUserGroup = (
+  accessToken = "null accessToken",
+  userUuid = "null userUuid",
+  groupUuid = "null groupUuid",
+  body = "null body"
+) => {
+  const MS = util.getEndpoint("groups");
+  const requestOptions = {
+    method: "PUT",
+    uri: `${MS}/users/${userUuid}/groups/${groupUuid}`,
+    headers: {
+      "Content-type": "application/json",
+      "Authorization": `Bearer ${accessToken}`,
+      'x-api-version': `${util.getVersion()}`
+    },
+   body:body,
+   json: true
+  };
+  
+  return request(requestOptions);
+};
+
 module.exports = {
-  listGroups,
-  getGroup,
-  deleteGroup,
+  addMembersToGroup,
+  assignGroupsToUser,
   createGroup,
-  updateGroup,
-  addMembersToGroup
+  createUserGroup,
+  deleteGroup,
+  deleteGroupMembers,
+  deleteUserGroup,
+  getGroup, 
+  listGroups,
+  listUserGroups,
+  modifyUserGroup,
+  updateGroup
 };

@@ -71,14 +71,6 @@ describe("Groups Test Suite", function () {
 
   it("Create Group", function (done) {
     if (!creds.isValid) return done();
-    /*
-     * @param name - String group Name
-     * @param description - description
-     * @param groupType = string group type
-     * @param members - array of type, uuid,
-     * @param accountUUID - account uuid optional
-     */
-
     s2sMS.Groups.createGroup(
         accessToken,
         "Test Group",
@@ -169,13 +161,6 @@ describe("Groups Test Suite", function () {
 
   it("Delete Groups ", function (done) {
     if (!creds.isValid) return done();
-    /*
-     * @param name - String group Name
-     * @param description - description
-     * @param groupType = string group type
-     * @param members - array of type, uuid,
-     * @param accountUUID - account uuid optional
-     */
     const testGroupName = 'UnitTestDeleteMe';
 
     s2sMS.Groups.createGroup(
@@ -325,4 +310,146 @@ describe("Groups Test Suite", function () {
             done(new Error(error));
           });
   });
+ 
+  let testGroupUuid;
+
+  it("Create User Group", function (done) {
+    if (!creds.isValid) return done();
+    
+    const body = {
+      "account_id": identityData.account_uuid,
+      "description": "A test group",
+      "members": [
+        {
+          "uuid": "fake-uuid"
+        }
+      ],
+      "name": "Test",
+      "type": "user"
+    }
+    s2sMS.Groups.createUserGroup(
+        accessToken,
+        identityData.uuid,
+        body
+      ).then(responseData => {
+        testGroupUuid = responseData.uuid; //Use this uuid for other tests.
+        // console.log(responseData);
+        assert(
+          responseData.account_uuid === identityData.account_uuid
+        );
+        done();
+      })
+      .catch((error) => {
+        console.log('Error Create User Group', error);
+        done(new Error(error));
+      });
+  });
+
+  it("List User Groups", function (done) {
+    if (!creds.isValid) return done();
+    s2sMS.Groups.listUserGroups(
+        accessToken,
+        identityData.uuid,
+        0, //offset
+        10, //limit
+        "member", //expand
+        5 //member_limit
+      ).then(responseData => {
+        // console.log(responseData);
+        assert(
+          responseData.hasOwnProperty('items')
+        );
+        done();
+      })
+      .catch((error) => {
+        console.log('Error List User Groups', error);
+        done(new Error(error));
+      });
+  });
+
+  it("Modify User Group", function (done) {
+    if (!creds.isValid) return done();
+    const body = {
+      "description": "new description",
+      "name": "new name"
+    }
+    s2sMS.Groups.modifyUserGroup(
+        accessToken,
+        identityData.uuid,
+        testGroupUuid,
+        body
+      ).then(responseData => {
+        // console.log(responseData);
+        assert(responseData.name === "new name");
+        done();
+      })
+      .catch((error) => {
+        console.log('Error List User Groups', error);
+        done(new Error(error));
+      });
+  });
+  
+  it("Add Group to User", function (done) {
+    if (!creds.isValid) return done();
+    const body = {
+      "groups": [
+        testGroupUuid
+      ]
+    }
+    s2sMS.Groups.assignGroupsToUser(
+        accessToken,
+        identityData.uuid,
+        body
+      ).then(responseData => {
+        // console.log(responseData);
+        assert(responseData[0].uuid === testGroupUuid);
+        done();
+      })
+      .catch((error) => {
+        console.log('Error Add Group to User', error);
+        done(new Error(error));
+      });
+  });
+
+  it("Delete User from Group", function (done) {
+    if (!creds.isValid) return done();
+    body = [
+      {
+        "uuid": identityData.uuid
+      }
+    ];
+    s2sMS.Groups.deleteGroupMembers(
+        accessToken,
+        identityData.uuid,
+        testGroupUuid,
+        body
+      ).then(responseData => {
+        // console.log(responseData);
+        assert(responseData.status === "ok");
+
+        done();
+      })
+      .catch((error) => {
+        console.log('Error Delete User Group', error);
+        done(new Error(error));
+      });
+  });
+
+  it("Delete User Group", function (done) {
+    if (!creds.isValid) return done();
+    s2sMS.Groups.deleteUserGroup(
+        accessToken,
+        identityData.uuid,
+        testGroupUuid
+      ).then(responseData => {
+        // console.log(responseData);
+        assert(responseData.status === "ok");
+        done();
+      })
+      .catch((error) => {
+        console.log('Error Delete User Group', error);
+        done(new Error(error));
+      });
+  });
+
 });
