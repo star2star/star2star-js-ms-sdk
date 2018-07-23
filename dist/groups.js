@@ -77,19 +77,18 @@ var createGroup = function createGroup() {
  * @description This function will ask the cpaas groups service for a specific group.
  * @param {string} [accessToken="null accessToken"] - access Token
  * @param {string} [groupUUID="null uuid"] - group UUID
+ * @param {array} [filters=undefined] - optional array of filters, e.g. [expand] = "members.type"
  * @returns {Promise<object>} - Promise resolving to a data object containing a single group
  */
 var getGroup = function getGroup() {
   var accessToken = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : "null accessToken";
   var groupUUID = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : "null uuid";
+  var filters = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : undefined;
 
   var MS = util.getEndpoint("groups");
   var requestOptions = {
     method: "GET",
     uri: MS + "/groups/" + groupUUID,
-    qs: {
-      expand: "members.type"
-    },
     headers: {
       "Content-type": "application/json",
       "Authorization": "Bearer " + accessToken,
@@ -97,6 +96,49 @@ var getGroup = function getGroup() {
     },
     json: true
   };
+
+  if (filters) {
+    requestOptions.qs = [];
+    Object.keys(filters).forEach(function (filter) {
+      requestOptions.qs[filter] = filters[filter];
+    });
+  }
+  //console.log("****REQUESTOPTS****",requestOptions);
+  return request(requestOptions);
+};
+
+/**
+ * @async
+ * @description This function will return a list of the members of a group.
+ * @param {string} [accessToken="null accessToken"] - access Token
+ * @param {string} [groupUUID="null uuid"] - group UUID
+ * @param {array} [filters=undefined] - optional array of filters, e.g. [expand] = "members.type", [offset] and [limit] for pagination
+ * @returns {Promise<object>} - Promise resolving to a data object containing a single group
+ */
+var listGroupMembers = function listGroupMembers() {
+  var accessToken = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : "null accessToken";
+  var groupUUID = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : "null uuid";
+  var filters = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : undefined;
+
+  var MS = util.getEndpoint("groups");
+  var requestOptions = {
+    method: "GET",
+    uri: MS + "/groups/" + groupUUID + "/members",
+    headers: {
+      "Content-type": "application/json",
+      "Authorization": "Bearer " + accessToken,
+      'x-api-version': "" + util.getVersion()
+    },
+    json: true
+  };
+
+  if (filters) {
+    requestOptions.qs = [];
+    Object.keys(filters).forEach(function (filter) {
+      requestOptions.qs[filter] = filters[filter];
+    });
+  }
+  //console.log("****REQUESTOPTS****",requestOptions);
   return request(requestOptions);
 };
 
@@ -291,6 +333,7 @@ module.exports = {
   deleteGroupMembers: deleteGroupMembers,
   getGroup: getGroup,
   listGroups: listGroups,
+  listGroupMembers: listGroupMembers,
   modifyGroup: modifyGroup,
   reactivateGroup: reactivateGroup
 };

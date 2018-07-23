@@ -47,6 +47,7 @@ toc:
       - deleteGroupMembers
       - getGroup 
       - listGroups
+      - listGroupMembers
       - modifyGroup
       - reactivateGroup
   - name: Identity

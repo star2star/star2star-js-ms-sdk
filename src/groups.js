@@ -76,19 +76,18 @@ const createGroup = (
  * @description This function will ask the cpaas groups service for a specific group.
  * @param {string} [accessToken="null accessToken"] - access Token
  * @param {string} [groupUUID="null uuid"] - group UUID
+ * @param {array} [filters=undefined] - optional array of filters, e.g. [expand] = "members.type"
  * @returns {Promise<object>} - Promise resolving to a data object containing a single group
  */
 const getGroup = (
   accessToken = "null accessToken",
-  groupUUID = "null uuid"
+  groupUUID = "null uuid",
+  filters = undefined
 ) => {
   const MS = util.getEndpoint("groups");
   const requestOptions = {
     method: "GET",
     uri: `${MS}/groups/${groupUUID}`,
-    qs: {
-      expand: "members.type"
-    },
     headers: {
       "Content-type": "application/json",
       "Authorization": `Bearer ${accessToken}`,
@@ -96,6 +95,49 @@ const getGroup = (
     },
     json: true
   };
+
+  if(filters) {
+    requestOptions.qs = [];
+    Object.keys(filters).forEach(filter => {
+      requestOptions.qs[filter] = filters[filter];
+    });
+  }
+  //console.log("****REQUESTOPTS****",requestOptions);
+  return request(requestOptions);
+};
+
+/**
+ * @async
+ * @description This function will return a list of the members of a group.
+ * @param {string} [accessToken="null accessToken"] - access Token
+ * @param {string} [groupUUID="null uuid"] - group UUID
+ * @param {array} [filters=undefined] - optional array of filters, e.g. [expand] = "members.type", [offset] and [limit] for pagination
+ * @returns {Promise<object>} - Promise resolving to a data object containing a single group
+ */
+const listGroupMembers = (
+  accessToken = "null accessToken",
+  groupUUID = "null uuid",
+  filters = undefined
+) => {
+  const MS = util.getEndpoint("groups");
+  const requestOptions = {
+    method: "GET",
+    uri: `${MS}/groups/${groupUUID}/members`,
+    headers: {
+      "Content-type": "application/json",
+      "Authorization": `Bearer ${accessToken}`,
+      'x-api-version': `${util.getVersion()}`
+    },
+    json: true
+  };
+
+  if(filters) {
+    requestOptions.qs = [];
+    Object.keys(filters).forEach(filter => {
+      requestOptions.qs[filter] = filters[filter];
+    });
+  }
+  //console.log("****REQUESTOPTS****",requestOptions);
   return request(requestOptions);
 };
 
@@ -290,6 +332,7 @@ module.exports = {
   deleteGroupMembers,
   getGroup, 
   listGroups,
+  listGroupMembers,
   modifyGroup,
   reactivateGroup
 };

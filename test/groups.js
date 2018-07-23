@@ -53,7 +53,7 @@ describe("Groups Test Suite", function () {
   it("List Groups", function (done) {
     if (!creds.isValid) return done();
     filters = [];
-    filters["expand"] = "member",
+    filters["expand"] = "members";
     filters["member_limit"] = 5;
 
     s2sMS.Groups.listGroups(
@@ -107,17 +107,38 @@ describe("Groups Test Suite", function () {
 
   it("Get One Group", function (done) {
     if (!creds.isValid) return done();
-    const body = {
-      "description": "new description",
-      "name": "new name"
-    }
+    filters = [];
+    filters["expand"] = "members.type";
+
     s2sMS.Groups.getGroup(
         accessToken,
         testGroupUuid,
-        body
+        filters
       ).then(responseData => {
         // console.log(responseData);
         assert(responseData.name === "Test");
+        assert(responseData.members.items[0].type === "user")
+        done();
+      })
+      .catch((error) => {
+        console.log('Error List User Groups', error);
+        done(new Error(error));
+      });
+  });
+
+  it("Get Group Members", function (done) {
+    if (!creds.isValid) return done();
+    filters = [];
+    filters["expand"] = "members.type";
+
+    s2sMS.Groups.listGroupMembers(
+        accessToken,
+        testGroupUuid,
+        filters
+      ).then(responseData => {
+        // console.log(responseData);
+        assert(responseData.metadata.total === 1);
+        assert(responseData.items[0].type === "user")
         done();
       })
       .catch((error) => {
