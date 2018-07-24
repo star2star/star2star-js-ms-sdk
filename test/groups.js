@@ -173,7 +173,7 @@ describe("Groups Test Suite", function () {
 
   it("Delete User from Group", function (done) {
     if (!creds.isValid) return done();
-    body = [
+    members = [
       {
         "uuid": identityData.uuid
       }
@@ -181,7 +181,7 @@ describe("Groups Test Suite", function () {
     s2sMS.Groups.deleteGroupMembers(
         accessToken,
         testGroupUuid,
-        body
+        members
       ).then(responseData => {
         // console.log(responseData);
         assert(responseData.status === "ok");

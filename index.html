@@ -2,7 +2,7 @@
 <html>
 <head>
   <meta charset='utf-8' />
-  <title>star2star-js-ms-sdk 2.1.20 | Documentation</title>
+  <title>star2star-js-ms-sdk 2.1.21 | Documentation</title>
   <meta name='viewport' content='width=device-width,initial-scale=1'>
   <link href='assets/bass.css' type='text/css' rel='stylesheet' />
   <link href='assets/style.css' type='text/css' rel='stylesheet' />
@@ -14,7 +14,7 @@
       <div id='split-left' class='overflow-auto fs0 height-viewport-100'>
         <div class='py1 px2'>
           <h3 class='mb0 no-anchor'>star2star-js-ms-sdk</h3>
-          <div class='mb1'><code>2.1.20</code></div>
+          <div class='mb1'><code>2.1.21</code></div>
           <input
             placeholder='Filter'
             id='filter-input'
@@ -4559,19 +4559,9 @@
       
         <div class='space-bottom0'>
           <div>
-            <span class='code bold'>body</span> <code class='quiet'>(<a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Array">array</a>
-            = <code>&quot;null body&quot;</code>)</code>
-	    array of objects containing member uuids to remove from group
-
-          </div>
-          
-        </div>
-      
-        <div class='space-bottom0'>
-          <div>
-            <span class='code bold'>userUuid</span> <code class='quiet'>(<a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String">string</a>
-            = <code>&quot;null userUuid&quot;</code>)</code>
-	    group owner uuid
+            <span class='code bold'>members</span> <code class='quiet'>(<a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Array">array</a>
+            = <code>[]</code>)</code>
+	    array of objects containing 'uuid' (for known users)
 
           </div>
           
@@ -4768,16 +4758,6 @@ expand
             <span class='code bold'>filters</span> <code class='quiet'>(<a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Array">array</a>
             = <code>undefined</code>)</code>
 	    optional array of key-value pairs to filter response.
-
-          </div>
-          
-        </div>
-      
-        <div class='space-bottom0'>
-          <div>
-            <span class='code bold'>members_limit</span> <code class='quiet'>(<a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String">string</a>
-            = <code>undefined</code>)</code>
-	    optional; specify the number of members to return. Default is 20
 
           </div>
           

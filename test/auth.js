@@ -319,13 +319,13 @@ describe("Auth MS Test Suite", function () {
       });
   });
 
-  /*it("Add Role to User", function (done) {
+ it("Add Role to User", function (done) {
     if (!creds.isValid) 
     return done(err);
  
     body = {
       "role_uuid": [
-        "0d781753-5f10-4928-9608-696663b0d378"
+        creds.TEST_ROLE_UUID
       ]
     };
     s2sMS.Identity.getMyIdentityData(accessToken)
@@ -356,7 +356,7 @@ describe("Auth MS Test Suite", function () {
  
     s2sMS.Identity.getMyIdentityData(accessToken)
       .then(identityData => {
-        role_uuid = "0d781753-5f10-4928-9608-696663b0d378";
+        role_uuid = creds.TEST_ROLE_UUID;
         s2sMS.Auth.detachUserRole(
           accessToken,
           identityData.user_uuid,
@@ -375,7 +375,7 @@ describe("Auth MS Test Suite", function () {
         console.log("error in getting user_uuid", error);
         done(new Error(error));
       });
-  });*/
+  });
 
   it("Get User Roles", function (done) {
     if (!creds.isValid) {

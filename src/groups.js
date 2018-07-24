@@ -11,7 +11,6 @@ const ObjectMerge = require("object-merge");
  * @param {number} [offset=0] - page number
  * @param {number} [limit=10] - page size
  * @param {array} [filters=undefined] - optional array of key-value pairs to filter response.
- * @param {string} [members_limit=undefined] - optional; specify the number of members to return. Default is 20
  * @returns {Promise<object>} - Promise resolving to a list of user groups.
  */
 const listGroups = (
@@ -209,15 +208,14 @@ const addMembersToGroup = (
  * @async
  * @description This function will remove one or more members from a group
  * @param {string} [accessToken="null accessToken"] - cpaas access token
- * @param {string} [userUuid="null userUuid"] - group owner uuid
  * @param {string} [groupUuid="null groupUuid"] - group to remove users from
- * @param {array} [body="null body"] - array of objects containing member uuids to remove from group
+ * @param {array} [members=[]] - array of objects containing 'uuid' (for known users)
  * @returns {Promise<empty>} - Promise resolving success or failure status object.
  */
 const deleteGroupMembers = (
   accessToken = "null accessToken",
   groupUuid = "null groupUuid",
-  body = "null body"
+  members = []
 ) => {
   const MS = util.getEndpoint("groups");
   const requestOptions = {
@@ -228,7 +226,7 @@ const deleteGroupMembers = (
       "Authorization": `Bearer ${accessToken}`,
       'x-api-version': `${util.getVersion()}`
     },
-    body: body,
+    body: members,
     resolveWithFullResponse: true,
     json: true,
     
