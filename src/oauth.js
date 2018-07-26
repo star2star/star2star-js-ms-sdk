@@ -73,8 +73,39 @@ const refreshAccessToken = (
   return request(requestOptions);
 };
 
+/**
+ * @async
+ * @description This function will call the oauth microservice with the basic token you passed in.
+ * @param {string} [oauthToken="null oauth token"] - token for authentication to cpaas oauth system
+ * @returns {Promise<object>} - Promise resolving to an oauth token data object
+ */
+const getClientToken = (
+  oauthToken = "null oauth token"
+) => {
+  const MS = util.getAuthHost();
+  const VERSION = util.getVersion();
+  const requestOptions = {
+    method: "POST",
+    uri: `${MS}/oauth/token`,
+    headers: {
+      "Authorization": `Basic ${oauthToken}`,
+      'x-api-version': `${VERSION}`,
+      "Content-type": "application/x-www-form-urlencoded"
+    },
+    form: {
+      grant_type: "client_credentials",
+      scope: "default"
+    },
+    json:true 
+    // resolveWithFullResponse: true
+  };
+
+  return request(requestOptions);
+};
+
 
 module.exports = {
+  getClientToken,
   getAccessToken,
   refreshAccessToken
 };

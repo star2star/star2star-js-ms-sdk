@@ -81,4 +81,22 @@ describe("Oauth MS", function () {
         done(new Error(error));
       });
   });
+
+  it("Get Client Token", function (done) {
+    if (!creds.isValid) return done();
+    s2sMS.Oauth.getClientToken(
+        creds.CPAAS_OAUTH_TOKEN,
+      )
+      .then(oauthData => {
+        console.log('Got access token data ', oauthData);
+        assert(
+          oauthData.hasOwnProperty('access_token')
+        );
+        done();
+      })
+      .catch((error) => {
+        console.log('Error getting access token [getAccessToken]', error);
+        done(new Error(error));
+      });
+  });
 });
