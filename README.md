@@ -31,6 +31,7 @@ s2sMS.Identity.login(creds.CPAAS_KEY, creds.email, creds.password)
 [Please click here for our documentation pages.](https://star2star.github.io/star2star-js-ms-sdk/ "Star2Star Micro Service SDK Documentation")
 
 ## Changes
+* 2.1.21 - Fix Chat unit tests.
 * 2.1.21 - Normalize add and delete group members and update unit tests.
 * 2.1.20 - Add list group members
 * 2.1.19 - Fix groups and add deativate/reactivate groups
