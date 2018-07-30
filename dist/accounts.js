@@ -143,7 +143,6 @@ var getAccount = function getAccount() {
  * @param {string} [accessToken="null access token"] - access token for cpaas systems
  * @param {string} [accountUUID="null account uuid"]
  * @param {string} [body="null body"]
- * @param {string} [property=""]
  * @returns {Promise<object>} - Promise resolving to a status data object
  */
 var modifyAccount = function modifyAccount() {
@@ -176,14 +175,14 @@ var modifyAccount = function modifyAccount() {
 };
 
 /**
-* @async
-* @description This function returns all available accounts.
-* @param {string} [accessToken="null accessToken"] - access token for cpaas system
-* @param {string} [accountUUID="null account uuid"] - account uuid of the parent
-* @param {number} [offset=0] - what page number you want 
-* @param {number} [limit=10] - size of the page or number of records to return 
-* @returns {Promise<object>} - Promise resolving to a data object containing a list of accounts
-*/
+ * @async
+ * @description This function returns all available accounts.
+ * @param {string} [accessToken="null accessToken"] - access token for cpaas system
+ * @param {string} [accountUUID="null account uuid"] - account uuid of the parent
+ * @param {number} [offset=0] - what page number you want 
+ * @param {number} [limit=10] - size of the page or number of records to return 
+ * @returns {Promise<object>} - Promise resolving to a data object containing a list of accounts
+ */
 //TODO add sort order also 
 var listAccountRelationships = function listAccountRelationships() {
   var accessToken = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : "null accessToken";
@@ -292,9 +291,44 @@ var suspendAccount = function suspendAccount() {
   });
 };
 
+/**
+   * @async
+   * @description This function will delete an account.
+   * @param {string} [accessToken="null access token"] - access token for cpaas systems
+   * @param {string} [accountUUID="null account uuid"] - uuid of account to delte
+   * @returns {Promise<object>} - Promise resolving to a status data object
+   */
+var deleteAccount = function deleteAccount() {
+  var accessToken = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : "null access token";
+  var accountUUID = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : "null account uuid";
+
+  //body = JSON.stringify(body);
+  var MS = util.getEndpoint("accounts");
+  var requestOptions = {
+    method: "DELETE",
+    uri: MS + "/accounts/" + accountUUID,
+    resolveWithFullResponse: true,
+    json: true,
+    headers: {
+      "Authorization": "Bearer " + accessToken,
+      "Content-type": "application/json",
+      'x-api-version': "" + util.getVersion()
+    }
+  };
+
+  return new Promise(function (resolve, reject) {
+    request(requestOptions).then(function (responseData) {
+      responseData.statusCode === 200 ? resolve({ "status": "ok" }) : reject({ "status": "failed" });
+    }).catch(function (error) {
+      reject(error);
+    });
+  });
+};
+
 module.exports = {
   createRelationship: createRelationship,
   createAccount: createAccount,
+  deleteAccount: deleteAccount,
   listAccountRelationships: listAccountRelationships,
   listAccounts: listAccounts,
   getAccount: getAccount,

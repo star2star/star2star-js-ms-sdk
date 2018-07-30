@@ -12,7 +12,8 @@ let creds = {
 
 describe("Identity MS Unit Test Suite", function () {
 
-  let accessToken, identityData, testUUID, time;
+  let accessToken, identityData, testUUID;
+  let time = new Date().getTime().toString().slice(-10); //FIXME Temporary until DELETE is fixed
 
   before(function () {
     // file system uses full path so will do it like this
@@ -52,8 +53,6 @@ describe("Identity MS Unit Test Suite", function () {
 
   it("Create Identity", function (done) {
     if (!creds.isValid) return done();
-    time = new Date().getTime(); //FIXME Temporary until DELETE is fixed
-    console.log 
     const body = {
       "account_uuid": identityData.account_uuid,
       "type": "user",
@@ -64,18 +63,18 @@ describe("Identity MS Unit Test Suite", function () {
       "status": "Active",
       "provider": "local",
       "email": "larry"+time+"@fake.email",
-      "phone": "1112223333",
+      "phone": time,
       "address": {
         "city": "Somewhere",
         "state": "AK",
         "postal_code": "12345",
         "country": "US"
-      },
+      }, 
       "reference": "Free form text"
     }
     s2sMS.Identity.createIdentity(accessToken, body)
       .then(identity => {
-        console.log('Created user', identity.uuid);
+        // console.log('Created user', identity.uuid);
         testUUID = identity.uuid;
         assert(identity.uuid !== undefined);
         done();
@@ -86,20 +85,57 @@ describe("Identity MS Unit Test Suite", function () {
       });
   });
 
-  it("Add DID Identity Alias", function (done) {
+  it("Create DID Identity Alias", function (done) {
     if (!creds.isValid) return done();
-    // console.log('Created guest user [create Alias]', identityData.uuid);
-    const testSMSNumber = time.toString().slice(-10); //FIXME Temporary until DELETE is fixed
+    const body = {
+      "nickname": "larry"+time+"@fake.email",
+      "email": "larry"+time+"@fake.email",
+      "sms": time
+    }    
+    s2sMS.Identity.createAlias(
+        accessToken,
+        testUUID,
+        body
+      ).then(response => {
+        assert(response.status === "ok");
+        s2sMS.Identity.getIdentityDetails(accessToken,testUUID)
+        .then(response => {
+            //console.log("UPDATED IDENTITY",response);
+            assert(response.aliases[0].sms === time);
+            done();
+        })
+        .catch(error => {
+          console.log('Error Getting Updated Identity', error);
+          done(new Error(error));
+        });
+      })
+      .catch(error => {
+        console.log('Error updating alias [create alias]', error);
+        done(new Error(error));
+      });
+  });
+  
+  it("Update DID Identity Alias", function (done) {
+    if (!creds.isValid) return done();
+    time++; //FIXME incrementing our time to use for new sms until delete is fixed.    
     s2sMS.Identity.updateAliasWithDID(
         accessToken,
         testUUID,
-        testSMSNumber
-      ).then((aliasData) => {
-        //console.log('alias data', aliasData);
-        assert(aliasData.sms === testSMSNumber);
-        done();
+        time
+      ).then(response => {
+        assert(response.status === "ok");
+        s2sMS.Identity.getIdentityDetails(accessToken,testUUID)
+        .then(response => {
+            // console.log("UPDATED SMS",response.aliases[0].sms);
+            assert(response.aliases[0].sms == time);
+            done();
+        })
+        .catch(error => {
+          console.log('Error Getting Updated Identity', error);
+          done(new Error(error));
+        });
       })
-      .catch((error) => {
+      .catch(error => {
         console.log('Error updating alias [create alias]', error);
         done(new Error(error));
       });
@@ -108,14 +144,14 @@ describe("Identity MS Unit Test Suite", function () {
   it("Modify Identity", function (done) {
     if (!creds.isValid) return done();
     // console.log('Created guest user [create Alias]', identityData.uuid);
-    const body = {properties: {first_name: "Bob"}};
+    const body = {first_name: "Bob"};
     s2sMS.Identity.modifyIdentity(
         accessToken,
         testUUID,
         body
       ).then((response) => {
         //console.log('alias data', aliasData);
-        assert(response.properties.first_name === "Bob");
+        assert(response.first_name === "Bob");
         done();
       })
       .catch((error) => {
@@ -123,6 +159,8 @@ describe("Identity MS Unit Test Suite", function () {
         done(new Error(error));
       });
   });
+
+  //TODO these return 204s but are broken
 
   it("Deactivate Identity", function (done) {
     if (!creds.isValid) return done();
@@ -207,12 +245,10 @@ describe("Identity MS Unit Test Suite", function () {
       });
   });
 
-
-
   it("Lookup Identity with known user", function (done) {
     if (!creds.isValid) return done();
     filters = [];
-    filters["username"] = "kpancharathi@star2star.com";
+    filters["username"] = creds.email;
 
     s2sMS.Identity
       .lookupIdentity(accessToken, 0, 10, filters)
@@ -276,8 +312,8 @@ describe("Identity MS Unit Test Suite", function () {
       })
       .catch(error => {
         // Expecting a specific error as this token is expired.
-        // console.log("error in reset password", error.message);
-        const expected = "Identity email cannot be null"
+        //console.log("error in reset password", error.message);
+        const expected = "does not exist locally"
         assert(error.message.includes(expected));
         done();
       });

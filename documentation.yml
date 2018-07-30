@@ -3,6 +3,7 @@ toc:
     children:
       - createAccount
       - createRelationship
+      - deleteAccount
       - listAccounts
       - listAccountRelationships
       - getAccount
@@ -52,6 +53,7 @@ toc:
       - reactivateGroup
   - name: Identity
     children:
+      - createAlias
       - createIdentity
       - deactivateIdentity
       - deleteIdentity

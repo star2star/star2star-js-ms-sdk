@@ -127,6 +127,45 @@ const reactivateIdentity = (
 
 /**
  * @async
+ * @description This function will add aliases to an identity
+ * @param {string} [accessToken="null accessToken"] - access token
+ * @param {string} [userUuid="null user uuid"] - user_uuid for alias being created
+ * @param {object} [body="null body"] - object containing any combination of email, nickname, or sms alias assignments.
+ * @returns {Promise<object>} - Promise resolving to an identity data object with alias
+ */
+const createAlias = (
+  accessToken = "null accessToken",
+  userUuid = "null user uuid",
+  body = "null body"
+) => {
+  const MS = util.getEndpoint("identity");
+  const requestOptions = {
+    method: "POST",
+    uri: `${MS}/identities/${userUuid}/aliases`,
+    headers: {
+      "Authorization": `Bearer ${accessToken}`,
+      "Content-type": "application/json",
+      'x-api-version': `${util.getVersion()}`
+    },
+    body: body,
+    json: true,
+    resolveWithFullResponse: true
+  };
+
+  //Returning "ok" here as response object does not contain alias.
+  return new Promise((resolve, reject)=>{
+    request(requestOptions)
+    .then(response =>{
+      response.statusCode === 201 ?  resolve({"status":"ok"}): reject({"status":"failed"});
+    })
+    .catch(error=>{
+      reject(error);
+    });
+  });
+};
+
+/**
+ * @async
  * @description This function will call the identity microservice with the credentials and accessToken you passed in.
  * @param {string} [accessToken="null accessToken"] - access token
  * @param {string} [userUuid="null user uuid"] - user_uuid for alias being created
@@ -147,10 +186,19 @@ const updateAliasWithDID = (
       "Content-type": "application/json",
       'x-api-version': `${util.getVersion()}`
     },
-    json: true
+    json: true,
+    resolveWithFullResponse: true
   };
 
-  return request(requestOptions);
+  return new Promise((resolve, reject)=>{
+    request(requestOptions)
+    .then(response =>{
+      response.statusCode === 202 ?  resolve({"status":"ok"}): reject({"status":"failed"});
+    })
+    .catch(error=>{
+      reject(error);
+    });
+  });
 };
 
 /**
@@ -252,7 +300,7 @@ const getIdentityDetails = (accessToken = "null access token", user_uuid="null u
   const MS = util.getEndpoint("identity");
   const requestOptions = {
     method: "GET",
-    uri: `${MS}/identities/${user_uuid}`,
+    uri: `${MS}/identities/${user_uuid}?include=alias`,
     headers: {
       "Authorization": `Bearer ${accessToken}`,
       "Content-type": "application/json",
@@ -392,6 +440,7 @@ const validatePasswordToken = (accessToken = "null access token", password_token
 };
 
 module.exports = {
+  createAlias,
   createIdentity,
   modifyIdentity,
   reactivateIdentity,
