@@ -97,9 +97,16 @@ const deleteShortCode = (userUuid = 'null user uuid', accessToken = 'null access
             'x-api-version': `${util.getVersion()}`,
             'user_uuid': userUuid
         },
-        json: true
+        json: true,
+        resolveWithFullResponse: true,
     };
-    return request(requestOptions);
+    return new Promise (function (resolve, reject){
+        request(requestOptions).then(function(responseData){
+            responseData.statusCode === 204 ?  resolve({"status":"ok"}): reject({"status":"failed"});
+        }).catch(function(error){
+            reject(error);
+        })
+      });
 };
 
 module.exports = {

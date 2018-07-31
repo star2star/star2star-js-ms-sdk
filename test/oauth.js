@@ -88,7 +88,7 @@ describe("Oauth MS", function () {
         creds.CPAAS_OAUTH_TOKEN,
       )
       .then(oauthData => {
-        console.log('Got access token data ', oauthData);
+        //console.log('Got access token data ', oauthData);
         assert(
           oauthData.hasOwnProperty('access_token')
         );

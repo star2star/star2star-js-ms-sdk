@@ -97,7 +97,7 @@ var sendSMSMessage = function sendSMSMessage(accessToken, convesationUUID, userU
  */
 var sendSMS = function sendSMS(accessToken, userUuid, msg, fromPhoneNumber, toPhoneNumber) {
   return new Promise(function (resolve, reject) {
-    getConvesationUUID(accessToken, userUuid, toPhoneNumber).then(function (conversationUUID) {
+    getConversationUuid(accessToken, userUuid, toPhoneNumber).then(function (conversationUUID) {
       sendSMSMessage(accessToken, conversationUUID, userUuid, fromPhoneNumber, msg).then(function (response) {
         resolve(response);
       }).catch(function (sError) {
@@ -124,7 +124,7 @@ var getSMSNumber = function getSMSNumber(accessToken, userUuid) {
 
     var requestOptions = {
       method: 'GET',
-      uri: MS + '/identities/' + userUuid,
+      uri: MS + '/identities/' + userUuid + '?include=alias',
       headers: {
         "Authorization": 'Bearer ' + accessToken,
         'x-api-version': '' + util.getVersion(),

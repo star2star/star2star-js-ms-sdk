@@ -52,7 +52,7 @@ describe("ShortUrls Test Suite", function () {
 
   it("create / list / delete ", function (done) {
     if (!creds.isValid) return done();
-
+    
     const options = {
       url: "http://www.google.com"
     };
@@ -60,50 +60,39 @@ describe("ShortUrls Test Suite", function () {
       identityData.uuid,
       accessToken,
       options
-    ).then(responseData => {
-      // ok list 
-      //console.log('------->', responseData);
+    ).then(response => {
+      //console.log('------->', response);
+      assert(response.hasOwnProperty("short_url_link"))
       s2sMS.ShortUrls.listShortUrls(
         identityData.uuid,
         accessToken
-      ).then(listData => {
-        //console.log('xxxx', listData);
+      ).then(response => {
+        //console.log('List of ShortUrls', response);
         //TODO issue CSRVS-77 content rename to items 
-
+        assert(response.hasOwnProperty("content") && response.content.length > 0)
         setTimeout(()=>{
           s2sMS.ShortUrls.deleteShortCode(
             identityData.uuid,
             accessToken,
-            responseData.short_code
-          ).then((d)=>{
-            //
-  
-            if (responseData.short_code.length < 1 ){
-              done(new Error( "short code returned length is not greater than 0"));
-            } else if ( !(listData.hasOwnProperty('content')) || listData.content.length <1 ){
-              done(new Error( "list returned but does not contain items or item length is 0"));
-            } else {
-              done();
-            }
-  
-          }).catch((de)=>{
-            console.log(de)
-            done(de)
+            response.content[0].short_code
+          ).then(response => {
+            //console.log(response);
+            assert(response.status === "ok");
+            done()
+          }).catch(error=>{
+            console.log("Error Deleting ShortUrl", error)
+            done(new Error(error));
           });
         }, 1000)
-        
-
       })
       .catch((error) => {
-        console.log('Error create shortUrl list', error);
-        done(error)
+        console.log('Error listing shortUrls', error);
+        done(new Error(error))
       });
-
-
     })
     .catch((error) => {
       console.log('Error creating shortUrl ', error);
-      done(error);
+      done(new Error(error));
     });
   });
 });

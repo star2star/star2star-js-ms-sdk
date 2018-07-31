@@ -53,7 +53,7 @@ describe("Media Test Suite", function () {
   it("List user Media", function (done) {
     if (!creds.isValid) return done();
     s2sMS.Media.listUserMedia(
-        "d189eae7-712f-4599-bac6-f45967bc4859",
+        identityData.uuid,
         accessToken
       ).then(responseData => {
         //console.log(responseData);
@@ -77,7 +77,7 @@ describe("Media Test Suite", function () {
     s2sMS.Media.uploadFile(
         fileName,
         fs.createReadStream('./test/media.js'), 
-        "d189eae7-712f-4599-bac6-f45967bc4859",
+        identityData.uuid,
         accessToken
       ).then(responseData => {
         //console.log(responseData);

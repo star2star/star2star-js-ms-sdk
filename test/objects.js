@@ -199,7 +199,7 @@ describe("Objects MS Test Suite", function () {
         responseData.uuid,
         responseData
       ).then((upObj) => {
-        console.log('User Object Update response', upObj);
+        //console.log('User Object Update response', upObj);
         assert(upObj.content.hasOwnProperty("myContent"));
         done();
         s2sMS.Objects.deleteDataObject(

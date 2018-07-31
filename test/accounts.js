@@ -76,13 +76,14 @@ describe("Accounts MS Unit Test Suite", function () {
         "phone": "1112223333"
       }],
       "reference": "Free form text",
-      "status": "Active"
+      "status": "Active",
+      "parent_uuid": "44475342-e08a-4314-8536-5670290b04c6"
     };
 
     s2sMS.Accounts
       .createAccount(accessToken, body)
       .then(response => {
-        //console.log("Account Created: ", response);
+        // console.log("Account Created: ", response);
         //save the account number for other tests
         assert(response.name === "Unit Test");
         accountUUID = response.uuid;
@@ -94,38 +95,6 @@ describe("Accounts MS Unit Test Suite", function () {
       });
   });
   
-  /*Uncomment when relationships are fixed. NH 7/30/18
-  it("Create Relationship", function (done) {
-    if (!creds.isValid) return done();
-    
-    //Test Partial Update -- Address
-    body = {
-      "source": {
-        "name": "Unit Test",
-        "type": "Reseller",
-        "uuid": accountUUID
-      },
-      "target": {
-        "name": "Unit Test",
-        "type": "MasterReseller",
-        "uuid": "c0b92b35-8f02-4bf8-a84d-831342b579aa"
-      },
-      "type": "parent"
-    };
-
-    s2sMS.Accounts
-      .createRelationship(accessToken, body)
-      .then(response => {
-        console.log("Worked",response);
-        done();
-      })
-      .catch(error => {
-        console.log("failed",error);
-        //assert(error.error.message === "Such account already has parent account");
-        done();
-      });
-  });
-*/
   it("List Accounts", function (done) {
     if (!creds.isValid) return done();
 
@@ -143,30 +112,22 @@ describe("Accounts MS Unit Test Suite", function () {
       });
   });
 
-  it("Get Account Data", function (done) {
+  it("Get Account Data and Check Relationships", function (done) {
     if (!creds.isValid) return done();
 
     s2sMS.Accounts
-      .listAccounts(accessToken)
-      .then((accountList) => {
-         // console.log("accountList -- getAccountData", accountList);
-
-        s2sMS.Accounts
-          .getAccount(accessToken, accountList.items[0].uuid)
-          .then(accountData => {
-            // console.log("accountData", accountData);
-            assert(accountData.uuid === accountList.items[0].uuid);
-            done();
-          })
-          .catch((error) => {
-            // console.log("error in getting account data", error);
-            done(new Error(error));
-          });
-      })
-      .catch((error) => {
-        //console.log("error in getting account list [getAccountData]", error);
-        done(new Error(error));
-      });
+      s2sMS.Accounts
+        .getAccount(accessToken, accountUUID)
+        .then(response => {
+          //console.log("accountData", response);
+          assert(response.uuid === accountUUID);
+          assert(response.relationships.items[1].source.uuid === accountUUID);
+          done();
+        })
+        .catch((error) => {
+          // console.log("error in getting account data", error);
+          done(new Error(error));
+        });
   });
 
   it("Modify Account", function (done) {

@@ -97,7 +97,7 @@ const sendSMSMessage = (accessToken, convesationUUID, userUuid, fromPhoneNumber,
  */
 const sendSMS = (accessToken, userUuid, msg, fromPhoneNumber, toPhoneNumber) => {
   return new Promise((resolve, reject) => {
-    getConvesationUUID(accessToken, userUuid, toPhoneNumber).then((conversationUUID) => {
+    getConversationUuid(accessToken, userUuid, toPhoneNumber).then((conversationUUID) => {
       sendSMSMessage(accessToken, conversationUUID, userUuid, fromPhoneNumber, msg).then((response) => {
         resolve(response);
       }).catch((sError) => {
@@ -124,7 +124,7 @@ const getSMSNumber = (accessToken, userUuid) => {
 
     const requestOptions = {
       method: 'GET',
-      uri: `${MS}/identities/${userUuid}`,
+      uri: `${MS}/identities/${userUuid}?include=alias`,
       headers: {
         "Authorization": `Bearer ${accessToken}`,
         'x-api-version': `${util.getVersion()}`,

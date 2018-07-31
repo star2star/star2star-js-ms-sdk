@@ -31,6 +31,7 @@ s2sMS.Identity.login(creds.CPAAS_KEY, creds.email, creds.password)
 [Please click here for our documentation pages.](https://star2star.github.io/star2star-js-ms-sdk/ "Star2Star Micro Service SDK Documentation")
 
 ## Changes
+* 2.1.25 - More updates to unit tests
 * 2.1.24 - Fix identity unit tests and add delete account
 * 2.1.23 - Add client auth.
 * 2.1.22 - Fix Chat unit tests.
