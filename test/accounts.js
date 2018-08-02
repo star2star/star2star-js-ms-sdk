@@ -177,14 +177,14 @@ describe("Accounts MS Unit Test Suite", function () {
     if (!creds.isValid) return done();
 
     s2sMS.Accounts
-      .listAccountRelationships(accessToken, accountUUID)
-      .then(accountList => {
-        // console.log("accountList", accountList);
-        assert(accountList.items.length > 0);
+      .listAccountRelationships(accessToken, accountUUID, 0, 10, "reseller")
+      .then(relationshipList => {
+        //console.log("accountList", relationshipList);
+        assert(relationshipList.items.length > 0);
         done();
       })
       .catch((error) => {
-        //console.log("error in getting account list", error);
+        console.log("error in getting account list", error);
         done(new Error(error));
       });
   });

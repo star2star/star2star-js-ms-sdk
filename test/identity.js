@@ -244,18 +244,81 @@ describe("Identity MS Unit Test Suite", function () {
           });
   });
 
-  it("Delete Identity", function (done) {
+  it("Delete Identity and Confirm Identity is Removed from User-groups", function (done){
     if (!creds.isValid) return done();
-    s2sMS.Identity.deleteIdentity(accessToken, testUUID)
-          .then((response) => {
-            //console.log('Deleted guest user:', testUUID);
-            assert(response.status === "ok");
-            done();
+    //create group
+    const body = {
+      "account_id": identityData.account_uuid,
+      "description": "A test group", //FIXME Revisit when CCORE-181 is fixed
+      "members": [
+        {
+          "uuid": "fake-uuid"
+        }
+      ],
+      "name": "Test",
+      "type": "user"
+    }
+    s2sMS.Groups.createGroup(
+        accessToken,
+        body
+      ).then(responseData => {
+        testGroupUuid = responseData.uuid; //Use this uuid for other tests.
+        //console.log(responseData);
+        assert(
+          responseData.name === "Test"
+        );
+        //add the test identity to the group
+        const testMembers = [{
+          type: "user",
+          uuid: testUUID
+        }];
+        s2sMS.Groups.addMembersToGroup(
+            accessToken,
+            testGroupUuid,
+            testMembers
+          ).then(responseData => {
+            // console.log("Add Members response %j", responseData);
+            assert(
+              responseData.name === "Test" &&
+              responseData.total_members === 2
+            );
+            //delete the identity
+            s2sMS.Identity.deleteIdentity(accessToken, testUUID)
+              .then((response) => {
+                //console.log('Deleted guest user:', testUUID);
+                assert(response.status === "ok");
+                //check that testUUID is not a member of any groups
+                filters = [];
+                filters["member_uuid"] = testUUID;
+                s2sMS.Groups.listGroups(
+                    accessToken,
+                    0, //offset
+                    10, //limit
+                    filters
+                  ).then(responseData => {
+                     //console.log(responseData);
+                     assert(responseData.hasOwnProperty('items') && responseData.items.length === 0); //FIXME CCORE-178
+                     done();
+                  })
+                  .catch((error) => {
+                    console.log('Error List User Groups', error);
+                    done(new Error(error));
+                  });
+              })
+              .catch((error) => {
+                console.log('Error deleting user [create user]', error);
+                done(new Error(error));
+              });
           })
           .catch((error) => {
-            console.log('Error deleting user [create user]', error);
+            console.log('Error adding member to group [create/add members/delete]', error);
             done(new Error(error));
           });
+      })
+      .catch((error) => {
+        console.log('Error Create Group', error);
+        done(new Error(error));
+      });
   });
 
   it("Login with Good Credentials", function (done) {

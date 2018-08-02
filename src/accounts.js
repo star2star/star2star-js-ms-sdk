@@ -170,7 +170,6 @@ const listAccountRelationships = (accessToken = "null accessToken", accountUUID 
     method: "GET",
     uri: `${MS}/accounts/${accountUUID}/relationships`,
     qs: {
-      "expand": "accounts",
       "offset": offset,
       "limit": limit
     },
@@ -183,15 +182,12 @@ const listAccountRelationships = (accessToken = "null accessToken", accountUUID 
    
   };
   //console.log("REQUEST_OPTIONS",requestOptions);
-  //TODO remove this stuff once account_type is supported
+  //TODO remove this stuff once account_type is supported CSRVS-158
   return new Promise((resolve, reject)=>{
     request(requestOptions).then((data)=>{
       const rtnObj = {};
       rtnObj.items = data.items.filter((i)=>{
         return account_type.length > 0 ? i.source.type.toLowerCase() === account_type.toLowerCase() : i;
-      });
-      rtnObj.accounts = data.accounts.filter((i)=>{
-        return account_type.length > 0 ? i.type.toLowerCase() === account_type.toLowerCase() : i;
       });
       //console.log(JSON.stringify(data));
       resolve(rtnObj);

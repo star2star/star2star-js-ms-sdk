@@ -77,9 +77,10 @@ describe("Groups Test Suite", function () {
   it("Create Group", function (done) {
     if (!creds.isValid) return done();
     
+    //FIXME needs default attribute CCORE-179
     const body = {
       "account_id": identityData.account_uuid,
-      "description": "A test group",
+      "description": "A test group", //FIXME Revisit when CCORE-181 is fixed
       "members": [
         {
           "uuid": "fake-uuid"

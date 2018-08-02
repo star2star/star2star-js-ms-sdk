@@ -196,7 +196,6 @@ var listAccountRelationships = function listAccountRelationships() {
     method: "GET",
     uri: MS + "/accounts/" + accountUUID + "/relationships",
     qs: {
-      "expand": "accounts",
       "offset": offset,
       "limit": limit
     },
@@ -209,15 +208,12 @@ var listAccountRelationships = function listAccountRelationships() {
 
   };
   //console.log("REQUEST_OPTIONS",requestOptions);
-  //TODO remove this stuff once account_type is supported
+  //TODO remove this stuff once account_type is supported CSRVS-158
   return new Promise(function (resolve, reject) {
     request(requestOptions).then(function (data) {
       var rtnObj = {};
       rtnObj.items = data.items.filter(function (i) {
         return account_type.length > 0 ? i.source.type.toLowerCase() === account_type.toLowerCase() : i;
-      });
-      rtnObj.accounts = data.accounts.filter(function (i) {
-        return account_type.length > 0 ? i.type.toLowerCase() === account_type.toLowerCase() : i;
       });
       //console.log(JSON.stringify(data));
       resolve(rtnObj);
