@@ -189,13 +189,15 @@ var listAccountRelationships = function listAccountRelationships() {
   var accountUUID = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : "null account uuid";
   var offset = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : 0;
   var limit = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : 10;
-  var account_type = arguments.length > 4 && arguments[4] !== undefined ? arguments[4] : "";
+  var accountType = arguments.length > 4 && arguments[4] !== undefined ? arguments[4] : undefined;
+  var expand = arguments.length > 5 && arguments[5] !== undefined ? arguments[5] : "accounts";
 
   var MS = util.getEndpoint("accounts");
   var requestOptions = {
     method: "GET",
     uri: MS + "/accounts/" + accountUUID + "/relationships",
     qs: {
+      "expand": expand,
       "offset": offset,
       "limit": limit
     },
@@ -207,20 +209,13 @@ var listAccountRelationships = function listAccountRelationships() {
     json: true
 
   };
-  //console.log("REQUEST_OPTIONS",requestOptions);
+
+  if (accountType) {
+    requestOptions.qs.account_type = accountType;
+  }
+
   //TODO remove this stuff once account_type is supported CSRVS-158
-  return new Promise(function (resolve, reject) {
-    request(requestOptions).then(function (data) {
-      var rtnObj = {};
-      rtnObj.items = data.items.filter(function (i) {
-        return account_type.length > 0 ? i.source.type.toLowerCase() === account_type.toLowerCase() : i;
-      });
-      //console.log(JSON.stringify(data));
-      resolve(rtnObj);
-    }).catch(function (e) {
-      reject(e);
-    });
-  });
+  return request(requestOptions);
 };
 
 /**

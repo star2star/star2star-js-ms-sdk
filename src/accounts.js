@@ -164,12 +164,13 @@ const modifyAccount = (accessToken = "null access token", accountUUID = "null ac
  * @returns {Promise<object>} - Promise resolving to a data object containing a list of accounts
  */
 //TODO add sort order also 
-const listAccountRelationships = (accessToken = "null accessToken", accountUUID = "null account uuid", offset=0, limit=10, account_type="") => {
+const listAccountRelationships = (accessToken = "null accessToken", accountUUID = "null account uuid", offset=0, limit=10, accountType=undefined, expand="accounts") => {
   const MS = util.getEndpoint("accounts");
   const requestOptions = {
     method: "GET",
     uri: `${MS}/accounts/${accountUUID}/relationships`,
     qs: {
+      "expand": expand,
       "offset": offset,
       "limit": limit
     },
@@ -181,20 +182,13 @@ const listAccountRelationships = (accessToken = "null accessToken", accountUUID 
     json: true
    
   };
-  //console.log("REQUEST_OPTIONS",requestOptions);
+  
+  if (accountType){
+    requestOptions.qs.account_type = accountType;
+  }
+
   //TODO remove this stuff once account_type is supported CSRVS-158
-  return new Promise((resolve, reject)=>{
-    request(requestOptions).then((data)=>{
-      const rtnObj = {};
-      rtnObj.items = data.items.filter((i)=>{
-        return account_type.length > 0 ? i.source.type.toLowerCase() === account_type.toLowerCase() : i;
-      });
-      //console.log(JSON.stringify(data));
-      resolve(rtnObj);
-    }).catch((e)=>{
-      reject(e);
-    });
-  });
+  return request(requestOptions)
 };
 
 /**
