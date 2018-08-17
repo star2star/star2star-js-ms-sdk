@@ -170,7 +170,7 @@ const deleteGroup = (
         responseData.statusCode === 204 ?  resolve({"status":"ok"}): reject({"status":"failed"});
     }).catch(function(error){
         reject(error);
-    })
+    });
   });
 };
 
@@ -237,7 +237,7 @@ const deleteGroupMembers = (
         responseData.statusCode === 204 ?  resolve({"status":"ok"}): reject({"status":"failed"});
     }).catch(function(error){
         reject(error);
-    })
+    });
   });
 };
 

@@ -15,6 +15,7 @@ const Contacts = require('./contacts');
 const Oauth = require('./oauth');
 const Media = require('./media');
 const Pubsub = require('./pubsub');
+const Project = require('./project');
 
 
 const request = require('request-promise');
@@ -76,52 +77,6 @@ const getApplicationKey = () => {
   return cpaasKey;
 };
 
-/**
- * @async
- * @description This function will get permissions from microservice and
- * return object with constants refering to the permission uuid.
- * @param {string} [accessToken="null accessToken"]
- * @returns {Promise<object>} - Promise resolving to a data object containing key in 
- * form of {scope}_{action}_{resource_type}, value is uuid
- */
-const getPermissions = (accessToken = "null accessToken") => {
-
-  return new Promise((resolve, reject) => {
-    // if no accessToken, can't get permissions
-    if (accessToken === "null accessToken") reject("Required accessToken not provided");
-    let permissions = {};
-    const requestOptions = {
-      method: "GET",
-      uri: `${getMsHost()}/auth/permissions?resource_type=object`,
-      headers: {
-        "Content-type": "application/json",
-        "Authorization": `Bearer ${accessToken}`,
-        'x-api-version': `${Util.getVersion()}`
-      },
-    };
-    const permissionList = request(requestOptions);
-
-    permissionList.then((permissionData) => {
-      // console.log('Permission Data', permissionData);
-      const pData = JSON.parse(permissionData);
-
-      if (pData.items.length > 0) {
-        pData.items.forEach((pObject) => {
-          if (pObject.resource_type === 'object' && ['global', 'account', 'user'].indexOf(pObject.scope) !== -1) {
-            const permissionIndex = `${pObject.scope.toUpperCase()}_${pObject.action.toUpperCase()}_OBJECT}`;
-            permissions[permissionIndex] = pObject.uuid;
-          }
-        });
-        // console.log('Got some permisions', permissions);
-        resolve(permissions);
-      } else {
-        console.log('Error -- no permissions created in this microservice instance... Check with ms administrators');
-        reject("Promise reject -- no permissions created in this microservice instance... Check with ms administrator");
-      }
-    });
-  });
-};
-
 module.exports = {
   Accounts,
   Lambda,
@@ -141,8 +96,8 @@ module.exports = {
   Oauth,
   Chat,
   Contacts,
-  getPermissions,
   Media,
   Pubsub,
+  Project,
   setMSVersion
 };

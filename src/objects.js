@@ -301,9 +301,16 @@ const deleteDataObject = (
       'Content-type': 'application/json',
       'x-api-version': `${util.getVersion()}`
     },
-    json: true
+    json: true,
+    resolveWithFullResponse: true
   };
-  return request(requestOptions);
+  return new Promise (function (resolve, reject){
+    request(requestOptions).then(function(responseData){
+        responseData.statusCode === 204 ?  resolve({"status":"ok"}): reject({"status":"failed"});
+    }).catch(function(error){
+        reject(error);
+    });
+  });
 };
 
 /**

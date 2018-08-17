@@ -46,7 +46,7 @@ describe("Task", function () {
            reject(e);
          });
        });
-     })
+     });
   });
 
   it("Get Task Templates", function (done) {

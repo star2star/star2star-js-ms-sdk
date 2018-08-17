@@ -47,7 +47,7 @@ describe("Objects MS Test Suite", function () {
            reject(e);
          });
        });
-     })
+     });
   });
 
 
@@ -281,7 +281,7 @@ describe("Objects MS Test Suite", function () {
             // console.log('d', d);
           }).catch((error) => {
             console.log('Error deleting objects [getDataObjectsByTypeAndName]', error);
-          })
+          });
         });
       }).catch((error) => { //
         console.log('Error creating data objects [getUserDataObjectByTypeAndName]', error);

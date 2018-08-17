@@ -12,13 +12,24 @@ toc:
       - suspendAccount
   - name: Auth
     children:
-      - addExplicitGroupPermissions
-      - addExplicitUserPermissions
-      - addRoleToUser
-      - detachUserRole
-      - getSpecificPermissions
-      - getUserRoles
-      - listUserPermissions
+      - activateRole
+      - assignPermissionsToRole
+      - assignRolesToUserGroup
+      - createPermission
+      - createUserGroup
+      - createRole
+      - deactivateRole
+      - deletePermissionFromRole
+      - deleteRole
+      - deleteRoleFromUserGroup
+      - listGroupRoles
+      - listPermissions
+      - listPermissionRoles
+      - listRoleGroups
+      - listRolePermissions
+      - listRoles
+      - listUserGroups
+      - modifyRole
   - name: Chat
     children:
       - addMember
@@ -72,7 +83,6 @@ toc:
       - getApplicationKey
       - getAuthHost
       - getMsHost
-      - getPermissions
       - setApplicationKey
       - setMsHost
       - setMsAuthHost
@@ -104,6 +114,12 @@ toc:
       - getDataObjectByType
       - getDataObjectByTypeAndName
       - createUserDataObject
+  - name: Project
+    children:  
+      - createProjectObject
+      - deleteProjectObject
+      - getProjectObject
+      - updateProjectObject
   - name: Pubsub
     children: 
       - addSubscription

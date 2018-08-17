@@ -48,7 +48,7 @@ describe("Accounts MS Unit Test Suite", function () {
           reject(e);
         });
       });
-    })
+    });
   });
 
   it("Create Account Without Parent-uuid", function (done) {
@@ -97,8 +97,8 @@ describe("Accounts MS Unit Test Suite", function () {
           });
       })
       .catch((error) => {
-        console.log("ERROR CREATING ACCOUNT",error);
-        assert(error);
+        //console.log("ERROR CREATING ACCOUNT",error);
+        assert(error.statusCode === 400);
         done();
       });
   });
@@ -129,7 +129,7 @@ describe("Accounts MS Unit Test Suite", function () {
       }],
       "reference": "Free form text",
       "status": "Active",
-      "parent_uuid": "44475342-e08a-4314-8536-5670290b04c6"
+      "parent_uuid": identityData.account_uuid
     };
 
     s2sMS.Accounts
@@ -139,6 +139,7 @@ describe("Accounts MS Unit Test Suite", function () {
         //save the account number for other tests
         assert(response.name === "Unit Test");
         accountUUID = response.uuid;
+        //console.log("ACCOUNT UUID",accountUUID);
         done();
       })
       .catch((error) => {
@@ -166,20 +167,20 @@ describe("Accounts MS Unit Test Suite", function () {
 
   it("Get Account Data and Check Relationships", function (done) {
     if (!creds.isValid) return done();
-
-    s2sMS.Accounts
+      setTimeout(() => { //Workaround for CSRVS-181
       s2sMS.Accounts
         .getAccount(accessToken, accountUUID)
         .then(response => {
-          //console.log("accountData", response);
+          //console.log("accountData", response.relationships.items[0]);
           assert(response.uuid === accountUUID);
-          assert(response.relationships.items[1].source.uuid == accountUUID);
+          assert(response.relationships.items[0].source.uuid == accountUUID);
           done();
         })
         .catch((error) => {
           // console.log("error in getting account data", error);
           done(new Error(error));
         });
+      }, 2000);
   });
 
   it("Modify Account", function (done) {
@@ -227,9 +228,8 @@ describe("Accounts MS Unit Test Suite", function () {
 
   it("List Account Relationships", function (done) {
     if (!creds.isValid) return done();
-
     s2sMS.Accounts
-      .listAccountRelationships(accessToken, accountUUID, 0, 10, "Reseller")
+      .listAccountRelationships(accessToken, identityData.account_uuid, 0, 10, "Reseller")
       .then(relationshipList => {
         //console.log("accountList", relationshipList);
         assert(relationshipList.items.length > 0);
@@ -247,7 +247,7 @@ describe("Accounts MS Unit Test Suite", function () {
     s2sMS.Accounts
       .suspendAccount(accessToken, accountUUID)
       .then(response => {
-        assert(response.status === "ok")
+        assert(response.status === "ok");
         done();
       })
       .catch((error) => {
@@ -261,7 +261,7 @@ describe("Accounts MS Unit Test Suite", function () {
     s2sMS.Accounts
       .reinstateAccount(accessToken, accountUUID)
       .then(response => {
-        assert(response.status === "ok")
+        assert(response.status === "ok");
         done();
       })
       .catch((error) => {
@@ -283,5 +283,4 @@ describe("Accounts MS Unit Test Suite", function () {
       done(new Error(error));
     });
   });
-
 });

@@ -150,7 +150,7 @@ const modifyAccount = (accessToken = "null access token", accountUUID = "null ac
           responseData.statusCode === 202 ?  resolve({"status":"ok"}): reject({"status":"failed"});
       }).catch(function(error){
           reject(error);
-      })
+      });
   }); 
 };
 
@@ -188,7 +188,7 @@ const listAccountRelationships = (accessToken = "null accessToken", accountUUID 
   }
 
   //TODO remove this stuff once account_type is supported CSRVS-158
-  return request(requestOptions)
+  return request(requestOptions);
 };
 
 /**
@@ -216,7 +216,7 @@ const reinstateAccount = (accessToken = "null access token", accountUUID = "null
         responseData.statusCode === 200 ?  resolve({"status":"ok"}): reject({"status":"failed"});
     }).catch(function(error){
         reject(error);
-    })
+    });
   });
 };
 
@@ -245,7 +245,7 @@ const suspendAccount = (accessToken = "null access token", accountUUID = "null a
         responseData.statusCode === 200 ?  resolve({"status":"ok"}): reject({"status":"failed"});
     }).catch(function(error){
         reject(error);
-    })
+    });
   });
 };
 
@@ -276,7 +276,7 @@ const suspendAccount = (accessToken = "null access token", accountUUID = "null a
             responseData.statusCode === 200 ?  resolve({"status":"ok"}): reject({"status":"failed"});
         }).catch(function(error){
             reject(error);
-        })
+        });
     }); 
   };
 

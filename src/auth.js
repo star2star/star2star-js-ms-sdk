@@ -4,349 +4,307 @@ const util = require('./utilities');
 const request = require('request-promise');
 const ObjectMerge = require('object-merge');
 
-const VALID_ACTIONS = ['create', 'read', 'update', 'delete', 'list'];
-const VALID_RT = ['object', 'account', 'user'];
-const VALID_SCOPE = ['global', 'account', 'user'];
-
 /**
  * @async
- * @description This function will list all user's permissions
- * @param {string} [accessToken='null access Token'] - access Token for cpaas systems
- * @param {string} [userUuid='null user uuid'] - user UUID to be used
- * @param {string} [resource_type=undefined] - filter if defined - 'object', 'account', 'user' 
- * @param {string} [scope=undefined] - required - 'global', 'account', 'user'
- * @param {array} [actions=['create', 'read', 'update', 'delete', 'list']]
- * @returns {Promise<object>} - Promise resolving to a data object
- */
-const listUserPermissions = (accessToken = 'null access Token', userUuid = 'null user uuid', resource_type = undefined, scope = undefined, actions = ['create', 'read', 'update', 'delete', 'list']) => {
-  const MS = util.getEndpoint("auth");
-  const VERSION = util.getVersion();
-  const requestOptions = {
-    method: 'GET',
-    uri: `${MS}/users/${userUuid}/permissions`,
-    headers: {
-      'Authorization': `Bearer ${accessToken}`,
-      'Content-type': 'application/json',
-      'x-api-version': `${VERSION}`
-    },
-    json: true,
-    // resolveWithFullResponse: true
-  };
-  // only add filter if defined
-  if (resource_type !== undefined) {
-    requestOptions.qs = {
-      "resource_type": resource_type
-    };
-  };
-
-  return new Promise((resolve, reject) => {
-    request(requestOptions).then((responseData) => {
-      // console.log('responseData', responseData);
-
-      let pItems = ObjectMerge([], responseData.items);
-
-      if (scope !== undefined) {
-        pItems = pItems.filter((i) => {
-          return i.scope === scope;
-        });
-      }
-      // console.log('>>>', pItems, actions, actions !== undefined && Array.isArray(actions));
-
-      if (actions !== undefined && Array.isArray(actions)) {
-        pItems = pItems.filter((i) => {
-          //console.log('---', actions, i.action)`
-          return actions.indexOf(i.action) > -1;
-        });
-      }
-      resolve(pItems);
-    }).catch((responseError) => {
-      reject(responseError);
-    });
-  });
-};
-
-/**
- * @async
- * @description This function will GET specific permissions.
- * @param {string} [accessToken='null access Token'] - access Token for cpaas systems
- * @param {string} [userUuid='null user uuid'] - user UUID to be used
- * @param {string} [resource_type=undefined] - filter if defined - 'object', 'account', 'user' 
- * @param {string} [scope=undefined] - required - 'global', 'account', 'user'
- * @param {array} [actions=['create', 'read', 'update', 'delete', 'list']]
- * @returns {Promise<object>} - Promise resolving to a data object
- */
-const getSpecificPermissions = (accessToken = 'null access Token', userUuid = 'null user uuid',
-  resource_type = undefined, scope = undefined, actions = []) => {
-
-  if (resource_type === undefined || VALID_RT.indexOf(resource_type) === -1) {
-    return Promise.reject("resource_type must be specified and one of " + VALID_RT);
-  }
-
-  if (scope === undefined || VALID_SCOPE.indexOf(scope) === -1) {
-    return Promise.reject("scope must be specified and one of " + VALID_SCOPE);
-  }
-
-  const missingActions = actions.filter((i) => (VALID_ACTIONS.indexOf(i) === -1));
-  if (!Array.isArray(actions) || actions.length === 0 || missingActions.length > 0) {
-    return Promise.reject("actions must be an array consisting of some or all of the follow values  " + VALID_ACTIONS);
-  }
-
-  // ok all parameters valid
-  const MS = util.getEndpoint("auth");
-  const VERSION = util.getVersion();
-  const requestOptions = {
-    method: 'GET',
-    uri: `${MS}/permissions`,
-    qs: {
-      "resource_type": resource_type
-    },
-    headers: {
-      'Authorization': `Bearer ${accessToken}`,
-      'Content-type': 'application/json',
-      'x-api-version': `${VERSION}`
-    },
-    json: true
-  };
-
-  return new Promise((resolve, reject) => {
-    request(requestOptions).then((responseData) => {
-      let pItems = ObjectMerge([], responseData.items);
-
-      pItems = pItems.filter((i) => {
-        return i.scope === scope;
-      });
-
-      pItems = pItems.filter((i) => {
-        //console.log('---', actions, i.action)`
-        return actions.indexOf(i.action) > -1;
-      });
-
-      resolve(pItems);
-    }).catch((responseError) => {
-      reject(responseError);
-    });
-  });
-};
-
-/**
- * @async
- * @description This function will add permissions to a group.
- * @param {string} [accessToken='null access Token'] - access Token for cpaas systems
- * @param {string} [userUuid='null user uuid'] - user UUID to be used for auth
- * @param {string} [group_uuid=undefined] - group uuid receiving permissions
- * @param {string} [resource_uuid=undefined] - resource uuid
- * @param {string} [resource_type=undefined] - filter if defined - 'object', 'account', 'user' 
- * @param {string} [resource_scope=undefined] - required - 'global', 'account', 'user'
- * @param {array} [actions=['create', 'read', 'update', 'delete', 'list']]
- * @returns {Promise<object>} - Promise resolving to a data object
- */
-const addExplicitGroupPermissions = (accessToken = 'null access Token', userUuid = 'null user uuid',
-  group_uuid = undefined, resource_uuid = undefined, resource_type = undefined, resource_scope = undefined, actions = []) => {
-  const MS = util.getEndpoint("auth");
-  const VERSION = util.getVersion();
-  // 1.  validate parameters
-  if (group_uuid === undefined) {
-    return Promise.reject("group uuid is missing");
-  }
-  if (resource_uuid === undefined) {
-    return Promise.reject("resource uuid is missing");
-  }
-  if (resource_type === undefined || VALID_RT.indexOf(resource_type) === -1) {
-    return Promise.reject("resource_type must be specified and one of " + VALID_RT);
-  }
-  if (resource_scope === undefined || VALID_SCOPE.indexOf(resource_scope) === -1) {
-    return Promise.reject("scope must be specified and one of " + VALID_SCOPE);
-  }
-  const missingActions = actions.filter((i) => (VALID_ACTIONS.indexOf(i) === -1));
-  if (!Array.isArray(actions) || actions.length === 0 || missingActions.length > 0) {
-    return Promise.reject("actions must be an array consisting of the follow values  " + VALID_ACTIONS);
-  }
-
-  return new Promise((resolve, reject) => {
-    //2. get permissions
-    getSpecificPermissions(accessToken, userUuid, accessToken, resource_type, resource_scope, actions).then((pData) => {
-      // ok have permission object
-      // loop over them which will build an array of permission objects to be posted
-      const arrayOfPermissions = pData.map((p) => {
-        return {
-          "permission_uuid": p.uuid,
-          "resource_uuid": resource_uuid
-        };
-      });
-      const requestOptions = {
-        method: 'POST',
-        uri: `${MS}/groups/${group_uuid}/permissions`,
-        body: {
-          "permissions": arrayOfPermissions
-        },
-        headers: {
-          'Authorization': `Bearer ${accessToken}`,
-          'Content-type': 'application/json',
-          'x-api-version': `${VERSION}`
-        },
-        json: true
-      };
-      const pPromise = request(requestOptions);
-
-      // ok i now have an array of promises
-      pPromise.then((aPData) => {
-        // console.log(aPData)
-        resolve(aPData);
-      }).catch((pError) => {
-        reject(pError);
-      });
-    }).catch((pError) => {
-      reject(pError);
-    });
-  }); //end of new Promse
-};
-
-/**
- * @async 
- * @description This function will add permissions to a user.
- * @param {string} [accessToken='null access Token'] - access Token for cpaas systems
- * @param {string} [userUuid='null user uuid'] - user UUID to be used for auth
- * @param {string} [user_uuid=undefined] - user UUID receiving permissions
- * @param {string} [resource_scope=undefined] - 'global', 'user'
- * @param {string} [resource_uuid=undefined] - resource uuid
- * @param {string} [resource_type=undefined] - filter if defined - 'object', 'group', 'user' 
- * @param {array} [actions=['create', 'read', 'update', 'delete', 'list']]
- * @returns {Promise<object>} - Promise resolving to a data object.
- */
-const addExplicitUserPermissions = (accessToken = 'null access Token', userUuid = 'null user uuid',
-  user_uuid = undefined, resource_uuid = undefined, resource_type = undefined, resource_scope = undefined, actions = []) => {
-  const MS = util.getEndpoint("auth");
-  const VERSION = util.getVersion();
-  // 1.  validate parameters
-  if (user_uuid === undefined) {
-    return Promise.reject("user uuid is missing");
-  }
-  if (resource_uuid === undefined) {
-    return Promise.reject("resource uuid is missing");
-  }
-  if (resource_type === undefined || VALID_RT.indexOf(resource_type) === -1) {
-    return Promise.reject("resource_type must be specified and one of " + VALID_RT);
-  }
-  if (resource_scope === undefined || VALID_SCOPE.indexOf(resource_scope) === -1) {
-    return Promise.reject("scope must be specified and one of " + VALID_SCOPE);
-  }
-  const missingActions = actions.filter((i) => (VALID_ACTIONS.indexOf(i) === -1));
-  if (!Array.isArray(actions) || actions.length === 0 || missingActions.length > 0) {
-    return Promise.reject("actions must be an array consisting of the follow values  " + VALID_ACTIONS);
-  }
-
-  return new Promise((resolve, reject) => {
-    //2. get permissions
-    getSpecificPermissions(accessToken, userUuid, accessToken, resource_type, resource_scope, actions).then((pData) => {
-      // ok have permission object
-      // loop over them which will build an array of permission objects to be posted
-      const arrayOfPermissions = pData.map((p) => {
-        return {
-          "permission_uuid": p.uuid,
-          "resource_uuid": resource_uuid
-        };
-      });
-
-      const requestOptions = {
-        method: 'POST',
-        uri: `${MS}/users/${user_uuid}/permissions`,
-        body: {
-          "permissions": arrayOfPermissions
-        },
-        headers: {
-          'Authorization': `Bearer ${accessToken}`,
-          'Content-type': 'application/json',
-          'x-api-version': `${util.getVersion()}`
-        },
-        json: true
-      };
-      const pPromise = request(requestOptions);
-
-      pPromise.then((aPData) => {
-        // console.log(aPData)
-        resolve(aPData);
-      }).catch((pError) => {
-        reject(pError);
-      });
-    });
-  }); // end promise
-};
-
-/**
- * @async
- * @description This function will add a role or list of roles to a user.
- * @param {string} [accessToken="null access token"] - access token for cpaas systems
- * @param {string} [user_uuid="null user_uuid"] - user uuid
- * @param {string} [body="null body"] - JSON object defining roles to add to user
+ * @description This function deactivates a role.
+ * @param {string} [accessToken="null accessToken"] - cpaas access token
+ * @param {string} [roleUUID="null roleUUID"] - role uuid
  * @returns {Promise<object>} - Promise resolving to a status data object
  */
-const addRoleToUser = (accessToken = "null access token", user_uuid = "null user_uuid", body = "null body") => {
+const  activateRole = (accessToken = "null accessToken", roleUUID = "null roleUUID") => {
   const MS = util.getEndpoint("auth");
   const requestOptions = {
     method: "POST",
-    uri: `${MS}/users/${user_uuid}/roles`,
-    body: body,
-    resolveWithFullResponse: true,
-    json: true,
+    uri: `${MS}/roles/${roleUUID}/activate`,
     headers: {
       "Authorization": `Bearer ${accessToken}`,
       "Content-type": "application/json",
       'x-api-version': `${util.getVersion()}`
-    }
+    },
+    resolveWithFullResponse: true,
+    json: true
+   
   };
-
   return new Promise (function (resolve, reject){
-      request(requestOptions).then(function(responseData){
-          responseData.statusCode === 204 ?  resolve({"status":"ok"}): reject({"status":"failed"});
-      }).catch(function(error){
-          reject(error);
-      })
-  }); 
+    request(requestOptions).then(function(responseData){
+        responseData.statusCode === 204 ?  resolve({"status":"ok"}): reject({"status":"failed"});
+    }).catch(function(error){
+        reject(error);
+    });
+  });
 };
 
 /**
  * @async
- * @description This function will remove a role from a user.
- * @param {string} [accessToken="null access token"] - access token for cpaas systems
- * @param {string} [user_uuid="null user_uuid"] - user uuid
- * @param {string} [role_uuid="null role_uuid"] - role uuid to detach
+ * @description This function will assign a permission to a role.
+ * @param {string} [accessToken="null accessToken"] - cpaas access token
+ * @param {string} [roleUUID="null roleUUID"] - role uuid
+ * @param {object} [body="null body"] - object containing array of permissions
  * @returns {Promise<object>} - Promise resolving to a status data object
  */
-const detachUserRole = (accessToken = "null access token", user_uuid = "null user_uuid", role_uuid = "null role_uuid") => {
+const  assignPermissionsToRole = (accessToken = "null accessToken", roleUUID = "null roleUUID", body = "null body") => {
+  const MS = util.getEndpoint("auth");
+  const requestOptions = {
+    method: "POST",
+    uri: `${MS}/roles/${roleUUID}/permissions`,
+    headers: {
+      "Authorization": `Bearer ${accessToken}`,
+      "Content-type": "application/json",
+      'x-api-version': `${util.getVersion()}`
+    },
+    body: body,
+    resolveWithFullResponse: true,
+    json: true
+   
+  };
+  return new Promise (function (resolve, reject){
+    request(requestOptions).then(function(responseData){
+        responseData.statusCode === 204 ?  resolve({"status":"ok"}): reject({"status":"failed"});
+    }).catch(function(error){
+        reject(error);
+    });
+  });
+};
+
+/**
+ * @async
+ * @description This function assigns roles to a user-group
+ * @param {string} [accessToken="null accessToken"] - cpaas access token
+ * @param {string} [userGroupUUID="null groupUUID"] - user-group uuid
+ * @param {object} [body="null body"] - object containing an array of roles
+ * @returns {Promise<object>} - Promise resolving to a status data object
+ */
+const  assignRolesToUserGroup = (accessToken = "null accessToken", userGroupUUID = "null groupUUID", body = "null body") => {
+  const MS = util.getEndpoint("auth");
+  const requestOptions = {
+    method: "POST",
+    uri: `${MS}/user-groups/${userGroupUUID}/roles`,
+    headers: {
+      "Authorization": `Bearer ${accessToken}`,
+      "Content-type": "application/json",
+      'x-api-version': `${util.getVersion()}`
+    },
+    body: body,
+    resolveWithFullResponse: true,
+    json: true
+   
+  };
+  return new Promise (function (resolve, reject){
+    request(requestOptions).then(function(responseData){
+        responseData.statusCode === 204 ?  resolve({"status":"ok"}): reject({"status":"failed"});
+    }).catch(function(error){
+        reject(error);
+    });
+  });
+};
+
+/**
+ * @async
+ * @description This function creates a permission
+ * @param {string} [accessToken="null accessToken"] - cpaas access token
+ * @param {object} [body="null body"] - object 
+ * @returns {Promise<object>} - Promise resolving to a permission data object
+ */
+const  createPermission = (accessToken = "null accessToken", body = "null body") => {
+  const MS = util.getEndpoint("auth");
+  const requestOptions = {
+    method: "POST",
+    uri: `${MS}/permissions`,
+    headers: {
+      "Authorization": `Bearer ${accessToken}`,
+      "Content-type": "application/json",
+      'x-api-version': `${util.getVersion()}`
+    },
+    body: body,
+    json: true
+   
+  };
+  return request(requestOptions);
+};
+
+/**
+ * @async
+ * @description This function creates a user-group.
+ * @param {string} [accessToken="null accessToken"] - cpaas access token
+ * @param {string} [account_uuid="null account uuid"] - account uuid
+ * @param {object} [body="null body"] - user-group object
+ * @returns {Promise<object>} - Promise resolving to a user-group data object
+ */
+const  createUserGroup = (accessToken = "null accessToken", account_uuid = "null account uuid", body = "null body") => {
+  const MS = util.getEndpoint("auth");
+  const requestOptions = {
+    method: "POST",
+    uri: `${MS}/accounts/${account_uuid}/user-groups`,
+    headers: {
+      "Authorization": `Bearer ${accessToken}`,
+      "Content-type": "application/json",
+      'x-api-version': `${util.getVersion()}`
+    },
+    body: body,
+    json: true
+   
+  };
+  return request(requestOptions);
+};
+
+/**
+ * @async
+ * @description This function creates a role.
+ * @param {string} [accessToken="null accessToken"] - cpaas access token
+ * @param {object} [body="null body"] - role definition object
+ * @returns {Promise<object>} - Promise resolving to a role data object
+ */
+const  createRole = (accessToken = "null accessToken", body = "null body") => {
+  const MS = util.getEndpoint("auth");
+  const requestOptions = {
+    method: "POST",
+    uri: `${MS}/roles`,
+    headers: {
+      "Authorization": `Bearer ${accessToken}`,
+      "Content-type": "application/json",
+      'x-api-version': `${util.getVersion()}`
+    },
+    body: body,
+    json: true
+   
+  };
+  return request(requestOptions);
+};
+
+/**
+ * @async
+ * @description This function deactivates a role.
+ * @param {string} [accessToken="null accessToken"] - cpaas access token
+ * @param {string} [roleUUID="null roleUUID"] - role uuid
+ * @returns {Promise<object>} - Promise resolving to a status data object
+ */
+const  deactivateRole = (accessToken = "null accessToken", roleUUID = "null roleUUID") => {
+  const MS = util.getEndpoint("auth");
+  const requestOptions = {
+    method: "POST",
+    uri: `${MS}/roles/${roleUUID}/deactivate`,
+    headers: {
+      "Authorization": `Bearer ${accessToken}`,
+      "Content-type": "application/json",
+      'x-api-version': `${util.getVersion()}`
+    },
+    resolveWithFullResponse: true,
+    json: true
+   
+  };
+  return new Promise (function (resolve, reject){
+    request(requestOptions).then(function(responseData){
+        responseData.statusCode === 204 ?  resolve({"status":"ok"}): reject({"status":"failed"});
+    }).catch(function(error){
+        reject(error);
+    });
+  });
+};
+
+/**
+ * @async
+ * @description This function deletes a permission from a role.
+ * @param {string} [accessToken="null accessToken"] - cpaas access token
+ * @param {string} [roleUUID="null roleUUID"] - role uuid
+ * @param {string} [permissionUUID="null permissionUUID"] - permission uuid
+ * @returns {Promise<object>} - Promise resolving to a status data object
+ */
+const  deletePermissionFromRole = (accessToken = "null accessToken", roleUUID = "null roleUUID", permissionUUID = "null permissionUUID") => {
   const MS = util.getEndpoint("auth");
   const requestOptions = {
     method: "DELETE",
-    uri: `${MS}/users/${user_uuid}/roles/${role_uuid}`,
-    resolveWithFullResponse: true,
-    json: true,
+    uri: `${MS}/roles/${roleUUID}/permissions/${permissionUUID}`,
     headers: {
       "Authorization": `Bearer ${accessToken}`,
       "Content-type": "application/json",
       'x-api-version': `${util.getVersion()}`
-    }
+    },
+    resolveWithFullResponse: true,
+    json: true
+   
   };
-
   return new Promise (function (resolve, reject){
-      request(requestOptions).then(function(responseData){
-          responseData.statusCode === 204 ?  resolve({"status":"ok"}): reject({"status":"failed"});
-      }).catch(function(error){
-          reject(error);
-      })
-  }); 
+    request(requestOptions).then(function(responseData){
+        responseData.statusCode === 204 ?  resolve({"status":"ok"}): reject({"status":"failed"});
+    }).catch(function(error){
+        reject(error);
+    });
+  });
 };
 
 /**
  * @async
- * @description This function will return the roles associated with a user.
- * @param {string} [accessToken="null accessToken"] - access token for cpaas systems
- * @param {string} [user_uuid="null user_uuid"] - user uuid
- * @returns {Promise<object>} - Promise resolving to a data object containing a list of roles.
+ * @description This function deletes a role.
+ * @param {string} [accessToken="null accessToken"] - cpaas access token
+ * @param {string} [roleUUID="null roleUUID"] - role uuid
+ * @returns {Promise<object>} - Promise resolving to a status data object
  */
-const  getUserRoles = (accessToken = "null accessToken", user_uuid = "null user_uuid") => {
+const  deleteRole = (accessToken = "null accessToken", roleUUID = "null roleUUID") => {
+  const MS = util.getEndpoint("auth");
+  const requestOptions = {
+    method: "DELETE",
+    uri: `${MS}/roles/${roleUUID}`,
+    headers: {
+      "Authorization": `Bearer ${accessToken}`,
+      "Content-type": "application/json",
+      'x-api-version': `${util.getVersion()}`
+    },
+    resolveWithFullResponse: true,
+    json: true
+   
+  };
+  return new Promise (function (resolve, reject){
+    request(requestOptions).then(function(responseData){
+        responseData.statusCode === 204 ?  resolve({"status":"ok"}): reject({"status":"failed"});
+    }).catch(function(error){
+        reject(error);
+    });
+  });
+};
+
+/**
+ * @async
+ * @description This function deletes a role from a user-group.
+ * @param {string} [accessToken="null accessToken"] - cpaas access token
+ * @param {string} [roleUUID="null roleUUID"] - role uuid
+ * @param {string} [userGroupUUID="null userGroupUUID"] - user group uuid
+ * @returns {Promise<object>} - Promise resolving to a status data object
+ */
+const  deleteRoleFromUserGroup = (accessToken = "null accessToken", userGroupUUID = "null userGroupUUID", roleUUID = "null roleUUID") => {
+  const MS = util.getEndpoint("auth");
+  const requestOptions = {
+    method: "DELETE",
+    uri: `${MS}/user-groups/${userGroupUUID}/roles/${roleUUID}`,
+    headers: {
+      "Authorization": `Bearer ${accessToken}`,
+      "Content-type": "application/json",
+      'x-api-version': `${util.getVersion()}`
+    },
+    resolveWithFullResponse: true,
+    json: true
+   
+  };
+  return new Promise (function (resolve, reject){
+    request(requestOptions).then(function(responseData){
+        responseData.statusCode === 204 ?  resolve({"status":"ok"}): reject({"status":"failed"});
+    }).catch(function(error){
+        reject(error);
+    });
+  });
+};
+
+/**
+ * @async
+ * @description This function lists user groups a role is assigned to.
+ * @param {string} [accessToken="null accessToken"] - cpaas access token
+ * @param {string} [userGroupUUID="null userGroupUUID"] - user group uuid
+ * @returns {Promise<object>} - Promise resolving to a data object containing a list of user groups
+ */
+const  listGroupRoles = (accessToken = "null accessToken", userGroupUUID = "null roleUUID") => {
   const MS = util.getEndpoint("auth");
   const requestOptions = {
     method: "GET",
-    uri: `${MS}/users/${user_uuid}/roles`,
+    uri: `${MS}/user-groups/${userGroupUUID}/roles`,
     headers: {
       "Authorization": `Bearer ${accessToken}`,
       "Content-type": "application/json",
@@ -355,15 +313,229 @@ const  getUserRoles = (accessToken = "null accessToken", user_uuid = "null user_
     json: true
    
   };
+  
+  return request(requestOptions);
+};
+
+/**
+ * @async
+ * @description This function lists permissions.
+ * @param {string} [accessToken="null accessToken"]
+ * @param {string} [offset="0"]
+ * @param {string} [limit="10"]
+ * @param {array} [filters=undefined] - array of filter query parameters
+ * @returns {Promise<object>} - Promise resolving to a data object containing a list of permissions
+ */
+const  listPermissions = (accessToken = "null accessToken", offset = "0", limit = "10", filters = undefined) => {
+  const MS = util.getEndpoint("auth");
+  const requestOptions = {
+    method: "GET",
+    uri: `${MS}/permissions`,
+    headers: {
+      "Authorization": `Bearer ${accessToken}`,
+      "Content-type": "application/json",
+      'x-api-version': `${util.getVersion()}`
+    },
+    qs: {
+      "offset": offset,
+      "limit": limit,
+    },
+    json: true
+   
+  };
+  if(filters) {
+    Object.keys(filters).forEach(filter => {
+      requestOptions.qs[filter] = filters[filter];
+    });
+  }
+
+  return request(requestOptions);
+};
+
+/**
+ * @async
+ * @description This function lists roles a permission is assigned to.
+ * @param {string} [accessToken="null accessToken"] - cpaas access token
+ * @param {string} [permissionUUID="null permissionUUID"] - permission uuid
+ * @returns {Promise<object>} - Promise resolving to a data object containing a list of user groups
+ */
+const  listPermissionRoles = (accessToken = "null accessToken", permissionUUID = "null permissionUUID") => {
+  const MS = util.getEndpoint("auth");
+  const requestOptions = {
+    method: "GET",
+    uri: `${MS}/permissions/${permissionUUID}/roles`,
+    headers: {
+      "Authorization": `Bearer ${accessToken}`,
+      "Content-type": "application/json",
+      'x-api-version': `${util.getVersion()}`
+    },
+    json: true
+   
+  };
+  
+  return request(requestOptions);
+};
+
+/**
+ * @async
+ * @description This function lists roles.
+ * @param {string} [accessToken="null accessToken"] - cpaas access token
+ * @param {string} [offset="0"] - pagination offset
+ * @param {string} [limit="10"] - pagination limit
+ * @param {array} [filters=undefined] - array of filter query parameters
+ * @returns {Promise<object>} - Promise resolving to a data object containing a list of roles
+ */
+const  listRoles = (accessToken = "null accessToken", offset = "0", limit = "10", filters = undefined) => {
+  const MS = util.getEndpoint("auth");
+  const requestOptions = {
+    method: "GET",
+    uri: `${MS}/roles`,
+    headers: {
+      "Authorization": `Bearer ${accessToken}`,
+      "Content-type": "application/json",
+      'x-api-version': `${util.getVersion()}`
+    },
+    qs: {
+      "offset": offset,
+      "limit": limit,
+    },
+    json: true
+   
+  };
+  if(filters) {
+    Object.keys(filters).forEach(filter => {
+      requestOptions.qs[filter] = filters[filter];
+    });
+  }
+
+  return request(requestOptions);
+};
+
+/**
+ * @async
+ * @description This function lists user groups a role is assigned to.
+ * @param {string} [accessToken="null accessToken"] - cpaas access token
+ * @param {string} [roleUUID="null roleUUID"] - role uuid
+ * @returns {Promise<object>} - Promise resolving to a data object containing a list of user groups
+ */
+const  listRoleGroups = (accessToken = "null accessToken", roleUUID = "null roleUUID") => {
+  const MS = util.getEndpoint("auth");
+  const requestOptions = {
+    method: "GET",
+    uri: `${MS}/roles/${roleUUID}/user-groups`,
+    headers: {
+      "Authorization": `Bearer ${accessToken}`,
+      "Content-type": "application/json",
+      'x-api-version': `${util.getVersion()}`
+    },
+    json: true
+   
+  };
+  
+  return request(requestOptions);
+};
+
+/**
+ * @async
+ * @description This function lists permissions assigned to a role.
+ * @param {string} [accessToken="null accessToken"] - cpaas access token
+ * @param {string} [roleUUID="null roleUUID"] - role uuid
+ * @returns {Promise<object>} - Promise resolving to a data object containing a list of user groups
+ */
+const  listRolePermissions = (accessToken = "null accessToken", roleUUID = "null roleUUID") => {
+  const MS = util.getEndpoint("auth");
+  const requestOptions = {
+    method: "GET",
+    uri: `${MS}/roles/${roleUUID}/permissions`,
+    headers: {
+      "Authorization": `Bearer ${accessToken}`,
+      "Content-type": "application/json",
+      'x-api-version': `${util.getVersion()}`
+    },
+    json: true
+   
+  };
+  
+  return request(requestOptions);
+};
+
+/**
+ * @async
+ * @description This function lists user groups.
+ * @param {string} [accessToken="null accessToken"] - cpaas access token
+ * @param {string} [offset="0"] - pagination offset
+ * @param {string} [limit="10"] - pagination limit
+ * @param {array} [filters=undefined] - array of filter query string parameters
+ * @returns {Promise<object>} - Promise resolving to a data object containing a list of user groups
+ */
+const  listUserGroups = (accessToken = "null accessToken", offset = "0", limit = "10", filters = undefined) => {
+  const MS = util.getEndpoint("auth");
+  const requestOptions = {
+    method: "GET",
+    uri: `${MS}/user-groups`,
+    headers: {
+      "Authorization": `Bearer ${accessToken}`,
+      "Content-type": "application/json",
+      'x-api-version': `${util.getVersion()}`
+    },
+    qs: {
+      "offset": offset,
+      "limit": limit,
+    },
+    json: true
+   
+  };
+  if(filters) {
+    Object.keys(filters).forEach(filter => {
+      requestOptions.qs[filter] = filters[filter];
+    });
+  }
+
+  return request(requestOptions);
+};
+
+/**
+ * @async
+ * @description This function modifies a role
+ * @param {string} [accessToken="null accessToken"] - cpaas access token
+ * @param {string} [roleUUID = "null roleUUID"] - uuid of role being modified
+ * @param {object} [body="null body"] - object 
+ * @returns {Promise<object>} - Promise resolving to a permission data object
+ */
+const  modifyRole = (accessToken = "null accessToken", roleUUID = "null roleUUID", body = "null body") => {
+  const MS = util.getEndpoint("auth");
+  const requestOptions = {
+    method: "POST",
+    uri: `${MS}/roles/${roleUUID}/modify`,
+    headers: {
+      "Authorization": `Bearer ${accessToken}`,
+      "Content-type": "application/json",
+      'x-api-version': `${util.getVersion()}`
+    },
+    body: body,
+    json: true
+   
+  };
   return request(requestOptions);
 };
 
 module.exports = {
-  listUserPermissions,
-  getSpecificPermissions,
-  addExplicitGroupPermissions,
-  addExplicitUserPermissions,
-  addRoleToUser,
-  detachUserRole,
-  getUserRoles
+  activateRole,
+  assignPermissionsToRole,
+  assignRolesToUserGroup,
+  createPermission,
+  createUserGroup,
+  createRole,
+  deactivateRole,
+  deletePermissionFromRole,
+  deleteRole,
+  deleteRoleFromUserGroup,
+  listGroupRoles,
+  listPermissions,
+  listPermissionRoles,
+  listRoleGroups,
+  listRolePermissions,
+  listRoles,
+  listUserGroups,
+  modifyRole
 };
