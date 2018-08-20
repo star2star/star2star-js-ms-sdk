@@ -89,11 +89,11 @@ describe("Auth MS Test Suite", function () {
     }
     
     const filters = [];
-    filters["name"] = "testobject";
+    filters["name"] = "account";
 
     s2sMS.Auth.listPermissions(accessToken, 0, 2, filters)
     .then(response => {
-        //console.log('RESPONSE', response);
+        //console.log('LIST PERMISSIONS RESPONSE', response);
         permissions = response.items;
         assert(response.hasOwnProperty("items") && response.items[0].hasOwnProperty("action"));
         done();
@@ -198,7 +198,7 @@ describe("Auth MS Test Suite", function () {
     s2sMS.Auth.listRoles(accessToken, 0, 1, filters)
       .then(response => {
           roleBody = response.items[0];
-          //console.log("RESPONSE", roleBody);
+          //console.log("RESPONSE", response);
           assert(
             response.hasOwnProperty("items") &&
             response.items[0].hasOwnProperty("permissions") &&

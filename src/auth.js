@@ -300,7 +300,7 @@ const  deleteRoleFromUserGroup = (accessToken = "null accessToken", userGroupUUI
  * @param {string} [userGroupUUID="null userGroupUUID"] - user group uuid
  * @returns {Promise<object>} - Promise resolving to a data object containing a list of user groups
  */
-const  listGroupRoles = (accessToken = "null accessToken", userGroupUUID = "null roleUUID") => {
+const  listGroupRoles = (accessToken = "null accessToken", userGroupUUID = "null userGroupUUID") => {
   const MS = util.getEndpoint("auth");
   const requestOptions = {
     method: "GET",
