@@ -336,9 +336,9 @@ var deleteRoleFromUserGroup = function deleteRoleFromUserGroup() {
  * @param {string} [userGroupUUID="null userGroupUUID"] - user group uuid
  * @returns {Promise<object>} - Promise resolving to a data object containing a list of user groups
  */
-var listGroupRoles = function listGroupRoles() {
+var listUserGroupRoles = function listUserGroupRoles() {
   var accessToken = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : "null accessToken";
-  var userGroupUUID = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : "null roleUUID";
+  var userGroupUUID = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : "null userGroupUUID";
 
   var MS = util.getEndpoint("auth");
   var requestOptions = {
@@ -470,7 +470,7 @@ var listRoles = function listRoles() {
  * @param {string} [roleUUID="null roleUUID"] - role uuid
  * @returns {Promise<object>} - Promise resolving to a data object containing a list of user groups
  */
-var listRoleGroups = function listRoleGroups() {
+var listRoleUserGroups = function listRoleUserGroups() {
   var accessToken = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : "null accessToken";
   var roleUUID = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : "null roleUUID";
 
@@ -597,10 +597,10 @@ module.exports = {
   deletePermissionFromRole: deletePermissionFromRole,
   deleteRole: deleteRole,
   deleteRoleFromUserGroup: deleteRoleFromUserGroup,
-  listGroupRoles: listGroupRoles,
+  listUserGroupRoles: listUserGroupRoles,
   listPermissions: listPermissions,
   listPermissionRoles: listPermissionRoles,
-  listRoleGroups: listRoleGroups,
+  listRoleUserGroups: listRoleUserGroups,
   listRolePermissions: listRolePermissions,
   listRoles: listRoles,
   listUserGroups: listUserGroups,

@@ -300,7 +300,7 @@ const  deleteRoleFromUserGroup = (accessToken = "null accessToken", userGroupUUI
  * @param {string} [userGroupUUID="null userGroupUUID"] - user group uuid
  * @returns {Promise<object>} - Promise resolving to a data object containing a list of user groups
  */
-const  listGroupRoles = (accessToken = "null accessToken", userGroupUUID = "null userGroupUUID") => {
+const  listUserGroupRoles = (accessToken = "null accessToken", userGroupUUID = "null userGroupUUID") => {
   const MS = util.getEndpoint("auth");
   const requestOptions = {
     method: "GET",
@@ -418,7 +418,7 @@ const  listRoles = (accessToken = "null accessToken", offset = "0", limit = "10"
  * @param {string} [roleUUID="null roleUUID"] - role uuid
  * @returns {Promise<object>} - Promise resolving to a data object containing a list of user groups
  */
-const  listRoleGroups = (accessToken = "null accessToken", roleUUID = "null roleUUID") => {
+const  listRoleUserGroups = (accessToken = "null accessToken", roleUUID = "null roleUUID") => {
   const MS = util.getEndpoint("auth");
   const requestOptions = {
     method: "GET",
@@ -530,10 +530,10 @@ module.exports = {
   deletePermissionFromRole,
   deleteRole,
   deleteRoleFromUserGroup,
-  listGroupRoles,
+  listUserGroupRoles,
   listPermissions,
   listPermissionRoles,
-  listRoleGroups,
+  listRoleUserGroups,
   listRolePermissions,
   listRoles,
   listUserGroups,

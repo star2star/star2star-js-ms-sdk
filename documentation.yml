@@ -22,10 +22,10 @@ toc:
       - deletePermissionFromRole
       - deleteRole
       - deleteRoleFromUserGroup
-      - listGroupRoles
+      - listUserGroupRoles
       - listPermissions
       - listPermissionRoles
-      - listRoleGroups
+      - listRoleUserGroups
       - listRolePermissions
       - listRoles
       - listUserGroups

@@ -265,7 +265,7 @@ describe("Auth MS Test Suite", function () {
       return done(err);
     }
     setTimeout(()=>{
-      s2sMS.Auth.listRoleGroups(accessToken, role)
+      s2sMS.Auth.listRoleUserGroups(accessToken, role)
         .then(response => {        
             //console.log("RESPONSE", response);
             assert(
@@ -320,7 +320,7 @@ describe("Auth MS Test Suite", function () {
       return done(err);
     }
     setTimeout(()=>{
-      s2sMS.Auth.listGroupRoles(accessToken, userGroupUUID)
+      s2sMS.Auth.listUserGroupRoles(accessToken, userGroupUUID)
         .then(response => {        
             //console.log("RESPONSE", response);
             assert(
@@ -402,7 +402,7 @@ describe("Auth MS Test Suite", function () {
           //console.log("Reactivate ROLE", response); 
           assert(response.status === "ok");
           setTimeout(()=>{
-            s2sMS.Auth.listGroupRoles(accessToken, userGroupUUID)
+            s2sMS.Auth.listUserGroupRoles(accessToken, userGroupUUID)
               .then(response => {        
                   //console.log("RESPONSE", response);
                   assert(response.items.length === 0);
