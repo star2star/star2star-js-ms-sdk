@@ -10,6 +10,13 @@ toc:
       - modifyAccount
       - reinstateAccount
       - suspendAccount
+  - name: Application
+    children:  
+      - createApplication
+      - deleteApplication
+      - getApplication
+      - listApplications
+      - updateApplication
   - name: Auth
     children:
       - activateRole
@@ -114,12 +121,6 @@ toc:
       - getDataObjectByType
       - getDataObjectByTypeAndName
       - createUserDataObject
-  - name: Project
-    children:  
-      - createProjectObject
-      - deleteProjectObject
-      - getProjectObject
-      - updateProjectObject
   - name: Pubsub
     children: 
       - addSubscription

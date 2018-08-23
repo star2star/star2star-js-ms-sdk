@@ -15,7 +15,7 @@ const Contacts = require('./contacts');
 const Oauth = require('./oauth');
 const Media = require('./media');
 const Pubsub = require('./pubsub');
-const Project = require('./project');
+const Application = require('./application');
 
 
 const request = require('request-promise');
@@ -98,6 +98,6 @@ module.exports = {
   Contacts,
   Media,
   Pubsub,
-  Project,
+  Application,
   setMSVersion
 };
