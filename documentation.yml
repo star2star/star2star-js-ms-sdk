@@ -111,6 +111,7 @@ toc:
   - name: Oauth
     children: 
       - getAccessToken
+      - getClientToken
       - refreshAccessToken
   - name: Objects
     children:
@@ -146,9 +147,11 @@ toc:
   - name: Util
     children:
       - createUUID
+      - filterResponse
       - getEndpoint
       - getVersion
       - getValueFromObjectTree
+      - paginate
       - replaceStaticValues
       - replaceVariables
       

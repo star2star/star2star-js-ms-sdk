@@ -141,11 +141,78 @@ var createUUID = function createUUID() {
   });
 };
 
+/**
+ *
+ * @description This function returns a portion of a response in a paginated format.
+ * @param {object} [response={}] - API list response object with format {"items":[]}
+ * @param {number} [offset=0] - response offset
+ * @param {number} [limit=10] - reponse items limit
+ * @returns {object} - response object with format {"items":[],"meatadata":{}}
+ */
+var paginate = function paginate(response) {
+  var offset = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 0;
+  var limit = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : 10;
+
+  var total = response.items.length;
+  var paginatedResponse = { "items": response.items.slice(offset, offset + limit) };
+  var count = paginatedResponse.items.length;
+  paginatedResponse.metadata = {
+    "total": total,
+    "offset": offset,
+    "count": count,
+    "limit": limit
+  };
+  return paginatedResponse;
+};
+
+/**
+ *
+ * @description This function filters an API response in an "AND" format. Returned items must match filter
+ * @param {object} [response={}] - API list response object with format {"items":[]}
+ * @param {array} [filter=[]] - Array of filters to apply to API response object
+ * @returns {object} - Response object with format {"items":[]}
+ */
+var filterResponse = function filterResponse(response, filters) {
+
+  Object.keys(filters).forEach(function (filter) {
+    var filteredResponse = response.items.filter(function (filterItem) {
+      var found = false;
+      var doFilter = function doFilter(obj, filter) {
+        Object.keys(obj).forEach(function (prop) {
+          if (found) return;
+          //not seaching through arrays
+          if (!Array.isArray(obj[prop])) {
+            if (typeof obj[prop] === "string" || typeof obj[prop] === "number" || typeof obj[prop] === "boolean") {
+              // console.log("PROP", prop);
+              // console.log("OBJ[PROP]", obj[prop]);
+              // console.log("FILTER", filter);
+              // console.log("FILTERS[FILTER}",filters[filter]);
+              found = prop === filter && obj[prop].toLowerCase().includes(filters[filter].toLowerCase());
+              return;
+            } else if (_typeof(obj[prop]) === "object") {
+              return doFilter(obj[prop], filter);
+            }
+          }
+        });
+        //console.log("FOUND", found);
+        return found;
+      };
+      return doFilter(filterItem, filter);
+    });
+    response.items = filteredResponse;
+    //console.log("FILTERED RESPONSE", filteredResponse);
+  });
+  //console.log("FINAL RESPONSE ARRAY", response.items.length, response.items);
+  return response;
+};
+
 module.exports = {
   getEndpoint: getEndpoint,
   getAuthHost: getAuthHost,
   getVersion: getVersion,
   config: config,
   replaceVariables: replaceVariables,
-  createUUID: createUUID
+  createUUID: createUUID,
+  paginate: paginate,
+  filterResponse: filterResponse
 };

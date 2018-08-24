@@ -35,6 +35,7 @@ var validateApplication = function validateApplication() {
       application.content.hasOwnProperty("status") && STATUSES.includes(application.content.status) ? vError : vError.push("status missing or invalid");
       application.content.hasOwnProperty("flows") && Array.isArray(application.content.flows) ? vError : vError.push("flows missing or not array");
       application.content.hasOwnProperty("workspaces") && Array.isArray(application.content.workspaces) ? vError : vError.push("workspaces missing or not array");
+      application.content.hasOwnProperty("version") ? vError : vError.push("version missing");
     } else {
       vError.push("content missing or not object");
     }
@@ -132,34 +133,10 @@ var listApplications = function listApplications() {
   return new Promise(function (resolve, reject) {
     Objects.getDataObjectByType(user_uuid, access_token, "starpaas_application", true).then(function (response) {
       if (filters) {
-        var filterResponse = function filterResponse(responseItems, filter) {
-          var postFilter = responseItems.filter(function (filterItem) {
-            //Checking root properties and children of content for a match
-            return filterItem.hasOwnProperty(filter) && filterItem[filter].toLowerCase().includes(filters[filter].toLowerCase()) || filterItem.hasOwnProperty("content") && filterItem.content.hasOwnProperty(filter) && filterItem.content[filter].toLowerCase().includes(filters[filter].toLowerCase());
-          });
-          response.items = postFilter;
-        };
-
-        Object.keys(filters).forEach(function (filter) {
-          filterResponse(response.items, filter);
-        });
+        response = util.filterResponse(response, filters);
       }
-      /* Paginate...This pagination is synthetic and limited to the original 100 objects we get from the API
-       * TODO move the filter, paginaiton, and aggregation methods to utilities and call here. NH 08-23-18
-       */
-      var paginate = function paginate(response, offset, limit) {
-        var total = response.items.length;
-        var paginatedResponse = { "items": response.items.slice(offset, offset + limit) };
-        var count = paginatedResponse.items.length;
-        paginatedResponse.metadata = {
-          "total": total,
-          "offset": offset,
-          "count": count,
-          "limit": limit
-        };
-        return paginatedResponse;
-      };
-      response = paginate(response, offset, limit);
+      // Paginate...This pagination is synthetic and limited to the original 100 objects we get from the API
+      response = util.paginate(response, offset, limit);
       //console.log("PAGINATED RESPONSE", response);
       resolve(response);
     }).catch(function (error) {

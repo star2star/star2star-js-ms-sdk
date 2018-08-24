@@ -31,6 +31,7 @@ s2sMS.Identity.login(creds.CPAAS_KEY, creds.email, creds.password)
 [Please click here for our documentation pages.](https://star2star.github.io/star2star-js-ms-sdk/ "Star2Star Micro Service SDK Documentation")
 
 ## Changes
+* 2.1.33 - Move pagination and filter to utils.
 * 2.1.32 - Add name sort order to list objects
 * 2.1.31 - Add filter and pagination to list application
 * 2.1.30 - Change project to application

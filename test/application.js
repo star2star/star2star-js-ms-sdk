@@ -109,7 +109,7 @@ describe("Application", function () {
       //console.log("CREATE EMPTY APPLICATION ERROR",error);
       assert(
         error.status === 400 &&
-        error.message === "account_uuid missing,admins array missing or empty,status missing or invalid,flows missing or not array,workspaces missing or not array"
+        error.message === "account_uuid missing,admins array missing or empty,status missing or invalid,flows missing or not array,workspaces missing or not array,version missing"
        );
       done();
     });
@@ -132,7 +132,8 @@ describe("Application", function () {
           "flows" : [],
           "workspaces" : [],
           "icon_color": "",
-          "icon" : ""
+          "icon" : "",
+          "version": ""
        }
     }
     ).then(response => {
@@ -209,7 +210,7 @@ describe("Application", function () {
       accessToken,
       identityData.uuid,
       0, //offset
-      10 //limit
+      100 //limit
       ).then(response => {
         //console.log("LIST RESPONSE", response);
         const thisIndex = response.items.findIndex(item => {
@@ -227,7 +228,7 @@ describe("Application", function () {
         });
     });
 
-    it("List Application Objects Filter Name and Description", function (done) {
+    it("List Application Objects With Filters", function (done) {
       if (!creds.isValid) return done();
       
       filters = [];

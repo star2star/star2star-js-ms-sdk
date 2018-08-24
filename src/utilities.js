@@ -131,11 +131,75 @@ const createUUID = () => {
   });
 };
 
+/**
+ *
+ * @description This function returns a portion of a response in a paginated format.
+ * @param {object} [response={}] - API list response object with format {"items":[]}
+ * @param {number} [offset=0] - response offset
+ * @param {number} [limit=10] - reponse items limit
+ * @returns {object} - response object with format {"items":[],"meatadata":{}}
+ */
+const paginate = (response, offset = 0, limit = 10) => {
+  const total = response.items.length;
+  const paginatedResponse = {"items":response.items.slice(offset, (offset + limit))};
+  const count = paginatedResponse.items.length;
+  paginatedResponse.metadata = {
+    "total": total,
+    "offset": offset,
+    "count": count,
+    "limit": limit
+  };
+  return paginatedResponse;
+};
+
+/**
+ *
+ * @description This function filters an API response in an "AND" format. Returned items must match filter
+ * @param {object} [response={}] - API list response object with format {"items":[]}
+ * @param {array} [filter=[]] - Array of filters to apply to API response object
+ * @returns {object} - Response object with format {"items":[]}
+ */
+const filterResponse = (response, filters) => {
+
+  Object.keys(filters).forEach(filter => {
+    const filteredResponse = response.items.filter(filterItem => {
+      let found=false;
+      const doFilter = (obj, filter) => {
+        Object.keys(obj).forEach(prop =>{
+          if(found) return;
+          //not seaching through arrays
+          if (!Array.isArray(obj[prop])) {
+            if ((typeof obj[prop] === "string") || (typeof obj[prop] === "number") || (typeof obj[prop] === "boolean")){
+              // console.log("PROP", prop);
+              // console.log("OBJ[PROP]", obj[prop]);
+              // console.log("FILTER", filter);
+              // console.log("FILTERS[FILTER}",filters[filter]);
+              found = (prop === filter) && obj[prop].toLowerCase().includes(filters[filter].toLowerCase());
+              return;
+            } else if (typeof obj[prop] === "object") {
+              return doFilter(obj[prop], filter);
+            }
+          } 
+        });
+        //console.log("FOUND", found);
+        return found;
+      };
+      return doFilter(filterItem, filter);
+    });
+    response.items = filteredResponse;
+    //console.log("FILTERED RESPONSE", filteredResponse);
+  });
+  //console.log("FINAL RESPONSE ARRAY", response.items.length, response.items);
+  return response;
+};
+
 module.exports = {
   getEndpoint,
   getAuthHost,
   getVersion, 
   config,
   replaceVariables,
-  createUUID
+  createUUID,
+  paginate,
+  filterResponse
 };

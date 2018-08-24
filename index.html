@@ -2,7 +2,7 @@
 <html>
 <head>
   <meta charset='utf-8' />
-  <title>star2star-js-ms-sdk 2.1.32 | Documentation</title>
+  <title>star2star-js-ms-sdk 2.1.33 | Documentation</title>
   <meta name='viewport' content='width=device-width,initial-scale=1'>
   <link href='assets/bass.css' type='text/css' rel='stylesheet' />
   <link href='assets/style.css' type='text/css' rel='stylesheet' />
@@ -15,7 +15,7 @@
       <div id='split-left' class='overflow-auto fs0 height-viewport-100'>
         <div class='py1 px2'>
           <h3 class='mb0 no-anchor'>star2star-js-ms-sdk</h3>
-          <div class='mb1'><code>2.1.32</code></div>
+          <div class='mb1'><code>2.1.33</code></div>
           <input
             placeholder='Filter'
             id='filter-input'
@@ -808,6 +808,12 @@
                       </a></li>
                     
                       <li><a
+                        href='#getclienttoken'
+                        class='regular pre-open'>
+                        .getClientToken
+                      </a></li>
+                    
+                      <li><a
                         href='#refreshaccesstoken'
                         class='regular pre-open'>
                         .refreshAccessToken
@@ -1068,6 +1074,12 @@
                       </a></li>
                     
                       <li><a
+                        href='#filterresponse'
+                        class='regular pre-open'>
+                        .filterResponse
+                      </a></li>
+                    
+                      <li><a
                         href='#getendpoint'
                         class='regular pre-open'>
                         .getEndpoint
@@ -1083,6 +1095,12 @@
                         href='#getvaluefromobjecttree'
                         class='regular pre-open'>
                         .getValueFromObjectTree
+                      </a></li>
+                    
+                      <li><a
+                        href='#paginate'
+                        class='regular pre-open'>
+                        .paginate
                       </a></li>
                     
                       <li><a
@@ -1103,16 +1121,6 @@
                   
                   
                 </div>
-                
-                </li>
-              
-                
-                <li><a
-                  href='#getclienttoken'
-                  class="">
-                  getClientToken
-                  
-                </a>
                 
                 </li>
               
@@ -9456,6 +9464,77 @@ outh key and basic token you passed in.</p>
       </div>
     </div>
   
+    <div class='border-bottom' id='getclienttoken'>
+      <div class="clearfix small pointer toggle-sibling">
+        <div class="py1 contain">
+            <a class='icon pin-right py1 dark-link caret-right'>▸</a>
+            <span class='code strong strong truncate'>getClientToken</span>
+        </div>
+      </div>
+      <div class="clearfix display-none toggle-target">
+        <section class='p2 mb2 clearfix bg-white minishadow'>
+
+  
+
+  <p>This function will call the oauth microservice with the basic token you passed in.</p>
+
+ 
+  
+    <div class='pre p1 fill-light mt0'>getClientToken</div>
+   
+  
+  
+
+  
+  
+  
+  
+  
+  
+
+  
+    <div class='py1 quiet mt1 prose-big'>Parameters</div>
+    <div class='prose'>
+      
+        <div class='space-bottom0'>
+          <div>
+            <span class='code bold'>oauthToken</span> <code class='quiet'>(<a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String">string</a>
+            = <code>&quot;null oauth token&quot;</code>)</code>
+	    token for authentication to cpaas oauth system
+
+          </div>
+          
+        </div>
+      
+    </div>
+  
+
+  
+
+  
+    
+      <div class='py1 quiet mt1 prose-big'>Returns</div>
+      <code><a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise">Promise</a>&#x3C;<a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object">object</a>></code>:
+        Promise resolving to an oauth token data object
+
+      
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+</section>
+
+      </div>
+    </div>
+  
     <div class='border-bottom' id='refreshaccesstoken'>
       <div class="clearfix small pointer toggle-sibling">
         <div class="py1 contain">
@@ -12054,6 +12133,95 @@ type of object with name.</p>
       </div>
     </div>
   
+    <div class='border-bottom' id='filterresponse'>
+      <div class="clearfix small pointer toggle-sibling">
+        <div class="py1 contain">
+            <a class='icon pin-right py1 dark-link caret-right'>▸</a>
+            <span class='code strong strong truncate'>filterResponse</span>
+        </div>
+      </div>
+      <div class="clearfix display-none toggle-target">
+        <section class='p2 mb2 clearfix bg-white minishadow'>
+
+  
+
+  <p>This function filters an API response in an "AND" format. Returned items must match filter</p>
+
+ 
+  
+    <div class='pre p1 fill-light mt0'>filterResponse</div>
+   
+  
+  
+
+  
+  
+  
+  
+  
+  
+
+  
+    <div class='py1 quiet mt1 prose-big'>Parameters</div>
+    <div class='prose'>
+      
+        <div class='space-bottom0'>
+          <div>
+            <span class='code bold'>response</span> <code class='quiet'>(<a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object">object</a>
+            = <code>{}</code>)</code>
+	    API list response object with format {"items":[]}
+
+          </div>
+          
+        </div>
+      
+        <div class='space-bottom0'>
+          <div>
+            <span class='code bold'>filters</span> <code class='quiet'>(any)</code>
+	    
+          </div>
+          
+        </div>
+      
+        <div class='space-bottom0'>
+          <div>
+            <span class='code bold'>filter</span> <code class='quiet'>(<a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Array">array</a>
+            = <code>[]</code>)</code>
+	    Array of filters to apply to API response object
+
+          </div>
+          
+        </div>
+      
+    </div>
+  
+
+  
+
+  
+    
+      <div class='py1 quiet mt1 prose-big'>Returns</div>
+      <code><a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object">object</a></code>:
+        Response object with format {"items":[]}
+
+      
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+</section>
+
+      </div>
+    </div>
+  
     <div class='border-bottom' id='getendpoint'>
       <div class="clearfix small pointer toggle-sibling">
         <div class="py1 contain">
@@ -12262,6 +12430,97 @@ type of object with name.</p>
       </div>
     </div>
   
+    <div class='border-bottom' id='paginate'>
+      <div class="clearfix small pointer toggle-sibling">
+        <div class="py1 contain">
+            <a class='icon pin-right py1 dark-link caret-right'>▸</a>
+            <span class='code strong strong truncate'>paginate</span>
+        </div>
+      </div>
+      <div class="clearfix display-none toggle-target">
+        <section class='p2 mb2 clearfix bg-white minishadow'>
+
+  
+
+  <p>This function returns a portion of a response in a paginated format.</p>
+
+ 
+  
+    <div class='pre p1 fill-light mt0'>paginate</div>
+   
+  
+  
+
+  
+  
+  
+  
+  
+  
+
+  
+    <div class='py1 quiet mt1 prose-big'>Parameters</div>
+    <div class='prose'>
+      
+        <div class='space-bottom0'>
+          <div>
+            <span class='code bold'>response</span> <code class='quiet'>(<a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object">object</a>
+            = <code>{}</code>)</code>
+	    API list response object with format {"items":[]}
+
+          </div>
+          
+        </div>
+      
+        <div class='space-bottom0'>
+          <div>
+            <span class='code bold'>offset</span> <code class='quiet'>(<a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number">number</a>
+            = <code>0</code>)</code>
+	    response offset
+
+          </div>
+          
+        </div>
+      
+        <div class='space-bottom0'>
+          <div>
+            <span class='code bold'>limit</span> <code class='quiet'>(<a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number">number</a>
+            = <code>10</code>)</code>
+	    reponse items limit
+
+          </div>
+          
+        </div>
+      
+    </div>
+  
+
+  
+
+  
+    
+      <div class='py1 quiet mt1 prose-big'>Returns</div>
+      <code><a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object">object</a></code>:
+        response object with format {"items":[],"meatadata":{}}
+
+      
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+</section>
+
+      </div>
+    </div>
+  
     <div class='border-bottom' id='replacestaticvalues'>
       <div class="clearfix small pointer toggle-sibling">
         <div class="py1 contain">
@@ -12414,77 +12673,6 @@ type of object with name.</p>
     </div>
   
 </div>
-
-  
-
-  
-
-  
-</section>
-
-        
-          
-          <section class='p2 mb2 clearfix bg-white minishadow'>
-
-  
-  <div class='clearfix'>
-    
-    <h3 class='fl m0' id='getclienttoken'>
-      getClientToken
-    </h3>
-    
-    
-  </div>
-  
-
-  <p>This function will call the oauth microservice with the basic token you passed in.</p>
-
- 
-  
-    <div class='pre p1 fill-light mt0'>getClientToken</div>
-   
-  
-  
-
-  
-  
-  
-  
-  
-  
-
-  
-    <div class='py1 quiet mt1 prose-big'>Parameters</div>
-    <div class='prose'>
-      
-        <div class='space-bottom0'>
-          <div>
-            <span class='code bold'>oauthToken</span> <code class='quiet'>(<a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String">string</a>
-            = <code>&quot;null oauth token&quot;</code>)</code>
-	    token for authentication to cpaas oauth system
-
-          </div>
-          
-        </div>
-      
-    </div>
-  
-
-  
-
-  
-    
-      <div class='py1 quiet mt1 prose-big'>Returns</div>
-      <code><a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise">Promise</a>&#x3C;<a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object">object</a>></code>:
-        Promise resolving to an oauth token data object
-
-      
-    
-  
-
-  
-
-  
 
   
 
