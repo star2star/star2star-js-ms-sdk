@@ -117,16 +117,16 @@ var getApplication = function getApplication() {
  * @description This function will retrieve application list.
  * @param {string} [access_token="null access_token"] - cpaas access token
  * @param {string} [user_uuid="null user_uuid"] - user_uuid
- * @param {string} [offset="0"] - pagination offset
- * @param {string} [limit="10"] - pagination limit
+ * @param {number} [offset=0] - pagination offset
+ * @param {number} [limit=10] - pagination limit
  * @param {array} [filters=undefined] - optional array of filters [name, description, status]
  * @returns {Promise<object>} - Promise resolving to a application data object
  */
 var listApplications = function listApplications() {
   var access_token = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : "null access_token";
   var user_uuid = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : "null user_uuid";
-  var offset = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : "0";
-  var limit = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : "10";
+  var offset = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : 0;
+  var limit = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : 10;
   var filters = arguments.length > 4 && arguments[4] !== undefined ? arguments[4] : undefined;
 
   return new Promise(function (resolve, reject) {
@@ -148,9 +148,9 @@ var listApplications = function listApplications() {
        * TODO move the filter, paginaiton, and aggregation methods to utilities and call here. NH 08-23-18
        */
       var paginate = function paginate(response, offset, limit) {
-        var total = response.items.length.toString();
+        var total = response.items.length;
         var paginatedResponse = { "items": response.items.slice(offset, offset + limit) };
-        var count = paginatedResponse.items.length.toString();
+        var count = paginatedResponse.items.length;
         paginatedResponse.metadata = {
           "total": total,
           "offset": offset,

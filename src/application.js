@@ -117,16 +117,16 @@ const getApplication = (
  * @description This function will retrieve application list.
  * @param {string} [access_token="null access_token"] - cpaas access token
  * @param {string} [user_uuid="null user_uuid"] - user_uuid
- * @param {string} [offset="0"] - pagination offset
- * @param {string} [limit="10"] - pagination limit
+ * @param {number} [offset=0] - pagination offset
+ * @param {number} [limit=10] - pagination limit
  * @param {array} [filters=undefined] - optional array of filters [name, description, status]
  * @returns {Promise<object>} - Promise resolving to a application data object
  */
 const listApplications = (
   access_token = "null access_token",
   user_uuid = "null user_uuid",
-  offset = "0",
-  limit = "10",
+  offset = 0,
+  limit = 10,
   filters = undefined
 ) => {
   return new Promise((resolve, reject) => {
@@ -154,9 +154,9 @@ const listApplications = (
        * TODO move the filter, paginaiton, and aggregation methods to utilities and call here. NH 08-23-18
        */ 
       const paginate = (response, offset, limit) => {
-         const total = response.items.length.toString();
+         const total = response.items.length;
          const paginatedResponse = {"items":response.items.slice(offset, (offset + limit))};
-         const count = paginatedResponse.items.length.toString();
+         const count = paginatedResponse.items.length;
          paginatedResponse.metadata = {
            "total": total,
            "offset": offset,

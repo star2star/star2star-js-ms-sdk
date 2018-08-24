@@ -208,8 +208,8 @@ describe("Application", function () {
     s2sMS.Application.listApplications(
       accessToken,
       identityData.uuid,
-      "0", //offset
-      "10" //limit
+      0, //offset
+      10 //limit
       ).then(response => {
         //console.log("LIST RESPONSE", response);
         const thisIndex = response.items.findIndex(item => {
@@ -239,8 +239,8 @@ describe("Application", function () {
       s2sMS.Application.listApplications(
         accessToken,
         identityData.uuid,
-        "0", //offset
-        "1", //limit
+        0, //offset
+        1, //limit
         filters
         ).then(response => {
           //console.log("LIST RESPONSE", response);
@@ -248,7 +248,7 @@ describe("Application", function () {
             response.items[0].content.status === "active" &&
             response.items[0].content.account_uuid === identityData.account_uuid &&
             response.items[0].uuid === objectUUID &&
-            response.metadata.total === "1"
+            response.metadata.total === 1
           );
           done();
         })

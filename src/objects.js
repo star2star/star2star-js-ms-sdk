@@ -26,7 +26,7 @@ const getDataObjectByType = (
     const arrayRequest = [];
     const requestOptionsGlobal = {
       method: "GET",
-      uri: `${MS}/users/${userUUID}/allowed-objects?type=${dataObjectType}&load_content=${loadContent}`,
+      uri: `${MS}/users/${userUUID}/allowed-objects?type=${dataObjectType}&load_content=${loadContent}&sort=name`,
       headers: {
         'Authorization': `Bearer ${accessToken}`,
         'Content-type': 'application/json',
