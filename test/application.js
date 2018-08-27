@@ -154,9 +154,9 @@ describe("Application", function () {
     });
   });
 
-  it("Update Application Object", function (done) {
+  it("Modify Application Object", function (done) {
     if (!creds.isValid) return done();
-      s2sMS.Application.updateApplication(
+      s2sMS.Application.modifyApplication(
         accessToken,
         objectUUID,
         {
@@ -176,7 +176,7 @@ describe("Application", function () {
          }
       }
       ).then(response => {
-        //console.log("UPDATE RESPONSE", response);
+        //console.log("MODIFY RESPONSE", response);
         assert(response.uuid === objectUUID);
         done();
       })

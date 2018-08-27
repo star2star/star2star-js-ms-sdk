@@ -16,7 +16,7 @@ toc:
       - deleteApplication
       - getApplication
       - listApplications
-      - updateApplication
+      - modifyApplication
   - name: Auth
     children:
       - activateRole

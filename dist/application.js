@@ -147,13 +147,13 @@ var listApplications = function listApplications() {
 
 /**
  * @async
- * @description This function will update application list.
+ * @description This function will modify application list.
  * @param {string} [access_token="null access_token"] - access token for cpaas systems
  * @param {string} [uuid="missing_uuid"] - application list UUID
  * @param {object} [applicationObject={}]
  * @returns {Promise<object>} - Promise resolving to a application data object
  */
-var updateApplication = function updateApplication() {
+var modifyApplication = function modifyApplication() {
   var access_token = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : "null access_token";
   var uuid = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : "missing_uuid";
   var application = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : {};
@@ -171,5 +171,5 @@ module.exports = {
   deleteApplication: deleteApplication,
   getApplication: getApplication,
   listApplications: listApplications,
-  updateApplication: updateApplication
+  modifyApplication: modifyApplication
 };

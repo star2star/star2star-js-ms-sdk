@@ -152,13 +152,13 @@ const listApplications = (
 
 /**
  * @async
- * @description This function will update application list.
+ * @description This function will modify application list.
  * @param {string} [access_token="null access_token"] - access token for cpaas systems
  * @param {string} [uuid="missing_uuid"] - application list UUID
  * @param {object} [applicationObject={}]
  * @returns {Promise<object>} - Promise resolving to a application data object
  */
-const updateApplication = (
+const modifyApplication = (
   access_token = "null access_token",
   uuid = "missing_uuid",
   application = {}
@@ -181,5 +181,5 @@ module.exports = {
   deleteApplication,
   getApplication,
   listApplications,
-  updateApplication
+  modifyApplication
 };
