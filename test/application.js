@@ -89,31 +89,31 @@ describe("Application", function () {
     });
   });
 
-  it("Create Application Object With Empty Content", function (done) {
-    if (!creds.isValid) return done();
-    s2sMS.Application.createApplication(
-      accessToken,
-      identityData.uuid,
-      {
-        "name" : "Unit-Test", 
-        "type" : "starpaas_application",
-        "description": "Unit-Test",
-        "content_type" : "application/json",
-        "content" : {}
-      }
-    ).then(response => {
-      console.log("CREATE EMPTY APPLICATION", response);
-      done(new Error(response));
-    })
-    .catch(error =>{
-      //console.log("CREATE EMPTY APPLICATION ERROR",error);
-      assert(
-        error.status === 400 &&
-        error.message === "account_uuid missing,admins array missing or empty,status missing or invalid,flows missing or not array,workspaces missing or not array,version missing"
-       );
-      done();
-    });
-  });
+  // it("Create Application Object With Empty Content", function (done) {
+  //   if (!creds.isValid) return done();
+  //   s2sMS.Application.createApplication(
+  //     accessToken,
+  //     identityData.uuid,
+  //     {
+  //       "name" : "Unit-Test", 
+  //       "type" : "starpaas_application",
+  //       "description": "Unit-Test",
+  //       "content_type" : "application/json",
+  //       "content" : {}
+  //     }
+  //   ).then(response => {
+  //     console.log("CREATE EMPTY APPLICATION", response);
+  //     done(new Error(response));
+  //   })
+  //   .catch(error =>{
+  //     //console.log("CREATE EMPTY APPLICATION ERROR",error);
+  //     assert(
+  //       error.status === 400 &&
+  //       error.message === "account_uuid missing,admins array missing or empty,status missing or invalid,flows missing or not array,workspaces missing or not array,version missing"
+  //      );
+  //     done();
+  //   });
+  // });
   
   it("Create Application Object", function (done) {
     if (!creds.isValid) return done();
