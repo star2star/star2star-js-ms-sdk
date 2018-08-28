@@ -16,6 +16,7 @@ const Oauth = require('./oauth');
 const Media = require('./media');
 const Pubsub = require('./pubsub');
 const Application = require('./application');
+const Workflow = require('./workflow');
 
 
 const request = require('request-promise');
@@ -99,5 +100,6 @@ module.exports = {
   Media,
   Pubsub,
   Application,
-  setMSVersion
+  setMSVersion,
+  Workflow
 };

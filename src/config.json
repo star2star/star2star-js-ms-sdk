@@ -13,6 +13,7 @@
     "OAUTH": "/oauth",
     "MEDIA": "/media",
     "PUBSUB": "/pubsub",
-    "ACCOUNTS": "/accounts"
+    "ACCOUNTS": "/accounts",
+    "WORKFLOW": "/workflow"
   }
 }

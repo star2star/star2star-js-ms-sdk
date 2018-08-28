@@ -144,6 +144,19 @@ toc:
       - updateTaskObject
       - updateTaskInTaskObject
       - validateTasks 
+  - name: Workflow
+    children:
+      - createWorkflowTemplate
+      - cancelWorkflow
+      - deleteWorkflowTemplate
+      - getWfInstanceHistory
+      - getWfTemplateHistory
+      - getWorkflow
+      - getWorkflowTemplate
+      - listRunningWorkflows
+      - listWorkflowTemplates
+      - modifyWorkflowTemplate
+      - startWorkflow  
   - name: Util
     children:
       - createUUID
