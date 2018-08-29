@@ -24,13 +24,29 @@ const validateApplication = (application = {}) => {
     application.hasOwnProperty("type") && application.type === "starpaas_application" ? vError: vError.push("name missing or empty");
     application.hasOwnProperty("description") && application.description.length !==0 ? vError: vError.push("description missing or empty");
     application.hasOwnProperty("content_type") && application.content_type === "application/json" ? vError: vError.push("content_type missing or incorrect");
+    
     if (application.hasOwnProperty("content") && typeof application.content === "object") {
       application.content.hasOwnProperty("account_uuid") ? vError: vError.push("account_uuid missing");
-      // application.content.hasOwnProperty("admins") && Array.isArray(application.content.admins) && application.content.admins.length > 0 ?  vError: vError.push("admins array missing or empty");
-      // application.content.hasOwnProperty("status") && STATUSES.includes(application.content.status) ? vError: vError.push("status missing or invalid");
-      // application.content.hasOwnProperty("flows") && Array.isArray(application.content.flows) ?  vError: vError.push("flows missing or not array");
-      // application.content.hasOwnProperty("workspaces") && Array.isArray(application.content.workspaces) ? vError: vError.push("workspaces missing or not array");
-      // application.content.hasOwnProperty("version") ? vError: vError.push("version missing");
+      application.content.hasOwnProperty("admins") ? vError: vError.push("admins missing");   
+      if (application.content.hasOwnProperty("versions") && 
+        typeof application.content.versions === "object" && 
+        Object.keys(application.content.versions).length !== 0) {
+        const versions = application.content.versions;
+        Object.keys(versions).forEach(version=>{
+          RegExp('^([0-9]+[.]){2}[0-9]+$').test(version) ? vError:  vError.push(`version "${version}" invalid format`); //check for major.minor.revision
+          
+          versions[version].hasOwnProperty("flows") &&
+            Array.isArray(versions[version].flows)? vError: vError.push(`version "${version}" flows missing or not array`);
+          
+          versions[version].hasOwnProperty("workspaces") && 
+            Array.isArray(versions[version].workspaces) ? vError: vError.push(`version "${version}" workspaces missing or not array`);
+
+          versions[version].hasOwnProperty("status") && 
+            STATUSES.includes(versions[version].status) ? vError : vError.push(`version "${version}" status missing or invalid`);
+        });
+      } else {
+      vError.push("versions missing - empty - or not an object");
+      }
     } else {
       vError.push("content missing or not object");
     }

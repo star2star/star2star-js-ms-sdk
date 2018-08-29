@@ -89,31 +89,130 @@ describe("Application", function () {
     });
   });
 
-  // it("Create Application Object With Empty Content", function (done) {
-  //   if (!creds.isValid) return done();
-  //   s2sMS.Application.createApplication(
-  //     accessToken,
-  //     identityData.uuid,
-  //     {
-  //       "name" : "Unit-Test", 
-  //       "type" : "starpaas_application",
-  //       "description": "Unit-Test",
-  //       "content_type" : "application/json",
-  //       "content" : {}
-  //     }
-  //   ).then(response => {
-  //     console.log("CREATE EMPTY APPLICATION", response);
-  //     done(new Error(response));
-  //   })
-  //   .catch(error =>{
-  //     //console.log("CREATE EMPTY APPLICATION ERROR",error);
-  //     assert(
-  //       error.status === 400 &&
-  //       error.message === "account_uuid missing,admins array missing or empty,status missing or invalid,flows missing or not array,workspaces missing or not array,version missing"
-  //      );
-  //     done();
-  //   });
-  // });
+  it("Create Application Object With No Content", function (done) {
+    if (!creds.isValid) return done();
+    s2sMS.Application.createApplication(
+      accessToken,
+      identityData.uuid,
+      {
+        "name" : "Unit-Test", 
+        "type" : "starpaas_application",
+        "description": "Unit-Test",
+        "content_type" : "application/json"
+      }
+    ).then(response => {
+      console.log("CREATE EMPTY APPLICATION", response);
+      done(new Error(response));
+    })
+    .catch(error =>{
+      //console.log("CREATE EMPTY APPLICATION ERROR",error);
+      assert(
+        error.status === 400 &&
+        error.message === "content missing or not object"
+       );
+      done();
+    });
+  });
+
+  it("Create Application Object With Empty Content", function (done) {
+    if (!creds.isValid) return done();
+    s2sMS.Application.createApplication(
+      accessToken,
+      identityData.uuid,
+      {
+        "name" : "Unit-Test", 
+        "type" : "starpaas_application",
+        "description": "Unit-Test",
+        "content_type" : "application/json",
+        "content" : {}
+      }
+    ).then(response => {
+      console.log("CREATE EMPTY APPLICATION", response);
+      done(new Error(response));
+    })
+    .catch(error =>{
+      //console.log("CREATE EMPTY APPLICATION ERROR",error);
+      assert(
+        error.status === 400 &&
+        error.message === "account_uuid missing,admins missing,versions missing - empty - or not an object"
+       );
+      done();
+    });
+  });
+
+  it("Create Application Object With Empty Versions", function (done) {
+    if (!creds.isValid) return done();
+    s2sMS.Application.createApplication(
+      accessToken,
+      identityData.uuid,
+      {
+        "name" : "Unit-Test", 
+        "type" : "starpaas_application",
+        "description": "Unit-Test",
+        "content_type" : "application/json",
+        "content" : {
+          "account_uuid" : identityData.account_uuid,
+          "admins" : [{"uuid": identityData.uuid}],
+          "versions" : {}
+        }
+      }
+    ).then(response => {
+      console.log("CREATE EMPTY VERSION", response);
+      done(new Error(response));
+    })
+    .catch(error =>{
+      //console.log("CREATE EMPTY VERSION ERROR",error);
+      assert(
+        error.status === 400 &&
+        error.message === "versions missing - empty - or not an object"
+       );
+      done();
+    });
+  });
+
+  it("Create Application Object With Invalid Versions Object", function (done) {
+    if (!creds.isValid) return done();
+    s2sMS.Application.createApplication(
+      accessToken,
+      identityData.uuid,
+      {
+        "name" : "Unit-Test", 
+        "type" : "starpaas_application",
+        "description": "Unit-Test",
+        "content_type" : "application/json",
+        "content" : {
+          "account_uuid" : identityData.account_uuid,
+          "admins" : [{"uuid": identityData.uuid}],
+          "icon_color": "",
+          "icon" : "",
+          "versions" : {
+            "1.23.99": {
+              "flows":[],
+              "workspaces":[],
+              "status": "inactive"
+            },
+            "invalid" : {
+              "flows": "",
+              "workspaces":{},
+              "status": "invalid status"
+            }
+          }
+        }
+      }
+    ).then(response => {
+      console.log("CREATE INVALID VERSION", response);
+      done(new Error(response));
+    })
+    .catch(error =>{
+      //console.log("CREATE INVALID VERSION ERROR",error);
+      assert(
+        error.status === 400 &&
+        error.message === "version \"invalid\" invalid format,version \"invalid\" flows missing or not array,"+
+        "version \"invalid\" workspaces missing or not array,version \"invalid\" status missing or invalid"
+       );
+      done();
+    });
+  });
   
   it("Create Application Object", function (done) {
     if (!creds.isValid) return done();
@@ -125,17 +224,25 @@ describe("Application", function () {
         "type" : "starpaas_application",
         "description": "Unit-Test",
         "content_type" : "application/json",
-        "content" :{
-          "account_uuid": identityData.account_uuid,
-          "status": "inactive",
-          "admins": [identityData.uuid],
-          "flows" : [],
-          "workspaces" : [],
+        "content" : {
+          "account_uuid" : identityData.account_uuid,
+          "admins" : [{"uuid": identityData.uuid}],
           "icon_color": "",
           "icon" : "",
-          "version": ""
-       }
-    }
+          "versions" : {
+            "1.0.0": {
+              "flows":[],
+              "workspaces":[],
+              "status": "inactive"
+            },
+            "1.0.1" : {
+              "flows": [],
+              "workspaces":[],
+              "status": "inactive"
+            }
+          }
+        }
+      }
     ).then(response => {
       //console.log("Object Create: RESPONSE", response);
       objectUUID = response.uuid;
@@ -160,24 +267,35 @@ describe("Application", function () {
         accessToken,
         objectUUID,
         {
-          "name" : "Unit-Test", 
+          "name" : "Unit-Test-Modify", 
           "type" : "starpaas_application",
           "description": "Unit-Test",
           "content_type" : "application/json",
-          "content" :{
-            "account_uuid": identityData.account_uuid,
-            "status": "active",
-            "admins": [identityData.uuid],
-            "flows" : [],
-            "workspaces" : [],
+          "content" : {
+            "account_uuid" : identityData.account_uuid,
+            "admins" : [{"uuid": identityData.uuid}],
             "icon_color": "",
             "icon" : "",
-            "version": ""
-         }
-      }
+            "versions" : {
+              "1.0.0": {
+                "flows":[],
+                "workspaces":[],
+                "status": "active"
+              },
+              "1.0.1" : {
+                "flows": [],
+                "workspaces":[],
+                "status": "inactive"
+              }
+            }
+          }
+        }
       ).then(response => {
         //console.log("MODIFY RESPONSE", response);
-        assert(response.uuid === objectUUID);
+        assert(
+          response.name === "Unit-Test-Modify" &&
+          response.content.account_uuid === identityData.account_uuid
+        );
         done();
       })
       .catch(error => {
@@ -217,7 +335,7 @@ describe("Application", function () {
           return item.uuid === objectUUID;
         });
         assert(
-          response.items[thisIndex].content.status === "active" &&
+          response.items[thisIndex].name === "Unit-Test-Modify" &&
           response.items[thisIndex].content.account_uuid === identityData.account_uuid
         );
         done();
@@ -244,7 +362,7 @@ describe("Application", function () {
         1, //limit
         filters
         ).then(response => {
-          //console.log("LIST RESPONSE", response);
+          //console.log("LIST RESPONSE WITH FILTERS", response);
           assert(
             response.items[0].content.status === "active" &&
             response.items[0].content.account_uuid === identityData.account_uuid &&
