@@ -149,14 +149,14 @@ toc:
       - createWorkflowTemplate
       - cancelWorkflow
       - deleteWorkflowTemplate
+      - getRunningWorkflow
       - getWfInstanceHistory
       - getWfTemplateHistory
-      - getWorkflow
       - getWorkflowTemplate
       - listRunningWorkflows
       - listWorkflowTemplates
       - modifyWorkflowTemplate
-      - startWorkflow  
+      - startWorkflow
   - name: Util
     children:
       - createUUID

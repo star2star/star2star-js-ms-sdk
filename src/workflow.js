@@ -107,9 +107,16 @@ const cancelWorkflow = (accessToken = "null access token",  wfTemplateUUID = "nu
       'Content-type': 'application/json',
       'x-api-version': `${util.getVersion()}`
     },
+    resolveWithFullResponse: true,
     json: true
     };
-  return request(requestOptions);
+  return new Promise (function (resolve, reject){
+    request(requestOptions).then(function(responseData){
+        responseData.statusCode === 204 ?  resolve({"status":"ok"}): reject({"status":"failed"});
+    }).catch(function(error){
+        reject(error);
+    });
+  });
 };
 
 /**
@@ -117,20 +124,52 @@ const cancelWorkflow = (accessToken = "null access token",  wfTemplateUUID = "nu
  * @description This function will delete a workflow template.
  * @param {string} [accessToken="null access token"] - cpaas access token
  * @param {string} [wfTemplateUUID="null wfTemplateUUID"] - workflow template uuid
+ * @param {string} [version="null version"] - workflow version
  * @returns {Promise}
  */
-const deleteWorkflowTemplate = (accessToken = "null access token",  wfTemplateUUID = "null wfTemplateUUID") => {
+const deleteWorkflowTemplate = (accessToken = "null access token",  wfTemplateUUID = "null wfTemplateUUID", version = "null version") => {
   const MS = util.getEndpoint("workflow");
   const requestOptions = {
     method: "DELETE",
-    uri: `${MS}/workflows/${wfTemplateUUID}`,
+    uri: `${MS}/workflows/${wfTemplateUUID}/${version}`,
     headers: {
       'Authorization': `Bearer ${accessToken}`,
       'Content-type': 'application/json',
       'x-api-version': `${util.getVersion()}`
     },
+    resolveWithFullResponse: true,
     json: true
     };
+    return new Promise (function (resolve, reject){
+      request(requestOptions).then(function(responseData){
+          responseData.statusCode === 204 ?  resolve({"status":"ok"}): reject({"status":"failed"});
+      }).catch(function(error){
+          reject(error);
+      });
+    });
+};
+
+/**
+ * @async
+ * @description This function will get a specific workflow instance
+ * @param {string} [accessToken="null access token"] - cpaas access token
+ * @param {string} [wfTemplateUUID="null wfTemplateUUID"] - workflow template uuid
+ * @param {string} [wfInstanceUUID="null wfInstanceUUID"] - workflow uuid
+ * @returns {Promise}
+ */
+const getRunningWorkflow = (accessToken = "null access token", wfTemplateUUID = "null wfTemplateUUID", wfInstanceUUID = "null wfTemplateUUID") => {
+  const MS = util.getEndpoint("workflow");
+  const requestOptions = {
+    method: "GET",
+    uri: `${MS}/workflows/${wfTemplateUUID}/instances/${wfInstanceUUID}`,
+    headers: {
+      'Authorization': `Bearer ${accessToken}`,
+      'Content-type': 'application/json',
+      'x-api-version': `${util.getVersion()}`
+      },
+    json: true
+    };
+
   return request(requestOptions);
 };
 
@@ -197,37 +236,13 @@ const getWfTemplateHistory = (accessToken = "null access token", wfTemplateUUID 
 
 /**
  * @async
- * @description This function will get a specific workflow instance
- * @param {string} [accessToken="null access token"] - cpaas access token
- * @param {string} [wfTemplateUUID="null wfTemplateUUID"] - workflow template uuid
- * @param {string} [wfInstanceUUID="null wfInstanceUUID"] - workflow uuid
- * @returns {Promise}
- */
-const getWorkflow = (accessToken = "null access token", wfTemplateUUID = "null wfTemplateUUID", wfInstanceUUID = "null wfTemplateUUID") => {
-  const MS = util.getEndpoint("workflow");
-  const requestOptions = {
-    method: "GET",
-    uri: `${MS}/workflows/${wfTemplateUUID}/instances/${wfInstanceUUID}`,
-    headers: {
-      'Authorization': `Bearer ${accessToken}`,
-      'Content-type': 'application/json',
-      'x-api-version': `${util.getVersion()}`
-      },
-    json: true
-    };
-
-  return request(requestOptions);
-};
-
-/**
- * @async
  * @description This function will get a specific workflow template.
  * @param {string} [accessToken="null access token"] - cpaas access token
  * @param {string} [wfTemplateUUID="null wfTemplateUUID"] workflow template uuid
- * @param {string} [version=undefined] - option version filter
+ * @param {array} [filters=undefined] - optional filters
  * @returns {Promise}
  */
-const getWorkflowTemplate = (accessToken = "null access token", wfTemplateUUID = "null wfTemplateUUID", version = undefined) => {
+const getWorkflowTemplate = (accessToken = "null access token", wfTemplateUUID = "null wfTemplateUUID", filters = undefined) => {
   const MS = util.getEndpoint("workflow");
   const requestOptions = {
     method: "GET",
@@ -240,8 +255,14 @@ const getWorkflowTemplate = (accessToken = "null access token", wfTemplateUUID =
     json: true
     };
 
-    if(status){
-      requestOptions.qs.version = version;
+    if(filters) {
+      Object.keys(filters).forEach(filter => {
+        if(filter === "version") {
+          requestOptions.uri += `/${filters[filter]}`;
+        } else {
+          requestOptions.qs[filter] = filters[filter];
+        }
+      });
     }
 
   return request(requestOptions);
@@ -257,7 +278,7 @@ const getWorkflowTemplate = (accessToken = "null access token", wfTemplateUUID =
  * @param {string} [version=undefined] - optional filter by version
  * @returns {Promise}
  */
-const listRunningWorkflows = (accessToken = "null access token", wfTemplateUUID = "null wfTemplateUUID", offset = 0, limit = 10, version = undefined) => {
+const listRunningWorkflows = (accessToken = "null access token", wfTemplateUUID = "null wfTemplateUUID", offset = 0, limit = 10, filters = undefined) => {
   const MS = util.getEndpoint("workflow");
   const requestOptions = {
     method: "GET",
@@ -274,8 +295,10 @@ const listRunningWorkflows = (accessToken = "null access token", wfTemplateUUID 
     json: true
     };
 
-    if(status){
-      requestOptions.qs.version = version;
+    if(filters) {
+      Object.keys(filters).forEach(filter => {
+        requestOptions.qs[filter] = filters[filter];
+      });
     }
 
   return request(requestOptions);
@@ -290,7 +313,7 @@ const listRunningWorkflows = (accessToken = "null access token", wfTemplateUUID 
  * @param {string} [status=undefined] - option status filter
  * @returns {Promise}
  */
-const listWorkflowTemplates = (accessToken = "null access token", offset = 0, limit = 10, status = undefined) => {
+const listWorkflowTemplates = (accessToken = "null access token", offset = 0, limit = 10, filters = undefined) => {
   const MS = util.getEndpoint("workflow");
   const requestOptions = {
     method: "GET",
@@ -307,8 +330,10 @@ const listWorkflowTemplates = (accessToken = "null access token", offset = 0, li
     json: true
     };
 
-    if(status){
-      requestOptions.qs.status = status;
+    if(filters) {
+      Object.keys(filters).forEach(filter => {
+        requestOptions.qs[filter] = filters[filter];
+      });
     }
 
   return request(requestOptions);
@@ -347,6 +372,7 @@ const modifyWorkflowTemplate = ( accessToken = "null access token", wfTemplateUU
  * @returns {Promise}
  */
 const startWorkflow = (accessToken, wfTemplateUUID = "null wfTemplateUUID", body = "null body") => {
+  const MS = util.getEndpoint("workflow");
   const requestOptions = {
     method: "POST",
     uri: `${MS}/workflows/${wfTemplateUUID}/instances`,
@@ -365,9 +391,9 @@ module.exports = {
   createWorkflowTemplate,
   cancelWorkflow,
   deleteWorkflowTemplate,
-  getWfTemplateHistory,
-  getWorkflow,
+  getRunningWorkflow,
   getWfInstanceHistory,
+  getWfTemplateHistory,
   getWorkflowTemplate,
   listRunningWorkflows,
   listWorkflowTemplates,
