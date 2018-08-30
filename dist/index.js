@@ -17,6 +17,7 @@ var Oauth = require('./oauth');
 var Media = require('./media');
 var Pubsub = require('./pubsub');
 var Application = require('./application');
+var Workflow = require('./workflow');
 
 var request = require('request-promise');
 
@@ -107,5 +108,6 @@ module.exports = {
   Media: Media,
   Pubsub: Pubsub,
   Application: Application,
-  setMSVersion: setMSVersion
+  setMSVersion: setMSVersion,
+  Workflow: Workflow
 };
