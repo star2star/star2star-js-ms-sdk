@@ -11,7 +11,13 @@ let creds = {
 };
 
 describe("Workflow", function () {
-  let accessToken, identityData, wfTemplateUUID, wfInstanceUUID, version;
+  let accessToken, 
+      identityData,
+      wfTemplateUUID,
+      wfInstanceUUID,
+      wfInstanceUUIDv2False,
+      wfInstanceUUIDv2True,
+      version;
   
 
   before(function () {
@@ -127,7 +133,9 @@ describe("Workflow", function () {
       accessToken,
       {
         "name": "UNIT-TEST",
-        "description": "Unit Test",
+        "description": "Unit Test Modified",
+        "uuid": wfTemplateUUID,
+        "version": version,
         "status": "inactive",
         "states": [
           {
@@ -156,12 +164,10 @@ describe("Workflow", function () {
             "description": "transition one",
             "start_state": "START_STATE",
             "next_state": "NORMAL_STATE_TEST",
-            "additional": false,
             "next_error_state": "NORMAL_STATE_TEST",
             "next_timeout_state": "NORMAL_STATE_TEST",
-            "type": "normal",
             "timeout": "0",
-            "conditions": []
+            "condition": {}
           },
           {
             "uuid": uuidv4(),
@@ -169,20 +175,17 @@ describe("Workflow", function () {
             "description": "transition with lambda",
             "start_state": "NORMAL_STATE_TEST",
             "next_state": "END_STATE_ONE",
-            "additional": false,
             "next_error_state": "END_STATE_ONE",
             "next_timeout_state": "END_STATE_ONE",
-            "type": "normal",
             "timeout": "0",
-            "conditions": {
+            "condition": {
               "type": "lambda",
               "data": {
                 "lambda_condition": {
                   "function_name": "dtg_test_lambda",
-                  "blocking": true
-                },
-                "wait_condition": {
-                  "wait_value": 5
+                  "parameters": "$params",
+                  "blocking": true,
+                  "result_path": "$result"
                 }
               }
             }
@@ -218,7 +221,11 @@ describe("Workflow", function () {
             "uuid": uuidv4(),
             "name": "START_STATE",
             "description": "start",
-            "type": "start"
+            "type": "start",
+            "position": {
+              "x":123,
+              "y":-340
+            }
           },
           {
             "uuid": uuidv4(),
@@ -240,12 +247,10 @@ describe("Workflow", function () {
             "description": "transition one",
             "start_state": "START_STATE",
             "next_state": "NORMAL_STATE_TEST",
-            "additional": false,
             "next_error_state": "NORMAL_STATE_TEST",
             "next_timeout_state": "NORMAL_STATE_TEST",
-            "type": "normal",
             "timeout": "0",
-            "conditions": []
+            "condition": {}
           },
           {
             "uuid": uuidv4(),
@@ -253,17 +258,17 @@ describe("Workflow", function () {
             "description": "transition with lambda",
             "start_state": "NORMAL_STATE_TEST",
             "next_state": "END_STATE_ONE",
-            "additional": false,
             "next_error_state": "END_STATE_ONE",
             "next_timeout_state": "END_STATE_ONE",
-            "type": "normal",
             "timeout": "0",
-            "conditions": {
+            "condition": {
               "type": "lambda",
               "data": {
                 "lambda_condition": {
                   "function_name": "dtg_test_lambda",
-                  "blocking": true
+                  "parameters": "$params",
+                  "blocking": true,
+                  "result_path": "$result"
                 },
                 "wait_condition": {
                   "wait_value": 5
@@ -284,7 +289,7 @@ describe("Workflow", function () {
     });
   });
 
-  it("Create New Version Of Template", function (done) {
+  it("Create New Version Of Template With Descision", function (done) {
     if (!creds.isValid) return done();
     s2sMS.Workflow.createWorkflowTemplate(
       accessToken,
@@ -293,13 +298,17 @@ describe("Workflow", function () {
         "description": "Unit Test Version 2",
         "uuid": wfTemplateUUID,
         "version": "0.0.2",
-        "status": "inactive",
+        "status": "active",
         "states": [
           {
             "uuid": uuidv4(),
             "name": "START_STATE",
             "description": "start",
-            "type": "start"
+            "type": "start",
+            "position": {
+              "x":123,
+              "y":-340
+            }
           },
           {
             "uuid": uuidv4(),
@@ -312,6 +321,22 @@ describe("Workflow", function () {
             "name": "NORMAL_STATE_TEST",
             "description": "normal",
             "type": "normal"
+          },
+          {
+            "uuid": uuidv4(),
+            "name": "CHOICE_STATE",
+            "description": "A simple decision state",
+            "type": "decision",
+            "decision": {
+                "rules": {
+                    "<=": [{"var": "equality"},10]
+                 },
+                "data": {
+                    "equality": "$params.a"
+                },
+                "true_transition_name": "T3",
+                "false_transition_name": "T4"
+            }
           }
         ],
         "transitions": [
@@ -321,30 +346,73 @@ describe("Workflow", function () {
             "description": "transition one",
             "start_state": "START_STATE",
             "next_state": "NORMAL_STATE_TEST",
-            "additional": false,
             "next_error_state": "NORMAL_STATE_TEST",
             "next_timeout_state": "NORMAL_STATE_TEST",
-            "type": "normal",
             "timeout": "0",
-            "conditions": []
+            "condition": {}
           },
           {
             "uuid": uuidv4(),
             "name": "T2",
             "description": "transition with lambda",
             "start_state": "NORMAL_STATE_TEST",
-            "next_state": "END_STATE_ONE",
-            "additional": false,
+            "next_state": "CHOICE_STATE",
             "next_error_state": "END_STATE_ONE",
             "next_timeout_state": "END_STATE_ONE",
-            "type": "normal",
             "timeout": "0",
-            "conditions": {
+            "condition": {
               "type": "lambda",
               "data": {
                 "lambda_condition": {
                   "function_name": "dtg_test_lambda",
-                  "blocking": true
+                  "parameters": "$params",
+                  "blocking": true,
+                  "result_path": "$result"
+                }
+              }
+            }
+          },
+          {
+            "uuid": uuidv4(),
+            "name": "T3",
+            "description": "true transition",
+            "start_state": "CHOICE_STATE",
+            "next_state": "END_STATE_ONE",
+            "next_error_state": "END_STATE_ONE",
+            "next_timeout_state": "END_STATE_ONE",
+            "timeout": "0",
+            "condition": {
+              "type": "lambda",
+              "data": {
+                "lambda_condition": {
+                  "function_name": "dtg_test_lambda",
+                  "parameters": {"a":1,"b":true},
+                  "blocking": true,
+                  "result_path": "$decision"
+                },
+                "wait_condition": {
+                  "wait_value": 5
+                }
+              }
+            }
+          },
+          {
+            "uuid": uuidv4(),
+            "name": "T4",
+            "description": "false transition",
+            "start_state": "CHOICE_STATE",
+            "next_state": "END_STATE_ONE",
+            "next_error_state": "END_STATE_ONE",
+            "next_timeout_state": "END_STATE_ONE",
+            "timeout": "0",
+            "condition": {
+              "type": "lambda",
+              "data": {
+                "lambda_condition": {
+                  "function_name": "dtg_test_lambda",
+                  "parameters": {"a":0,"b":false},
+                  "blocking": true,
+                  "result_path": "$decision"
                 },
                 "wait_condition": {
                   "wait_value": 5
@@ -356,7 +424,7 @@ describe("Workflow", function () {
       }
     ).then(response => {
       //console.log("Create New Version Of Template RESPONSE", response);
-      assert(response.description === "Unit Test Version 2" && response.status === "inactive");
+      assert(response.description === "Unit Test Version 2" && response.status === "active");
       done();
     })
     .catch(error =>{
@@ -365,7 +433,7 @@ describe("Workflow", function () {
     });
   });
   
-  it("Start Workflow", function (done) {
+  it("Start Workflow Version 1", function (done) {
     if (!creds.isValid) return done();
     s2sMS.Workflow.startWorkflow(
       accessToken,
@@ -373,114 +441,113 @@ describe("Workflow", function () {
       {
         "version": "0.0.1",
         "start_state": "START_STATE",
-        "input_vars": {"a":4, "b": true }
+        "input_vars": {"params":{"a":4, "b": true}}
       }
     ).then(response => {
-      //console.log("Start Workflow RESPONSE", response);
-      assert(response.hasOwnProperty("uuid") && response.current_state === "START_STATE");
+      //console.log("Start Workflow Version 1 RESPONSE", response.workflow_vars);
+      assert(
+        response.hasOwnProperty("uuid") && 
+        response.current_state === "START_STATE" &&
+        response.workflow_vars.params.a === 4
+      );
       wfInstanceUUID = response.uuid;
       done();
     })
     .catch(error =>{
-      console.log("Start Workflow ERROR", error);      
+      console.log("Start Workflow Version 1 ERROR", error);      
       done(new Error(error));
     });  
   });
 
-  // it("List Running Workflows", function (done) {
-  //   if (!creds.isValid) return done();
-  //   s2sMS.Workflow.listRunningWorkflows(
-  //     accessToken,
-  //     wfTemplateUUID
-  //   ).then(response => {
-  //     console.log("List Running Workflows RESPONSE", response);
-  //     done();
-  //   })
-  //   .catch(error =>{
-  //     console.log("List Running Workflows ERROR", error);      
-  //     done(new Error(error));
-  //   });  
-  // });
+  it("Start Workflow Version 2: False", function (done) {
+    if (!creds.isValid) return done();
+    s2sMS.Workflow.startWorkflow(
+      accessToken,
+      wfTemplateUUID,
+      {
+        "version": "0.0.2",
+        "start_state": "START_STATE",
+        "input_vars": {params:{a:11, b: false}}
+      }
+    ).then(response => {
+      //console.log("Start Workflow Version 2: False RESPONSE", response);
+      assert(
+        response.hasOwnProperty("uuid") && 
+        response.current_state === "START_STATE" &&
+        response.workflow_vars.params.a === 11
+      );
+      wfInstanceUUIDv2False = response.uuid;
+      done();
+    })
+    .catch(error =>{
+      console.log("Start Workflow Version 2: False ERROR", error);      
+      done(new Error(error));
+    });  
+  });
 
-  // it("List Workflow Templates", function (done) {
-  //   if (!creds.isValid) return done();
-  //   s2sMS.Workflow.listWorkflowTemplates(
-  //     accessToken
-  //   ).then(response => {
-  //     console.log("List Workflow Templates RESPONSE", response);
-  //     done(new Error(response));
-  //   })
-  //   .catch(error =>{
-  //     console.log("List Workflow Templates ERROR", error);      
-  //     done(new Error(response));
-  //   });  
-  // });
+  it("Start Workflow Version 2: True", function (done) {
+    if (!creds.isValid) return done();
+    s2sMS.Workflow.startWorkflow(
+      accessToken,
+      wfTemplateUUID,
+      {
+        "version": "0.0.2",
+        "start_state": "START_STATE",
+        "input_vars": {"params":{"a":5, "b": true}}
+      }
+    ).then(response => {
+      //console.log("Start Workflow Version 2: True RESPONSE", response);
+      assert(
+        response.hasOwnProperty("uuid") && 
+        response.current_state === "START_STATE" &&
+        response.workflow_vars.params.a === 5
+      );
+      wfInstanceUUIDv2True = response.uuid;
+      done();
+    })
+    .catch(error =>{
+      console.log("Start Workflow Version 2: True ERROR", error);      
+      done(new Error(error));
+    });  
+  });
 
-  // it("Get Workflow Instance", function (done) {
-  //   if (!creds.isValid) return done();
-  //   s2sMS.Workflow.getWorkflow(
-  //     accessToken,
-  //     wfTemplateUUID,
-  //     wfInstanceUUID
-  //   ).then(response => {
-  //     console.log("Get Workflow Instance RESPONSE", response);
-  //     done();
-  //   })
-  //   .catch(error =>{
-  //     console.log("Get Workflow Instance ERROR", error);      
-  //     done(new Error(error));
-  //   });  
-  // });
+  it("List Running Workflows", function (done) {
+    if (!creds.isValid) return done();
+    const filters = [];
+    filters["verion"] = version;
+    s2sMS.Workflow.listRunningWorkflows(
+      accessToken,
+      wfTemplateUUID,
+      0,
+      1,
+      filters
+    ).then(response => {
+      //console.log("List Running Workflows RESPONSE", response);
+      assert(response.items[0].template_version === version);
+      done();
+    })
+    .catch(error =>{
+      console.log("List Running Workflows ERROR", error);      
+      done(new Error(error));
+    });  
+  });
 
-  // it("Get Workflow Template", function (done) {
-  //   if (!creds.isValid) return done();
-  //   s2sMS.Workflow.getWorkflowTemplate(
-  //     accessToken,
-  //     wfTemplateUUID
-  //   ).then(response => {
-  //     console.log("Get Workflow Template RESPONSE", response);
-  //     done();
-  //   })
-  //   .catch(error =>{
-  //     console.log("Get Workflow Template ERROR", error);      
-  //     done(new Error(error));
-  //   });  
-  // });
-
-  // it("Get Workflow Instance History", function (done) {
-  //   if (!creds.isValid) return done();
-  //   s2sMS.Workflow.getWfInstanceHistory(
-  //     accessToken,
-  //     wfInstanceUUID
-  //   ).then(response => {
-  //     console.log("Get Workflow Instance History RESPONSE", response);
-  //     done();
-  //   })
-  //   .catch(error =>{
-  //     console.log("Get Workflow Instance History ERROR", error);      
-  //     done(new Error(error));
-  //   });  
-  // });
-
-  // it("Get Workflow Template History", function (done) {
-  //   if (!creds.isValid) return done();
-  //   const filters = [];
-  //   filters["verson"] = "0.0.1";
-  //   s2sMS.Workflow.getWfTemplateHistory(
-  //     accessToken,
-  //     wfTemplateUUID,
-  //     0,
-  //     10,
-  //     filters
-  //   ).then(response => {
-  //     console.log("Get Workflow Template History RESPONSE", response);
-  //     done();
-  //   })
-  //   .catch(error =>{
-  //     console.log("Get Workflow Template History ERROR", error);      
-  //     done(new Error(error));
-  //   });  
-  // });
+  it("Get Workflow Instance", function (done) {
+    if (!creds.isValid) return done();
+    s2sMS.Workflow.getRunningWorkflow(
+      accessToken,
+      wfTemplateUUID,
+      wfInstanceUUID
+    ).then(response => {
+      //console.log("Get Workflow Instance RESPONSE", response);
+      assert(response.template_version === version && response.template_uuid === wfTemplateUUID);
+      done();
+    })
+    .catch(error =>{
+      console.log("Get Workflow Instance ERROR", error);      
+      done(new Error(error));
+    });  
+  });
 
   it("Cancel Workflow Instance", function (done) {
     if (!creds.isValid) return done();
@@ -495,6 +562,172 @@ describe("Workflow", function () {
     })
     .catch(error =>{
       console.log("Cancel Workflow Instance ERROR", error);      
+      done(new Error(error));
+    });  
+  });
+  
+  //Need more data/iterations for a solid test suite.... nh 8/30/18
+  it("Get Workflow Instance v1 History", function (done) {
+    if (!creds.isValid) return done();
+    s2sMS.Workflow.getWfInstanceHistory(
+      accessToken,
+      wfInstanceUUID
+    ).then(response => {
+      //console.log("Get Workflow Instance v1 History RESPONSE", response);
+      assert(response.result_type === "cancelled");
+      done();
+    })
+    .catch(error =>{
+      console.log("Get Workflow Instance v1 History ERROR", error);      
+      done(new Error(error));
+    });  
+  });
+
+  it("List Workflow Templates", function (done) {
+    if (!creds.isValid) return done();
+    const filters = [];
+    filters["show_versions"] = true;
+    //filters["status"] = "inactive"; Hands with this param...CSRVS-186 nh 8/30/18
+    s2sMS.Workflow.listWorkflowTemplates(
+      accessToken,
+      0,
+      1,
+      filters
+    ).then(response => {
+      //console.log("List Workflow Templates RESPONSE", response);
+      assert(
+        response.items.length === 1 &&
+        response.items[0].hasOwnProperty("uuid") &&
+        response.items[0].hasOwnProperty("version") &&
+        response.items[0].hasOwnProperty("states") &&
+        response.items[0].hasOwnProperty("transitions")
+      );
+      done();
+    })
+    .catch(error =>{
+      console.log("List Workflow Templates ERROR", error);      
+      done(new Error(error));
+    });  
+  });
+
+  it("Get Workflow Template", function (done) {
+    const filters = [];
+    filters["expand"] = "versions";
+    if (!creds.isValid) return done();
+    s2sMS.Workflow.getWorkflowTemplate(
+      accessToken,
+      wfTemplateUUID,
+      filters
+    ).then(response => {
+      //console.log("Get Workflow Template RESPONSE", response);
+      assert(response.description === "Unit Test Version 2" && response.version === "0.0.2");
+      done();
+    })
+    .catch(error =>{
+      console.log("Get Workflow Template ERROR", error);      
+      done(new Error(error));
+    });  
+  });
+
+  it("Get Workflow Template With Version", function (done) {
+    const filters = [];
+    filters["version"] = "0.0.1";
+    if (!creds.isValid) return done();
+    s2sMS.Workflow.getWorkflowTemplate(
+      accessToken,
+      wfTemplateUUID,
+      filters
+    ).then(response => {
+      //console.log("Get Workflow Template RESPONSE", response);
+      assert(response.description === "Unit Test Modified" && response.version === "0.0.1");
+      done();
+    })
+    .catch(error =>{
+      console.log("Get Workflow Template ERROR", error);      
+      done(new Error(error));
+    });  
+  });
+
+  it("Get Workflow Template With Invalid Filters", function (done) {
+    const filters = [];
+    filters["version"] = "0.0.1";
+    filters["expand"] = "versions";
+    if (!creds.isValid) return done();
+    s2sMS.Workflow.getWorkflowTemplate(
+      accessToken,
+      wfTemplateUUID,
+      filters
+    ).then(response => {
+      console.log("Get Workflow Template RESPONSE", response);
+      assert(1 === 0);
+      done(new Error(response));
+    })
+    .catch(error =>{
+      //asserts hang in catch blocks if they are false.     
+      if(error.status !== "failed") {
+        console.log("Get Workflow Template ERROR", error); 
+        done(new Error(error));
+      } else {
+        done();
+      }
+      
+    });  
+  });
+    
+  it("Get Workflow Instance v2 History", function (done) {
+    if (!creds.isValid) return done();
+    console.log("Standby 8 seconds for Workflow to Finish.....");
+    setTimeout(()=>{
+      s2sMS.Workflow.getWfInstanceHistory(
+        accessToken,
+        wfInstanceUUIDv2False
+      ).then(response => {
+        //console.log("Get Workflow Instance v2 False History RESPONSE", response);
+        assert(
+          response.result_type === "complete" &&
+          response.workflow_vars.decision.message == "params: { a: 0, b: false }"
+        );
+        s2sMS.Workflow.getWfInstanceHistory(
+          accessToken,
+          wfInstanceUUIDv2True
+        ).then(response => {
+          // console.log("Get Workflow Instance v2 True History RESPONSE", response);
+          assert(
+            response.result_type === "complete" &&
+            response.workflow_vars.decision.message == "params: { a: 1, b: true }"
+          );
+          done();
+        })
+        .catch(error =>{
+          console.log("Get Workflow Instance History v2 True ERROR", error);      
+          done(new Error(error));
+        });
+      })
+      .catch(error =>{
+        console.log("Get Workflow Instance History v2 False ERROR", error);      
+        done(new Error(error));
+      });  
+    }, 8000); //Just enought time for them all to finish
+  });
+  
+  //TODO Test start and end time filters....nh 8/30/18
+  it("Get Workflow Template History", function (done) {
+    if (!creds.isValid) return done();
+    const filters = [];
+    filters["verson"] = "0.0.1";
+    s2sMS.Workflow.getWfTemplateHistory(
+      accessToken,
+      wfTemplateUUID,
+      0,
+      1,
+      filters
+    ).then(response => {
+      //console.log("Get Workflow Template History RESPONSE", response);
+      assert(response.items[0].result_type === "cancelled");
+      done();
+    })
+    .catch(error =>{
+      console.log("Get Workflow Template History ERROR", error);      
       done(new Error(error));
     });  
   });

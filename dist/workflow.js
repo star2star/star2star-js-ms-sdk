@@ -2,7 +2,6 @@
 "use strict";
 
 var request = require("request-promise");
-var Objects = require("./objects");
 var util = require("./utilities");
 
 // const validateTemplate = (template = undefined) => {
@@ -152,6 +151,7 @@ var deleteWorkflowTemplate = function deleteWorkflowTemplate() {
     resolveWithFullResponse: true,
     json: true
   };
+
   return new Promise(function (resolve, reject) {
     request(requestOptions).then(function (responseData) {
       responseData.statusCode === 204 ? resolve({ "status": "ok" }) : reject({ "status": "failed" });
@@ -288,12 +288,23 @@ var getWorkflowTemplate = function getWorkflowTemplate() {
       if (filter === "version") {
         requestOptions.uri += "/" + filters[filter];
       } else {
+        !requestOptions.hasOwnProperty("qs") && (requestOptions.qs = {}); //init if not there
         requestOptions.qs[filter] = filters[filter];
       }
     });
   }
 
-  return request(requestOptions);
+  return new Promise(function (resolve, reject) {
+    if (typeof filters["version"] !== "undefined" && typeof filters["expand"] !== "undefined") {
+      reject({ "status": "failed", "message": "version and expand cannot be included in the same request" });
+    } else {
+      request(requestOptions).then(function (responseData) {
+        resolve(responseData);
+      }).catch(function (error) {
+        reject(error);
+      });
+    }
+  });
 };
 
 /**

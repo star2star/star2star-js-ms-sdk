@@ -1,7 +1,6 @@
 /* global require module*/
 "use strict";
 const request = require("request-promise");
-const Objects = require("./objects");
 const util = require("./utilities");
 
 // const validateTemplate = (template = undefined) => {
@@ -140,6 +139,7 @@ const deleteWorkflowTemplate = (accessToken = "null access token",  wfTemplateUU
     resolveWithFullResponse: true,
     json: true
     };
+
     return new Promise (function (resolve, reject){
       request(requestOptions).then(function(responseData){
           responseData.statusCode === 204 ?  resolve({"status":"ok"}): reject({"status":"failed"});
@@ -260,12 +260,23 @@ const getWorkflowTemplate = (accessToken = "null access token", wfTemplateUUID =
         if(filter === "version") {
           requestOptions.uri += `/${filters[filter]}`;
         } else {
+          !requestOptions.hasOwnProperty("qs") && (requestOptions.qs = {}); //init if not there
           requestOptions.qs[filter] = filters[filter];
         }
       });
     }
 
-  return request(requestOptions);
+  return new Promise (function (resolve, reject){
+    if (typeof filters["version"] !== "undefined" && typeof filters["expand"] !== "undefined") {
+      reject({"status":"failed", "message":"version and expand cannot be included in the same request"});
+    } else {
+      request(requestOptions).then(responseData => {
+        resolve(responseData);
+      }).catch(function(error){
+        reject(error);
+      });
+    } 
+  });
 };
 
 /**
