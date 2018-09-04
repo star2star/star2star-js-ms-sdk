@@ -14,50 +14,50 @@ const validateApplication = (application = {}) => {
     application: application
   };
 
-  // if (typeof application !== "object") {
-  //   rStatus.status = 400;
-  //   rStatus.message = "application must be an object";
-  // } else {
+  if (typeof application !== "object") {
+    rStatus.status = 400;
+    rStatus.message = "application must be an object";
+  } else {
     
-  //   const vError = [];
-  //   application.hasOwnProperty("name") && application.name.length !== 0 ? vError: vError.push("name missing or empty");
-  //   application.hasOwnProperty("type") && application.type === "starpaas_application" ? vError: vError.push("name missing or empty");
-  //   application.hasOwnProperty("description") && application.description.length !==0 ? vError: vError.push("description missing or empty");
-  //   application.hasOwnProperty("content_type") && application.content_type === "application/json" ? vError: vError.push("content_type missing or incorrect");
+    const vError = [];
+    application.hasOwnProperty("name") && application.name.length !== 0 ? vError: vError.push("name missing or empty");
+    application.hasOwnProperty("type") && application.type === "starpaas_application" ? vError: vError.push("name missing or empty");
+    application.hasOwnProperty("description") && application.description.length !==0 ? vError: vError.push("description missing or empty");
+    application.hasOwnProperty("content_type") && application.content_type === "application/json" ? vError: vError.push("content_type missing or incorrect");
     
-  //   if (application.hasOwnProperty("content") && typeof application.content === "object") {
-  //     application.content.hasOwnProperty("account_uuid") ? vError: vError.push("account_uuid missing");
-  //     application.content.hasOwnProperty("admins") ? vError: vError.push("admins missing");   
-  //     if (application.content.hasOwnProperty("versions") && 
-  //       typeof application.content.versions === "object" && 
-  //       Object.keys(application.content.versions).length !== 0) {
-  //       const versions = application.content.versions;
-  //       Object.keys(versions).forEach(version=>{
-  //         RegExp('^([0-9]+[.]){2}[0-9]+$').test(version) ? vError:  vError.push(`version "${version}" invalid format`); //check for major.minor.revision
+    if (application.hasOwnProperty("content") && typeof application.content === "object") {
+      application.content.hasOwnProperty("account_uuid") ? vError: vError.push("account_uuid missing");
+      application.content.hasOwnProperty("admins") ? vError: vError.push("admins missing");   
+      if (application.content.hasOwnProperty("versions") && 
+        typeof application.content.versions === "object" && 
+        Object.keys(application.content.versions).length !== 0) {
+        const versions = application.content.versions;
+        Object.keys(versions).forEach(version=>{
+          RegExp('^([0-9]+[.]){2}[0-9]+$').test(version) ? vError:  vError.push(`version "${version}" invalid format`); //check for major.minor.revision
           
-  //         versions[version].hasOwnProperty("flows") &&
-  //           Array.isArray(versions[version].flows)? vError: vError.push(`version "${version}" flows missing or not array`);
+          versions[version].hasOwnProperty("flows") &&
+            Array.isArray(versions[version].flows)? vError: vError.push(`version "${version}" flows missing or not array`);
           
-  //         versions[version].hasOwnProperty("workspaces") && 
-  //           Array.isArray(versions[version].workspaces) ? vError: vError.push(`version "${version}" workspaces missing or not array`);
+          versions[version].hasOwnProperty("workspaces") && 
+            Array.isArray(versions[version].workspaces) ? vError: vError.push(`version "${version}" workspaces missing or not array`);
 
-  //         versions[version].hasOwnProperty("status") && 
-  //           STATUSES.includes(versions[version].status) ? vError : vError.push(`version "${version}" status missing or invalid`);
-  //       });
-  //     } else {
-  //     vError.push("versions missing - empty - or not an object");
-  //     }
-  //   } else {
-  //     vError.push("content missing or not object");
-  //   }
+          versions[version].hasOwnProperty("status") && 
+            STATUSES.includes(versions[version].status) ? vError : vError.push(`version "${version}" status missing or invalid`);
+        });
+      } else {
+      vError.push("versions missing - empty - or not an object");
+      }
+    } else {
+      vError.push("content missing or not object");
+    }
     
-  //   if (vError.length !== 0) {
-  //     const message = vError.join();
-  //     rStatus.status = 400;
-  //     rStatus.message = message;
-  //   }
+    if (vError.length !== 0) {
+      const message = vError.join();
+      rStatus.status = 400;
+      rStatus.message = message;
+    }
     
-  // }
+  }
   //console.log("RETURNING RSTATUS",rStatus);  
   return rStatus;
 };
