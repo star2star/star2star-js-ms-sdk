@@ -334,11 +334,13 @@ var deleteRoleFromUserGroup = function deleteRoleFromUserGroup() {
  * @description This function lists user groups a role is assigned to.
  * @param {string} [accessToken="null accessToken"] - cpaas access token
  * @param {string} [userGroupUUID="null userGroupUUID"] - user group uuid
+ * @param {array} [filters=undefined] - optional filters. currently supports "name"
  * @returns {Promise<object>} - Promise resolving to a data object containing a list of user groups
  */
 var listUserGroupRoles = function listUserGroupRoles() {
   var accessToken = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : "null accessToken";
   var userGroupUUID = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : "null userGroupUUID";
+  var filters = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : undefined;
 
   var MS = util.getEndpoint("auth");
   var requestOptions = {
@@ -352,7 +354,12 @@ var listUserGroupRoles = function listUserGroupRoles() {
     json: true
 
   };
-
+  if (filters) {
+    requestOptions.qs = {};
+    Object.keys(filters).forEach(function (filter) {
+      requestOptions.qs[filter] = filters[filter];
+    });
+  }
   return request(requestOptions);
 };
 
@@ -401,11 +408,13 @@ var listPermissions = function listPermissions() {
  * @description This function lists roles a permission is assigned to.
  * @param {string} [accessToken="null accessToken"] - cpaas access token
  * @param {string} [permissionUUID="null permissionUUID"] - permission uuid
+ * @param {array} [filters=undefined] - optional filters. currently supports "name"
  * @returns {Promise<object>} - Promise resolving to a data object containing a list of user groups
  */
 var listPermissionRoles = function listPermissionRoles() {
   var accessToken = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : "null accessToken";
   var permissionUUID = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : "null permissionUUID";
+  var filters = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : undefined;
 
   var MS = util.getEndpoint("auth");
   var requestOptions = {
@@ -419,7 +428,12 @@ var listPermissionRoles = function listPermissionRoles() {
     json: true
 
   };
-
+  if (filters) {
+    requestOptions.qs = {};
+    Object.keys(filters).forEach(function (filter) {
+      requestOptions.qs[filter] = filters[filter];
+    });
+  }
   return request(requestOptions);
 };
 
@@ -468,11 +482,13 @@ var listRoles = function listRoles() {
  * @description This function lists user groups a role is assigned to.
  * @param {string} [accessToken="null accessToken"] - cpaas access token
  * @param {string} [roleUUID="null roleUUID"] - role uuid
+ * @param {array} [filters=undefined] - array of filter query parameters
  * @returns {Promise<object>} - Promise resolving to a data object containing a list of user groups
  */
 var listRoleUserGroups = function listRoleUserGroups() {
   var accessToken = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : "null accessToken";
   var roleUUID = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : "null roleUUID";
+  var filters = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : undefined;
 
   var MS = util.getEndpoint("auth");
   var requestOptions = {
@@ -486,7 +502,12 @@ var listRoleUserGroups = function listRoleUserGroups() {
     json: true
 
   };
-
+  if (filters) {
+    requestOptions.qs = {};
+    Object.keys(filters).forEach(function (filter) {
+      requestOptions.qs[filter] = filters[filter];
+    });
+  }
   return request(requestOptions);
 };
 
@@ -495,11 +516,13 @@ var listRoleUserGroups = function listRoleUserGroups() {
  * @description This function lists permissions assigned to a role.
  * @param {string} [accessToken="null accessToken"] - cpaas access token
  * @param {string} [roleUUID="null roleUUID"] - role uuid
+ * @param {array} [filters=undefined] - array of filter query parameters
  * @returns {Promise<object>} - Promise resolving to a data object containing a list of user groups
  */
 var listRolePermissions = function listRolePermissions() {
   var accessToken = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : "null accessToken";
   var roleUUID = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : "null roleUUID";
+  var filters = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : undefined;
 
   var MS = util.getEndpoint("auth");
   var requestOptions = {
@@ -513,7 +536,12 @@ var listRolePermissions = function listRolePermissions() {
     json: true
 
   };
-
+  if (filters) {
+    requestOptions.qs = {};
+    Object.keys(filters).forEach(function (filter) {
+      requestOptions.qs[filter] = filters[filter];
+    });
+  }
   return request(requestOptions);
 };
 

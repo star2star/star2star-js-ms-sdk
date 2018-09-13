@@ -88,7 +88,7 @@ const deactivateIdentity = (
         responseData.statusCode === 204 ?  resolve({"status":"ok"}): reject({"status":"failed"});
     }).catch(function(error){
         reject(error);
-    })
+    });
   });
 };
 
@@ -121,7 +121,7 @@ const reactivateIdentity = (
         responseData.statusCode === 204 ?  resolve({"status":"ok"}): reject({"status":"failed"});
     }).catch(function(error){
         reject(error);
-    })
+    });
   });
 };
 
@@ -228,7 +228,7 @@ const deleteIdentity = (accessToken = "null accessToken", userUuid = "null uuid"
         responseData.statusCode === 204 ?  resolve({"status":"ok"}): reject({"status":"failed"});
     }).catch(function(error){
         reject(error);
-    })
+    });
   });
 };
 
@@ -379,7 +379,7 @@ const resetPassword = (accessToken = "null access token", passwordToken = "null 
         responseData.statusCode === 202 ?  resolve({"status":"ok"}): reject({"status":"failed"});
     }).catch(function(error){
         reject(error);
-    })
+    });
   });
 };
 
@@ -412,7 +412,7 @@ const generatePasswordToken = (accessToken = "null access token", emailAddress="
         responseData.statusCode === 202 ?  resolve({"status":"ok"}): reject({"status":"failed"});
     }).catch(function(error){
         reject(error);
-    })
+    });
   });
 };
 

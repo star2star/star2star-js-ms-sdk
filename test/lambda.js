@@ -48,7 +48,26 @@ describe("Lambda MS", function () {
            reject(e);
          });
        });
-     })
+     });
+  });
+
+  
+  it("list lambdas", function (done) {
+    if (!creds.isValid) return done();
+
+    s2sMS.Lambda.listLambdas(accessToken)
+      .then(lambdaResponse => {
+         //console.log('Response from list lambda', lambdaResponse);
+        assert(
+          lambdaResponse.length > 0 &&
+          lambdaResponse[0].hasOwnProperty("name")
+          );
+        done();
+      })
+      .catch((error) => {
+        console.log('Error invoking valid lambda [invoke good lambda]', error);
+        done(new Error(error));
+      });
   });
 
   it("invokeGoodLambda", function (done) {

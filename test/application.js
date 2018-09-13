@@ -349,7 +349,7 @@ describe("Application", function () {
     it("List Application Objects With Filters", function (done) {
       if (!creds.isValid) return done();
       
-      filters = [];
+      const filters = [];
       filters["name"] = "Unit-"; //partial string
       filters["description"] = "unit"; //check case insensitivity
       filters["status"] = "ac"; //check status
@@ -359,12 +359,12 @@ describe("Application", function () {
         accessToken,
         identityData.uuid,
         0, //offset
-        1, //limit
+        2, //limit
         filters
         ).then(response => {
           //console.log("LIST RESPONSE WITH FILTERS", response);
           assert(
-            response.items[0].content.status === "active" &&
+            response.items[0].content.versions["1.0.0"].status === "active" && 
             response.items[0].content.account_uuid === identityData.account_uuid &&
             response.items[0].uuid === objectUUID &&
             response.metadata.total === 1

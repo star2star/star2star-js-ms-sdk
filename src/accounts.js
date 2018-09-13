@@ -213,7 +213,7 @@ const reinstateAccount = (accessToken = "null access token", accountUUID = "null
   };
   return new Promise (function (resolve, reject){
     request(requestOptions).then(function(responseData){
-        responseData.statusCode === 200 ?  resolve({"status":"ok"}): reject({"status":"failed"});
+        responseData.statusCode === 204 ?  resolve({"status":"ok"}): reject({"status":"failed"});
     }).catch(function(error){
         reject(error);
     });
@@ -242,7 +242,7 @@ const suspendAccount = (accessToken = "null access token", accountUUID = "null a
   };
   return new Promise (function (resolve, reject){
     request(requestOptions).then(function(responseData){
-        responseData.statusCode === 200 ?  resolve({"status":"ok"}): reject({"status":"failed"});
+        responseData.statusCode === 204 ?  resolve({"status":"ok"}): reject({"status":"failed"});
     }).catch(function(error){
         reject(error);
     });

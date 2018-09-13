@@ -96,6 +96,7 @@ toc:
       - setMSVersion    
   - name: Lambda
     children:
+      - listLambdas
       - invokeLambda
   - name: Media
     children:

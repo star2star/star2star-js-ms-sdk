@@ -12,7 +12,7 @@ let creds = {
 
 describe("Identity MS Unit Test Suite", function () {
 
-  let accessToken, identityData, testUUID;
+  let accessToken, identityData, testUUID, testGroupUuid;
   let time = new Date().getTime().toString().slice(-10); //FIXME Temporary until DELETE is fixed
 
   before(function () {
@@ -278,7 +278,7 @@ describe("Identity MS Unit Test Suite", function () {
             testGroupUuid,
             testMembers
           ).then(responseData => {
-            // console.log("Add Members response %j", responseData);
+             console.log("Add Members response %j", responseData);
             assert(
               responseData.name === "Test" &&
               responseData.total_members === 2
@@ -415,7 +415,7 @@ describe("Identity MS Unit Test Suite", function () {
   it("Reset Password", function (done) {
     if (!creds.isValid) return done();
     // This token is expired
-    const token = "7cf8f1f5-ee79-4303-aa40-7036d031f700";
+    const token = "48b1d304-50d8-489a-aece-79546024277a";
     const body = {
       email : creds.email,
       password: creds.password
@@ -429,11 +429,13 @@ describe("Identity MS Unit Test Suite", function () {
         done(new Error(response));
       })
       .catch(error => {
-        // Expecting a specific error as this token is expired.
-        console.log("error in reset password", error.message);
-        const expected = "does not exist locally";
-        //assert(error.message.includes(expected));
-        done();
+        // Expecting a specific error as this token is already used.
+        //console.log("error in reset password", error.message);
+        if(error.statusCode === 404){
+          done();
+        } else {
+          done( new Error(error));
+        }
       });
   });
 
@@ -441,7 +443,7 @@ describe("Identity MS Unit Test Suite", function () {
     if (!creds.isValid) return done();
 
     // This token is expired, but we get a different response if the token was never valid or the call failed.
-    const token = "7cf8f1f5-ee79-4303-aa40-7036d031f700";
+    const token = "48b1d304-50d8-489a-aece-79546024277a";
     
     s2sMS.Identity
       .validatePasswordToken(accessToken, token)

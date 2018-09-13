@@ -21,29 +21,30 @@ beforeEach(function () {
 
 describe("MS SDK Index", function () {
   it("s2s-ms module exports", function (done) {
-    const msKeys = [
-      "Accounts",
-      "Lambda",
-      "Identity",
-      "Messaging",
-      "Objects",
-      "Util",
-      "Task",
-      "setMsHost",
-      "getMsHost",
-      "setMsAuthHost",
-      "setApplicationKey",
-      "getApplicationKey",
-      "Groups",
-      "ShortUrls",
-      "Auth",
-      "Oauth",
-      "Chat",
-      "Contacts",
-      "getPermissions",
-      "Media",
-      "Pubsub",
-      "setMSVersion"
+    const msKeys = [ 
+      'Accounts',
+      'Lambda',
+      'Identity',
+      'Messaging',
+      'Objects',
+      'Util',
+      'Task',
+      'setMsHost',
+      'getMsHost',
+      'setMsAuthHost',
+      'setApplicationKey',
+      'getApplicationKey',
+      'Groups',
+      'ShortUrls',
+      'Auth',
+      'Oauth',
+      'Chat',
+      'Contacts',
+      'Media',
+      'Pubsub',
+      'Application',
+      'setMSVersion',
+      'Workflow'
     ];
     assert.deepEqual(Object.keys(s2sMS), msKeys);
     done();

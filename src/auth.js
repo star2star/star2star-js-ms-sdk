@@ -298,9 +298,10 @@ const  deleteRoleFromUserGroup = (accessToken = "null accessToken", userGroupUUI
  * @description This function lists user groups a role is assigned to.
  * @param {string} [accessToken="null accessToken"] - cpaas access token
  * @param {string} [userGroupUUID="null userGroupUUID"] - user group uuid
+ * @param {array} [filters=undefined] - optional filters. currently supports "name"
  * @returns {Promise<object>} - Promise resolving to a data object containing a list of user groups
  */
-const  listUserGroupRoles = (accessToken = "null accessToken", userGroupUUID = "null userGroupUUID") => {
+const  listUserGroupRoles = (accessToken = "null accessToken", userGroupUUID = "null userGroupUUID", filters = undefined) => {
   const MS = util.getEndpoint("auth");
   const requestOptions = {
     method: "GET",
@@ -313,7 +314,12 @@ const  listUserGroupRoles = (accessToken = "null accessToken", userGroupUUID = "
     json: true
    
   };
-  
+  if(filters) {
+    requestOptions.qs = {};
+    Object.keys(filters).forEach(filter => {
+      requestOptions.qs[filter] = filters[filter];
+    });
+  }
   return request(requestOptions);
 };
 
@@ -357,9 +363,10 @@ const  listPermissions = (accessToken = "null accessToken", offset = "0", limit 
  * @description This function lists roles a permission is assigned to.
  * @param {string} [accessToken="null accessToken"] - cpaas access token
  * @param {string} [permissionUUID="null permissionUUID"] - permission uuid
+ * @param {array} [filters=undefined] - optional filters. currently supports "name"
  * @returns {Promise<object>} - Promise resolving to a data object containing a list of user groups
  */
-const  listPermissionRoles = (accessToken = "null accessToken", permissionUUID = "null permissionUUID") => {
+const  listPermissionRoles = (accessToken = "null accessToken", permissionUUID = "null permissionUUID", filters = undefined) => {
   const MS = util.getEndpoint("auth");
   const requestOptions = {
     method: "GET",
@@ -372,7 +379,12 @@ const  listPermissionRoles = (accessToken = "null accessToken", permissionUUID =
     json: true
    
   };
-  
+  if(filters) {
+    requestOptions.qs = {};
+    Object.keys(filters).forEach(filter => {
+      requestOptions.qs[filter] = filters[filter];
+    });
+  }
   return request(requestOptions);
 };
 
@@ -416,9 +428,10 @@ const  listRoles = (accessToken = "null accessToken", offset = "0", limit = "10"
  * @description This function lists user groups a role is assigned to.
  * @param {string} [accessToken="null accessToken"] - cpaas access token
  * @param {string} [roleUUID="null roleUUID"] - role uuid
+ * @param {array} [filters=undefined] - array of filter query parameters
  * @returns {Promise<object>} - Promise resolving to a data object containing a list of user groups
  */
-const  listRoleUserGroups = (accessToken = "null accessToken", roleUUID = "null roleUUID") => {
+const  listRoleUserGroups = (accessToken = "null accessToken", roleUUID = "null roleUUID", filters = undefined) => {
   const MS = util.getEndpoint("auth");
   const requestOptions = {
     method: "GET",
@@ -431,7 +444,12 @@ const  listRoleUserGroups = (accessToken = "null accessToken", roleUUID = "null 
     json: true
    
   };
-  
+  if(filters) {
+    requestOptions.qs = {};
+    Object.keys(filters).forEach(filter => {
+      requestOptions.qs[filter] = filters[filter];
+    });
+  }
   return request(requestOptions);
 };
 
@@ -440,9 +458,10 @@ const  listRoleUserGroups = (accessToken = "null accessToken", roleUUID = "null 
  * @description This function lists permissions assigned to a role.
  * @param {string} [accessToken="null accessToken"] - cpaas access token
  * @param {string} [roleUUID="null roleUUID"] - role uuid
+ * @param {array} [filters=undefined] - array of filter query parameters
  * @returns {Promise<object>} - Promise resolving to a data object containing a list of user groups
  */
-const  listRolePermissions = (accessToken = "null accessToken", roleUUID = "null roleUUID") => {
+const  listRolePermissions = (accessToken = "null accessToken", roleUUID = "null roleUUID", filters = undefined) => {
   const MS = util.getEndpoint("auth");
   const requestOptions = {
     method: "GET",
@@ -455,7 +474,12 @@ const  listRolePermissions = (accessToken = "null accessToken", roleUUID = "null
     json: true
    
   };
-  
+  if(filters) {
+    requestOptions.qs = {};
+    Object.keys(filters).forEach(filter => {
+      requestOptions.qs[filter] = filters[filter];
+    });
+  }
   return request(requestOptions);
 };
 
