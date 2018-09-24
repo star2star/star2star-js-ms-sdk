@@ -22,6 +22,7 @@ toc:
       - activateRole
       - assignPermissionsToRole
       - assignRolesToUserGroup
+      - assignScopedRoleToUserGroup
       - createPermission
       - createUserGroup
       - createRole

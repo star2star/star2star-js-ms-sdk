@@ -31,6 +31,7 @@ s2sMS.Identity.login(creds.CPAAS_KEY, creds.email, creds.password)
 [Please click here for our documentation pages.](https://star2star.github.io/star2star-js-ms-sdk/ "Star2Star Micro Service SDK Documentation")
 
 ## Changes
+* 2.1.43 - Add resource group scoping.
 * 2.1.42 - Unit test updates after permissions drop.
 * 2.1.41 - Add list lambda take 2
 * 2.1.40 - Add list lambda

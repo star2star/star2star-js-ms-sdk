@@ -73,7 +73,7 @@ describe("Objects MS Test Suite", function () {
           // console.log('DELETED object ', responseData.uuid);
         })
         .catch((error) => {
-          //console.log('Error deleing data object [createGlobalObject]', error);
+          console.log('Error deleing data object [createGlobalObject]', error);
         });
     })
     .catch((error) => {

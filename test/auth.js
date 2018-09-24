@@ -198,11 +198,11 @@ describe("Auth MS Test Suite", function () {
     s2sMS.Auth.listRoles(accessToken, 0, 1, filters)
       .then(response => {
           roleBody = response.items[0];
-          //console.log("RESPONSE", response.items[0].permissions);
+          //console.log("RESPONSE", response.items);
           assert(
             response.hasOwnProperty("items") &&
             response.items[0].hasOwnProperty("permissions") &&
-            response.items[0].permissions.length === 1
+            response.items[0].permissions.length === 2
           );
           done();
         })
@@ -421,81 +421,122 @@ describe("Auth MS Test Suite", function () {
         });
   });
 
-  // it("Delete Role From User Group", function (done) {
-  //   if (!creds.isValid) {
-  //     const err = new Error("Valid credentials must be provided");
-  //     return done(err);
-  //   }
+  it("Delete Role From User Group", function (done) {
+    if (!creds.isValid) {
+      const err = new Error("Valid credentials must be provided");
+      return done(err);
+    }
 
-  //   s2sMS.Auth.deleteRoleFromUserGroup(accessToken, userGroupUUID, role)
-  //     .then(response => {
-  //         //console.log("Reactivate ROLE", response); 
-  //         assert(response.status === "ok");
-  //         setTimeout(()=>{
-  //           s2sMS.Auth.listUserGroupRoles(accessToken, userGroupUUID)
-  //             .then(response => {        
-  //                 //console.log("RESPONSE", response);
-  //                 assert(response.items.length === 0);
-  //                 done();
-  //               })
-  //             .catch((error) => {
-  //               //console.log('Error in List Roles', error);
-  //               done(new Error(error));
-  //               });
-  //         },2000);
-  //       })
-  //     .catch((error) => {
-  //       //console.log('Error in List Roles', error);
-  //       done(new Error(error));
-  //       });
-  // });
+    s2sMS.Auth.deleteRoleFromUserGroup(accessToken, userGroupUUID, role)
+      .then(response => {
+          //console.log("Reactivate ROLE", response); 
+          assert(response.status === "ok");
+          setTimeout(()=>{
+            s2sMS.Auth.listUserGroupRoles(accessToken, userGroupUUID)
+              .then(response => {        
+                  //console.log("RESPONSE", response);
+                  assert(response.items.length === 0);
+                  done();
+                })
+              .catch((error) => {
+                //console.log('Error in List Roles', error);
+                done(new Error(error));
+                });
+          },2000);
+        })
+      .catch((error) => {
+        //console.log('Error in List Roles', error);
+        done(new Error(error));
+        });
+  });
 
-  // it("Delete Role", function (done) {
-  //   if (!creds.isValid) {
-  //     const err = new Error("Valid credentials must be provided");
-  //     return done(err);
-  //   }
+  it("Delete Role", function (done) {
+    if (!creds.isValid) {
+      const err = new Error("Valid credentials must be provided");
+      return done(err);
+    }
 
-  //   s2sMS.Auth.deleteRole(accessToken, role)
-  //     .then(response => {
-  //         //console.log("DELETE ROLE", response); 
-  //         assert(response.status === "ok");
-  //         done();
-  //       })
-  //     .catch((error) => {
-  //       //console.log('Error in List Roles', error);
-  //       done(new Error(error));
-  //       });
-  // });
+    s2sMS.Auth.deleteRole(accessToken, role)
+      .then(response => {
+          //console.log("DELETE ROLE", response); 
+          assert(response.status === "ok");
+          done();
+        })
+      .catch((error) => {
+        //console.log('Error in List Roles', error);
+        done(new Error(error));
+        });
+  });
 
-  // it("List User Groups", function (done) {
-  //   if (!creds.isValid) {
-  //     const err = new Error("Valid credentials must be provided");
-  //     return done(err);
-  //   }
-  //   const filters = [];
-  //   filters["name"] = "Unit-Test";
+  it("Add Scoped Permissions For Resource to User Group", function (done) {
+    //TODO Add second identity without access to test permissions enforcement.
+    //Currently just checking the call returns the expected response.    
+    if (!creds.isValid) return done();
+    s2sMS.Objects.createUserDataObject(
+      identityData.uuid,
+        accessToken,
+        "Unit-Test",
+        "Unit-Test",
+        "a description", {
+          "importantData": true
+        }
+      ).then(responseData => {
+        //console.log('create user data object response', responseData);
+        s2sMS.Auth.assignScopedRoleToUserGroup(accessToken,userGroupUUID, creds.TEST_ROLE_UUID, responseData.uuid)
+        .then(assignResponse => {
+          //console.log("Assignment Response", assignResponse);
+          assert(assignResponse.status === "ok");
+          s2sMS.Objects.deleteDataObject(
+            accessToken,
+            responseData.uuid
+          ).then(d => {
+            //console.log(d)
+            done();
+          })
+          .catch(e => {
+            console.log('Error deleting user data object [create and get user object]', error);
+            done(new Error(e));
+          });
+        })
+        .catch(assignError =>{
+          console.log("Assign Role Scope to User Group Error", assignError);
+          done(new Error(error));
+        }); 
+      })
+      .catch((error) => {
+        console.log('Error creating User Object [create and get user object]', error);
+        done(new Error(error));
+      });
+  });
 
-  //   s2sMS.Auth.listUserGroups(accessToken, 0, 10, filters)
-  //     .then(response => {
-  //       //console.log("RESPONSE", response);
-  //       assert(
-  //         response.hasOwnProperty("items") &&
-  //         response.items[0].name === filters["name"]
-  //       );
-  //        //Cleanup
-  //       s2sMS.Groups.deleteGroup(accessToken,userGroupUUID)
-  //       .then(() => {
-  //           //console.log("Deleted Group", response);
-  //           done();
-  //       })
-  //       .catch(error => {
-  //         done(new Error(error));
-  //       });
-  //       })
-  //     .catch((error) => {
-  //       //console.log('Error in List Roles', error);
-  //       done(new Error(error));
-  //       });
-  // });
+  it("List User Groups", function (done) {
+    if (!creds.isValid) {
+      const err = new Error("Valid credentials must be provided");
+      return done(err);
+    }
+    const filters = [];
+    filters["name"] = "Unit-Test";
+
+    s2sMS.Auth.listUserGroups(accessToken, 0, 10, filters)
+      .then(response => {
+        //console.log("RESPONSE", response);
+        assert(
+          response.hasOwnProperty("items") &&
+          response.items[0].name === filters["name"]
+        );
+         //Cleanup
+        s2sMS.Groups.deleteGroup(accessToken,userGroupUUID)
+        .then(() => {
+            //console.log("Deleted Group", response);
+            done();
+        })
+        .catch(error => {
+          done(new Error(error));
+        });
+        })
+      .catch((error) => {
+        //console.log('Error in List Roles', error);
+        done(new Error(error));
+        });
+  });
 });

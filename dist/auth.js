@@ -112,6 +112,49 @@ var assignRolesToUserGroup = function assignRolesToUserGroup() {
 
 /**
  * @async
+ * @description This function will assign specified access to a resouce for the members of the provided user-group
+ * @param {string} [accessToken="null access token"] - cpaas access token
+ * @param {string} [userGroupUUID="null userGroupUUID"] - user-group uuid
+ * @param {string} [roleUUID="null roleUUID"] - role uuid
+ * @param {string} [resourceUUID="null resourceUUID"] - resource or object uuid
+ * @returns {Promise<object>} - Promise resolving to a status data object
+ */
+var assignScopedRoleToUserGroup = function assignScopedRoleToUserGroup() {
+  var accessToken = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : "null access token";
+  var userGroupUUID = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : "null userGroupUUID";
+  var roleUUID = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : "null roleUUID";
+  var resourceUUID = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : "null resourceUUID";
+
+  var MS = util.getEndpoint("auth");
+  var requestOptions = {
+    method: "POST",
+    uri: MS + '/user-groups/' + userGroupUUID + '/role/scopes',
+    headers: {
+      "Authorization": 'Bearer ' + accessToken,
+      "Content-type": "application/json",
+      'x-api-version': '' + util.getVersion()
+    },
+    body: {
+      "role": roleUUID,
+      "scope": [{
+        "resource": [resourceUUID]
+      }]
+    },
+    resolveWithFullResponse: true,
+    json: true
+
+  };
+  return new Promise(function (resolve, reject) {
+    request(requestOptions).then(function (responseData) {
+      responseData.statusCode === 204 ? resolve({ "status": "ok" }) : reject({ "status": "failed" });
+    }).catch(function (error) {
+      reject(error);
+    });
+  });
+};
+
+/**
+ * @async
  * @description This function creates a permission
  * @param {string} [accessToken="null accessToken"] - cpaas access token
  * @param {object} [body="null body"] - object 
@@ -618,6 +661,7 @@ module.exports = {
   activateRole: activateRole,
   assignPermissionsToRole: assignPermissionsToRole,
   assignRolesToUserGroup: assignRolesToUserGroup,
+  assignScopedRoleToUserGroup: assignScopedRoleToUserGroup,
   createPermission: createPermission,
   createUserGroup: createUserGroup,
   createRole: createRole,

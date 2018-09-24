@@ -98,6 +98,52 @@ const  assignRolesToUserGroup = (accessToken = "null accessToken", userGroupUUID
   });
 };
 
+
+/**
+ * @async
+ * @description This function will assign specified access to a resouce for the members of the provided user-group
+ * @param {string} [accessToken="null access token"] - cpaas access token
+ * @param {string} [userGroupUUID="null userGroupUUID"] - user-group uuid
+ * @param {string} [roleUUID="null roleUUID"] - role uuid
+ * @param {string} [resourceUUID="null resourceUUID"] - resource or object uuid
+ * @returns {Promise<object>} - Promise resolving to a status data object
+ */
+const assignScopedRoleToUserGroup = (
+  accessToken = "null access token",
+  userGroupUUID = "null userGroupUUID",
+  roleUUID = "null roleUUID",
+  resourceUUID = "null resourceUUID"
+  ) => {
+    const MS = util.getEndpoint("auth");
+    const requestOptions = {
+      method: "POST",
+      uri: `${MS}/user-groups/${userGroupUUID}/role/scopes`,
+      headers: {
+        "Authorization": `Bearer ${accessToken}`,
+        "Content-type": "application/json",
+        'x-api-version': `${util.getVersion()}`
+      },
+      body: {
+        "role": roleUUID,
+        "scope":[
+          {
+            "resource": [resourceUUID]
+          }
+        ]
+      },
+      resolveWithFullResponse: true,
+      json: true
+     
+    };
+    return new Promise (function (resolve, reject){
+      request(requestOptions).then(function(responseData){
+          responseData.statusCode === 204 ?  resolve({"status":"ok"}): reject({"status":"failed"});
+      }).catch(function(error){
+          reject(error);
+      });
+    });
+};
+
 /**
  * @async
  * @description This function creates a permission
@@ -547,6 +593,7 @@ module.exports = {
   activateRole,
   assignPermissionsToRole,
   assignRolesToUserGroup,
+  assignScopedRoleToUserGroup,
   createPermission,
   createUserGroup,
   createRole,
