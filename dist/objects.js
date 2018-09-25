@@ -12,6 +12,8 @@ var request = require("request-promise");
  * @param {string} userUUID - user UUID to be used
  * @param {string} accessToken - Access Token
  * @param {string} dataObjectType - Data object type to be retrieved; default: dataObjectType
+ * @param {number} offset - pagination offset
+ * @param {number} limit - pagination limit
  * @param {boolean} [loadContent] - String boolean if the call should also return content of object; default false
  * @returns {Promise<array>} Promise resolving to an array of data objects
  */
@@ -19,67 +21,23 @@ var getDataObjectByType = function getDataObjectByType() {
   var userUUID = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : "null user uuid";
   var accessToken = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : "null accessToken";
   var dataObjectType = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : "data_object";
-  var loadContent = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : "false";
+  var offset = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : 0;
+  var limit = arguments.length > 4 && arguments[4] !== undefined ? arguments[4] : 10;
+  var loadContent = arguments.length > 5 && arguments[5] !== undefined ? arguments[5] : "false";
 
-  return new Promise(function (resolve, reject) {
-    var MS = util.getEndpoint("objects");
+  var MS = util.getEndpoint("objects");
 
-    var arrayRequest = [];
-    var requestOptionsGlobal = {
-      method: "GET",
-      uri: MS + "/users/" + userUUID + "/allowed-objects?type=" + dataObjectType + "&load_content=" + loadContent + "&sort=name",
-      headers: {
-        'Authorization': "Bearer " + accessToken,
-        'Content-type': 'application/json',
-        'x-api-version': "" + util.getVersion()
-      },
-      json: true
-    };
-    arrayRequest.push(request(requestOptionsGlobal));
-    var requestOptionsUser = {
-      method: "GET",
-      uri: MS + "/users/" + userUUID + "/objects?type=" + dataObjectType + "&load_content=" + loadContent,
-      headers: {
-        "Content-type": "application/json",
-        Authorization: "Bearer " + accessToken
-      },
-      json: true
-    };
-    arrayRequest.push(request(requestOptionsUser));
-    Promise.all(arrayRequest).then(function (arrayData) {
-      // need to build data to return
-      //console.log('>>>>>>', JSON.stringify(arrayData));
-      var returnItems = [];
-      var isNotDuplicate = function isNotDuplicate(item, dataArray) {
-        return dataArray.filter(function (i) {
-          return i.uuid === item.uuid;
-        }).length === 0;
-      };
-      arrayData.forEach(function (i) {
-        //console.log('', i)
-        if (Array.isArray(i)) {
-          i.forEach(function (x) {
-            // let us make sure this is not a duplicate
-            if (isNotDuplicate(x, returnItems)) {
-              returnItems.push(x);
-            }
-          });
-        } else {
-          i.items && i.items.forEach(function (x) {
-            if (isNotDuplicate(x, returnItems)) {
-              returnItems.push(x);
-            }
-          });
-        }
-      });
-
-      resolve({
-        items: returnItems
-      });
-    }).catch(function (pError) {
-      reject(pError);
-    });
-  });
+  var requestOptions = {
+    method: "GET",
+    uri: MS + "/users/" + userUUID + "/allowed-objects?type=" + dataObjectType + "&load_content=" + loadContent + "&sort=name&offset=" + offset + "&limit=" + limit,
+    headers: {
+      'Authorization': "Bearer " + accessToken,
+      'Content-type': 'application/json',
+      'x-api-version': "" + util.getVersion()
+    },
+    json: true
+  };
+  return request(requestOptions);
 };
 
 /**
@@ -89,6 +47,8 @@ var getDataObjectByType = function getDataObjectByType() {
  * @param {string} userUUID - user UUID to be used
  * @param {string} accessToken - Access Token
  * @param {string} dataObjectType - Data object type to be retrieved; default: dataObjectType
+ * @param {number} offset - pagination offset
+ * @param {number} limit - pagination limit
  * @param {boolean} [loadContent] - String boolean if the call should also return content of object; default false
  * @returns {Promise<array>} Promise resolving to an array of data objects
  */
@@ -97,69 +57,23 @@ var getDataObjectByTypeAndName = function getDataObjectByTypeAndName() {
   var accessToken = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : "null accessToken";
   var dataObjectType = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : "data_object";
   var dataObjectName = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : "noName";
-  var loadContent = arguments.length > 4 && arguments[4] !== undefined ? arguments[4] : "false";
+  var offset = arguments.length > 4 && arguments[4] !== undefined ? arguments[4] : 0;
+  var limit = arguments.length > 5 && arguments[5] !== undefined ? arguments[5] : 10;
+  var loadContent = arguments.length > 6 && arguments[6] !== undefined ? arguments[6] : "false";
 
-  return new Promise(function (resolve, reject) {
-    var MS = util.getEndpoint("objects");
+  var MS = util.getEndpoint("objects");
 
-    var arrayRequest = [];
-    var requestOptionsGlobal = {
-      method: "GET",
-      uri: MS + "/users/" + userUUID + "/allowed-objects?type=" + dataObjectType + "&load_content=" + loadContent + "&name=" + dataObjectName,
-      headers: {
-        'Authorization': "Bearer " + accessToken,
-        'Content-type': 'application/json',
-        'x-api-version': "" + util.getVersion()
-      },
-      json: true
-    };
-    arrayRequest.push(request(requestOptionsGlobal));
-
-    var requestOptionsUser = {
-      method: "GET",
-      uri: MS + "/users/" + userUUID + "/objects?type=" + dataObjectType + "&load_content=" + loadContent + "&name=" + dataObjectName,
-      headers: {
-        "Content-type": "application/json",
-        Authorization: "Bearer " + accessToken
-      },
-      json: true
-    };
-    arrayRequest.push(request(requestOptionsUser));
-
-    Promise.all(arrayRequest).then(function (arrayData) {
-      // need to build data to return
-      //console.log('>>>>>>', JSON.stringify(arrayData));
-      var returnItems = [];
-      var isNotDuplicate = function isNotDuplicate(item, dataArray) {
-        return dataArray.filter(function (i) {
-          return i.uuid === item.uuid;
-        }).length === 0;
-      };
-      arrayData.forEach(function (i) {
-        //console.log('', i)
-        if (Array.isArray(i)) {
-          i.forEach(function (x) {
-            // let us make sure this is not a duplicate
-            if (isNotDuplicate(x, returnItems)) {
-              returnItems.push(x);
-            }
-          });
-        } else {
-          i.items && i.items.forEach(function (x) {
-            if (isNotDuplicate(x, returnItems)) {
-              returnItems.push(x);
-            }
-          });
-        }
-      });
-
-      resolve({
-        items: returnItems
-      });
-    }).catch(function (pError) {
-      reject(pError);
-    });
-  });
+  var requestOptions = {
+    method: "GET",
+    uri: MS + "/users/" + userUUID + "/allowed-objects?type=" + dataObjectType + "&load_content=" + loadContent + "&name=" + dataObjectName + "&offset=" + offset + "&limit=" + limit,
+    headers: {
+      'Authorization': "Bearer " + accessToken,
+      'Content-type': 'application/json',
+      'x-api-version': "" + util.getVersion()
+    },
+    json: true
+  };
+  return request(requestOptions);
 };
 
 /**

@@ -149,10 +149,12 @@ describe("Objects MS Test Suite", function () {
           identityData.uuid,
           accessToken,
           "unit_test_object",
+          0, //offset
+          10, //limit
           false
         )
         .then(responseData => {
-          // console.log('Got objects by type', responseData.items)
+          //console.log('Got objects by type', responseData);
           assert(
             responseData.items.length > 0 &&
             responseData.items[0].type === "unit_test_object"
@@ -258,10 +260,12 @@ describe("Objects MS Test Suite", function () {
             accessToken,
             objType,
             objNames[1],
+            0, //offset
+            10, //limit
             true // loadContent
           )
           .then(responseData => {
-            // console.log('GetObjectsByNameAndType response', responseData);
+            //console.log('GetObjectsByNameAndType response', responseData);
             assert(
               responseData.items.length > 0 &&
               responseData.items[0].name === objNames[1]
