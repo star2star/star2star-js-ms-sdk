@@ -142,7 +142,9 @@ var listApplications = function listApplications() {
   var filters = arguments.length > 4 && arguments[4] !== undefined ? arguments[4] : undefined;
 
   return new Promise(function (resolve, reject) {
-    Objects.getDataObjectByType(user_uuid, access_token, "starpaas_application", true).then(function (response) {
+    Objects.getDataObjectByType(user_uuid, access_token, "starpaas_application", 0, // FIXME
+    100, // FIXME
+    true).then(function (response) {
       if (filters) {
         response = util.filterResponse(response, filters);
       }
