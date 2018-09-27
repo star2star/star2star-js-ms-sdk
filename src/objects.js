@@ -4,6 +4,95 @@ const util = require("./utilities");
 const request = require("request-promise");
 
 /**
+ * @async 
+ * @description This function returns objects permitted to user with flexible filtering.
+ * @param {string} [accessToken="null accessToken"]
+ * @param {string} [userUUID="null userUUID"]
+ * @param {number} [offset=0] - pagination limit
+ * @param {number} [limit=10] - pagination offset
+ * @param {boolean} [load_content=false] - return object content or just descriptors
+ * @param {array} [filters=undefined] - array of filter options [name, description, status, etc]
+ */
+const getDataObjects = async (
+  accessToken = "null accessToken",
+  userUUID = "null userUUID",
+  offset = 0,
+  limit = 10,
+  loadContent = false,
+  filters = undefined
+) => {
+  const MS = util.getEndpoint("objects");
+  
+  const requestOptions = {
+    method: "GET",
+    uri: `${MS}/users/${userUUID}/allowed-objects`,
+    headers: {
+      'Authorization': `Bearer ${accessToken}`,
+      'Content-type': 'application/json',
+      'x-api-version': `${util.getVersion()}`
+    },
+    "qs": {
+      "load_content": loadContent    
+    },
+    json: true
+  };
+
+  
+  //here we determine if we will need to handle aggrigation, pagination, and filtering or send it to the microservice
+  if (filters) {
+    // filter param has been passed in, make sure it is an array befor proceeding
+    if (typeof filters !== "object") {
+      return Promise.reject({"statusCode":400,"message":"ERROR: filters is not an object"});
+    }
+
+    // sort the filters into those the API handles and those handled by the SDK.
+    const apiFilters = [
+      "content_type",
+      "description",
+      "name",
+      "sort",
+      "type"
+    ];
+    const sdkFilters = {};
+    Object.keys(filters).forEach(filter => {
+      if (apiFilters.includes(filter)) {
+        requestOptions.qs[filter] = filters[filter];
+      } else {
+        sdkFilters[filter] = filters[filter];
+      }
+    });
+    //console.log("Request Query Params", requestOptions.qs);
+    //console.log("sdkFilters",sdkFilters, Object.keys(sdkFilters).length);
+    // if the sdkFilters object is empty, the API can handle everything, otherwise the sdk needs to augment the api.
+    if (Object.keys(sdkFilters).length === 0) {
+        requestOptions.qs.offset = offset;
+        requestOptions.qs.limit = limit;
+        try {
+          return await request(requestOptions);
+        } catch (error) {
+          return Promise.reject(error);
+        }      
+    } else {
+     try {
+      const response = await util.aggregate(request, requestOptions);
+      //console.log("****** RESPONSE *******",response); 
+      if(response.hasOwnProperty("items") && response.items.length > 0){
+       const filteredResponse = util.filterResponse(response, sdkFilters);
+       //console.log("******* FILTERED RESPONSE ********",filteredResponse);
+       const paginatedResponse = util.paginate(filteredResponse, offset, limit);
+       //console.log("******* PAGINATED RESPONSE ********",paginatedResponse);
+       return paginatedResponse; 
+      } else {
+        return response;
+      }
+     } catch (error){
+       return Promise.reject(error);
+     }
+    }
+  }
+};
+
+/**
  * @async
  * @name Get Data Object By Type
  * @description This function will ask the cpaas data object service for a specific
@@ -247,6 +336,7 @@ const updateDataObject = (
 };
 module.exports = {
   getDataObject,
+  getDataObjects,
   getDataObjectByType,
   getDataObjectByTypeAndName,
   createUserDataObject,

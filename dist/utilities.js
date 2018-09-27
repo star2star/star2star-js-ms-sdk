@@ -3,6 +3,8 @@
 
 var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
 
+function _asyncToGenerator(fn) { return function () { var gen = fn.apply(this, arguments); return new Promise(function (resolve, reject) { function step(key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { return Promise.resolve(value).then(function (value) { step("next", value); }, function (err) { step("throw", err); }); } } return step("next"); }); }; }
+
 var config = require('./config.json');
 
 /**
@@ -173,7 +175,7 @@ var paginate = function paginate(response) {
  * @returns {object} - Response object with format {"items":[]}
  */
 var filterResponse = function filterResponse(response, filters) {
-
+  //console.log("*****FILTERS*****", filters);
   Object.keys(filters).forEach(function (filter) {
     var filteredResponse = response.items.filter(function (filterItem) {
       var found = false;
@@ -187,9 +189,10 @@ var filterResponse = function filterResponse(response, filters) {
               // console.log("OBJ[PROP]", obj[prop]);
               // console.log("FILTER", filter);
               // console.log("FILTERS[FILTER}",filters[filter]);
-              found = prop === filter && obj[prop].toLowerCase().includes(filters[filter].toLowerCase());
+              found = prop === filter && obj[prop] === filters[filter];
               return;
             } else if (_typeof(obj[prop]) === "object") {
+              //console.log("************ Filter recursing **************",obj[prop]);
               return doFilter(obj[prop], filter);
             }
           }
@@ -206,6 +209,105 @@ var filterResponse = function filterResponse(response, filters) {
   return response;
 };
 
+/**
+ * @async
+ * @description This utility will fetch all items for a GET call and return them as a single response.
+ * @param {Promise} request
+ * @param {object} requestOptions
+ * @returns
+ */
+var aggregate = function () {
+  var _ref = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee2(request, requestOptions) {
+    var total, offset, makeRequest;
+    return regeneratorRuntime.wrap(function _callee2$(_context2) {
+      while (1) {
+        switch (_context2.prev = _context2.next) {
+          case 0:
+            //requestOptions.qs.limit = 10; //uncomment to force pagination for testing.
+            total = void 0, offset = 0;
+
+            makeRequest = function () {
+              var _ref2 = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee(request, requestOptions) {
+                var response, nextResponse, items;
+                return regeneratorRuntime.wrap(function _callee$(_context) {
+                  while (1) {
+                    switch (_context.prev = _context.next) {
+                      case 0:
+                        _context.prev = 0;
+                        _context.next = 3;
+                        return request(requestOptions);
+
+                      case 3:
+                        response = _context.sent;
+
+                        total = response.metadata.total;
+                        offset = response.metadata.offset + response.metadata.count;
+
+                        if (!(total > offset)) {
+                          _context.next = 21;
+                          break;
+                        }
+
+                        console.log("recursing");
+                        requestOptions.qs.offset = offset;
+                        _context.next = 11;
+                        return makeRequest(request, requestOptions);
+
+                      case 11:
+                        nextResponse = _context.sent;
+                        items = response.items.concat(nextResponse.items);
+
+                        response.items = items;
+                        response.metadata.offset = 0;
+                        response.metadata.count = total;
+                        response.metadata.limit = total;
+                        delete response.links; //the links are invalid
+                        return _context.abrupt("return", response);
+
+                      case 21:
+                        return _context.abrupt("return", response);
+
+                      case 22:
+                        _context.next = 27;
+                        break;
+
+                      case 24:
+                        _context.prev = 24;
+                        _context.t0 = _context["catch"](0);
+                        return _context.abrupt("return", Promise.reject(_context.t0));
+
+                      case 27:
+                      case "end":
+                        return _context.stop();
+                    }
+                  }
+                }, _callee, undefined, [[0, 24]]);
+              }));
+
+              return function makeRequest(_x10, _x11) {
+                return _ref2.apply(this, arguments);
+              };
+            }();
+
+            _context2.next = 4;
+            return makeRequest(request, requestOptions);
+
+          case 4:
+            return _context2.abrupt("return", _context2.sent);
+
+          case 5:
+          case "end":
+            return _context2.stop();
+        }
+      }
+    }, _callee2, undefined);
+  }));
+
+  return function aggregate(_x8, _x9) {
+    return _ref.apply(this, arguments);
+  };
+}();
+
 module.exports = {
   getEndpoint: getEndpoint,
   getAuthHost: getAuthHost,
@@ -213,6 +315,7 @@ module.exports = {
   config: config,
   replaceVariables: replaceVariables,
   createUUID: createUUID,
-  paginate: paginate,
-  filterResponse: filterResponse
+  aggregate: aggregate, //TODO Unit test 9/27/18 nh
+  filterResponse: filterResponse, //TODO Unit test 9/27/18 nh
+  paginate: paginate //TODO Unit test 9/27/18 nh
 };

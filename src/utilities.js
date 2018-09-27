@@ -160,7 +160,7 @@ const paginate = (response, offset = 0, limit = 10) => {
  * @returns {object} - Response object with format {"items":[]}
  */
 const filterResponse = (response, filters) => {
-
+  //console.log("*****FILTERS*****", filters);
   Object.keys(filters).forEach(filter => {
     const filteredResponse = response.items.filter(filterItem => {
       let found=false;
@@ -174,9 +174,10 @@ const filterResponse = (response, filters) => {
               // console.log("OBJ[PROP]", obj[prop]);
               // console.log("FILTER", filter);
               // console.log("FILTERS[FILTER}",filters[filter]);
-              found = (prop === filter) && obj[prop].toLowerCase().includes(filters[filter].toLowerCase());
+              found = ((prop === filter) && (obj[prop] === filters[filter]));
               return;
             } else if (typeof obj[prop] === "object") {
+              //console.log("************ Filter recursing **************",obj[prop]);
               return doFilter(obj[prop], filter);
             }
           } 
@@ -193,6 +194,46 @@ const filterResponse = (response, filters) => {
   return response;
 };
 
+/**
+ * @async
+ * @description This utility will fetch all items for a GET call and return them as a single response.
+ * @param {Promise} request
+ * @param {object} requestOptions
+ * @returns
+ */
+const aggregate = async (request, requestOptions) => {
+  //requestOptions.qs.limit = 10; //uncomment to force pagination for testing.
+  let total,
+      offset = 0;
+    
+  const makeRequest = async (request, requestOptions) => {
+    try {
+      const response = await request(requestOptions);
+      total = response.metadata.total;
+      offset = response.metadata.offset + response.metadata.count;
+      if (total > offset) {
+        console.log("recursing");
+        requestOptions.qs.offset = offset;
+        const nextResponse = await makeRequest(request, requestOptions);
+        const items = response.items.concat(nextResponse.items);
+        response.items = items;
+        response.metadata.offset = 0;
+        response.metadata.count = total;
+        response.metadata.limit = total;
+        delete response.links; //the links are invalid
+        return response;
+      } else {
+        //console.log("done");
+        return response;
+      }
+    } catch (error) {
+      return Promise.reject(error);
+    }   
+  };
+
+  return await makeRequest(request, requestOptions);
+};
+
 module.exports = {
   getEndpoint,
   getAuthHost,
@@ -200,6 +241,7 @@ module.exports = {
   config,
   replaceVariables,
   createUUID,
-  paginate,
-  filterResponse
+  aggregate, //TODO Unit test 9/27/18 nh
+  filterResponse, //TODO Unit test 9/27/18 nh
+  paginate //TODO Unit test 9/27/18 nh
 };

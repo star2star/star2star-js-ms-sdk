@@ -1,8 +1,150 @@
 /* global require module*/
 "use strict";
 
+var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
+
+function _asyncToGenerator(fn) { return function () { var gen = fn.apply(this, arguments); return new Promise(function (resolve, reject) { function step(key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { return Promise.resolve(value).then(function (value) { step("next", value); }, function (err) { step("throw", err); }); } } return step("next"); }); }; }
+
 var util = require("./utilities");
 var request = require("request-promise");
+
+/**
+ * @async 
+ * @description This function returns objects permitted to user with flexible filtering.
+ * @param {string} [accessToken="null accessToken"]
+ * @param {string} [userUUID="null userUUID"]
+ * @param {number} [offset=0] - pagination limit
+ * @param {number} [limit=10] - pagination offset
+ * @param {boolean} [load_content=false] - return object content or just descriptors
+ * @param {array} [filters=undefined] - array of filter options [name, description, status, etc]
+ */
+var getDataObjects = function () {
+  var _ref = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee() {
+    var accessToken = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : "null accessToken";
+    var userUUID = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : "null userUUID";
+    var offset = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : 0;
+    var limit = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : 10;
+    var loadContent = arguments.length > 4 && arguments[4] !== undefined ? arguments[4] : false;
+    var filters = arguments.length > 5 && arguments[5] !== undefined ? arguments[5] : undefined;
+    var MS, requestOptions, apiFilters, sdkFilters, response, filteredResponse, paginatedResponse;
+    return regeneratorRuntime.wrap(function _callee$(_context) {
+      while (1) {
+        switch (_context.prev = _context.next) {
+          case 0:
+            MS = util.getEndpoint("objects");
+            requestOptions = {
+              method: "GET",
+              uri: MS + "/users/" + userUUID + "/allowed-objects",
+              headers: {
+                'Authorization': "Bearer " + accessToken,
+                'Content-type': 'application/json',
+                'x-api-version': "" + util.getVersion()
+              },
+              "qs": {
+                "load_content": loadContent
+              },
+              json: true
+            };
+
+            //here we determine if we will need to handle aggrigation, pagination, and filtering or send it to the microservice
+
+            if (!filters) {
+              _context.next = 38;
+              break;
+            }
+
+            if (!((typeof filters === "undefined" ? "undefined" : _typeof(filters)) !== "object")) {
+              _context.next = 5;
+              break;
+            }
+
+            return _context.abrupt("return", Promise.reject({ "statusCode": 400, "message": "ERROR: filters is not an object" }));
+
+          case 5:
+
+            // sort the filters into those the API handles and those handled by the SDK.
+            apiFilters = ["content_type", "description", "name", "sort", "type"];
+            sdkFilters = {};
+
+            Object.keys(filters).forEach(function (filter) {
+              if (apiFilters.includes(filter)) {
+                requestOptions.qs[filter] = filters[filter];
+              } else {
+                sdkFilters[filter] = filters[filter];
+              }
+            });
+            //console.log("Request Query Params", requestOptions.qs);
+            //console.log("sdkFilters",sdkFilters, Object.keys(sdkFilters).length);
+            // if the sdkFilters object is empty, the API can handle everything, otherwise the sdk needs to augment the api.
+
+            if (!(Object.keys(sdkFilters).length === 0)) {
+              _context.next = 22;
+              break;
+            }
+
+            requestOptions.qs.offset = offset;
+            requestOptions.qs.limit = limit;
+            _context.prev = 11;
+            _context.next = 14;
+            return request(requestOptions);
+
+          case 14:
+            return _context.abrupt("return", _context.sent);
+
+          case 17:
+            _context.prev = 17;
+            _context.t0 = _context["catch"](11);
+            return _context.abrupt("return", Promise.reject(_context.t0));
+
+          case 20:
+            _context.next = 38;
+            break;
+
+          case 22:
+            _context.prev = 22;
+            _context.next = 25;
+            return util.aggregate(request, requestOptions);
+
+          case 25:
+            response = _context.sent;
+
+            if (!(response.hasOwnProperty("items") && response.items.length > 0)) {
+              _context.next = 32;
+              break;
+            }
+
+            filteredResponse = util.filterResponse(response, sdkFilters);
+            //console.log("******* FILTERED RESPONSE ********",filteredResponse);
+
+            paginatedResponse = util.paginate(filteredResponse, offset, limit);
+            //console.log("******* PAGINATED RESPONSE ********",paginatedResponse);
+
+            return _context.abrupt("return", paginatedResponse);
+
+          case 32:
+            return _context.abrupt("return", response);
+
+          case 33:
+            _context.next = 38;
+            break;
+
+          case 35:
+            _context.prev = 35;
+            _context.t1 = _context["catch"](22);
+            return _context.abrupt("return", Promise.reject(_context.t1));
+
+          case 38:
+          case "end":
+            return _context.stop();
+        }
+      }
+    }, _callee, undefined, [[11, 17], [22, 35]]);
+  }));
+
+  return function getDataObjects() {
+    return _ref.apply(this, arguments);
+  };
+}();
 
 /**
  * @async
@@ -248,6 +390,7 @@ var updateDataObject = function updateDataObject() {
 };
 module.exports = {
   getDataObject: getDataObject,
+  getDataObjects: getDataObjects,
   getDataObjectByType: getDataObjectByType,
   getDataObjectByTypeAndName: getDataObjectByTypeAndName,
   createUserDataObject: createUserDataObject,

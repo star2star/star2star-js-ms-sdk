@@ -118,6 +118,7 @@ toc:
   - name: Objects
     children:
       - getDataObject
+      - getDataObjects
       - createDataObject
       - deleteDataObject
       - updateDataObject
@@ -161,6 +162,7 @@ toc:
       - startWorkflow
   - name: Util
     children:
+      - aggregate
       - createUUID
       - filterResponse
       - getEndpoint

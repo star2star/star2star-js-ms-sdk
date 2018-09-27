@@ -292,4 +292,30 @@ describe("Objects MS Test Suite", function () {
         done(new Error(error));
       }); //promise all 
   });
+
+  it("List Objects with SDK Aggregator and Paginator", function (done) {
+    if (!creds.isValid) return done();
+
+    const filters = {
+      "type" : "starpaas_application",
+      "status": "inactive"
+    };
+    
+    s2sMS.Objects.getDataObjects(
+      accessToken,
+      identityData.uuid,
+      0, //offset
+      25, //limit
+      true, //load_content
+      filters
+    ).then((response) => {
+       //console.log("SDK List", response);
+       assert(response.items.length > 0); //TODO expand this to test filtering, pagination, and aggregation
+       done();
+      
+    }).catch((error) => {
+      console.log("SDK Error", error);
+      done(new Error(error));
+    });
+  });
 });
