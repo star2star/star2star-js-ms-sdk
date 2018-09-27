@@ -17,7 +17,10 @@ describe("Workflow", function () {
       wfInstanceUUID,
       wfInstanceUUIDv2False,
       wfInstanceUUIDv2True,
-      version;
+      version,
+      groupUUID;
+
+    const groupName = "UNIT-TEST-GROUP";
   
 
   before(function () {
@@ -271,7 +274,7 @@ describe("Workflow", function () {
                   "result_path": "$result"
                 },
                 "wait_condition": {
-                  "wait_value": 5
+                  "wait_value": 5000
                 }
               }
             }
@@ -386,12 +389,9 @@ describe("Workflow", function () {
               "data": {
                 "lambda_condition": {
                   "function_name": "dtg_test_lambda",
-                  "parameters": {"a":1,"b":true},
+                  "parameters": "$params.true",
                   "blocking": true,
                   "result_path": "$decision"
-                },
-                "wait_condition": {
-                  "wait_value": 5
                 }
               }
             }
@@ -410,12 +410,9 @@ describe("Workflow", function () {
               "data": {
                 "lambda_condition": {
                   "function_name": "dtg_test_lambda",
-                  "parameters": {"a":0,"b":false},
+                  "parameters": "$params.false",
                   "blocking": true,
                   "result_path": "$decision"
-                },
-                "wait_condition": {
-                  "wait_value": 5
                 }
               }
             }
@@ -441,16 +438,18 @@ describe("Workflow", function () {
       {
         "version": "0.0.1",
         "start_state": "START_STATE",
-        "input_vars": {"params":{"a":4, "b": true}}
+        "group_name" :groupName,
+        "input_vars": {"params":{"a":4, "b":false}}
       }
     ).then(response => {
-      //console.log("Start Workflow Version 1 RESPONSE", response.workflow_vars);
+      //console.log("Start Workflow Version 1 RESPONSE", response);
       assert(
         response.hasOwnProperty("uuid") && 
         response.current_state === "START_STATE" &&
         response.workflow_vars.params.a === 4
       );
       wfInstanceUUID = response.uuid;
+      groupUUID = response.group_uuid;
       done();
     })
     .catch(error =>{
@@ -467,10 +466,11 @@ describe("Workflow", function () {
       {
         "version": "0.0.2",
         "start_state": "START_STATE",
-        "input_vars": {params:{a:11, b: false}}
+        "group_uuid": groupUUID,
+        "input_vars": {"params":{"a":11,"b": false}}
       }
     ).then(response => {
-      //console.log("Start Workflow Version 2: False RESPONSE", response);
+      console.log("Start Workflow Version 2: False RESPONSE", response);
       assert(
         response.hasOwnProperty("uuid") && 
         response.current_state === "START_STATE" &&
@@ -493,10 +493,11 @@ describe("Workflow", function () {
       {
         "version": "0.0.2",
         "start_state": "START_STATE",
+        "group_uuid":groupUUID,
         "input_vars": {"params":{"a":5, "b": true}}
       }
     ).then(response => {
-      //console.log("Start Workflow Version 2: True RESPONSE", response);
+      console.log("Start Workflow Version 2: True RESPONSE", response);
       assert(
         response.hasOwnProperty("uuid") && 
         response.current_state === "START_STATE" &&
@@ -540,7 +541,7 @@ describe("Workflow", function () {
       wfInstanceUUID
     ).then(response => {
       //console.log("Get Workflow Instance RESPONSE", response);
-      assert(response.template_version === version && response.template_uuid === wfTemplateUUID);
+      assert(response.object.template_version === version && response.object.template_uuid === wfTemplateUUID);
       done();
     })
     .catch(error =>{
@@ -674,15 +675,16 @@ describe("Workflow", function () {
     });  
   });
     
+  //FIXME why does this work randomly? nh 
   it("Get Workflow Instance v2 History", function (done) {
     if (!creds.isValid) return done();
-    console.log("Standby 8 seconds for Workflow to Finish.....");
+    //console.log("Standby 2 seconds for Workflow to Finish.....");
     setTimeout(()=>{
       s2sMS.Workflow.getWfInstanceHistory(
         accessToken,
         wfInstanceUUIDv2False
       ).then(response => {
-        //console.log("Get Workflow Instance v2 False History RESPONSE", response);
+        console.log("Get Workflow Instance v2 False History RESPONSE", response);
         assert(
           response.result_type === "complete" &&
           response.workflow_vars.decision.message == "params: { a: 0, b: false }"
@@ -691,7 +693,7 @@ describe("Workflow", function () {
           accessToken,
           wfInstanceUUIDv2True
         ).then(response => {
-          // console.log("Get Workflow Instance v2 True History RESPONSE", response);
+          console.log("Get Workflow Instance v2 True History RESPONSE", response);
           assert(
             response.result_type === "complete" &&
             response.workflow_vars.decision.message == "params: { a: 1, b: true }"
@@ -707,7 +709,7 @@ describe("Workflow", function () {
         console.log("Get Workflow Instance History v2 False ERROR", error);      
         done(new Error(error));
       });  
-    }, 8000); //Just enought time for them all to finish
+    }, 2000); //Just enought time for them all to finish
   });
   
   //TODO Test start and end time filters....nh 8/30/18
@@ -728,6 +730,63 @@ describe("Workflow", function () {
     })
     .catch(error =>{
       console.log("Get Workflow Template History ERROR", error);      
+      done(new Error(error));
+    });  
+  });
+
+  it("List Workflow Groups ", function (done) {
+    if (!creds.isValid) return done();
+    s2sMS.Workflow.listWorkflowGroups(
+      accessToken,
+      0, //offset
+      10, //limit
+      {
+        "template_uuid": wfTemplateUUID //filters
+      }
+    ).then(response => {
+      //console.log("List Workflow Group RESPONSE", response.items[0].master);
+      assert(response.items[0].master === wfInstanceUUID);
+      done();
+    })
+    .catch(error =>{
+      console.log("List Workflow Template History ERROR", error);      
+      done(new Error(error));
+    });  
+  });
+
+  it("Get Workflow Group ", function (done) {
+    if (!creds.isValid) return done();
+    s2sMS.Workflow.getWorkflowGroup(
+      accessToken,
+      groupUUID
+    ).then(response => {
+      //console.log("Get Workflow Group RESPONSE", response);
+      assert(response.uuid === groupUUID);
+      done();
+    })
+    .catch(error =>{
+      console.log("Get Workflow Group ERROR", error);      
+      done(new Error(error));
+    });  
+  });
+
+  it("Update Workflow Group ", function (done) {
+    if (!creds.isValid) return done();
+    s2sMS.Workflow.updateWorkflowGroup(
+      accessToken,
+      groupUUID,
+      "cancelled", //status
+      {"important_things": true} //data
+    ).then(response => {
+      //console.log("Update Workflow Group RESPONSE", response);
+      assert(
+        response.status === "cancelled" &&
+        response.data.important_things === true
+        );
+      done();
+    })
+    .catch(error =>{
+      console.log("Update Workflow Group ERROR", error);      
       done(new Error(error));
     });  
   });

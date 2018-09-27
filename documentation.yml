@@ -155,11 +155,13 @@ toc:
       - getRunningWorkflow
       - getWfInstanceHistory
       - getWfTemplateHistory
+      - getWorkflowGroup
       - getWorkflowTemplate
       - listRunningWorkflows
       - listWorkflowTemplates
       - modifyWorkflowTemplate
       - startWorkflow
+      - updateWorkflowGroup
   - name: Util
     children:
       - aggregate

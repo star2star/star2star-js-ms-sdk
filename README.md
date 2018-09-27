@@ -31,6 +31,7 @@ s2sMS.Identity.login(creds.CPAAS_KEY, creds.email, creds.password)
 [Please click here for our documentation pages.](https://star2star.github.io/star2star-js-ms-sdk/ "Star2Star Micro Service SDK Documentation")
 
 ## Changes
+* 2.1.48 - Add workflow groups support
 * 2.1.47 - Add request aggregator utility and generic getObjects
 * 2.1.46 - Temp fix for pagination
 * 2.1.45 - Add pagination to object calls

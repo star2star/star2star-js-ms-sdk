@@ -4,68 +4,6 @@
 var request = require("request-promise");
 var util = require("./utilities");
 
-// const validateTemplate = (template = undefined) => {
-//   const vWFTemplate = {
-//     "status" : 200,
-//     "message": "valid workflow template",
-//     "template": template
-//   };
-
-//   if (!template || typeof template !== "object"){
-//     vWFTemplate.status = 400;
-//     vWFTemplate.message = "template missing or not object";
-//   } else {
-//     const vError = [];
-
-//     template.hasOwnProperty("name") && template.name.length !== 0 ? vError: vError.push("name missing or empty");
-//     template.hasOwnProperty("description") && template.description.length !==0 ? vError: vError.push("description missing or empty");
-//     template.hasOwnProperty("status") && ["active","inactive","deprecated","deleted"].includes(template.status) ? vError: vError.push("status missing or invalid");
-
-//     if (template.hasOwnProperty("states") && typeof Array.isArray(template.states)) {
-//       Object.keys(template.states).forEach(state =>{
-//         template.states[state].hasOwnProperty("uuid") && 
-//         template.states[state].uuid.length !== 0 ? vError: vError.push(`state ${state} uuid missing or empty`);
-
-//         template.states[state].hasOwnProperty("name") && 
-//         template.states[state].uuid.length !== 0 ? vError: vError.push(`state ${state} name missing or empty`);
-
-//         template.states[state].hasOwnProperty("type") && 
-//         ["start","normal","decision","finish"].includes(template.states[state].type) ? vError: vError.push(`state ${state} type missing or invalid`);   
-//       });
-//     } else {
-//       vError.push("states missing or not array");
-//     }
-
-//     if (template.hasOwnProperty("transitions") && typeof Array.isArray(template.transitions)) {
-//       Object.keys(template.transitions).forEach(transition =>{
-//         template.transitions[transition].hasOwnProperty("uuid") && 
-//         template.transitions[transition].uuid.length !== 0 ? vError: vError.push(`transition ${transition} uuid missing or empty`);
-
-//         template.transitions[transition].hasOwnProperty("name") && 
-//         template.transitions[transition].uuid.length !== 0 ? vError: vError.push(`transition ${transition} name missing or empty`); 
-
-//         template.transitions[transition].hasOwnProperty("start_state") && 
-//         template.transitions[transition].start_state.length !== 0 ? vError: vError.push(`transition ${transition} start_state missing or empty`); 
-
-//         template.transitions[transition].hasOwnProperty("next_state") && 
-//         template.transitions[transition].next_state.length !== 0 ? vError: vError.push(`transition ${transition} next_state missing or empty`); 
-
-//         template.transitions[transition].hasOwnProperty("type") && 
-//         ["normal","wait"].includes(template.transitions[transition].type) ? vError: vError.push(`transition ${transition} type missing or invalid`);   
-//       });
-//     } else {
-//     vError.push("transitions missing or not array");
-//     }
-
-//     if (vError.length !== 0) {
-//       const message = vError.join();
-//       vWFTemplate.status = 400;
-//       vWFTemplate.message = message;
-//     }
-//   }
-//   return vWFTemplate;
-// };
-
 /**
  * @async
  * @description This function will create a new workflow template
@@ -178,6 +116,32 @@ var getRunningWorkflow = function getRunningWorkflow() {
   var requestOptions = {
     method: "GET",
     uri: MS + "/workflows/" + wfTemplateUUID + "/instances/" + wfInstanceUUID,
+    headers: {
+      'Authorization': "Bearer " + accessToken,
+      'Content-type': 'application/json',
+      'x-api-version': "" + util.getVersion()
+    },
+    json: true
+  };
+
+  return request(requestOptions);
+};
+
+/**
+ * @async
+ * @description This function will get workflow group by uuid.
+ * @param {string} [accessToken="null access token"] - cpaas access token
+ * @param {string} [wfGroupUUID="null wfGroupUUID"] - workflow uuid
+ * @returns {Promise}
+ */
+var getWorkflowGroup = function getWorkflowGroup() {
+  var accessToken = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : "null access token";
+  var wfGroupUUID = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : "null wfTemplateUUID";
+
+  var MS = util.getEndpoint("workflow");
+  var requestOptions = {
+    method: "GET",
+    uri: MS + "/groups/" + wfGroupUUID,
     headers: {
       'Authorization': "Bearer " + accessToken,
       'Content-type': 'application/json',
@@ -351,6 +315,47 @@ var listRunningWorkflows = function listRunningWorkflows() {
 
 /**
  * @async
+ * @description This function will return a list of group objects
+ * @param {string} [accessToken="null accesToken"] - cpaas access token
+ * @param {number} [offset=0] - pagination offset
+ * @param {number} [limit=10] - pagination limit
+ * @param {object} [filters=undefined] - object containing optional filters (start_datetime,end_datetime,template_uuid)
+ * @returns
+ */
+var listWorkflowGroups = function listWorkflowGroups() {
+  var accessToken = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : "null accesToken";
+  var offset = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 0;
+  var limit = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : 10;
+  var filters = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : undefined;
+
+  var MS = util.getEndpoint("workflow");
+
+  var requestOptions = {
+    method: "GET",
+    uri: MS + "/groups",
+    headers: {
+      'Authorization': "Bearer " + accessToken,
+      'Content-type': 'application/json',
+      'x-api-version': "" + util.getVersion()
+    },
+    qs: {
+      "offset": offset,
+      "limit": limit
+    },
+    json: true
+  };
+
+  if (filters) {
+    Object.keys(filters).forEach(function (filter) {
+      requestOptions.qs[filter] = filters[filter];
+    });
+  }
+
+  return request(requestOptions);
+};
+
+/**
+ * @async
  * @description This function lists configured workflow templates
  * @param {string} [accessToken="null access token"] - cpaas access token
  * @param {number} [offset=0] - pagination offset
@@ -444,6 +449,39 @@ var startWorkflow = function startWorkflow(accessToken) {
   return request(requestOptions);
 };
 
+/**
+ * @async
+ * @description This function updates the status and data for a workflow group
+ * @param {string} [accessToken="null access token"] - cpaas access token
+ * @param {string} [groupUUID="null group uuid"] - workflow group uuid
+ * @param {string} [status="null status"] - workflow instance status [ active, complete, cancelled ]
+ * @param {object} [data="null data"] - workflow instance data object 
+ * @returns {Promise} - promise resolving to updated workflow group
+ */
+var updateWorkflowGroup = function updateWorkflowGroup() {
+  var accessToken = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : "null access token";
+  var groupUUID = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : "null group uuid";
+  var status = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : "null status";
+  var data = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : "null data";
+
+  var MS = util.getEndpoint("workflow");
+  var requestOptions = {
+    method: "PUT",
+    uri: MS + "/groups/" + groupUUID,
+    body: {
+      "status": status,
+      "data": data
+    },
+    headers: {
+      'Authorization': "Bearer " + accessToken,
+      'Content-type': 'application/json',
+      'x-api-version': "" + util.getVersion()
+    },
+    json: true
+  };
+  return request(requestOptions);
+};
+
 module.exports = {
   createWorkflowTemplate: createWorkflowTemplate,
   cancelWorkflow: cancelWorkflow,
@@ -451,9 +489,12 @@ module.exports = {
   getRunningWorkflow: getRunningWorkflow,
   getWfInstanceHistory: getWfInstanceHistory,
   getWfTemplateHistory: getWfTemplateHistory,
+  getWorkflowGroup: getWorkflowGroup,
   getWorkflowTemplate: getWorkflowTemplate,
   listRunningWorkflows: listRunningWorkflows,
+  listWorkflowGroups: listWorkflowGroups,
   listWorkflowTemplates: listWorkflowTemplates,
   modifyWorkflowTemplate: modifyWorkflowTemplate,
-  startWorkflow: startWorkflow
+  startWorkflow: startWorkflow,
+  updateWorkflowGroup: updateWorkflowGroup
 };
