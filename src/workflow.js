@@ -407,7 +407,8 @@ const startWorkflow = (accessToken, wfTemplateUUID = "null wfTemplateUUID", body
 const updateWorkflowGroup = (
   accessToken = "null access token",
   groupUUID = "null group uuid",
-  status = "null status",data = "null data"
+  status = "null status",
+  data = "null data"
 ) => {
   const MS = util.getEndpoint("workflow");
   const requestOptions = {

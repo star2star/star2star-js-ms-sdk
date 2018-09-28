@@ -58,6 +58,8 @@ toc:
       - deleteContact
       - getContacts
       - listContacts
+  - name: Email
+      - sendEmail
   - name: Groups
     children:
       - addMembersToGroup

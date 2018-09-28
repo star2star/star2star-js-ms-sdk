@@ -44,7 +44,8 @@ describe("MS SDK Index", function () {
       'Pubsub',
       'Application',
       'setMSVersion',
-      'Workflow'
+      'Workflow',
+      'Email'
     ];
     assert.deepEqual(Object.keys(s2sMS), msKeys);
     done();

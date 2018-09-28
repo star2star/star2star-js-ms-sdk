@@ -1,6 +1,7 @@
 {
   "ms_version": "v1", 
   "microservices": {
+    "EMAIL": "/email",
     "CHAT": "/chat",
     "AUTH": "/auth",
     "GROUPS": "/groups",

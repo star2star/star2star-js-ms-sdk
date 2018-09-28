@@ -17,8 +17,7 @@ const Media = require('./media');
 const Pubsub = require('./pubsub');
 const Application = require('./application');
 const Workflow = require('./workflow');
-
-
+const Email = require('./email');
 const request = require('request-promise');
 
 let cpaasKey;
@@ -101,5 +100,6 @@ module.exports = {
   Pubsub,
   Application,
   setMSVersion,
-  Workflow
+  Workflow,
+  Email
 };

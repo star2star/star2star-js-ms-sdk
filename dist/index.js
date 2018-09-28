@@ -18,7 +18,7 @@ var Media = require('./media');
 var Pubsub = require('./pubsub');
 var Application = require('./application');
 var Workflow = require('./workflow');
-
+var Email = require('./email');
 var request = require('request-promise');
 
 var cpaasKey = void 0;
@@ -109,5 +109,6 @@ module.exports = {
   Pubsub: Pubsub,
   Application: Application,
   setMSVersion: setMSVersion,
-  Workflow: Workflow
+  Workflow: Workflow,
+  Email: Email
 };
