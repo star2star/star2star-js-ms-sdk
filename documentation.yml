@@ -59,6 +59,7 @@ toc:
       - getContacts
       - listContacts
   - name: Email
+     childred
       - sendEmail
   - name: Groups
     children:
@@ -160,6 +161,7 @@ toc:
       - getWorkflowGroup
       - getWorkflowTemplate
       - listRunningWorkflows
+      - listWorkflowGroups
       - listWorkflowTemplates
       - modifyWorkflowTemplate
       - startWorkflow
