@@ -59,7 +59,7 @@ toc:
       - getContacts
       - listContacts
   - name: Email
-     childred
+    children:
       - sendEmail
   - name: Groups
     children:

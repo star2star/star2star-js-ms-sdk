@@ -35,10 +35,10 @@ var validateEmail = function validateEmail(email) {
 /**
  * @async
  * @description This function will send an email to the provided recipients
- * @param {string} [sender=""]
+ * @param {string} [sender=""] - email address of sender
  * @param {array} [to=""] - array of email addresses for recipients
- * @param {string} [subject=""]
- * @param {string} [message=""]
+ * @param {string} [subject=""] - message subject
+ * @param {string} [message=""] - mesaage
  * @param {string} [type="text"] //TODO add validation for types
  * @returns
  */

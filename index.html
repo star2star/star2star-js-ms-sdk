@@ -430,11 +430,29 @@
               
                 
                 <li><a
-                  href='#email-childred---sendemail'
-                  class="h5 bold black caps">
-                  Email childred - sendEmail
-                  
+                  href='#email'
+                  class="h5 bold black caps toggle-sibling">
+                  Email
+                  <span class='icon'>▸</span>
                 </a>
+                
+                <div class='toggle-target display-none'>
+                  
+                  <ul class='list-reset py1-ul pl1'>
+                    <li class='h5'><span>Static members</span></li>
+                    
+                      <li><a
+                        href='#sendemail'
+                        class='regular pre-open'>
+                        .sendEmail
+                      </a></li>
+                    
+                    </ul>
+                  
+                  
+                  
+                  
+                </div>
                 
                 </li>
               
@@ -1261,16 +1279,6 @@
                   
                   
                 </div>
-                
-                </li>
-              
-                
-                <li><a
-                  href='#sendemail'
-                  class="">
-                  sendEmail
-                  
-                </a>
                 
                 </li>
               
@@ -6043,27 +6051,15 @@
 
         
           
-            <div class='keyline-top-not py2'>
-  <section class='py2 clearfix'>
-
-    <h2 id='email-childred---sendemail' class='mt0'>
-      Email childred - sendEmail
-    </h2>
-
-    
-      
-
-    
-  </section>
-</div>
+            <div class='keyline-top-not py2'></div>
           
           <section class='p2 mb2 clearfix bg-white minishadow'>
 
   
   <div class='clearfix'>
     
-    <h3 class='fl m0' id='email-childred---sendemail'>
-      Email childred - sendEmail
+    <h3 class='fl m0' id='email'>
+      Email
     </h3>
     
     
@@ -6093,6 +6089,124 @@
   
 
   
+
+  
+    <div class='py1 quiet mt1 prose-big'>Static Members</div>
+    <div class="clearfix">
+  
+    <div class='border-bottom' id='sendemail'>
+      <div class="clearfix small pointer toggle-sibling">
+        <div class="py1 contain">
+            <a class='icon pin-right py1 dark-link caret-right'>▸</a>
+            <span class='code strong strong truncate'>sendEmail</span>
+        </div>
+      </div>
+      <div class="clearfix display-none toggle-target">
+        <section class='p2 mb2 clearfix bg-white minishadow'>
+
+  
+
+  <p>This function will send an email to the provided recipients</p>
+
+ 
+  
+    <div class='pre p1 fill-light mt0'>sendEmail</div>
+   
+  
+  
+
+  
+  
+  
+  
+  
+  
+
+  
+    <div class='py1 quiet mt1 prose-big'>Parameters</div>
+    <div class='prose'>
+      
+        <div class='space-bottom0'>
+          <div>
+            <span class='code bold'>accessToken</span> <code class='quiet'>(any
+            = <code>&quot;null accessToken&quot;</code>)</code>
+	    
+          </div>
+          
+        </div>
+      
+        <div class='space-bottom0'>
+          <div>
+            <span class='code bold'>sender</span> <code class='quiet'>(<a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String">string</a>
+            = <code>&quot;&quot;</code>)</code>
+	    email address of sender
+
+          </div>
+          
+        </div>
+      
+        <div class='space-bottom0'>
+          <div>
+            <span class='code bold'>to</span> <code class='quiet'>(<a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Array">array</a>
+            = <code>&quot;&quot;</code>)</code>
+	    array of email addresses for recipients
+
+          </div>
+          
+        </div>
+      
+        <div class='space-bottom0'>
+          <div>
+            <span class='code bold'>subject</span> <code class='quiet'>(<a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String">string</a>
+            = <code>&quot;&quot;</code>)</code>
+	    message subject
+
+          </div>
+          
+        </div>
+      
+        <div class='space-bottom0'>
+          <div>
+            <span class='code bold'>message</span> <code class='quiet'>(<a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String">string</a>
+            = <code>&quot;&quot;</code>)</code>
+	    mesaage
+
+          </div>
+          
+        </div>
+      
+        <div class='space-bottom0'>
+          <div>
+            <span class='code bold'>type</span> <code class='quiet'>(<a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String">string</a>
+            = <code>&quot;text&quot;</code>)</code>
+	    //TODO add validation for types
+
+          </div>
+          
+        </div>
+      
+    </div>
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+</section>
+
+      </div>
+    </div>
+  
+</div>
 
   
 
@@ -14710,115 +14824,6 @@ type of object with name.</p>
     </div>
   
 </div>
-
-  
-
-  
-
-  
-</section>
-
-        
-          
-          <section class='p2 mb2 clearfix bg-white minishadow'>
-
-  
-  <div class='clearfix'>
-    
-    <h3 class='fl m0' id='sendemail'>
-      sendEmail
-    </h3>
-    
-    
-  </div>
-  
-
-  <p>This function will send an email to the provided recipients</p>
-
- 
-  
-    <div class='pre p1 fill-light mt0'>sendEmail</div>
-   
-  
-  
-
-  
-  
-  
-  
-  
-  
-
-  
-    <div class='py1 quiet mt1 prose-big'>Parameters</div>
-    <div class='prose'>
-      
-        <div class='space-bottom0'>
-          <div>
-            <span class='code bold'>accessToken</span> <code class='quiet'>(any
-            = <code>&quot;null accessToken&quot;</code>)</code>
-	    
-          </div>
-          
-        </div>
-      
-        <div class='space-bottom0'>
-          <div>
-            <span class='code bold'>sender</span> <code class='quiet'>(<a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String">string</a>
-            = <code>&quot;&quot;</code>)</code>
-	    
-          </div>
-          
-        </div>
-      
-        <div class='space-bottom0'>
-          <div>
-            <span class='code bold'>to</span> <code class='quiet'>(<a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Array">array</a>
-            = <code>&quot;&quot;</code>)</code>
-	    array of email addresses for recipients
-
-          </div>
-          
-        </div>
-      
-        <div class='space-bottom0'>
-          <div>
-            <span class='code bold'>subject</span> <code class='quiet'>(<a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String">string</a>
-            = <code>&quot;&quot;</code>)</code>
-	    
-          </div>
-          
-        </div>
-      
-        <div class='space-bottom0'>
-          <div>
-            <span class='code bold'>message</span> <code class='quiet'>(<a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String">string</a>
-            = <code>&quot;&quot;</code>)</code>
-	    
-          </div>
-          
-        </div>
-      
-        <div class='space-bottom0'>
-          <div>
-            <span class='code bold'>type</span> <code class='quiet'>(<a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String">string</a>
-            = <code>&quot;text&quot;</code>)</code>
-	    //TODO add validation for types
-
-          </div>
-          
-        </div>
-      
-    </div>
-  
-
-  
-
-  
-
-  
-
-  
 
   
 
