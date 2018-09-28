@@ -430,9 +430,9 @@
               
                 
                 <li><a
-                  href='#email---sendemail'
+                  href='#email-childred---sendemail'
                   class="h5 bold black caps">
-                  Email - sendEmail
+                  Email childred - sendEmail
                   
                 </a>
                 
@@ -1150,6 +1150,12 @@
                       </a></li>
                     
                       <li><a
+                        href='#listworkflowgroups'
+                        class='regular pre-open'>
+                        .listWorkflowGroups
+                      </a></li>
+                    
+                      <li><a
                         href='#listworkflowtemplates'
                         class='regular pre-open'>
                         .listWorkflowTemplates
@@ -1255,16 +1261,6 @@
                   
                   
                 </div>
-                
-                </li>
-              
-                
-                <li><a
-                  href='#listworkflowgroups'
-                  class="">
-                  listWorkflowGroups
-                  
-                </a>
                 
                 </li>
               
@@ -6050,8 +6046,8 @@
             <div class='keyline-top-not py2'>
   <section class='py2 clearfix'>
 
-    <h2 id='email---sendemail' class='mt0'>
-      Email - sendEmail
+    <h2 id='email-childred---sendemail' class='mt0'>
+      Email childred - sendEmail
     </h2>
 
     
@@ -6066,8 +6062,8 @@
   
   <div class='clearfix'>
     
-    <h3 class='fl m0' id='email---sendemail'>
-      Email - sendEmail
+    <h3 class='fl m0' id='email-childred---sendemail'>
+      Email childred - sendEmail
     </h3>
     
     
@@ -13519,6 +13515,99 @@ type of object with name.</p>
       </div>
     </div>
   
+    <div class='border-bottom' id='listworkflowgroups'>
+      <div class="clearfix small pointer toggle-sibling">
+        <div class="py1 contain">
+            <a class='icon pin-right py1 dark-link caret-right'>▸</a>
+            <span class='code strong strong truncate'>listWorkflowGroups</span>
+        </div>
+      </div>
+      <div class="clearfix display-none toggle-target">
+        <section class='p2 mb2 clearfix bg-white minishadow'>
+
+  
+
+  <p>This function will return a list of group objects</p>
+
+ 
+  
+    <div class='pre p1 fill-light mt0'>listWorkflowGroups</div>
+   
+  
+  
+
+  
+  
+  
+  
+  
+  
+
+  
+    <div class='py1 quiet mt1 prose-big'>Parameters</div>
+    <div class='prose'>
+      
+        <div class='space-bottom0'>
+          <div>
+            <span class='code bold'>accessToken</span> <code class='quiet'>(<a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String">string</a>
+            = <code>&quot;null accesToken&quot;</code>)</code>
+	    cpaas access token
+
+          </div>
+          
+        </div>
+      
+        <div class='space-bottom0'>
+          <div>
+            <span class='code bold'>offset</span> <code class='quiet'>(<a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number">number</a>
+            = <code>0</code>)</code>
+	    pagination offset
+
+          </div>
+          
+        </div>
+      
+        <div class='space-bottom0'>
+          <div>
+            <span class='code bold'>limit</span> <code class='quiet'>(<a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number">number</a>
+            = <code>10</code>)</code>
+	    pagination limit
+
+          </div>
+          
+        </div>
+      
+        <div class='space-bottom0'>
+          <div>
+            <span class='code bold'>filters</span> <code class='quiet'>(<a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object">object</a>
+            = <code>undefined</code>)</code>
+	    object containing optional filters (start_datetime,end_datetime,template_uuid)
+
+          </div>
+          
+        </div>
+      
+    </div>
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+</section>
+
+      </div>
+    </div>
+  
     <div class='border-bottom' id='listworkflowtemplates'>
       <div class="clearfix small pointer toggle-sibling">
         <div class="py1 contain">
@@ -14621,99 +14710,6 @@ type of object with name.</p>
     </div>
   
 </div>
-
-  
-
-  
-
-  
-</section>
-
-        
-          
-          <section class='p2 mb2 clearfix bg-white minishadow'>
-
-  
-  <div class='clearfix'>
-    
-    <h3 class='fl m0' id='listworkflowgroups'>
-      listWorkflowGroups
-    </h3>
-    
-    
-  </div>
-  
-
-  <p>This function will return a list of group objects</p>
-
- 
-  
-    <div class='pre p1 fill-light mt0'>listWorkflowGroups</div>
-   
-  
-  
-
-  
-  
-  
-  
-  
-  
-
-  
-    <div class='py1 quiet mt1 prose-big'>Parameters</div>
-    <div class='prose'>
-      
-        <div class='space-bottom0'>
-          <div>
-            <span class='code bold'>accessToken</span> <code class='quiet'>(<a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String">string</a>
-            = <code>&quot;null accesToken&quot;</code>)</code>
-	    cpaas access token
-
-          </div>
-          
-        </div>
-      
-        <div class='space-bottom0'>
-          <div>
-            <span class='code bold'>offset</span> <code class='quiet'>(<a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number">number</a>
-            = <code>0</code>)</code>
-	    pagination offset
-
-          </div>
-          
-        </div>
-      
-        <div class='space-bottom0'>
-          <div>
-            <span class='code bold'>limit</span> <code class='quiet'>(<a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number">number</a>
-            = <code>10</code>)</code>
-	    pagination limit
-
-          </div>
-          
-        </div>
-      
-        <div class='space-bottom0'>
-          <div>
-            <span class='code bold'>filters</span> <code class='quiet'>(<a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object">object</a>
-            = <code>undefined</code>)</code>
-	    object containing optional filters (start_datetime,end_datetime,template_uuid)
-
-          </div>
-          
-        </div>
-      
-    </div>
-  
-
-  
-
-  
-
-  
-
-  
 
   
 
