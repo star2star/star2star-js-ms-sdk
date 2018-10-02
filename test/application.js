@@ -350,9 +350,9 @@ describe("Application", function () {
       if (!creds.isValid) return done();
       
       const filters = [];
-      filters["name"] = "Unit-"; //partial string
-      filters["description"] = "unit"; //check case insensitivity
-      filters["status"] = "ac"; //check status
+      filters["name"] = "Unit-Test-Modify";
+      filters["description"] = "Unit-Test";
+      filters["status"] = "active"; //check status
       filters["account_uuid"] = identityData.account_uuid;
       
       s2sMS.Application.listApplications(

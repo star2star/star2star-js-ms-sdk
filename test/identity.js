@@ -278,7 +278,7 @@ describe("Identity MS Unit Test Suite", function () {
             testGroupUuid,
             testMembers
           ).then(responseData => {
-             console.log("Add Members response %j", responseData);
+            //console.log("Add Members response %j", responseData);
             assert(
               responseData.name === "Test" &&
               responseData.total_members === 2

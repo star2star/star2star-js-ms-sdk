@@ -58,7 +58,7 @@ describe("Objects MS Test Suite", function () {
     s2sMS.Objects.createDataObject(
       accessToken,
       "myName",
-      "foo_bar",
+      "objects-unit-test2",
       "the description", {
         a: 1
       }
@@ -88,7 +88,7 @@ describe("Objects MS Test Suite", function () {
       identityData.uuid,
         accessToken,
         "myName",
-        "foo_bar",
+        "objects-unit-test2",
         "the description", {
           a: 1
         }
@@ -130,7 +130,7 @@ describe("Objects MS Test Suite", function () {
 
     // create a new data object
     const objName = "Unit Test Object";
-    const objType = "unit_test_object";
+    const objType = "objects-unit-test2";
     const objDescription = "This object created as part of unit testing";
     const objContent = {
       test: "Test String"
@@ -148,7 +148,7 @@ describe("Objects MS Test Suite", function () {
       s2sMS.Objects.getDataObjectByType(
           identityData.uuid,
           accessToken,
-          "unit_test_object",
+          "objects-unit-test2",
           0, //offset
           10, //limit
           false
@@ -157,7 +157,7 @@ describe("Objects MS Test Suite", function () {
           //console.log('Got objects by type', responseData);
           assert(
             responseData.items.length > 0 &&
-            responseData.items[0].type === "unit_test_object"
+            responseData.items[0].type === "objects-unit-test2"
           );
           done();
           // delete the data object(s)
@@ -187,7 +187,7 @@ describe("Objects MS Test Suite", function () {
       identityData.uuid,
       accessToken,
       "myName",
-      "foo_bar",
+      "objects-unit-test2",
       "the description", {
         a: 1
       }
@@ -231,7 +231,7 @@ describe("Objects MS Test Suite", function () {
 
     const objectPromisArray = [];
 
-    const objType = 'unit_test_object_type';
+    const objType = 'objects-unit-test2';
     const objDescription = 'Unit Test Object for getting objects by type and name';
     const objContent = {
       "myContent": "Unit testing is cool!"
@@ -265,12 +265,12 @@ describe("Objects MS Test Suite", function () {
             true // loadContent
           )
           .then(responseData => {
-            //console.log('GetObjectsByNameAndType response', responseData);
+            console.log('GetObjectsByNameAndType response', responseData.items[0].name);
+            console.log("objNames[1]",objNames[1]);
             assert(
               responseData.items.length > 0 &&
               responseData.items[0].name === objNames[1]
             );
-            done();
           })
           .catch((error) => {
             console.log('Error getting data objects [getUserDataObjectByTypeAndName]', error);
@@ -287,6 +287,7 @@ describe("Objects MS Test Suite", function () {
             console.log('Error deleting objects [getDataObjectsByTypeAndName]', error);
           });
         });
+        done();
       }).catch((error) => { //
         console.log('Error creating data objects [getUserDataObjectByTypeAndName]', error);
         done(new Error(error));

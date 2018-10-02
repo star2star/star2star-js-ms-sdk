@@ -389,7 +389,7 @@ describe("Workflow", function () {
               "data": {
                 "lambda_condition": {
                   "function_name": "dtg_test_lambda",
-                  "parameters": {"decision": true},
+                  "parameters": {"condition":true},
                   "blocking": true,
                   "result_path": "$decision"
                 }
@@ -410,7 +410,7 @@ describe("Workflow", function () {
               "data": {
                 "lambda_condition": {
                   "function_name": "dtg_test_lambda",
-                  "parameters": {"decision": false},
+                  "parameters": {"condition":false},
                   "blocking": true,
                   "result_path": "$decision"
                 }
@@ -686,18 +686,18 @@ describe("Workflow", function () {
         accessToken,
         wfInstanceUUIDv2False
       ).then(response => {
-        //console.log("Get Workflow Instance v2 False History RESPONSE", response);
+        //console.log("Get Workflow Instance v2 False History RESPONSE", response.workflow_vars.decision.message);
         assert(
           response.result_type === "complete" &&
-          response.workflow_vars.decision.message == "params: { decision: false }"
+          response.workflow_vars.decision.message === "params: { condition: false }"
         );
         s2sMS.Workflow.getWfInstanceHistory(
           accessToken,
           wfInstanceUUIDv2True
         ).then(response => {
-          //console.log("Get Workflow Instance v2 True History RESPONSE", response);
+          //console.log("Get Workflow Instance v2 True History RESPONSE", response.workflow_vars.decision.message);
           assert(response.result_type === "complete");
-          assert (response.workflow_vars.decision.message == "params: { decision: true }");
+          assert (response.workflow_vars.decision.message === "params: { condition: true }");
           done();
         })
         .catch(error =>{
@@ -715,8 +715,7 @@ describe("Workflow", function () {
   //TODO Test start and end time filters....nh 8/30/18
   it("Get Workflow Template History", function (done) {
     if (!creds.isValid) return done();
-    const filters = [];
-    filters["verson"] = "0.0.1";
+    const filters = {"version": "0.0.1"};
     s2sMS.Workflow.getWfTemplateHistory(
       accessToken,
       wfTemplateUUID,
@@ -724,9 +723,8 @@ describe("Workflow", function () {
       3,
       filters
     ).then(response => {
-      console.log("uuid",wfTemplateUUID);
-      console.log("Get Workflow Template History RESPONSE", response);
-      //assert(response.items[0].result_type === "cancelled");
+      //console.log("Get Workflow Template History RESPONSE", response);
+      assert(response.items[0].result_type === "cancelled");
       done();
     })
     .catch(error =>{
