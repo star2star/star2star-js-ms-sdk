@@ -25,12 +25,23 @@ s2sMS.Identity.login(creds.CPAAS_KEY, creds.email, creds.password)
     // houston we have an issue
   });
 ```
-
+If you see the following error when using the SDK:
+ 
+```javascript
+ReferenceError: regeneratorRuntime is not defined
+```
+You need to require or import babel polyfill it at the top of the entry point to your application.
+```javascript
+require("babel-polyfill");
+```
 ## Methods
 
 [Please click here for our documentation pages.](https://star2star.github.io/star2star-js-ms-sdk/ "Star2Star Micro Service SDK Documentation")
 
 ## Changes
+* 2.1.53 - Revert babel updates, they break documentation
+* 2.1.52 - Updates to babel
+* 2.1.51 - Updates to babel
 * 2.1.50 - Updates to unit tests
 * 2.1.49 - Add send email
 * 2.1.48 - Add workflow groups support
