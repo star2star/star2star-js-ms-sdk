@@ -111,6 +111,7 @@ toc:
     children: 
       - getSMSNumber
       - getConversationUuid
+      - sendSimpleSMS
       - sendSMS
       - sendSMSMessage
   - name: Oauth

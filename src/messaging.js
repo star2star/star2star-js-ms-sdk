@@ -160,8 +160,54 @@ const getSMSNumber = (accessToken, userUuid) => {
   });
 };
 
+
+/**
+ * @async 
+ * @description This function sends a basic SMS message
+ * @param {string} [accessToken="null access token" - cpaas access token
+ * @param {string} [receiver="null receiver"] - recipient number (+15555555555)
+ * @param {string} [sender="null sender"] - sender number (+15555555555)
+ * @param {string} [message="null message"] - message
+ * @param {type} [type="text"] - message type
+ * @param {*=object} [metadata={}] - optional metadata object
+ * @returns
+ */
+const sendSimpleSMS = (
+  accessToken = "null access token",
+  sender = "null sender",
+  receiver = "null receiver",
+  message = "null message",
+  type = "text",
+  metadata = {}
+) => {
+  const MS = util.getEndpoint("sms");
+  const requestOptions = {
+    method: 'POST',
+    uri: `${MS}/messages/send`,
+    headers: {
+      "Authorization": `Bearer ${accessToken}`,
+      'x-api-version': `${util.getVersion()}`,
+      'Content-type': 'application/json'
+    },
+    body: {
+      "to": receiver,
+      "from": sender,
+      "content": [
+        {
+          "type": type,
+          "body": message
+        }
+      ],
+      "metadata": metadata
+    },
+    json: true
+  };
+  return request(requestOptions);
+};
+
 module.exports = {
   getSMSNumber,
+  sendSimpleSMS,
   sendSMS,
   sendSMSMessage,
   getConversationUuid

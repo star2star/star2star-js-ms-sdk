@@ -160,8 +160,51 @@ var getSMSNumber = function getSMSNumber(accessToken, userUuid) {
   });
 };
 
+/**
+ * @async 
+ * @description This function sends a basic SMS message
+ * @param {string} [accessToken="null access token" - cpaas access token
+ * @param {string} [receiver="null receiver"] - recipient number (+15555555555)
+ * @param {string} [sender="null sender"] - sender number (+15555555555)
+ * @param {string} [message="null message"] - message
+ * @param {type} [type="text"] - message type
+ * @param {*=object} [metadata={}] - optional metadata object
+ * @returns
+ */
+var sendSimpleSMS = function sendSimpleSMS() {
+  var accessToken = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : "null access token";
+  var sender = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : "null sender";
+  var receiver = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : "null receiver";
+  var message = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : "null message";
+  var type = arguments.length > 4 && arguments[4] !== undefined ? arguments[4] : "text";
+  var metadata = arguments.length > 5 && arguments[5] !== undefined ? arguments[5] : {};
+
+  var MS = util.getEndpoint("sms");
+  var requestOptions = {
+    method: 'POST',
+    uri: MS + '/messages/send',
+    headers: {
+      "Authorization": 'Bearer ' + accessToken,
+      'x-api-version': '' + util.getVersion(),
+      'Content-type': 'application/json'
+    },
+    body: {
+      "to": receiver,
+      "from": sender,
+      "content": [{
+        "type": type,
+        "body": message
+      }],
+      "metadata": metadata
+    },
+    json: true
+  };
+  return request(requestOptions);
+};
+
 module.exports = {
   getSMSNumber: getSMSNumber,
+  sendSimpleSMS: sendSimpleSMS,
   sendSMS: sendSMS,
   sendSMSMessage: sendSMSMessage,
   getConversationUuid: getConversationUuid

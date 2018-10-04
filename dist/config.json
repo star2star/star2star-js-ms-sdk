@@ -10,6 +10,7 @@
     "OBJECTS": "/objects",
     "LAMBDA": "/lambda",
     "SHORTURLS": "/shorturl",
+    "SMS": "/sms",
     "CONTACTS": "/contacts",
     "OAUTH": "/oauth",
     "MEDIA": "/media",
