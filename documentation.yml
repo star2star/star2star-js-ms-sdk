@@ -123,12 +123,15 @@ toc:
     children:
       - getDataObject
       - getDataObjects
-      - createDataObject
-      - deleteDataObject
-      - updateDataObject
       - getDataObjectByType
       - getDataObjectByTypeAndName
+      - createDataObject
       - createUserDataObject
+      - createSharedUserObject
+      - deleteDataObject
+      - deleteSharedObject
+      - updateDataObject
+      - updateSharedObject
   - name: Pubsub
     children: 
       - addSubscription
