@@ -62,16 +62,17 @@ describe("Objects MS Test Suite", function () {
         a: 1 //content
       },
       {
-        "rud": [identityData.uuid] //users read, update, delete permissions
+        "rud": [identityData.uuid],
+        "d": ["be2df92f-f6d9-4770-bedb-5447465f9359"] //users read, update, delete permissions
       }
     ).then(responseData => {
-         console.log('create user data object response', responseData);
+        // console.log('create user data object response', responseData);
          userObjectUUID = responseData.uuid;
          done();
       })
       .catch((error) => {
         console.log('Error creating User Object [create and get user object]', error);
-        done(new Error(error));
+        done(new Error(JSON.stringify(error)));
       });
   });
 
@@ -79,7 +80,7 @@ describe("Objects MS Test Suite", function () {
   //   if (!creds.isValid) return done();
   //   s2sMS.Objects.updateDataObject(
   //       accessToken,
-  //       "6c21d1f6-c9e0-4ebe-856d-237b7a35b0c0",
+  //       "79d4b83f-7d1b-4d46-ad59-bc0965fcefd4",
   //       {
   //         a: 2 //content
   //       },
@@ -96,23 +97,23 @@ describe("Objects MS Test Suite", function () {
   //     });
   // });
 
-  // it("Delete User Object", function (done) {
-  //   if (!creds.isValid) return done();
-  //   setTimeout(() => {
-  //     s2sMS.Objects.deleteDataObject(
-  //       accessToken,
-  //       userObjectUUID
-  //     ).then(responseData => {
-  //          console.log('Delete User Object RESPONSE', responseData);
-  //          done();
-  //       })
-  //       .catch((error) => {
-  //         console.log('Delete User Object ERROR', error);
-  //         done(new Error(error));
-  //       });
-  //   }, 5000); //takes a long time for resource groups to show up as associated with an object
+  it("Delete Shared User Object", function (done) {
+    if (!creds.isValid) return done();
+    setTimeout(() => {
+      s2sMS.Objects.deleteSharedObject(
+        accessToken,
+        userObjectUUID
+      ).then(responseData => {
+           console.log('Delete User Object RESPONSE', responseData);
+           done();
+        })
+        .catch((error) => {
+          console.log('Delete User Object ERROR', error);
+          done(new Error(error));
+        });
+    }, 5000); //takes a long time for resource groups to show up as associated with an object
    
-  // });
+  });
 
 
   // it("Create Global Object", function (done) {

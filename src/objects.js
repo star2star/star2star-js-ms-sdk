@@ -275,73 +275,81 @@ const createSharedUserObject = async (
     },
     json: true
   };
-
-  const errors = [];
+  
+  const buildErrors = {
+    _errors : [],
+    get () {
+      return this._errors;
+    },
+    set (errorName, error) {
+      this._errors.push({[errorName]: error});
+    },
+    length () {
+      return this._errors.length;
+    }
+  };
 
   //create the object first
   let newObject;
   try {
     newObject = await request(requestOptions);
+    console.log("New Obj", newObject);
   } catch (error) {
     return Promise.reject(error);
   }
   //need to create permissions resource groups
   if (users && typeof users === "object") {
     const Auth = require("./auth");
+    const Identity = require("./identity");
     const roles = util.config.objectRoles;
-    console.log("ROLES",roles);
-    //create the groups
-    Object.keys(users).forEach(async (prop) => {
-      if(roles.hasOwnProperty(prop)){
-        const userGroup = {
-          "name": `${prop}: ${newObject.uuid}`,
-          "users": [...users[prop]],
-          "description": "resource group"
-        };
-      let group;
-      try{
-        group = await Auth.createUserGroup(accessToken, userUUID, userGroup);
-        console.log("CREATED GROUP",group);
-      } catch (error) {
-        const errorName = `resource_group_create_${prop}`;   
-        errors.push(
-          {[errorName]:error}
-        );
-      } 
-      try {
-        await Auth.assignScopedRoleToUserGroup(
-          accessToken,
-          group.uuid,
-          roles[prop],
-          newObject.uuid
-          );
-      } catch (error) {
-        const errorName = `resource_group_scope_${prop}`;   
-        errors.push(
-          {[errorName]:error}
-        );
-      }
-    }
-      
-    });
-  }
-  if(errors.length > 0){
+    let step = "fetch_identity"; //build a meaningful error if we have one
     try {
-      const cleanUpObject = await deleteDataObject(accessToken,newObject.uuid); //this will clean up the groups created if there are any.
-      errors.push({"clean_up_object":cleanUpObject});
+      //user groups require an account
+      const identity = await Identity.getIdentityDetails(accessToken,userUUID);
+      //create the groups
+      for (const prop in users) {
+        if(roles.hasOwnProperty(prop)){
+          const userGroup = {
+            "name": `${prop}: ${newObject.uuid}`,
+            "users": [...users[prop]],
+            "description": "resource group"
+          };
+          step = `create_group_${prop}`;
+          const group = await Auth.createUserGroup(accessToken, identity.account_uuid, userGroup);
+          console.log("CREATED GROUP",group);
+          step = `scope_group_${prop}`;
+          await Auth.assignScopedRoleToUserGroup(
+            accessToken,
+            group.uuid,
+            roles[prop],
+            newObject.uuid
+          ); 
+        }   
+      }
     } catch (error) {
-      errors.push({"clean_up_object":error});
+      buildErrors.set(step, error);
+    }   
+  }
+  //something went wrong above...revert
+  if(buildErrors.length() > 0){ 
+    try {
+      await new Promise(resolve =>setTimeout(resolve, 4000)); //this is to allow microservices time ack the new group before deleting.
+      const cleanUpObject = await deleteSharedObject(accessToken,newObject.uuid); //this will clean up the groups created if there are any.
+      buildErrors.set("clean_up_object", cleanUpObject);
+    } catch (error) {
+      buildErrors.set("clean_up_object", error);
     }
     return Promise.reject(
       {
         "message": "unable to create new object, permissions assignment failure",
         "statusCode": 400,
-        "errors": errors
+        "errors": buildErrors.get()
       }
     );
   } else {
     //users are not part of the object itself, so tag them onto the response.
     newObject.users = users;
+    console.log("new obj users", newObject.users, users);
     return newObject;
   }
 };
@@ -437,12 +445,12 @@ const deleteSharedObject = async (
   //First determine if there are any resource groups we should try to clean up... this is best effort.
   try {
     const resourceGroups = await Auth.listAccessByGroups(accessToken,data_uuid);
-    
+    console.log("RESOURCE GROUPS FROM DELETE", resourceGroups);
     if (resourceGroups.hasOwnProperty("items") && resourceGroups.items.length > 0) {     
-      resourceGroups.items.forEach(async item => {
+      for (const item in resourceGroups.items) {
         console.log("Resource Groups",item);
-        await Groups.deleteGroup(accessToken,item.user_group.uuid);
-      });
+        await Groups.deleteGroup(accessToken,resourceGroups.items[item].user_group.uuid);
+      }
     }
   } catch (error) {
    return Promise.reject(error);
@@ -459,14 +467,13 @@ const deleteSharedObject = async (
     json: true,
     resolveWithFullResponse: true
   };
-  return new Promise (function (resolve, reject){
-    request(requestOptions).then(function(responseData){
-        responseData.statusCode === 204 ?  resolve({"status":"ok"}): reject({"status":"failed"});
-    }).catch(function(error){
-        reject(error);
-    });
-   });
-
+  
+  try {
+    await request(requestOptions);
+    return Promise.resolve({"status":"ok"});
+  } catch (error) {
+    return Promise.reject({"status":"failed", "error":error});
+  }
 };
 
 /**

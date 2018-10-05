@@ -341,6 +341,52 @@ const  deleteRoleFromUserGroup = (accessToken = "null accessToken", userGroupUUI
 
 /**
  * @async
+ * @description This function lists the user groups associated with a resource
+ * @param {string} [accessToken="null accessToken"] - cpaas access token
+ * @param {string} [resourceUUID="null resourceUUID"] - resource uuid
+ * @returns
+ */
+const listAccessByGroups = (accessToken = "null accessToken", resourceUUID = "null groupUUID") => {
+  const MS = util.getEndpoint("auth");
+  const requestOptions = {
+    method: "GET",
+    uri: `${MS}/resources/${resourceUUID}/user-groups/access`,
+    headers: {
+      "Authorization": `Bearer ${accessToken}`,
+      "Content-type": "application/json",
+      'x-api-version': `${util.getVersion()}`
+    },
+    json: true
+   
+  };
+  return request(requestOptions);
+};
+
+/**
+ * @async
+ * @description This function lists the permissions associated with a resource
+ * @param {string} [accessToken="null accessToken"] - cpaas access token
+ * @param {string} [resourceUUID="null resourceUUID"] - resource uuid
+ * @returns
+ */
+const listAccessByPermissions = (accessToken = "null accessToken", resourceUUID = "null groupUUID") => {
+  const MS = util.getEndpoint("auth");
+  const requestOptions = {
+    method: "GET",
+    uri: `${MS}/resources/${resourceUUID}/permissions/access`,
+    headers: {
+      "Authorization": `Bearer ${accessToken}`,
+      "Content-type": "application/json",
+      'x-api-version': `${util.getVersion()}`
+    },
+    json: true
+   
+  };
+  return request(requestOptions);
+};
+
+/**
+ * @async
  * @description This function lists user groups a role is assigned to.
  * @param {string} [accessToken="null accessToken"] - cpaas access token
  * @param {string} [userGroupUUID="null userGroupUUID"] - user group uuid
@@ -601,6 +647,8 @@ module.exports = {
   deletePermissionFromRole,
   deleteRole,
   deleteRoleFromUserGroup,
+  listAccessByGroups,
+  listAccessByPermissions,
   listUserGroupRoles,
   listPermissions,
   listPermissionRoles,
