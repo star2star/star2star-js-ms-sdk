@@ -31,7 +31,7 @@ var cpaasKey = void 0;
 var setMsHost = function setMsHost() {
   var msHost = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : "https://cpaas.star2star.com/api";
 
-  process.env.MS_HOST = msHost;
+  Util.isBrowser() ? window.s2sJsMsSdk.MS_HOST = msHost : process.env.MS_HOST = msHost;
 };
 
 /**
@@ -42,7 +42,7 @@ var setMsHost = function setMsHost() {
 var setMsAuthHost = function setMsAuthHost() {
   var authHost = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : "https://auth.star2starglobal.net";
 
-  process.env.AUTH_HOST = authHost;
+  Util.isBrowser() ? window.s2sJsMsSdk.AUTH_HOST = authHost : process.env.AUTH_HOST = authHost;
 };
 
 /**
@@ -53,7 +53,7 @@ var setMsAuthHost = function setMsAuthHost() {
 var setMSVersion = function setMSVersion() {
   var version = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : "v1";
 
-  process.env.MS_VERSION = version;
+  Util.isBrowser() ? window.s2sJsMsSdk.MS_VERSION = version : process.env.MS_VERSION = version;
 };
 
 /**
@@ -62,8 +62,7 @@ var setMSVersion = function setMSVersion() {
  * @returns {string} - configured host URL
  */
 var getMsHost = function getMsHost() {
-  // setMsHost(process.env.MS_HOST);
-  return process.env.MS_HOST;
+  return Util.isBrowser() ? window.s2sJsMsSdk.MS_HOST : process.env.MS_HOST;
 };
 
 /**

@@ -17,8 +17,8 @@ var getEndpoint = function getEndpoint() {
   var microservice = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : "NOTHING";
 
   var upperMS = microservice.toUpperCase();
-
-  return config.microservices[upperMS] ? process.env.MS_HOST + config.microservices[upperMS] : undefined;
+  var env = isBrowser() ? window.s2sJsMsSdk : process.env;
+  return config.microservices[upperMS] ? env.MS_HOST + config.microservices[upperMS] : undefined;
 };
 
 /**
@@ -28,7 +28,7 @@ var getEndpoint = function getEndpoint() {
  * @returns {string} - the configured value or undefined
  */
 var getAuthHost = function getAuthHost() {
-  return process.env.AUTH_HOST;
+  return isBrowser() ? window.s2sJsMsSdk.AUTH_HOST : process.env.AUTH_HOST;
 };
 
 /**
@@ -37,8 +37,8 @@ var getAuthHost = function getAuthHost() {
  * @returns {string} - the configured string value or undefined
  */
 var getVersion = function getVersion() {
-
-  return process.env.MS_VERSION ? process.env.MS_VERSION : config.ms_version;
+  var env = isBrowser() ? window.s2sJsMsSdk : process.env;
+  return env.MS_VERSION ? env.MS_VERSION : config.ms_version;
 };
 
 /**
@@ -308,6 +308,22 @@ var aggregate = function () {
   };
 }();
 
+/**
+ * @description Returns true is window is found and sets sdk namespace if needed.
+ *
+ * @returns
+ */
+var isBrowser = function isBrowser() {
+  if (typeof window === 'undefined') {
+    return false;
+  } else {
+    if (!window.hasOwnProperty("s2sJsMsSdk")) {
+      window.s2sJsMsSdk = {};
+    }
+    return true;
+  }
+};
+
 module.exports = {
   getEndpoint: getEndpoint,
   getAuthHost: getAuthHost,
@@ -317,5 +333,6 @@ module.exports = {
   createUUID: createUUID,
   aggregate: aggregate, //TODO Unit test 9/27/18 nh
   filterResponse: filterResponse, //TODO Unit test 9/27/18 nh
-  paginate: paginate //TODO Unit test 9/27/18 nh
+  paginate: paginate, //TODO Unit test 9/27/18 nh
+  isBrowser: isBrowser
 };

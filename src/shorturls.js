@@ -105,7 +105,7 @@ const deleteShortCode = (userUuid = 'null user uuid', accessToken = 'null access
             responseData.statusCode === 204 ?  resolve({"status":"ok"}): reject({"status":"failed"});
         }).catch(function(error){
             reject(error);
-        })
+        });
       });
 };
 

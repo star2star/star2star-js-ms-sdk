@@ -28,7 +28,7 @@ let cpaasKey;
  * @param {string} [msHost="https://cpaas.star2star.com/api"] - valid url for microservice host server
  */
 const setMsHost = (msHost = "https://cpaas.star2star.com/api") => {
-  process.env.MS_HOST = msHost;
+  Util.isBrowser() ? window.s2sJsMsSdk.MS_HOST = msHost : process.env.MS_HOST = msHost;
 };
 
 /**
@@ -37,7 +37,7 @@ const setMsHost = (msHost = "https://cpaas.star2star.com/api") => {
  * @param {string} [msHost="https://auth.star2starglobal.net"] - valid url for microservice host server
  */
 const setMsAuthHost = (authHost = "https://auth.star2starglobal.net") => {
-  process.env.AUTH_HOST = authHost;
+  Util.isBrowser() ? window.s2sJsMsSdk.AUTH_HOST = authHost : process.env.AUTH_HOST = authHost;
 };
 
 /**
@@ -46,7 +46,7 @@ const setMsAuthHost = (authHost = "https://auth.star2starglobal.net") => {
  * @param {string} [version="v1"] - configured microservice version
  */
 const setMSVersion = (version = "v1") => {
-  process.env.MS_VERSION = version;
+  Util.isBrowser() ? window.s2sJsMsSdk.MS_VERSION = version : process.env.MS_VERSION = version;
 };
 
 /**
@@ -55,8 +55,7 @@ const setMSVersion = (version = "v1") => {
  * @returns {string} - configured host URL
  */
 const getMsHost = () => {
-  // setMsHost(process.env.MS_HOST);
-  return process.env.MS_HOST;
+  return Util.isBrowser() ? window.s2sJsMsSdk.MS_HOST : process.env.MS_HOST;
 };
 
 /**

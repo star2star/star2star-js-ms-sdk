@@ -168,8 +168,8 @@ var getSMSNumber = function getSMSNumber(accessToken, userUuid) {
  * @param {string} [sender="null sender"] - sender number (+15555555555)
  * @param {string} [message="null message"] - message
  * @param {type} [type="text"] - message type
- * @param {*=object} [metadata={}] - optional metadata object
- * @returns
+ * @param {object} [metadata={}] - optional metadata object
+ * @returns Promise resolving to sms send confirmation with uuid
  */
 var sendSimpleSMS = function sendSimpleSMS() {
   var accessToken = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : "null access token";
