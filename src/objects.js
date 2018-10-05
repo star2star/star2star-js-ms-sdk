@@ -293,7 +293,6 @@ const createSharedUserObject = async (
   let newObject;
   try {
     newObject = await request(requestOptions);
-    console.log("New Obj", newObject);
   } catch (error) {
     return Promise.reject(error);
   }
@@ -349,7 +348,6 @@ const createSharedUserObject = async (
   } else {
     //users are not part of the object itself, so tag them onto the response.
     newObject.users = users;
-    console.log("new obj users", newObject.users, users);
     return newObject;
   }
 };
@@ -445,10 +443,8 @@ const deleteSharedObject = async (
   //First determine if there are any resource groups we should try to clean up... this is best effort.
   try {
     const resourceGroups = await Auth.listAccessByGroups(accessToken,data_uuid);
-    console.log("RESOURCE GROUPS FROM DELETE", resourceGroups);
     if (resourceGroups.hasOwnProperty("items") && resourceGroups.items.length > 0) {     
       for (const item in resourceGroups.items) {
-        console.log("Resource Groups",item);
         await Groups.deleteGroup(accessToken,resourceGroups.items[item].user_group.uuid);
       }
     }

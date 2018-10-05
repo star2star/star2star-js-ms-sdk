@@ -12,7 +12,7 @@ let creds = {
 
 describe("Objects MS Test Suite", function () {
 
-  let accessToken, identityData;
+  let accessToken, identityData, userObjectUUID;
 
   before(function () {
     // file system uses full path so will do it like this
@@ -66,7 +66,7 @@ describe("Objects MS Test Suite", function () {
         "d": ["be2df92f-f6d9-4770-bedb-5447465f9359"] //users read, update, delete permissions
       }
     ).then(responseData => {
-        // console.log('create user data object response', responseData);
+         console.log('create user data object response', responseData);
          userObjectUUID = responseData.uuid;
          done();
       })
@@ -111,7 +111,7 @@ describe("Objects MS Test Suite", function () {
           console.log('Delete User Object ERROR', error);
           done(new Error(error));
         });
-    }, 5000); //takes a long time for resource groups to show up as associated with an object
+    }, 7000); //takes a long time for resource groups to show up as associated with an object
    
   });
 
