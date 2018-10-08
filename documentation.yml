@@ -175,6 +175,7 @@ toc:
       - getEndpoint
       - getVersion
       - getValueFromObjectTree
+      - isBrowser
       - paginate
       - replaceStaticValues
       - replaceVariables

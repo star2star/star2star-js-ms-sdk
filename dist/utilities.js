@@ -334,5 +334,5 @@ module.exports = {
   aggregate: aggregate, //TODO Unit test 9/27/18 nh
   filterResponse: filterResponse, //TODO Unit test 9/27/18 nh
   paginate: paginate, //TODO Unit test 9/27/18 nh
-  isBrowser: isBrowser
+  isBrowser: isBrowser //TODO Unit test 10/50/18 nh
 };

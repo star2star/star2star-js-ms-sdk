@@ -47,7 +47,7 @@ describe("ShortUrls Test Suite", function () {
            reject(e);
          });
        });
-     })
+     });
   });
 
   it("create / list / delete ", function (done) {
@@ -57,19 +57,18 @@ describe("ShortUrls Test Suite", function () {
       url: "http://www.google.com"
     };
     s2sMS.ShortUrls.createShortUrl(
-      identityData.uuid,
       accessToken,
       options
     ).then(response => {
       //console.log('------->', response);
-      assert(response.hasOwnProperty("short_url_link"))
+      assert(response.hasOwnProperty("short_url_link"));
       s2sMS.ShortUrls.listShortUrls(
         identityData.uuid,
         accessToken
       ).then(response => {
         //console.log('List of ShortUrls', response);
         //TODO issue CSRVS-77 content rename to items 
-        assert(response.hasOwnProperty("content") && response.content.length > 0)
+        assert(response.hasOwnProperty("content") && response.content.length > 0);
         setTimeout(()=>{
           s2sMS.ShortUrls.deleteShortCode(
             identityData.uuid,
@@ -78,16 +77,16 @@ describe("ShortUrls Test Suite", function () {
           ).then(response => {
             //console.log(response);
             assert(response.status === "ok");
-            done()
+            done();
           }).catch(error=>{
-            console.log("Error Deleting ShortUrl", error)
+            console.log("Error Deleting ShortUrl", error);
             done(new Error(error));
           });
-        }, 1000)
+        }, 1000);
       })
       .catch((error) => {
         console.log('Error listing shortUrls', error);
-        done(new Error(error))
+        done(new Error(error));
       });
     })
     .catch((error) => {

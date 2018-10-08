@@ -39,6 +39,7 @@ require("babel-polyfill");
 [Please click here for our documentation pages.](https://star2star.github.io/star2star-js-ms-sdk/ "Star2Star Micro Service SDK Documentation")
 
 ## Changes
+* 2.1.58 - Update create shortUrl
 * 2.1.57 - Fix browser namespacing
 * 2.1.56 - Add browser support
 * 2.1.55 - Update simpleSMS unit test

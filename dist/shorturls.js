@@ -36,7 +36,6 @@ var listShortUrls = function listShortUrls() {
 /**
  * @async
  * @description This function will create a new short url.
- * @param {string} [userUuid='null user uuid'] - account_uuid
  * @param {string} [accessToken='null accessToken'] - access token for cpaas systems
  * @param {object} [options={}] - {
   "account_uuid": "string",
@@ -57,9 +56,8 @@ var listShortUrls = function listShortUrls() {
  * @returns {Promise<object>} - Promise resolving to a data object containing a list of short urls
  */
 var createShortUrl = function createShortUrl() {
-    var userUuid = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 'null user uuid';
-    var accessToken = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 'null accessToken';
-    var options = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : {};
+    var accessToken = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 'null accessToken';
+    var options = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
 
     var MS = util.getEndpoint("shorturls");
 
@@ -75,8 +73,7 @@ var createShortUrl = function createShortUrl() {
         headers: {
             'Authorization': 'Bearer ' + accessToken,
             'Content-type': 'application/json',
-            'x-api-version': '' + util.getVersion(),
-            'user_uuid': userUuid
+            'x-api-version': '' + util.getVersion()
         },
         json: true
     };

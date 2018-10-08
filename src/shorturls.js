@@ -31,7 +31,6 @@ const listShortUrls = (userUuid = 'null user uuid', accessToken = 'null accessTo
 /**
  * @async
  * @description This function will create a new short url.
- * @param {string} [userUuid='null user uuid'] - account_uuid
  * @param {string} [accessToken='null accessToken'] - access token for cpaas systems
  * @param {object} [options={}] - {
   "account_uuid": "string",
@@ -51,7 +50,7 @@ const listShortUrls = (userUuid = 'null user uuid', accessToken = 'null accessTo
  }
  * @returns {Promise<object>} - Promise resolving to a data object containing a list of short urls
  */
-const createShortUrl = (userUuid = 'null user uuid', accessToken = 'null accessToken',
+const createShortUrl = (accessToken = 'null accessToken',
     options = {}) => {
     const MS = util.getEndpoint("shorturls");
 
@@ -67,8 +66,7 @@ const createShortUrl = (userUuid = 'null user uuid', accessToken = 'null accessT
         headers: {
             'Authorization': `Bearer ${accessToken}`,
             'Content-type': 'application/json',
-            'x-api-version': `${util.getVersion()}`,
-            'user_uuid': userUuid
+            'x-api-version': `${util.getVersion()}`
         },
         json: true
     };
