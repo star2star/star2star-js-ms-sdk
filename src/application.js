@@ -18,47 +18,75 @@ const validateApplication = (application = {}) => {
     rStatus.status = 400;
     rStatus.message = "application must be an object";
   } else {
-    
     const vError = [];
-    application.hasOwnProperty("name") && application.name.length !== 0 ? vError: vError.push("name missing or empty");
-    application.hasOwnProperty("type") && application.type === "starpaas_application" ? vError: vError.push("name missing or empty");
-    application.hasOwnProperty("description") && application.description.length !==0 ? vError: vError.push("description missing or empty");
-    application.hasOwnProperty("content_type") && application.content_type === "application/json" ? vError: vError.push("content_type missing or incorrect");
-    
-    if (application.hasOwnProperty("content") && typeof application.content === "object") {
-      application.content.hasOwnProperty("account_uuid") ? vError: vError.push("account_uuid missing");
-      application.content.hasOwnProperty("admins") ? vError: vError.push("admins missing");   
-      if (application.content.hasOwnProperty("versions") && 
-        typeof application.content.versions === "object" && 
-        Object.keys(application.content.versions).length !== 0) {
-        const versions = application.content.versions;
-        Object.keys(versions).forEach(version=>{
-          RegExp('^([0-9]+[.]){2}[0-9]+$').test(version) ? vError:  vError.push(`version "${version}" invalid format`); //check for major.minor.revision
-          
-          versions[version].hasOwnProperty("flows") &&
-            Array.isArray(versions[version].flows)? vError: vError.push(`version "${version}" flows missing or not array`);
-          
-          versions[version].hasOwnProperty("workspaces") && 
-            Array.isArray(versions[version].workspaces) ? vError: vError.push(`version "${version}" workspaces missing or not array`);
+    application.hasOwnProperty("name") && application.name.length !== 0
+      ? vError
+      : vError.push("name missing or empty");
+    application.hasOwnProperty("type") &&
+    application.type === "starpaas_application"
+      ? vError
+      : vError.push("name missing or empty");
+    application.hasOwnProperty("description") &&
+    application.description.length !== 0
+      ? vError
+      : vError.push("description missing or empty");
+    application.hasOwnProperty("content_type") &&
+    application.content_type === "application/json"
+      ? vError
+      : vError.push("content_type missing or incorrect");
 
-          versions[version].hasOwnProperty("status") && 
-            STATUSES.includes(versions[version].status) ? vError : vError.push(`version "${version}" status missing or invalid`);
+    if (
+      application.hasOwnProperty("content") &&
+      typeof application.content === "object"
+    ) {
+      application.content.hasOwnProperty("account_uuid")
+        ? vError
+        : vError.push("account_uuid missing");
+      application.content.hasOwnProperty("admins")
+        ? vError
+        : vError.push("admins missing");
+      if (
+        application.content.hasOwnProperty("versions") &&
+        typeof application.content.versions === "object" &&
+        Object.keys(application.content.versions).length !== 0
+      ) {
+        const versions = application.content.versions;
+        Object.keys(versions).forEach(version => {
+          RegExp("^([0-9]+[.]){2}[0-9]+$").test(version)
+            ? vError
+            : vError.push(`version "${version}" invalid format`); //check for major.minor.revision
+
+          versions[version].hasOwnProperty("flows") &&
+          Array.isArray(versions[version].flows)
+            ? vError
+            : vError.push(`version "${version}" flows missing or not array`);
+
+          versions[version].hasOwnProperty("workspaces") &&
+          Array.isArray(versions[version].workspaces)
+            ? vError
+            : vError.push(
+                `version "${version}" workspaces missing or not array`
+              );
+
+          versions[version].hasOwnProperty("status") &&
+          STATUSES.includes(versions[version].status)
+            ? vError
+            : vError.push(`version "${version}" status missing or invalid`);
         });
       } else {
-      vError.push("versions missing - empty - or not an object");
+        vError.push("versions missing - empty - or not an object");
       }
     } else {
       vError.push("content missing or not object");
     }
-    
+
     if (vError.length !== 0) {
       const message = vError.join();
       rStatus.status = 400;
       rStatus.message = message;
     }
-    
   }
-  //console.log("RETURNING RSTATUS",rStatus);  
+  //console.log("RETURNING RSTATUS",rStatus);
   return rStatus;
 };
 
@@ -79,19 +107,19 @@ const createApplication = (
 ) => {
   const MS = util.getEndpoint("objects");
   const vApp = validateApplication(body);
-  if(vApp.status === 200) {
-      const requestOptions = {
-        method: "POST",
-        uri: `${MS}/users/${userUUID}/objects`,
-        body: vApp.application,
-        headers: {
-          'Authorization': `Bearer ${accessToken}`,
-          'Content-type': 'application/json',
-          'x-api-version': `${util.getVersion()}`
-        },
-        json: true
-      };
-      return request(requestOptions);
+  if (vApp.status === 200) {
+    const requestOptions = {
+      method: "POST",
+      uri: `${MS}/users/${userUUID}/objects`,
+      body: vApp.application,
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+        "Content-type": "application/json",
+        "x-api-version": `${util.getVersion()}`
+      },
+      json: true
+    };
+    return request(requestOptions);
   } else {
     return Promise.reject(vApp);
   }
@@ -122,11 +150,7 @@ const getApplication = (
   access_token = "null access_token",
   applicationObjectUUID = "null uuid"
 ) => {
-  return Objects.getDataObject(
-    access_token,
-    applicationObjectUUID,
-    true
-  );
+  return Objects.getDataObject(access_token, applicationObjectUUID, true);
 };
 
 /**
@@ -154,17 +178,19 @@ const listApplications = (
       0, // FIXME
       100, // FIXME
       true
-    ).then(response =>{
-      if(filters) {
-        response = util.filterResponse(response, filters);
-      }
-      // Paginate...This pagination is synthetic and limited to the original 100 objects we get from the API
-      response = util.paginate(response, offset, limit);
-      //console.log("PAGINATED RESPONSE", response);
-      resolve(response);
-    }).catch(error => {
-      reject(error);
-    });
+    )
+      .then(response => {
+        if (filters) {
+          response = util.filterResponse(response, filters);
+        }
+        // Paginate...This pagination is synthetic and limited to the original 100 objects we get from the API
+        response = util.paginate(response, offset, limit);
+        //console.log("PAGINATED RESPONSE", response);
+        resolve(response);
+      })
+      .catch(error => {
+        reject(error);
+      });
   });
 };
 
@@ -183,15 +209,10 @@ const modifyApplication = (
 ) => {
   const vApp = validateApplication(application);
   if (vApp.status === 200) {
-    return Objects.updateDataObject(
-      access_token,
-      uuid,
-      vApp.application
-    );
+    return Objects.updateDataObject(access_token, uuid, vApp.application);
   } else {
     return Promise.reject(vApp);
   }
-  
 };
 
 module.exports = {

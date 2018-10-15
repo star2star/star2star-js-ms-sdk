@@ -2,9 +2,9 @@
 "use strict";
 const util = require("./utilities");
 const request = require("request-promise");
-const emailValidator = require('email-validator');
+const emailValidator = require("email-validator");
 
-const validateEmail = (email) => {
+const validateEmail = email => {
   const rStatus = {
     status: 200,
     message: "valid",
@@ -12,10 +12,16 @@ const validateEmail = (email) => {
   };
 
   const vError = [];
-  emailValidator.validate(email.from) ? vError:  vError.push(`sender "${email.from}" invalid format`);
+  emailValidator.validate(email.from)
+    ? vError
+    : vError.push(`sender "${email.from}" invalid format`);
   if (Array.isArray(email.to) && email.to.length > 0) {
-    email.to.forEach((emailAddress) =>{
-      emailValidator.validate(emailAddress) ? vError:  vError.push(`recipient in "to" parameter "${emailAddress}" invalid format`);
+    email.to.forEach(emailAddress => {
+      emailValidator.validate(emailAddress)
+        ? vError
+        : vError.push(
+          `recipient in "to" parameter "${emailAddress}" invalid format`
+        );
     });
   } else {
     vError.push("to is not array or is empty");
@@ -26,9 +32,8 @@ const validateEmail = (email) => {
     rStatus.status = 400;
     rStatus.message = message;
   }
-    
-  
-  //console.log("RETURNING RSTATUS",rStatus);  
+
+  //console.log("RETURNING RSTATUS",rStatus);
   return rStatus;
 };
 
@@ -40,6 +45,7 @@ const validateEmail = (email) => {
  * @param {string} [subject=""] - message subject
  * @param {string} [message=""] - mesaage
  * @param {string} [type="text"] //TODO add validation for types
+ * @param {object} [trace = {}] - optional microservice lifecycle trace headers
  * @returns
  */
 const sendEmail = (
@@ -48,20 +54,18 @@ const sendEmail = (
   to = [],
   subject = "",
   message = "",
-  type = "text"
+  type = "text",
+  trace = {}
 ) => {
-  
-  const validEmail = validateEmail(
-    {
-      "content": {
-        "body": message,
-        "type": type
-      },
-      "from": sender,
-      "subject": subject,
-      "to" : to
-    }
-  );
+  const validEmail = validateEmail({
+    content: {
+      body: message,
+      type: type
+    },
+    from: sender,
+    subject: subject,
+    to: to
+  });
 
   if (validEmail.status === 200) {
     const MS = util.getEndpoint("email");
@@ -70,13 +74,14 @@ const sendEmail = (
       uri: `${MS}/messages/send`,
       headers: {
         "Content-type": "application/json",
-        "Authorization": `Bearer ${accessToken}`,
-        'x-api-version': `${util.getVersion()}`
+        Authorization: `Bearer ${accessToken}`,
+        "x-api-version": `${util.getVersion()}`
       },
-      "body" : validEmail.email,
-      json:true 
+      body: validEmail.email,
+      json: true
     };
-  return request(requestOptions);
+    util.addRequestTrace(requestOptions, trace);
+    return request(requestOptions);
   } else {
     return Promise.reject(validEmail);
   }

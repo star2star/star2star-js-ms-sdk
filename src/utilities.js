@@ -1,7 +1,9 @@
 /* global require process module*/
 "use strict";
-const config = require('./config.json');
-
+const config = require("./config.json");
+const uuidv4 = require("uuid/v4");
+const winston = require("winston");
+const logLevel = config.localDebug ? "debug" : "silent";
 /**
  *
  * @description This function will determine microservice endpoint URI.
@@ -11,7 +13,9 @@ const config = require('./config.json');
 const getEndpoint = (microservice = "NOTHING") => {
   const upperMS = microservice.toUpperCase();
   const env = isBrowser() ? window.s2sJsMsSdk : process.env;
-  return config.microservices[upperMS] ? env.MS_HOST + config.microservices[upperMS] : undefined;
+  return config.microservices[upperMS]
+    ? env.MS_HOST + config.microservices[upperMS]
+    : undefined;
 };
 
 /**
@@ -31,7 +35,7 @@ const getAuthHost = () => {
  */
 const getVersion = () => {
   const env = isBrowser() ? window.s2sJsMsSdk : process.env;
-  return env.MS_VERSION ? env.MS_VERSION  : config.ms_version;
+  return env.MS_VERSION ? env.MS_VERSION : config.ms_version;
 };
 
 /**
@@ -40,15 +44,15 @@ const getVersion = () => {
  * @param {string} matchString - the string that we are matching on.
  * @returns {string} - the string value or undefined
  */
-const replaceStaticValues = (matchString) => {
+const replaceStaticValues = matchString => {
   const TDATE = new Date();
-  const MONTH = "" + ((TDATE).getMonth() + 1);
-  const MYDAY = "" + ((TDATE).getDate());
+  const MONTH = "" + (TDATE.getMonth() + 1);
+  const MYDAY = "" + TDATE.getDate();
   const aValues = {
-    'datetime': TDATE,
-    'YYYY': (TDATE).getFullYear(),
-    'MM': ("0" + MONTH).substring((MONTH.length + 1 - 2)),
-    'DD': ("0" + MYDAY).substring((MYDAY.length + 1 - 2))
+    datetime: TDATE,
+    YYYY: TDATE.getFullYear(),
+    MM: ("0" + MONTH).substring(MONTH.length + 1 - 2),
+    DD: ("0" + MYDAY).substring(MYDAY.length + 1 - 2)
   };
   //console.log('matchstring:',("0"+DAY).substring((DAY.length+1 - 2)), matchString, DAY, aValues)
   return aValues[matchString];
@@ -62,8 +66,7 @@ const replaceStaticValues = (matchString) => {
  * @returns {string} - the string value or undefined
  */
 const getValueFromObjectTree = (matchString = "", objectTree = {}) => {
-
-  const mString = matchString.replace(/%/g, '');
+  const mString = matchString.replace(/%/g, "");
   const sValue = replaceStaticValues(mString);
   if (sValue) {
     return sValue;
@@ -74,16 +77,14 @@ const getValueFromObjectTree = (matchString = "", objectTree = {}) => {
     //console.log('rrrr', matchString, objectTree[mString])
     xReturn = objectTree[mString];
   } else {
-
-    xReturn = Object.keys(objectTree).reduce((p, c, i, a) => {
+    xReturn = Object.keys(objectTree).reduce((p, c) => {
       if (p === undefined) {
         //console.log(p)
-        if (typeof (objectTree[c]) === 'object') {
+        if (typeof objectTree[c] === "object") {
           return getValueFromObjectTree(mString, objectTree[c]);
         }
       }
       return p;
-
     }, undefined);
   }
   //console.log('bbbb', matchString, xReturn)
@@ -104,11 +105,15 @@ const replaceVariables = (inputValue = "", objectTree = {}) => {
 
   const arrayOfMatches = inputValue.match(myRegex);
 
-  arrayOfMatches !== null && arrayOfMatches.forEach((theMatch) => {
-    const retrievedValue = getValueFromObjectTree(theMatch, objectTree);
-    //console.log('^^^^^^^^', theMatch, retrievedValue)
-    returnString = returnString.replace(theMatch, retrievedValue ? retrievedValue : theMatch);
-  });
+  arrayOfMatches !== null &&
+    arrayOfMatches.forEach(theMatch => {
+      const retrievedValue = getValueFromObjectTree(theMatch, objectTree);
+      //console.log('^^^^^^^^', theMatch, retrievedValue)
+      returnString = returnString.replace(
+        theMatch,
+        retrievedValue ? retrievedValue : theMatch
+      );
+    });
 
   return returnString;
 };
@@ -120,14 +125,17 @@ const replaceVariables = (inputValue = "", objectTree = {}) => {
  */
 const createUUID = () => {
   let d = new Date().getTime();
-  if (typeof performance !== 'undefined' && typeof performance.now === 'function') {
+  if (
+    typeof performance !== "undefined" &&
+    typeof performance.now === "function"
+  ) {
     d += performance.now(); //use high-precision timer if available
   }
 
-  return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, (c) => {
+  return "xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx".replace(/[xy]/g, c => {
     var r = (d + Math.random() * 16) % 16 | 0;
     d = Math.floor(d / 16);
-    return (c === 'x' ? r : (r & 0x3 | 0x8)).toString(16);
+    return (c === "x" ? r : (r & 0x3) | 0x8).toString(16);
   });
 };
 
@@ -141,13 +149,15 @@ const createUUID = () => {
  */
 const paginate = (response, offset = 0, limit = 10) => {
   const total = response.items.length;
-  const paginatedResponse = {"items":response.items.slice(offset, (offset + limit))};
+  const paginatedResponse = {
+    items: response.items.slice(offset, offset + limit)
+  };
   const count = paginatedResponse.items.length;
   paginatedResponse.metadata = {
-    "total": total,
-    "offset": offset,
-    "count": count,
-    "limit": limit
+    total: total,
+    offset: offset,
+    count: count,
+    limit: limit
   };
   return paginatedResponse;
 };
@@ -163,24 +173,28 @@ const filterResponse = (response, filters) => {
   //console.log("*****FILTERS*****", filters);
   Object.keys(filters).forEach(filter => {
     const filteredResponse = response.items.filter(filterItem => {
-      let found=false;
+      let found = false;
       const doFilter = (obj, filter) => {
-        Object.keys(obj).forEach(prop =>{
-          if(found) return;
+        Object.keys(obj).forEach(prop => {
+          if (found) return;
           //not seaching through arrays
           if (!Array.isArray(obj[prop])) {
-            if ((typeof obj[prop] === "string") || (typeof obj[prop] === "number") || (typeof obj[prop] === "boolean")){
+            if (
+              typeof obj[prop] === "string" ||
+              typeof obj[prop] === "number" ||
+              typeof obj[prop] === "boolean"
+            ) {
               // console.log("PROP", prop);
               // console.log("OBJ[PROP]", obj[prop]);
               // console.log("FILTER", filter);
               // console.log("FILTERS[FILTER}",filters[filter]);
-              found = ((prop === filter) && (obj[prop] === filters[filter]));
+              found = prop === filter && obj[prop] === filters[filter];
               return;
             } else if (typeof obj[prop] === "object") {
               //console.log("************ Filter recursing **************",obj[prop]);
               return doFilter(obj[prop], filter);
             }
-          } 
+          }
         });
         //console.log("FOUND", found);
         return found;
@@ -201,12 +215,14 @@ const filterResponse = (response, filters) => {
  * @param {object} requestOptions
  * @returns
  */
-const aggregate = async (request, requestOptions) => {
-  //requestOptions.qs.limit = 10; //uncomment to force pagination for testing.
+const aggregate = async (request, requestOptions, trace = {}) => {
+  requestOptions.qs.limit = 10; //uncomment to force pagination for testing.
   let total,
-      offset = 0;
-    
-  const makeRequest = async (request, requestOptions) => {
+    offset = 0;
+
+  const makeRequest = async (request, requestOptions, trace = {}) => {
+    const nextTrace = generateNewMetaData(trace);
+    addRequestTrace(requestOptions, nextTrace);
     try {
       const response = await request(requestOptions);
       total = response.metadata.total;
@@ -228,10 +244,10 @@ const aggregate = async (request, requestOptions) => {
       }
     } catch (error) {
       return Promise.reject(error);
-    }   
+    }
   };
 
-  return await makeRequest(request, requestOptions);
+  return await makeRequest(request, requestOptions, trace);
 };
 
 /**
@@ -240,25 +256,78 @@ const aggregate = async (request, requestOptions) => {
  * @returns
  */
 const isBrowser = () => {
-  if (typeof window === 'undefined') {
+  if (typeof window === "undefined") {
     return false;
   } else {
     if (!window.hasOwnProperty("s2sJsMsSdk")) {
       window.s2sJsMsSdk = {};
     }
     return true;
-  }  
+  }
+};
+
+const addRequestTrace = (request, trace = {}) => {
+  const headerKeys = ["id", "trace"];
+
+  headerKeys.forEach(keyName => {
+    if (typeof trace === "object" && trace.hasOwnProperty(keyName)) {
+      request.headers[keyName] = trace[keyName];
+      logger.debug(`Found Trace ${keyName}: ${request.headers[keyName]}`);
+    } else {
+      request.headers[keyName] = uuidv4();
+      logger.debug(`Assigning Trace ${keyName}: ${request.headers[keyName]}`);
+    }
+  });
+
+  return request;
+};
+
+const logger = winston.createLogger({
+  level: logLevel,
+  transports: [
+    new winston.transports.Console({
+      format: winston.format.simple()
+    })
+  ]
+});
+
+const generateNewMetaData = (oldMetaData = {}) => {
+  let rObject = {};
+  if (oldMetaData.hasOwnProperty("id")) {
+    rObject.parent = oldMetaData.id;
+  }
+
+  if (oldMetaData.hasOwnProperty("trace")) {
+    rObject.trace = oldMetaData.trace;
+  } else {
+    rObject.trace = uuidv4();
+  }
+
+  if (config.msDebug) {
+    rObject.debug = true;
+  } else if (oldMetaData.hasOwnProperty("debug")) {
+    rObject.debug = oldMetaData.debug;
+  } else {
+    rObject.debug = false;
+  }
+
+  rObject.id = uuidv4();
+
+  return rObject;
 };
 
 module.exports = {
   getEndpoint,
   getAuthHost,
-  getVersion, 
+  getVersion,
   config,
   replaceVariables,
   createUUID,
   aggregate, //TODO Unit test 9/27/18 nh
   filterResponse, //TODO Unit test 9/27/18 nh
   paginate, //TODO Unit test 9/27/18 nh
-  isBrowser //TODO Unit test 10/50/18 nh
+  isBrowser, //TODO Unit test 10/05/18 nh
+  addRequestTrace, //TODO Unit test 10/10/18 nh
+  logger, //TODO Unit test 10/11/18 nh
+  generateNewMetaData
 };

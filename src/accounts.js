@@ -8,9 +8,14 @@ const request = require("request-promise");
  * @description This function will create a relationship between two accounts.
  * @param {string} [accessToken="null access token"]
  * @param {string} [body="null body"]
+ * @param {object} [trace = {}] - optional microservice lifecycle trace headers 
  * @returns {Promise<object>} - Promise resolving to a data object containing new relationship
  */
-const createRelationship = (accessToken = "null access token", body = "null body") => {
+const createRelationship = (
+  accessToken = "null access token",
+  body = "null body",
+  trace = {}
+) => {
   const MS = util.getEndpoint("accounts");
   const requestOptions = {
     method: "POST",
@@ -19,11 +24,12 @@ const createRelationship = (accessToken = "null access token", body = "null body
     resolveWithFullResponse: true,
     json: true,
     headers: {
-      "Authorization": `Bearer ${accessToken}`,
+      Authorization: `Bearer ${accessToken}`,
       "Content-type": "application/json",
-      'x-api-version': `${util.getVersion()}`
+      "x-api-version": `${util.getVersion()}`
     }
   };
+  util.addRequestTrace(requestOptions, trace);
   return request(requestOptions);
 };
 
@@ -35,62 +41,73 @@ const createRelationship = (accessToken = "null access token", body = "null body
  * @param {number} [limit=10] - optional; return a specified number of accounts
  * @param {string} [accountType=""] - optional; "Reseller, MasterReseller, Customer"
  * @param {string} [expand=""] optional; expand="relationships"
+ * @param {object} [trace = {}] - optional microservice lifecycle trace headers 
  * @returns {Promise<object>} - Promise resolving to a data object containing a list of accounts
  */
-const listAccounts = (accessToken = "null accessToken", offset = 0, limit = 10, accountType = undefined, expand = undefined) => {
-    const MS = util.getEndpoint("accounts");
-    const requestOptions = {
-      method: "GET",
-      uri: `${MS}/accounts`,
-      qs: {
-        offset: offset,
-        limit: limit,
-        type: accountType,
-        expand: expand
-      },
-      headers: {
-        "Authorization": `Bearer ${accessToken}`,
-        "Content-type": "application/json",
-        'x-api-version': `${util.getVersion()}`
-      },
-      json: true
-     
-    };
-    
-    if (accountType) {
-      requestOptions.qs.type = accountType;
-    }
-    
-    if (expand) {
-      requestOptions.qs.expand = expand;
-    }
-    //console.log("REQUEST_OPTIONS",requestOptions);
-  
-    return request(requestOptions);
+const listAccounts = (
+  accessToken = "null accessToken",
+  offset = 0,
+  limit = 10,
+  accountType = undefined,
+  expand = undefined,
+  trace = {}
+) => {
+  const MS = util.getEndpoint("accounts");
+  const requestOptions = {
+    method: "GET",
+    uri: `${MS}/accounts`,
+    qs: {
+      offset: offset,
+      limit: limit,
+      type: accountType,
+      expand: expand
+    },
+    headers: {
+      Authorization: `Bearer ${accessToken}`,
+      "Content-type": "application/json",
+      "x-api-version": `${util.getVersion()}`
+    },
+    json: true
   };
-  
+  util.addRequestTrace(requestOptions, trace);
+  if (accountType) {
+    requestOptions.qs.type = accountType;
+  }
+
+  if (expand) {
+    requestOptions.qs.expand = expand;
+  }
+  //console.log("REQUEST_OPTIONS",requestOptions);
+
+  return request(requestOptions);
+};
+
 /**
  * @async
  * @description This function creates a new account.
  * @param {string} [accessToken="null accessToken"] - access token for cpaas systems
  * @param {string} [body="null body"] - object containing account details
-* @returns {Promise<object>} - Promise resolving to an account data object
+ * @param {object} [trace = {}] - optional microservice lifecycle trace headers 
+ * @returns {Promise<object>} - Promise resolving to an account data object
  */
-const createAccount = (accessToken = "null accessToken", body = "null body") => {
+const createAccount = (
+  accessToken = "null accessToken",
+  body = "null body",
+  trace = {}
+) => {
   const MS = util.getEndpoint("accounts");
   const requestOptions = {
     method: "POST",
     uri: `${MS}/accounts`,
     body: body,
     headers: {
-      "Authorization": `Bearer ${accessToken}`,
+      Authorization: `Bearer ${accessToken}`,
       "Content-type": "application/json",
-      'x-api-version': `${util.getVersion()}`
+      "x-api-version": `${util.getVersion()}`
     },
     json: true
-   
   };
-  //console.log("REQUEST_OPTIONS",requestOptions);
+  util.addRequestTrace(requestOptions, trace);
 
   return request(requestOptions);
 };
@@ -101,9 +118,14 @@ const createAccount = (accessToken = "null accessToken", body = "null body") => 
  * @param {string} [accessToken="null access token"] - access token for cpaas systems
  * @param {string} [accountUUID="null account uuid"] - account_uuid for an star2star account (customer)
  * @param {string} [expand = "identities"] - expand data in response; currently "identities" or "relationship"
+ * @param {object} [trace = {}] - optional microservice lifecycle trace headers 
  * @returns {Promise<object>} - Promise resolving to an identity data object
  */
-const getAccount = (accessToken = "null access token", accountUUID = "null account uuid") => {
+const getAccount = (
+  accessToken = "null access token",
+  accountUUID = "null account uuid",
+  trace = {}
+) => {
   const MS = util.getEndpoint("accounts");
   const requestOptions = {
     method: "GET",
@@ -112,12 +134,13 @@ const getAccount = (accessToken = "null access token", accountUUID = "null accou
       expand: "relationships"
     },
     headers: {
-      "Authorization": `Bearer ${accessToken}`,
+      Authorization: `Bearer ${accessToken}`,
       "Content-type": "application/json",
-      'x-api-version': `${util.getVersion()}`
+      "x-api-version": `${util.getVersion()}`
     },
     json: true
   };
+  util.addRequestTrace(requestOptions, trace);
   return request(requestOptions);
 };
 
@@ -127,9 +150,15 @@ const getAccount = (accessToken = "null access token", accountUUID = "null accou
  * @param {string} [accessToken="null access token"] - access token for cpaas systems
  * @param {string} [accountUUID="null account uuid"]
  * @param {string} [body="null body"]
+ * @param {object} [trace = {}] - optional microservice lifecycle trace headers 
  * @returns {Promise<object>} - Promise resolving to a status data object
  */
-const modifyAccount = (accessToken = "null access token", accountUUID = "null account uuid", body = "null body") => {
+const modifyAccount = (
+  accessToken = "null access token",
+  accountUUID = "null account uuid",
+  body = "null body",
+  trace = {}
+) => {
   //body = JSON.stringify(body);
   const MS = util.getEndpoint("accounts");
   const requestOptions = {
@@ -139,19 +168,24 @@ const modifyAccount = (accessToken = "null access token", accountUUID = "null ac
     resolveWithFullResponse: true,
     json: true,
     headers: {
-      "Authorization": `Bearer ${accessToken}`,
+      Authorization: `Bearer ${accessToken}`,
       "Content-type": "application/json",
-      'x-api-version': `${util.getVersion()}`
+      "x-api-version": `${util.getVersion()}`
     }
   };
+  util.addRequestTrace(requestOptions, trace);
 
-  return new Promise (function (resolve, reject){
-      request(requestOptions).then(function(responseData){
-          responseData.statusCode === 202 ?  resolve({"status":"ok"}): reject({"status":"failed"});
-      }).catch(function(error){
-          reject(error);
+  return new Promise(function(resolve, reject) {
+    request(requestOptions)
+      .then(function(responseData) {
+        responseData.statusCode === 202
+          ? resolve({ status: "ok" })
+          : reject({ status: "failed" });
+      })
+      .catch(function(error) {
+        reject(error);
       });
-  }); 
+  });
 };
 
 /**
@@ -159,31 +193,40 @@ const modifyAccount = (accessToken = "null access token", accountUUID = "null ac
  * @description This function returns all available accounts.
  * @param {string} [accessToken="null accessToken"] - access token for cpaas system
  * @param {string} [accountUUID="null account uuid"] - account uuid of the parent
- * @param {number} [offset=0] - what page number you want 
- * @param {number} [limit=10] - size of the page or number of records to return 
+ * @param {number} [offset=0] - what page number you want
+ * @param {number} [limit=10] - size of the page or number of records to return
+ * @param {object} [trace = {}] - optional microservice lifecycle trace headers 
  * @returns {Promise<object>} - Promise resolving to a data object containing a list of accounts
  */
-//TODO add sort order also 
-const listAccountRelationships = (accessToken = "null accessToken", accountUUID = "null account uuid", offset=0, limit=10, accountType=undefined, expand="accounts") => {
+//TODO add sort order also
+const listAccountRelationships = (
+  accessToken = "null accessToken",
+  accountUUID = "null account uuid",
+  offset = 0,
+  limit = 10,
+  accountType = undefined,
+  expand = "accounts",
+  trace = {}
+) => {
   const MS = util.getEndpoint("accounts");
   const requestOptions = {
     method: "GET",
     uri: `${MS}/accounts/${accountUUID}/relationships`,
     qs: {
-      "expand": expand,
-      "offset": offset,
-      "limit": limit
+      expand: expand,
+      offset: offset,
+      limit: limit
     },
     headers: {
-      "Authorization": `Bearer ${accessToken}`,
+      Authorization: `Bearer ${accessToken}`,
       "Content-type": "application/json",
-      'x-api-version': `${util.getVersion()}`
+      "x-api-version": `${util.getVersion()}`
     },
     json: true
-   
   };
-  
-  if (accountType){
+  util.addRequestTrace(requestOptions, trace);
+
+  if (accountType) {
     requestOptions.qs.account_type = accountType;
   }
 
@@ -196,27 +239,38 @@ const listAccountRelationships = (accessToken = "null accessToken", accountUUID 
  * @description This function will set an account status to "Active"
  * @param {string} [accessToken="null access token"] - cpaas access token
  * @param {string} [accountUUID="null account uuid"] - account uuid
+ * @param {object} [trace = {}] - optional microservice lifecycle trace headers 
  * @returns {Promise<object>} - Promise resolving to a status data object
  */
-const reinstateAccount = (accessToken = "null access token", accountUUID = "null account uuid") => {
+const reinstateAccount = (
+  accessToken = "null access token",
+  accountUUID = "null account uuid",
+  trace = {}
+) => {
   const MS = util.getEndpoint("accounts");
   const requestOptions = {
     method: "POST",
     uri: `${MS}/accounts/${accountUUID}/reinstate`,
     headers: {
-      "Authorization": `Bearer ${accessToken}`,
+      Authorization: `Bearer ${accessToken}`,
       "Content-type": "application/json",
-      'x-api-version': `${util.getVersion()}`
+      "x-api-version": `${util.getVersion()}`
     },
     resolveWithFullResponse: true,
     json: true
   };
-  return new Promise (function (resolve, reject){
-    request(requestOptions).then(function(responseData){
-        responseData.statusCode === 204 ?  resolve({"status":"ok"}): reject({"status":"failed"});
-    }).catch(function(error){
+  util.addRequestTrace(requestOptions, trace);
+
+  return new Promise(function(resolve, reject) {
+    request(requestOptions)
+      .then(function(responseData) {
+        responseData.statusCode === 204
+          ? resolve({ status: "ok" })
+          : reject({ status: "failed" });
+      })
+      .catch(function(error) {
         reject(error);
-    });
+      });
   });
 };
 
@@ -225,69 +279,90 @@ const reinstateAccount = (accessToken = "null access token", accountUUID = "null
  * @description This function will set an account status to "Inactive"
  * @param {string} [accessToken="null access token"] - cpaas access token
  * @param {string} [accountUUID="null account uuid"] - account uuid
+ * @param {object} [trace = {}] - optional microservice lifecycle trace headers 
  * @returns {Promise<object>} - Promise resolving to a status data object
  */
-const suspendAccount = (accessToken = "null access token", accountUUID = "null account uuid") => {
+const suspendAccount = (
+  accessToken = "null access token",
+  accountUUID = "null account uuid",
+  trace = {}
+) => {
   const MS = util.getEndpoint("accounts");
   const requestOptions = {
     method: "POST",
     uri: `${MS}/accounts/${accountUUID}/suspend`,
     headers: {
-      "Authorization": `Bearer ${accessToken}`,
+      Authorization: `Bearer ${accessToken}`,
       "Content-type": "application/json",
-      'x-api-version': `${util.getVersion()}`
+      "x-api-version": `${util.getVersion()}`
     },
     resolveWithFullResponse: true,
     json: true
   };
-  return new Promise (function (resolve, reject){
-    request(requestOptions).then(function(responseData){
-        responseData.statusCode === 204 ?  resolve({"status":"ok"}): reject({"status":"failed"});
-    }).catch(function(error){
+  util.addRequestTrace(requestOptions, trace);
+
+  return new Promise(function(resolve, reject) {
+    request(requestOptions)
+      .then(function(responseData) {
+        responseData.statusCode === 204
+          ? resolve({ status: "ok" })
+          : reject({ status: "failed" });
+      })
+      .catch(function(error) {
         reject(error);
-    });
+      });
   });
 };
 
 /**
-   * @async
-   * @description This function will delete an account.
-   * @param {string} [accessToken="null access token"] - access token for cpaas systems
-   * @param {string} [accountUUID="null account uuid"] - uuid of account to delte
-   * @returns {Promise<object>} - Promise resolving to a status data object
-   */
-  const deleteAccount = (accessToken = "null access token", accountUUID = "null account uuid") => {
-    //body = JSON.stringify(body);
-    const MS = util.getEndpoint("accounts");
-    const requestOptions = {
-      method: "DELETE",
-      uri: `${MS}/accounts/${accountUUID}`,
-      resolveWithFullResponse: true,
-      json: true,
-      headers: {
-        "Authorization": `Bearer ${accessToken}`,
-        "Content-type": "application/json",
-        'x-api-version': `${util.getVersion()}`
-      }
-    };
-
-    return new Promise (function (resolve, reject){
-        request(requestOptions).then(function(responseData){
-            responseData.statusCode === 204 ?  resolve({"status":"ok"}): reject({"status":"failed"});
-        }).catch(function(error){
-            reject(error);
-        });
-    }); 
+ * @async
+ * @description This function will delete an account.
+ * @param {string} [accessToken="null access token"] - access token for cpaas systems
+ * @param {string} [accountUUID="null account uuid"] - uuid of account to delete
+ * @param {object} [trace = {}] - optional microservice lifecycle trace headers 
+ * @returns {Promise<object>} - Promise resolving to a status data object
+ */
+const deleteAccount = (
+  accessToken = "null access token",
+  accountUUID = "null account uuid",
+  trace = {}
+) => {
+  //body = JSON.stringify(body);
+  const MS = util.getEndpoint("accounts");
+  const requestOptions = {
+    method: "DELETE",
+    uri: `${MS}/accounts/${accountUUID}`,
+    resolveWithFullResponse: true,
+    json: true,
+    headers: {
+      Authorization: `Bearer ${accessToken}`,
+      "Content-type": "application/json",
+      "x-api-version": `${util.getVersion()}`
+    }
   };
+  util.addRequestTrace(requestOptions, trace);
+  
+  return new Promise(function(resolve, reject) {
+    request(requestOptions)
+      .then(function(responseData) {
+        responseData.statusCode === 204
+          ? resolve({ status: "ok" })
+          : reject({ status: "failed" });
+      })
+      .catch(function(error) {
+        reject(error);
+      });
+  });
+};
 
-  module.exports = {
-    createRelationship,
-    createAccount,
-    deleteAccount,
-    listAccountRelationships,
-    listAccounts,
-    getAccount,
-    modifyAccount,
-    reinstateAccount,
-    suspendAccount
-  };
+module.exports = {
+  createRelationship,
+  createAccount,
+  deleteAccount,
+  listAccountRelationships,
+  listAccounts,
+  getAccount,
+  modifyAccount,
+  reinstateAccount,
+  suspendAccount
+};

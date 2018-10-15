@@ -9,12 +9,14 @@ const util = require("./utilities");
  * @param {string} [accessToken="null accessToken"] - access token
  * @param {string} [userUuid="null user uuid"] - user UUID to be used
  * @param {*} [contactData={}] - contact data object
+ * @param {object} [trace = {}] - optional microservice lifecycle trace headers
  * @returns {Promise<object>} - Promise resolving to a contact data object
  */
 const createUserContact = (
   accessToken = "null accessToken",
   userUuid = "null user uuid",
-  contactData = {}
+  contactData = {},
+  trace = {}
 ) => {
   const MS = util.getEndpoint("contacts");
   //console.log('MMMMSSSSS', MS, contactData);
@@ -23,13 +25,14 @@ const createUserContact = (
     method: "POST",
     uri: `${MS}/users/${userUuid}/contacts`,
     headers: {
-      "Authorization": `Bearer ${accessToken}`,
+      Authorization: `Bearer ${accessToken}`,
       "Content-type": "application/json",
-      'x-api-version': `${util.getVersion()}`
+      "x-api-version": `${util.getVersion()}`
     },
     body: contactData,
     json: true
   };
+  util.addRequestTrace(requestOptions, trace);
   return request(requestOptions);
 };
 
@@ -38,23 +41,26 @@ const createUserContact = (
  * @description This function will ask the cpaas contacts service to delete a contact
  * @param {string} [accessToken="null accessToken"] - access token
  * @param {string} [contactUUID="null contact uuid"] - contact UUID to be used
+ * @param {object} [trace = {}] - optional microservice lifecycle trace headers
  * @returns {Promise} - Promise resolving to a data object
  */
 const deleteContact = (
   accessToken = "null accessToken",
-  contactUUID = "null contact uuid"
+  contactUUID = "null contact uuid",
+  trace = {}
 ) => {
   const MS = util.getEndpoint("contacts");
   const requestOptions = {
     method: "DELETE",
     uri: `${MS}/contacts/${contactUUID}`,
     headers: {
-      "Authorization": `Bearer ${accessToken}`,
+      Authorization: `Bearer ${accessToken}`,
       "Content-type": "application/json",
-      'x-api-version': `${util.getVersion()}`
+      "x-api-version": `${util.getVersion()}`
     },
     json: true
   };
+  util.addRequestTrace(requestOptions, trace);
   return request(requestOptions);
 };
 
@@ -64,29 +70,32 @@ const deleteContact = (
  * @param {string} [user_uuid="null user uuid"]
  * @param {object} [params={}] - object containing query params
  * @param {*} accessToken - access token
+ * @param {object} [trace = {}] - optional microservice lifecycle trace headers
  * @returns {Promise<object>} - Promise resolving to a data object containing collection of user contacts
  */
 const getContacts = (
   user_uuid = "null user uuid",
   params = {},
-  accessToken
+  accessToken,
+  trace = {}
 ) => {
   const MS = util.getEndpoint("contacts");
   const requestOptions = {
     method: "GET",
     uri: `${MS}/users/${user_uuid}/contacts`,
-    qs: { ...params
+    qs: {
+      ...params
     },
     headers: {
-      "Authorization": `Bearer ${accessToken}`,
+      Authorization: `Bearer ${accessToken}`,
       "Content-type": "application/json",
-      'x-api-version': `${util.getVersion()}`
+      "x-api-version": `${util.getVersion()}`
     },
     json: true
   };
+  util.addRequestTrace(requestOptions, trace);ß
   return request(requestOptions);
 };
-
 
 /**
  * @async
@@ -94,23 +103,30 @@ const getContacts = (
  * @param {string} [user_uuid="null user uuid"]
  * @param {object} [params={}] - object containing query params
  * @param {*} accessToken - access token
+ * @param {object} [trace = {}] - optional microservice lifecycle trace headers
+ * @param {object} [trace = {}] - optional microservice lifecycle trace headers
  * @returns {Promise<object>} - Promise resolving to a data object containing collection of user contacts
  */
-const listContacts = (user_uuid="missing uuid", params, accessToken) => {
+const listContacts = (
+  user_uuid = "missing uuid",
+  params,
+  accessToken,
+  trace = {}
+) => {
   return new Promise((resolve, reject) => {
     // this array will accumulate the contact list
     let returnContacts = [];
     let parameters = {};
     // make initial call to get first contacts
-    getContacts(user_uuid,  params, accessToken).then((contactData) => {
-      resolve(contactData);
-    }).catch((e) => {
-      console.log('Error getting contacts', e);
-      reject(e);
-    });
+    getContacts(user_uuid, params, accessToken, trace)
+      .then(contactData => {
+        resolve(contactData);
+      })
+      .catch(e => {
+        console.log("Error getting contacts", e);
+        reject(e);
+      });
   });
-
-
 };
 
 module.exports = {

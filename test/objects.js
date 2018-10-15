@@ -1,6 +1,8 @@
 const assert = require("assert");
 const s2sMS = require("../src/index");
 const fs = require("fs");
+const util = require("../src/utilities");
+const logger = util.logger;
 
 let creds = {
   CPAAS_OAUTH_TOKEN: "Basic your oauth token here",
@@ -10,68 +12,71 @@ let creds = {
   isValid: false
 };
 
-describe("Objects MS Test Suite", function () {
-
+describe("Objects MS Test Suite", function() {
   let accessToken, identityData, userObjectUUID;
 
-  before(function () {
+  before(function() {
     // file system uses full path so will do it like this
     if (fs.existsSync("./test/credentials.json")) {
       // do not need test folder here
       creds = require("./credentials.json");
     }
 
-     // For tests, use the dev msHost
-     s2sMS.setMsHost("https://cpaas.star2starglobal.net");
-     s2sMS.setMSVersion(creds.CPAAS_API_VERSION);
-     s2sMS.setMsAuthHost("https://auth.star2starglobal.net");
-     // get accessToken to use in test cases
-     // Return promise so that test cases will not fire until it resolves.
-     return new Promise((resolve, reject)=>{
-       s2sMS.Oauth.getAccessToken(
-         creds.CPAAS_OAUTH_TOKEN,
-         creds.email,
-         creds.password
-       )
-       .then(oauthData => {
-         //console.log('Got access token and identity data -[Get Object By Data Type] ',  oauthData);
-         accessToken = oauthData.access_token;
-         s2sMS.Identity.getMyIdentityData(accessToken).then((idData)=>{
-           s2sMS.Identity.getIdentityDetails(accessToken, idData.user_uuid).then((identityDetails)=>{
-             identityData = identityDetails;
-             resolve();
-           }).catch((e1)=>{
-             reject(e1);
-           });
-         }).catch((e)=>{
-           reject(e);
-         });
-       });
-     });
+    // For tests, use the dev msHost
+    s2sMS.setMsHost("https://cpaas.star2starglobal.net");
+    s2sMS.setMSVersion(creds.CPAAS_API_VERSION);
+    s2sMS.setMsAuthHost("https://auth.star2starglobal.net");
+    // get accessToken to use in test cases
+    // Return promise so that test cases will not fire until it resolves.
+    return new Promise((resolve, reject) => {
+      s2sMS.Oauth.getAccessToken(
+        creds.CPAAS_OAUTH_TOKEN,
+        creds.email,
+        creds.password
+      ).then(oauthData => {
+        //console.log('Got access token and identity data -[Get Object By Data Type] ',  oauthData);
+        accessToken = oauthData.access_token;
+        s2sMS.Identity.getMyIdentityData(accessToken)
+          .then(idData => {
+            s2sMS.Identity.getIdentityDetails(accessToken, idData.user_uuid)
+              .then(identityDetails => {
+                identityData = identityDetails;
+                resolve();
+              })
+              .catch(e1 => {
+                reject(e1);
+              });
+          })
+          .catch(e => {
+            reject(e);
+          });
+      });
+    });
   });
-  
-   it("Create Shared User Object", function (done) {
+
+  it("Create Shared User Object", function(done) {
     if (!creds.isValid) return done();
-    s2sMS.Objects.createSharedUserObject(
+    s2sMS.Objects.createUserDataObject(
       identityData.uuid,
       accessToken,
       "Unit-Test",
       "unit-test",
-      "the description", 
+      "the description",
       {
         a: 1 //content
       },
       {
-        "rud": [identityData.uuid],
-        "d": ["be2df92f-f6d9-4770-bedb-5447465f9359"] //users read, update, delete permissions
+        rud: [identityData.uuid],
+        d: ["be2df92f-f6d9-4770-bedb-5447465f9359"] //users read, update, delete permissions
       }
-    ).then(responseData => {
-         console.log('create user data object response', responseData);
-         userObjectUUID = responseData.uuid;
-         done();
+    )
+      .then(responseData => {
+        logger.info(`Create Shared User Object RESPONSE: ${JSON.stringify(responseData, null, "\t")}`);
+        userObjectUUID = responseData.uuid;
+        done();
       })
-      .catch((error) => {
-        console.log('Error creating User Object [create and get user object]', error);
+      .catch(error => {
+        logger.error(`Create Shared User Object RESPONSE: ${JSON.stringify(error, null, "\t")}`);
         done(new Error(JSON.stringify(error)));
       });
   });
@@ -97,24 +102,27 @@ describe("Objects MS Test Suite", function () {
   //     });
   // });
 
-  it("Delete Shared User Object", function (done) {
-    if (!creds.isValid) return done();
-    setTimeout(() => {
-      s2sMS.Objects.deleteSharedObject(
-        accessToken,
-        userObjectUUID
-      ).then(responseData => {
-           console.log('Delete User Object RESPONSE', responseData);
-           done();
-        })
-        .catch((error) => {
-          console.log('Delete User Object ERROR', error);
-          done(new Error(error));
-        });
-    }, 7000); //takes a long time for resource groups to show up as associated with an object
-   
-  });
-
+  // it("Delete Shared User Object", function(done) {
+  //   if (!creds.isValid) return done();
+  //   if (userObjectUUID) {
+  //     setTimeout(() => {
+  //       s2sMS.Objects.deleteDataObject(
+  //         accessToken,
+  //         userObjectUUID
+  //       )
+  //         .then(responseData => {
+  //           logger.info(`Delete Shared User Object RESPONSE: ${JSON.stringify(responseData, null, "\t")}`);
+  //           done();
+  //         })
+  //         .catch(error => {
+  //           logger.error(`Delete Shared User Object ERROR: ${JSON.stringify(error, null, "\t")}`);
+  //           done(new Error(error));
+  //         });
+  //     }, util.config.msDelay); //takes a long time for resource groups to show up as associated with an object
+  //   } else {
+  //     done(new Error("userObjectUUID is undefined"));
+  //   }
+  // });
 
   // it("Create Global Object", function (done) {
   //   if (!creds.isValid) return done();
@@ -287,7 +295,6 @@ describe("Objects MS Test Suite", function () {
   //   });
   // });
 
-
   // it("getUserDataObjectByTypeAndName", function (done) {
   //   if (!creds.isValid) return done();
 
@@ -356,7 +363,7 @@ describe("Objects MS Test Suite", function () {
   //     }).catch((error) => { //
   //       console.log('Error creating data objects [getUserDataObjectByTypeAndName]', error);
   //       done(new Error(error));
-  //     }); //promise all 
+  //     }); //promise all
   // });
 
   // it("List Objects with SDK Aggregator and Paginator", function (done) {
@@ -366,7 +373,7 @@ describe("Objects MS Test Suite", function () {
   //     "type" : "starpaas_application",
   //     "status": "inactive"
   //   };
-    
+
   //   s2sMS.Objects.getDataObjects(
   //     accessToken,
   //     identityData.uuid,
@@ -378,7 +385,7 @@ describe("Objects MS Test Suite", function () {
   //      //console.log("SDK List", response);
   //      assert(response.items.length > 0); //TODO expand this to test filtering, pagination, and aggregation
   //      done();
-      
+
   //   }).catch((error) => {
   //     console.log("SDK Error", error);
   //     done(new Error(error));

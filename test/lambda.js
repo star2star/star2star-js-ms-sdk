@@ -1,6 +1,5 @@
 const assert = require("assert");
 const s2sMS = require("../src/index");
-const config = require("../src/utilities").config;
 const fs = require("fs");
 
 let creds = {
@@ -11,66 +10,57 @@ let creds = {
   isValid: false
 };
 
-describe("Lambda MS", function () {
+let accessToken;
 
-  let accessToken, identityData;
-
-  before(function () {
+describe("Lambda MS", function() {
+  before(function() {
     // file system uses full path so will do it like this
     if (fs.existsSync("./test/credentials.json")) {
       // do not need test folder here
       creds = require("./credentials.json");
     }
 
-     // For tests, use the dev msHost
-     s2sMS.setMsHost("https://cpaas.star2starglobal.net");
-     s2sMS.setMSVersion(creds.CPAAS_API_VERSION);
-     s2sMS.setMsAuthHost("https://auth.star2starglobal.net");
-     // get accessToken to use in test cases
-     // Return promise so that test cases will not fire until it resolves.
-     return new Promise((resolve, reject)=>{
-       s2sMS.Oauth.getAccessToken(
-         creds.CPAAS_OAUTH_TOKEN,
-         creds.email,
-         creds.password
-       )
-       .then(oauthData => {
-         //console.log('Got access token and identity data -[Get Object By Data Type] ',  oauthData);
-         accessToken = oauthData.access_token;
-         s2sMS.Identity.getMyIdentityData(accessToken).then((idData)=>{
-           s2sMS.Identity.getIdentityDetails(accessToken, idData.user_uuid).then((identityDetails)=>{
-             identityData = identityDetails;
-             resolve();
-           }).catch((e1)=>{
-             reject(e1);
-           });
-         }).catch((e)=>{
-           reject(e);
-         });
-       });
-     });
+    // For tests, use the dev msHost
+    s2sMS.setMsHost("https://cpaas.star2starglobal.net");
+    s2sMS.setMSVersion(creds.CPAAS_API_VERSION);
+    s2sMS.setMsAuthHost("https://auth.star2starglobal.net");
+    // get accessToken to use in test cases
+    // Return promise so that test cases will not fire until it resolves.
+    return new Promise((resolve, reject) => {
+      s2sMS.Oauth.getAccessToken(
+        creds.CPAAS_OAUTH_TOKEN,
+        creds.email,
+        creds.password
+      )
+        .then(oauthData => {
+          //console.log('Got access token and identity data -[Get Object By Data Type] ',  oauthData);
+          accessToken = oauthData.access_token;
+          resolve();
+        })
+        .catch(e => {
+          reject(e);
+        });
+    });
   });
 
-  
-  it("list lambdas", function (done) {
+  it("list lambdas", function(done) {
     if (!creds.isValid) return done();
 
     s2sMS.Lambda.listLambdas(accessToken)
       .then(lambdaResponse => {
-         //console.log('Response from list lambda', lambdaResponse);
+        //console.log('Response from list lambda', lambdaResponse);
         assert(
-          lambdaResponse.length > 0 &&
-          lambdaResponse[0].hasOwnProperty("name")
-          );
+          lambdaResponse.length > 0 && lambdaResponse[0].hasOwnProperty("name")
+        );
         done();
       })
-      .catch((error) => {
-        console.log('Error invoking valid lambda [invoke good lambda]', error);
+      .catch(error => {
+        console.log("Error invoking valid lambda [invoke good lambda]", error);
         done(new Error(error));
       });
   });
 
-  it("invokeGoodLambda", function (done) {
+  it("invokeGoodLambda", function(done) {
     if (!creds.isValid) return done();
     const params = {
       a: 1,
@@ -87,22 +77,21 @@ describe("Lambda MS", function () {
         assert.deepEqual(lambdaResponse, validResponse);
         done();
       })
-      .catch((error) => {
-        console.log('Error invoking valid lambda [invoke good lambda]', error);
+      .catch(error => {
+        console.log("Error invoking valid lambda [invoke good lambda]", error);
         done(new Error(error));
       });
   });
 
-  it("invokeBadLambda", function (done) {
+  it("invokeBadLambda", function(done) {
     if (!creds.isValid) return done();
     s2sMS.Lambda.invokeLambda(accessToken, "this one does not exists", {
-        env: "dev"
-      })
-      .catch(lambdaResponse => {
-        //console.log(lambdaResponse)
-        assert.equal(lambdaResponse.statusCode, 404);
-        done();
-      });
+      env: "dev"
+    }).catch(lambdaResponse => {
+      //console.log(lambdaResponse)
+      assert.equal(lambdaResponse.statusCode, 404);
+      done();
+    });
   });
 
   // TODO - do we need this test????
@@ -130,7 +119,7 @@ describe("Lambda MS", function () {
   //     }],
   //     env: "dev"
   //   };
-  // 
+  //
   //   s2sMS.Lambda.invokeLambda(creds.CPAAS_KEY, "default-all-notify", params)
   //     .then(lambdaResponse => {
   //       //console.log('=======', lambdaResponse)
@@ -144,5 +133,4 @@ describe("Lambda MS", function () {
   //       done();
   //     });
   // });
-
 });

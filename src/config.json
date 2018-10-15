@@ -26,5 +26,8 @@
     "r": "318a2910-0a53-4db3-9fbc-96a83f45d0d3",
     "u": "799673e2-cccb-4437-b4e4-247170a24458",
     "d": "09290831-0ca0-44ce-b9ac-464ef6a868fe"
-  }
+  },
+  "msDelay": 4000,
+  "localDebug": true,
+  "msDebug": false
 }

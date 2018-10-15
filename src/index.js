@@ -18,6 +18,7 @@ const Pubsub = require('./pubsub');
 const Application = require('./application');
 const Workflow = require('./workflow');
 const Email = require('./email');
+const ResourceGroups = require('./resourceGroups');
 const request = require('request-promise');
 
 let cpaasKey;
@@ -100,5 +101,6 @@ module.exports = {
   Application,
   setMSVersion,
   Workflow,
-  Email
+  Email,
+  ResourceGroups
 };

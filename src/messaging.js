@@ -1,7 +1,7 @@
 /* global require module*/
 "use strict";
-const util = require('./utilities');
-const request = require('request-promise');
+const util = require("./utilities");
+const request = require("request-promise");
 
 /**
  * @async
@@ -9,34 +9,42 @@ const request = require('request-promise');
  * @param {string} accessToken - Access token for cpaas systems
  * @param {string} userUuid - The user uuid making the request
  * @param {string} toPhoneNumber - A full phone number you will be sending the sms too
+ * @param {object} [trace = {}] - optional microservice lifecycle trace headers
  * @returns {Promise<object>} - Promise resolving to a conversation uuid data object
  */
-const getConversationUuid = (accessToken, userUuid, toPhoneNumber) => {
+const getConversationUuid = (
+  accessToken,
+  userUuid,
+  toPhoneNumber,
+  trace = {}
+) => {
   return new Promise((resolve, reject) => {
     const MS = util.getEndpoint("Messaging");
     const requestOptions = {
-      method: 'POST',
+      method: "POST",
       uri: `${MS}/users/${userUuid}/conversations`,
       body: {
-        "phone_numbers": [toPhoneNumber]
+        phone_numbers: [toPhoneNumber]
       },
       headers: {
-        'Content-Type': 'application/json',
-        "Authorization": `Bearer ${accessToken}`,
-        'x-api-version': `${util.getVersion()}`
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${accessToken}`,
+        "x-api-version": `${util.getVersion()}`
       },
       json: true
     };
-
+    util.addRequestTrace(requestOptions, trace);
     //console.log('RRRR:', requestOptions)
-    request(requestOptions).then((response) => {
-      //console.log('rrrr', response.context.uuid)
-      resolve(response.context.uuid);
-    }).catch((fetchError) => {
-      // something went wrong so
-      //console.log('fetch error: ', fetchError)
-      reject(fetchError);
-    });
+    request(requestOptions)
+      .then(response => {
+        //console.log('rrrr', response.context.uuid)
+        resolve(response.context.uuid);
+      })
+      .catch(fetchError => {
+        // something went wrong so
+        //console.log('fetch error: ', fetchError)
+        reject(fetchError);
+      });
   }); // end promise
 }; // end function getConversation UUID
 
@@ -48,40 +56,51 @@ const getConversationUuid = (accessToken, userUuid, toPhoneNumber) => {
  * @param {string} userUuid - the user uuid making the request
  * @param {string} fromPhoneNumber - full phone number to use as the sender/reply too
  * @param {string} msg - the message to send
+ * @param {object} [trace = {}] - optional microservice lifecycle trace headers
  * @returns {Promise<object>} - Promise resolving to a response confirmation data object
  */
-const sendSMSMessage = (accessToken, convesationUUID, userUuid, fromPhoneNumber, msg) => {
+const sendSMSMessage = (
+  accessToken,
+  convesationUUID,
+  userUuid,
+  fromPhoneNumber,
+  msg,
+  trace = {}
+) => {
   return new Promise((resolve, reject) => {
     const objectBody = {
-      "to": `${convesationUUID}`,
-      "from": `${fromPhoneNumber}`,
-      "channel": "sms",
-      "content": [{
-        "type": "text",
-        "body": `${msg}`
-      }]
+      to: `${convesationUUID}`,
+      from: `${fromPhoneNumber}`,
+      channel: "sms",
+      content: [
+        {
+          type: "text",
+          body: `${msg}`
+        }
+      ]
     };
     const MS = util.getEndpoint("Messaging");
     const requestOptions = {
-      method: 'POST',
+      method: "POST",
       uri: `${MS}/users/${userUuid}/messages`,
       body: objectBody,
       headers: {
-        'Content-Type': 'application/json',
-        "Authorization": `Bearer ${accessToken}`,
-        'x-api-version': `${util.getVersion()}`
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${accessToken}`,
+        "x-api-version": `${util.getVersion()}`
       },
       json: true
     };
-
-    request(requestOptions).then((response) => {
-      //console.log('xxxxx', response)
-      resolve(response);
-    }).catch((e) => {
-      //console.log(e)
-      reject(`sendSMSMessage errored: ${e}`);
-    });
-
+    util.addRequestTrace(requestOptions, trace);
+    request(requestOptions)
+      .then(response => {
+        //console.log('xxxxx', response)
+        resolve(response);
+      })
+      .catch(e => {
+        //console.log(e)
+        reject(`sendSMSMessage errored: ${e}`);
+      });
   });
 };
 
@@ -93,20 +112,38 @@ const sendSMSMessage = (accessToken, convesationUUID, userUuid, fromPhoneNumber,
  * @param {string} msg - the message to send
  * @param {string} fromPhoneNumber - full phone number to use as the sender/reply too
  * @param {string} toPhoneNumber - full phone number you will be sending the sms too
+ * @param {object} [trace = {}] - optional microservice lifecycle trace headers
  * @returns {Promise<object>} - Promise resolving to a response confirmation data object
  */
-const sendSMS = (accessToken, userUuid, msg, fromPhoneNumber, toPhoneNumber) => {
+const sendSMS = (
+  accessToken,
+  userUuid,
+  msg,
+  fromPhoneNumber,
+  toPhoneNumber,
+  trace = {}
+) => {
   return new Promise((resolve, reject) => {
-    getConversationUuid(accessToken, userUuid, toPhoneNumber).then((conversationUUID) => {
-      sendSMSMessage(accessToken, conversationUUID, userUuid, fromPhoneNumber, msg).then((response) => {
-        resolve(response);
-      }).catch((sError) => {
-        reject(sError);
+    getConversationUuid(accessToken, userUuid, toPhoneNumber, trace)
+      .then(conversationUUID => {
+        sendSMSMessage(
+          accessToken,
+          conversationUUID,
+          userUuid,
+          fromPhoneNumber,
+          msg
+        )
+          .then(response => {
+            resolve(response);
+          })
+          .catch(sError => {
+            reject(sError);
+          });
+      })
+      .catch(cError => {
+        //console.log('EEEEE:', cError)
+        reject(cError);
       });
-    }).catch((cError) => {
-      //console.log('EEEEE:', cError)
-      reject(cError);
-    });
   });
 };
 
@@ -115,54 +152,56 @@ const sendSMS = (accessToken, userUuid, msg, fromPhoneNumber, toPhoneNumber) => 
  * @description This function will get user sms number.
  * @param {string} accessToken - cpaas access Token
  * @param {string} userUuid - the user uuid making the request
+ * @param {object} [trace = {}] - optional microservice lifecycle trace headers
  * @returns {Promise<object>} - Promise resolving to a data object containing the sms number
  */
-const getSMSNumber = (accessToken, userUuid) => {
-
+const getSMSNumber = (accessToken, userUuid, trace = {}) => {
   return new Promise((resolve, reject) => {
     const MS = util.getEndpoint("identity");
 
     const requestOptions = {
-      method: 'GET',
+      method: "GET",
       uri: `${MS}/identities/${userUuid}?include=alias`,
       headers: {
-        "Authorization": `Bearer ${accessToken}`,
-        'x-api-version': `${util.getVersion()}`,
-        'Content-type': 'application/json'
+        Authorization: `Bearer ${accessToken}`,
+        "x-api-version": `${util.getVersion()}`,
+        "Content-type": "application/json"
       },
       json: true
     };
-    request(requestOptions).then((smsResponse) => {
-      if (smsResponse && smsResponse.aliases) {
-        const smsNbr = smsResponse.aliases.reduce((prev, curr) => {
-          if (!prev) {
-            if (curr && curr.hasOwnProperty('sms')) {
-              return curr['sms'];
+    util.addRequestTrace(requestOptions, trace);
+    request(requestOptions)
+      .then(smsResponse => {
+        if (smsResponse && smsResponse.aliases) {
+          const smsNbr = smsResponse.aliases.reduce((prev, curr) => {
+            if (!prev) {
+              if (curr && curr.hasOwnProperty("sms")) {
+                return curr["sms"];
+              }
             }
+            return prev;
+          }, undefined);
+          if (smsNbr) {
+            resolve(smsNbr);
+          } else {
+            reject({
+              message: `No sms number in alias: ${smsResponse}`
+            });
           }
-          return prev;
-        }, undefined);
-        if (smsNbr) {
-          resolve(smsNbr);
         } else {
           reject({
-            message: `No sms number in alias: ${smsResponse}`
+            message: `No aliases in sms response ${smsResponse}`
           });
         }
-      } else {
-        reject({
-          message: `No aliases in sms response ${smsResponse}`
-        });
-      }
-    }).catch((error) => {
-      reject(error);
-    });
+      })
+      .catch(error => {
+        reject(error);
+      });
   });
 };
 
-
 /**
- * @async 
+ * @async
  * @description This function sends a basic SMS message
  * @param {string} [accessToken="null access token" - cpaas access token
  * @param {string} [receiver="null receiver"] - recipient number (+15555555555)
@@ -170,6 +209,7 @@ const getSMSNumber = (accessToken, userUuid) => {
  * @param {string} [message="null message"] - message
  * @param {type} [type="text"] - message type
  * @param {object} [metadata={}] - optional metadata object
+ * @param {object} [trace = {}] - optional microservice lifecycle trace headers
  * @returns Promise resolving to sms send confirmation with uuid
  */
 const sendSimpleSMS = (
@@ -178,30 +218,32 @@ const sendSimpleSMS = (
   receiver = "null receiver",
   message = "null message",
   type = "text",
-  metadata = {}
+  metadata = {},
+  trace = {}
 ) => {
   const MS = util.getEndpoint("sms");
   const requestOptions = {
-    method: 'POST',
+    method: "POST",
     uri: `${MS}/messages/send`,
     headers: {
-      "Authorization": `Bearer ${accessToken}`,
-      'x-api-version': `${util.getVersion()}`,
-      'Content-type': 'application/json'
+      Authorization: `Bearer ${accessToken}`,
+      "x-api-version": `${util.getVersion()}`,
+      "Content-type": "application/json"
     },
     body: {
-      "to": receiver,
-      "from": sender,
-      "content": [
+      to: receiver,
+      from: sender,
+      content: [
         {
-          "type": type,
-          "body": message
+          type: type,
+          body: message
         }
       ],
-      "metadata": metadata
+      metadata: metadata
     },
     json: true
   };
+  util.addRequestTrace(requestOptions, trace);
   return request(requestOptions);
 };
 

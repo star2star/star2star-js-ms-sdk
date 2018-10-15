@@ -4,6 +4,7 @@
 const util = require("./utilities");
 const Groups = require("./groups");
 const request = require("request-promise");
+const objectMerge = require("object-merge");
 
 /**
  * @async
@@ -12,10 +13,11 @@ const request = require("request-promise");
  * @param {string} [userUUID="null user uuid"] - user UUID to be used
  * @param {string} [name="no name specified for group"] - name
  * @param {string} [topic="no topic specified"] - topic
- * @param {string} [description=undefined] - description 
+ * @param {string} [description=undefined] - description
  * @param {string} [groupUUID=undefined] - group UUID for members
  * @param {string} [accountUUID=undefined] - account uuid
  * @param {object} [metadata={}] - object for meta data
+ * @param {object} [trace = {}] - optional microservice lifecycle trace headers
  * @returns {Promise<object>} - Promise resolving to a data object
  */
 const createRoom = (
@@ -26,7 +28,8 @@ const createRoom = (
   description = undefined,
   groupUUID = undefined,
   accountUUID = undefined,
-  metadata = {}
+  metadata = {},
+  trace = {}
 ) => {
   const MS = util.getEndpoint("chat");
 
@@ -46,11 +49,12 @@ const createRoom = (
     body: b,
     headers: {
       "Content-type": "application/json",
-      "Authorization": `Bearer ${access_token}`,
-      'x-api-version': `${util.getVersion()}`
+      Authorization: `Bearer ${access_token}`,
+      "x-api-version": `${util.getVersion()}`
     },
     json: true
   };
+  util.addRequestTrace(requestOptions, trace);
   return request(requestOptions);
 };
 
@@ -58,13 +62,11 @@ const createRoom = (
  * @async
  * @description This function will list rooms.
  * @param {string} [access_token="null acess token"] - access token for cpaas systems
- * @param {object} [filter=undefined] - optional object
+ * @param {object} [filter=undefined] - optional object,
+  * @param {object} [trace = {}] - optional microservice lifecycle trace headers
  * @returns {Promise<object>} - Promise resolving to a data object
  */
-const listRooms = (
-  access_token = "null acess token",
-  filter = undefined
-) => {
+const listRooms = (access_token = "null acess token", filter = undefined, trace = {}) => {
   const MS = util.getEndpoint("chat");
 
   const requestOptions = {
@@ -72,14 +74,15 @@ const listRooms = (
     uri: `${MS}/rooms`,
     headers: {
       "Content-type": "application/json",
-      "Authorization": `Bearer ${access_token}`,
-      'x-api-version': `${util.getVersion()}`
+      Authorization: `Bearer ${access_token}`,
+      "x-api-version": `${util.getVersion()}`
     },
     json: true
   };
   if (filter !== undefined) {
     requestOptions.qs = filter;
   }
+  util.addRequestTrace(requestOptions, trace);
   return request(requestOptions);
 };
 
@@ -88,11 +91,13 @@ const listRooms = (
  * @description This function will get a specific room.
  * @param {string} [access_token="null access token"] - access token for cpaas systems
  * @param {string} [roomUUID="no room uuid specified"] - room UUID
+ * @param {object} [trace = {}] - optional microservice lifecycle trace headers
  * @returns {Promise<object>} - Promise resolving to a data object
  */
 const getRoom = (
   access_token = "null access token",
   roomUUID = "no room uuid specified",
+  trace ={}
 ) => {
   const MS = util.getEndpoint("chat");
 
@@ -101,12 +106,12 @@ const getRoom = (
     uri: `${MS}/rooms/${roomUUID}`,
     headers: {
       "Content-type": "application/json",
-      "Authorization": `Bearer ${access_token}`,
-      'x-api-version': `${util.getVersion()}`
+      Authorization: `Bearer ${access_token}`,
+      "x-api-version": `${util.getVersion()}`
     },
     json: true
   };
-
+  util.addRequestTrace(requestOptions, trace);
   return request(requestOptions);
 };
 
@@ -115,11 +120,13 @@ const getRoom = (
  * @description This function will delete a room.
  * @param {string} [access_token="null acess token"]
  * @param {string} [roomUUID="no room uuid specified"]
+ * @param {object} [trace = {}] - optional microservice lifecycle trace headers
  * @returns {Promise<empty>} - Promise with no payload
  */
 const deleteRoom = (
   access_token = "null acess token",
-  roomUUID = "no room uuid specified"
+  roomUUID = "no room uuid specified",
+  trace = {}
 ) => {
   const MS = util.getEndpoint("chat");
 
@@ -128,12 +135,12 @@ const deleteRoom = (
     uri: `${MS}/rooms/${roomUUID}`,
     headers: {
       "Content-type": "application/json",
-      "Authorization": `Bearer ${access_token}`,
-      'x-api-version': `${util.getVersion()}`
+      Authorization: `Bearer ${access_token}`,
+      "x-api-version": `${util.getVersion()}`
     },
     json: true
   };
-
+  util.addRequestTrace(requestOptions, trace);
   return request(requestOptions);
 };
 
@@ -143,12 +150,14 @@ const deleteRoom = (
  * @param {string} [access_token="null access_token"]
  * @param {string} [roomUUID="no room uuid specified"]
  * @param {object} [info={}] - object containing attributes to update
+ * @param {object} [trace = {}] - optional microservice lifecycle trace headers
  * @returns {Promise<object>} - Promise resolving to a data object
  */
 const updateRoomInfo = (
   access_token = "null access_token",
   roomUUID = "no room uuid specified",
-  info = {}
+  info = {},
+  trace = {}
 ) => {
   const MS = util.getEndpoint("chat");
 
@@ -158,27 +167,29 @@ const updateRoomInfo = (
     body: info,
     headers: {
       "Content-type": "application/json",
-      "Authorization": `Bearer ${access_token}`,
-      'x-api-version': `${util.getVersion()}`
+      Authorization: `Bearer ${access_token}`,
+      "x-api-version": `${util.getVersion()}`
     },
     json: true
   };
-
+  util.addRequestTrace(requestOptions, trace);
   return request(requestOptions);
 };
 
 /**
  * @async
- * @description This function will udpate room meta 
+ * @description This function will udpate room meta
  * @param {string} [access_token="null access_token"] - access_token for cpaas systems
  * @param {string} [roomUUID="no room uuid specified"] - room uuid
  * @param {object} [meta={}] - metedata object
+ * @param {object} [trace = {}] - optional microservice lifecycle trace headers
  * @returns {Promise<object>} - Promise resolving to a data object
  */
 const updateRoomMeta = (
   access_token = "null access_token",
   roomUUID = "no room uuid specified",
-  meta = {}
+  meta = {},
+  trace = {}
 ) => {
   const MS = util.getEndpoint("chat");
 
@@ -189,12 +200,12 @@ const updateRoomMeta = (
     body: meta,
     headers: {
       "Content-type": "application/json",
-      "Authorization": `Bearer ${access_token}`,
-      'x-api-version': `${util.getVersion()}`
+      Authorization: `Bearer ${access_token}`,
+      "x-api-version": `${util.getVersion()}`
     },
     json: true
   };
-
+  util.addRequestTrace(requestOptions, trace);
   return request(requestOptions);
 };
 
@@ -203,11 +214,13 @@ const updateRoomMeta = (
  * @description This function will return a list of room members.
  * @param {string} [access_token="null access_token"]
  * @param {string} [roomUUID="no room uuid specified"]
+ * @param {object} [trace = {}] - optional microservice lifecycle trace headers
  * @returns {Promise<object>} - Promise resolving to a data object
  */
 const getRoomMembers = (
   access_token = "null access_token",
-  roomUUID = "no room uuid specified"
+  roomUUID = "no room uuid specified",
+  trace = {}
 ) => {
   const MS = util.getEndpoint("chat");
 
@@ -217,12 +230,12 @@ const getRoomMembers = (
     uri: `${MS}/rooms/${roomUUID}/members`,
     headers: {
       "Content-type": "application/json",
-      "Authorization": `Bearer ${access_token}`,
-      'x-api-version': `${util.getVersion()}`
+      Authorization: `Bearer ${access_token}`,
+      "x-api-version": `${util.getVersion()}`
     },
     json: true
   };
-
+  util.addRequestTrace(requestOptions, trace);
   return request(requestOptions);
 };
 
@@ -232,12 +245,14 @@ const getRoomMembers = (
  * @param {string} [access_token="null access_token"] - access_token for cpaas system
  * @param {string} [roomUUID="no room uuid specified"] - room uuid
  * @param {object} memberData - object {"uuid": "string","type": "string"}
- * @returns {Promise<object>} - Promise resolving to a member data object 
+ * @param {object} [trace = {}] - optional microservice lifecycle trace headers
+ * @returns {Promise<object>} - Promise resolving to a member data object
  */
 const addMember = (
   access_token = "null access_token",
   roomUUID = "no room uuid specified",
-  memberData
+  memberData,
+  trace = {}
 ) => {
   const MS = util.getEndpoint("chat");
 
@@ -248,12 +263,12 @@ const addMember = (
     body: memberData,
     headers: {
       "Content-type": "application/json",
-      "Authorization": `Bearer ${access_token}`,
-      'x-api-version': `${util.getVersion()}`
+      Authorization: `Bearer ${access_token}`,
+      "x-api-version": `${util.getVersion()}`
     },
     json: true
   };
-
+  util.addRequestTrace(requestOptions, trace);
   return request(requestOptions);
 };
 
@@ -263,12 +278,14 @@ const addMember = (
  * @param {string} [access_token="null access_token"] - access_token for cpaas systems
  * @param {string} [roomUUID="no room uuid specified"] - member to remove
  * @param {string} [memberUUID="empty"] - member to remove
+ * @param {object} [trace = {}] - optional microservice lifecycle trace headers
  * @returns {Promise<object>} - Promise resolving to a member data object
  */
 const deleteMember = (
   access_token = "null access_token",
   roomUUID = "no room uuid specified",
-  memberUUID = "empty"
+  memberUUID = "empty",
+  trace = {}
 ) => {
   const MS = util.getEndpoint("chat");
 
@@ -278,12 +295,12 @@ const deleteMember = (
     uri: `${MS}/rooms/${roomUUID}/members/${memberUUID}`,
     headers: {
       "Content-type": "application/json",
-      "Authorization": `Bearer ${access_token}`,
-      'x-api-version': `${util.getVersion()}`
+      Authorization: `Bearer ${access_token}`,
+      "x-api-version": `${util.getVersion()}`
     },
     json: true
   };
-
+  util.addRequestTrace(requestOptions, trace);
   return request(requestOptions);
 };
 
@@ -292,13 +309,15 @@ const deleteMember = (
  * @description This function will get room messages.
  * @param {string} [access_token="null access_token"] - access_token for cpaas systems
  * @param {string} [roomUUID="no room uuid specified"] - room uuid
- * @param {number} [max=100] - number of messages 
+ * @param {number} [max=100] - number of messages
+ * @param {object} [trace = {}] - optional microservice lifecycle trace headers
  * @returns {Promise<object>} - Promise resolving to a data object containing a colelction of message objects.
  */
 const getMessages = (
   access_token = "null access_token",
   roomUUID = "no room uuid specified",
-  max = 100
+  max = 100,
+  trace = {}
 ) => {
   const MS = util.getEndpoint("chat");
 
@@ -311,12 +330,12 @@ const getMessages = (
     },
     headers: {
       "Content-type": "application/json",
-      "Authorization": `Bearer ${access_token}`,
-      'x-api-version': `${util.getVersion()}`
+      Authorization: `Bearer ${access_token}`,
+      "x-api-version": `${util.getVersion()}`
     },
     json: true
   };
-
+  util.addRequestTrace(requestOptions, trace);
   return request(requestOptions);
 };
 
@@ -327,13 +346,16 @@ const getMessages = (
  * @param {string} [userUUID="null user uuid"] - user UUID to be used
  * @param {string} [roomUUID="no room uuid specified"] - room uuid
  * @param {string} [message="missing text"] - message
+ * @param {object} [trace = {}] - optional microservice lifecycle trace headers
  * @returns {Promise<object>} - Promise resolving to a data object
- */ 
+ */
+
 const sendMessage = (
-  access_token= "null access_token",
+  access_token = "null access_token",
   userUUID = "null user uuid",
   roomUUID = "no room uuid specified",
-  message = "missing text"
+  message = "missing text",
+  trace = {}
 ) => {
   const MS = util.getEndpoint("chat");
 
@@ -351,12 +373,12 @@ const sendMessage = (
     body: b,
     headers: {
       "Content-type": "application/json",
-      "Authorization": `Bearer ${access_token}`,
-      'x-api-version': `${util.getVersion()}`
+      Authorization: `Bearer ${access_token}`,
+      "x-api-version": `${util.getVersion()}`
     },
     json: true
   };
-
+  util.addRequestTrace(requestOptions, trace);
   return request(requestOptions);
 };
 
@@ -366,38 +388,45 @@ const sendMessage = (
  * @param {string} [access_token="null access_token"] - access_token for cpaas systems
  * @param {string} [roomUUID="no room uuid specified"] - string message
  * @param {number} [message_count=100]
+ * @param {object} [trace = {}] - optional microservice lifecycle trace headers
  * @returns {Promise<object>} - Promise resolving to a data object
  */
 const getRoomInfo = (
   access_token = "null access_token",
   roomUUID = "no room uuid specified",
-  message_count = 100
+  message_count = 100,
+  trace = {}
 ) => {
   return new Promise((resolve, reject) => {
-    const pInfo = getRoom(access_token, roomUUID);
-    const pMessages = getMessages(access_token, roomUUID, message_count);
+    const newMeta = util.generateNewMetaData;
+    const pInfo = getRoom(access_token, roomUUID, trace);
+    let nextMeta = objectMerge({}, trace, newMeta(trace));
+    const pMessages = getMessages(access_token, roomUUID, message_count, nextMeta);
 
-    Promise.all([pInfo, pMessages]).then((pData) => {
-      //console.log('--------', pData)
-      // get group data
-      Groups.getGroup(access_token, pData[0].group_uuid)
-        .then((groupData) => {
-          resolve({
-            "info": pData[0],
-            "members": groupData.members,
-            "messages": pData[1].items
+    Promise.all([pInfo, pMessages])
+      .then(pData => {
+        //console.log('--------', pData)
+        // get group data
+        nextMeta = objectMerge({}, trace, newMeta(trace));
+        Groups.getGroup(access_token, pData[0].group_uuid, nextMeta)
+          .then(groupData => {
+            resolve({
+              info: pData[0],
+              members: groupData.members,
+              messages: pData[1].items
+            });
+          })
+          .catch(groupError => {
+            console.log("##### Group Error in getRoomInfo", groupError);
+            reject(groupError);
           });
-        }).catch((groupError) => {
-          console.log('##### Group Error in getRoomInfo', groupError);
-          reject(groupError);
-        });
-    }).catch((error) => {
-      console.log('##### Error getRoomInfo', error);
-      reject(error);
-    });
+      })
+      .catch(error => {
+        console.log("##### Error getRoomInfo", error);
+        reject(error);
+      });
   });
 };
-
 
 module.exports = {
   createRoom,
