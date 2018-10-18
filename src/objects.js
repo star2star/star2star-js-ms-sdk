@@ -251,7 +251,7 @@ const createUserDataObject = async (
   util.addRequestTrace(requestOptions, trace);
   //create the object first
   let newObject;
-  let nextTrace = objectMerge({},trace); 
+  let nextTrace = objectMerge({}, trace);
   try {
     newObject = await request(requestOptions);
     //need to create permissions resource groups
@@ -260,7 +260,7 @@ const createUserDataObject = async (
         {},
         nextTrace,
         util.generateNewMetaData(nextTrace)
-      ); 
+      );
       //user groups require an account
       const identity = await Identity.getIdentityDetails(
         accessToken,
@@ -271,7 +271,7 @@ const createUserDataObject = async (
         {},
         nextTrace,
         util.generateNewMetaData(nextTrace)
-      ); 
+      );
       await ResourceGroups.createResourceGroups(
         accessToken,
         identity.account_uuid,
@@ -422,13 +422,37 @@ const updateDataObject = async (
     json: true
   };
   util.addRequestTrace(requestOptions, trace);
+  let nextTrace = objectMerge({}, trace);
   try {
     if (users && typeof users === "object") {
-      await ResourceGroups.updateResoßurceGroups(
+      //first determine this object's owner and account
+      nextTrace = objectMerge(
+        {},
+        nextTrace,
+        util.generateNewMetaData(nextTrace)
+      );
+      const object = await getDataObject(accessToken, data_uuid, nextTrace);
+      nextTrace = objectMerge(
+        {},
+        nextTrace,
+        util.generateNewMetaData(nextTrace)
+      );
+      const identity = await Identity.getIdentityDetails(
+        accessToken,
+        object.audit.created_by,
+        nextTrace
+      );
+      nextTrace = objectMerge(
+        {},
+        nextTrace,
+        util.generateNewMetaData(nextTrace)
+      );
+      await ResourceGroups.updateResourceGroups(
         accessToken,
         data_uuid,
+        identity.account_uuid,
         users,
-        util.generateNewMetaData(trace)
+        nextTrace
       );
     }
     return await request(requestOptions);

@@ -1,7 +1,9 @@
 /*global require module*/
 "use strict";
-const util = require("./utilities");
+const Util = require("./utilities");
 const request = require("request-promise");
+const Groups = require("./groups");
+const objectMerge = require("object-merge");
 
 /**
  * @async
@@ -16,19 +18,19 @@ const activateRole = (
   roleUUID = "null roleUUID",
   trace = {}
 ) => {
-  const MS = util.getEndpoint("auth");
+  const MS = Util.getEndpoint("auth");
   const requestOptions = {
     method: "POST",
     uri: `${MS}/roles/${roleUUID}/activate`,
     headers: {
       Authorization: `Bearer ${accessToken}`,
       "Content-type": "application/json",
-      "x-api-version": `${util.getVersion()}`
+      "x-api-version": `${Util.getVersion()}`
     },
     resolveWithFullResponse: true,
     json: true
   };
-  util.addRequestTrace(requestOptions, trace);
+  Util.addRequestTrace(requestOptions, trace);
   return new Promise(function(resolve, reject) {
     request(requestOptions)
       .then(function(responseData) {
@@ -57,20 +59,20 @@ const assignPermissionsToRole = (
   body = "null body",
   trace = {}
 ) => {
-  const MS = util.getEndpoint("auth");
+  const MS = Util.getEndpoint("auth");
   const requestOptions = {
     method: "POST",
     uri: `${MS}/roles/${roleUUID}/permissions`,
     headers: {
       Authorization: `Bearer ${accessToken}`,
       "Content-type": "application/json",
-      "x-api-version": `${util.getVersion()}`
+      "x-api-version": `${Util.getVersion()}`
     },
     body: body,
     resolveWithFullResponse: true,
     json: true
   };
-  util.addRequestTrace(requestOptions, trace);
+  Util.addRequestTrace(requestOptions, trace);
   return new Promise(function(resolve, reject) {
     request(requestOptions)
       .then(function(responseData) {
@@ -99,20 +101,20 @@ const assignRolesToUserGroup = (
   body = "null body",
   trace = {}
 ) => {
-  const MS = util.getEndpoint("auth");
+  const MS = Util.getEndpoint("auth");
   const requestOptions = {
     method: "POST",
     uri: `${MS}/user-groups/${userGroupUUID}/roles`,
     headers: {
       Authorization: `Bearer ${accessToken}`,
       "Content-type": "application/json",
-      "x-api-version": `${util.getVersion()}`
+      "x-api-version": `${Util.getVersion()}`
     },
     body: body,
     resolveWithFullResponse: true,
     json: true
   };
-  util.addRequestTrace(requestOptions, trace);
+  Util.addRequestTrace(requestOptions, trace);
   return new Promise(function(resolve, reject) {
     request(requestOptions)
       .then(function(responseData) {
@@ -143,14 +145,14 @@ const assignScopedRoleToUserGroup = (
   resourceUUID = "null resourceUUID",
   trace = {}
 ) => {
-  const MS = util.getEndpoint("auth");
+  const MS = Util.getEndpoint("auth");
   const requestOptions = {
     method: "POST",
     uri: `${MS}/user-groups/${userGroupUUID}/role/scopes`,
     headers: {
       Authorization: `Bearer ${accessToken}`,
       "Content-type": "application/json",
-      "x-api-version": `${util.getVersion()}`
+      "x-api-version": `${Util.getVersion()}`
     },
     body: {
       role: roleUUID,
@@ -163,7 +165,7 @@ const assignScopedRoleToUserGroup = (
     resolveWithFullResponse: true,
     json: true
   };
-  util.addRequestTrace(requestOptions, trace);
+  Util.addRequestTrace(requestOptions, trace);
   return new Promise(function(resolve, reject) {
     request(requestOptions)
       .then(function(responseData) {
@@ -190,19 +192,19 @@ const createPermission = (
   body = "null body",
   trace = {}
 ) => {
-  const MS = util.getEndpoint("auth");
+  const MS = Util.getEndpoint("auth");
   const requestOptions = {
     method: "POST",
     uri: `${MS}/permissions`,
     headers: {
       Authorization: `Bearer ${accessToken}`,
       "Content-type": "application/json",
-      "x-api-version": `${util.getVersion()}`
+      "x-api-version": `${Util.getVersion()}`
     },
     body: body,
     json: true
   };
-  util.addRequestTrace(requestOptions, trace);
+  Util.addRequestTrace(requestOptions, trace);
   return request(requestOptions);
 };
 
@@ -221,19 +223,19 @@ const createUserGroup = (
   body = "null body",
   trace = {}
 ) => {
-  const MS = util.getEndpoint("auth");
+  const MS = Util.getEndpoint("auth");
   const requestOptions = {
     method: "POST",
     uri: `${MS}/accounts/${account_uuid}/user-groups`,
     headers: {
       Authorization: `Bearer ${accessToken}`,
       "Content-type": "application/json",
-      "x-api-version": `${util.getVersion()}`
+      "x-api-version": `${Util.getVersion()}`
     },
     body: body,
     json: true
   };
-  util.addRequestTrace(requestOptions, trace);
+  Util.addRequestTrace(requestOptions, trace);
   return request(requestOptions);
 };
 
@@ -246,19 +248,19 @@ const createUserGroup = (
  * @returns {Promise<object>} - Promise resolving to a role data object
  */
 const createRole = (accessToken = "null accessToken", body = "null body", trace = {}) => {
-  const MS = util.getEndpoint("auth");
+  const MS = Util.getEndpoint("auth");
   const requestOptions = {
     method: "POST",
     uri: `${MS}/roles`,
     headers: {
       Authorization: `Bearer ${accessToken}`,
       "Content-type": "application/json",
-      "x-api-version": `${util.getVersion()}`
+      "x-api-version": `${Util.getVersion()}`
     },
     body: body,
     json: true
   };
-  util.addRequestTrace(requestOptions, trace);
+  Util.addRequestTrace(requestOptions, trace);
   return request(requestOptions);
 };
 
@@ -275,19 +277,19 @@ const deactivateRole = (
   roleUUID = "null roleUUID",
   trace = {}
 ) => {
-  const MS = util.getEndpoint("auth");
+  const MS = Util.getEndpoint("auth");
   const requestOptions = {
     method: "POST",
     uri: `${MS}/roles/${roleUUID}/deactivate`,
     headers: {
       Authorization: `Bearer ${accessToken}`,
       "Content-type": "application/json",
-      "x-api-version": `${util.getVersion()}`
+      "x-api-version": `${Util.getVersion()}`
     },
     resolveWithFullResponse: true,
     json: true
   };
-  util.addRequestTrace(requestOptions, trace);
+  Util.addRequestTrace(requestOptions, trace);
   return new Promise(function(resolve, reject) {
     request(requestOptions)
       .then(function(responseData) {
@@ -316,19 +318,19 @@ const deletePermissionFromRole = (
   permissionUUID = "null permissionUUID",
   trace = {}
 ) => {
-  const MS = util.getEndpoint("auth");
+  const MS = Util.getEndpoint("auth");
   const requestOptions = {
     method: "DELETE",
     uri: `${MS}/roles/${roleUUID}/permissions/${permissionUUID}`,
     headers: {
       Authorization: `Bearer ${accessToken}`,
       "Content-type": "application/json",
-      "x-api-version": `${util.getVersion()}`
+      "x-api-version": `${Util.getVersion()}`
     },
     resolveWithFullResponse: true,
     json: true
   };
-  util.addRequestTrace(requestOptions, trace);
+  Util.addRequestTrace(requestOptions, trace);
   return new Promise(function(resolve, reject) {
     request(requestOptions)
       .then(function(responseData) {
@@ -355,19 +357,19 @@ const deleteRole = (
   roleUUID = "null roleUUID",
   trace = {}
 ) => {
-  const MS = util.getEndpoint("auth");
+  const MS = Util.getEndpoint("auth");
   const requestOptions = {
     method: "DELETE",
     uri: `${MS}/roles/${roleUUID}`,
     headers: {
       Authorization: `Bearer ${accessToken}`,
       "Content-type": "application/json",
-      "x-api-version": `${util.getVersion()}`
+      "x-api-version": `${Util.getVersion()}`
     },
     resolveWithFullResponse: true,
     json: true
   };
-  util.addRequestTrace(requestOptions, trace);
+  Util.addRequestTrace(requestOptions, trace);
   return new Promise(function(resolve, reject) {
     request(requestOptions)
       .then(function(responseData) {
@@ -396,19 +398,19 @@ const deleteRoleFromUserGroup = (
   roleUUID = "null roleUUID",
   trace = {}
 ) => {
-  const MS = util.getEndpoint("auth");
+  const MS = Util.getEndpoint("auth");
   const requestOptions = {
     method: "DELETE",
     uri: `${MS}/user-groups/${userGroupUUID}/roles/${roleUUID}`,
     headers: {
       Authorization: `Bearer ${accessToken}`,
       "Content-type": "application/json",
-      "x-api-version": `${util.getVersion()}`
+      "x-api-version": `${Util.getVersion()}`
     },
     resolveWithFullResponse: true,
     json: true
   };
-  util.addRequestTrace(requestOptions, trace);
+  Util.addRequestTrace(requestOptions, trace);
   return new Promise(function(resolve, reject) {
     request(requestOptions)
       .then(function(responseData) {
@@ -420,6 +422,37 @@ const deleteRoleFromUserGroup = (
         reject(error);
       });
   });
+};
+
+const getResourceUsers = async (accessToken = "null accessToken", resourceUUID = "null resourceUUID", trace = {}) => {
+  const groups = await listAccessByGroups(accessToken, resourceUUID, trace);
+  let nextTrace = objectMerge({}, trace);
+  const users = {};
+  const groupTypeRegex = /^[r,u,d]{1,3}/;
+  for (const group in groups.items) {
+    const groupName = groupTypeRegex.exec(
+      groups.items[group].user_group.group_name
+    );
+    users[groupName] = [];
+    nextTrace = objectMerge(
+      {},
+      nextTrace,
+      Util.generateNewMetaData(nextTrace)
+    );
+    const groupUsers = await Groups.getGroup(
+      accessToken,
+      groups.items[group].user_group.uuid,
+      {
+        "expand":"members",
+        "members_limit":999 //hopefully we don't need pagination here. nh
+      },
+      nextTrace
+    );
+    users[groupName] = groupUsers.members.items.map(item => {
+      return item.uuid;
+    });
+  }
+  return users;
 };
 
 /**
@@ -435,18 +468,18 @@ const listAccessByGroups = (
   resourceUUID = "null groupUUID",
   trace = {}
 ) => {
-  const MS = util.getEndpoint("auth");
+  const MS = Util.getEndpoint("auth");
   const requestOptions = {
     method: "GET",
     uri: `${MS}/resources/${resourceUUID}/user-groups/access`,
     headers: {
       Authorization: `Bearer ${accessToken}`,
       "Content-type": "application/json",
-      "x-api-version": `${util.getVersion()}`
+      "x-api-version": `${Util.getVersion()}`
     },
     json: true
   };
-  util.addRequestTrace(requestOptions, trace);
+  Util.addRequestTrace(requestOptions, trace);
   return request(requestOptions);
 };
 
@@ -463,18 +496,18 @@ const listAccessByPermissions = (
   resourceUUID = "null groupUUID",
   trace = {}
 ) => {
-  const MS = util.getEndpoint("auth");
+  const MS = Util.getEndpoint("auth");
   const requestOptions = {
     method: "GET",
     uri: `${MS}/resources/${resourceUUID}/permissions/access`,
     headers: {
       Authorization: `Bearer ${accessToken}`,
       "Content-type": "application/json",
-      "x-api-version": `${util.getVersion()}`
+      "x-api-version": `${Util.getVersion()}`
     },
     json: true
   };
-  util.addRequestTrace(requestOptions, trace);
+  Util.addRequestTrace(requestOptions, trace);
   return request(requestOptions);
 };
 
@@ -493,18 +526,18 @@ const listUserGroupRoles = (
   filters = undefined,
   trace = {}
 ) => {
-  const MS = util.getEndpoint("auth");
+  const MS = Util.getEndpoint("auth");
   const requestOptions = {
     method: "GET",
     uri: `${MS}/user-groups/${userGroupUUID}/roles`,
     headers: {
       Authorization: `Bearer ${accessToken}`,
       "Content-type": "application/json",
-      "x-api-version": `${util.getVersion()}`
+      "x-api-version": `${Util.getVersion()}`
     },
     json: true
   };
-  util.addRequestTrace(requestOptions, trace);
+  Util.addRequestTrace(requestOptions, trace);
   if (filters) {
     requestOptions.qs = {};
     Object.keys(filters).forEach(filter => {
@@ -531,14 +564,14 @@ const listPermissions = (
   filters = undefined,
   trace = {}
 ) => {
-  const MS = util.getEndpoint("auth");
+  const MS = Util.getEndpoint("auth");
   const requestOptions = {
     method: "GET",
     uri: `${MS}/permissions`,
     headers: {
       Authorization: `Bearer ${accessToken}`,
       "Content-type": "application/json",
-      "x-api-version": `${util.getVersion()}`
+      "x-api-version": `${Util.getVersion()}`
     },
     qs: {
       offset: offset,
@@ -546,7 +579,7 @@ const listPermissions = (
     },
     json: true
   };
-  util.addRequestTrace(requestOptions, trace);
+  Util.addRequestTrace(requestOptions, trace);
   if (filters) {
     Object.keys(filters).forEach(filter => {
       requestOptions.qs[filter] = filters[filter];
@@ -571,18 +604,18 @@ const listPermissionRoles = (
   filters = undefined,
   trace = {}
 ) => {
-  const MS = util.getEndpoint("auth");
+  const MS = Util.getEndpoint("auth");
   const requestOptions = {
     method: "GET",
     uri: `${MS}/permissions/${permissionUUID}/roles`,
     headers: {
       Authorization: `Bearer ${accessToken}`,
       "Content-type": "application/json",
-      "x-api-version": `${util.getVersion()}`
+      "x-api-version": `${Util.getVersion()}`
     },
     json: true
   };
-  util.addRequestTrace(requestOptions, trace);
+  Util.addRequestTrace(requestOptions, trace);
   if (filters) {
     requestOptions.qs = {};
     Object.keys(filters).forEach(filter => {
@@ -609,14 +642,14 @@ const listRoles = (
   filters = undefined,
   trace = {}
 ) => {
-  const MS = util.getEndpoint("auth");
+  const MS = Util.getEndpoint("auth");
   const requestOptions = {
     method: "GET",
     uri: `${MS}/roles`,
     headers: {
       Authorization: `Bearer ${accessToken}`,
       "Content-type": "application/json",
-      "x-api-version": `${util.getVersion()}`
+      "x-api-version": `${Util.getVersion()}`
     },
     qs: {
       offset: offset,
@@ -624,7 +657,7 @@ const listRoles = (
     },
     json: true
   };
-  util.addRequestTrace(requestOptions, trace);
+  Util.addRequestTrace(requestOptions, trace);
   if (filters) {
     Object.keys(filters).forEach(filter => {
       requestOptions.qs[filter] = filters[filter];
@@ -649,18 +682,18 @@ const listRoleUserGroups = (
   filters = undefined,
   trace = {}
 ) => {
-  const MS = util.getEndpoint("auth");
+  const MS = Util.getEndpoint("auth");
   const requestOptions = {
     method: "GET",
     uri: `${MS}/roles/${roleUUID}/user-groups`,
     headers: {
       Authorization: `Bearer ${accessToken}`,
       "Content-type": "application/json",
-      "x-api-version": `${util.getVersion()}`
+      "x-api-version": `${Util.getVersion()}`
     },
     json: true
   };
-  util.addRequestTrace(requestOptions, trace);
+  Util.addRequestTrace(requestOptions, trace);
   if (filters) {
     requestOptions.qs = {};
     Object.keys(filters).forEach(filter => {
@@ -685,18 +718,18 @@ const listRolePermissions = (
   filters = undefined,
   trace = {}
 ) => {
-  const MS = util.getEndpoint("auth");
+  const MS = Util.getEndpoint("auth");
   const requestOptions = {
     method: "GET",
     uri: `${MS}/roles/${roleUUID}/permissions`,
     headers: {
       Authorization: `Bearer ${accessToken}`,
       "Content-type": "application/json",
-      "x-api-version": `${util.getVersion()}`
+      "x-api-version": `${Util.getVersion()}`
     },
     json: true
   };
-  util.addRequestTrace(requestOptions, trace);
+  Util.addRequestTrace(requestOptions, trace);
   if (filters) {
     requestOptions.qs = {};
     Object.keys(filters).forEach(filter => {
@@ -723,14 +756,14 @@ const listUserGroups = (
   filters = undefined,
   trace = {}
 ) => {
-  const MS = util.getEndpoint("auth");
+  const MS = Util.getEndpoint("auth");
   const requestOptions = {
     method: "GET",
     uri: `${MS}/user-groups`,
     headers: {
       Authorization: `Bearer ${accessToken}`,
       "Content-type": "application/json",
-      "x-api-version": `${util.getVersion()}`
+      "x-api-version": `${Util.getVersion()}`
     },
     qs: {
       offset: offset,
@@ -738,7 +771,7 @@ const listUserGroups = (
     },
     json: true
   };
-  util.addRequestTrace(requestOptions, trace);
+  Util.addRequestTrace(requestOptions, trace);
   if (filters) {
     Object.keys(filters).forEach(filter => {
       requestOptions.qs[filter] = filters[filter];
@@ -763,19 +796,19 @@ const modifyRole = (
   body = "null body",
   trace = {}
 ) => {
-  const MS = util.getEndpoint("auth");
+  const MS = Util.getEndpoint("auth");
   const requestOptions = {
     method: "POST",
     uri: `${MS}/roles/${roleUUID}/modify`,
     headers: {
       Authorization: `Bearer ${accessToken}`,
       "Content-type": "application/json",
-      "x-api-version": `${util.getVersion()}`
+      "x-api-version": `${Util.getVersion()}`
     },
     body: body,
     json: true
   };
-  util.addRequestTrace(requestOptions, trace);
+  Util.addRequestTrace(requestOptions, trace);
   return request(requestOptions);
 };
 
@@ -791,6 +824,7 @@ module.exports = {
   deletePermissionFromRole,
   deleteRole,
   deleteRoleFromUserGroup,
+  getResourceUsers,
   listAccessByGroups,
   listAccessByPermissions,
   listUserGroupRoles,

@@ -9,25 +9,27 @@ var request = require("request-promise");
  * @description This function will call the identity microservice with the credentials and accessToken you passed in.
  * @param {string} [accessToken="null accessToken"] - access token
  * @param {object} [body="null body"] - JSON object containing new user info
+ * @param {object} [trace = {}] - optional microservice lifecycle trace headers
  * @returns {Promise<object>} - Promise resolving to an identity data object
  */
 var createIdentity = function createIdentity() {
   var accessToken = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : "null accessToken";
   var body = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : "null body";
+  var trace = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : {};
 
   var MS = util.getEndpoint("identity");
   var requestOptions = {
     method: "POST",
     uri: MS + "/identities",
     headers: {
-      "Authorization": "Bearer " + accessToken,
+      Authorization: "Bearer " + accessToken,
       "Content-type": "application/json",
-      'x-api-version': "" + util.getVersion()
+      "x-api-version": "" + util.getVersion()
     },
     body: body,
     json: true
   };
-
+  util.addRequestTrace(requestOptions, trace);
   return request(requestOptions);
 };
 
@@ -37,26 +39,28 @@ var createIdentity = function createIdentity() {
  * @param {string} [accessToken="null accessToken"]
  * @param {string} [userUuid="null userUuid"]
  * @param {object} [body="null body"]
+ * @param {object} [trace = {}] - optional microservice lifecycle trace headers
  * @returns {Promise<object>} - Promise resolving to an identity data object
  */
 var modifyIdentity = function modifyIdentity() {
   var accessToken = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : "null accessToken";
   var userUuid = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : "null userUuid";
   var body = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : "null body";
+  var trace = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : {};
 
   var MS = util.getEndpoint("identity");
   var requestOptions = {
     method: "POST",
     uri: MS + "/identities/" + userUuid + "/modify",
     headers: {
-      "Authorization": "Bearer " + accessToken,
+      Authorization: "Bearer " + accessToken,
       "Content-type": "application/json",
-      'x-api-version': "" + util.getVersion()
+      "x-api-version": "" + util.getVersion()
     },
     body: body,
     json: true
   };
-
+  util.addRequestTrace(requestOptions, trace);
   return request(requestOptions);
 };
 
@@ -65,28 +69,30 @@ var modifyIdentity = function modifyIdentity() {
  * @description This function will deactivate a user/identity.
  * @param {string} [accessToken="null accessToken"]
  * @param {string} [userUuid="null userUuid"]
+ * @param {object} [trace = {}] - optional microservice lifecycle trace headers
  * @returns {Promise<object>} - Promise resolving to an status data object
  */
 var deactivateIdentity = function deactivateIdentity() {
   var accessToken = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : "null accessToken";
   var userUuid = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : "null userUuid";
+  var trace = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : {};
 
   var MS = util.getEndpoint("identity");
   var requestOptions = {
     method: "POST",
     uri: MS + "/identities/" + userUuid + "/deactivate",
     headers: {
-      "Authorization": "Bearer " + accessToken,
+      Authorization: "Bearer " + accessToken,
       "Content-type": "application/json",
-      'x-api-version': "" + util.getVersion()
+      "x-api-version": "" + util.getVersion()
     },
     json: true,
     resolveWithFullResponse: true
   };
-
+  util.addRequestTrace(requestOptions, trace);
   return new Promise(function (resolve, reject) {
     request(requestOptions).then(function (responseData) {
-      responseData.statusCode === 204 ? resolve({ "status": "ok" }) : reject({ "status": "failed" });
+      responseData.statusCode === 204 ? resolve({ status: "ok" }) : reject({ status: "failed" });
     }).catch(function (error) {
       reject(error);
     });
@@ -98,28 +104,30 @@ var deactivateIdentity = function deactivateIdentity() {
  * @description This function will reactivate a user/identity.
  * @param {string} [accessToken="null accessToken"]
  * @param {string} [userUuid="null userUuid"]
+ * @param {object} [trace = {}] - optional microservice lifecycle trace headers
  * @returns {Promise<object>} - Promise resolving to an status data object
  */
 var reactivateIdentity = function reactivateIdentity() {
   var accessToken = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : "null accessToken";
   var userUuid = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : "null userUuid";
+  var trace = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : {};
 
   var MS = util.getEndpoint("identity");
   var requestOptions = {
     method: "POST",
     uri: MS + "/identities/" + userUuid + "/reactivate",
     headers: {
-      "Authorization": "Bearer " + accessToken,
+      Authorization: "Bearer " + accessToken,
       "Content-type": "application/json",
-      'x-api-version': "" + util.getVersion()
+      "x-api-version": "" + util.getVersion()
     },
     json: true,
     resolveWithFullResponse: true
   };
-
+  util.addRequestTrace(requestOptions, trace);
   return new Promise(function (resolve, reject) {
     request(requestOptions).then(function (responseData) {
-      responseData.statusCode === 204 ? resolve({ "status": "ok" }) : reject({ "status": "failed" });
+      responseData.statusCode === 204 ? resolve({ status: "ok" }) : reject({ status: "failed" });
     }).catch(function (error) {
       reject(error);
     });
@@ -132,31 +140,33 @@ var reactivateIdentity = function reactivateIdentity() {
  * @param {string} [accessToken="null accessToken"] - access token
  * @param {string} [userUuid="null user uuid"] - user_uuid for alias being created
  * @param {object} [body="null body"] - object containing any combination of email, nickname, or sms alias assignments.
+ * @param {object} [trace = {}] - optional microservice lifecycle trace headers
  * @returns {Promise<object>} - Promise resolving to an identity data object with alias
  */
 var createAlias = function createAlias() {
   var accessToken = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : "null accessToken";
   var userUuid = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : "null user uuid";
   var body = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : "null body";
+  var trace = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : {};
 
   var MS = util.getEndpoint("identity");
   var requestOptions = {
     method: "POST",
     uri: MS + "/identities/" + userUuid + "/aliases",
     headers: {
-      "Authorization": "Bearer " + accessToken,
+      Authorization: "Bearer " + accessToken,
       "Content-type": "application/json",
-      'x-api-version': "" + util.getVersion()
+      "x-api-version": "" + util.getVersion()
     },
     body: body,
     json: true,
     resolveWithFullResponse: true
   };
-
+  util.addRequestTrace(requestOptions, trace);
   //Returning "ok" here as response object does not contain alias.
   return new Promise(function (resolve, reject) {
     request(requestOptions).then(function (response) {
-      response.statusCode === 201 ? resolve({ "status": "ok" }) : reject({ "status": "failed" });
+      response.statusCode === 201 ? resolve({ status: "ok" }) : reject({ status: "failed" });
     }).catch(function (error) {
       reject(error);
     });
@@ -169,29 +179,31 @@ var createAlias = function createAlias() {
  * @param {string} [accessToken="null accessToken"] - access token
  * @param {string} [userUuid="null user uuid"] - user_uuid for alias being created
  * @param {string} [did="null DID"] - sms number to associate with the user
+ * @param {object} [trace = {}] - optional microservice lifecycle trace headers
  * @returns {Promise<object>} - Promise resolving to an identity data object with alias
  */
 var updateAliasWithDID = function updateAliasWithDID() {
   var accessToken = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : "null accessToken";
   var userUuid = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : "null user uuid";
   var did = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : "null DID";
+  var trace = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : {};
 
   var MS = util.getEndpoint("identity");
   var requestOptions = {
     method: "PUT",
     uri: MS + "/identities/" + userUuid + "/aliases/" + did,
     headers: {
-      "Authorization": "Bearer " + accessToken,
+      Authorization: "Bearer " + accessToken,
       "Content-type": "application/json",
-      'x-api-version': "" + util.getVersion()
+      "x-api-version": "" + util.getVersion()
     },
     json: true,
     resolveWithFullResponse: true
   };
-
+  util.addRequestTrace(requestOptions, trace);
   return new Promise(function (resolve, reject) {
     request(requestOptions).then(function (response) {
-      response.statusCode === 202 ? resolve({ "status": "ok" }) : reject({ "status": "failed" });
+      response.statusCode === 202 ? resolve({ status: "ok" }) : reject({ status: "failed" });
     }).catch(function (error) {
       reject(error);
     });
@@ -200,32 +212,34 @@ var updateAliasWithDID = function updateAliasWithDID() {
 
 /**
  * @async
- * @description This function will call the identity microservice with the credentials and 
+ * @description This function will call the identity microservice with the credentials and
  * accessToken you passed in and delete the user object matching the user_uuid submitted.
  * @param {string} [accessToken="null accessToken"] - access token for cpaas systems
  * @param {string} [userUuid="null uuid"] - uuid for a star2star user
+ * @param {object} [trace = {}] - optional microservice lifecycle trace headers
  * @returns {Promise<empty>} - Promise resolving success or failure.
  */
 var deleteIdentity = function deleteIdentity() {
   var accessToken = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : "null accessToken";
   var userUuid = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : "null uuid";
+  var trace = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : {};
 
   var MS = util.getEndpoint("identity");
   var requestOptions = {
     method: "DELETE",
     uri: MS + "/identities/" + userUuid,
     headers: {
-      "Authorization": "Bearer " + accessToken,
+      Authorization: "Bearer " + accessToken,
       "Content-type": "application/json",
-      'x-api-version': "" + util.getVersion()
+      "x-api-version": "" + util.getVersion()
     },
     json: true,
     resolveWithFullResponse: true
   };
-
+  util.addRequestTrace(requestOptions, trace);
   return new Promise(function (resolve, reject) {
     request(requestOptions).then(function (responseData) {
-      responseData.statusCode === 204 ? resolve({ "status": "ok" }) : reject({ "status": "failed" });
+      responseData.statusCode === 204 ? resolve({ status: "ok" }) : reject({ status: "failed" });
     }).catch(function (error) {
       reject(error);
     });
@@ -239,21 +253,23 @@ var deleteIdentity = function deleteIdentity() {
  * @param {string} [accessToken="null access token"] - access token for cpaas systems
  * @param {string} [email="null email"] - email address for an star2star account
  * @param {string} [pwd="null pwd"] - passowrd for that account
+ * @param {object} [trace = {}] - optional microservice lifecycle trace headers
  * @returns {Promise<object>} - Promise resolving to an identity data object
  */
 var login = function login() {
   var accessToken = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : "null access token";
   var email = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : "null email";
   var pwd = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : "null pwd";
+  var trace = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : {};
 
   var MS = util.getEndpoint("identity");
   var requestOptions = {
     method: "POST",
     uri: MS + "/users/login",
     headers: {
-      "Authorization": "Bearer " + accessToken,
+      Authorization: "Bearer " + accessToken,
       "Content-type": "application/json",
-      'x-api-version': "" + util.getVersion()
+      "x-api-version": "" + util.getVersion()
     },
     body: {
       email: email,
@@ -261,7 +277,7 @@ var login = function login() {
     },
     json: true
   };
-
+  util.addRequestTrace(requestOptions, trace);
   return request(requestOptions);
 };
 
@@ -270,23 +286,25 @@ var login = function login() {
  * @async
  * @description This function will return the identity data for the authenticated user.
  * @param {string} [accessToken="null access token"] - access token for cpaas systems
+ * @param {object} [trace = {}] - optional microservice lifecycle trace headers
  * @returns {Promise<object>} - Promise resolving to an identity data object
  */
 var getMyIdentityData = function getMyIdentityData() {
   var accessToken = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : "null access token";
+  var trace = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
 
   var MS = util.getEndpoint("identity");
   var requestOptions = {
     method: "GET",
     uri: MS + "/users/me",
     headers: {
-      "Authorization": "Bearer " + accessToken,
+      Authorization: "Bearer " + accessToken,
       "Content-type": "application/json",
-      'x-api-version': "" + util.getVersion()
+      "x-api-version": "" + util.getVersion()
     },
     json: true
   };
-
+  util.addRequestTrace(requestOptions, trace);
   return request(requestOptions);
 };
 
@@ -296,24 +314,26 @@ var getMyIdentityData = function getMyIdentityData() {
  * accessToken you passed in.
  * @param {string} [accessToken="null access token"] - access token for cpaas systems
  * @param {string} [user_uuid="null user uuid"] - user uuid to lookup
+ * @param {object} [trace = {}] - optional microservice lifecycle trace headers
  * @returns {Promise<object>} - Promise resolving to an identity data object
  */
 var getIdentityDetails = function getIdentityDetails() {
   var accessToken = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : "null access token";
   var user_uuid = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : "null user uuid";
+  var trace = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : {};
 
   var MS = util.getEndpoint("identity");
   var requestOptions = {
     method: "GET",
     uri: MS + "/identities/" + user_uuid + "?include=alias",
     headers: {
-      "Authorization": "Bearer " + accessToken,
+      Authorization: "Bearer " + accessToken,
       "Content-type": "application/json",
-      'x-api-version': "" + util.getVersion()
+      "x-api-version": "" + util.getVersion()
     },
     json: true
   };
-
+  util.addRequestTrace(requestOptions, trace);
   return request(requestOptions);
 };
 
@@ -324,6 +344,7 @@ var getIdentityDetails = function getIdentityDetails() {
  * @param {number} [offset=0] - list offset
  * @param {number} [limit=10] - number of items to return
  * @param {array} [filters=undefined] - optional array of key-value pairs to filter response.
+ * @param {object} [trace = {}] - optional microservice lifecycle trace headers
  * @returns {Promise<object>} - Promise resolving to an identity data object
  */
 var lookupIdentity = function lookupIdentity() {
@@ -331,22 +352,24 @@ var lookupIdentity = function lookupIdentity() {
   var offset = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 0;
   var limit = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : 10;
   var filters = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : undefined;
+  var trace = arguments.length > 4 && arguments[4] !== undefined ? arguments[4] : {};
 
   var MS = util.getEndpoint("identity");
   var requestOptions = {
     method: "GET",
     uri: MS + "/identities",
     qs: {
-      "offset": offset,
-      "limit": limit
+      offset: offset,
+      limit: limit
     },
     headers: {
-      "Authorization": "Bearer " + accessToken,
+      Authorization: "Bearer " + accessToken,
       "Content-type": "application/json",
-      'x-api-version': "" + util.getVersion()
+      "x-api-version": "" + util.getVersion()
     },
     json: true
   };
+  util.addRequestTrace(requestOptions, trace);
   if (filters) {
     Object.keys(filters).forEach(function (filter) {
       requestOptions.qs[filter] = filters[filter];
@@ -356,18 +379,20 @@ var lookupIdentity = function lookupIdentity() {
   return request(requestOptions);
 };
 
-/** 
+/**
  * @async
  * @description This function will update a user's password.
  * @param {string} [accessToken="null access token"] - access token for cpaas systems
  * @param {string} [password_token="null passwordToken"] - Reset token received via email
  * @param {object} [body="null body"] - object containing email address and new password
+ * @param {object} [trace = {}] - optional microservice lifecycle trace headers
  * @returns {Promise<object>} - Promise resolving to a as status message; "ok" or "failed"
  */
 var resetPassword = function resetPassword() {
   var accessToken = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : "null access token";
   var passwordToken = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : "null passwordToken";
   var body = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : "null body";
+  var trace = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : {};
 
   var MS = util.getEndpoint("identity");
   var requestOptions = {
@@ -375,17 +400,17 @@ var resetPassword = function resetPassword() {
     uri: MS + "/users/password-tokens/" + passwordToken,
     body: body,
     headers: {
-      "Authorization": "Bearer " + accessToken,
+      Authorization: "Bearer " + accessToken,
       "Content-type": "application/json",
-      'x-api-version': "" + util.getVersion()
+      "x-api-version": "" + util.getVersion()
     },
     resolveWithFullResponse: true,
     json: true
   };
-
+  util.addRequestTrace(requestOptions, trace);
   return new Promise(function (resolve, reject) {
     request(requestOptions).then(function (responseData) {
-      responseData.statusCode === 202 ? resolve({ "status": "ok" }) : reject({ "status": "failed" });
+      responseData.statusCode === 202 ? resolve({ status: "ok" }) : reject({ status: "failed" });
     }).catch(function (error) {
       reject(error);
     });
@@ -397,11 +422,13 @@ var resetPassword = function resetPassword() {
  * @description This function will initiate a request for a password reset token via the user email account.
  * @param {string} [accessToken="null access token"] - access token for cpaas systems
  * @param {string} [emailAddress="null emailAddress"] - target email address
+ * @param {object} [trace = {}] - optional microservice lifecycle trace headers
  * @returns {Promise<object>} - Promise resolving to a as status message; "ok" or "failed"
  */
 var generatePasswordToken = function generatePasswordToken() {
   var accessToken = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : "null access token";
   var emailAddress = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : "null emailAddress";
+  var trace = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : {};
 
   var MS = util.getEndpoint("identity");
   var requestOptions = {
@@ -411,17 +438,17 @@ var generatePasswordToken = function generatePasswordToken() {
       email: emailAddress
     },
     headers: {
-      "Authorization": "Bearer " + accessToken,
+      Authorization: "Bearer " + accessToken,
       "Content-type": "application/json",
-      'x-api-version': "" + util.getVersion()
+      "x-api-version": "" + util.getVersion()
     },
     resolveWithFullResponse: true,
     json: true
   };
-
+  util.addRequestTrace(requestOptions, trace);
   return new Promise(function (resolve, reject) {
     request(requestOptions).then(function (responseData) {
-      responseData.statusCode === 202 ? resolve({ "status": "ok" }) : reject({ "status": "failed" });
+      responseData.statusCode === 202 ? resolve({ status: "ok" }) : reject({ status: "failed" });
     }).catch(function (error) {
       reject(error);
     });
@@ -433,24 +460,26 @@ var generatePasswordToken = function generatePasswordToken() {
  * @description This function will validate a password reset token received from email.
  * @param {string} [accessToken="null access token"] - access token for cpaas systems
  * @param {string} [password_token="null password token"] - password reset token received via email
+ * @param {object} [trace = {}] - optional microservice lifecycle trace headers
  * @returns {Promise<object>} - Promise resolving to an object confirming the token and target email
  */
 var validatePasswordToken = function validatePasswordToken() {
   var accessToken = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : "null access token";
   var password_token = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : "null password token";
+  var trace = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : {};
 
   var MS = util.getEndpoint("identity");
   var requestOptions = {
     method: "GET",
     uri: MS + "/users/password-tokens/" + password_token,
     headers: {
-      "Authorization": "Bearer " + accessToken,
+      Authorization: "Bearer " + accessToken,
       "Content-type": "application/json",
-      'x-api-version': "" + util.getVersion()
+      "x-api-version": "" + util.getVersion()
     },
     json: true
   };
-
+  util.addRequestTrace(requestOptions, trace);
   return request(requestOptions);
 };
 

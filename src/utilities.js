@@ -267,7 +267,7 @@ const isBrowser = () => {
 };
 
 const addRequestTrace = (request, trace = {}) => {
-  const headerKeys = ["id", "trace"];
+  const headerKeys = ["id", "trace", "parent"];
 
   headerKeys.forEach(keyName => {
     if (typeof trace === "object" && trace.hasOwnProperty(keyName)) {
@@ -278,6 +278,13 @@ const addRequestTrace = (request, trace = {}) => {
       logger.debug(`Assigning Trace ${keyName}: ${request.headers[keyName]}`);
     }
   });
+  if (typeof trace === "object" && trace.hasOwnProperty("debug")) {
+    request.headers["debug"] = trace["debug"];
+  } else if (config.msDebug) {
+    request.headers["debug"] = true;
+  } else {
+    request.headers["debug"] = false;
+  }
 
   return request;
 };

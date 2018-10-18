@@ -3,7 +3,7 @@
 
 var util = require("./utilities");
 var request = require("request-promise");
-var emailValidator = require('email-validator');
+var emailValidator = require("email-validator");
 
 var validateEmail = function validateEmail(email) {
   var rStatus = {
@@ -28,7 +28,7 @@ var validateEmail = function validateEmail(email) {
     rStatus.message = message;
   }
 
-  //console.log("RETURNING RSTATUS",rStatus);  
+  //console.log("RETURNING RSTATUS",rStatus);
   return rStatus;
 };
 
@@ -40,6 +40,7 @@ var validateEmail = function validateEmail(email) {
  * @param {string} [subject=""] - message subject
  * @param {string} [message=""] - mesaage
  * @param {string} [type="text"] //TODO add validation for types
+ * @param {object} [trace = {}] - optional microservice lifecycle trace headers
  * @returns
  */
 var sendEmail = function sendEmail() {
@@ -49,16 +50,16 @@ var sendEmail = function sendEmail() {
   var subject = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : "";
   var message = arguments.length > 4 && arguments[4] !== undefined ? arguments[4] : "";
   var type = arguments.length > 5 && arguments[5] !== undefined ? arguments[5] : "text";
-
+  var trace = arguments.length > 6 && arguments[6] !== undefined ? arguments[6] : {};
 
   var validEmail = validateEmail({
-    "content": {
-      "body": message,
-      "type": type
+    content: {
+      body: message,
+      type: type
     },
-    "from": sender,
-    "subject": subject,
-    "to": to
+    from: sender,
+    subject: subject,
+    to: to
   });
 
   if (validEmail.status === 200) {
@@ -68,12 +69,13 @@ var sendEmail = function sendEmail() {
       uri: MS + "/messages/send",
       headers: {
         "Content-type": "application/json",
-        "Authorization": "Bearer " + accessToken,
-        'x-api-version': "" + util.getVersion()
+        Authorization: "Bearer " + accessToken,
+        "x-api-version": "" + util.getVersion()
       },
-      "body": validEmail.email,
+      body: validEmail.email,
       json: true
     };
+    util.addRequestTrace(requestOptions, trace);
     return request(requestOptions);
   } else {
     return Promise.reject(validEmail);

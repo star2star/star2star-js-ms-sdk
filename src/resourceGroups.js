@@ -119,92 +119,192 @@ const cleanUpResourceGroups = async (
   }
 };
 
-// /**
-//  * @async
-//  * @description This function will update a resources permissions groups.
-//  * @param {string} [accessToken="null accessToken"] - Access Token
-//  * @param {string} [data_uuid="uuid not specified"] - data object UUID
-//  * @param {object} [users={}}] - users object treated as PUT
-//  * @param {object} [trace = {}] - microservice lifecycle trace headers
-//  * @returns {Promise<object>} Promise resolving to confirmation of updated groups
-//  */
-// const updateResourceGroups = async (
-//   accessToken = "null accessToken",
-//   resourceUUID = "uuid not specified",
-//   users = {},
-//   trace = {}
-// ) => {
-//   try {
-//     const resourceGroups = await Auth.listAccessByGroups(
-//       accessToken,
-//       resourceUUID,
-//       trace
-//     );
-//     let nextTrace = trace;
-//     logger.info(
-//       `Resource group lookup success: ${JSON.stringify(resourceGroups, null, "\t")}`
-//     );
-//     if (
-//       resourceGroups.hasOwnProperty("items") &&
-//       resourceGroups.items.length > 0
-//     ) {
-//       //extract the type of group from the name
-//       const groupTypeRegex = /^[r,u,d]{1,3}/;
-//       for (const item in resourceGroups.items) {
-//         if (
-//           item.hasOwnProperty("user_group") &&
-//           item.user_group.hasOwnProperty("group_name")
-//         ) {
-//           let groupType = groupTypeRegex.exec(item.user_group.group_name); 
-//           // A resource group exists for this set of permissions.
-//           if (typeof users === "object" && users.hasOwnProperty(groupType)) {
-//             nextTrace = objectMerge(
-//               {},
-//               nextTrace,
-//               Util.generateNewMetaData(nextTrace)
-//             );
-//             const userGroup = await Groups.getGroup(accessToken,item.user_group.uuid,undefined,nextTrace);
-//             //diff the group and the user for this groupType to add or remove users as needed
-//             logger.info(
-//               `Found Existing Resource Group: ${JSON.stringify(userGroup, null, "\t")}`
-//             );
-//             for (const groupUser in userGroup.members.items) {
-//               for (const user in users[groupType]) {
-
-//               }
-//             }
-//             //mark the users object as done for this groupType
-//             users[groupType].done = true;
-//           } else {
-//             // we no longer have any users for this resource group, so delete it
-//             await Groups.deleteGroup(accessToken,item.user_group.uuid);
-//             logger.info(`Deleted Resource Group: ${item.user_group.group_name}`);
-//           }
-//         } else {
-//           // Unexpected item format. Bail out....
-//           return Promise.reject({"statusCode":400, "message":"resource group lookup returned corrupt data"});
-//         }
-//       }
-//       //add any new groups if needed.
-//       Object.keys("users").forEach(user => {
-//         if(user.hasOwnProperty("done") && user.done) {
-//           delete users[user];
-//         }
-//         nextTrace = objectMerge(
-//           {},
-//           nextTrace,
-//           Util.generateNewMetaData(nextTrace)
-//         );
-//         createResourceGroups(accessToken)
-//       });
-//     }
-//   } catch (error) {
-//     return Promise.reject(error);
-//   }
-// };
+/**
+ * @async
+ * @description This function will update a resources permissions groups.
+ * @param {string} [accessToken="null accessToken"] - Access Token
+ * @param {string} [data_uuid="uuid not specified"] - data object UUID
+ * @param {object} [users={}}] - users object treated as PUT
+ * @param {object} [trace = {}] - microservice lifecycle trace headers
+ * @returns {Promise<object>} Promise resolving to confirmation of updated groups
+ */
+const updateResourceGroups = async (
+  accessToken = "null accessToken",
+  resourceUUID = "uuid not specified",
+  accountUUID = "null accountUUID",
+  users = {},
+  trace = {}
+) => {
+  try {
+    const resourceGroups = await Auth.listAccessByGroups(
+      accessToken,
+      resourceUUID,
+      trace
+    );
+    let nextTrace = trace;
+    logger.info(
+      `Resource group lookup success: ${JSON.stringify(
+        resourceGroups,
+        null,
+        "\t"
+      )}`
+    );
+    if (
+      resourceGroups.hasOwnProperty("items") &&
+      resourceGroups.items.length > 0
+    ) {
+      //extract the type of group from the name
+      const groupTypeRegex = /^[r,u,d]{1,3}/;
+      for (const item in resourceGroups.items) {
+        logger.info(
+          `resource group item: ${JSON.stringify(
+            resourceGroups.items[item],
+            null,
+            "\t"
+          )}`
+        );
+        if (
+          resourceGroups.items[item].hasOwnProperty("user_group") &&
+          resourceGroups.items[item].user_group.hasOwnProperty("group_name")
+        ) {
+          let groupType = groupTypeRegex.exec(
+            resourceGroups.items[item].user_group.group_name
+          );
+          // A resource group exists for this set of permissions.
+          if (typeof users === "object" && users.hasOwnProperty(groupType)) {
+            nextTrace = objectMerge(
+              {},
+              nextTrace,
+              Util.generateNewMetaData(nextTrace)
+            );
+            const userGroup = await Groups.getGroup(
+              accessToken,
+              resourceGroups.items[item].user_group.uuid,
+              {
+                expand: "members",
+                members_limit: 999 //hopefully we don't need pagination here. nh
+              },
+              nextTrace
+            );
+            logger.info(
+              `Found Existing Resource Group To Update: ${JSON.stringify(
+                userGroup,
+                null,
+                "\t"
+              )}`
+            );
+            //add the new users to the group
+            const addUsers = users[groupType]
+              .filter(user => {
+                let found = false;
+                userGroup.members.items.forEach(groupUser => {
+                  if (!found) {
+                    user === groupUser.uuid ? (found = true) : (found = false);
+                  }
+                });
+                return !found;
+              })
+              .map(user => {
+                return { uuid: user, type: "user" };
+              });
+            if (addUsers && addUsers.length > 0) {
+              nextTrace = objectMerge(
+                {},
+                nextTrace,
+                Util.generateNewMetaData(nextTrace)
+              );
+              await Groups.addMembersToGroup(
+                accessToken,
+                userGroup.uuid,
+                addUsers,
+                nextTrace
+              );
+            }
+            //delete the old users from the group
+            const deleteUsers = userGroup.members.items
+              .filter(groupUser => {
+                let found = false;
+                users[groupType].forEach(user => {
+                  if (!found) {
+                    user === groupUser.uuid ? (found = true) : (found = false);
+                  }
+                });
+                return !found;
+              })
+              .map(groupUser => {
+                return { uuid: groupUser.uuid };
+              });
+            if (deleteUsers && deleteUsers.length > 0) {
+              nextTrace = objectMerge(
+                {},
+                nextTrace,
+                Util.generateNewMetaData(nextTrace)
+              );
+              await Groups.deleteGroupMembers(
+                accessToken,
+                userGroup.uuid,
+                deleteUsers,
+                nextTrace
+              );
+            }
+            //mark the users object as done for this groupType
+            users[groupType] = "";
+          } else {
+            // we no longer have any users for this resource group, so delete it
+            await Groups.deleteGroup(
+              accessToken,
+              resourceGroups.items[item].user_group.uuid
+            );
+            users[groupType] = "";
+            logger.info(
+              `Deleted Resource Group: ${
+                resourceGroups.items[item].user_group.group_name
+              }`
+            );
+          }
+        } else {
+          // Unexpected item format. Bail out....
+          return Promise.reject({
+            statusCode: 400,
+            message: "resource group lookup returned corrupt data"
+          });
+        }
+      }
+    }
+    // add any new groups if needed. empty properties were set above
+    for (const user in users) {
+      if (users[user] === "") {
+        delete users[user];
+      }
+    }
+    if (Object.keys(users).length > 0) {
+      nextTrace = objectMerge(
+        {},
+        nextTrace,
+        Util.generateNewMetaData(nextTrace)
+      );
+      logger.info(
+        `Creating New Resource Groups For Updated Object ${JSON.stringify(
+          users,
+          null,
+          "\t"
+        )}`
+      );
+      await createResourceGroups(
+        accessToken,
+        accountUUID,
+        resourceUUID,
+        users,
+        trace
+      );
+    }
+  } catch (error) {
+    return Promise.reject(error);
+  }
+};
 
 module.exports = {
   createResourceGroups,
-  cleanUpResourceGroups
-  
+  cleanUpResourceGroups,
+  updateResourceGroups
 };

@@ -15,7 +15,6 @@ const Contacts = require('./contacts');
 const Oauth = require('./oauth');
 const Media = require('./media');
 const Pubsub = require('./pubsub');
-const Application = require('./application');
 const Workflow = require('./workflow');
 const Email = require('./email');
 const ResourceGroups = require('./resourceGroups');
@@ -98,7 +97,6 @@ module.exports = {
   Contacts,
   Media,
   Pubsub,
-  Application,
   setMSVersion,
   Workflow,
   Email,

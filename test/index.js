@@ -42,7 +42,6 @@ describe("MS SDK Index", function () {
       'Contacts',
       'Media',
       'Pubsub',
-      'Application',
       'setMSVersion',
       'Workflow',
       'Email'

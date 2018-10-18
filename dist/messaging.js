@@ -1,8 +1,8 @@
 /* global require module*/
 "use strict";
 
-var util = require('./utilities');
-var request = require('request-promise');
+var util = require("./utilities");
+var request = require("request-promise");
 
 /**
  * @async
@@ -10,25 +10,28 @@ var request = require('request-promise');
  * @param {string} accessToken - Access token for cpaas systems
  * @param {string} userUuid - The user uuid making the request
  * @param {string} toPhoneNumber - A full phone number you will be sending the sms too
+ * @param {object} [trace = {}] - optional microservice lifecycle trace headers
  * @returns {Promise<object>} - Promise resolving to a conversation uuid data object
  */
 var getConversationUuid = function getConversationUuid(accessToken, userUuid, toPhoneNumber) {
+  var trace = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : {};
+
   return new Promise(function (resolve, reject) {
     var MS = util.getEndpoint("Messaging");
     var requestOptions = {
-      method: 'POST',
-      uri: MS + '/users/' + userUuid + '/conversations',
+      method: "POST",
+      uri: MS + "/users/" + userUuid + "/conversations",
       body: {
-        "phone_numbers": [toPhoneNumber]
+        phone_numbers: [toPhoneNumber]
       },
       headers: {
-        'Content-Type': 'application/json',
-        "Authorization": 'Bearer ' + accessToken,
-        'x-api-version': '' + util.getVersion()
+        "Content-Type": "application/json",
+        Authorization: "Bearer " + accessToken,
+        "x-api-version": "" + util.getVersion()
       },
       json: true
     };
-
+    util.addRequestTrace(requestOptions, trace);
     //console.log('RRRR:', requestOptions)
     request(requestOptions).then(function (response) {
       //console.log('rrrr', response.context.uuid)
@@ -49,38 +52,41 @@ var getConversationUuid = function getConversationUuid(accessToken, userUuid, to
  * @param {string} userUuid - the user uuid making the request
  * @param {string} fromPhoneNumber - full phone number to use as the sender/reply too
  * @param {string} msg - the message to send
+ * @param {object} [trace = {}] - optional microservice lifecycle trace headers
  * @returns {Promise<object>} - Promise resolving to a response confirmation data object
  */
 var sendSMSMessage = function sendSMSMessage(accessToken, convesationUUID, userUuid, fromPhoneNumber, msg) {
+  var trace = arguments.length > 5 && arguments[5] !== undefined ? arguments[5] : {};
+
   return new Promise(function (resolve, reject) {
     var objectBody = {
-      "to": '' + convesationUUID,
-      "from": '' + fromPhoneNumber,
-      "channel": "sms",
-      "content": [{
-        "type": "text",
-        "body": '' + msg
+      to: "" + convesationUUID,
+      from: "" + fromPhoneNumber,
+      channel: "sms",
+      content: [{
+        type: "text",
+        body: "" + msg
       }]
     };
     var MS = util.getEndpoint("Messaging");
     var requestOptions = {
-      method: 'POST',
-      uri: MS + '/users/' + userUuid + '/messages',
+      method: "POST",
+      uri: MS + "/users/" + userUuid + "/messages",
       body: objectBody,
       headers: {
-        'Content-Type': 'application/json',
-        "Authorization": 'Bearer ' + accessToken,
-        'x-api-version': '' + util.getVersion()
+        "Content-Type": "application/json",
+        Authorization: "Bearer " + accessToken,
+        "x-api-version": "" + util.getVersion()
       },
       json: true
     };
-
+    util.addRequestTrace(requestOptions, trace);
     request(requestOptions).then(function (response) {
       //console.log('xxxxx', response)
       resolve(response);
     }).catch(function (e) {
       //console.log(e)
-      reject('sendSMSMessage errored: ' + e);
+      reject("sendSMSMessage errored: " + e);
     });
   });
 };
@@ -93,11 +99,14 @@ var sendSMSMessage = function sendSMSMessage(accessToken, convesationUUID, userU
  * @param {string} msg - the message to send
  * @param {string} fromPhoneNumber - full phone number to use as the sender/reply too
  * @param {string} toPhoneNumber - full phone number you will be sending the sms too
+ * @param {object} [trace = {}] - optional microservice lifecycle trace headers
  * @returns {Promise<object>} - Promise resolving to a response confirmation data object
  */
 var sendSMS = function sendSMS(accessToken, userUuid, msg, fromPhoneNumber, toPhoneNumber) {
+  var trace = arguments.length > 5 && arguments[5] !== undefined ? arguments[5] : {};
+
   return new Promise(function (resolve, reject) {
-    getConversationUuid(accessToken, userUuid, toPhoneNumber).then(function (conversationUUID) {
+    getConversationUuid(accessToken, userUuid, toPhoneNumber, trace).then(function (conversationUUID) {
       sendSMSMessage(accessToken, conversationUUID, userUuid, fromPhoneNumber, msg).then(function (response) {
         resolve(response);
       }).catch(function (sError) {
@@ -115,29 +124,32 @@ var sendSMS = function sendSMS(accessToken, userUuid, msg, fromPhoneNumber, toPh
  * @description This function will get user sms number.
  * @param {string} accessToken - cpaas access Token
  * @param {string} userUuid - the user uuid making the request
+ * @param {object} [trace = {}] - optional microservice lifecycle trace headers
  * @returns {Promise<object>} - Promise resolving to a data object containing the sms number
  */
 var getSMSNumber = function getSMSNumber(accessToken, userUuid) {
+  var trace = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : {};
 
   return new Promise(function (resolve, reject) {
     var MS = util.getEndpoint("identity");
 
     var requestOptions = {
-      method: 'GET',
-      uri: MS + '/identities/' + userUuid + '?include=alias',
+      method: "GET",
+      uri: MS + "/identities/" + userUuid + "?include=alias",
       headers: {
-        "Authorization": 'Bearer ' + accessToken,
-        'x-api-version': '' + util.getVersion(),
-        'Content-type': 'application/json'
+        Authorization: "Bearer " + accessToken,
+        "x-api-version": "" + util.getVersion(),
+        "Content-type": "application/json"
       },
       json: true
     };
+    util.addRequestTrace(requestOptions, trace);
     request(requestOptions).then(function (smsResponse) {
       if (smsResponse && smsResponse.aliases) {
         var smsNbr = smsResponse.aliases.reduce(function (prev, curr) {
           if (!prev) {
-            if (curr && curr.hasOwnProperty('sms')) {
-              return curr['sms'];
+            if (curr && curr.hasOwnProperty("sms")) {
+              return curr["sms"];
             }
           }
           return prev;
@@ -146,12 +158,12 @@ var getSMSNumber = function getSMSNumber(accessToken, userUuid) {
           resolve(smsNbr);
         } else {
           reject({
-            message: 'No sms number in alias: ' + smsResponse
+            message: "No sms number in alias: " + smsResponse
           });
         }
       } else {
         reject({
-          message: 'No aliases in sms response ' + smsResponse
+          message: "No aliases in sms response " + smsResponse
         });
       }
     }).catch(function (error) {
@@ -161,7 +173,7 @@ var getSMSNumber = function getSMSNumber(accessToken, userUuid) {
 };
 
 /**
- * @async 
+ * @async
  * @description This function sends a basic SMS message
  * @param {string} [accessToken="null access token" - cpaas access token
  * @param {string} [receiver="null receiver"] - recipient number (+15555555555)
@@ -169,6 +181,7 @@ var getSMSNumber = function getSMSNumber(accessToken, userUuid) {
  * @param {string} [message="null message"] - message
  * @param {type} [type="text"] - message type
  * @param {object} [metadata={}] - optional metadata object
+ * @param {object} [trace = {}] - optional microservice lifecycle trace headers
  * @returns Promise resolving to sms send confirmation with uuid
  */
 var sendSimpleSMS = function sendSimpleSMS() {
@@ -178,27 +191,29 @@ var sendSimpleSMS = function sendSimpleSMS() {
   var message = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : "null message";
   var type = arguments.length > 4 && arguments[4] !== undefined ? arguments[4] : "text";
   var metadata = arguments.length > 5 && arguments[5] !== undefined ? arguments[5] : {};
+  var trace = arguments.length > 6 && arguments[6] !== undefined ? arguments[6] : {};
 
   var MS = util.getEndpoint("sms");
   var requestOptions = {
-    method: 'POST',
-    uri: MS + '/messages/send',
+    method: "POST",
+    uri: MS + "/messages/send",
     headers: {
-      "Authorization": 'Bearer ' + accessToken,
-      'x-api-version': '' + util.getVersion(),
-      'Content-type': 'application/json'
+      Authorization: "Bearer " + accessToken,
+      "x-api-version": "" + util.getVersion(),
+      "Content-type": "application/json"
     },
     body: {
-      "to": receiver,
-      "from": sender,
-      "content": [{
-        "type": type,
-        "body": message
+      to: receiver,
+      from: sender,
+      content: [{
+        type: type,
+        body: message
       }],
-      "metadata": metadata
+      metadata: metadata
     },
     json: true
   };
+  util.addRequestTrace(requestOptions, trace);
   return request(requestOptions);
 };
 

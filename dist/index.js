@@ -16,9 +16,9 @@ var Contacts = require('./contacts');
 var Oauth = require('./oauth');
 var Media = require('./media');
 var Pubsub = require('./pubsub');
-var Application = require('./application');
 var Workflow = require('./workflow');
 var Email = require('./email');
+var ResourceGroups = require('./resourceGroups');
 var request = require('request-promise');
 
 var cpaasKey = void 0;
@@ -106,8 +106,8 @@ module.exports = {
   Contacts: Contacts,
   Media: Media,
   Pubsub: Pubsub,
-  Application: Application,
   setMSVersion: setMSVersion,
   Workflow: Workflow,
-  Email: Email
+  Email: Email,
+  ResourceGroups: ResourceGroups
 };

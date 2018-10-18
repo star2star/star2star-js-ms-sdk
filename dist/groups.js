@@ -3,7 +3,6 @@
 
 var request = require("request-promise");
 var util = require("./utilities");
-var ObjectMerge = require("object-merge");
 
 /**
  * @async
@@ -12,6 +11,7 @@ var ObjectMerge = require("object-merge");
  * @param {number} [offset=0] - page number
  * @param {number} [limit=10] - page size
  * @param {array} [filters=undefined] - optional array of key-value pairs to filter response.
+ * @param {object} [trace = {}] - optional microservice lifecycle trace headers
  * @returns {Promise<object>} - Promise resolving to a list of user groups.
  */
 var listGroups = function listGroups() {
@@ -19,6 +19,7 @@ var listGroups = function listGroups() {
   var offset = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 0;
   var limit = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : 10;
   var filters = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : undefined;
+  var trace = arguments.length > 4 && arguments[4] !== undefined ? arguments[4] : {};
 
   var MS = util.getEndpoint("groups");
   var requestOptions = {
@@ -26,8 +27,8 @@ var listGroups = function listGroups() {
     uri: MS + "/groups",
     headers: {
       "Content-type": "application/json",
-      "Authorization": "Bearer " + accessToken,
-      'x-api-version': "" + util.getVersion()
+      Authorization: "Bearer " + accessToken,
+      "x-api-version": "" + util.getVersion()
     },
     qs: {
       offset: offset,
@@ -35,7 +36,7 @@ var listGroups = function listGroups() {
     },
     json: true
   };
-
+  util.addRequestTrace(requestOptions, trace);
   if (filters) {
     Object.keys(filters).forEach(function (filter) {
       requestOptions.qs[filter] = filters[filter];
@@ -49,11 +50,13 @@ var listGroups = function listGroups() {
  * @description This function will create a new group associated with a user
  * @param {string} [accessToken="null accessToken"] - cpaas access token
  * @param {string} [body="null body"] - object conatining group data
+ * @param {object} [trace = {}] - optional microservice lifecycle trace headers
  * @returns
  */
 var createGroup = function createGroup() {
   var accessToken = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : "null accessToken";
   var body = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : "null body";
+  var trace = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : {};
 
   var MS = util.getEndpoint("groups");
   var requestOptions = {
@@ -61,13 +64,13 @@ var createGroup = function createGroup() {
     uri: MS + "/groups",
     headers: {
       "Content-type": "application/json",
-      "Authorization": "Bearer " + accessToken,
-      'x-api-version': "" + util.getVersion()
+      Authorization: "Bearer " + accessToken,
+      "x-api-version": "" + util.getVersion()
     },
     body: body,
     json: true
   };
-
+  util.addRequestTrace(requestOptions, trace);
   return request(requestOptions);
 };
 
@@ -77,12 +80,14 @@ var createGroup = function createGroup() {
  * @param {string} [accessToken="null accessToken"] - access Token
  * @param {string} [groupUUID="null uuid"] - group UUID
  * @param {array} [filters=undefined] - optional array of filters, e.g. [expand] = "members.type"
+ * @param {object} [trace = {}] - optional microservice lifecycle trace headers
  * @returns {Promise<object>} - Promise resolving to a data object containing a single group
  */
 var getGroup = function getGroup() {
   var accessToken = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : "null accessToken";
   var groupUUID = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : "null uuid";
   var filters = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : undefined;
+  var trace = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : {};
 
   var MS = util.getEndpoint("groups");
   var requestOptions = {
@@ -90,12 +95,12 @@ var getGroup = function getGroup() {
     uri: MS + "/groups/" + groupUUID,
     headers: {
       "Content-type": "application/json",
-      "Authorization": "Bearer " + accessToken,
-      'x-api-version': "" + util.getVersion()
+      Authorization: "Bearer " + accessToken,
+      "x-api-version": "" + util.getVersion()
     },
     json: true
   };
-
+  util.addRequestTrace(requestOptions, trace);
   if (filters) {
     requestOptions.qs = [];
     Object.keys(filters).forEach(function (filter) {
@@ -112,12 +117,14 @@ var getGroup = function getGroup() {
  * @param {string} [accessToken="null accessToken"] - access Token
  * @param {string} [groupUUID="null uuid"] - group UUID
  * @param {array} [filters=undefined] - optional array of filters, e.g. [expand] = "members.type", [offset] and [limit] for pagination
+ * @param {object} [trace = {}] - optional microservice lifecycle trace headers
  * @returns {Promise<object>} - Promise resolving to a data object containing a single group
  */
 var listGroupMembers = function listGroupMembers() {
   var accessToken = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : "null accessToken";
   var groupUUID = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : "null uuid";
   var filters = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : undefined;
+  var trace = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : {};
 
   var MS = util.getEndpoint("groups");
   var requestOptions = {
@@ -125,12 +132,12 @@ var listGroupMembers = function listGroupMembers() {
     uri: MS + "/groups/" + groupUUID + "/members",
     headers: {
       "Content-type": "application/json",
-      "Authorization": "Bearer " + accessToken,
-      'x-api-version': "" + util.getVersion()
+      Authorization: "Bearer " + accessToken,
+      "x-api-version": "" + util.getVersion()
     },
     json: true
   };
-
+  util.addRequestTrace(requestOptions, trace);
   if (filters) {
     requestOptions.qs = [];
     Object.keys(filters).forEach(function (filter) {
@@ -146,11 +153,13 @@ var listGroupMembers = function listGroupMembers() {
  * @description This function will delete a specific group.
  * @param {string} [accessToken="null accessToken"] - access Token
  * @param {string} [groupUUID="not specified"] - group UUID
+ * @param {object} [trace = {}] - optional microservice lifecycle trace headers
  * @returns {Promise<empty>} - Promise resolving success or failure.
  */
 var deleteGroup = function deleteGroup() {
   var accessToken = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : "null accessToken";
   var groupUUID = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : "not specified";
+  var trace = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : {};
 
   var MS = util.getEndpoint("groups");
 
@@ -159,16 +168,16 @@ var deleteGroup = function deleteGroup() {
     uri: MS + "/groups/" + groupUUID,
     headers: {
       "Content-type": "application/json",
-      "Authorization": "Bearer " + accessToken,
-      'x-api-version': "" + util.getVersion()
+      Authorization: "Bearer " + accessToken,
+      "x-api-version": "" + util.getVersion()
     },
     resolveWithFullResponse: true,
     json: true
   };
-
+  util.addRequestTrace(requestOptions, trace);
   return new Promise(function (resolve, reject) {
     request(requestOptions).then(function (responseData) {
-      responseData.statusCode === 204 ? resolve({ "status": "ok" }) : reject({ "status": "failed" });
+      responseData.statusCode === 204 ? resolve({ status: "ok" }) : reject({ status: "failed" });
     }).catch(function (error) {
       reject(error);
     });
@@ -181,12 +190,14 @@ var deleteGroup = function deleteGroup() {
  * @param {string} [accessToken="null accessToken"] - access Token
  * @param {string} [groupUUID="group uuid not specified"] - data object UUID
  * @param {array} [members=[]] - array of objects containing 'uuid' (for known users)
+ * @param {object} [trace = {}] - optional microservice lifecycle trace headers
  * @returns {Promise<array>} - Promise resolving to an array of added users
  */
 var addMembersToGroup = function addMembersToGroup() {
   var accessToken = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : "null accessToken";
   var groupUUID = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : "group uuid not specified";
   var members = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : [];
+  var trace = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : {};
 
   var MS = util.getEndpoint("groups");
 
@@ -196,11 +207,12 @@ var addMembersToGroup = function addMembersToGroup() {
     body: members,
     headers: {
       "Content-type": "application/json",
-      "Authorization": "Bearer " + accessToken,
-      'x-api-version': "" + util.getVersion()
+      Authorization: "Bearer " + accessToken,
+      "x-api-version": "" + util.getVersion()
     },
     json: true
   };
+  util.addRequestTrace(requestOptions, trace);
   // console.log("request options", JSON.stringify(requestOptions));
   return request(requestOptions);
 };
@@ -211,12 +223,14 @@ var addMembersToGroup = function addMembersToGroup() {
  * @param {string} [accessToken="null accessToken"] - cpaas access token
  * @param {string} [groupUuid="null groupUuid"] - group to remove users from
  * @param {array} [members=[]] - array of objects containing 'uuid' (for known users)
+ * @param {object} [trace = {}] - optional microservice lifecycle trace headers
  * @returns {Promise<empty>} - Promise resolving success or failure status object.
  */
 var deleteGroupMembers = function deleteGroupMembers() {
   var accessToken = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : "null accessToken";
   var groupUuid = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : "null groupUuid";
   var members = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : [];
+  var trace = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : {};
 
   var MS = util.getEndpoint("groups");
   var requestOptions = {
@@ -224,18 +238,17 @@ var deleteGroupMembers = function deleteGroupMembers() {
     uri: MS + "/groups/" + groupUuid + "/members",
     headers: {
       "Content-type": "application/json",
-      "Authorization": "Bearer " + accessToken,
-      'x-api-version': "" + util.getVersion()
+      Authorization: "Bearer " + accessToken,
+      "x-api-version": "" + util.getVersion()
     },
     body: members,
     resolveWithFullResponse: true,
     json: true
-
   };
-
+  util.addRequestTrace(requestOptions, trace);
   return new Promise(function (resolve, reject) {
     request(requestOptions).then(function (responseData) {
-      responseData.statusCode === 204 ? resolve({ "status": "ok" }) : reject({ "status": "failed" });
+      responseData.statusCode === 204 ? resolve({ status: "ok" }) : reject({ status: "failed" });
     }).catch(function (error) {
       reject(error);
     });
@@ -247,11 +260,13 @@ var deleteGroupMembers = function deleteGroupMembers() {
  * @description This method will deactivate a group
  * @param {string} [accessToken="null accessToken"] - cpaas access token
  * @param {string} [groupUuid="null groupUuid"] - group to modify
+ * @param {object} [trace = {}] - optional microservice lifecycle trace headers
  * @returns {Promise<object>} - Promise resolving to a group object.
  */
 var deactivateGroup = function deactivateGroup() {
   var accessToken = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : "null accessToken";
   var groupUuid = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : "null groupUuid";
+  var trace = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : {};
 
   var MS = util.getEndpoint("groups");
   var requestOptions = {
@@ -259,12 +274,12 @@ var deactivateGroup = function deactivateGroup() {
     uri: MS + "/groups/" + groupUuid + "/deactivate",
     headers: {
       "Content-type": "application/json",
-      "Authorization": "Bearer " + accessToken,
-      'x-api-version': "" + util.getVersion()
+      Authorization: "Bearer " + accessToken,
+      "x-api-version": "" + util.getVersion()
     },
     json: true
   };
-
+  util.addRequestTrace(requestOptions, trace);
   return request(requestOptions);
 };
 
@@ -273,11 +288,13 @@ var deactivateGroup = function deactivateGroup() {
  * @description This method will reactivate a group
  * @param {string} [accessToken="null accessToken"] - cpaas access token
  * @param {string} [groupUuid="null groupUuid"] - group to modify
+ * @param {object} [trace = {}] - optional microservice lifecycle trace headers
  * @returns {Promise<object>} - Promise resolving to a group object.
  */
 var reactivateGroup = function reactivateGroup() {
   var accessToken = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : "null accessToken";
   var groupUuid = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : "null groupUuid";
+  var trace = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : {};
 
   var MS = util.getEndpoint("groups");
   var requestOptions = {
@@ -285,12 +302,12 @@ var reactivateGroup = function reactivateGroup() {
     uri: MS + "/groups/" + groupUuid + "/reactivate",
     headers: {
       "Content-type": "application/json",
-      "Authorization": "Bearer " + accessToken,
-      'x-api-version': "" + util.getVersion()
+      Authorization: "Bearer " + accessToken,
+      "x-api-version": "" + util.getVersion()
     },
     json: true
   };
-
+  util.addRequestTrace(requestOptions, trace);
   return request(requestOptions);
 };
 
@@ -300,12 +317,14 @@ var reactivateGroup = function reactivateGroup() {
  * @param {string} [accessToken="null accessToken"] - cpaas access token
  * @param {string} [groupUuid="null groupUuid"] - group to modify
  * @param {string} [body="null body] - object containing new name and/or description
+ * @param {object} [trace = {}] - optional microservice lifecycle trace headers
  * @returns {Promise<object>} - Promise resolving to a group object.
  */
 var modifyGroup = function modifyGroup() {
   var accessToken = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : "null accessToken";
   var groupUuid = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : "null groupUuid";
   var body = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : "null body";
+  var trace = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : {};
 
   var MS = util.getEndpoint("groups");
   var requestOptions = {
@@ -313,13 +332,13 @@ var modifyGroup = function modifyGroup() {
     uri: MS + "/groups/" + groupUuid,
     headers: {
       "Content-type": "application/json",
-      "Authorization": "Bearer " + accessToken,
-      'x-api-version': "" + util.getVersion()
+      Authorization: "Bearer " + accessToken,
+      "x-api-version": "" + util.getVersion()
     },
     body: body,
     json: true
   };
-
+  util.addRequestTrace(requestOptions, trace);
   return request(requestOptions);
 };
 
