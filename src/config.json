@@ -27,7 +27,7 @@
     "u": "799673e2-cccb-4437-b4e4-247170a24458",
     "d": "09290831-0ca0-44ce-b9ac-464ef6a868fe"
   },
-  "msDelay": 4000,
-  "localDebug": true,
-  "msDebug": true
+  "msDelay": 3000,
+  "localDebug": false,
+  "msDebug": false
 }

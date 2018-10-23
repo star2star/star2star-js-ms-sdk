@@ -11,14 +11,38 @@ npm install star2star-js-ms-sdk --save
 ```javascript
 import s2sMS from "star2star-js-ms-sdk";
 
+// Create a file that is not included in your revision control to contain your private data
+// Here we are using "credentials.json"
+
+const fs = require("fs");
+// You can set defaults or credentials directly in a temporary file for testing. Do not commit this!
+let creds = {
+  CPAAS_OAUTH_TOKEN: "Basic your oauth token here",
+  CPAAS_API_VERSION: "v1",
+  email: "email@email.com",
+  password: "pwd"
+};
+
+if (fs.existsSync("./test/credentials.json")) {
+  // do not need test folder here
+  creds = require("./credentials.json");
+}
 
 // You need to set base Url if you want to specify another endpoint than production(https://cpaas.star2star.com/api) 
 
+//To receive your CPAAS_OAUTH_TOKEN, username and password, please register here:
+// https://star2star-communications.cloud.tyk.io/portal/register/
+
 // This is the endpoint for development
 s2sMS.setMsHost("https://cpaas.star2starglobal.net");
+s2sMS.setMSVersion(creds.CPAAS_API_VERSION);
+s2sMS.setMsAuthHost("https://auth.star2starglobal.net");
 
-s2sMS.Identity.login(creds.CPAAS_KEY, creds.email, creds.password)
-  .then(data => {
+s2sMS.Oauth.getAccessToken(
+  creds.CPAAS_OAUTH_TOKEN,
+  creds.email,
+  creds.password
+).then(data => {
     //ok got data do something cool here
   })
   .catch(error => {
@@ -34,6 +58,7 @@ You need to require or import babel polyfill it at the top of the entry point to
 ```javascript
 require("babel-polyfill");
 ```
+
 ## Methods
 
 [Please click here for our documentation pages.](https://star2star.github.io/star2star-js-ms-sdk/ "Star2Star Micro Service SDK Documentation")
