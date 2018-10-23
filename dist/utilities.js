@@ -334,7 +334,7 @@ var isBrowser = function isBrowser() {
 var addRequestTrace = function addRequestTrace(request) {
   var trace = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
 
-  var headerKeys = ["id", "trace"];
+  var headerKeys = ["id", "trace", "parent"];
 
   headerKeys.forEach(function (keyName) {
     if ((typeof trace === "undefined" ? "undefined" : _typeof(trace)) === "object" && trace.hasOwnProperty(keyName)) {
@@ -345,6 +345,13 @@ var addRequestTrace = function addRequestTrace(request) {
       logger.debug("Assigning Trace " + keyName + ": " + request.headers[keyName]);
     }
   });
+  if ((typeof trace === "undefined" ? "undefined" : _typeof(trace)) === "object" && trace.hasOwnProperty("debug")) {
+    request.headers["debug"] = trace["debug"];
+  } else if (config.msDebug) {
+    request.headers["debug"] = true;
+  } else {
+    request.headers["debug"] = false;
+  }
 
   return request;
 };

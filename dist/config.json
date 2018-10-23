@@ -29,5 +29,5 @@
   },
   "msDelay": 4000,
   "localDebug": true,
-  "msDebug": false
+  "msDebug": true
 }
