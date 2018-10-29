@@ -10,13 +10,6 @@ toc:
       - modifyAccount
       - reinstateAccount
       - suspendAccount
-  - name: Application
-    children:  
-      - createApplication
-      - deleteApplication
-      - getApplication
-      - listApplications
-      - modifyApplication
   - name: Auth
     children:
       - activateRole
@@ -146,6 +139,7 @@ toc:
     children:
       - createResourceGroups
       - cleanUpResourceGroups
+      - updateResourceGroups
   - name: ShortUrls
     children:
       - createShortUrl
