@@ -118,9 +118,15 @@ toc:
       - sendSMSMessage
   - name: Oauth
     children: 
+      - createClientApp
+      - generateBasicToken
       - getAccessToken
       - getClientToken
+      - invalidateToken
+      - listClientTokens
       - refreshAccessToken
+      - scopeClientApp
+      - validateToken
   - name: Objects
     children:
       - getDataObject

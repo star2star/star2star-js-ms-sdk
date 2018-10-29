@@ -4,6 +4,7 @@ const config = require("./config.json");
 const uuidv4 = require("uuid/v4");
 const winston = require("winston");
 const logLevel = config.localDebug ? "debug" : "silent";
+
 /**
  *
  * @description This function will determine microservice endpoint URI.
@@ -272,10 +273,10 @@ const addRequestTrace = (request, trace = {}) => {
   headerKeys.forEach(keyName => {
     if (typeof trace === "object" && trace.hasOwnProperty(keyName)) {
       request.headers[keyName] = trace[keyName];
-      logger.debug(`Found Trace ${keyName}: ${request.headers[keyName]}`);
+      logger.log("debug", `Found Trace ${keyName}: ${request.headers[keyName]}`);
     } else {
       request.headers[keyName] = uuidv4();
-      logger.debug(`Assigning Trace ${keyName}: ${request.headers[keyName]}`);
+      logger.log("debug", `Assigning Trace ${keyName}: ${request.headers[keyName]}`);
     }
   });
   if (typeof trace === "object" && trace.hasOwnProperty("debug")) {
@@ -289,14 +290,13 @@ const addRequestTrace = (request, trace = {}) => {
   return request;
 };
 
-const logger = winston.createLogger({
+const logger = new (winston.Logger)({
   level: logLevel,
   transports: [
-    new winston.transports.Console({
-      format: winston.format.simple()
-    })
+    new winston.transports.Console({colorize: true})
   ]
 });
+
 
 const generateNewMetaData = (oldMetaData = {}) => {
   let rObject = {};

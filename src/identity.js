@@ -234,35 +234,31 @@ const updateAliasWithDID = (
  * @param {object} [trace = {}] - optional microservice lifecycle trace headers
  * @returns {Promise<empty>} - Promise resolving success or failure.
  */
-const deleteIdentity = (
+const deleteIdentity = async (
   accessToken = "null accessToken",
   userUuid = "null uuid",
   trace = {}
 ) => {
-  const MS = util.getEndpoint("identity");
-  const requestOptions = {
-    method: "DELETE",
-    uri: `${MS}/identities/${userUuid}`,
-    headers: {
-      Authorization: `Bearer ${accessToken}`,
-      "Content-type": "application/json",
-      "x-api-version": `${util.getVersion()}`
-    },
-    json: true,
-    resolveWithFullResponse: true
-  };
-  util.addRequestTrace(requestOptions, trace);
-  return new Promise(function(resolve, reject) {
-    request(requestOptions)
-      .then(function(responseData) {
-        responseData.statusCode === 204
-          ? resolve({ status: "ok" })
-          : reject({ status: "failed" });
-      })
-      .catch(function(error) {
-        reject(error);
-      });
-  });
+  try {
+    const MS = util.getEndpoint("identity");
+    const requestOptions = {
+      method: "DELETE",
+      uri: `${MS}/identities/${userUuid}`,
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+        "Content-type": "application/json",
+        "x-api-version": `${util.getVersion()}`
+      },
+      json: true,
+      resolveWithFullResponse: true
+    };
+    util.addRequestTrace(requestOptions, trace);
+    await new Promise(resolve => setTimeout(resolve, util.config.msDelay)); //delay is to ensure clean-up operations work
+    const response = await request(requestOptions);
+    return response.statusCode === 204 ? Promise.resolve({ status: "ok" }) : Promise.reject({ status: "failed" });
+  } catch (error) {
+    return Promise.reject({ status: "failed", "error": error});
+  }
 };
 
 /**

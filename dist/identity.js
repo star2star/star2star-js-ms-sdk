@@ -1,6 +1,8 @@
 /*global module require */
 "use strict";
 
+function _asyncToGenerator(fn) { return function () { var gen = fn.apply(this, arguments); return new Promise(function (resolve, reject) { function step(key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { return Promise.resolve(value).then(function (value) { step("next", value); }, function (err) { step("throw", err); }); } } return step("next"); }); }; }
+
 var util = require("./utilities");
 var request = require("request-promise");
 
@@ -219,32 +221,61 @@ var updateAliasWithDID = function updateAliasWithDID() {
  * @param {object} [trace = {}] - optional microservice lifecycle trace headers
  * @returns {Promise<empty>} - Promise resolving success or failure.
  */
-var deleteIdentity = function deleteIdentity() {
-  var accessToken = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : "null accessToken";
-  var userUuid = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : "null uuid";
-  var trace = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : {};
+var deleteIdentity = function () {
+  var _ref = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee() {
+    var accessToken = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : "null accessToken";
+    var userUuid = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : "null uuid";
+    var trace = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : {};
+    var MS, requestOptions, response;
+    return regeneratorRuntime.wrap(function _callee$(_context) {
+      while (1) {
+        switch (_context.prev = _context.next) {
+          case 0:
+            _context.prev = 0;
+            MS = util.getEndpoint("identity");
+            requestOptions = {
+              method: "DELETE",
+              uri: MS + "/identities/" + userUuid,
+              headers: {
+                Authorization: "Bearer " + accessToken,
+                "Content-type": "application/json",
+                "x-api-version": "" + util.getVersion()
+              },
+              json: true,
+              resolveWithFullResponse: true
+            };
 
-  var MS = util.getEndpoint("identity");
-  var requestOptions = {
-    method: "DELETE",
-    uri: MS + "/identities/" + userUuid,
-    headers: {
-      Authorization: "Bearer " + accessToken,
-      "Content-type": "application/json",
-      "x-api-version": "" + util.getVersion()
-    },
-    json: true,
-    resolveWithFullResponse: true
+            util.addRequestTrace(requestOptions, trace);
+            _context.next = 6;
+            return new Promise(function (resolve) {
+              return setTimeout(resolve, util.config.msDelay);
+            });
+
+          case 6:
+            _context.next = 8;
+            return request(requestOptions);
+
+          case 8:
+            response = _context.sent;
+            return _context.abrupt("return", response.statusCode === 204 ? Promise.resolve({ status: "ok" }) : Promise.reject({ status: "failed" }));
+
+          case 12:
+            _context.prev = 12;
+            _context.t0 = _context["catch"](0);
+            return _context.abrupt("return", Promise.reject({ status: "failed", "error": _context.t0 }));
+
+          case 15:
+          case "end":
+            return _context.stop();
+        }
+      }
+    }, _callee, undefined, [[0, 12]]);
+  }));
+
+  return function deleteIdentity() {
+    return _ref.apply(this, arguments);
   };
-  util.addRequestTrace(requestOptions, trace);
-  return new Promise(function (resolve, reject) {
-    request(requestOptions).then(function (responseData) {
-      responseData.statusCode === 204 ? resolve({ status: "ok" }) : reject({ status: "failed" });
-    }).catch(function (error) {
-      reject(error);
-    });
-  });
-};
+}();
 
 /**
  * @async

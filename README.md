@@ -64,6 +64,9 @@ require("babel-polyfill");
 [Please click here for our documentation pages.](https://star2star.github.io/star2star-js-ms-sdk/ "Star2Star Micro Service SDK Documentation")
 
 ## Changes
+* 2.2.5 - Add client credentialing
+* 2.2.4 - Fix winston version take 2
+* 2.2.3 - Fix winston version
 * 2.2.2 - Set dependency versions
 * 2.2.1 - Fix resource groups
 * 2.2.0 - Add trace and permissions resource groups
