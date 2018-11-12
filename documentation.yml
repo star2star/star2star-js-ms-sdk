@@ -10,13 +10,6 @@ toc:
       - modifyAccount
       - reinstateAccount
       - suspendAccount
-  - name: Application
-    children:  
-      - createApplication
-      - deleteApplication
-      - getApplication
-      - listApplications
-      - modifyApplication
   - name: Auth
     children:
       - activateRole

@@ -3,7 +3,8 @@
 const Util = require("./utilities");
 const Auth = require("./auth");
 const Groups = require("./groups");
-const roles = Util.config.objectRoles;
+const env = Util.config.env;
+const roles = Util.config.roles[env];
 const msDelay = Util.config.msDelay;
 const objectMerge = require("object-merge");
 const logger = Util.logger;
@@ -22,14 +23,17 @@ const createResourceGroups = async (
   accessToken = "null access token",
   accountUUID = "null accountUUID",
   resourceUUID = "null resourceUUID",
+  type = "object",
   users = {},
   trace = {}
 ) => {
   try {
     //create the groups
+    console.log("env", env);
+    console.log("roles[type]", roles[type]);
     let nextTrace = objectMerge({}, trace);
     for (const prop in users) {
-      if (roles.hasOwnProperty(prop)) {
+      if (roles[type].hasOwnProperty(prop)) {
         const userGroup = {
           name: `${prop}: ${resourceUUID}`,
           users: [...users[prop]],
@@ -55,11 +59,13 @@ const createResourceGroups = async (
           nextTrace,
           Util.generateNewMetaData(nextTrace)
         );
+        console.log("********* roles[env][prop] **********", roles[type][prop]);
         await Auth.assignScopedRoleToUserGroup(
           accessToken,
           group.uuid,
-          roles[prop],
-          resourceUUID,
+          roles[type][prop],
+          "resource",
+          [resourceUUID],
           nextTrace
         );
       }
@@ -294,6 +300,7 @@ const updateResourceGroups = async (
         accessToken,
         accountUUID,
         resourceUUID,
+        "object", //system role type
         users,
         trace
       );

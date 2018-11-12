@@ -3,6 +3,8 @@
 
 function _asyncToGenerator(fn) { return function () { var gen = fn.apply(this, arguments); return new Promise(function (resolve, reject) { function step(key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { return Promise.resolve(value).then(function (value) { step("next", value); }, function (err) { step("throw", err); }); } } return step("next"); }); }; }
 
+function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+
 var Util = require("./utilities");
 var request = require("request-promise");
 var Groups = require("./groups");
@@ -125,7 +127,8 @@ var assignRolesToUserGroup = function assignRolesToUserGroup() {
  * @param {string} [accessToken="null access token"] - cpaas access token
  * @param {string} [userGroupUUID="null userGroupUUID"] - user-group uuid
  * @param {string} [roleUUID="null roleUUID"] - role uuid
- * @param {string} [resourceUUID="null resourceUUID"] - resource or object uuid
+ * @param {string} [type="account"] - resource or account
+ * @param {array} [data="null data"] - array of resource or account uuids to bind to group
  * @param {object} [trace = {}] - optional microservice lifecycle trace headers
  * @returns {Promise<object>} - Promise resolving to a status data object
  */
@@ -133,8 +136,9 @@ var assignScopedRoleToUserGroup = function assignScopedRoleToUserGroup() {
   var accessToken = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : "null access token";
   var userGroupUUID = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : "null userGroupUUID";
   var roleUUID = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : "null roleUUID";
-  var resourceUUID = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : "null resourceUUID";
-  var trace = arguments.length > 4 && arguments[4] !== undefined ? arguments[4] : {};
+  var type = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : "account";
+  var data = arguments.length > 4 && arguments[4] !== undefined ? arguments[4] : "null resourceUUID";
+  var trace = arguments.length > 5 && arguments[5] !== undefined ? arguments[5] : {};
 
   var MS = Util.getEndpoint("auth");
   var requestOptions = {
@@ -147,9 +151,7 @@ var assignScopedRoleToUserGroup = function assignScopedRoleToUserGroup() {
     },
     body: {
       role: roleUUID,
-      scope: [{
-        resource: [resourceUUID]
-      }]
+      scope: [_defineProperty({}, type, data)]
     },
     resolveWithFullResponse: true,
     json: true
@@ -204,14 +206,14 @@ var createPermission = function createPermission() {
  */
 var createUserGroup = function createUserGroup() {
   var accessToken = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : "null accessToken";
-  var account_uuid = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : "null account uuid";
+  var accountUUID = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : "null accountUUID";
   var body = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : "null body";
   var trace = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : {};
 
   var MS = Util.getEndpoint("auth");
   var requestOptions = {
     method: "POST",
-    uri: MS + "/accounts/" + account_uuid + "/user-groups",
+    uri: MS + "/accounts/" + accountUUID + "/user-groups",
     headers: {
       Authorization: "Bearer " + accessToken,
       "Content-type": "application/json",
@@ -228,19 +230,21 @@ var createUserGroup = function createUserGroup() {
  * @async
  * @description This function creates a role.
  * @param {string} [accessToken="null accessToken"] - cpaas access token
+ * @param {string} [accountUUID="null accountUUID"] - account uuid
  * @param {object} [body="null body"] - role definition object
  * @param {object} [trace = {}] - optional microservice lifecycle trace headers
  * @returns {Promise<object>} - Promise resolving to a role data object
  */
 var createRole = function createRole() {
   var accessToken = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : "null accessToken";
-  var body = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : "null body";
-  var trace = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : {};
+  var accountUUID = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : "null accountUUID";
+  var body = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : "null body";
+  var trace = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : {};
 
   var MS = Util.getEndpoint("auth");
   var requestOptions = {
     method: "POST",
-    uri: MS + "/roles",
+    uri: MS + "/accounts/" + accountUUID + "/roles",
     headers: {
       Authorization: "Bearer " + accessToken,
       "Content-type": "application/json",
@@ -398,7 +402,7 @@ var deleteRoleFromUserGroup = function deleteRoleFromUserGroup() {
 };
 
 var getResourceUsers = function () {
-  var _ref = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee() {
+  var _ref2 = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee() {
     var accessToken = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : "null accessToken";
     var resourceUUID = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : "null resourceUUID";
     var trace = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : {};
@@ -455,7 +459,7 @@ var getResourceUsers = function () {
   }));
 
   return function getResourceUsers() {
-    return _ref.apply(this, arguments);
+    return _ref2.apply(this, arguments);
   };
 }();
 

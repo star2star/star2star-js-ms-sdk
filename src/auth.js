@@ -134,7 +134,8 @@ const assignRolesToUserGroup = (
  * @param {string} [accessToken="null access token"] - cpaas access token
  * @param {string} [userGroupUUID="null userGroupUUID"] - user-group uuid
  * @param {string} [roleUUID="null roleUUID"] - role uuid
- * @param {string} [resourceUUID="null resourceUUID"] - resource or object uuid
+ * @param {string} [type="account"] - resource or account
+ * @param {array} [data="null data"] - array of resource or account uuids to bind to group
  * @param {object} [trace = {}] - optional microservice lifecycle trace headers
  * @returns {Promise<object>} - Promise resolving to a status data object
  */
@@ -142,7 +143,8 @@ const assignScopedRoleToUserGroup = (
   accessToken = "null access token",
   userGroupUUID = "null userGroupUUID",
   roleUUID = "null roleUUID",
-  resourceUUID = "null resourceUUID",
+  type = "account",
+  data = "null resourceUUID",
   trace = {}
 ) => {
   const MS = Util.getEndpoint("auth");
@@ -158,7 +160,7 @@ const assignScopedRoleToUserGroup = (
       role: roleUUID,
       scope: [
         {
-          resource: [resourceUUID]
+          [type]: data
         }
       ]
     },
@@ -219,14 +221,14 @@ const createPermission = (
  */
 const createUserGroup = (
   accessToken = "null accessToken",
-  account_uuid = "null account uuid",
+  accountUUID = "null accountUUID",
   body = "null body",
   trace = {}
 ) => {
   const MS = Util.getEndpoint("auth");
   const requestOptions = {
     method: "POST",
-    uri: `${MS}/accounts/${account_uuid}/user-groups`,
+    uri: `${MS}/accounts/${accountUUID}/user-groups`,
     headers: {
       Authorization: `Bearer ${accessToken}`,
       "Content-type": "application/json",
@@ -243,15 +245,21 @@ const createUserGroup = (
  * @async
  * @description This function creates a role.
  * @param {string} [accessToken="null accessToken"] - cpaas access token
+ * @param {string} [accountUUID="null accountUUID"] - account uuid
  * @param {object} [body="null body"] - role definition object
  * @param {object} [trace = {}] - optional microservice lifecycle trace headers
  * @returns {Promise<object>} - Promise resolving to a role data object
  */
-const createRole = (accessToken = "null accessToken", body = "null body", trace = {}) => {
+const createRole = (
+  accessToken = "null accessToken",
+  accountUUID = "null accountUUID",
+  body = "null body",
+  trace = {}
+) => {
   const MS = Util.getEndpoint("auth");
   const requestOptions = {
     method: "POST",
-    uri: `${MS}/roles`,
+    uri: `${MS}/accounts/${accountUUID}/roles`,
     headers: {
       Authorization: `Bearer ${accessToken}`,
       "Content-type": "application/json",

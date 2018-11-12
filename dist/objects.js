@@ -337,7 +337,8 @@ var createUserDataObject = function () {
 
             nextTrace = objectMerge({}, nextTrace, util.generateNewMetaData(nextTrace));
             _context2.next = 19;
-            return ResourceGroups.createResourceGroups(accessToken, identity.account_uuid, newObject.uuid, users, nextTrace);
+            return ResourceGroups.createResourceGroups(accessToken, identity.account_uuid, newObject.uuid, "object", //system role type
+            users, nextTrace);
 
           case 19:
             return _context2.abrupt("return", newObject);

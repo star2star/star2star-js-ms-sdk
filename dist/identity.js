@@ -10,19 +10,21 @@ var request = require("request-promise");
  * @async
  * @description This function will call the identity microservice with the credentials and accessToken you passed in.
  * @param {string} [accessToken="null accessToken"] - access token
+ * @param {string} [accountUUID="null accountUUID"] - account uuid
  * @param {object} [body="null body"] - JSON object containing new user info
  * @param {object} [trace = {}] - optional microservice lifecycle trace headers
  * @returns {Promise<object>} - Promise resolving to an identity data object
  */
 var createIdentity = function createIdentity() {
   var accessToken = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : "null accessToken";
-  var body = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : "null body";
-  var trace = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : {};
+  var accountUUID = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : "null accountUUID";
+  var body = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : "null body";
+  var trace = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : {};
 
   var MS = util.getEndpoint("identity");
   var requestOptions = {
     method: "POST",
-    uri: MS + "/identities",
+    uri: MS + "/accounts/" + accountUUID + "/identities",
     headers: {
       Authorization: "Bearer " + accessToken,
       "Content-type": "application/json",

@@ -276,6 +276,7 @@ const createUserDataObject = async (
         accessToken,
         identity.account_uuid,
         newObject.uuid,
+        "object", //system role type
         users,
         nextTrace
       );
