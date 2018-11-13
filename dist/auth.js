@@ -1,9 +1,9 @@
 /*global require module*/
 "use strict";
 
-function _asyncToGenerator(fn) { return function () { var gen = fn.apply(this, arguments); return new Promise(function (resolve, reject) { function step(key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { return Promise.resolve(value).then(function (value) { step("next", value); }, function (err) { step("throw", err); }); } } return step("next"); }); }; }
-
 function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+
+function _asyncToGenerator(fn) { return function () { var gen = fn.apply(this, arguments); return new Promise(function (resolve, reject) { function step(key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { return Promise.resolve(value).then(function (value) { step("next", value); }, function (err) { step("throw", err); }); } } return step("next"); }); }; }
 
 var Util = require("./utilities");
 var request = require("request-promise");
@@ -92,34 +92,62 @@ var assignPermissionsToRole = function assignPermissionsToRole() {
  * @param {object} [trace = {}] - optional microservice lifecycle trace headers
  * @returns {Promise<object>} - Promise resolving to a status data object
  */
-var assignRolesToUserGroup = function assignRolesToUserGroup() {
-  var accessToken = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : "null accessToken";
-  var userGroupUUID = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : "null groupUUID";
-  var body = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : "null body";
-  var trace = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : {};
+var assignRolesToUserGroup = function () {
+  var _ref = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee() {
+    var accessToken = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : "null accessToken";
+    var userGroupUUID = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : "null groupUUID";
+    var body = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : "null body";
+    var trace = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : {};
+    var MS, requestOptions;
+    return regeneratorRuntime.wrap(function _callee$(_context) {
+      while (1) {
+        switch (_context.prev = _context.next) {
+          case 0:
+            _context.prev = 0;
+            MS = Util.getEndpoint("auth");
+            requestOptions = {
+              method: "POST",
+              uri: MS + "/user-groups/" + userGroupUUID + "/roles",
+              headers: {
+                Authorization: "Bearer " + accessToken,
+                "Content-type": "application/json",
+                "x-api-version": "" + Util.getVersion()
+              },
+              body: body,
+              resolveWithFullResponse: true,
+              json: true
+            };
 
-  var MS = Util.getEndpoint("auth");
-  var requestOptions = {
-    method: "POST",
-    uri: MS + "/user-groups/" + userGroupUUID + "/roles",
-    headers: {
-      Authorization: "Bearer " + accessToken,
-      "Content-type": "application/json",
-      "x-api-version": "" + Util.getVersion()
-    },
-    body: body,
-    resolveWithFullResponse: true,
-    json: true
+            Util.addRequestTrace(requestOptions, trace);
+            _context.next = 6;
+            return new Promise(function (resolve, reject) {
+              request(requestOptions).then(function (responseData) {
+                responseData.statusCode === 204 ? resolve({ status: "ok" }) : reject({ status: "failed" });
+              }).catch(function (error) {
+                reject(error);
+              });
+            });
+
+          case 6:
+            return _context.abrupt("return", _context.sent);
+
+          case 9:
+            _context.prev = 9;
+            _context.t0 = _context["catch"](0);
+            return _context.abrupt("return", Promise.reject(_context.t0));
+
+          case 12:
+          case "end":
+            return _context.stop();
+        }
+      }
+    }, _callee, undefined, [[0, 9]]);
+  }));
+
+  return function assignRolesToUserGroup() {
+    return _ref.apply(this, arguments);
   };
-  Util.addRequestTrace(requestOptions, trace);
-  return new Promise(function (resolve, reject) {
-    request(requestOptions).then(function (responseData) {
-      responseData.statusCode === 204 ? resolve({ status: "ok" }) : reject({ status: "failed" });
-    }).catch(function (error) {
-      reject(error);
-    });
-  });
-};
+}();
 
 /**
  * @async
@@ -132,39 +160,73 @@ var assignRolesToUserGroup = function assignRolesToUserGroup() {
  * @param {object} [trace = {}] - optional microservice lifecycle trace headers
  * @returns {Promise<object>} - Promise resolving to a status data object
  */
-var assignScopedRoleToUserGroup = function assignScopedRoleToUserGroup() {
-  var accessToken = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : "null access token";
-  var userGroupUUID = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : "null userGroupUUID";
-  var roleUUID = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : "null roleUUID";
-  var type = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : "account";
-  var data = arguments.length > 4 && arguments[4] !== undefined ? arguments[4] : "null resourceUUID";
-  var trace = arguments.length > 5 && arguments[5] !== undefined ? arguments[5] : {};
+var assignScopedRoleToUserGroup = function () {
+  var _ref2 = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee2() {
+    var accessToken = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : "null access token";
+    var userGroupUUID = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : "null userGroupUUID";
+    var roleUUID = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : "null roleUUID";
+    var type = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : "account";
+    var data = arguments.length > 4 && arguments[4] !== undefined ? arguments[4] : "null resourceUUID";
+    var trace = arguments.length > 5 && arguments[5] !== undefined ? arguments[5] : {};
+    var MS, requestOptions;
+    return regeneratorRuntime.wrap(function _callee2$(_context2) {
+      while (1) {
+        switch (_context2.prev = _context2.next) {
+          case 0:
+            _context2.prev = 0;
+            _context2.next = 3;
+            return new Promise(function (resolve) {
+              return setTimeout(resolve, Util.config.msDelay);
+            });
 
-  var MS = Util.getEndpoint("auth");
-  var requestOptions = {
-    method: "POST",
-    uri: MS + "/user-groups/" + userGroupUUID + "/role/scopes",
-    headers: {
-      Authorization: "Bearer " + accessToken,
-      "Content-type": "application/json",
-      "x-api-version": "" + Util.getVersion()
-    },
-    body: {
-      role: roleUUID,
-      scope: [_defineProperty({}, type, data)]
-    },
-    resolveWithFullResponse: true,
-    json: true
+          case 3:
+            MS = Util.getEndpoint("auth");
+            requestOptions = {
+              method: "POST",
+              uri: MS + "/user-groups/" + userGroupUUID + "/role/scopes",
+              headers: {
+                Authorization: "Bearer " + accessToken,
+                "Content-type": "application/json",
+                "x-api-version": "" + Util.getVersion()
+              },
+              body: {
+                role: roleUUID,
+                scope: [_defineProperty({}, type, data)]
+              },
+              resolveWithFullResponse: true,
+              json: true
+            };
+
+            Util.addRequestTrace(requestOptions, trace);
+            _context2.next = 8;
+            return new Promise(function (resolve, reject) {
+              request(requestOptions).then(function (responseData) {
+                responseData.statusCode === 204 ? resolve({ status: "ok" }) : reject({ status: "failed" });
+              }).catch(function (error) {
+                reject(error);
+              });
+            });
+
+          case 8:
+            return _context2.abrupt("return", _context2.sent);
+
+          case 11:
+            _context2.prev = 11;
+            _context2.t0 = _context2["catch"](0);
+            return _context2.abrupt("return", Promise.reject(_context2.t0));
+
+          case 14:
+          case "end":
+            return _context2.stop();
+        }
+      }
+    }, _callee2, undefined, [[0, 11]]);
+  }));
+
+  return function assignScopedRoleToUserGroup() {
+    return _ref2.apply(this, arguments);
   };
-  Util.addRequestTrace(requestOptions, trace);
-  return new Promise(function (resolve, reject) {
-    request(requestOptions).then(function (responseData) {
-      responseData.statusCode === 204 ? resolve({ status: "ok" }) : reject({ status: "failed" });
-    }).catch(function (error) {
-      reject(error);
-    });
-  });
-};
+}();
 
 /**
  * @async
@@ -204,27 +266,61 @@ var createPermission = function createPermission() {
  * @param {object} [trace = {}] - optional microservice lifecycle trace headers
  * @returns {Promise<object>} - Promise resolving to a user-group data object
  */
-var createUserGroup = function createUserGroup() {
-  var accessToken = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : "null accessToken";
-  var accountUUID = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : "null accountUUID";
-  var body = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : "null body";
-  var trace = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : {};
+var createUserGroup = function () {
+  var _ref4 = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee3() {
+    var accessToken = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : "null accessToken";
+    var accountUUID = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : "null accountUUID";
+    var body = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : "null body";
+    var trace = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : {};
+    var MS, requestOptions;
+    return regeneratorRuntime.wrap(function _callee3$(_context3) {
+      while (1) {
+        switch (_context3.prev = _context3.next) {
+          case 0:
+            _context3.prev = 0;
+            _context3.next = 3;
+            return new Promise(function (resolve) {
+              return setTimeout(resolve, Util.config.msDelay);
+            });
 
-  var MS = Util.getEndpoint("auth");
-  var requestOptions = {
-    method: "POST",
-    uri: MS + "/accounts/" + accountUUID + "/user-groups",
-    headers: {
-      Authorization: "Bearer " + accessToken,
-      "Content-type": "application/json",
-      "x-api-version": "" + Util.getVersion()
-    },
-    body: body,
-    json: true
+          case 3:
+            MS = Util.getEndpoint("auth");
+            requestOptions = {
+              method: "POST",
+              uri: MS + "/accounts/" + accountUUID + "/user-groups",
+              headers: {
+                Authorization: "Bearer " + accessToken,
+                "Content-type": "application/json",
+                "x-api-version": "" + Util.getVersion()
+              },
+              body: body,
+              json: true
+            };
+
+            Util.addRequestTrace(requestOptions, trace);
+            _context3.next = 8;
+            return request(requestOptions);
+
+          case 8:
+            return _context3.abrupt("return", _context3.sent);
+
+          case 11:
+            _context3.prev = 11;
+            _context3.t0 = _context3["catch"](0);
+            return _context3.abrupt("return", Promise.reject(_context3.t0));
+
+          case 14:
+          case "end":
+            return _context3.stop();
+        }
+      }
+    }, _callee3, undefined, [[0, 11]]);
+  }));
+
+  return function createUserGroup() {
+    return _ref4.apply(this, arguments);
   };
-  Util.addRequestTrace(requestOptions, trace);
-  return request(requestOptions);
-};
+}();
 
 /**
  * @async
@@ -402,64 +498,64 @@ var deleteRoleFromUserGroup = function deleteRoleFromUserGroup() {
 };
 
 var getResourceUsers = function () {
-  var _ref2 = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee() {
+  var _ref5 = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee4() {
     var accessToken = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : "null accessToken";
     var resourceUUID = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : "null resourceUUID";
     var trace = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : {};
     var groups, nextTrace, users, groupTypeRegex, group, groupName, groupUsers;
-    return regeneratorRuntime.wrap(function _callee$(_context) {
+    return regeneratorRuntime.wrap(function _callee4$(_context4) {
       while (1) {
-        switch (_context.prev = _context.next) {
+        switch (_context4.prev = _context4.next) {
           case 0:
-            _context.next = 2;
+            _context4.next = 2;
             return listAccessByGroups(accessToken, resourceUUID, trace);
 
           case 2:
-            groups = _context.sent;
+            groups = _context4.sent;
             nextTrace = objectMerge({}, trace);
             users = {};
             groupTypeRegex = /^[r,u,d]{1,3}/;
-            _context.t0 = regeneratorRuntime.keys(groups.items);
+            _context4.t0 = regeneratorRuntime.keys(groups.items);
 
           case 7:
-            if ((_context.t1 = _context.t0()).done) {
-              _context.next = 18;
+            if ((_context4.t1 = _context4.t0()).done) {
+              _context4.next = 18;
               break;
             }
 
-            group = _context.t1.value;
+            group = _context4.t1.value;
             groupName = groupTypeRegex.exec(groups.items[group].user_group.group_name);
 
             users[groupName] = [];
             nextTrace = objectMerge({}, nextTrace, Util.generateNewMetaData(nextTrace));
-            _context.next = 14;
+            _context4.next = 14;
             return Groups.getGroup(accessToken, groups.items[group].user_group.uuid, {
               "expand": "members",
               "members_limit": 999 //hopefully we don't need pagination here. nh
             }, nextTrace);
 
           case 14:
-            groupUsers = _context.sent;
+            groupUsers = _context4.sent;
 
             users[groupName] = groupUsers.members.items.map(function (item) {
               return item.uuid;
             });
-            _context.next = 7;
+            _context4.next = 7;
             break;
 
           case 18:
-            return _context.abrupt("return", users);
+            return _context4.abrupt("return", users);
 
           case 19:
           case "end":
-            return _context.stop();
+            return _context4.stop();
         }
       }
-    }, _callee, undefined);
+    }, _callee4, undefined);
   }));
 
   return function getResourceUsers() {
-    return _ref2.apply(this, arguments);
+    return _ref5.apply(this, arguments);
   };
 }();
 

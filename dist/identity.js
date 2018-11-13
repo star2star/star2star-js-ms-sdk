@@ -15,27 +15,61 @@ var request = require("request-promise");
  * @param {object} [trace = {}] - optional microservice lifecycle trace headers
  * @returns {Promise<object>} - Promise resolving to an identity data object
  */
-var createIdentity = function createIdentity() {
-  var accessToken = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : "null accessToken";
-  var accountUUID = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : "null accountUUID";
-  var body = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : "null body";
-  var trace = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : {};
+var createIdentity = function () {
+  var _ref = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee() {
+    var accessToken = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : "null accessToken";
+    var accountUUID = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : "null accountUUID";
+    var body = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : "null body";
+    var trace = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : {};
+    var MS, requestOptions;
+    return regeneratorRuntime.wrap(function _callee$(_context) {
+      while (1) {
+        switch (_context.prev = _context.next) {
+          case 0:
+            _context.prev = 0;
+            _context.next = 3;
+            return new Promise(function (resolve) {
+              return setTimeout(resolve, util.config.msDelay);
+            });
 
-  var MS = util.getEndpoint("identity");
-  var requestOptions = {
-    method: "POST",
-    uri: MS + "/accounts/" + accountUUID + "/identities",
-    headers: {
-      Authorization: "Bearer " + accessToken,
-      "Content-type": "application/json",
-      "x-api-version": "" + util.getVersion()
-    },
-    body: body,
-    json: true
+          case 3:
+            MS = util.getEndpoint("identity");
+            requestOptions = {
+              method: "POST",
+              uri: MS + "/accounts/" + accountUUID + "/identities",
+              headers: {
+                Authorization: "Bearer " + accessToken,
+                "Content-type": "application/json",
+                "x-api-version": "" + util.getVersion()
+              },
+              body: body,
+              json: true
+            };
+
+            util.addRequestTrace(requestOptions, trace);
+            _context.next = 8;
+            return request(requestOptions);
+
+          case 8:
+            return _context.abrupt("return", _context.sent);
+
+          case 11:
+            _context.prev = 11;
+            _context.t0 = _context["catch"](0);
+            return _context.abrupt("return", Promise.reject(_context.t0));
+
+          case 14:
+          case "end":
+            return _context.stop();
+        }
+      }
+    }, _callee, undefined, [[0, 11]]);
+  }));
+
+  return function createIdentity() {
+    return _ref.apply(this, arguments);
   };
-  util.addRequestTrace(requestOptions, trace);
-  return request(requestOptions);
-};
+}();
 
 /**
  * @async
@@ -224,16 +258,22 @@ var updateAliasWithDID = function updateAliasWithDID() {
  * @returns {Promise<empty>} - Promise resolving success or failure.
  */
 var deleteIdentity = function () {
-  var _ref = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee() {
+  var _ref2 = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee2() {
     var accessToken = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : "null accessToken";
     var userUuid = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : "null uuid";
     var trace = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : {};
     var MS, requestOptions, response;
-    return regeneratorRuntime.wrap(function _callee$(_context) {
+    return regeneratorRuntime.wrap(function _callee2$(_context2) {
       while (1) {
-        switch (_context.prev = _context.next) {
+        switch (_context2.prev = _context2.next) {
           case 0:
-            _context.prev = 0;
+            _context2.prev = 0;
+            _context2.next = 3;
+            return new Promise(function (resolve) {
+              return setTimeout(resolve, util.config.msDelay);
+            });
+
+          case 3:
             MS = util.getEndpoint("identity");
             requestOptions = {
               method: "DELETE",
@@ -248,34 +288,28 @@ var deleteIdentity = function () {
             };
 
             util.addRequestTrace(requestOptions, trace);
-            _context.next = 6;
-            return new Promise(function (resolve) {
-              return setTimeout(resolve, util.config.msDelay);
-            });
-
-          case 6:
-            _context.next = 8;
+            _context2.next = 8;
             return request(requestOptions);
 
           case 8:
-            response = _context.sent;
-            return _context.abrupt("return", response.statusCode === 204 ? Promise.resolve({ status: "ok" }) : Promise.reject({ status: "failed" }));
+            response = _context2.sent;
+            return _context2.abrupt("return", response.statusCode === 204 ? Promise.resolve({ status: "ok" }) : Promise.reject({ status: "failed" }));
 
           case 12:
-            _context.prev = 12;
-            _context.t0 = _context["catch"](0);
-            return _context.abrupt("return", Promise.reject({ status: "failed", "error": _context.t0 }));
+            _context2.prev = 12;
+            _context2.t0 = _context2["catch"](0);
+            return _context2.abrupt("return", Promise.reject({ status: "failed", "error": _context2.t0 }));
 
           case 15:
           case "end":
-            return _context.stop();
+            return _context2.stop();
         }
       }
-    }, _callee, undefined, [[0, 12]]);
+    }, _callee2, undefined, [[0, 12]]);
   }));
 
   return function deleteIdentity() {
-    return _ref.apply(this, arguments);
+    return _ref2.apply(this, arguments);
   };
 }();
 
@@ -380,37 +414,71 @@ var getIdentityDetails = function getIdentityDetails() {
  * @param {object} [trace = {}] - optional microservice lifecycle trace headers
  * @returns {Promise<object>} - Promise resolving to an identity data object
  */
-var lookupIdentity = function lookupIdentity() {
-  var accessToken = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : "null accessToken";
-  var offset = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 0;
-  var limit = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : 10;
-  var filters = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : undefined;
-  var trace = arguments.length > 4 && arguments[4] !== undefined ? arguments[4] : {};
+var lookupIdentity = function () {
+  var _ref3 = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee3() {
+    var accessToken = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : "null accessToken";
+    var offset = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 0;
+    var limit = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : 10;
+    var filters = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : undefined;
+    var trace = arguments.length > 4 && arguments[4] !== undefined ? arguments[4] : {};
+    var MS, requestOptions;
+    return regeneratorRuntime.wrap(function _callee3$(_context3) {
+      while (1) {
+        switch (_context3.prev = _context3.next) {
+          case 0:
+            _context3.prev = 0;
+            _context3.next = 3;
+            return new Promise(function (resolve) {
+              return setTimeout(resolve, util.config.msDelay);
+            });
 
-  var MS = util.getEndpoint("identity");
-  var requestOptions = {
-    method: "GET",
-    uri: MS + "/identities",
-    qs: {
-      offset: offset,
-      limit: limit
-    },
-    headers: {
-      Authorization: "Bearer " + accessToken,
-      "Content-type": "application/json",
-      "x-api-version": "" + util.getVersion()
-    },
-    json: true
+          case 3:
+            MS = util.getEndpoint("identity");
+            requestOptions = {
+              method: "GET",
+              uri: MS + "/identities",
+              qs: {
+                offset: offset,
+                limit: limit
+              },
+              headers: {
+                Authorization: "Bearer " + accessToken,
+                "Content-type": "application/json",
+                "x-api-version": "" + util.getVersion()
+              },
+              json: true
+            };
+
+            util.addRequestTrace(requestOptions, trace);
+            if (filters) {
+              Object.keys(filters).forEach(function (filter) {
+                requestOptions.qs[filter] = filters[filter];
+              });
+            }
+            //console.log("REQUEST********",requestOptions);
+            _context3.next = 9;
+            return request(requestOptions);
+
+          case 9:
+            return _context3.abrupt("return", _context3.sent);
+
+          case 12:
+            _context3.prev = 12;
+            _context3.t0 = _context3["catch"](0);
+            return _context3.abrupt("return", Promise.reject(_context3.t0));
+
+          case 15:
+          case "end":
+            return _context3.stop();
+        }
+      }
+    }, _callee3, undefined, [[0, 12]]);
+  }));
+
+  return function lookupIdentity() {
+    return _ref3.apply(this, arguments);
   };
-  util.addRequestTrace(requestOptions, trace);
-  if (filters) {
-    Object.keys(filters).forEach(function (filter) {
-      requestOptions.qs[filter] = filters[filter];
-    });
-  }
-  //console.log("REQUEST********",requestOptions);
-  return request(requestOptions);
-};
+}();
 
 /**
  * @async

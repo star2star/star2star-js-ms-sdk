@@ -1,6 +1,8 @@
 /*global module require */
 "use strict";
 
+function _asyncToGenerator(fn) { return function () { var gen = fn.apply(this, arguments); return new Promise(function (resolve, reject) { function step(key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { return Promise.resolve(value).then(function (value) { step("next", value); }, function (err) { step("throw", err); }); } } return step("next"); }); }; }
+
 var util = require("./utilities");
 var request = require("request-promise");
 
@@ -40,8 +42,7 @@ var createRelationship = function createRelationship() {
  * @param {string} [accessToken="null accessToken"] - access token for cpaas system
  * @param {number} [offset=0] - optional; return the list starting at a specified index
  * @param {number} [limit=10] - optional; return a specified number of accounts
- * @param {string} [accountType=""] - optional; "Reseller, MasterReseller, Customer"
- * @param {string} [expand=""] optional; expand="relationships"
+  * @param {array} [filters=undefined] - optional array of key-value pairs to filter response.
  * @param {object} [trace = {}] - optional microservice lifecycle trace headers 
  * @returns {Promise<object>} - Promise resolving to a data object containing a list of accounts
  */
@@ -49,9 +50,8 @@ var listAccounts = function listAccounts() {
   var accessToken = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : "null accessToken";
   var offset = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 0;
   var limit = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : 10;
-  var accountType = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : undefined;
-  var expand = arguments.length > 4 && arguments[4] !== undefined ? arguments[4] : undefined;
-  var trace = arguments.length > 5 && arguments[5] !== undefined ? arguments[5] : {};
+  var filters = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : undefined;
+  var trace = arguments.length > 4 && arguments[4] !== undefined ? arguments[4] : {};
 
   var MS = util.getEndpoint("accounts");
   var requestOptions = {
@@ -59,9 +59,7 @@ var listAccounts = function listAccounts() {
     uri: MS + "/accounts",
     qs: {
       offset: offset,
-      limit: limit,
-      type: accountType,
-      expand: expand
+      limit: limit
     },
     headers: {
       Authorization: "Bearer " + accessToken,
@@ -71,15 +69,12 @@ var listAccounts = function listAccounts() {
     json: true
   };
   util.addRequestTrace(requestOptions, trace);
-  if (accountType) {
-    requestOptions.qs.type = accountType;
-  }
-
-  if (expand) {
-    requestOptions.qs.expand = expand;
+  if (filters) {
+    Object.keys(filters).forEach(function (filter) {
+      requestOptions.qs[filter] = filters[filter];
+    });
   }
   //console.log("REQUEST_OPTIONS",requestOptions);
-
   return request(requestOptions);
 };
 
@@ -91,27 +86,61 @@ var listAccounts = function listAccounts() {
  * @param {object} [trace = {}] - optional microservice lifecycle trace headers 
  * @returns {Promise<object>} - Promise resolving to an account data object
  */
-var createAccount = function createAccount() {
-  var accessToken = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : "null accessToken";
-  var body = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : "null body";
-  var trace = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : {};
+var createAccount = function () {
+  var _ref = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee() {
+    var accessToken = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : "null accessToken";
+    var body = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : "null body";
+    var trace = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : {};
+    var MS, requestOptions;
+    return regeneratorRuntime.wrap(function _callee$(_context) {
+      while (1) {
+        switch (_context.prev = _context.next) {
+          case 0:
+            _context.prev = 0;
+            _context.next = 3;
+            return new Promise(function (resolve) {
+              return setTimeout(resolve, util.config.msDelay);
+            });
 
-  var MS = util.getEndpoint("accounts");
-  var requestOptions = {
-    method: "POST",
-    uri: MS + "/accounts",
-    body: body,
-    headers: {
-      Authorization: "Bearer " + accessToken,
-      "Content-type": "application/json",
-      "x-api-version": "" + util.getVersion()
-    },
-    json: true
+          case 3:
+            MS = util.getEndpoint("accounts");
+            requestOptions = {
+              method: "POST",
+              uri: MS + "/accounts",
+              body: body,
+              headers: {
+                Authorization: "Bearer " + accessToken,
+                "Content-type": "application/json",
+                "x-api-version": "" + util.getVersion()
+              },
+              json: true
+            };
+
+            util.addRequestTrace(requestOptions, trace);
+
+            _context.next = 8;
+            return request(requestOptions);
+
+          case 8:
+            return _context.abrupt("return", _context.sent);
+
+          case 11:
+            _context.prev = 11;
+            _context.t0 = _context["catch"](0);
+            return _context.abrupt("return", Promise.reject(_context.t0));
+
+          case 14:
+          case "end":
+            return _context.stop();
+        }
+      }
+    }, _callee, undefined, [[0, 11]]);
+  }));
+
+  return function createAccount() {
+    return _ref.apply(this, arguments);
   };
-  util.addRequestTrace(requestOptions, trace);
-
-  return request(requestOptions);
-};
+}();
 
 /**
  * @async
@@ -311,34 +340,67 @@ var suspendAccount = function suspendAccount() {
  * @param {object} [trace = {}] - optional microservice lifecycle trace headers 
  * @returns {Promise<object>} - Promise resolving to a status data object
  */
-var deleteAccount = function deleteAccount() {
-  var accessToken = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : "null access token";
-  var accountUUID = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : "null account uuid";
-  var trace = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : {};
+var deleteAccount = function () {
+  var _ref2 = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee2() {
+    var accessToken = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : "null access token";
+    var accountUUID = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : "null account uuid";
+    var trace = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : {};
+    var MS, requestOptions;
+    return regeneratorRuntime.wrap(function _callee2$(_context2) {
+      while (1) {
+        switch (_context2.prev = _context2.next) {
+          case 0:
+            _context2.prev = 0;
+            _context2.next = 3;
+            return new Promise(function (resolve) {
+              return setTimeout(resolve, util.config.msDelay);
+            });
 
-  //body = JSON.stringify(body);
-  var MS = util.getEndpoint("accounts");
-  var requestOptions = {
-    method: "DELETE",
-    uri: MS + "/accounts/" + accountUUID,
-    resolveWithFullResponse: true,
-    json: true,
-    headers: {
-      Authorization: "Bearer " + accessToken,
-      "Content-type": "application/json",
-      "x-api-version": "" + util.getVersion()
-    }
+          case 3:
+            MS = util.getEndpoint("accounts");
+            requestOptions = {
+              method: "DELETE",
+              uri: MS + "/accounts/" + accountUUID,
+              resolveWithFullResponse: true,
+              json: true,
+              headers: {
+                Authorization: "Bearer " + accessToken,
+                "Content-type": "application/json",
+                "x-api-version": "" + util.getVersion()
+              }
+            };
+
+            util.addRequestTrace(requestOptions, trace);
+
+            _context2.next = 8;
+            return new Promise(function (resolve, reject) {
+              request(requestOptions).then(function (responseData) {
+                responseData.statusCode === 204 ? resolve({ status: "ok" }) : reject({ status: "failed" });
+              }).catch(function (error) {
+                reject(error);
+              });
+            });
+
+          case 8:
+            return _context2.abrupt("return", _context2.sent);
+
+          case 11:
+            _context2.prev = 11;
+            _context2.t0 = _context2["catch"](0);
+            return _context2.abrupt("return", Promise.reject(_context2.t0));
+
+          case 14:
+          case "end":
+            return _context2.stop();
+        }
+      }
+    }, _callee2, undefined, [[0, 11]]);
+  }));
+
+  return function deleteAccount() {
+    return _ref2.apply(this, arguments);
   };
-  util.addRequestTrace(requestOptions, trace);
-
-  return new Promise(function (resolve, reject) {
-    request(requestOptions).then(function (responseData) {
-      responseData.statusCode === 204 ? resolve({ status: "ok" }) : reject({ status: "failed" });
-    }).catch(function (error) {
-      reject(error);
-    });
-  });
-};
+}();
 
 module.exports = {
   createRelationship: createRelationship,

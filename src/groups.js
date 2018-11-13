@@ -155,36 +155,40 @@ const listGroupMembers = (
  * @param {object} [trace = {}] - optional microservice lifecycle trace headers
  * @returns {Promise<empty>} - Promise resolving success or failure.
  */
-const deleteGroup = (
+const deleteGroup = async (
   accessToken = "null accessToken",
   groupUUID = "not specified",
   trace = {}
 ) => {
-  const MS = util.getEndpoint("groups");
-
-  const requestOptions = {
-    method: "DELETE",
-    uri: `${MS}/groups/${groupUUID}`,
-    headers: {
-      "Content-type": "application/json",
-      Authorization: `Bearer ${accessToken}`,
-      "x-api-version": `${util.getVersion()}`
-    },
-    resolveWithFullResponse: true,
-    json: true
-  };
-  util.addRequestTrace(requestOptions, trace);
-  return new Promise(function(resolve, reject) {
-    request(requestOptions)
-      .then(function(responseData) {
-        responseData.statusCode === 204
-          ? resolve({ status: "ok" })
-          : reject({ status: "failed" });
-      })
-      .catch(function(error) {
-        reject(error);
-      });
-  });
+  try {
+    await new Promise(resolve => setTimeout(resolve, util.config.msDelay));
+    const MS = util.getEndpoint("groups");
+    const requestOptions = {
+      method: "DELETE",
+      uri: `${MS}/groups/${groupUUID}`,
+      headers: {
+        "Content-type": "application/json",
+        Authorization: `Bearer ${accessToken}`,
+        "x-api-version": `${util.getVersion()}`
+      },
+      resolveWithFullResponse: true,
+      json: true
+    };
+    util.addRequestTrace(requestOptions, trace);
+    return await new Promise(function(resolve, reject) {
+      request(requestOptions)
+        .then(function(responseData) {
+          responseData.statusCode === 204
+            ? resolve({ status: "ok" })
+            : reject({ status: "failed" });
+        })
+        .catch(function(error) {
+          reject(error);
+        });
+    });
+  } catch (error) {
+    return Promise.reject(error);
+  }
 };
 
 /**
@@ -196,28 +200,32 @@ const deleteGroup = (
  * @param {object} [trace = {}] - optional microservice lifecycle trace headers
  * @returns {Promise<array>} - Promise resolving to an array of added users
  */
-const addMembersToGroup = (
+const addMembersToGroup = async (
   accessToken = "null accessToken",
   groupUUID = "group uuid not specified",
   members = [],
   trace = {}
 ) => {
-  const MS = util.getEndpoint("groups");
-
-  const requestOptions = {
-    method: "POST",
-    uri: `${MS}/groups/${groupUUID}/members`,
-    body: members,
-    headers: {
-      "Content-type": "application/json",
-      Authorization: `Bearer ${accessToken}`,
-      "x-api-version": `${util.getVersion()}`
-    },
-    json: true
-  };
-  util.addRequestTrace(requestOptions, trace);
-  // console.log("request options", JSON.stringify(requestOptions));
-  return request(requestOptions);
+  try {
+    await new Promise(resolve => setTimeout(resolve, util.config.msDelay));
+    const MS = util.getEndpoint("groups");
+    const requestOptions = {
+      method: "POST",
+      uri: `${MS}/groups/${groupUUID}/members`,
+      body: members,
+      headers: {
+        "Content-type": "application/json",
+        Authorization: `Bearer ${accessToken}`,
+        "x-api-version": `${util.getVersion()}`
+      },
+      json: true
+    };
+    util.addRequestTrace(requestOptions, trace);
+    // console.log("request options", JSON.stringify(requestOptions));
+    return await request(requestOptions);
+  } catch (error) {
+    return Promise.reject(error);
+  }
 };
 
 /**
@@ -229,37 +237,42 @@ const addMembersToGroup = (
  * @param {object} [trace = {}] - optional microservice lifecycle trace headers
  * @returns {Promise<empty>} - Promise resolving success or failure status object.
  */
-const deleteGroupMembers = (
+const deleteGroupMembers = async (
   accessToken = "null accessToken",
   groupUuid = "null groupUuid",
   members = [],
   trace = {}
 ) => {
-  const MS = util.getEndpoint("groups");
-  const requestOptions = {
-    method: "DELETE",
-    uri: `${MS}/groups/${groupUuid}/members`,
-    headers: {
-      "Content-type": "application/json",
-      Authorization: `Bearer ${accessToken}`,
-      "x-api-version": `${util.getVersion()}`
-    },
-    body: members,
-    resolveWithFullResponse: true,
-    json: true
-  };
-  util.addRequestTrace(requestOptions, trace);
-  return new Promise(function(resolve, reject) {
-    request(requestOptions)
-      .then(function(responseData) {
-        responseData.statusCode === 204
-          ? resolve({ status: "ok" })
-          : reject({ status: "failed" });
-      })
-      .catch(function(error) {
-        reject(error);
-      });
-  });
+  try {
+    await new Promise(resolve => setTimeout(resolve, util.config.msDelay));
+    const MS = util.getEndpoint("groups");
+    const requestOptions = {
+      method: "DELETE",
+      uri: `${MS}/groups/${groupUuid}/members`,
+      headers: {
+        "Content-type": "application/json",
+        Authorization: `Bearer ${accessToken}`,
+        "x-api-version": `${util.getVersion()}`
+      },
+      body: members,
+      resolveWithFullResponse: true,
+      json: true
+    };
+    util.addRequestTrace(requestOptions, trace);
+    return await new Promise(function(resolve, reject) {
+      request(requestOptions)
+        .then(function(responseData) {
+          responseData.statusCode === 204
+            ? resolve({ status: "ok" })
+            : reject({ status: "failed" });
+        })
+        .catch(function(error) {
+          reject(error);
+        });
+    });
+  } catch (error) {
+    return Promise.reject(error);
+  } 
 };
 
 /**

@@ -317,59 +317,65 @@ var createUserDataObject = function () {
             nextTrace = objectMerge({}, trace);
             _context2.prev = 7;
             _context2.next = 10;
-            return request(requestOptions);
+            return new Promise(function (resolve) {
+              return setTimeout(resolve, util.config.msDelay);
+            });
 
           case 10:
+            _context2.next = 12;
+            return request(requestOptions);
+
+          case 12:
             newObject = _context2.sent;
 
             if (!(users && (typeof users === "undefined" ? "undefined" : _typeof(users)) === "object")) {
-              _context2.next = 19;
+              _context2.next = 21;
               break;
             }
 
             nextTrace = objectMerge({}, nextTrace, util.generateNewMetaData(nextTrace));
             //user groups require an account
-            _context2.next = 15;
+            _context2.next = 17;
             return Identity.getIdentityDetails(accessToken, userUUID, nextTrace);
 
-          case 15:
+          case 17:
             identity = _context2.sent;
 
             nextTrace = objectMerge({}, nextTrace, util.generateNewMetaData(nextTrace));
-            _context2.next = 19;
+            _context2.next = 21;
             return ResourceGroups.createResourceGroups(accessToken, identity.account_uuid, newObject.uuid, "object", //system role type
             users, nextTrace);
 
-          case 19:
+          case 21:
             return _context2.abrupt("return", newObject);
 
-          case 22:
-            _context2.prev = 22;
+          case 24:
+            _context2.prev = 24;
             _context2.t0 = _context2["catch"](7);
 
             if (!(newObject && newObject.hasOwnProperty("uuid"))) {
-              _context2.next = 39;
+              _context2.next = 41;
               break;
             }
 
-            _context2.prev = 25;
-            _context2.next = 28;
+            _context2.prev = 27;
+            _context2.next = 30;
             return new Promise(function (resolve) {
               return setTimeout(resolve, msDelay);
             });
 
-          case 28:
+          case 30:
             //this is to allow microservices time ack the new group before deleting.
             nextTrace = objectMerge({}, nextTrace, util.generateNewMetaData(nextTrace));
-            _context2.next = 31;
+            _context2.next = 33;
             return deleteDataObject(accessToken, newObject.uuid, nextTrace);
 
-          case 31:
+          case 33:
             return _context2.abrupt("return", Promise.reject(_context2.t0));
 
-          case 34:
-            _context2.prev = 34;
-            _context2.t1 = _context2["catch"](25);
+          case 36:
+            _context2.prev = 36;
+            _context2.t1 = _context2["catch"](27);
             return _context2.abrupt("return", Promise.reject({
               errors: {
                 create: _context2.t0,
@@ -377,19 +383,19 @@ var createUserDataObject = function () {
               }
             }));
 
-          case 37:
-            _context2.next = 40;
+          case 39:
+            _context2.next = 42;
             break;
 
-          case 39:
+          case 41:
             return _context2.abrupt("return", Promise.reject(_context2.t0));
 
-          case 40:
+          case 42:
           case "end":
             return _context2.stop();
         }
       }
-    }, _callee2, undefined, [[7, 22], [25, 34]]);
+    }, _callee2, undefined, [[7, 24], [27, 36]]);
   }));
 
   return function createUserDataObject() {

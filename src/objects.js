@@ -253,6 +253,7 @@ const createUserDataObject = async (
   let newObject;
   let nextTrace = objectMerge({}, trace);
   try {
+    await new Promise(resolve => setTimeout(resolve, util.config.msDelay));
     newObject = await request(requestOptions);
     //need to create permissions resource groups
     if (users && typeof users === "object") {
