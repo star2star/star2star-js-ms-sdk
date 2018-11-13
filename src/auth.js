@@ -95,37 +95,42 @@ const assignPermissionsToRole = (
  * @param {object} [trace = {}] - optional microservice lifecycle trace headers
  * @returns {Promise<object>} - Promise resolving to a status data object
  */
-const assignRolesToUserGroup = (
+const assignRolesToUserGroup = async (
   accessToken = "null accessToken",
   userGroupUUID = "null groupUUID",
   body = "null body",
   trace = {}
 ) => {
-  const MS = Util.getEndpoint("auth");
-  const requestOptions = {
-    method: "POST",
-    uri: `${MS}/user-groups/${userGroupUUID}/roles`,
-    headers: {
-      Authorization: `Bearer ${accessToken}`,
-      "Content-type": "application/json",
-      "x-api-version": `${Util.getVersion()}`
-    },
-    body: body,
-    resolveWithFullResponse: true,
-    json: true
-  };
-  Util.addRequestTrace(requestOptions, trace);
-  return new Promise(function(resolve, reject) {
-    request(requestOptions)
-      .then(function(responseData) {
-        responseData.statusCode === 204
-          ? resolve({ status: "ok" })
-          : reject({ status: "failed" });
-      })
-      .catch(function(error) {
-        reject(error);
-      });
-  });
+  try{
+    
+    const MS = Util.getEndpoint("auth");
+    const requestOptions = {
+      method: "POST",
+      uri: `${MS}/user-groups/${userGroupUUID}/roles`,
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+        "Content-type": "application/json",
+        "x-api-version": `${Util.getVersion()}`
+      },
+      body: body,
+      resolveWithFullResponse: true,
+      json: true
+    };
+    Util.addRequestTrace(requestOptions, trace);
+    return await new Promise(function(resolve, reject) {
+      request(requestOptions)
+        .then(function(responseData) {
+          responseData.statusCode === 204
+            ? resolve({ status: "ok" })
+            : reject({ status: "failed" });
+        })
+        .catch(function(error) {
+          reject(error);
+        });
+    });
+  } catch (error) {
+    return Promise.reject(error);
+  } 
 };
 
 /**
@@ -134,49 +139,56 @@ const assignRolesToUserGroup = (
  * @param {string} [accessToken="null access token"] - cpaas access token
  * @param {string} [userGroupUUID="null userGroupUUID"] - user-group uuid
  * @param {string} [roleUUID="null roleUUID"] - role uuid
- * @param {string} [resourceUUID="null resourceUUID"] - resource or object uuid
+ * @param {string} [type="account"] - resource or account
+ * @param {array} [data="null data"] - array of resource or account uuids to bind to group
  * @param {object} [trace = {}] - optional microservice lifecycle trace headers
  * @returns {Promise<object>} - Promise resolving to a status data object
  */
-const assignScopedRoleToUserGroup = (
+const assignScopedRoleToUserGroup = async (
   accessToken = "null access token",
   userGroupUUID = "null userGroupUUID",
   roleUUID = "null roleUUID",
-  resourceUUID = "null resourceUUID",
+  type = "account",
+  data = "null resourceUUID",
   trace = {}
 ) => {
-  const MS = Util.getEndpoint("auth");
-  const requestOptions = {
-    method: "POST",
-    uri: `${MS}/user-groups/${userGroupUUID}/role/scopes`,
-    headers: {
-      Authorization: `Bearer ${accessToken}`,
-      "Content-type": "application/json",
-      "x-api-version": `${Util.getVersion()}`
-    },
-    body: {
-      role: roleUUID,
-      scope: [
-        {
-          resource: [resourceUUID]
-        }
-      ]
-    },
-    resolveWithFullResponse: true,
-    json: true
-  };
-  Util.addRequestTrace(requestOptions, trace);
-  return new Promise(function(resolve, reject) {
-    request(requestOptions)
-      .then(function(responseData) {
-        responseData.statusCode === 204
-          ? resolve({ status: "ok" })
-          : reject({ status: "failed" });
-      })
-      .catch(function(error) {
-        reject(error);
-      });
-  });
+  try {
+    await new Promise(resolve => setTimeout(resolve, Util.config.msDelay));
+    const MS = Util.getEndpoint("auth");
+    const requestOptions = {
+      method: "POST",
+      uri: `${MS}/user-groups/${userGroupUUID}/role/scopes`,
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+        "Content-type": "application/json",
+        "x-api-version": `${Util.getVersion()}`
+      },
+      body: {
+        role: roleUUID,
+        scope: [
+          {
+            [type]: data
+          }
+        ]
+      },
+      resolveWithFullResponse: true,
+      json: true
+    };
+    Util.addRequestTrace(requestOptions, trace);
+    return await new Promise(function(resolve, reject) {
+      request(requestOptions)
+        .then(function(responseData) {
+          responseData.statusCode === 204
+            ? resolve({ status: "ok" })
+            : reject({ status: "failed" });
+        })
+        .catch(function(error) {
+          reject(error);
+        });
+    });
+  } catch (error) {
+    return Promise.reject(error);
+  }
 };
 
 /**
@@ -217,41 +229,52 @@ const createPermission = (
  * @param {object} [trace = {}] - optional microservice lifecycle trace headers
  * @returns {Promise<object>} - Promise resolving to a user-group data object
  */
-const createUserGroup = (
+const createUserGroup = async (
   accessToken = "null accessToken",
-  account_uuid = "null account uuid",
+  accountUUID = "null accountUUID",
   body = "null body",
   trace = {}
 ) => {
-  const MS = Util.getEndpoint("auth");
-  const requestOptions = {
-    method: "POST",
-    uri: `${MS}/accounts/${account_uuid}/user-groups`,
-    headers: {
-      Authorization: `Bearer ${accessToken}`,
-      "Content-type": "application/json",
-      "x-api-version": `${Util.getVersion()}`
-    },
-    body: body,
-    json: true
-  };
-  Util.addRequestTrace(requestOptions, trace);
-  return request(requestOptions);
+  try {
+    await new Promise(resolve => setTimeout(resolve, Util.config.msDelay));
+    const MS = Util.getEndpoint("auth");
+    const requestOptions = {
+      method: "POST",
+      uri: `${MS}/accounts/${accountUUID}/user-groups`,
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+        "Content-type": "application/json",
+        "x-api-version": `${Util.getVersion()}`
+      },
+      body: body,
+      json: true
+    };
+    Util.addRequestTrace(requestOptions, trace);
+    return await request(requestOptions);
+  } catch (error) {
+    return Promise.reject(error);
+  }
 };
 
 /**
  * @async
  * @description This function creates a role.
  * @param {string} [accessToken="null accessToken"] - cpaas access token
+ * @param {string} [accountUUID="null accountUUID"] - account uuid
  * @param {object} [body="null body"] - role definition object
  * @param {object} [trace = {}] - optional microservice lifecycle trace headers
  * @returns {Promise<object>} - Promise resolving to a role data object
  */
-const createRole = (accessToken = "null accessToken", body = "null body", trace = {}) => {
+const createRole = (
+  accessToken = "null accessToken",
+  accountUUID = "null accountUUID",
+  body = "null body",
+  trace = {}
+) => {
   const MS = Util.getEndpoint("auth");
   const requestOptions = {
     method: "POST",
-    uri: `${MS}/roles`,
+    uri: `${MS}/accounts/${accountUUID}/roles`,
     headers: {
       Authorization: `Bearer ${accessToken}`,
       "Content-type": "application/json",

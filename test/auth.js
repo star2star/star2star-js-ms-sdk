@@ -149,7 +149,7 @@ describe("Auth MS Test Suite", function() {
       permissions: [permissions[0].uuid]
     };
 
-    s2sMS.Auth.createRole(accessToken, body)
+    s2sMS.Auth.createRole(accessToken, identityData.account_uuid, body)
       .then(response => {
         //console.log("Create Role Response", response);
         role = response.uuid;

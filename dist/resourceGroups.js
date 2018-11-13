@@ -10,7 +10,8 @@ function _asyncToGenerator(fn) { return function () { var gen = fn.apply(this, a
 var Util = require("./utilities");
 var Auth = require("./auth");
 var Groups = require("./groups");
-var roles = Util.config.objectRoles;
+var env = Util.config.env;
+var roles = Util.config.roles[env];
 var msDelay = Util.config.msDelay;
 var objectMerge = require("object-merge");
 var logger = Util.logger;
@@ -30,8 +31,9 @@ var createResourceGroups = function () {
     var accessToken = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : "null access token";
     var accountUUID = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : "null accountUUID";
     var resourceUUID = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : "null resourceUUID";
-    var users = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : {};
-    var trace = arguments.length > 4 && arguments[4] !== undefined ? arguments[4] : {};
+    var type = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : "object";
+    var users = arguments.length > 4 && arguments[4] !== undefined ? arguments[4] : {};
+    var trace = arguments.length > 5 && arguments[5] !== undefined ? arguments[5] : {};
     var nextTrace, prop, userGroup, group;
     return regeneratorRuntime.wrap(function _callee$(_context) {
       while (1) {
@@ -40,19 +42,21 @@ var createResourceGroups = function () {
             _context.prev = 0;
 
             //create the groups
+            console.log("env", env);
+            console.log("roles[type]", roles[type]);
             nextTrace = objectMerge({}, trace);
             _context.t0 = regeneratorRuntime.keys(users);
 
-          case 3:
+          case 5:
             if ((_context.t1 = _context.t0()).done) {
-              _context.next = 19;
+              _context.next = 22;
               break;
             }
 
             prop = _context.t1.value;
 
-            if (!roles.hasOwnProperty(prop)) {
-              _context.next = 17;
+            if (!roles[type].hasOwnProperty(prop)) {
+              _context.next = 20;
               break;
             }
 
@@ -63,42 +67,43 @@ var createResourceGroups = function () {
             };
 
             nextTrace = objectMerge({}, nextTrace, Util.generateNewMetaData(nextTrace));
-            _context.next = 10;
+            _context.next = 12;
             return Auth.createUserGroup(accessToken, accountUUID, userGroup, nextTrace);
 
-          case 10:
+          case 12:
             group = _context.sent;
 
             logger.info("Created resource group: " + JSON.stringify(group, null, "\t"));
-            _context.next = 14;
+            _context.next = 16;
             return new Promise(function (resolve) {
               return setTimeout(resolve, msDelay);
             });
 
-          case 14:
+          case 16:
             //microservices delay :(
             nextTrace = objectMerge({}, nextTrace, Util.generateNewMetaData(nextTrace));
-            _context.next = 17;
-            return Auth.assignScopedRoleToUserGroup(accessToken, group.uuid, roles[prop], resourceUUID, nextTrace);
+            console.log("********* roles[env][prop] **********", roles[type][prop]);
+            _context.next = 20;
+            return Auth.assignScopedRoleToUserGroup(accessToken, group.uuid, roles[type][prop], "resource", [resourceUUID], nextTrace);
 
-          case 17:
-            _context.next = 3;
+          case 20:
+            _context.next = 5;
             break;
 
-          case 19:
+          case 22:
             return _context.abrupt("return", Promise.resolve({ status: "ok" }));
 
-          case 22:
-            _context.prev = 22;
+          case 25:
+            _context.prev = 25;
             _context.t2 = _context["catch"](0);
             return _context.abrupt("return", Promise.reject({ status: "failed", createResourceGroups: _context.t2 }));
 
-          case 25:
+          case 28:
           case "end":
             return _context.stop();
         }
       }
-    }, _callee, undefined, [[0, 22]]);
+    }, _callee, undefined, [[0, 25]]);
   }));
 
   return function createResourceGroups() {
@@ -356,7 +361,8 @@ var updateResourceGroups = function () {
             nextTrace = objectMerge({}, nextTrace, Util.generateNewMetaData(nextTrace));
             logger.info("Creating New Resource Groups For Updated Object " + JSON.stringify(users, null, "\t"));
             _context4.next = 25;
-            return createResourceGroups(accessToken, accountUUID, resourceUUID, users, trace);
+            return createResourceGroups(accessToken, accountUUID, resourceUUID, "object", //system role type
+            users, trace);
 
           case 25:
             _context4.next = 30;

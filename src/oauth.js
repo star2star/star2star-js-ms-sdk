@@ -20,28 +20,32 @@ const createClientApp = async (
   description = "null description",
   trace = {}
 ) => {
-  const MS = util.getAuthHost();
-  const requestOptions = {
-    method: "POST",
-    uri: `${MS}/oauth/clients`,
-    body: {
-      name: name,
-      description: description,
-      application_type: "connect",
-      grant_types: ["client_credentials"],
-      app_user: userUUID
-    },
-    json: true,
-    headers: {
-      Authorization: `Bearer ${accessToken}`,
-      "Content-type": "application/json",
-      "x-api-version": `${util.getVersion()}`
-    }
-  };
-  util.addRequestTrace(requestOptions, trace);
-  await new Promise(resolve => setTimeout(resolve, util.config.msDelay));
-
-  return await request(requestOptions);
+  try {
+    await new Promise(resolve => setTimeout(resolve, util.config.msDelay));
+    const MS = util.getAuthHost();
+    const requestOptions = {
+      method: "POST",
+      uri: `${MS}/oauth/clients`,
+      body: {
+        name: name,
+        description: description,
+        application_type: "connect",
+        grant_types: ["client_credentials"],
+        app_user: userUUID
+      },
+      json: true,
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+        "Content-type": "application/json",
+        "x-api-version": `${util.getVersion()}`
+      }
+    };
+    util.addRequestTrace(requestOptions, trace);
+    return await request(requestOptions);
+  } catch (error) {
+    return Promise.reject(error);
+  }
+  
 };
 
 /**
@@ -85,29 +89,32 @@ const getAccessToken = async (
   pwd = "null pwd",
   trace = {}
 ) => {
-  const MS = util.getAuthHost();
-  const VERSION = util.getVersion();
-  const requestOptions = {
-    method: "POST",
-    uri: `${MS}/oauth/token`,
-    headers: {
-      Authorization: `Basic ${oauthToken}`,
-      "x-api-version": `${VERSION}`,
-      "Content-type": "application/x-www-form-urlencoded"
-    },
-    form: {
-      grant_type: "password",
-      scope: "message.list",
-      email: email,
-      password: pwd
-    },
-    json: true
-    // resolveWithFullResponse: true
-  };
-  util.addRequestTrace(requestOptions, trace);
-  await new Promise(resolve => setTimeout(resolve, util.config.msDelay));
-
-  return await request(requestOptions);
+  try {
+    await new Promise(resolve => setTimeout(resolve, util.config.msDelay));
+    const MS = util.getAuthHost();
+    const VERSION = util.getVersion();
+    const requestOptions = {
+      method: "POST",
+      uri: `${MS}/oauth/token`,
+      headers: {
+        Authorization: `Basic ${oauthToken}`,
+        "x-api-version": `${VERSION}`,
+        "Content-type": "application/x-www-form-urlencoded"
+      },
+      form: {
+        grant_type: "password",
+        scope: "message.list",
+        email: email,
+        password: pwd
+      },
+      json: true
+      // resolveWithFullResponse: true
+    };
+    util.addRequestTrace(requestOptions, trace);
+    return await request(requestOptions);
+  } catch (error) {
+    return Promise.reject(error);
+  }
 };
 
 /**
@@ -118,27 +125,30 @@ const getAccessToken = async (
  * @returns {Promise<object>} - Promise resolving to an oauth token data object
  */
 const getClientToken = async (oauthToken = "null oauth token", trace = {}) => {
-  const MS = util.getAuthHost();
-  const VERSION = util.getVersion();
-  const requestOptions = {
-    method: "POST",
-    uri: `${MS}/oauth/token`,
-    headers: {
-      Authorization: `Basic ${oauthToken}`,
-      "x-api-version": `${VERSION}`,
-      "Content-type": "application/x-www-form-urlencoded"
-    },
-    form: {
-      grant_type: "client_credentials",
-      scope: "default"
-    },
-    json: true
-    // resolveWithFullResponse: true
-  };
-  util.addRequestTrace(requestOptions, trace);
-  await new Promise(resolve => setTimeout(resolve, util.config.msDelay));
-
-  return request(requestOptions);
+  try {
+    await new Promise(resolve => setTimeout(resolve, util.config.msDelay));
+    const MS = util.getAuthHost();
+    const VERSION = util.getVersion();
+    const requestOptions = {
+      method: "POST",
+      uri: `${MS}/oauth/token`,
+      headers: {
+        Authorization: `Basic ${oauthToken}`,
+        "x-api-version": `${VERSION}`,
+        "Content-type": "application/x-www-form-urlencoded"
+      },
+      form: {
+        grant_type: "client_credentials",
+        scope: "default"
+      },
+      json: true
+      // resolveWithFullResponse: true
+    };
+    util.addRequestTrace(requestOptions, trace);
+    return request(requestOptions);
+  } catch (error) {
+    return Promise.reject(error);
+  } 
 };
 
 /**
@@ -151,6 +161,7 @@ const getClientToken = async (oauthToken = "null oauth token", trace = {}) => {
  */
 const invalidateToken = async (accessToken = "null accessToken", token = "null token", trace = {}) => {
   try {
+    await new Promise(resolve => setTimeout(resolve, util.config.msDelay)); //delay is to ensure clean-up operations work
     const MS = util.getAuthHost();
     const requestOptions = {
       method: "POST",
@@ -167,7 +178,6 @@ const invalidateToken = async (accessToken = "null accessToken", token = "null t
       }
     };
     util.addRequestTrace(requestOptions, trace);
-    await new Promise(resolve => setTimeout(resolve, util.config.msDelay)); //delay is to ensure clean-up operations work
     const response = await request(requestOptions);
     return response.statusCode === 204 ? Promise.resolve({ status: "ok" }) : Promise.reject({ status: "failed" });
   } catch (error) {
@@ -192,29 +202,34 @@ const listClientTokens = async (
   filters = undefined,
   trace = {}
 ) => {
-  const MS = util.getAuthHost();
-  const requestOptions = {
-    method: "GET",
-    uri: `${MS}/oauth/tokens`,
-    qs: {
-      offset: offset,
-      limit: limit
-    },
-    json: true,
-    headers: {
-      Authorization: `Bearer ${accessToken}`,
-      "Content-type": "application/json",
-      "x-api-version": `${util.getVersion()}`
+  try {
+    await new Promise(resolve => setTimeout(resolve, util.config.msDelay));
+    const MS = util.getAuthHost();
+    const requestOptions = {
+      method: "GET",
+      uri: `${MS}/oauth/tokens`,
+      qs: {
+        offset: offset,
+        limit: limit
+      },
+      json: true,
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+        "Content-type": "application/json",
+        "x-api-version": `${util.getVersion()}`
+      }
+    };
+    if (filters && typeof filters == "object") {
+      Object.keys(filters).forEach(filter => {
+        requestOptions.qs[filter] = filters[filter];
+      });
     }
-  };
-  if (filters && typeof filters == "object") {
-    Object.keys(filters).forEach(filter => {
-      requestOptions.qs[filter] = filters[filter];
-    });
+    util.addRequestTrace(requestOptions, trace);
+    return request(requestOptions);
+  } catch (error) {
+    return Promise.reject(error);
   }
-  util.addRequestTrace(requestOptions, trace);
-  await new Promise(resolve => setTimeout(resolve, util.config.msDelay));
-  return request(requestOptions);
+  
 };
 
 /**
@@ -231,26 +246,30 @@ const refreshAccessToken = async (
   refreshToken = "null refresh token",
   trace = {}
 ) => {
-  const MS = util.getAuthHost();
-  const VERSION = util.getVersion();
-  const requestOptions = {
-    method: "POST",
-    uri: `${MS}/oauth/token`,
-    headers: {
-      Authorization: `Basic ${oauthToken}`,
-      "x-api-version": `${VERSION}`,
-      "Content-type": "application/x-www-form-urlencoded"
-    },
-    form: {
-      grant_type: "refresh_token",
-      refresh_token: refreshToken
-    },
-    json: true
-    // resolveWithFullResponse: true
-  };
-  util.addRequestTrace(requestOptions, trace);
-  await new Promise(resolve => setTimeout(resolve, util.config.msDelay));
-  return await request(requestOptions);
+  try {
+    await new Promise(resolve => setTimeout(resolve, util.config.msDelay));
+    const MS = util.getAuthHost();
+    const VERSION = util.getVersion();
+    const requestOptions = {
+      method: "POST",
+      uri: `${MS}/oauth/token`,
+      headers: {
+        Authorization: `Basic ${oauthToken}`,
+        "x-api-version": `${VERSION}`,
+        "Content-type": "application/x-www-form-urlencoded"
+      },
+      form: {
+        grant_type: "refresh_token",
+        refresh_token: refreshToken
+      },
+      json: true
+      // resolveWithFullResponse: true
+    };
+    util.addRequestTrace(requestOptions, trace);
+    return await request(requestOptions);
+  } catch (error) {
+    return Promise.reject(error);
+  }
 };
 
 /**
@@ -307,6 +326,7 @@ const scopeClientApp = async (
  */
 const validateToken = async (accessToken = "null accessToken", token= "null token", trace = {}) => {
   try {
+    await new Promise(resolve => setTimeout(resolve, util.config.msDelay)); //delay is to ensure clean-up operations work
     const MS = util.getAuthHost();
     const requestOptions = {
       method: "POST",
@@ -323,7 +343,6 @@ const validateToken = async (accessToken = "null accessToken", token= "null toke
       }
     };
     util.addRequestTrace(requestOptions, trace);
-    await new Promise(resolve => setTimeout(resolve, util.config.msDelay)); //delay is to ensure clean-up operations work
     const response = await request(requestOptions);
     return response.statusCode === 204 ? Promise.resolve({ status: "ok" }) : Promise.reject({ status: "failed" });
   } catch (error) {

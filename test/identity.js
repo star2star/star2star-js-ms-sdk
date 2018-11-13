@@ -72,7 +72,7 @@ describe("Identity MS Unit Test Suite", function () {
       }, 
       "reference": "Free form text"
     };
-    s2sMS.Identity.createIdentity(accessToken, body)
+    s2sMS.Identity.createIdentity(accessToken, identityData.account_uuid, body)
       .then(identity => {
         // console.log('Created user', identity.uuid);
         testUUID = identity.uuid;

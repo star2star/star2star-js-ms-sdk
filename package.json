@@ -1,11 +1,11 @@
 {
   "name": "star2star-js-ms-sdk",
-  "version": "2.2.6",
+  "version": "2.2.7",
   "description": "Star2Star JavaScript Micro Service SDK",
   "main": "./dist/index.js",
   "scripts": {
     "init": "mkdir dist",
-    "clean": "rm -rf dist && rm package-lock.json && rm -rf node_modules",
+    "clean": "rm -rf dist && touch package-lock.json && rm package-lock.json && rm -rf node_modules",
     "test": "mocha --timeout 10000",
     "prebuild": "npm run clean && npm install",
     "build": "babel src -d dist --presets es2015",

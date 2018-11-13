@@ -166,7 +166,15 @@ describe("Accounts MS Unit Test Suite", function() {
 
     s2sMS.Accounts
       // .listAccounts(accessToken, offset, limit, accountType, expand)
-      .listAccounts(accessToken, 1, 1, "Reseller", "relationships")
+      .listAccounts(
+        accessToken, 
+        1, //offset
+        1, //limit
+        {
+          "type": "Reseller", 
+          "expand": "relationships"
+        }
+      )
       .then(accountList => {
         //console.log("accountList", accountList);
         assert(accountList.items.length === 1);

@@ -1,6 +1,8 @@
 /* global require module*/
 "use strict";
 
+function _asyncToGenerator(fn) { return function () { var gen = fn.apply(this, arguments); return new Promise(function (resolve, reject) { function step(key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { return Promise.resolve(value).then(function (value) { step("next", value); }, function (err) { step("throw", err); }); } } return step("next"); }); }; }
+
 var request = require("request-promise");
 var util = require("./utilities");
 
@@ -156,33 +158,66 @@ var listGroupMembers = function listGroupMembers() {
  * @param {object} [trace = {}] - optional microservice lifecycle trace headers
  * @returns {Promise<empty>} - Promise resolving success or failure.
  */
-var deleteGroup = function deleteGroup() {
-  var accessToken = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : "null accessToken";
-  var groupUUID = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : "not specified";
-  var trace = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : {};
+var deleteGroup = function () {
+  var _ref = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee() {
+    var accessToken = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : "null accessToken";
+    var groupUUID = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : "not specified";
+    var trace = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : {};
+    var MS, requestOptions;
+    return regeneratorRuntime.wrap(function _callee$(_context) {
+      while (1) {
+        switch (_context.prev = _context.next) {
+          case 0:
+            _context.prev = 0;
+            _context.next = 3;
+            return new Promise(function (resolve) {
+              return setTimeout(resolve, util.config.msDelay);
+            });
 
-  var MS = util.getEndpoint("groups");
+          case 3:
+            MS = util.getEndpoint("groups");
+            requestOptions = {
+              method: "DELETE",
+              uri: MS + "/groups/" + groupUUID,
+              headers: {
+                "Content-type": "application/json",
+                Authorization: "Bearer " + accessToken,
+                "x-api-version": "" + util.getVersion()
+              },
+              resolveWithFullResponse: true,
+              json: true
+            };
 
-  var requestOptions = {
-    method: "DELETE",
-    uri: MS + "/groups/" + groupUUID,
-    headers: {
-      "Content-type": "application/json",
-      Authorization: "Bearer " + accessToken,
-      "x-api-version": "" + util.getVersion()
-    },
-    resolveWithFullResponse: true,
-    json: true
+            util.addRequestTrace(requestOptions, trace);
+            _context.next = 8;
+            return new Promise(function (resolve, reject) {
+              request(requestOptions).then(function (responseData) {
+                responseData.statusCode === 204 ? resolve({ status: "ok" }) : reject({ status: "failed" });
+              }).catch(function (error) {
+                reject(error);
+              });
+            });
+
+          case 8:
+            return _context.abrupt("return", _context.sent);
+
+          case 11:
+            _context.prev = 11;
+            _context.t0 = _context["catch"](0);
+            return _context.abrupt("return", Promise.reject(_context.t0));
+
+          case 14:
+          case "end":
+            return _context.stop();
+        }
+      }
+    }, _callee, undefined, [[0, 11]]);
+  }));
+
+  return function deleteGroup() {
+    return _ref.apply(this, arguments);
   };
-  util.addRequestTrace(requestOptions, trace);
-  return new Promise(function (resolve, reject) {
-    request(requestOptions).then(function (responseData) {
-      responseData.statusCode === 204 ? resolve({ status: "ok" }) : reject({ status: "failed" });
-    }).catch(function (error) {
-      reject(error);
-    });
-  });
-};
+}();
 
 /**
  * @async
@@ -193,29 +228,62 @@ var deleteGroup = function deleteGroup() {
  * @param {object} [trace = {}] - optional microservice lifecycle trace headers
  * @returns {Promise<array>} - Promise resolving to an array of added users
  */
-var addMembersToGroup = function addMembersToGroup() {
-  var accessToken = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : "null accessToken";
-  var groupUUID = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : "group uuid not specified";
-  var members = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : [];
-  var trace = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : {};
+var addMembersToGroup = function () {
+  var _ref2 = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee2() {
+    var accessToken = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : "null accessToken";
+    var groupUUID = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : "group uuid not specified";
+    var members = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : [];
+    var trace = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : {};
+    var MS, requestOptions;
+    return regeneratorRuntime.wrap(function _callee2$(_context2) {
+      while (1) {
+        switch (_context2.prev = _context2.next) {
+          case 0:
+            _context2.prev = 0;
+            _context2.next = 3;
+            return new Promise(function (resolve) {
+              return setTimeout(resolve, util.config.msDelay);
+            });
 
-  var MS = util.getEndpoint("groups");
+          case 3:
+            MS = util.getEndpoint("groups");
+            requestOptions = {
+              method: "POST",
+              uri: MS + "/groups/" + groupUUID + "/members",
+              body: members,
+              headers: {
+                "Content-type": "application/json",
+                Authorization: "Bearer " + accessToken,
+                "x-api-version": "" + util.getVersion()
+              },
+              json: true
+            };
 
-  var requestOptions = {
-    method: "POST",
-    uri: MS + "/groups/" + groupUUID + "/members",
-    body: members,
-    headers: {
-      "Content-type": "application/json",
-      Authorization: "Bearer " + accessToken,
-      "x-api-version": "" + util.getVersion()
-    },
-    json: true
+            util.addRequestTrace(requestOptions, trace);
+            // console.log("request options", JSON.stringify(requestOptions));
+            _context2.next = 8;
+            return request(requestOptions);
+
+          case 8:
+            return _context2.abrupt("return", _context2.sent);
+
+          case 11:
+            _context2.prev = 11;
+            _context2.t0 = _context2["catch"](0);
+            return _context2.abrupt("return", Promise.reject(_context2.t0));
+
+          case 14:
+          case "end":
+            return _context2.stop();
+        }
+      }
+    }, _callee2, undefined, [[0, 11]]);
+  }));
+
+  return function addMembersToGroup() {
+    return _ref2.apply(this, arguments);
   };
-  util.addRequestTrace(requestOptions, trace);
-  // console.log("request options", JSON.stringify(requestOptions));
-  return request(requestOptions);
-};
+}();
 
 /**
  * @async
@@ -226,34 +294,68 @@ var addMembersToGroup = function addMembersToGroup() {
  * @param {object} [trace = {}] - optional microservice lifecycle trace headers
  * @returns {Promise<empty>} - Promise resolving success or failure status object.
  */
-var deleteGroupMembers = function deleteGroupMembers() {
-  var accessToken = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : "null accessToken";
-  var groupUuid = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : "null groupUuid";
-  var members = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : [];
-  var trace = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : {};
+var deleteGroupMembers = function () {
+  var _ref3 = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee3() {
+    var accessToken = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : "null accessToken";
+    var groupUuid = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : "null groupUuid";
+    var members = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : [];
+    var trace = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : {};
+    var MS, requestOptions;
+    return regeneratorRuntime.wrap(function _callee3$(_context3) {
+      while (1) {
+        switch (_context3.prev = _context3.next) {
+          case 0:
+            _context3.prev = 0;
+            _context3.next = 3;
+            return new Promise(function (resolve) {
+              return setTimeout(resolve, util.config.msDelay);
+            });
 
-  var MS = util.getEndpoint("groups");
-  var requestOptions = {
-    method: "DELETE",
-    uri: MS + "/groups/" + groupUuid + "/members",
-    headers: {
-      "Content-type": "application/json",
-      Authorization: "Bearer " + accessToken,
-      "x-api-version": "" + util.getVersion()
-    },
-    body: members,
-    resolveWithFullResponse: true,
-    json: true
+          case 3:
+            MS = util.getEndpoint("groups");
+            requestOptions = {
+              method: "DELETE",
+              uri: MS + "/groups/" + groupUuid + "/members",
+              headers: {
+                "Content-type": "application/json",
+                Authorization: "Bearer " + accessToken,
+                "x-api-version": "" + util.getVersion()
+              },
+              body: members,
+              resolveWithFullResponse: true,
+              json: true
+            };
+
+            util.addRequestTrace(requestOptions, trace);
+            _context3.next = 8;
+            return new Promise(function (resolve, reject) {
+              request(requestOptions).then(function (responseData) {
+                responseData.statusCode === 204 ? resolve({ status: "ok" }) : reject({ status: "failed" });
+              }).catch(function (error) {
+                reject(error);
+              });
+            });
+
+          case 8:
+            return _context3.abrupt("return", _context3.sent);
+
+          case 11:
+            _context3.prev = 11;
+            _context3.t0 = _context3["catch"](0);
+            return _context3.abrupt("return", Promise.reject(_context3.t0));
+
+          case 14:
+          case "end":
+            return _context3.stop();
+        }
+      }
+    }, _callee3, undefined, [[0, 11]]);
+  }));
+
+  return function deleteGroupMembers() {
+    return _ref3.apply(this, arguments);
   };
-  util.addRequestTrace(requestOptions, trace);
-  return new Promise(function (resolve, reject) {
-    request(requestOptions).then(function (responseData) {
-      responseData.statusCode === 204 ? resolve({ status: "ok" }) : reject({ status: "failed" });
-    }).catch(function (error) {
-      reject(error);
-    });
-  });
-};
+}();
 
 /**
  * @async

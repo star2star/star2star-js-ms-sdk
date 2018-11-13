@@ -2,7 +2,7 @@
 <html>
 <head>
   <meta charset='utf-8' />
-  <title>star2star-js-ms-sdk 2.2.6 | Documentation</title>
+  <title>star2star-js-ms-sdk 2.2.7 | Documentation</title>
   <meta name='viewport' content='width=device-width,initial-scale=1'>
   <link href='assets/bass.css' type='text/css' rel='stylesheet' />
   <link href='assets/style.css' type='text/css' rel='stylesheet' />
@@ -14,7 +14,7 @@
       <div id='split-left' class='overflow-auto fs0 height-viewport-100'>
         <div class='py1 px2'>
           <h3 class='mb0 no-anchor'>star2star-js-ms-sdk</h3>
-          <div class='mb1'><code>2.2.6</code></div>
+          <div class='mb1'><code>2.2.7</code></div>
           <input
             placeholder='Filter'
             id='filter-input'
@@ -1717,19 +1717,9 @@
       
         <div class='space-bottom0'>
           <div>
-            <span class='code bold'>accountType</span> <code class='quiet'>(<a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String">string</a>
-            = <code>&quot;&quot;</code>)</code>
-	    optional; "Reseller, MasterReseller, Customer"
-
-          </div>
-          
-        </div>
-      
-        <div class='space-bottom0'>
-          <div>
-            <span class='code bold'>expand</span> <code class='quiet'>(<a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String">string</a>
-            = <code>&quot;&quot;</code>)</code>
-	    optional; expand="relationships"
+            <span class='code bold'>filters</span> <code class='quiet'>(<a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Array">array</a>
+            = <code>undefined</code>)</code>
+	    optional array of key-value pairs to filter response.
 
           </div>
           
@@ -2696,9 +2686,19 @@
       
         <div class='space-bottom0'>
           <div>
-            <span class='code bold'>resourceUUID</span> <code class='quiet'>(<a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String">string</a>
-            = <code>&quot;null resourceUUID&quot;</code>)</code>
-	    resource or object uuid
+            <span class='code bold'>type</span> <code class='quiet'>(<a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String">string</a>
+            = <code>&quot;account&quot;</code>)</code>
+	    resource or account
+
+          </div>
+          
+        </div>
+      
+        <div class='space-bottom0'>
+          <div>
+            <span class='code bold'>data</span> <code class='quiet'>(<a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Array">array</a>
+            = <code>&quot;null data&quot;</code>)</code>
+	    array of resource or account uuids to bind to group
 
           </div>
           
@@ -2878,10 +2878,9 @@
       
         <div class='space-bottom0'>
           <div>
-            <span class='code bold'>account_uuid</span> <code class='quiet'>(<a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String">string</a>
-            = <code>&quot;null account uuid&quot;</code>)</code>
-	    account uuid
-
+            <span class='code bold'>accountUUID</span> <code class='quiet'>(any
+            = <code>&quot;null accountUUID&quot;</code>)</code>
+	    
           </div>
           
         </div>
@@ -2901,6 +2900,16 @@
             <span class='code bold'>trace</span> <code class='quiet'>(<a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object">object</a>
             = <code>{}</code>)</code>
 	    optional microservice lifecycle trace headers
+
+          </div>
+          
+        </div>
+      
+        <div class='space-bottom0'>
+          <div>
+            <span class='code bold'>account_uuid</span> <code class='quiet'>(<a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String">string</a>
+            = <code>&quot;null account uuid&quot;</code>)</code>
+	    account uuid
 
           </div>
           
@@ -2972,6 +2981,16 @@
             <span class='code bold'>accessToken</span> <code class='quiet'>(<a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String">string</a>
             = <code>&quot;null accessToken&quot;</code>)</code>
 	    cpaas access token
+
+          </div>
+          
+        </div>
+      
+        <div class='space-bottom0'>
+          <div>
+            <span class='code bold'>accountUUID</span> <code class='quiet'>(<a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String">string</a>
+            = <code>&quot;null accountUUID&quot;</code>)</code>
+	    account uuid
 
           </div>
           
@@ -7535,6 +7554,16 @@
             <span class='code bold'>accessToken</span> <code class='quiet'>(<a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String">string</a>
             = <code>&quot;null accessToken&quot;</code>)</code>
 	    access token
+
+          </div>
+          
+        </div>
+      
+        <div class='space-bottom0'>
+          <div>
+            <span class='code bold'>accountUUID</span> <code class='quiet'>(<a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String">string</a>
+            = <code>&quot;null accountUUID&quot;</code>)</code>
+	    account uuid
 
           </div>
           
@@ -12870,6 +12899,15 @@ type of object with name.</p>
             = <code>&quot;null resourceUUID&quot;</code>)</code>
 	    resource requiring permissions groups
 
+          </div>
+          
+        </div>
+      
+        <div class='space-bottom0'>
+          <div>
+            <span class='code bold'>type</span> <code class='quiet'>(any
+            = <code>&quot;object&quot;</code>)</code>
+	    
           </div>
           
         </div>

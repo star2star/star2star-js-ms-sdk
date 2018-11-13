@@ -7,29 +7,37 @@ const request = require("request-promise");
  * @async
  * @description This function will call the identity microservice with the credentials and accessToken you passed in.
  * @param {string} [accessToken="null accessToken"] - access token
+ * @param {string} [accountUUID="null accountUUID"] - account uuid
  * @param {object} [body="null body"] - JSON object containing new user info
  * @param {object} [trace = {}] - optional microservice lifecycle trace headers
  * @returns {Promise<object>} - Promise resolving to an identity data object
  */
-const createIdentity = (
+const createIdentity = async (
   accessToken = "null accessToken",
+  accountUUID = "null accountUUID",
   body = "null body",
   trace = {}
 ) => {
-  const MS = util.getEndpoint("identity");
-  const requestOptions = {
-    method: "POST",
-    uri: `${MS}/identities`,
-    headers: {
-      Authorization: `Bearer ${accessToken}`,
-      "Content-type": "application/json",
-      "x-api-version": `${util.getVersion()}`
-    },
-    body: body,
-    json: true
-  };
-  util.addRequestTrace(requestOptions, trace);
-  return request(requestOptions);
+  try {
+    await new Promise(resolve => setTimeout(resolve, util.config.msDelay));
+    const MS = util.getEndpoint("identity");
+    const requestOptions = {
+      method: "POST",
+      uri: `${MS}/accounts/${accountUUID}/identities`,
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+        "Content-type": "application/json",
+        "x-api-version": `${util.getVersion()}`
+      },
+      body: body,
+      json: true
+    };
+    util.addRequestTrace(requestOptions, trace);
+    return await request(requestOptions);
+  } catch (error) {
+    return Promise.reject(error);
+  }
+  
 };
 
 /**
@@ -240,6 +248,7 @@ const deleteIdentity = async (
   trace = {}
 ) => {
   try {
+    await new Promise(resolve => setTimeout(resolve, util.config.msDelay));
     const MS = util.getEndpoint("identity");
     const requestOptions = {
       method: "DELETE",
@@ -253,7 +262,6 @@ const deleteIdentity = async (
       resolveWithFullResponse: true
     };
     util.addRequestTrace(requestOptions, trace);
-    await new Promise(resolve => setTimeout(resolve, util.config.msDelay)); //delay is to ensure clean-up operations work
     const response = await request(requestOptions);
     return response.statusCode === 204 ? Promise.resolve({ status: "ok" }) : Promise.reject({ status: "failed" });
   } catch (error) {
@@ -359,36 +367,42 @@ const getIdentityDetails = (
  * @param {object} [trace = {}] - optional microservice lifecycle trace headers
  * @returns {Promise<object>} - Promise resolving to an identity data object
  */
-const lookupIdentity = (
+const lookupIdentity = async (
   accessToken = "null accessToken",
   offset = 0,
   limit = 10,
   filters = undefined,
   trace = {}
 ) => {
-  const MS = util.getEndpoint("identity");
-  const requestOptions = {
-    method: "GET",
-    uri: `${MS}/identities`,
-    qs: {
-      offset: offset,
-      limit: limit
-    },
-    headers: {
-      Authorization: `Bearer ${accessToken}`,
-      "Content-type": "application/json",
-      "x-api-version": `${util.getVersion()}`
-    },
-    json: true
-  };
-  util.addRequestTrace(requestOptions, trace);
-  if (filters) {
-    Object.keys(filters).forEach(filter => {
-      requestOptions.qs[filter] = filters[filter];
-    });
+  try {
+    await new Promise(resolve => setTimeout(resolve, util.config.msDelay));
+    const MS = util.getEndpoint("identity");
+    const requestOptions = {
+      method: "GET",
+      uri: `${MS}/identities`,
+      qs: {
+        offset: offset,
+        limit: limit
+      },
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+        "Content-type": "application/json",
+        "x-api-version": `${util.getVersion()}`
+      },
+      json: true
+    };
+    util.addRequestTrace(requestOptions, trace);
+    if (filters) {
+      Object.keys(filters).forEach(filter => {
+        requestOptions.qs[filter] = filters[filter];
+      });
+    }
+    //console.log("REQUEST********",requestOptions);
+    return await request(requestOptions);
+  } catch (error) {
+    return Promise.reject(error);
   }
-  //console.log("REQUEST********",requestOptions);
-  return request(requestOptions);
+  
 };
 
 /**

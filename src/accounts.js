@@ -39,8 +39,7 @@ const createRelationship = (
  * @param {string} [accessToken="null accessToken"] - access token for cpaas system
  * @param {number} [offset=0] - optional; return the list starting at a specified index
  * @param {number} [limit=10] - optional; return a specified number of accounts
- * @param {string} [accountType=""] - optional; "Reseller, MasterReseller, Customer"
- * @param {string} [expand=""] optional; expand="relationships"
+  * @param {array} [filters=undefined] - optional array of key-value pairs to filter response.
  * @param {object} [trace = {}] - optional microservice lifecycle trace headers 
  * @returns {Promise<object>} - Promise resolving to a data object containing a list of accounts
  */
@@ -48,8 +47,7 @@ const listAccounts = (
   accessToken = "null accessToken",
   offset = 0,
   limit = 10,
-  accountType = undefined,
-  expand = undefined,
+  filters = undefined,
   trace = {}
 ) => {
   const MS = util.getEndpoint("accounts");
@@ -59,8 +57,6 @@ const listAccounts = (
     qs: {
       offset: offset,
       limit: limit,
-      type: accountType,
-      expand: expand
     },
     headers: {
       Authorization: `Bearer ${accessToken}`,
@@ -70,15 +66,12 @@ const listAccounts = (
     json: true
   };
   util.addRequestTrace(requestOptions, trace);
-  if (accountType) {
-    requestOptions.qs.type = accountType;
-  }
-
-  if (expand) {
-    requestOptions.qs.expand = expand;
+  if (filters) {
+    Object.keys(filters).forEach(filter => {
+      requestOptions.qs[filter] = filters[filter];
+    });
   }
   //console.log("REQUEST_OPTIONS",requestOptions);
-
   return request(requestOptions);
 };
 
@@ -90,26 +83,31 @@ const listAccounts = (
  * @param {object} [trace = {}] - optional microservice lifecycle trace headers 
  * @returns {Promise<object>} - Promise resolving to an account data object
  */
-const createAccount = (
+const createAccount = async (
   accessToken = "null accessToken",
   body = "null body",
   trace = {}
 ) => {
-  const MS = util.getEndpoint("accounts");
-  const requestOptions = {
-    method: "POST",
-    uri: `${MS}/accounts`,
-    body: body,
-    headers: {
-      Authorization: `Bearer ${accessToken}`,
-      "Content-type": "application/json",
-      "x-api-version": `${util.getVersion()}`
-    },
-    json: true
-  };
-  util.addRequestTrace(requestOptions, trace);
+  try {
+    await new Promise(resolve => setTimeout(resolve, util.config.msDelay));
+    const MS = util.getEndpoint("accounts");
+    const requestOptions = {
+      method: "POST",
+      uri: `${MS}/accounts`,
+      body: body,
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+        "Content-type": "application/json",
+        "x-api-version": `${util.getVersion()}`
+      },
+      json: true
+    };
+    util.addRequestTrace(requestOptions, trace);
 
-  return request(requestOptions);
+    return await request(requestOptions);
+  } catch (error) {
+    return Promise.reject(error);
+  } 
 };
 
 /**
@@ -322,37 +320,41 @@ const suspendAccount = (
  * @param {object} [trace = {}] - optional microservice lifecycle trace headers 
  * @returns {Promise<object>} - Promise resolving to a status data object
  */
-const deleteAccount = (
+const deleteAccount = async (
   accessToken = "null access token",
   accountUUID = "null account uuid",
   trace = {}
 ) => {
-  //body = JSON.stringify(body);
-  const MS = util.getEndpoint("accounts");
-  const requestOptions = {
-    method: "DELETE",
-    uri: `${MS}/accounts/${accountUUID}`,
-    resolveWithFullResponse: true,
-    json: true,
-    headers: {
-      Authorization: `Bearer ${accessToken}`,
-      "Content-type": "application/json",
-      "x-api-version": `${util.getVersion()}`
-    }
-  };
-  util.addRequestTrace(requestOptions, trace);
-  
-  return new Promise(function(resolve, reject) {
-    request(requestOptions)
-      .then(function(responseData) {
-        responseData.statusCode === 204
-          ? resolve({ status: "ok" })
-          : reject({ status: "failed" });
-      })
-      .catch(function(error) {
-        reject(error);
-      });
-  });
+  try {
+    await new Promise(resolve => setTimeout(resolve, util.config.msDelay));
+    const MS = util.getEndpoint("accounts");
+    const requestOptions = {
+      method: "DELETE",
+      uri: `${MS}/accounts/${accountUUID}`,
+      resolveWithFullResponse: true,
+      json: true,
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+        "Content-type": "application/json",
+        "x-api-version": `${util.getVersion()}`
+      }
+    };
+    util.addRequestTrace(requestOptions, trace);
+    
+    return await new Promise(function(resolve, reject) {
+      request(requestOptions)
+        .then(function(responseData) {
+          responseData.statusCode === 204
+            ? resolve({ status: "ok" })
+            : reject({ status: "failed" });
+        })
+        .catch(function(error) {
+          reject(error);
+        });
+    });
+  } catch (error) {
+    return Promise.reject(error);
+  }
 };
 
 module.exports = {
