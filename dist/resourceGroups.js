@@ -42,21 +42,19 @@ var createResourceGroups = function () {
             _context.prev = 0;
 
             //create the groups
-            console.log("env", env);
-            console.log("roles[type]", roles[type]);
             nextTrace = objectMerge({}, trace);
             _context.t0 = regeneratorRuntime.keys(users);
 
-          case 5:
+          case 3:
             if ((_context.t1 = _context.t0()).done) {
-              _context.next = 22;
+              _context.next = 19;
               break;
             }
 
             prop = _context.t1.value;
 
             if (!roles[type].hasOwnProperty(prop)) {
-              _context.next = 20;
+              _context.next = 17;
               break;
             }
 
@@ -67,43 +65,42 @@ var createResourceGroups = function () {
             };
 
             nextTrace = objectMerge({}, nextTrace, Util.generateNewMetaData(nextTrace));
-            _context.next = 12;
+            _context.next = 10;
             return Auth.createUserGroup(accessToken, accountUUID, userGroup, nextTrace);
 
-          case 12:
+          case 10:
             group = _context.sent;
 
             logger.info("Created resource group: " + JSON.stringify(group, null, "\t"));
-            _context.next = 16;
+            _context.next = 14;
             return new Promise(function (resolve) {
               return setTimeout(resolve, msDelay);
             });
 
-          case 16:
+          case 14:
             //microservices delay :(
             nextTrace = objectMerge({}, nextTrace, Util.generateNewMetaData(nextTrace));
-            console.log("********* roles[env][prop] **********", roles[type][prop]);
-            _context.next = 20;
+            _context.next = 17;
             return Auth.assignScopedRoleToUserGroup(accessToken, group.uuid, roles[type][prop], "resource", [resourceUUID], nextTrace);
 
-          case 20:
-            _context.next = 5;
+          case 17:
+            _context.next = 3;
             break;
 
-          case 22:
+          case 19:
             return _context.abrupt("return", Promise.resolve({ status: "ok" }));
 
-          case 25:
-            _context.prev = 25;
+          case 22:
+            _context.prev = 22;
             _context.t2 = _context["catch"](0);
             return _context.abrupt("return", Promise.reject({ status: "failed", createResourceGroups: _context.t2 }));
 
-          case 28:
+          case 25:
           case "end":
             return _context.stop();
         }
       }
-    }, _callee, undefined, [[0, 25]]);
+    }, _callee, undefined, [[0, 22]]);
   }));
 
   return function createResourceGroups() {

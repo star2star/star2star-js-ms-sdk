@@ -29,8 +29,6 @@ const createResourceGroups = async (
 ) => {
   try {
     //create the groups
-    console.log("env", env);
-    console.log("roles[type]", roles[type]);
     let nextTrace = objectMerge({}, trace);
     for (const prop in users) {
       if (roles[type].hasOwnProperty(prop)) {
@@ -59,7 +57,6 @@ const createResourceGroups = async (
           nextTrace,
           Util.generateNewMetaData(nextTrace)
         );
-        console.log("********* roles[env][prop] **********", roles[type][prop]);
         await Auth.assignScopedRoleToUserGroup(
           accessToken,
           group.uuid,

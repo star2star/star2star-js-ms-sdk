@@ -156,6 +156,7 @@ describe("Workflow", function() {
       uuid: wfTemplateUUID,
       version: version,
       status: "inactive",
+      globals: {"token": accessToken},
       states: [
         {
           uuid: uuidv4(),
@@ -240,6 +241,7 @@ describe("Workflow", function() {
       uuid: wfTemplateUUID,
       version: version,
       status: "active",
+      globals: {"token": accessToken},
       states: [
         {
           uuid: uuidv4(),
@@ -330,6 +332,7 @@ describe("Workflow", function() {
       uuid: wfTemplateUUID,
       version: "0.0.2",
       status: "active",
+      globals: {"token": accessToken},
       states: [
         {
           uuid: uuidv4(),
@@ -589,7 +592,7 @@ describe("Workflow", function() {
     if (!creds.isValid) return done();
     const filters = [];
     filters["show_versions"] = true;
-    //filters["status"] = "inactive"; Hands with this param...CSRVS-186 nh 8/30/18
+    filters["status"] = "inactive";
     s2sMS.Workflow.listWorkflowTemplates(accessToken, 0, 1, filters)
       .then(response => {
         logger.info(
