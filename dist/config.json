@@ -34,7 +34,7 @@
     "prod": {}
   },
   "msDelay": 3000,
-  "localDebug": false,
+  "localDebug": true,
   "msDebug": false,
   "env": "dev"
 }

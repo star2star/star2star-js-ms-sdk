@@ -64,6 +64,8 @@ require("babel-polyfill");
 [Please click here for our documentation pages.](https://star2star.github.io/star2star-js-ms-sdk/ "Star2Star Micro Service SDK Documentation")
 
 ## Changes
+* 2.2.10 - Improved fix for filter bug
+* 2.2.9 - Add guard to fix filter bug and additional logging
 * 2.2.8 - Clean up console.logs
 * 2.2.7 - Update permissions to support revamped scoping
 * 2.2.6 - Fix documentation

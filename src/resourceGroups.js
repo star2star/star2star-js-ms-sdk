@@ -287,7 +287,7 @@ const updateResourceGroups = async (
         Util.generateNewMetaData(nextTrace)
       );
       logger.info(
-        `Creating New Resource Groups For Updated Object ${JSON.stringify(
+        `Creating New Resource Groups For Resource ${resourceUUID}: ${JSON.stringify(
           users,
           null,
           "\t"

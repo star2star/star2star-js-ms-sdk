@@ -356,7 +356,7 @@ var updateResourceGroups = function () {
             }
 
             nextTrace = objectMerge({}, nextTrace, Util.generateNewMetaData(nextTrace));
-            logger.info("Creating New Resource Groups For Updated Object " + JSON.stringify(users, null, "\t"));
+            logger.info("Creating New Resource Groups For Resource " + resourceUUID + ": " + JSON.stringify(users, null, "\t"));
             _context4.next = 25;
             return createResourceGroups(accessToken, accountUUID, resourceUUID, "object", //system role type
             users, trace);

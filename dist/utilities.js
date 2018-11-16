@@ -194,7 +194,7 @@ var filterResponse = function filterResponse(response, filters) {
               // console.log("FILTERS[FILTER}",filters[filter]);
               found = prop === filter && obj[prop] === filters[filter];
               return;
-            } else if (_typeof(obj[prop]) === "object") {
+            } else if (_typeof(obj[prop]) === "object" && obj[prop] !== null) {
               //console.log("************ Filter recursing **************",obj[prop]);
               return doFilter(obj[prop], filter);
             }
@@ -335,6 +335,8 @@ var isBrowser = function isBrowser() {
 var addRequestTrace = function addRequestTrace(request) {
   var trace = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
 
+  logger.log("debug", "Request Method: " + request.method + ", URI: " + request.uri);
+
   var headerKeys = ["id", "trace", "parent"];
 
   headerKeys.forEach(function (keyName) {
@@ -353,7 +355,6 @@ var addRequestTrace = function addRequestTrace(request) {
   } else {
     request.headers["debug"] = false;
   }
-
   return request;
 };
 
