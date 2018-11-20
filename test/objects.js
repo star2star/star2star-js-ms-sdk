@@ -61,13 +61,14 @@ describe("Objects MS Test Suite", function() {
       accessToken,
       "Unit-Test",
       "unit-test",
-      "the description",
+      "the description",  
       {
         a: 1 //content
       },
+      identityData.account_uuid, // combined with users creates resource group scoping
       {
         rud: [identityData.uuid],
-        d: ["be2df92f-f6d9-4770-bedb-5447465f9359"] //users read, update, delete permissions
+        d: ["6013f80a-c69b-47dd-9028-4830e2297b48"] //users read, update, delete permissions
       }
     )
       .then(responseData => {
@@ -83,7 +84,7 @@ describe("Objects MS Test Suite", function() {
       })
       .catch(error => {
         logger.error(
-          `Create Shared User Object RESPONSE: ${JSON.stringify(
+          `Create Shared User Object ERROR: ${JSON.stringify(
             error,
             null,
             "\t"
@@ -93,94 +94,95 @@ describe("Objects MS Test Suite", function() {
       });
   });
 
-  it("Update User Object", function(done) {
-    if (!creds.isValid) return done();
-    setTimeout(() => {
-      s2sMS.Objects.updateDataObject(
-        accessToken,
-        userObjectUUID,
-        {
-          a: 2 //content
-        },
-        {
-          rd: [identityData.uuid],
-          d: [identityData.uuid] //users read, update, delete permissions
-        }
-      )
-        .then(responseData => {
-          logger.info(
-            `Update User Object RESPONSE: ${JSON.stringify(
-              responseData,
-              null,
-              "\t"
-            )}`
-          );
-          done();
-        })
-        .catch(error => {
-          logger.error(
-            `Update User Object ERROR: ${JSON.stringify(error, null, "\t")}`
-          );
-          done(new Error(error));
-        });
-    }, util.config.msDelay);
-  });
+  // it("Update User Object", function(done) {
+  //   if (!creds.isValid) return done();
+  //   setTimeout(() => {
+  //     s2sMS.Objects.updateDataObject(
+  //       accessToken,
+  //       userObjectUUID,
+  //       {
+  //         a: 2 //content
+  //       },
+  //       identityData.account_uuid,
+  //       {
+  //         rd: [identityData.uuid],
+  //         d: [identityData.uuid] //users read, update, delete permissions
+  //       }
+  //     )
+  //       .then(responseData => {
+  //         logger.info(
+  //           `Update User Object RESPONSE: ${JSON.stringify(
+  //             responseData,
+  //             null,
+  //             "\t"
+  //           )}`
+  //         );
+  //         done();
+  //       })
+  //       .catch(error => {
+  //         logger.error(
+  //           `Update User Object ERROR: ${JSON.stringify(error, null, "\t")}`
+  //         );
+  //         done(new Error(error));
+  //       });
+  //   }, util.config.msDelay);
+  // });
 
-  it("Get Resource Group users", function(done) {
-    if (!creds.isValid) return done();
+  // it("Get Resource Group users", function(done) {
+  //   if (!creds.isValid) return done();
 
-    s2sMS.Auth.getResourceUsers(
-      accessToken,
-      userObjectUUID
-    )
-      .then(responseData => {
-        logger.info(
-          `Get Resource Group users RESPONSE: ${JSON.stringify(
-            responseData,
-            null,
-            "\t"
-          )}`
-        );
-        done();
-      })
-      .catch(error => {
-        logger.error(
-          `Get Resource Group users ERROR: ${JSON.stringify(error, null, "\t")}`
-        );
-        done(new Error(error));
-      });
-  });
+  //   s2sMS.Auth.getResourceUsers(
+  //     accessToken,
+  //     userObjectUUID
+  //   )
+  //     .then(responseData => {
+  //       logger.info(
+  //         `Get Resource Group users RESPONSE: ${JSON.stringify(
+  //           responseData,
+  //           null,
+  //           "\t"
+  //         )}`
+  //       );
+  //       done();
+  //     })
+  //     .catch(error => {
+  //       logger.error(
+  //         `Get Resource Group users ERROR: ${JSON.stringify(error, null, "\t")}`
+  //       );
+  //       done(new Error(error));
+  //     });
+  // });
 
-  it("Delete Shared User Object", function(done) {
-    if (!creds.isValid) return done();
-    if (userObjectUUID) {
-      setTimeout(() => {
-        s2sMS.Objects.deleteDataObject(accessToken, userObjectUUID)
-          .then(responseData => {
-            logger.info(
-              `Delete Shared User Object RESPONSE: ${JSON.stringify(
-                responseData,
-                null,
-                "\t"
-              )}`
-            );
-            done();
-          })
-          .catch(error => {
-            logger.error(
-              `Delete Shared User Object ERROR: ${JSON.stringify(
-                error,
-                null,
-                "\t"
-              )}`
-            );
-            done(new Error(error));
-          });
-      }, util.config.msDelay); //takes a long time for resource groups to show up as associated with an object
-    } else {
-      done(new Error("userObjectUUID is undefined"));
-    }
-  });
+  // it("Delete Shared User Object", function(done) {
+  //   if (!creds.isValid) return done();
+  //   if (userObjectUUID) {
+  //     setTimeout(() => {
+  //       s2sMS.Objects.deleteDataObject(accessToken, userObjectUUID)
+  //         .then(responseData => {
+  //           logger.info(
+  //             `Delete Shared User Object RESPONSE: ${JSON.stringify(
+  //               responseData,
+  //               null,
+  //               "\t"
+  //             )}`
+  //           );
+  //           done();
+  //         })
+  //         .catch(error => {
+  //           logger.error(
+  //             `Delete Shared User Object ERROR: ${JSON.stringify(
+  //               error,
+  //               null,
+  //               "\t"
+  //             )}`
+  //           );
+  //           done(new Error(error));
+  //         });
+  //     }, util.config.msDelay); //takes a long time for resource groups to show up as associated with an object
+  //   } else {
+  //     done(new Error("userObjectUUID is undefined"));
+  //   }
+  // });
 
   // it("Create Global Object", function(done) {
   //   if (!creds.isValid) return done();

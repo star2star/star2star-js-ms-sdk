@@ -6,7 +6,7 @@
   "scripts": {
     "init": "mkdir dist",
     "clean": "rm -rf dist && touch package-lock.json && rm package-lock.json && rm -rf node_modules",
-    "test": "mocha --timeout 10000",
+    "test": "mocha --timeout 30000",
     "prebuild": "npm run clean && npm install",
     "build": "babel src -d dist --presets es2015",
     "postbuild": "cp src/config.json dist/config.json",

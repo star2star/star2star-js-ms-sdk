@@ -30,43 +30,60 @@ const createResourceGroups = async (
   try {
     //create the groups
     let nextTrace = objectMerge({}, trace);
-    for (const prop in users) {
-      if (roles[type].hasOwnProperty(prop)) {
-        const userGroup = {
-          name: `${prop}: ${resourceUUID}`,
-          users: [...users[prop]],
-          description: "resource group"
-        };
-        nextTrace = objectMerge(
-          {},
-          nextTrace,
-          Util.generateNewMetaData(nextTrace)
-        );
-        const group = await Auth.createUserGroup(
-          accessToken,
-          accountUUID,
-          userGroup,
-          nextTrace
-        );
-        logger.info(
-          `Created resource group: ${JSON.stringify(group, null, "\t")}`
-        );
-        await new Promise(resolve => setTimeout(resolve, msDelay)); //microservices delay :(
-        nextTrace = objectMerge(
-          {},
-          nextTrace,
-          Util.generateNewMetaData(nextTrace)
-        );
-        await Auth.assignScopedRoleToUserGroup(
-          accessToken,
-          group.uuid,
-          roles[type][prop],
-          "resource",
-          [resourceUUID],
-          nextTrace
-        );
-      }
-    }
+    const groupPromises = [];
+    const scopePromises = [];
+    const groupTypeRegex = /^[r,u,d]{1,3}/;
+    console.log("*************** USERS **************", users);
+    Object.keys(users).forEach(prop => {
+      console.log("********** prop ********", prop);
+      const userGroup = {
+        name: `${prop}: ${resourceUUID}`,
+        users: [...users[prop]],
+        description: "resource group"
+      };
+      console.log("********** userGroup ***********", userGroup);
+      nextTrace = objectMerge({}, nextTrace, Util.generateNewMetaData(nextTrace));
+      groupPromises.push(Auth.createUserGroup(
+        accessToken,
+        accountUUID,
+        userGroup,
+        nextTrace
+      ));
+    });
+    const groups = await Promise.all(groupPromises);
+    logger.info(
+      `Created resource groups: ${JSON.stringify(
+        groups,
+        null,
+        "\t"
+      )}`
+    );
+    await new Promise(resolve => setTimeout(resolve, msDelay)); //microservices delay :(
+    
+    // scope the resource to the groups
+    groups.forEach(group => {
+      //extract the group type from the group name
+      const groupType = groupTypeRegex.exec(group.name);
+      console.log("************ SCOPE GROUP TYPE ************", groupType);
+      console.log("************ ROLE ************", roles[type][groupType]);
+      nextTrace = objectMerge({}, nextTrace, Util.generateNewMetaData(nextTrace));
+      scopePromises.push(Auth.assignScopedRoleToUserGroup(
+        accessToken,
+        group.uuid,
+        roles[type][groupType],
+        "resource",
+        [resourceUUID],
+        nextTrace
+      ));  
+    }); 
+    const scopes = await Promise.all(scopePromises);
+    logger.info(
+      `Completed resource group scoping calls: ${JSON.stringify(
+        scopes,
+        null,
+        "\t"
+      )}`
+    );  
     return Promise.resolve({ status: "ok" });
   } catch (error) {
     return Promise.reject({ status: "failed", createResourceGroups: error });
@@ -302,6 +319,78 @@ const updateResourceGroups = async (
         trace
       );
     }
+    return Promise.resolve({"status":"ok"});
+  } catch (error) {
+    return Promise.reject(error);
+  }
+};
+
+/**
+ * @async
+ * @description This function will update a resources permissions groups.
+ * @param {string} [accessToken="null accessToken"] - Access Token
+ * @param {string} [data_uuid="uuid not specified"] - data object UUID
+ * @param {object} [users={}}] - users object treated as PUT
+ * @param {object} [trace = {}] - microservice lifecycle trace headers
+ * @returns {Promise<object>} Promise resolving to confirmation of updated groups
+ */
+const updateResourceGroups2 = async (
+  accessToken = "null accessToken",
+  resourceUUID = "uuid not specified",
+  accountUUID = "null accountUUID",
+  users = {},
+  trace = {}
+) => {
+  try {
+    const resourceGroups = await Auth.listAccessByGroups(
+      accessToken,
+      resourceUUID,
+      trace
+    );
+    let nextTrace = trace;
+    logger.info(
+      `Resource group lookup success: ${JSON.stringify(
+        resourceGroups,
+        null,
+        "\t"
+      )}`
+    );
+    // groups exist for this resource. update or delete them.
+    if (
+      resourceGroups.hasOwnProperty("items") &&
+      resourceGroups.items.length > 0
+    ) { 
+      // format listAccessByGroups to more easily work with the users object
+      const groupTypeRegex = /^[r,u,d]{1,3}/;
+      const formattedResourceGrps = {};
+      resourceGroups.items.forEach(item => {
+        formattedResourceGrps[groupTypeRegex.exec(item.user_group.group_name)] = item.user_group.uuid;
+      });
+      logger.info(
+        `Formatted Resource Groups: ${JSON.stringify(
+          formattedResourceGrps,
+          null,
+          "\t"
+        )}`
+      );
+    } else {
+      // groups do not exist for this resource. create them.
+      const newGroups = await createResourceGroups(
+        accessToken,
+        accountUUID,
+        resourceUUID,
+        "object", //system role type
+        users,
+        trace
+      );
+      logger.info(
+        `No existing resourge groups found. Created new: ${JSON.stringify(
+          newGroups,
+          null,
+          "\t"
+        )}`
+      );
+    }
   } catch (error) {
     return Promise.reject(error);
   }
@@ -310,5 +399,6 @@ const updateResourceGroups = async (
 module.exports = {
   createResourceGroups,
   cleanUpResourceGroups,
-  updateResourceGroups
+  updateResourceGroups,
+  updateResourceGroups2
 };

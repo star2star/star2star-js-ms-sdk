@@ -4,7 +4,6 @@ const util = require("./utilities");
 const request = require("request-promise");
 const objectMerge = require("object-merge");
 const ResourceGroups = require("./resourceGroups");
-const Identity = require("./identity");
 
 /**
  * @async
@@ -213,7 +212,8 @@ const getDataObject = (
  * @param {string} objectType - object type (use '_' between words)
  * @param {string} objectDescription - object description
  * @param {object} [content={}] - object to be created
- * @param {object} [users=undefined] - optinal object containing users for creating permissions groups
+ * @param {string} [accountUUID="null accountUUID"] - optional account uuid to scope user permissions
+ * @param {object} [users=undefined] - optional object containing users for creating permissions groups
  * @param {object} [trace = {}] - microservice lifecycle trace headers
  * @returns {Promise<object>} Promise resolving to a data object
  */
@@ -224,6 +224,7 @@ const createUserDataObject = async (
   objectType,
   objectDescription,
   content = {},
+  accountUUID = undefined,
   users = undefined,
   trace = {}
 ) => {
@@ -256,26 +257,15 @@ const createUserDataObject = async (
     await new Promise(resolve => setTimeout(resolve, util.config.msDelay));
     newObject = await request(requestOptions);
     //need to create permissions resource groups
-    if (users && typeof users === "object") {
-      nextTrace = objectMerge(
-        {},
-        nextTrace,
-        util.generateNewMetaData(nextTrace)
-      );
-      //user groups require an account
-      const identity = await Identity.getIdentityDetails(
-        accessToken,
-        userUUID,
-        nextTrace
-      );
-      nextTrace = objectMerge(
-        {},
-        nextTrace,
-        util.generateNewMetaData(nextTrace)
-      );
+    if (
+      accountUUID &&
+      users && 
+      typeof users === "object"
+    ) {
+      nextTrace = objectMerge({}, nextTrace, util.generateNewMetaData(nextTrace));
       await ResourceGroups.createResourceGroups(
         accessToken,
-        identity.account_uuid,
+        accountUUID,
         newObject.uuid,
         "object", //system role type
         users,
@@ -398,23 +388,26 @@ const deleteDataObject = async (
  * @async
  * @description This function will update an existing data object.
  * @param {string} [accessToken="null accessToken"] - Access Token
- * @param {string} [data_uuid="uuid not specified"] - data object UUID
+ * @param {string} [dataUUID="uuid not specified"] - data object UUID
  * @param {object} [body={}] - data object replacement
+ * @param {string} [accountUUID=undefined] - optional account to scope users object permissions to
+ * @param {object} [users=undefined] - optional users permissions object
  * @param {object} [trace = {}] - microservice lifecycle trace headers
  * @returns {Promise<object>} Promise resolving to a data object
  */
 const updateDataObject = async (
   accessToken = "null accessToken",
-  data_uuid = "uuid not specified",
+  dataUUID = "uuid not specified",
   body = {},
-  users = undefined,
+  accountUUID = undefined, // only needed for shared objects
+  users = undefined, //only needed for shared objects
   trace = {}
 ) => {
   const MS = util.getEndpoint("objects");
 
   const requestOptions = {
     method: "PUT",
-    uri: `${MS}/objects/${data_uuid}`,
+    uri: `${MS}/objects/${dataUUID}`,
     body: body,
     headers: {
       Authorization: `Bearer ${accessToken}`,
@@ -426,33 +419,16 @@ const updateDataObject = async (
   util.addRequestTrace(requestOptions, trace);
   let nextTrace = objectMerge({}, trace);
   try {
-    if (users && typeof users === "object") {
-      //first determine this object's owner and account
-      nextTrace = objectMerge(
-        {},
-        nextTrace,
-        util.generateNewMetaData(nextTrace)
-      );
-      const object = await getDataObject(accessToken, data_uuid, nextTrace);
-      nextTrace = objectMerge(
-        {},
-        nextTrace,
-        util.generateNewMetaData(nextTrace)
-      );
-      const identity = await Identity.getIdentityDetails(
+    if (
+      accountUUID &&
+      users && 
+      typeof users === "object"
+    ) {
+      nextTrace = objectMerge({}, nextTrace, util.generateNewMetaData(nextTrace));
+      await ResourceGroups.updateResourceGroups2(
         accessToken,
-        object.audit.created_by,
-        nextTrace
-      );
-      nextTrace = objectMerge(
-        {},
-        nextTrace,
-        util.generateNewMetaData(nextTrace)
-      );
-      await ResourceGroups.updateResourceGroups(
-        accessToken,
-        data_uuid,
-        identity.account_uuid,
+        dataUUID,
+        accountUUID,
         users,
         nextTrace
       );
