@@ -1,6 +1,8 @@
 const assert = require("assert");
 const s2sMS = require("../src/index");
 const fs = require("fs");
+const util = require("../src/utilities");
+const logger = util.logger;
 
 let creds = {
   CPAAS_OAUTH_TOKEN: "Basic your oauth token here",
@@ -363,6 +365,33 @@ describe("Identity MS Unit Test Suite", function () {
       });
   });
 
+  it("Get My Account's Identities", function (done) {
+    if (!creds.isValid) return done();
+    const filters = {
+      "username": identityData.email
+    };
+    s2sMS.Identity.listIdentitiesByAccount(
+      accessToken,
+      identityData.account_uuid,
+      0, //offset
+      1, //limit
+      filters
+    )
+      .then((response) => {
+        logger.info("Get My Account's Identities RESPONSE:", JSON.stringify(response, null, "\t"));
+        assert(
+          response.hasOwnProperty("items") &&
+          Array.isArray(response.items) &&
+          response.items[0].uuid === identityData.uuid
+        );
+        done();
+      })
+      .catch((error) => {
+        logger.error("Get My Account's Identities", JSON.stringify(error, null, "\t"));
+        done(new Error(error));
+      });
+  });
+
   it("Lookup Identity with known user", function (done) {
     if (!creds.isValid) return done();
     filters = [];
@@ -453,7 +482,7 @@ describe("Identity MS Unit Test Suite", function () {
         done();
       })
       .catch(e => {
-        console.log("error in validate token", e);
+        //console.log("error in validate token", e);
         done();
       });
   });

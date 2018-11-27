@@ -406,21 +406,23 @@ var getIdentityDetails = function getIdentityDetails() {
 
 /**
  * @async
- * @description This function will look up an identity by username.
- * @param {string} [accessToken="null accessToken"]
+ * @description This function will list the identities associated with a given account.
+ * @param {string} [accessToken="null accessToken"] - cpaas access token
+ * @param {string} [accountUUID="null accountUUID"] - account uuid
  * @param {number} [offset=0] - list offset
  * @param {number} [limit=10] - number of items to return
  * @param {array} [filters=undefined] - optional array of key-value pairs to filter response.
  * @param {object} [trace = {}] - optional microservice lifecycle trace headers
  * @returns {Promise<object>} - Promise resolving to an identity data object
  */
-var lookupIdentity = function () {
+var listIdentitiesByAccount = function () {
   var _ref3 = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee3() {
     var accessToken = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : "null accessToken";
-    var offset = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 0;
-    var limit = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : 10;
-    var filters = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : undefined;
-    var trace = arguments.length > 4 && arguments[4] !== undefined ? arguments[4] : {};
+    var accountUUID = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : "null accountUUID";
+    var offset = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : 0;
+    var limit = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : 10;
+    var filters = arguments.length > 4 && arguments[4] !== undefined ? arguments[4] : undefined;
+    var trace = arguments.length > 5 && arguments[5] !== undefined ? arguments[5] : {};
     var MS, requestOptions;
     return regeneratorRuntime.wrap(function _callee3$(_context3) {
       while (1) {
@@ -436,7 +438,7 @@ var lookupIdentity = function () {
             MS = util.getEndpoint("identity");
             requestOptions = {
               method: "GET",
-              uri: MS + "/identities",
+              uri: MS + "/accounts/" + accountUUID + "/identities",
               qs: {
                 offset: offset,
                 limit: limit
@@ -475,8 +477,84 @@ var lookupIdentity = function () {
     }, _callee3, undefined, [[0, 12]]);
   }));
 
-  return function lookupIdentity() {
+  return function listIdentitiesByAccount() {
     return _ref3.apply(this, arguments);
+  };
+}();
+
+/**
+ * @async
+ * @description This function will look up an identity by username.
+ * @param {string} [accessToken="null accessToken"]
+ * @param {number} [offset=0] - list offset
+ * @param {number} [limit=10] - number of items to return
+ * @param {array} [filters=undefined] - optional array of key-value pairs to filter response.
+ * @param {object} [trace = {}] - optional microservice lifecycle trace headers
+ * @returns {Promise<object>} - Promise resolving to an identity data object
+ */
+var lookupIdentity = function () {
+  var _ref4 = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee4() {
+    var accessToken = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : "null accessToken";
+    var offset = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 0;
+    var limit = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : 10;
+    var filters = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : undefined;
+    var trace = arguments.length > 4 && arguments[4] !== undefined ? arguments[4] : {};
+    var MS, requestOptions;
+    return regeneratorRuntime.wrap(function _callee4$(_context4) {
+      while (1) {
+        switch (_context4.prev = _context4.next) {
+          case 0:
+            _context4.prev = 0;
+            _context4.next = 3;
+            return new Promise(function (resolve) {
+              return setTimeout(resolve, util.config.msDelay);
+            });
+
+          case 3:
+            MS = util.getEndpoint("identity");
+            requestOptions = {
+              method: "GET",
+              uri: MS + "/identities",
+              qs: {
+                offset: offset,
+                limit: limit
+              },
+              headers: {
+                Authorization: "Bearer " + accessToken,
+                "Content-type": "application/json",
+                "x-api-version": "" + util.getVersion()
+              },
+              json: true
+            };
+
+            util.addRequestTrace(requestOptions, trace);
+            if (filters) {
+              Object.keys(filters).forEach(function (filter) {
+                requestOptions.qs[filter] = filters[filter];
+              });
+            }
+            //console.log("REQUEST********",requestOptions);
+            _context4.next = 9;
+            return request(requestOptions);
+
+          case 9:
+            return _context4.abrupt("return", _context4.sent);
+
+          case 12:
+            _context4.prev = 12;
+            _context4.t0 = _context4["catch"](0);
+            return _context4.abrupt("return", Promise.reject(_context4.t0));
+
+          case 15:
+          case "end":
+            return _context4.stop();
+        }
+      }
+    }, _callee4, undefined, [[0, 12]]);
+  }));
+
+  return function lookupIdentity() {
+    return _ref4.apply(this, arguments);
   };
 }();
 
@@ -594,6 +672,7 @@ module.exports = {
   deleteIdentity: deleteIdentity,
   login: login,
   getMyIdentityData: getMyIdentityData,
+  listIdentitiesByAccount: listIdentitiesByAccount,
   lookupIdentity: lookupIdentity,
   getIdentityDetails: getIdentityDetails,
   generatePasswordToken: generatePasswordToken,
