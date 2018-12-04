@@ -13,6 +13,43 @@ var Identity = require("./identity");
 
 /**
  * @async
+ * @name Get By Type
+ * @description This function will ask the cpaas data object service for a specific
+ * type of object.
+ * @param {string} accessToken - Access Token
+ * @param {string} dataObjectType - Data object type to be retrieved; default: dataObjectType
+ * @param {number} offset - pagination offset
+ * @param {number} limit - pagination limit
+ * @param {boolean} [loadContent] - String boolean if the call should also return content of object; default false
+ * @param {object} [trace = {}] - microservice lifecycle trace headers
+ * @returns {Promise<array>} Promise resolving to an array of data objects
+ */
+var getByType = function getByType() {
+  var accessToken = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : "null accessToken";
+  var dataObjectType = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : "data_object";
+  var offset = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : 0;
+  var limit = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : 10;
+  var loadContent = arguments.length > 4 && arguments[4] !== undefined ? arguments[4] : "false";
+  var trace = arguments.length > 5 && arguments[5] !== undefined ? arguments[5] : {};
+
+  var MS = util.getEndpoint("objects");
+
+  var requestOptions = {
+    method: "GET",
+    uri: MS + "/objects?type=" + dataObjectType + "&load_content=" + loadContent + "&sort=name&offset=" + offset + "&limit=" + limit,
+    headers: {
+      Authorization: "Bearer " + accessToken,
+      "Content-type": "application/json",
+      "x-api-version": "" + util.getVersion()
+    },
+    json: true
+  };
+  util.addRequestTrace(requestOptions, trace);
+  return request(requestOptions);
+};
+
+/**
+ * @async
  * @description This function returns objects permitted to user with flexible filtering.
  * @param {string} [accessToken="null accessToken"]
  * @param {string} [userUUID="null userUUID"]
@@ -598,6 +635,7 @@ var updateDataObject = function () {
 }();
 
 module.exports = {
+  getByType: getByType,
   getDataObject: getDataObject,
   getDataObjects: getDataObjects,
   getDataObjectByType: getDataObjectByType,

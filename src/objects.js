@@ -8,6 +8,44 @@ const Identity = require("./identity");
 
 /**
  * @async
+ * @name Get By Type
+ * @description This function will ask the cpaas data object service for a specific
+ * type of object.
+ * @param {string} accessToken - Access Token
+ * @param {string} dataObjectType - Data object type to be retrieved; default: dataObjectType
+ * @param {number} offset - pagination offset
+ * @param {number} limit - pagination limit
+ * @param {boolean} [loadContent] - String boolean if the call should also return content of object; default false
+ * @param {object} [trace = {}] - microservice lifecycle trace headers
+ * @returns {Promise<array>} Promise resolving to an array of data objects
+ */
+const getByType = (
+  accessToken = "null accessToken",
+  dataObjectType = "data_object",
+  offset = 0,
+  limit = 10,
+  loadContent = "false",
+  trace = {}
+) => {
+  const MS = util.getEndpoint("objects");
+
+  const requestOptions = {
+    method: "GET",
+    uri: `${MS}/objects?type=${dataObjectType}&load_content=${loadContent}&sort=name&offset=${offset}&limit=${limit}`,
+    headers: {
+      Authorization: `Bearer ${accessToken}`,
+      "Content-type": "application/json",
+      "x-api-version": `${util.getVersion()}`
+    },
+    json: true
+  };
+  util.addRequestTrace(requestOptions, trace);
+  return request(requestOptions);
+};
+
+
+/**
+ * @async
  * @description This function returns objects permitted to user with flexible filtering.
  * @param {string} [accessToken="null accessToken"]
  * @param {string} [userUUID="null userUUID"]
@@ -464,6 +502,7 @@ const updateDataObject = async (
 };
 
 module.exports = {
+  getByType,
   getDataObject,
   getDataObjects,
   getDataObjectByType,
