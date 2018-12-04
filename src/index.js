@@ -1,24 +1,24 @@
 /*global require process module*/
 "use strict";
-const Accounts = require('./accounts');
-const Lambda = require('./lambda');
-const Identity = require('./identity');
-const Messaging = require('./messaging');
-const Objects = require('./objects');
-const Util = require('./utilities');
-const Task = require('./task');
-const Groups = require('./groups');
-const ShortUrls = require('./shorturls');
-const Auth = require('./auth');
-const Chat = require('./chat');
-const Contacts = require('./contacts');
-const Oauth = require('./oauth');
-const Media = require('./media');
-const Pubsub = require('./pubsub');
-const Workflow = require('./workflow');
-const Email = require('./email');
-const ResourceGroups = require('./resourceGroups');
-const request = require('request-promise');
+const Accounts = require("./accounts");
+const Lambda = require("./lambda");
+const Identity = require("./identity");
+const Messaging = require("./messaging");
+const Objects = require("./objects");
+const Util = require("./utilities");
+const Task = require("./task");
+const Groups = require("./groups");
+const ShortUrls = require("./shorturls");
+const Auth = require("./auth");
+const Chat = require("./chat");
+const Contacts = require("./contacts");
+const Oauth = require("./oauth");
+const Media = require("./media");
+const Pubsub = require("./pubsub");
+const Workflow = require("./workflow");
+const Email = require("./email");
+const ResourceGroups = require("./resourceGroups");
+const Scheduler = require("./scheduler");
 
 let cpaasKey;
 
@@ -100,5 +100,6 @@ module.exports = {
   setMSVersion,
   Workflow,
   Email,
-  ResourceGroups
+  ResourceGroups,
+  Scheduler
 };

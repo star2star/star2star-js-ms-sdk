@@ -4,6 +4,7 @@ const Util = require("./utilities");
 const request = require("request-promise");
 const Groups = require("./groups");
 const objectMerge = require("object-merge");
+const logger = Util.logger;
 
 /**
  * @async
@@ -175,6 +176,7 @@ const assignScopedRoleToUserGroup = async (
       json: true
     };
     Util.addRequestTrace(requestOptions, trace);
+    logger.info(`Scoped Role Request ${JSON.stringify(requestOptions.body, null, "\t")}`);
     return await new Promise(function(resolve, reject) {
       request(requestOptions)
         .then(function(responseData) {
@@ -835,6 +837,37 @@ const modifyRole = (
   return request(requestOptions);
 };
 
+/**
+ * @async
+ * @description This method will change the user-group name and/or description
+ * @param {string} [accessToken="null accessToken"] - cpaas access token
+ * @param {string} [groupUUID="null groupUuid"] - group to modify
+ * @param {string} [body="null body] - object containing new name and/or description
+ * @param {object} [trace = {}] - optional microservice lifecycle trace headers
+ * @returns {Promise<object>} - Promise resolving to a group object.
+ */
+const modifyUserGroup = (
+  accessToken = "null accessToken",
+  groupUUID = "null groupUUID",
+  body = "null body",
+  trace = {}
+) => {
+  const MS = Util.getEndpoint("auth");
+  const requestOptions = {
+    method: "POST",
+    uri: `${MS}/user-groups/${groupUUID}/modify`,
+    headers: {
+      Authorization: `Bearer ${accessToken}`,
+      "Content-type": "application/json",
+      "x-api-version": `${Util.getVersion()}`
+    },
+    body: body,
+    json: true
+  };
+  Util.addRequestTrace(requestOptions, trace);
+  return request(requestOptions);
+};
+
 module.exports = {
   activateRole,
   assignPermissionsToRole,
@@ -857,5 +890,6 @@ module.exports = {
   listRolePermissions,
   listRoles,
   listUserGroups,
-  modifyRole
+  modifyRole,
+  modifyUserGroup
 };

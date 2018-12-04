@@ -16,6 +16,7 @@
     "MEDIA": "/media",
     "PUBSUB": "/pubsub",
     "ACCOUNTS": "/accounts",
+    "SCHEDULER": "/scheduler",
     "WORKFLOW": "/workflow"
   },
   "roles": {
