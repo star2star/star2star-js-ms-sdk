@@ -1,25 +1,25 @@
 /*global require process module*/
 "use strict";
 
-var Accounts = require('./accounts');
-var Lambda = require('./lambda');
-var Identity = require('./identity');
-var Messaging = require('./messaging');
-var Objects = require('./objects');
-var Util = require('./utilities');
-var Task = require('./task');
-var Groups = require('./groups');
-var ShortUrls = require('./shorturls');
-var Auth = require('./auth');
-var Chat = require('./chat');
-var Contacts = require('./contacts');
-var Oauth = require('./oauth');
-var Media = require('./media');
-var Pubsub = require('./pubsub');
-var Workflow = require('./workflow');
-var Email = require('./email');
-var ResourceGroups = require('./resourceGroups');
-var request = require('request-promise');
+var Accounts = require("./accounts");
+var Lambda = require("./lambda");
+var Identity = require("./identity");
+var Messaging = require("./messaging");
+var Objects = require("./objects");
+var Util = require("./utilities");
+var Task = require("./task");
+var Groups = require("./groups");
+var ShortUrls = require("./shorturls");
+var Auth = require("./auth");
+var Chat = require("./chat");
+var Contacts = require("./contacts");
+var Oauth = require("./oauth");
+var Media = require("./media");
+var Pubsub = require("./pubsub");
+var Workflow = require("./workflow");
+var Email = require("./email");
+var ResourceGroups = require("./resourceGroups");
+var Scheduler = require("./scheduler");
 
 var cpaasKey = void 0;
 
@@ -109,5 +109,6 @@ module.exports = {
   setMSVersion: setMSVersion,
   Workflow: Workflow,
   Email: Email,
-  ResourceGroups: ResourceGroups
+  ResourceGroups: ResourceGroups,
+  Scheduler: Scheduler
 };

@@ -415,7 +415,7 @@ var reactivateGroup = function reactivateGroup() {
 
 /**
  * @async
- * @description This method will change the group name and/or description
+ * @description This method will change the group name and description
  * @param {string} [accessToken="null accessToken"] - cpaas access token
  * @param {string} [groupUuid="null groupUuid"] - group to modify
  * @param {string} [body="null body] - object containing new name and/or description

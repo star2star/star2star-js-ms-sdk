@@ -33,6 +33,7 @@ toc:
       - listRoles
       - listUserGroups
       - modifyRole
+      - modifyUserGroup
   - name: Chat
     children:
       - addMember
@@ -141,6 +142,15 @@ toc:
       - createResourceGroups
       - cleanUpResourceGroups
       - updateResourceGroups
+  - name: Scheduler
+    children:
+      - deleteEvent
+      - getEvent
+      - getNextEventInfo
+      - listEvents
+      - listEventsHistory
+      - scheduleEvent
+      - updateEvent
   - name: ShortUrls
     children:
       - createShortUrl

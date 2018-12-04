@@ -538,6 +538,29 @@ describe("Auth MS Test Suite", function() {
       });
   });
 
+  it("Modify User Groups", function(done) {
+    if (!creds.isValid) {
+      const err = new Error("Valid credentials must be provided");
+      return done(err);
+    }
+    const body = {
+      "description": "new description"
+    };
+    s2sMS.Auth.modifyUserGroup(accessToken, userGroupUUID, body)
+      .then(response => {
+        //console.log("RESPONSE", response);
+        assert(
+          response.hasOwnProperty("description") &&
+          response.description === body.description
+        );
+        done();
+      })
+      .catch(error => {
+        //console.log('Error in List Roles', error);
+        done(new Error(error));
+      });
+  });
+
   it("List User Groups", function(done) {
     if (!creds.isValid) {
       const err = new Error("Valid credentials must be provided");

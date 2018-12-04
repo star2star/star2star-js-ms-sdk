@@ -9,6 +9,7 @@ var Util = require("./utilities");
 var request = require("request-promise");
 var Groups = require("./groups");
 var objectMerge = require("object-merge");
+var logger = Util.logger;
 
 /**
  * @async
@@ -198,7 +199,8 @@ var assignScopedRoleToUserGroup = function () {
             };
 
             Util.addRequestTrace(requestOptions, trace);
-            _context2.next = 8;
+            logger.info("Scoped Role Request " + JSON.stringify(requestOptions.body, null, "\t"));
+            _context2.next = 9;
             return new Promise(function (resolve, reject) {
               request(requestOptions).then(function (responseData) {
                 responseData.statusCode === 204 ? resolve({ status: "ok" }) : reject({ status: "failed" });
@@ -207,20 +209,20 @@ var assignScopedRoleToUserGroup = function () {
               });
             });
 
-          case 8:
+          case 9:
             return _context2.abrupt("return", _context2.sent);
 
-          case 11:
-            _context2.prev = 11;
+          case 12:
+            _context2.prev = 12;
             _context2.t0 = _context2["catch"](0);
             return _context2.abrupt("return", Promise.reject(_context2.t0));
 
-          case 14:
+          case 15:
           case "end":
             return _context2.stop();
         }
       }
-    }, _callee2, undefined, [[0, 11]]);
+    }, _callee2, undefined, [[0, 12]]);
   }));
 
   return function assignScopedRoleToUserGroup() {
@@ -916,6 +918,37 @@ var modifyRole = function modifyRole() {
   return request(requestOptions);
 };
 
+/**
+ * @async
+ * @description This method will change the user-group name and/or description
+ * @param {string} [accessToken="null accessToken"] - cpaas access token
+ * @param {string} [groupUUID="null groupUuid"] - group to modify
+ * @param {string} [body="null body] - object containing new name and/or description
+ * @param {object} [trace = {}] - optional microservice lifecycle trace headers
+ * @returns {Promise<object>} - Promise resolving to a group object.
+ */
+var modifyUserGroup = function modifyUserGroup() {
+  var accessToken = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : "null accessToken";
+  var groupUUID = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : "null groupUUID";
+  var body = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : "null body";
+  var trace = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : {};
+
+  var MS = Util.getEndpoint("auth");
+  var requestOptions = {
+    method: "POST",
+    uri: MS + "/user-groups/" + groupUUID + "/modify",
+    headers: {
+      Authorization: "Bearer " + accessToken,
+      "Content-type": "application/json",
+      "x-api-version": "" + Util.getVersion()
+    },
+    body: body,
+    json: true
+  };
+  Util.addRequestTrace(requestOptions, trace);
+  return request(requestOptions);
+};
+
 module.exports = {
   activateRole: activateRole,
   assignPermissionsToRole: assignPermissionsToRole,
@@ -938,5 +971,6 @@ module.exports = {
   listRolePermissions: listRolePermissions,
   listRoles: listRoles,
   listUserGroups: listUserGroups,
-  modifyRole: modifyRole
+  modifyRole: modifyRole,
+  modifyUserGroup: modifyUserGroup
 };

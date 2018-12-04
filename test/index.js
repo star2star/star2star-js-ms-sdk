@@ -45,7 +45,8 @@ describe("MS SDK Index", function () {
       'setMSVersion',
       'Workflow',
       'Email',
-      'ResourceGroups'
+      'ResourceGroups',
+      'Scheduler'
     ];
     assert.deepEqual(Object.keys(s2sMS), msKeys);
     done();
