@@ -233,6 +233,7 @@ var listEventsHistory = function listEventsHistory() {
  *   }] - frequency object
  * @param {object} [trigger={}] - action to perform at the specified schedule
  * @param {object} [notification={}] - optional notification
+ * @param {object} [metadata={}] - optional custom data to include with the event.
  * @param {object} [trace={}] - optional debug headers
  * @returns {Promise} - scheduled event object
  */
@@ -248,7 +249,8 @@ var scheduleEvent = function scheduleEvent() {
   };
   var trigger = arguments.length > 7 && arguments[7] !== undefined ? arguments[7] : {};
   var notification = arguments.length > 8 && arguments[8] !== undefined ? arguments[8] : {};
-  var trace = arguments.length > 9 && arguments[9] !== undefined ? arguments[9] : {};
+  var metadata = arguments.length > 9 && arguments[9] !== undefined ? arguments[9] : {};
+  var trace = arguments.length > 10 && arguments[10] !== undefined ? arguments[10] : {};
 
   var MS = Util.getEndpoint("scheduler");
   var requestOptions = {
@@ -269,7 +271,7 @@ var scheduleEvent = function scheduleEvent() {
       "frequency": frequency,
       "trigger": trigger,
       "notification": notification,
-      "metadata": {} //what is this for?
+      "metadata": metadata
     },
     json: true
   };

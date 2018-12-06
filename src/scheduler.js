@@ -197,6 +197,7 @@ const listEventsHistory = (
  *   }] - frequency object
  * @param {object} [trigger={}] - action to perform at the specified schedule
  * @param {object} [notification={}] - optional notification
+ * @param {object} [metadata={}] - optional custom data to include with the event.
  * @param {object} [trace={}] - optional debug headers
  * @returns {Promise} - scheduled event object
  */
@@ -212,6 +213,7 @@ const scheduleEvent = (
   },
   trigger = {},
   notification = {},
+  metadata = {},
   trace = {}
 ) => {
   const MS = Util.getEndpoint("scheduler");
@@ -233,7 +235,7 @@ const scheduleEvent = (
       "frequency": frequency,
       "trigger": trigger,
       "notification": notification,
-      "metadata": {} //what is this for?
+      "metadata": metadata
     },
     json: true
   };

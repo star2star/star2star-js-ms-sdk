@@ -145,7 +145,7 @@ describe("Objects MS Test Suite", function() {
     //update event body
     s2sMS.Scheduler.deleteEvent(
       accessToken,
-      event
+      event.uuid
     )
       .then(responseData => {
         logger.info(`Delete Event RESPONSE: ${JSON.stringify(responseData, null, "\t")}`);
