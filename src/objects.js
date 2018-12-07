@@ -463,10 +463,11 @@ const updateDataObject = async (
       typeof users === "object"
     ) {
       nextTrace = objectMerge({}, nextTrace, util.generateNewMetaData(nextTrace));
-      await ResourceGroups.updateResourceGroups2(
+      await ResourceGroups.updateResourceGroups(
         accessToken,
         dataUUID,
         accountUUID,
+        "object", //specifies the system role to find in config.json
         users,
         nextTrace
       );

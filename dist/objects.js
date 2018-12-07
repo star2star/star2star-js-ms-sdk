@@ -9,7 +9,6 @@ var util = require("./utilities");
 var request = require("request-promise");
 var objectMerge = require("object-merge");
 var ResourceGroups = require("./resourceGroups");
-var Identity = require("./identity");
 
 /**
  * @async
@@ -308,7 +307,8 @@ var getDataObject = function getDataObject() {
  * @param {string} objectType - object type (use '_' between words)
  * @param {string} objectDescription - object description
  * @param {object} [content={}] - object to be created
- * @param {object} [users=undefined] - optinal object containing users for creating permissions groups
+ * @param {string} [accountUUID="null accountUUID"] - optional account uuid to scope user permissions
+ * @param {object} [users=undefined] - optional object containing users for creating permissions groups
  * @param {object} [trace = {}] - microservice lifecycle trace headers
  * @returns {Promise<object>} Promise resolving to a data object
  */
@@ -320,9 +320,10 @@ var createUserDataObject = function () {
     var objectType = arguments[3];
     var objectDescription = arguments[4];
     var content = arguments.length > 5 && arguments[5] !== undefined ? arguments[5] : {};
-    var users = arguments.length > 6 && arguments[6] !== undefined ? arguments[6] : undefined;
-    var trace = arguments.length > 7 && arguments[7] !== undefined ? arguments[7] : {};
-    var MS, msDelay, body, requestOptions, newObject, nextTrace, identity;
+    var accountUUID = arguments.length > 6 && arguments[6] !== undefined ? arguments[6] : undefined;
+    var users = arguments.length > 7 && arguments[7] !== undefined ? arguments[7] : undefined;
+    var trace = arguments.length > 8 && arguments[8] !== undefined ? arguments[8] : {};
+    var MS, msDelay, body, requestOptions, newObject, nextTrace;
     return regeneratorRuntime.wrap(function _callee2$(_context2) {
       while (1) {
         switch (_context2.prev = _context2.next) {
@@ -365,54 +366,46 @@ var createUserDataObject = function () {
           case 12:
             newObject = _context2.sent;
 
-            if (!(users && (typeof users === "undefined" ? "undefined" : _typeof(users)) === "object")) {
-              _context2.next = 21;
+            if (!(accountUUID && users && (typeof users === "undefined" ? "undefined" : _typeof(users)) === "object")) {
+              _context2.next = 17;
               break;
             }
 
             nextTrace = objectMerge({}, nextTrace, util.generateNewMetaData(nextTrace));
-            //user groups require an account
             _context2.next = 17;
-            return Identity.getIdentityDetails(accessToken, userUUID, nextTrace);
-
-          case 17:
-            identity = _context2.sent;
-
-            nextTrace = objectMerge({}, nextTrace, util.generateNewMetaData(nextTrace));
-            _context2.next = 21;
-            return ResourceGroups.createResourceGroups(accessToken, identity.account_uuid, newObject.uuid, "object", //system role type
+            return ResourceGroups.createResourceGroups(accessToken, accountUUID, newObject.uuid, "object", //system role type
             users, nextTrace);
 
-          case 21:
+          case 17:
             return _context2.abrupt("return", newObject);
 
-          case 24:
-            _context2.prev = 24;
+          case 20:
+            _context2.prev = 20;
             _context2.t0 = _context2["catch"](7);
 
             if (!(newObject && newObject.hasOwnProperty("uuid"))) {
-              _context2.next = 41;
+              _context2.next = 37;
               break;
             }
 
-            _context2.prev = 27;
-            _context2.next = 30;
+            _context2.prev = 23;
+            _context2.next = 26;
             return new Promise(function (resolve) {
               return setTimeout(resolve, msDelay);
             });
 
-          case 30:
+          case 26:
             //this is to allow microservices time ack the new group before deleting.
             nextTrace = objectMerge({}, nextTrace, util.generateNewMetaData(nextTrace));
-            _context2.next = 33;
+            _context2.next = 29;
             return deleteDataObject(accessToken, newObject.uuid, nextTrace);
 
-          case 33:
+          case 29:
             return _context2.abrupt("return", Promise.reject(_context2.t0));
 
-          case 36:
-            _context2.prev = 36;
-            _context2.t1 = _context2["catch"](27);
+          case 32:
+            _context2.prev = 32;
+            _context2.t1 = _context2["catch"](23);
             return _context2.abrupt("return", Promise.reject({
               errors: {
                 create: _context2.t0,
@@ -420,19 +413,19 @@ var createUserDataObject = function () {
               }
             }));
 
-          case 39:
-            _context2.next = 42;
+          case 35:
+            _context2.next = 38;
             break;
 
-          case 41:
+          case 37:
             return _context2.abrupt("return", Promise.reject(_context2.t0));
 
-          case 42:
+          case 38:
           case "end":
             return _context2.stop();
         }
       }
-    }, _callee2, undefined, [[7, 24], [27, 36]]);
+    }, _callee2, undefined, [[7, 20], [23, 32]]);
   }));
 
   return function createUserDataObject() {
@@ -551,19 +544,22 @@ var deleteDataObject = function () {
  * @async
  * @description This function will update an existing data object.
  * @param {string} [accessToken="null accessToken"] - Access Token
- * @param {string} [data_uuid="uuid not specified"] - data object UUID
+ * @param {string} [dataUUID="uuid not specified"] - data object UUID
  * @param {object} [body={}] - data object replacement
+ * @param {string} [accountUUID=undefined] - optional account to scope users object permissions to
+ * @param {object} [users=undefined] - optional users permissions object
  * @param {object} [trace = {}] - microservice lifecycle trace headers
  * @returns {Promise<object>} Promise resolving to a data object
  */
 var updateDataObject = function () {
   var _ref4 = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee4() {
     var accessToken = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : "null accessToken";
-    var data_uuid = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : "uuid not specified";
+    var dataUUID = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : "uuid not specified";
     var body = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : {};
-    var users = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : undefined;
-    var trace = arguments.length > 4 && arguments[4] !== undefined ? arguments[4] : {};
-    var MS, requestOptions, nextTrace, object, identity;
+    var accountUUID = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : undefined;
+    var users = arguments.length > 4 && arguments[4] !== undefined ? arguments[4] : undefined;
+    var trace = arguments.length > 5 && arguments[5] !== undefined ? arguments[5] : {};
+    var MS, requestOptions, nextTrace;
     return regeneratorRuntime.wrap(function _callee4$(_context4) {
       while (1) {
         switch (_context4.prev = _context4.next) {
@@ -571,7 +567,7 @@ var updateDataObject = function () {
             MS = util.getEndpoint("objects");
             requestOptions = {
               method: "PUT",
-              uri: MS + "/objects/" + data_uuid,
+              uri: MS + "/objects/" + dataUUID,
               body: body,
               headers: {
                 Authorization: "Bearer " + accessToken,
@@ -585,48 +581,34 @@ var updateDataObject = function () {
             nextTrace = objectMerge({}, trace);
             _context4.prev = 4;
 
-            if (!(users && (typeof users === "undefined" ? "undefined" : _typeof(users)) === "object")) {
-              _context4.next = 17;
+            if (!(accountUUID && users && (typeof users === "undefined" ? "undefined" : _typeof(users)) === "object")) {
+              _context4.next = 9;
               break;
             }
 
-            //first determine this object's owner and account
             nextTrace = objectMerge({}, nextTrace, util.generateNewMetaData(nextTrace));
             _context4.next = 9;
-            return getDataObject(accessToken, data_uuid, nextTrace);
+            return ResourceGroups.updateResourceGroups(accessToken, dataUUID, accountUUID, "object", //specifies the system role to find in config.json
+            users, nextTrace);
 
           case 9:
-            object = _context4.sent;
-
-            nextTrace = objectMerge({}, nextTrace, util.generateNewMetaData(nextTrace));
-            _context4.next = 13;
-            return Identity.getIdentityDetails(accessToken, object.audit.created_by, nextTrace);
-
-          case 13:
-            identity = _context4.sent;
-
-            nextTrace = objectMerge({}, nextTrace, util.generateNewMetaData(nextTrace));
-            _context4.next = 17;
-            return ResourceGroups.updateResourceGroups(accessToken, data_uuid, identity.account_uuid, users, nextTrace);
-
-          case 17:
-            _context4.next = 19;
+            _context4.next = 11;
             return request(requestOptions);
 
-          case 19:
+          case 11:
             return _context4.abrupt("return", _context4.sent);
 
-          case 22:
-            _context4.prev = 22;
+          case 14:
+            _context4.prev = 14;
             _context4.t0 = _context4["catch"](4);
             return _context4.abrupt("return", Promise.reject(_context4.t0));
 
-          case 25:
+          case 17:
           case "end":
             return _context4.stop();
         }
       }
-    }, _callee4, undefined, [[4, 22]]);
+    }, _callee4, undefined, [[4, 14]]);
   }));
 
   return function updateDataObject() {

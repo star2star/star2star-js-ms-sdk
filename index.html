@@ -2,7 +2,7 @@
 <html>
 <head>
   <meta charset='utf-8' />
-  <title>star2star-js-ms-sdk 2.2.16 | Documentation</title>
+  <title>star2star-js-ms-sdk 2.2.17 | Documentation</title>
   <meta name='viewport' content='width=device-width,initial-scale=1'>
   <link href='assets/bass.css' type='text/css' rel='stylesheet' />
   <link href='assets/style.css' type='text/css' rel='stylesheet' />
@@ -14,7 +14,7 @@
       <div id='split-left' class='overflow-auto fs0 height-viewport-100'>
         <div class='py1 px2'>
           <h3 class='mb0 no-anchor'>star2star-js-ms-sdk</h3>
-          <div class='mb1'><code>2.2.16</code></div>
+          <div class='mb1'><code>2.2.17</code></div>
           <input
             placeholder='Filter'
             id='filter-input'
@@ -12470,9 +12470,19 @@ type of object with name.</p>
       
         <div class='space-bottom0'>
           <div>
+            <span class='code bold'>accountUUID</span> <code class='quiet'>(<a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String">string</a>
+            = <code>&quot;null accountUUID&quot;</code>)</code>
+	    optional account uuid to scope user permissions
+
+          </div>
+          
+        </div>
+      
+        <div class='space-bottom0'>
+          <div>
             <span class='code bold'>users</span> <code class='quiet'>(<a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object">object</a>
             = <code>undefined</code>)</code>
-	    optinal object containing users for creating permissions groups
+	    optional object containing users for creating permissions groups
 
           </div>
           
@@ -12652,7 +12662,7 @@ type of object with name.</p>
       
         <div class='space-bottom0'>
           <div>
-            <span class='code bold'>data_uuid</span> <code class='quiet'>(<a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String">string</a>
+            <span class='code bold'>dataUUID</span> <code class='quiet'>(<a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String">string</a>
             = <code>&quot;uuid not specified&quot;</code>)</code>
 	    data object UUID
 
@@ -12672,9 +12682,20 @@ type of object with name.</p>
       
         <div class='space-bottom0'>
           <div>
-            <span class='code bold'>users</span> <code class='quiet'>(any
+            <span class='code bold'>accountUUID</span> <code class='quiet'>(<a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String">string</a>
             = <code>undefined</code>)</code>
-	    
+	    optional account to scope users object permissions to
+
+          </div>
+          
+        </div>
+      
+        <div class='space-bottom0'>
+          <div>
+            <span class='code bold'>users</span> <code class='quiet'>(<a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object">object</a>
+            = <code>undefined</code>)</code>
+	    optional users permissions object
+
           </div>
           
         </div>
@@ -13213,9 +13234,10 @@ type of object with name.</p>
       
         <div class='space-bottom0'>
           <div>
-            <span class='code bold'>type</span> <code class='quiet'>(any
-            = <code>&quot;object&quot;</code>)</code>
-	    
+            <span class='code bold'>type</span> <code class='quiet'>(<a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String">string</a>
+            = <code>undefined</code>)</code>
+	    resource type, object, etc.
+
           </div>
           
         </div>
@@ -13415,6 +13437,15 @@ type of object with name.</p>
           <div>
             <span class='code bold'>accountUUID</span> <code class='quiet'>(any
             = <code>&quot;null accountUUID&quot;</code>)</code>
+	    
+          </div>
+          
+        </div>
+      
+        <div class='space-bottom0'>
+          <div>
+            <span class='code bold'>type</span> <code class='quiet'>(any
+            = <code>undefined</code>)</code>
 	    
           </div>
           
