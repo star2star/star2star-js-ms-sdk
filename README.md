@@ -64,6 +64,7 @@ require("babel-polyfill");
 [Please click here for our documentation pages.](https://star2star.github.io/star2star-js-ms-sdk/ "Star2Star Micro Service SDK Documentation")
 
 ## Changes
+* 2.2.18 - Updates to accounts and auth unit tests
 * 2.2.17 - Performance improvements for resource groups
 * 2.2.16 - Disable debug mode for browser compatiblilty
 * 2.2.15 - Add scheduler metadata

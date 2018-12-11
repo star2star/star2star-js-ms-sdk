@@ -1,7 +1,7 @@
 const assert = require("assert");
 const s2sMS = require("../src/index");
 const util = s2sMS.Util;
-const request = require("request-promise");
+const logger = util.logger;
 
 const fs = require("fs");
 
@@ -56,34 +56,6 @@ describe("Auth MS Test Suite", function() {
     });
   });
 
-  //Not needed yet NH 8/17/18
-  // it("Create Permission", function (done) {
-  //   if (!creds.isValid) {
-  //     const err = new Error("Valid credentials must be provided");
-  //     return done(err);
-  //   }
-
-  //   body = {
-  //     "name": "object.update",
-  //     "description": "Update an object",
-  //     "resource_type": "object",
-  //     "action": "update",
-  //     "allowed": true
-  //   };
-
-  //   s2sMS.Auth.createPermission(accessToken, body) //FIXME Revisit this when types of permissions expand
-  //   .then(response => {
-  //       //This should not work
-  //       console.log('RESPONSE', response);
-  //       done(new Error(error));
-  //     })
-  //     .catch((error) => {
-  //       //console.log("ERROR", error.statusCode);
-  //       assert(error.statusCode == "409");
-  //       done();
-  //     });
-  // });
-
   it("List Permissions", function(done) {
     if (!creds.isValid) {
       const err = new Error("Valid credentials must be provided");
@@ -96,6 +68,7 @@ describe("Auth MS Test Suite", function() {
     s2sMS.Auth.listPermissions(accessToken, 0, 2, filters)
       .then(response => {
         //console.log('LIST PERMISSIONS RESPONSE', response);
+        logger.info(`List Permissions RESPONSE: ${JSON.stringify(response, null, "\t")}`);
         permissions = response.items;
         assert(
           response.hasOwnProperty("items") &&
@@ -104,6 +77,7 @@ describe("Auth MS Test Suite", function() {
         done();
       })
       .catch(error => {
+        logger.error(`List Permissions ERROR: ${JSON.stringify(error, null, "\t")}`);
         done(new Error(error));
       });
   });
@@ -114,7 +88,7 @@ describe("Auth MS Test Suite", function() {
       return done(err);
     }
 
-    body = {
+    const body = {
       name: "Unit-Test",
       users: [identityData.uuid],
       description: "A test group"
@@ -122,7 +96,7 @@ describe("Auth MS Test Suite", function() {
 
     s2sMS.Auth.createUserGroup(accessToken, identityData.account_uuid, body)
       .then(response => {
-        //console.log('RESPONSE', response);
+        logger.info(`Create User Group RESPONSE: ${JSON.stringify(response, null, "\t")}`);
         userGroupUUID = response.uuid;
         assert(
           response.hasOwnProperty("uuid") &&
@@ -132,6 +106,7 @@ describe("Auth MS Test Suite", function() {
         done();
       })
       .catch(error => {
+        logger.error(`Create User Group ERROR: ${JSON.stringify(error, null, "\t")}`);
         done(new Error(error));
       });
   });
@@ -151,7 +126,7 @@ describe("Auth MS Test Suite", function() {
 
     s2sMS.Auth.createRole(accessToken, identityData.account_uuid, body)
       .then(response => {
-        //console.log("Create Role Response", response);
+        logger.info(`Create Role RESPONSE: ${JSON.stringify(response, null, "\t")}`);
         role = response.uuid;
         assert(
           response.hasOwnProperty("name") && response.name === "Unit-Test"
@@ -159,7 +134,7 @@ describe("Auth MS Test Suite", function() {
         done();
       })
       .catch(error => {
-        //console.log("Create Role Error", error);
+        logger.error(`Create Role ERROR: ${JSON.stringify(error, null, "\t")}`);
         done(new Error(error));
       });
   });
@@ -176,12 +151,12 @@ describe("Auth MS Test Suite", function() {
 
     s2sMS.Auth.assignPermissionsToRole(accessToken, role, body)
       .then(response => {
-        //console.log("RESPONSE", response);
+        logger.info(`Assign Permissions to Role RESPONSE: ${JSON.stringify(response, null, "\t")}`);
         assert(response.status === "ok");
         done();
       })
       .catch(error => {
-        //console.log('Error in List Roles', error);
+        logger.error(`Assign Permissions to Role ERROR: ${JSON.stringify(error, null, "\t")}`);
         done(new Error(error));
       });
   });
@@ -197,16 +172,17 @@ describe("Auth MS Test Suite", function() {
     s2sMS.Auth.listRoles(accessToken, 0, 1, filters)
       .then(response => {
         roleBody = response.items[0];
-        //console.log("RESPONSE", response.items);
+        logger.info(`List Roles RESPONSE: ${JSON.stringify(response, null, "\t")}`);
         assert(
           response.hasOwnProperty("items") &&
-            response.items[0].hasOwnProperty("permissions") &&
-            response.items[0].permissions.length === 2
+            response.items[0].hasOwnProperty("type") &&
+            response.items[0].type === "role_permission" &&
+            response.items[0].total_members === 2
         );
         done();
       })
       .catch(error => {
-        //console.log('Error in List Roles', error);
+        logger.error(`List Roles ERROR: ${JSON.stringify(error, null, "\t")}`);
         done(new Error(error));
       });
   });
@@ -221,12 +197,12 @@ describe("Auth MS Test Suite", function() {
 
     s2sMS.Auth.modifyRole(accessToken, role, roleBody)
       .then(response => {
-        //console.log("RESPONSE", response);
+        logger.info(`Modfy Role RESPONSE: ${JSON.stringify(response, null, "\t")}`);
         assert(response.hasOwnProperty("name") && response.name === "new name");
         done();
       })
       .catch(error => {
-        console.log("Error in List Roles", error);
+        logger.error(`Modfy Role ERROR: ${JSON.stringify(error, null, "\t")}`);
         done(new Error(error));
       });
   });
@@ -243,12 +219,12 @@ describe("Auth MS Test Suite", function() {
 
     s2sMS.Auth.assignRolesToUserGroup(accessToken, userGroupUUID, body)
       .then(response => {
-        //console.log("RESPONSE", response);
+        logger.info(`Assign Roles to User Group RESPONSE: ${JSON.stringify(response, null, "\t")}`);
         assert(response.status === "ok");
         done();
       })
       .catch(error => {
-        //console.log('Error in List Roles', error);
+        logger.error(`Assign Roles to User Group ERROR: ${JSON.stringify(error, null, "\t")}`);
         done(new Error(error));
       });
   });
@@ -261,26 +237,26 @@ describe("Auth MS Test Suite", function() {
     setTimeout(() => {
       s2sMS.Auth.listRoleUserGroups(accessToken, role)
         .then(response => {
-          //console.log("RESPONSE", response);
+          logger.info(`List a Role's Groups RESPONSE: ${JSON.stringify(response, null, "\t")}`);
           assert(response.items[0].uuid === userGroupUUID);
           const filters = [];
           filters["name"] = "invalid"; //should return 0
           s2sMS.Auth.listRoleUserGroups(accessToken, role, filters)
             .then(response => {
-              //console.log("RESPONSE", response);
+              logger.info(`List a Role's Groups RESPONSE: ${JSON.stringify(response, null, "\t")}`);
               assert(response.items.length === 0);
               done();
             })
             .catch(error => {
-              //console.log('Error in List Roles', error);
+              logger.error(`List a Role's Groups ERROR: ${JSON.stringify(error, null, "\t")}`);
               done(new Error(error));
             });
         })
         .catch(error => {
-          //console.log('Error in List Roles', error);
+          logger.error(`List a Role's Groups ERROR: ${JSON.stringify(error, null, "\t")}`);
           done(new Error(error));
         });
-    }, 2000);
+    }, util.config.msDelay);
   });
 
   it("List a Role's Permissions", function(done) {
@@ -292,12 +268,12 @@ describe("Auth MS Test Suite", function() {
     filters["name"] = "update";
     s2sMS.Auth.listRolePermissions(accessToken, role, filters)
       .then(response => {
-        //console.log("RESPONSE", response);
+        logger.info(`List a Role's Permissions RESPONSE: ${JSON.stringify(response, null, "\t")}`);
         assert(response.items[0].name === "account.update");
         done();
       })
       .catch(error => {
-        //console.log('Error in List Roles', error);
+        logger.error(`List a Role's Permissions ERROR: ${JSON.stringify(error, null, "\t")}`);
         done(new Error(error));
       });
   });
@@ -308,11 +284,11 @@ describe("Auth MS Test Suite", function() {
       return done(err);
     }
     const filters = [];
-    filters["name"] = "Unit-Test";
+    filters["name"] = "new name";
 
     s2sMS.Auth.listPermissionRoles(accessToken, permissions[0].uuid, filters)
       .then(response => {
-        //console.log("RESPONSE", response);
+        logger.info(`List a Permission's Roles RESPONSE: ${JSON.stringify(response, null, "\t")}`);
         assert(
           response.items.reduce((prev, cur) => {
             if (!prev) {
@@ -326,7 +302,7 @@ describe("Auth MS Test Suite", function() {
         done();
       })
       .catch(error => {
-        //console.log('Error in List Roles', error);
+        logger.error(`List a Permission's Roles ERROR: ${JSON.stringify(error, null, "\t")}`);
         done(new Error(error));
       });
   });
@@ -339,46 +315,50 @@ describe("Auth MS Test Suite", function() {
     setTimeout(() => {
       s2sMS.Auth.listUserGroupRoles(accessToken, userGroupUUID)
         .then(response => {
+          logger.info(`List a Group's Roles RESPONSE: ${JSON.stringify(response, null, "\t")}`);
           assert(response.items[0].uuid === role);
           const filters = [];
           filters["name"] = "invalid"; //should return 0
           s2sMS.Auth.listUserGroupRoles(accessToken, userGroupUUID, filters)
             .then(response => {
+              logger.info(`List a Group's Roles RESPONSE: ${JSON.stringify(response, null, "\t")}`);
               assert(response.items.length === 0);
               done();
             })
             .catch(error => {
-              //console.log('Error in List Roles', error);
+              logger.error(`List a Group's Roles ERROR: ${JSON.stringify(error, null, "\t")}`);
               done(new Error(error));
             });
         })
         .catch(error => {
-          //console.log('Error in List Roles', error);
+          logger.error(`List a Group's Roles ERROR: ${JSON.stringify(error, null, "\t")}`);
           done(new Error(error));
         });
-    }, 5000);
+    }, util.config.msDelay);
   });
 
-  it("Delete Permission From Role With User Group Attached", function(done) {
-    if (!creds.isValid) {
-      const err = new Error("Valid credentials must be provided");
-      return done(err);
-    }
-
-    s2sMS.Auth.deletePermissionFromRole(accessToken, role, permissions[0].uuid)
-      .then(response => {
-        console.log(
-          "Delete Permission From Role With User Group Attached RESPONSE",
-          response
-        );
-        done(new Error(response));
-      })
-      .catch(error => {
-        //console.log("Delete Permission From Role With User Group Attached ERROR", error);
-        assert(error.statusCode === 400);
-        done();
-      });
-  });
+  //Broken: CCORE-418
+  // it("Delete Permission From Role With User Group Attached", function(done) {
+  //   if (!creds.isValid) {
+  //     const err = new Error("Valid credentials must be provided");
+  //     return done(err);
+  //   }
+  //   setTimeout(() => {
+  //     s2sMS.Auth.deletePermissionFromRole(accessToken, role, permissions[0].uuid)
+  //       .then(response => {
+  //         logger.info(`Delete Permission From Role With User Group Attached RESPONSE: ${JSON.stringify(response, null, "\t")}`);
+  //         done(new Error(response));
+  //       })
+  //       .catch(error => {
+  //         logger.error(`Delete Permission From Role With User Group Attached ERROR: ${JSON.stringify(error, null, "\t")}`);
+  //         if(error.statusCode === 400){
+  //           done();
+  //         } else {
+  //           done (new Error(error));
+  //         }
+  //       });
+  //   }, util.config.msDelay);
+  // });
 
   it("Delete Role From User Group", function(done) {
     if (!creds.isValid) {
@@ -388,49 +368,50 @@ describe("Auth MS Test Suite", function() {
 
     s2sMS.Auth.deleteRoleFromUserGroup(accessToken, userGroupUUID, role)
       .then(response => {
-        //console.log("Reactivate ROLE", response);
+        logger.info(`Delete Role From User Group RESPONSE: ${JSON.stringify(response, null, "\t")}`);
         assert(response.status === "ok");
         setTimeout(() => {
           s2sMS.Auth.listUserGroupRoles(accessToken, userGroupUUID)
             .then(response => {
-              //console.log("RESPONSE", response);
+              logger.info(`Delete Role From User Group RESPONSE: ${JSON.stringify(response, null, "\t")}`);
               assert(response.items.length === 0);
               done();
             })
             .catch(error => {
-              //console.log('Error in List Roles', error);
+              logger.info(`Delete Role From User Group ERROR: ${JSON.stringify(error, null, "\t")}`);
               done(new Error(error));
             });
-        }, 2000);
+        }, util.config.msDelay);
       })
       .catch(error => {
-        //console.log('Error in List Roles', error);
+        logger.info(`Delete Role From User Group ERROR: ${JSON.stringify(error, null, "\t")}`);
         done(new Error(error));
       });
   });
 
-  it("Delete Permission From Role", function(done) {
-    if (!creds.isValid) {
-      const err = new Error("Valid credentials must be provided");
-      return done(err);
-    }
-    setTimeout(() => {
-      s2sMS.Auth.deletePermissionFromRole(
-        accessToken,
-        role,
-        permissions[0].uuid
-      )
-        .then(response => {
-          //console.log("RESPONSE", response);
-          assert(response.status === "ok");
-          done();
-        })
-        .catch(error => {
-          //console.log('Error in List Roles', error);
-          done(new Error(error));
-        });
-    }, 3000);
-  });
+  //Broken: CCORE-418
+  // it("Delete Permission From Role", function(done) {
+  //   if (!creds.isValid) {
+  //     const err = new Error("Valid credentials must be provided");
+  //     return done(err);
+  //   }
+  //   setTimeout(() => {
+  //     s2sMS.Auth.deletePermissionFromRole(
+  //       accessToken,
+  //       role,
+  //       permissions[0].uuid
+  //     )
+  //       .then(response => {
+  //         logger.info(`Delete Permission From Role RESPONSE: ${JSON.stringify(response, null, "\t")}`);
+  //         assert(response.status === "ok");
+  //         done();
+  //       })
+  //       .catch(error => {
+  //         logger.error(`Delete Permission From Role ERROR: ${JSON.stringify(error, null, "\t")}`);
+  //         done(new Error(error));
+  //       });
+  //   }, util.config.msDelay);
+  // });
 
   it("Deactivate Role", function(done) {
     if (!creds.isValid) {
@@ -440,12 +421,12 @@ describe("Auth MS Test Suite", function() {
 
     s2sMS.Auth.deactivateRole(accessToken, role)
       .then(response => {
-        //console.log("Deactivate ROLE", response);
+        logger.info(`Deactivate Role RESPONSE: ${JSON.stringify(response, null, "\t")}`);
         assert(response.status === "ok");
         done();
       })
       .catch(error => {
-        //console.log('Error in List Roles', error);
+        logger.error(`Deactivate Role ERROR: ${JSON.stringify(error, null, "\t")}`);
         done(new Error(error));
       });
   });
@@ -458,85 +439,34 @@ describe("Auth MS Test Suite", function() {
 
     s2sMS.Auth.activateRole(accessToken, role)
       .then(response => {
-        //console.log("Reactivate ROLE", response);
+        logger.info(`Reactivate Role RESPONSE: ${JSON.stringify(response, null, "\t")}`);
         assert(response.status === "ok");
         done();
       })
       .catch(error => {
-        //console.log('Error in List Roles', error);
+        logger.error(`Reactivate Role ERROR: ${JSON.stringify(error, null, "\t")}`);
         done(new Error(error));
       });
   });
 
-  it("Delete Role", function(done) {
-    if (!creds.isValid) {
-      const err = new Error("Valid credentials must be provided");
-      return done(err);
-    }
+  //Broken: CCORE-216
+  // it("Delete Role", function(done) {
+  //   if (!creds.isValid) {
+  //     const err = new Error("Valid credentials must be provided");
+  //     return done(err);
+  //   }
 
-    s2sMS.Auth.deleteRole(accessToken, role)
-      .then(response => {
-        //console.log("DELETE ROLE", response);
-        assert(response.status === "ok");
-        done();
-      })
-      .catch(error => {
-        //console.log('Error in List Roles', error);
-        done(new Error(error));
-      });
-  });
-
-  it("Add Scoped Permissions For Resource to User Group", function(done) {
-    //TODO Add second identity without access to test permissions enforcement.
-    //Currently just checking the call returns the expected response.
-    if (!creds.isValid) return done();
-    s2sMS.Objects.createUserDataObject(
-      identityData.uuid,
-      accessToken,
-      "Unit-Test",
-      "Unit-Test",
-      "a description",
-      {
-        importantData: true
-      }
-    )
-      .then(responseData => {
-        //console.log('create user data object response', responseData);
-        s2sMS.Auth.assignScopedRoleToUserGroup(
-          accessToken,
-          userGroupUUID,
-          creds.TEST_ROLE_UUID,
-          responseData.uuid
-        )
-          .then(assignResponse => {
-            //console.log("Assignment Response", assignResponse);
-            assert(assignResponse.status === "ok");
-            s2sMS.Objects.deleteDataObject(accessToken, responseData.uuid)
-              .then(d => {
-                //console.log(d)
-                done();
-              })
-              .catch(e => {
-                console.log(
-                  "Error deleting user data object [create and get user object]",
-                  e
-                );
-                done(new Error(e));
-              });
-          })
-          .catch(assignError => {
-            console.log("Assign Role Scope to User Group Error", assignError);
-            done(new Error(assignError));
-          });
-      })
-      .catch(error => {
-        console.log(
-          "Error creating User Object [create and get user object]",
-          error
-        );
-        done(new Error(error));
-      });
-  });
+  //   s2sMS.Auth.deleteRole(accessToken, role)
+  //     .then(response => {
+  //       logger.info(`Delete Role RESPONSE: ${JSON.stringify(response, null, "\t")}`);
+  //       assert(response.status === "ok");
+  //       done();
+  //     })
+  //     .catch(error => {
+  //       logger.error(`Delete Role RESPONSE: ${JSON.stringify(error, null, "\t")}`);
+  //       done(new Error(error));
+  //     });
+  // });
 
   it("Modify User Groups", function(done) {
     if (!creds.isValid) {
@@ -548,7 +478,7 @@ describe("Auth MS Test Suite", function() {
     };
     s2sMS.Auth.modifyUserGroup(accessToken, userGroupUUID, body)
       .then(response => {
-        //console.log("RESPONSE", response);
+        logger.info(`Modify User Groups RESPONSE: ${JSON.stringify(response, null, "\t")}`);
         assert(
           response.hasOwnProperty("description") &&
           response.description === body.description
@@ -556,7 +486,7 @@ describe("Auth MS Test Suite", function() {
         done();
       })
       .catch(error => {
-        //console.log('Error in List Roles', error);
+        logger.error(`Modify User Groups ERROR: ${JSON.stringify(error, null, "\t")}`);
         done(new Error(error));
       });
   });
@@ -571,23 +501,24 @@ describe("Auth MS Test Suite", function() {
 
     s2sMS.Auth.listUserGroups(accessToken, 0, 10, filters)
       .then(response => {
-        //console.log("RESPONSE", response);
+        logger.info(`List User Groups RESPONSE: ${JSON.stringify(response, null, "\t")}`);
         assert(
           response.hasOwnProperty("items") &&
             response.items[0].name === filters["name"]
         );
         //Cleanup
         s2sMS.Groups.deleteGroup(accessToken, userGroupUUID)
-          .then(() => {
-            //console.log("Deleted Group", response);
+          .then((response) => {
+            logger.info(`List User Groups cleanup RESPONSE: ${JSON.stringify(response, null, "\t")}`);
             done();
           })
           .catch(error => {
+            logger.error(`List User Groups cleanup ERROR: ${JSON.stringify(error, null, "\t")}`);
             done(new Error(error));
           });
       })
       .catch(error => {
-        //console.log('Error in List Roles', error);
+        logger.error(`List User Groups ERROR: ${JSON.stringify(error, null, "\t")}`);
         done(new Error(error));
       });
   });

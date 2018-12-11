@@ -276,7 +276,6 @@ var scheduleEvent = function scheduleEvent() {
     json: true
   };
   Util.addRequestTrace(requestOptions, trace);
-  logger.debug(requestOptions, null, "\t");
   return request(requestOptions);
 };
 

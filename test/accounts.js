@@ -17,7 +17,7 @@ let creds = {
 };
 
 describe("Accounts MS Unit Test Suite", function() {
-  let accessToken, accountUUID;
+  let accessToken, accountUUID, contactUUID;
   let time = new Date()
     .getTime()
     .toString()
@@ -133,7 +133,6 @@ describe("Accounts MS Unit Test Suite", function() {
       },
       contacts: [
         {
-          id: 1,
           type: "primary",
           first_name: "First",
           last_name: "Last",
@@ -148,15 +147,15 @@ describe("Accounts MS Unit Test Suite", function() {
     
     s2sMS.Accounts.createAccount(accessToken, body)
       .then(response => {
-        // console.log("Account Created: ", response);
+        logger.info(`Create Account RESPONSE: ${JSON.stringify(response, null, "\t")}`);
         //save the account number for other tests
         assert(response.name === "Unit Test");
         accountUUID = response.uuid;
-        //console.log("ACCOUNT UUID",accountUUID);
+        contactUUID = response.contacts[0].uuid;
         done();
       })
       .catch(error => {
-        console.log("ERROR CREATING ACCOUNT", error);
+        logger.error(`Create Account ERROR: ${JSON.stringify(error, null, "\t")}`);
         done(new Error(error));
       });
   });
@@ -165,7 +164,6 @@ describe("Accounts MS Unit Test Suite", function() {
     if (!creds.isValid) return done();
 
     s2sMS.Accounts
-      // .listAccounts(accessToken, offset, limit, accountType, expand)
       .listAccounts(
         accessToken, 
         1, //offset
@@ -175,13 +173,13 @@ describe("Accounts MS Unit Test Suite", function() {
           "expand": "relationships"
         }
       )
-      .then(accountList => {
-        //console.log("accountList", accountList);
-        assert(accountList.items.length === 1);
+      .then(response => {
+        logger.info(`List Accounts RESPONSE: ${JSON.stringify(response, null, "\t")}`);
+        assert(response.items.length === 1);
         done();
       })
       .catch(error => {
-        //console.log("error in getting account list", error);
+        logger.error(`List Accounts ERROR: ${JSON.stringify(error, null, "\t")}`);
         done(new Error(error));
       });
   });
@@ -192,13 +190,13 @@ describe("Accounts MS Unit Test Suite", function() {
       //Workaround for CSRVS-181
       s2sMS.Accounts.getAccount(accessToken, accountUUID)
         .then(response => {
-          //console.log("accountData", response.relationships.items[0]);
+          logger.info(`Get Account Data and Check Relationships RESPONSE: ${JSON.stringify(response, null, "\t")}`);
           assert(response.uuid === accountUUID);
           assert(response.relationships.items[0].source.uuid == accountUUID);
           done();
         })
         .catch(error => {
-          // console.log("error in getting account data", error);
+          logger.error(`Get Account Data and Check Relationships RESPONSE: ${JSON.stringify(error, null, "\t")}`);
           done(new Error(error));
         });
     }, 2000);
@@ -222,7 +220,7 @@ describe("Accounts MS Unit Test Suite", function() {
       },
       contacts: [
         {
-          uuid: "f1f45521-4501-4874-94be-3067498ee0b6",
+          uuid: contactUUID,
           type: "primary",
           email: "abcmodified@test.com",
           phone: "1112223333",
@@ -253,16 +251,20 @@ describe("Accounts MS Unit Test Suite", function() {
       accessToken,
       identityData.account_uuid,
       0,
-      10,
-      "Reseller"
+      10 //,
+      // "reseller" FIX params and assert when is CSRVS-228 fixed.
     )
-      .then(relationshipList => {
-        //console.log("accountList", relationshipList);
-        assert(relationshipList.items.length > 0);
+      .then(response => {
+        
+        logger.info(`List Account Relationships RESPONSE: ${JSON.stringify(response, null, "\t")}`);
+        assert(
+          response.items.length > 0 //&&
+          //response.items[0].target.uuid === identityData.account_uuid
+        );
         done();
       })
       .catch(error => {
-        console.log("error in getting account list", error);
+        logger.error(`List Account Relationships ERROR: ${JSON.stringify(error, null, "\t")}`);
         done(new Error(error));
       });
   });
@@ -271,10 +273,12 @@ describe("Accounts MS Unit Test Suite", function() {
     if (!creds.isValid) return done();
     s2sMS.Accounts.suspendAccount(accessToken, accountUUID)
       .then(response => {
+        logger.info(`Suspend Account RESPONSE: ${JSON.stringify(response, null, "\t")}`);
         assert(response.status === "ok");
         done();
       })
       .catch(error => {
+        logger.error(`List Account Relationships ERROR: ${JSON.stringify(error, null, "\t")}`);
         done(new Error(error));
       });
   });
@@ -283,11 +287,12 @@ describe("Accounts MS Unit Test Suite", function() {
     if (!creds.isValid) return done();
     s2sMS.Accounts.reinstateAccount(accessToken, accountUUID)
       .then(response => {
+        logger.info(`Reinstate Account RESPONSE: ${JSON.stringify(response, null, "\t")}`);
         assert(response.status === "ok");
         done();
       })
       .catch(error => {
-        // console.log("error in getting account data", error);
+        logger.error(`Reinstate Account ERROR: ${JSON.stringify(error, null, "\t")}`);
         done(new Error(error));
       });
   });
@@ -296,11 +301,12 @@ describe("Accounts MS Unit Test Suite", function() {
     if (!creds.isValid) return done();
     s2sMS.Accounts.deleteAccount(accessToken, accountUUID) //Test account uuid created by Create Account test
       .then(response => {
+        logger.info(`Delete Account RESPONSE: ${JSON.stringify(response, null, "\t")}`);
         assert(response.status === "ok");
         done();
       })
       .catch(error => {
-        //console.log("error in getting account list [getAccountData]", error);
+        logger.error(`Delete Account ERROR: ${JSON.stringify(error, null, "\t")}`);
         done(new Error(error));
       });
   });

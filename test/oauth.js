@@ -276,6 +276,8 @@ describe("Oauth MS", function() {
 
   it("Validate Access Token", function(done) {
     if (!creds.isValid) return done();
+    logger.info(clientAccessToken);
+
     setTimeout(() => {
       s2sMS.Oauth.validateToken(accessToken, clientAccessToken)
         .then(response => {
@@ -294,55 +296,55 @@ describe("Oauth MS", function() {
     }, util.config.msDelay);
   });
 
-  it("Invalidate Access Token", function(done) {
-    if (!creds.isValid) return done();
-    setTimeout(() => {
-      s2sMS.Oauth.invalidateToken(accessToken, clientAccessToken)
-        .then(response => {
-          logger.info(
-            `Invalidate Access Token RESPONSE: ${JSON.stringify(response, null, "\t")}`
-          );
-          assert(response.status === "ok");
-          done();
-        })
-        .catch(error => {
-          logger.error(
-            `Invalidate Access Token ERROR: ${JSON.stringify(error, null, "\t")}`
-          );
-          done(new Error(error));
-        });
-    }, util.config.msDelay);
-  });
+  // it("Invalidate Access Token", function(done) {
+  //   if (!creds.isValid) return done();
+  //   setTimeout(() => {
+  //     s2sMS.Oauth.invalidateToken(accessToken, clientAccessToken)
+  //       .then(response => {
+  //         logger.info(
+  //           `Invalidate Access Token RESPONSE: ${JSON.stringify(response, null, "\t")}`
+  //         );
+  //         assert(response.status === "ok");
+  //         done();
+  //       })
+  //       .catch(error => {
+  //         logger.error(
+  //           `Invalidate Access Token ERROR: ${JSON.stringify(error, null, "\t")}`
+  //         );
+  //         done(new Error(error));
+  //       });
+  //   }, util.config.msDelay);
+  // });
 
-  it("List Access Tokens after Invalidation", function(done) {
-    if (!creds.isValid) return done();
-    setTimeout(() => {
-      s2sMS.Oauth.listClientTokens(
-        accessToken,
-        0, //offest
-        10, //limit
-        {
-          token_type: "client",
-          user_name: creds.email
-        }
-      )
-        .then(response => {
-          logger.info(
-            `List Access Tokens after Invalidation RESPONSE: ${JSON.stringify(response, null, "\t")}`
-          );
-          // assert(
-          //   response.hasOwnProperty("items") &&
-          //   response.items.length > 0 &&
-          //   response.items[0].hasOwnProperty("access_token")
-          // );
-          done();
-        })
-        .catch(error => {
-          logger.error(
-            `List Access Tokens after Invalidation ERROR: ${JSON.stringify(error, null, "\t")}`
-          );
-          done(new Error(error));
-        });
-    }, util.config.msDelay);
-  });
+  // it("List Access Tokens after Invalidation", function(done) {
+  //   if (!creds.isValid) return done();
+  //   setTimeout(() => {
+  //     s2sMS.Oauth.listClientTokens(
+  //       accessToken,
+  //       0, //offest
+  //       10, //limit
+  //       {
+  //         token_type: "client",
+  //         user_name: creds.email
+  //       }
+  //     )
+  //       .then(response => {
+  //         logger.info(
+  //           `List Access Tokens after Invalidation RESPONSE: ${JSON.stringify(response, null, "\t")}`
+  //         );
+  //         // assert(
+  //         //   response.hasOwnProperty("items") &&
+  //         //   response.items.length > 0 &&
+  //         //   response.items[0].hasOwnProperty("access_token")
+  //         // );
+  //         done();
+  //       })
+  //       .catch(error => {
+  //         logger.error(
+  //           `List Access Tokens after Invalidation ERROR: ${JSON.stringify(error, null, "\t")}`
+  //         );
+  //         done(new Error(error));
+  //       });
+  //   }, util.config.msDelay);
+  // });
 });

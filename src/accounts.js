@@ -203,7 +203,6 @@ const listAccountRelationships = (
   offset = 0,
   limit = 10,
   accountType = undefined,
-  expand = "accounts",
   trace = {}
 ) => {
   const MS = util.getEndpoint("accounts");
@@ -211,7 +210,7 @@ const listAccountRelationships = (
     method: "GET",
     uri: `${MS}/accounts/${accountUUID}/relationships`,
     qs: {
-      expand: expand,
+      expand: "accounts",
       offset: offset,
       limit: limit
     },

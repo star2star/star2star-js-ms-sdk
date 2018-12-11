@@ -231,15 +231,14 @@ var listAccountRelationships = function listAccountRelationships() {
   var offset = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : 0;
   var limit = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : 10;
   var accountType = arguments.length > 4 && arguments[4] !== undefined ? arguments[4] : undefined;
-  var expand = arguments.length > 5 && arguments[5] !== undefined ? arguments[5] : "accounts";
-  var trace = arguments.length > 6 && arguments[6] !== undefined ? arguments[6] : {};
+  var trace = arguments.length > 5 && arguments[5] !== undefined ? arguments[5] : {};
 
   var MS = util.getEndpoint("accounts");
   var requestOptions = {
     method: "GET",
     uri: MS + "/accounts/" + accountUUID + "/relationships",
     qs: {
-      expand: expand,
+      expand: "accounts",
       offset: offset,
       limit: limit
     },
