@@ -2,7 +2,6 @@
 "use strict";
 const request = require("request-promise");
 const Util = require("./utilities");
-const logger = Util.logger;
 
 /**
  * @async

@@ -1,9 +1,21 @@
+//mocha reqruies
+require("babel-polyfill");
 const assert = require("assert");
-const s2sMS = require("../src/index");
-const util = s2sMS.Util;
-const logger = util.logger;
+const mocha = require("mocha");
+const describe = mocha.describe;
+const it = mocha.it;
+const before = mocha.before;
 
+//test requires
 const fs = require("fs");
+const s2sMS = require("../src/index");
+const Util = require("../src/utilities");
+const logLevel = Util.getLogLevel();
+const logPretty = Util.getLogPretty();
+import Logger from "../src/node-logger";
+const logger = new Logger();
+logger.setLevel(logLevel);
+logger.setPretty(logPretty);
 
 let creds = {
   CPAAS_OAUTH_TOKEN: "Basic your oauth token here",
@@ -256,7 +268,7 @@ describe("Auth MS Test Suite", function() {
           logger.error(`List a Role's Groups ERROR: ${JSON.stringify(error, null, "\t")}`);
           done(new Error(error));
         });
-    }, util.config.msDelay);
+    }, Util.config.msDelay);
   });
 
   it("List a Role's Permissions", function(done) {
@@ -334,7 +346,7 @@ describe("Auth MS Test Suite", function() {
           logger.error(`List a Group's Roles ERROR: ${JSON.stringify(error, null, "\t")}`);
           done(new Error(error));
         });
-    }, util.config.msDelay);
+    }, Util.config.msDelay);
   });
 
   //Broken: CCORE-418
@@ -357,7 +369,7 @@ describe("Auth MS Test Suite", function() {
   //           done (new Error(error));
   //         }
   //       });
-  //   }, util.config.msDelay);
+  //   }, Util.config.msDelay);
   // });
 
   it("Delete Role From User Group", function(done) {
@@ -381,7 +393,7 @@ describe("Auth MS Test Suite", function() {
               logger.info(`Delete Role From User Group ERROR: ${JSON.stringify(error, null, "\t")}`);
               done(new Error(error));
             });
-        }, util.config.msDelay);
+        }, Util.config.msDelay);
       })
       .catch(error => {
         logger.info(`Delete Role From User Group ERROR: ${JSON.stringify(error, null, "\t")}`);
@@ -410,7 +422,7 @@ describe("Auth MS Test Suite", function() {
   //         logger.error(`Delete Permission From Role ERROR: ${JSON.stringify(error, null, "\t")}`);
   //         done(new Error(error));
   //       });
-  //   }, util.config.msDelay);
+  //   }, Util.config.msDelay);
   // });
 
   it("Deactivate Role", function(done) {

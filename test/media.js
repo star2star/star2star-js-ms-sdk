@@ -1,6 +1,21 @@
-var assert = require("assert");
-var s2sMS = require("../src/index");
-var fs = require("fs");
+//mocha reqruies
+require("babel-polyfill");
+const assert = require("assert");
+const mocha = require("mocha");
+const describe = mocha.describe;
+const it = mocha.it;
+const before = mocha.before;
+
+//test requires
+const fs = require("fs");
+const s2sMS = require("../src/index");
+const Util = require("../src/utilities");
+const logLevel = Util.getLogLevel();
+const logPretty = Util.getLogPretty();
+import Logger from "../src/node-logger";
+const logger = new Logger();
+logger.setLevel(logLevel);
+logger.setPretty(logPretty);
 
 let creds = {
   CPAAS_OAUTH_TOKEN: "Basic your oauth token here",
@@ -106,7 +121,7 @@ describe("Media Test Suite", function() {
   it("delete user Media", function(done) {
     if (!creds.isValid) return done();
     s2sMS.Media.deleteMedia(file_id, accessToken)
-      .then(x => {
+      .then(() => {
         //console.log(`deleted ${file_id}`)
         assert(true);
         done();

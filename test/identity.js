@@ -1,8 +1,21 @@
+//mocha reqruies
+require("babel-polyfill");
 const assert = require("assert");
-const s2sMS = require("../src/index");
+const mocha = require("mocha");
+const describe = mocha.describe;
+const it = mocha.it;
+const before = mocha.before;
+
+//test requires
 const fs = require("fs");
-const util = require("../src/utilities");
-const logger = util.logger;
+const s2sMS = require("../src/index");
+const Util = require("../src/utilities");
+const logLevel = Util.getLogLevel();
+const logPretty = Util.getLogPretty();
+import Logger from "../src/node-logger";
+const logger = new Logger();
+logger.setLevel(logLevel);
+logger.setPretty(logPretty);
 
 let creds = {
   CPAAS_OAUTH_TOKEN: "Basic your oauth token here",
@@ -24,33 +37,33 @@ describe("Identity MS Unit Test Suite", function () {
       creds = require("./credentials.json");
     }
 
-     // For tests, use the dev msHost
-     s2sMS.setMsHost("https://cpaas.star2starglobal.net");
-     s2sMS.setMSVersion(creds.CPAAS_API_VERSION);
-     s2sMS.setMsAuthHost("https://auth.star2starglobal.net");
-     // get accessToken to use in test cases
-     // Return promise so that test cases will not fire until it resolves.
-     return new Promise((resolve, reject)=>{
-       s2sMS.Oauth.getAccessToken(
-         creds.CPAAS_OAUTH_TOKEN,
-         creds.email,
-         creds.password
-       )
-       .then(oauthData => {
-         //console.log('Got access token and identity data -[Get Object By Data Type] ',  oauthData);
-         accessToken = oauthData.access_token;
-         s2sMS.Identity.getMyIdentityData(accessToken).then((idData)=>{
-           s2sMS.Identity.getIdentityDetails(accessToken, idData.user_uuid).then((identityDetails)=>{
-             identityData = identityDetails;
-             resolve();
-           }).catch((e1)=>{
-             reject(e1);
-           });
-         }).catch((e)=>{
-           reject(e);
-         });
-       });
-     });
+    // For tests, use the dev msHost
+    s2sMS.setMsHost("https://cpaas.star2starglobal.net");
+    s2sMS.setMSVersion(creds.CPAAS_API_VERSION);
+    s2sMS.setMsAuthHost("https://auth.star2starglobal.net");
+    // get accessToken to use in test cases
+    // Return promise so that test cases will not fire until it resolves.
+    return new Promise((resolve, reject)=>{
+      s2sMS.Oauth.getAccessToken(
+        creds.CPAAS_OAUTH_TOKEN,
+        creds.email,
+        creds.password
+      )
+        .then(oauthData => {
+          //console.log('Got access token and identity data -[Get Object By Data Type] ',  oauthData);
+          accessToken = oauthData.access_token;
+          s2sMS.Identity.getMyIdentityData(accessToken).then((idData)=>{
+            s2sMS.Identity.getIdentityDetails(accessToken, idData.user_uuid).then((identityDetails)=>{
+              identityData = identityDetails;
+              resolve();
+            }).catch((e1)=>{
+              reject(e1);
+            });
+          }).catch((e)=>{
+            reject(e);
+          });
+        });
+    });
   });
 
   it("Create Identity", function (done) {
@@ -82,7 +95,7 @@ describe("Identity MS Unit Test Suite", function () {
         done();
       })
       .catch((error) => {
-        console.log('Error creating identity', error);
+        console.log("Error creating identity", error);
         done(new Error(error));
       });
   });
@@ -95,24 +108,24 @@ describe("Identity MS Unit Test Suite", function () {
       "sms": time
     };    
     s2sMS.Identity.createAlias(
-        accessToken,
-        testUUID,
-        body
-      ).then(response => {
-        assert(response.status === "ok");
-        s2sMS.Identity.getIdentityDetails(accessToken,testUUID)
+      accessToken,
+      testUUID,
+      body
+    ).then(response => {
+      assert(response.status === "ok");
+      s2sMS.Identity.getIdentityDetails(accessToken,testUUID)
         .then(response => {
-            //console.log("UPDATED IDENTITY",response);
-            assert(response.aliases[0].sms === time);
-            done();
+          //console.log("UPDATED IDENTITY",response);
+          assert(response.aliases[0].sms === time);
+          done();
         })
         .catch(error => {
-          console.log('Error Getting Updated Identity', error);
+          console.log("Error Getting Updated Identity", error);
           done(new Error(error));
         });
-      })
+    })
       .catch(error => {
-        console.log('Error updating alias [create alias]', error);
+        console.log("Error updating alias [create alias]", error);
         done(new Error(error));
       });
   });
@@ -121,24 +134,24 @@ describe("Identity MS Unit Test Suite", function () {
     if (!creds.isValid) return done();
     time++; //FIXME incrementing our time to use for new sms until delete is fixed.    
     s2sMS.Identity.updateAliasWithDID(
-        accessToken,
-        testUUID,
-        time
-      ).then(response => {
-        assert(response.status === "ok");
-        s2sMS.Identity.getIdentityDetails(accessToken,testUUID)
+      accessToken,
+      testUUID,
+      time
+    ).then(response => {
+      assert(response.status === "ok");
+      s2sMS.Identity.getIdentityDetails(accessToken,testUUID)
         .then(response => {
-            // console.log("UPDATED SMS",response.aliases[0].sms);
-            assert(response.aliases[0].sms == time);
-            done();
+          // console.log("UPDATED SMS",response.aliases[0].sms);
+          assert(response.aliases[0].sms == time);
+          done();
         })
         .catch(error => {
-          console.log('Error Getting Updated Identity', error);
+          console.log("Error Getting Updated Identity", error);
           done(new Error(error));
         });
-      })
+    })
       .catch(error => {
-        console.log('Error updating alias [create alias]', error);
+        console.log("Error updating alias [create alias]", error);
         done(new Error(error));
       });
   });
@@ -147,16 +160,16 @@ describe("Identity MS Unit Test Suite", function () {
 
   it("Valid SMS Number", function (done) {
     if (!creds.isValid) return done();
-      s2sMS.Messaging.getSMSNumber(accessToken, testUUID)
-        .then((sms) => {
-          //console.log('SSSMMMSSS', sms);
-          assert(sms == time);
-          done();
-        })
-        .catch((error) => {
-          console.log('Error getting SMS Number', JSON.stringify(error));
-          done(new Error(error));
-        });         
+    s2sMS.Messaging.getSMSNumber(accessToken, testUUID)
+      .then((sms) => {
+        //console.log('SSSMMMSSS', sms);
+        assert(sms == time);
+        done();
+      })
+      .catch((error) => {
+        console.log("Error getting SMS Number", JSON.stringify(error));
+        done(new Error(error));
+      });         
   });
 
   it("GetSMS for Invalid USER UUID", function (done) {
@@ -168,13 +181,13 @@ describe("Identity MS Unit Test Suite", function () {
       })
       .catch(error => {
       //console.log('Got expected error with invalid uuid [getsms for invalid user]', error);
-      assert(error.statusCode === 400);
-      done();
-    });
+        assert(error.statusCode === 400);
+        done();
+      });
   });
 
 
-   /* FIXME once CSRVS-155 is figured out
+  /* FIXME once CSRVS-155 is figured out
    it("Send SMS", function (done) {
      if (!creds.isValid) return done();
      s2sMS.Messaging.sendSMS(
@@ -202,16 +215,16 @@ describe("Identity MS Unit Test Suite", function () {
     // console.log('Created guest user [create Alias]', identityData.uuid);
     const body = {first_name: "Bob"};
     s2sMS.Identity.modifyIdentity(
-        accessToken,
-        testUUID,
-        body
-      ).then((response) => {
-        //console.log('alias data', aliasData);
-        assert(response.first_name === "Bob");
-        done();
-      })
+      accessToken,
+      testUUID,
+      body
+    ).then((response) => {
+      //console.log('alias data', aliasData);
+      assert(response.first_name === "Bob");
+      done();
+    })
       .catch((error) => {
-        console.log('Error updating alias [create alias]', error);
+        console.log("Error updating alias [create alias]", error);
         done(new Error(error));
       });
   });
@@ -221,29 +234,29 @@ describe("Identity MS Unit Test Suite", function () {
   it("Deactivate Identity", function (done) {
     if (!creds.isValid) return done();
     s2sMS.Identity.deactivateIdentity(accessToken, testUUID)
-          .then((response) => {
-            //console.log('Deleted guest user:', testUUID);
-            assert(response.status === "ok");
-            done();
-          })
-          .catch((error) => {
-            console.log('Error deleting user [create user]', error);
-            done(new Error(error));
-          });
+      .then((response) => {
+        //console.log('Deleted guest user:', testUUID);
+        assert(response.status === "ok");
+        done();
+      })
+      .catch((error) => {
+        console.log("Error deleting user [create user]", error);
+        done(new Error(error));
+      });
   });
 
   it("Reactivate Identity", function (done) {
     if (!creds.isValid) return done();
     s2sMS.Identity.reactivateIdentity(accessToken, testUUID)
-          .then((response) => {
-            //console.log('Deleted guest user:', testUUID);
-            assert(response.status === "ok");
-            done();
-          })
-          .catch((error) => {
-            console.log('Error deleting user [create user]', error);
-            done(new Error(error));
-          });
+      .then((response) => {
+        //console.log('Deleted guest user:', testUUID);
+        assert(response.status === "ok");
+        done();
+      })
+      .catch((error) => {
+        console.log("Error deleting user [create user]", error);
+        done(new Error(error));
+      });
   });
 
   it("Delete Identity and Confirm Identity is Removed from User-groups", function (done){
@@ -262,64 +275,64 @@ describe("Identity MS Unit Test Suite", function () {
     };
 
     s2sMS.Groups.createGroup(
+      accessToken,
+      body
+    ).then(responseData => {
+      testGroupUuid = responseData.uuid; //Use this uuid for other tests.
+      //console.log(responseData);
+      assert(
+        responseData.name === "Test"
+      );
+      //add the test identity to the group
+      const testMembers = [{
+        type: "user",
+        uuid: testUUID
+      }];
+      s2sMS.Groups.addMembersToGroup(
         accessToken,
-        body
+        testGroupUuid,
+        testMembers
       ).then(responseData => {
-        testGroupUuid = responseData.uuid; //Use this uuid for other tests.
-        //console.log(responseData);
+        //console.log("Add Members response %j", responseData);
         assert(
-          responseData.name === "Test"
-        );
-        //add the test identity to the group
-        const testMembers = [{
-          type: "user",
-          uuid: testUUID
-        }];
-        s2sMS.Groups.addMembersToGroup(
-            accessToken,
-            testGroupUuid,
-            testMembers
-          ).then(responseData => {
-            //console.log("Add Members response %j", responseData);
-            assert(
-              responseData.name === "Test" &&
+          responseData.name === "Test" &&
               responseData.total_members === 2
-            );
-            //delete the identity
-            s2sMS.Identity.deleteIdentity(accessToken, testUUID)
-              .then((response) => {
-                //console.log('Deleted guest user:', testUUID);
-                assert(response.status === "ok");
-                //check that testUUID is not a member of any groups
-                filters = [];
-                filters["member_uuid"] = testUUID;
-                s2sMS.Groups.listGroups(
-                    accessToken,
-                    0, //offset
-                    10, //limit
-                    filters
-                  ).then(responseData => {
-                     console.log(responseData);
-                     assert(responseData.hasOwnProperty('items') && responseData.items.length === 0); //FIXME CCORE-178
-                     done();
-                  })
-                  .catch((error) => {
-                    console.log('Error List User Groups', error);
-                    done(new Error(error));
-                  });
-              })
+        );
+        //delete the identity
+        s2sMS.Identity.deleteIdentity(accessToken, testUUID)
+          .then((response) => {
+            //console.log('Deleted guest user:', testUUID);
+            assert(response.status === "ok");
+            //check that testUUID is not a member of any groups
+            const filters = [];
+            filters["member_uuid"] = testUUID;
+            s2sMS.Groups.listGroups(
+              accessToken,
+              0, //offset
+              10, //limit
+              filters
+            ).then(responseData => {
+              console.log(responseData);
+              assert(responseData.hasOwnProperty("items") && responseData.items.length === 0); //FIXME CCORE-178
+              done();
+            })
               .catch((error) => {
-                console.log('Error deleting user [create user]', error);
+                console.log("Error List User Groups", error);
                 done(new Error(error));
               });
           })
           .catch((error) => {
-            console.log('Error adding member to group [create/add members/delete]', error);
+            console.log("Error deleting user [create user]", error);
             done(new Error(error));
           });
       })
+        .catch((error) => {
+          console.log("Error adding member to group [create/add members/delete]", error);
+          done(new Error(error));
+        });
+    })
       .catch((error) => {
-        console.log('Error Create Group', error);
+        console.log("Error Create Group", error);
         done(new Error(error));
       });
   });
@@ -333,7 +346,7 @@ describe("Identity MS Unit Test Suite", function () {
         done();
       })
       .catch((error) => {
-        console.log('Error login [login with good credentials]', error);
+        console.log("Error login [login with good credentials]", error);
         done(new Error(error));
       });
   });
@@ -341,10 +354,10 @@ describe("Identity MS Unit Test Suite", function () {
   it("Login with Bad Credentials", function (done) {
     if (!creds.isValid) return done();
     s2sMS.Identity.login(accessToken, creds.email, "bad").catch(login => {
-        // console.log('Bad Creds login status code: %j', identityData);
-        assert(login.statusCode === 401);
-        done();
-      })
+      // console.log('Bad Creds login status code: %j', identityData);
+      assert(login.statusCode === 401);
+      done();
+    })
       .catch((error) => {
         //console.log('Error logging in with BAD credentials', error);
         done(new Error(error));
@@ -356,7 +369,7 @@ describe("Identity MS Unit Test Suite", function () {
     s2sMS.Identity.getMyIdentityData(accessToken)
       .then((response) => {
         // console.log('get My Identity data response: %j', JSON.parse(identityData));
-        response.hasOwnProperty('uuid');
+        response.hasOwnProperty("uuid");
         done();
       })
       .catch((error) => {
@@ -394,7 +407,7 @@ describe("Identity MS Unit Test Suite", function () {
 
   it("Lookup Identity with known user", function (done) {
     if (!creds.isValid) return done();
-    filters = [];
+    const filters = [];
     filters["username"] = creds.email;
 
     s2sMS.Identity
@@ -412,7 +425,7 @@ describe("Identity MS Unit Test Suite", function () {
 
   it("Lookup Identity with unknown user", function (done) {
     if (!creds.isValid) return done();
-    filters = [];
+    const filters = [];
     filters["username"] = "test333@test.com";
     s2sMS.Identity
       .lookupIdentity(accessToken, 1, 10, filters)
@@ -481,7 +494,7 @@ describe("Identity MS Unit Test Suite", function () {
         assert(tokenData.hasOwnProperty("token"));
         done();
       })
-      .catch(e => {
+      .catch(() => {
         //console.log("error in validate token", e);
         done();
       });

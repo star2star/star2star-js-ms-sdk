@@ -5,7 +5,6 @@ function _asyncToGenerator(fn) { return function () { var gen = fn.apply(this, a
 
 var request = require("request-promise");
 var Util = require("./utilities");
-var logger = Util.logger;
 
 /**
  * @async

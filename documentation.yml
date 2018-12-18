@@ -90,8 +90,10 @@ toc:
     children:
       - getApplicationKey
       - getAuthHost
+      - getEnv
       - getMsHost
       - setApplicationKey
+      - setEnv
       - setMsHost
       - setMsAuthHost
       - setMSVersion    
@@ -191,13 +193,15 @@ toc:
       - createUUID
       - filterResponse
       - getEndpoint
+      - getLogLevel
+      - getLogPretty
       - getVersion
       - getValueFromObjectTree
       - isBrowser
       - paginate
       - replaceStaticValues
       - replaceVariables
-      
+      - setLogLevel
+      - setLogPretty
 
-
-
+     

@@ -1,11 +1,21 @@
+//mocha reqruies
+require("babel-polyfill");
 const assert = require("assert");
-const s2sMS = require("../src/index");
+const mocha = require("mocha");
+const describe = mocha.describe;
+const it = mocha.it;
+const before = mocha.before;
+
+//test requires
 const fs = require("fs");
-const objectMerge = require("object-merge");
-const util = require("../src/utilities");
-const logger = util.logger;
-const newMeta = util.generateNewMetaData;
-let trace = newMeta();
+const s2sMS = require("../src/index");
+const Util = require("../src/utilities");
+const logLevel = Util.getLogLevel();
+const logPretty = Util.getLogPretty();
+import Logger from "../src/node-logger";
+const logger = new Logger();
+logger.setLevel(logLevel);
+logger.setPretty(logPretty);
 
 let creds = {
   CPAAS_OAUTH_TOKEN: "Basic your oauth token here",
@@ -68,8 +78,7 @@ describe("Accounts MS Unit Test Suite", function() {
       to,
       subject,
       message,
-      type,
-      trace
+      type
     )
       .then(response => {
         logger.info(`Send Valid Email: ${JSON.stringify(response)}`);
@@ -91,8 +100,7 @@ describe("Accounts MS Unit Test Suite", function() {
     const subject = "a test";
     const message = "a test";
     const type = "text";
-    trace = objectMerge({}, trace, newMeta(trace));
-    s2sMS.Email.sendEmail(accessToken, sender, to, subject, message, type, trace)
+    s2sMS.Email.sendEmail(accessToken, sender, to, subject, message, type)
       .then(response => {
         logger.error(`Send Invalid Sender Email: ${JSON.stringify(response)}`);
         assert(false);
@@ -112,8 +120,7 @@ describe("Accounts MS Unit Test Suite", function() {
     const subject = "a test";
     const message = "a test";
     const type = "text";
-    trace = objectMerge({}, trace, newMeta(trace));
-    s2sMS.Email.sendEmail(accessToken, sender, to, subject, message, type, trace)
+    s2sMS.Email.sendEmail(accessToken, sender, to, subject, message, type)
       .then(response => {
         logger.error(`Send Invalid Recipient Email: ${JSON.stringify(response)}`);
         assert(false);

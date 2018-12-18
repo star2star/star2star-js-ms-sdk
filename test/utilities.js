@@ -1,36 +1,36 @@
-var assert = require("assert");
-const s2sMS = require("../src/index");
-var util = require("../src/utilities");
-var config = require("../src/config.json");
-var fs = require("fs");
+//mocha reqruies
+require("babel-polyfill");
+const assert = require("assert");
+const mocha = require("mocha");
+const describe = mocha.describe;
+const it = mocha.it;
+const beforeEach = mocha.beforeEach;
 
-let creds = {
-  CPAAS_OAUTH_TOKEN: "Basic your oauth token here",
-  CPAAS_API_VERSION: "v1",
-  email: "email@email.com",
-  password: "pwd",
-  isValid: false
-};
+//test requires
+const s2sMS = require("../src/index");
+const Util = require("../src/utilities");
+var config = require("../src/config.json");
+const logLevel = Util.getLogLevel();
+const logPretty = Util.getLogPretty();
+import Logger from "../src/node-logger";
+const logger = new Logger();
+logger.setLevel(logLevel);
+logger.setPretty(logPretty);
 
 beforeEach(function () {
   s2sMS.setMsHost("https://cpaas.star2starglobal.net");
   s2sMS.setMsAuthHost("https://auth.star2starglobal.net");
-  // file system uses full path so will do it like this
-  if (fs.existsSync("./test/credentials.json")) {
-    // do not need test folder here
-    creds = require("./credentials.json");
-  }
 });
 
 describe("Util", function () {
   it("config", function (done) {
-    const cfg = util.config;
+    const cfg = Util.config;
     assert.deepEqual(config, cfg);
     done();
   });
 
   it("replace variables", function (done) {
-    const newString = util.replaceVariables("%foo%", {
+    const newString = Util.replaceVariables("%foo%", {
       foo: 1
     });
     assert(newString === "1");
@@ -38,7 +38,7 @@ describe("Util", function () {
   });
 
   it("replace variables missing", function (done) {
-    const newString = util.replaceVariables("%foobar%", {
+    const newString = Util.replaceVariables("%foobar%", {
       foo: 1
     });
     assert.equal(newString, "%foobar%");
@@ -46,7 +46,7 @@ describe("Util", function () {
   });
 
   it("replace variables nested", function (done) {
-    const newString = util.replaceVariables("%foobar%", {
+    const newString = Util.replaceVariables("%foobar%", {
       foo: 1,
       bar: {
         foobar: "value"
@@ -56,13 +56,13 @@ describe("Util", function () {
     done();
   });
   it("replace static stuff ONLY ", function (done) {
-    const newString = util.replaceVariables("%YYYY% %MM% %DD%", {});
+    const newString = Util.replaceVariables("%YYYY% %MM% %DD%", {});
     //console.log(newString)
     assert(newString.length === 10);
     done();
   });
   it("replace static stuff concat ", function (done) {
-    const newString = util.replaceVariables("APPT_%YYYY%%MM%%DD%", {});
+    const newString = Util.replaceVariables("APPT_%YYYY%%MM%%DD%", {});
     //console.log(newString.length)
     assert(newString.length === 13);
     done();
@@ -87,7 +87,7 @@ describe("Util", function () {
       Date1: "dateOne"
     };
 
-    const newString = util.replaceVariables(x, ot);
+    const newString = Util.replaceVariables(x, ot);
     assert.equal(newString, mValue);
     done();
   });
@@ -111,61 +111,61 @@ describe("Util", function () {
       Date1: "dateOne"
     };
 
-    const newString = util.replaceVariables(x, ot);
+    const newString = Util.replaceVariables(x, ot);
     assert.equal(newString, mValue);
     done();
   });
 
   it("test getEndpoint valid", function (done) {
-    const prodEndPoint = util.getEndpoint("IDENTITY");
+    const prodEndPoint = Util.getEndpoint("IDENTITY");
     assert.equal("https://cpaas.star2starglobal.net/identity", prodEndPoint);
     done();
   });
 
   // it('test getEndpoint valid - dev', function(done){
-  //   const prodEndPoint = util.getEndpoint("dev", 'IDENTITY');
+  //   const prodEndPoint = Util.getEndpoint("dev", 'IDENTITY');
   //   assert.equal("https://cpaas.star2star.net/identity", prodEndPoint);
   //   done();
   // });
   //
   // it('test getEndpoint valid - test ', function(done){
-  //   const prodEndPoint = util.getEndpoint("test", 'IDENTITY');
+  //   const prodEndPoint = Util.getEndpoint("test", 'IDENTITY');
   //   assert.equal("https://cpaas.star2star.net/identity", prodEndPoint);
   //   done();
   // });
   //
   // it('test getEndpoint valid - prod ', function(done){
-  //   const prodEndPoint = util.getEndpoint('prod', 'IDENTITY');
+  //   const prodEndPoint = Util.getEndpoint('prod', 'IDENTITY');
   //   assert.equal("https://cpaas.star2star.com/api/identity", prodEndPoint);
   //   done();
   // });
   //
   // it('test getEndpoint invalid env ', function(done){
-  //   const prodEndPoint = util.getEndpoint('foobar', 'IDENTITY');
+  //   const prodEndPoint = Util.getEndpoint('foobar', 'IDENTITY');
   //   assert.equal("https://cpaas.star2star.com/api/identity", prodEndPoint);
   //   done();
   // });
 
   it("test getEndpoint invalid service ", function (done) {
-    const prodEndPoint = util.getEndpoint("foo");
+    const prodEndPoint = Util.getEndpoint("foo");
     assert.equal(undefined, prodEndPoint);
     done();
   });
 
   it("test getEndpoint valid - lowercase ", function (done) {
-    const prodEndPoint = util.getEndpoint("identity");
+    const prodEndPoint = Util.getEndpoint("identity");
     assert.equal("https://cpaas.star2starglobal.net/identity", prodEndPoint);
     done();
   });
 
   it("test getAuthHost valid - lowercase ", function (done) {
-    const prodAuthHost = util.getAuthHost();
+    const prodAuthHost = Util.getAuthHost();
     assert.equal("https://auth.star2starglobal.net", prodAuthHost);
     done();
   });
 
   it("test create UUID  ", function (done) {
-    const uuid = util.createUUID();
+    const uuid = Util.createUUID();
     assert.equal(uuid.length, 36);
     done();
   });

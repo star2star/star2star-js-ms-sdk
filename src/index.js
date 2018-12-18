@@ -19,7 +19,6 @@ const Workflow = require("./workflow");
 const Email = require("./email");
 const ResourceGroups = require("./resourceGroups");
 const Scheduler = require("./scheduler");
-
 let cpaasKey;
 
 /**
@@ -76,6 +75,30 @@ const getApplicationKey = () => {
   return cpaasKey;
 };
 
+/**
+ *
+ * @description This function sets the environment; development, production, etc...
+ * @param {string} env
+ */
+const setEnv = (env) => {
+  Util.isBrowser() ? window.s2sJsMsSdk.MS_ENV = env : process.env.MS_ENV = env;
+};
+
+/**
+ *
+ * @description - This function retreives the currently configured environment; development, production, etc...
+ * @returns {string} - environment.
+ */
+const getEnv = () => {
+  let client;
+  Util.isBrowser() ? client = window.s2sJsMsSdk : client = process.env;
+  
+  if (!client.hasOwnProperty("MS_ENV")){
+    setEnv(Util.config.env);
+  }
+  return client.MS_ENV;
+};
+
 module.exports = {
   Accounts,
   Lambda,
@@ -89,6 +112,8 @@ module.exports = {
   setMsAuthHost,
   setApplicationKey,
   getApplicationKey,
+  setEnv,
+  getEnv,
   Groups,
   ShortUrls,
   Auth,

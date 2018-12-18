@@ -1,6 +1,21 @@
-var assert = require("assert");
-var s2sMS = require("../src/index");
-var fs = require("fs");
+//mocha reqruies
+require("babel-polyfill");
+const assert = require("assert");
+const mocha = require("mocha");
+const describe = mocha.describe;
+const it = mocha.it;
+const before = mocha.before;
+
+//test requires
+const fs = require("fs");
+const s2sMS = require("../src/index");
+const Util = require("../src/utilities");
+const logLevel = Util.getLogLevel();
+const logPretty = Util.getLogPretty();
+import Logger from "../src/node-logger";
+const logger = new Logger();
+logger.setLevel(logLevel);
+logger.setPretty(logPretty);
 
 let creds = {
   CPAAS_OAUTH_TOKEN: "Basic your oauth token here",
@@ -20,33 +35,33 @@ describe("Task", function () {
       creds = require("./credentials.json");
     }
 
-     // For tests, use the dev msHost
-     s2sMS.setMsHost("https://cpaas.star2starglobal.net");
-     s2sMS.setMSVersion(creds.CPAAS_API_VERSION);
-     s2sMS.setMsAuthHost("https://auth.star2starglobal.net");
-     // get accessToken to use in test cases
-     // Return promise so that test cases will not fire until it resolves.
-     return new Promise((resolve, reject)=>{
-       s2sMS.Oauth.getAccessToken(
-         creds.CPAAS_OAUTH_TOKEN,
-         creds.email,
-         creds.password
-       )
-       .then(oauthData => {
-         //console.log('Got access token and identity data -[Get Object By Data Type] ',  oauthData);
-         accessToken = oauthData.access_token;
-         s2sMS.Identity.getMyIdentityData(accessToken).then((idData)=>{
-           s2sMS.Identity.getIdentityDetails(accessToken, idData.user_uuid).then((identityDetails)=>{
-             identityData = identityDetails;
-             resolve();
-           }).catch((e1)=>{
-             reject(e1);
-           });
-         }).catch((e)=>{
-           reject(e);
-         });
-       });
-     });
+    // For tests, use the dev msHost
+    s2sMS.setMsHost("https://cpaas.star2starglobal.net");
+    s2sMS.setMSVersion(creds.CPAAS_API_VERSION);
+    s2sMS.setMsAuthHost("https://auth.star2starglobal.net");
+    // get accessToken to use in test cases
+    // Return promise so that test cases will not fire until it resolves.
+    return new Promise((resolve, reject)=>{
+      s2sMS.Oauth.getAccessToken(
+        creds.CPAAS_OAUTH_TOKEN,
+        creds.email,
+        creds.password
+      )
+        .then(oauthData => {
+          //console.log('Got access token and identity data -[Get Object By Data Type] ',  oauthData);
+          accessToken = oauthData.access_token;
+          s2sMS.Identity.getMyIdentityData(accessToken).then((idData)=>{
+            s2sMS.Identity.getIdentityDetails(accessToken, idData.user_uuid).then((identityDetails)=>{
+              identityData = identityDetails;
+              resolve();
+            }).catch((e1)=>{
+              reject(e1);
+            });
+          }).catch((e)=>{
+            reject(e);
+          });
+        });
+    });
   });
 
   it("Get Task Templates", function (done) {
@@ -166,21 +181,21 @@ describe("Task", function () {
         responseData.uuid,
         z
       )
-      .then(newData => {
+        .then(newData => {
         //console.log('taskobject: %j', newData)
-        assert(
-          newData.content.tasks.length === 1 &&
+          assert(
+            newData.content.tasks.length === 1 &&
           newData.content.tasks[0].title === "lena"
-        );
-        done();
-        s2sMS.Task.deleteTaskObject(
-          accessToken,
-          newData.uuid
-        );
-      }).catch(e => {
-        console.log("uh oh....", e);
-        done(e);
-      });
+          );
+          done();
+          s2sMS.Task.deleteTaskObject(
+            accessToken,
+            newData.uuid
+          );
+        }).catch(e => {
+          console.log("uh oh....", e);
+          done(e);
+        });
     });
 
   });

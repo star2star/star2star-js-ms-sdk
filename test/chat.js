@@ -1,7 +1,21 @@
-var assert = require("assert");
-var s2sMS = require("../src/index");
-var fs = require("fs");
-var ObjectMerge = require("object-merge");
+//mocha reqruies
+require("babel-polyfill");
+const assert = require("assert");
+const mocha = require("mocha");
+const describe = mocha.describe;
+const it = mocha.it;
+const before = mocha.before;
+
+//test requires
+const fs = require("fs");
+const s2sMS = require("../src/index");
+const Util = require("../src/utilities");
+const logLevel = Util.getLogLevel();
+const logPretty = Util.getLogPretty();
+import Logger from "../src/node-logger";
+const logger = new Logger();
+logger.setLevel(logLevel);
+logger.setPretty(logPretty);
 
 describe("Chat", function() {
   let accessToken;
@@ -137,7 +151,7 @@ describe("Chat", function() {
 
   it("Modify Room Info", function(done) {
     if (!creds.isValid) return done();
-    const newInfo = ObjectMerge({}, test_room);
+    const newInfo = objectMerge({}, test_room);
     newInfo.name = "james";
     newInfo.topic = "test2";
     newInfo.description = "updated description";

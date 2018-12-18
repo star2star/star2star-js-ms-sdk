@@ -1,9 +1,23 @@
+//mocha reqruies
+require("babel-polyfill");
 const assert = require("assert");
-const s2sMS = require("../src/index");
+const mocha = require("mocha");
+const describe = mocha.describe;
+const it = mocha.it;
+const before = mocha.before;
+
+//test requires
 const fs = require("fs");
+const s2sMS = require("../src/index");
+const Util = require("../src/utilities");
+const logLevel = Util.getLogLevel();
+const logPretty = Util.getLogPretty();
+import Logger from "../src/node-logger";
+const logger = new Logger();
+logger.setLevel(logLevel);
+logger.setPretty(logPretty);
 const objectMerge = require("object-merge");
 const util = require("../src/utilities");
-const logger = util.logger;
 const newMeta = util.generateNewMetaData;
 let trace = newMeta();
 let identityData;

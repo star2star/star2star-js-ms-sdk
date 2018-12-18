@@ -1,8 +1,21 @@
+//mocha reqruies
+require("babel-polyfill");
 const assert = require("assert");
-const s2sMS = require("../src/index");
+const mocha = require("mocha");
+const describe = mocha.describe;
+const it = mocha.it;
+const before = mocha.before;
+
+//test requires
 const fs = require("fs");
-const util = require("../src/utilities");
-const logger = util.logger;
+const s2sMS = require("../src/index");
+const Util = require("../src/utilities");
+const logLevel = Util.getLogLevel();
+const logPretty = Util.getLogPretty();
+import Logger from "../src/node-logger";
+const logger = new Logger();
+logger.setLevel(logLevel);
+logger.setPretty(logPretty);
 
 let creds = {
   CPAAS_OAUTH_TOKEN: "Basic your oauth token here",
@@ -65,12 +78,12 @@ describe("Objects MS Test Suite", function() {
       "the description", // description  
       {
         a: 1 //content
+      },
+      identityData.account_uuid, // combined with users creates resource group scoping
+      {
+        rud: [identityData.uuid],
+        d: ["57852400-6650-466b-bdc2-bc128e6ccaca"] //users read, update, delete permissions
       }
-      // identityData.account_uuid, // combined with users creates resource group scoping
-      // {
-      //   rud: [identityData.uuid],
-      //   d: ["57852400-6650-466b-bdc2-bc128e6ccaca"] //users read, update, delete permissions
-      // }
     )
       .then(responseData => {
         logger.info(
@@ -130,7 +143,7 @@ describe("Objects MS Test Suite", function() {
           );
           done(new Error(error));
         });
-    }, util.config.msDelay);
+    }, Util.config.msDelay);
   });
 
   // it("Get Resource Group users", function(done) {
@@ -183,7 +196,7 @@ describe("Objects MS Test Suite", function() {
             );
             done(new Error(error));
           });
-      }, util.config.msDelay); //takes a long time for resource groups to show up as associated with an object
+      }, Util.config.msDelay); //takes a long time for resource groups to show up as associated with an object
     } else {
       done(new Error("userObjectUUID is undefined"));
     }

@@ -2,8 +2,8 @@
 "use strict";
 const config = require("./config.json");
 const uuidv4 = require("uuid/v4");
-const winston = require("winston");
-const logLevel = config.localDebug ? "debug" : "silent";
+import Logger from "./node-logger";
+const logger = new Logger();
 
 /**
  *
@@ -268,17 +268,20 @@ const isBrowser = () => {
 };
 
 const addRequestTrace = (request, trace = {}) => {
-  logger.log("debug", `Request Method: ${request.method}, URI: ${request.uri}`);
+  //defaults to "trace" if MS_LOGLEVEL is undefined.
+  logger.setLevel(getLogLevel());
+  //defaults to "false" if MS_LOGPRETTY is undefined.
+  logger.setPretty(getLogPretty());
 
   const headerKeys = ["id", "trace", "parent"];
 
   headerKeys.forEach(keyName => {
     if (typeof trace === "object" && trace.hasOwnProperty(keyName)) {
       request.headers[keyName] = trace[keyName];
-      logger.log("debug", `Found Trace ${keyName}: ${request.headers[keyName]}`);
+      logger.debug(`Found Trace ${keyName}: ${request.headers[keyName]}`);
     } else {
       request.headers[keyName] = uuidv4();
-      logger.log("debug", `Assigning Trace ${keyName}: ${request.headers[keyName]}`);
+      logger.debug(`Assigning Trace ${keyName}: ${request.headers[keyName]}`);
     }
   });
   if (typeof trace === "object" && trace.hasOwnProperty("debug")) {
@@ -288,16 +291,10 @@ const addRequestTrace = (request, trace = {}) => {
   } else {
     request.headers["debug"] = false;
   }
+  logger.trace(`Microservice Request ${request.method}: ${request.uri}`, request.headers);
+
   return request;
 };
-
-const logger = new (winston.Logger)({
-  level: logLevel,
-  transports: [
-    new winston.transports.Console({colorize: true})
-  ]
-});
-
 
 const generateNewMetaData = (oldMetaData = {}) => {
   let rObject = {};
@@ -324,6 +321,54 @@ const generateNewMetaData = (oldMetaData = {}) => {
   return rObject;
 };
 
+/**
+ *
+ * @description This function sets the log level. Disabled in browsers.
+ * @param {string} logLevel
+ */
+const setLogLevel = (logLevel) => {
+  isBrowser() ? window.s2sJsMsSdk.MS_LOGLEVEL = "silent" : process.env.MS_LOGLEVEL = logLevel;
+};
+
+/**
+ *
+ * @description - This function retreives the currently configured log level. "silent" in browsers.
+ * @returns {string} - log level.
+ */
+const getLogLevel = () => {
+  if(isBrowser()){
+    //winston logger is not configured to run in browser
+    return "silent";
+  } else if (!process.env.hasOwnProperty("MS_LOGLEVEL")){
+    setLogLevel(config.logLevel);
+  }
+  return process.env.MS_LOGLEVEL;
+};
+
+/**
+ *
+ * @description This function sets the log level. Disabled in browsers.
+ * @param {string} logLevel
+ */
+const setLogPretty = (isPretty) => {
+  isBrowser() ? window.s2sJsMsSdk.MS_LOGPRETTY = isPretty : process.env.MS_LOGPRETY = isPretty;
+};
+
+/**
+ *
+ * @description - This function retreives the currently configured log level. "silent" in browsers.
+ * @returns {string} - log level.
+ */
+const getLogPretty = () => {
+  if(isBrowser()){
+    //winston logger is not configured to run in browser
+    return false;
+  } else if (!process.env.hasOwnProperty("MS_LOGPRETTY")){
+    setLogPretty(config.logPretty);
+  }
+  return !process.env.MS_LOGPRETTY || process.env.MS_LOGPRETTY === "false" ? false : true;
+};
+
 module.exports = {
   getEndpoint,
   getAuthHost,
@@ -336,6 +381,9 @@ module.exports = {
   paginate, //TODO Unit test 9/27/18 nh
   isBrowser, //TODO Unit test 10/05/18 nh
   addRequestTrace, //TODO Unit test 10/10/18 nh
-  logger, //TODO Unit test 10/11/18 nh
-  generateNewMetaData
+  generateNewMetaData,
+  setLogLevel,
+  getLogLevel,
+  setLogPretty,
+  getLogPretty
 };

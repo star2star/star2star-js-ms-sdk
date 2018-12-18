@@ -1,6 +1,21 @@
-var assert = require("assert");
-var s2sMS = require("../src/index");
-var fs = require("fs");
+//mocha reqruies
+require("babel-polyfill");
+const assert = require("assert");
+const mocha = require("mocha");
+const describe = mocha.describe;
+const it = mocha.it;
+const before = mocha.before;
+
+//test requires
+const fs = require("fs");
+const s2sMS = require("../src/index");
+const Util = require("../src/utilities");
+const logLevel = Util.getLogLevel();
+const logPretty = Util.getLogPretty();
+import Logger from "../src/node-logger";
+const logger = new Logger();
+logger.setLevel(logLevel);
+logger.setPretty(logPretty);
 
 let creds = {
   CPAAS_OAUTH_TOKEN: "Basic your oauth token here",
@@ -21,51 +36,51 @@ describe("PubSub Test Suite", function () {
       creds = require("./credentials.json");
     }
 
-     // For tests, use the dev msHost
-     s2sMS.setMsHost("https://cpaas.star2starglobal.net");
-     s2sMS.setMSVersion(creds.CPAAS_API_VERSION);
-     s2sMS.setMsAuthHost("https://auth.star2starglobal.net");
-     // get accessToken to use in test cases
-     // Return promise so that test cases will not fire until it resolves.
-     return new Promise((resolve, reject)=>{
-       s2sMS.Oauth.getAccessToken(
-         creds.CPAAS_OAUTH_TOKEN,
-         creds.email,
-         creds.password
-       )
-       .then(oauthData => {
-         //console.log('Got access token and identity data -[Get Object By Data Type] ',  oauthData);
-         accessToken = oauthData.access_token;
-         s2sMS.Identity.getMyIdentityData(accessToken).then((idData)=>{
-           s2sMS.Identity.getIdentityDetails(accessToken, idData.user_uuid).then((identityDetails)=>{
-             identityData = identityDetails;
-             resolve();
-           }).catch((e1)=>{
-             reject(e1);
-           });
-         }).catch((e)=>{
-           reject(e);
-         });
-       });
-     })
+    // For tests, use the dev msHost
+    s2sMS.setMsHost("https://cpaas.star2starglobal.net");
+    s2sMS.setMSVersion(creds.CPAAS_API_VERSION);
+    s2sMS.setMsAuthHost("https://auth.star2starglobal.net");
+    // get accessToken to use in test cases
+    // Return promise so that test cases will not fire until it resolves.
+    return new Promise((resolve, reject)=>{
+      s2sMS.Oauth.getAccessToken(
+        creds.CPAAS_OAUTH_TOKEN,
+        creds.email,
+        creds.password
+      )
+        .then(oauthData => {
+          //console.log('Got access token and identity data -[Get Object By Data Type] ',  oauthData);
+          accessToken = oauthData.access_token;
+          s2sMS.Identity.getMyIdentityData(accessToken).then((idData)=>{
+            s2sMS.Identity.getIdentityDetails(accessToken, idData.user_uuid).then((identityDetails)=>{
+              identityData = identityDetails;
+              resolve();
+            }).catch((e1)=>{
+              reject(e1);
+            });
+          }).catch((e)=>{
+            reject(e);
+          });
+        });
+    });
   });
  
   it("List user subscriptions", function (done) {
     if (!creds.isValid) return done();
     s2sMS.Pubsub.listUserSubscriptions(
-        "0904f8d5-627f-4ff5-b34d-68dc96487b1e",
-        accessToken
-      ).then(responseData => {
-        //console.log(responseData);
-        // TODO other asserts?
-        assert(
-          responseData.hasOwnProperty('items') &&
-          responseData.hasOwnProperty('metadata')
-        );
-        done();
-      })
+      "0904f8d5-627f-4ff5-b34d-68dc96487b1e",
+      accessToken
+    ).then(responseData => {
+      //console.log(responseData);
+      // TODO other asserts?
+      assert(
+        responseData.hasOwnProperty("items") &&
+          responseData.hasOwnProperty("metadata")
+      );
+      done();
+    })
       .catch((error) => {
-        console.log('Error list user subscriptions', error);
+        console.log("Error list user subscriptions", error);
         done(new Error(error));
       });
   });
@@ -75,30 +90,30 @@ describe("PubSub Test Suite", function () {
   it("add subscription", function (done) {
     if (!creds.isValid) return done();
     const subscriptions = {
-        identity: ["identity_property_change"]
-    }
+      identity: ["identity_property_change"]
+    };
     const criteria = [{
-       user_uuid: "0904f8d5-627f-4ff5-b34d-68dc96487b1e"
-    }]
+      user_uuid: "0904f8d5-627f-4ff5-b34d-68dc96487b1e"
+    }];
 
     s2sMS.Pubsub.addSubscription( 
-        "0904f8d5-627f-4ff5-b34d-68dc96487b1e",
-        "47113ee7-ddbe-4388-aade-717c36ec17c7",
-        "http://localhost:8001/foo",
-        [],
-        criteria,
-        subscriptions, 
-        accessToken
-      ).then(responseData => {
-        //console.log(responseData);
-        // TODO other asserts?
-        sub_uuid = responseData.subscription_uuid;
+      "0904f8d5-627f-4ff5-b34d-68dc96487b1e",
+      "47113ee7-ddbe-4388-aade-717c36ec17c7",
+      "http://localhost:8001/foo",
+      [],
+      criteria,
+      subscriptions, 
+      accessToken
+    ).then(responseData => {
+      //console.log(responseData);
+      // TODO other asserts?
+      sub_uuid = responseData.subscription_uuid;
 
-        assert(responseData.hasOwnProperty('subscription_uuid'), "add subscription failed ... no subscription uuid found" );
-        done();
-      })
+      assert(responseData.hasOwnProperty("subscription_uuid"), "add subscription failed ... no subscription uuid found" );
+      done();
+    })
       .catch((error) => {
-        console.log('Error adding subscription', error);
+        console.log("Error adding subscription", error);
         done(new Error(error));
       });
   });
@@ -106,15 +121,15 @@ describe("PubSub Test Suite", function () {
   it("delete subscription", function (done) {
     if (!creds.isValid) return done();
     s2sMS.Pubsub.deleteSubscription( 
-        sub_uuid, 
-        accessToken
-      ).then(responseData => {
-        //console.log(responseData);
-        assert(true );
-        done();
-      })
+      sub_uuid, 
+      accessToken
+    ).then(responseData => {
+      //console.log(responseData);
+      assert(true );
+      done();
+    })
       .catch((error) => {
-        console.log('Error deleting subscription', error);
+        console.log("Error deleting subscription", error);
         done(new Error(error));
       });
   });

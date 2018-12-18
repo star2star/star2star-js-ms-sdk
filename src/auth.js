@@ -4,7 +4,6 @@ const Util = require("./utilities");
 const request = require("request-promise");
 const Groups = require("./groups");
 const objectMerge = require("object-merge");
-const logger = Util.logger;
 
 /**
  * @async
@@ -176,7 +175,6 @@ const assignScopedRoleToUserGroup = async (
       json: true
     };
     Util.addRequestTrace(requestOptions, trace);
-    logger.info(`Scoped Role Request ${JSON.stringify(requestOptions.body, null, "\t")}`);
     return await new Promise(function(resolve, reject) {
       request(requestOptions)
         .then(function(responseData) {

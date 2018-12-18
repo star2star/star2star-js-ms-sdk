@@ -1,8 +1,21 @@
+//mocha reqruies
+require("babel-polyfill");
 const assert = require("assert");
-const s2sMS = require("../src/index");
+const mocha = require("mocha");
+const describe = mocha.describe;
+const it = mocha.it;
+const before = mocha.before;
+
+//test requires
 const fs = require("fs");
-const util = require("../src/utilities");
-const logger = util.logger;
+const s2sMS = require("../src/index");
+const Util = require("../src/utilities");
+const logLevel = Util.getLogLevel();
+const logPretty = Util.getLogPretty();
+import Logger from "../src/node-logger";
+const logger = new Logger();
+logger.setLevel(logLevel);
+logger.setPretty(logPretty);
 
 let creds = {
   CPAAS_OAUTH_TOKEN: "Basic your oauth token here",
@@ -41,13 +54,13 @@ describe("Oauth MS", function() {
     )
       .then(oauthData => {
         accessToken = oauthData.access_token;
-        logger.info(
-          `Generate Access Token RESPONSE: ${JSON.stringify(
-            oauthData,
-            null,
-            "\t"
-          )}`
-        );
+        // logger.info(
+        //   `Generate Access Token RESPONSE: ${JSON.stringify(
+        //     oauthData,
+        //     null,
+        //     "\t"
+        //   )}`
+        // );
         assert(
           oauthData.hasOwnProperty("access_token") &&
             oauthData.hasOwnProperty("refresh_token") &&
@@ -56,9 +69,9 @@ describe("Oauth MS", function() {
         done();
       })
       .catch(error => {
-        logger.error(
-          `Generate Basic Token ERROR: ${JSON.stringify(error, null, "\t")}`
-        );
+        // logger.error(
+        //   `Generate Basic Token ERROR: ${JSON.stringify(error, null, "\t")}`
+        // );
         done(new Error(error));
       });
   });
@@ -80,9 +93,9 @@ describe("Oauth MS", function() {
         )
           .then(refreshData => {
             const rData = refreshData;
-            logger.info(
-              `Refresh Token RESPONSE: ${JSON.stringify(refreshData, null, "\t")}`
-            );
+            // logger.info(
+            //   `Refresh Token RESPONSE: ${JSON.stringify(refreshData, null, "\t")}`
+            // );
             assert(
               rData.hasOwnProperty("access_token") &&
                 rData.hasOwnProperty("refresh_token") &&
@@ -91,14 +104,14 @@ describe("Oauth MS", function() {
             done();
           })
           .catch(error => {
-            logger.error(
-              `Refresh Token ERROR: ${JSON.stringify(error, null, "\t")}`
-            );
+            // logger.error(
+            //   `Refresh Token ERROR: ${JSON.stringify(error, null, "\t")}`
+            // );
             done(new Error(error));
           });
       })
       .catch(error => {
-        console.log("Failed to get access token [refresh token]", error);
+        //console.log("Failed to get access token [refresh token]", error);
         done(new Error(error));
       });
   });
@@ -107,16 +120,16 @@ describe("Oauth MS", function() {
     if (!creds.isValid) return done();
     s2sMS.Oauth.getClientToken(creds.CPAAS_OAUTH_TOKEN)
       .then(oauthData => {
-        logger.info(
-          `Get Client Token RESPONSE: ${JSON.stringify(oauthData, null, "\t")}`
-        );
+        // logger.info(
+        //   `Get Client Token RESPONSE: ${JSON.stringify(oauthData, null, "\t")}`
+        // );
         assert(oauthData.hasOwnProperty("access_token"));
         done();
       })
       .catch(error => {
-        logger.error(
-          `Get Client Token RESPONSE: ${JSON.stringify(error, null, "\t")}`
-        );
+        // logger.error(
+        //   `Get Client Token RESPONSE: ${JSON.stringify(error, null, "\t")}`
+        // );
         done(new Error(error));
       });
   });
@@ -128,12 +141,12 @@ describe("Oauth MS", function() {
         userUUID = identityData.user_uuid;
         const name = "Unit-Test";
         const description = "Unit Test Application";
-        logger.info(identityData);
+        // logger.info(identityData);
         s2sMS.Oauth.createClientApp(accessToken, userUUID, name, description)
           .then(response => {
-            logger.info(
-              `Create Client Application RESPONSE: ${JSON.stringify(response, null, "\t")}`
-            );
+            // logger.info(
+            //   `Create Client Application RESPONSE: ${JSON.stringify(response, null, "\t")}`
+            // );
             assert(
               response.hasOwnProperty("uuid") &&
                 response.hasOwnProperty("name") &&
@@ -149,9 +162,9 @@ describe("Oauth MS", function() {
             done();
           })
           .catch(error => {
-            logger.error(
-              `Create Client Application ERROR: ${JSON.stringify(error, null, "\t")}`
-            );
+            // logger.error(
+            //   `Create Client Application ERROR: ${JSON.stringify(error, null, "\t")}`
+            // );
             done(new Error(error));
           });
       })
@@ -165,32 +178,32 @@ describe("Oauth MS", function() {
     setTimeout(() => {
       s2sMS.Oauth.scopeClientApp(accessToken, clientUUID)
         .then(response => {
-          logger.info(
-            `Scope Client App RESPONSE: ${JSON.stringify(response, null, "\t")}`
-          );
+          // logger.info(
+          //   `Scope Client App RESPONSE: ${JSON.stringify(response, null, "\t")}`
+          // );
           assert(response.status === "ok");
           done();
         })
         .catch(error => {
-          logger.error(
-            `Scope Client App  ERROR: ${JSON.stringify(error, null, "\t")}`
-          );
+          // logger.error(
+          //   `Scope Client App  ERROR: ${JSON.stringify(error, null, "\t")}`
+          // );
           done(new Error(error));
         });
-    }, util.config.msDelay);
+    }, Util.config.msDelay);
   });
 
   it("Generate Basic Token", function(done) {
     if (!creds.isValid) return done();
     s2sMS.Oauth.generateBasicToken(publicID, secret)
       .then(response => {
-        logger.info(
-          `Generate Basic Token RESPONSE: ${JSON.stringify(
-            response,
-            null,
-            "\t"
-          )}`
-        );
+        // logger.info(
+        //   `Generate Basic Token RESPONSE: ${JSON.stringify(
+        //     response,
+        //     null,
+        //     "\t"
+        //   )}`
+        // );
         assert(
           Buffer.from(response, "base64").toString() === `${publicID}:${secret}`
         );
@@ -198,9 +211,9 @@ describe("Oauth MS", function() {
         done();
       })
       .catch(error => {
-        logger.error(
-          `Generate Basic Tokent RESPONSE: ${JSON.stringify(error, null, "\t")}`
-        );
+        // logger.error(
+        //   `Generate Basic Tokent RESPONSE: ${JSON.stringify(error, null, "\t")}`
+        // );
         done(new Error(error));
       });
   });
@@ -210,8 +223,8 @@ describe("Oauth MS", function() {
     setTimeout(() => {
       s2sMS.Oauth.getClientToken(clientBasicToken)
         .then(response => {
-          logger.info(
-            `Get Client Access Token RESPONSE: ${JSON.stringify(response, null, "\t")}`);
+          // logger.info(
+          //   `Get Client Access Token RESPONSE: ${JSON.stringify(response, null, "\t")}`);
           assert(
             response.hasOwnProperty("access_token") &&
             response.hasOwnProperty("token_type") &&
@@ -220,26 +233,26 @@ describe("Oauth MS", function() {
           clientAccessToken = response.access_token;
           s2sMS.Lambda.listLambdas(clientAccessToken)
             .then(identity => {
-              logger.info(
-                `Test Client Access Token RESPONSE: ${JSON.stringify(identity, null, "\t")}`
-              );
+              // logger.info(
+              //   `Test Client Access Token RESPONSE: ${JSON.stringify(identity, null, "\t")}`
+              // );
               //no assert here just checking we received a resolved promise
               done();
             })
             .catch(identError => {
-              logger.error(
-                `Test Client Access Token ERROR: ${JSON.stringify(identError, null, "\t")}`
-              );
+              // logger.error(
+              //   `Test Client Access Token ERROR: ${JSON.stringify(identError, null, "\t")}`
+              // );
               done(new Error(identError));
             });
         })
         .catch(error => {
-          logger.error(
-            `Get Client Access Token ERROR: ${JSON.stringify(error, null, "\t")}`
-          );
+          // logger.error(
+          //   `Get Client Access Token ERROR: ${JSON.stringify(error, null, "\t")}`
+          // );
           done(new Error(error));
         });
-    }, util.config.msDelay);
+    }, Util.config.msDelay);
   });
 
   it("List Access Tokens", function(done) {
@@ -255,9 +268,9 @@ describe("Oauth MS", function() {
         }
       )
         .then(response => {
-          logger.info(
-            `List Access Tokens RESPONSE: ${JSON.stringify(response, null, "\t")}`
-          );
+          // logger.info(
+          //   `List Access Tokens RESPONSE: ${JSON.stringify(response, null, "\t")}`
+          // );
           assert(
             response.hasOwnProperty("items") &&
             response.items.length > 0 &&
@@ -266,12 +279,12 @@ describe("Oauth MS", function() {
           done();
         })
         .catch(error => {
-          logger.error(
-            `List Access Tokens ERROR: ${JSON.stringify(error, null, "\t")}`
-          );
+          // logger.error(
+          //   `List Access Tokens ERROR: ${JSON.stringify(error, null, "\t")}`
+          // );
           done(new Error(error));
         });
-    }, util.config.msDelay);
+    }, Util.config.msDelay);
   });
 
   it("Validate Access Token", function(done) {
@@ -281,70 +294,70 @@ describe("Oauth MS", function() {
     setTimeout(() => {
       s2sMS.Oauth.validateToken(accessToken, clientAccessToken)
         .then(response => {
-          logger.info(
-            `Validate Access Token RESPONSE: ${JSON.stringify(response, null, "\t")}`
-          );
+          // logger.info(
+          //   `Validate Access Token RESPONSE: ${JSON.stringify(response, null, "\t")}`
+          // );
           assert(response.status === "ok");
           done();
         })
         .catch(error => {
-          logger.error(
-            `Validate Access Token ERROR: ${JSON.stringify(error, null, "\t")}`
-          );
+          // logger.error(
+          //   `Validate Access Token ERROR: ${JSON.stringify(error, null, "\t")}`
+          // );
           done(new Error(error));
         });
-    }, util.config.msDelay);
+    }, Util.config.msDelay);
   });
 
-  // it("Invalidate Access Token", function(done) {
-  //   if (!creds.isValid) return done();
-  //   setTimeout(() => {
-  //     s2sMS.Oauth.invalidateToken(accessToken, clientAccessToken)
-  //       .then(response => {
-  //         logger.info(
-  //           `Invalidate Access Token RESPONSE: ${JSON.stringify(response, null, "\t")}`
-  //         );
-  //         assert(response.status === "ok");
-  //         done();
-  //       })
-  //       .catch(error => {
-  //         logger.error(
-  //           `Invalidate Access Token ERROR: ${JSON.stringify(error, null, "\t")}`
-  //         );
-  //         done(new Error(error));
-  //       });
-  //   }, util.config.msDelay);
-  // });
+  it("Invalidate Access Token", function(done) {
+    if (!creds.isValid) return done();
+    setTimeout(() => {
+      s2sMS.Oauth.invalidateToken(accessToken, clientAccessToken)
+        .then(response => {
+          // logger.info(
+          //   `Invalidate Access Token RESPONSE: ${JSON.stringify(response, null, "\t")}`
+          // );
+          assert(response.status === "ok");
+          done();
+        })
+        .catch(error => {
+          // logger.error(
+          //   `Invalidate Access Token ERROR: ${JSON.stringify(error, null, "\t")}`
+          // );
+          done(new Error(error));
+        });
+    }, Util.config.msDelay);
+  });
 
-  // it("List Access Tokens after Invalidation", function(done) {
-  //   if (!creds.isValid) return done();
-  //   setTimeout(() => {
-  //     s2sMS.Oauth.listClientTokens(
-  //       accessToken,
-  //       0, //offest
-  //       10, //limit
-  //       {
-  //         token_type: "client",
-  //         user_name: creds.email
-  //       }
-  //     )
-  //       .then(response => {
-  //         logger.info(
-  //           `List Access Tokens after Invalidation RESPONSE: ${JSON.stringify(response, null, "\t")}`
-  //         );
-  //         // assert(
-  //         //   response.hasOwnProperty("items") &&
-  //         //   response.items.length > 0 &&
-  //         //   response.items[0].hasOwnProperty("access_token")
-  //         // );
-  //         done();
-  //       })
-  //       .catch(error => {
-  //         logger.error(
-  //           `List Access Tokens after Invalidation ERROR: ${JSON.stringify(error, null, "\t")}`
-  //         );
-  //         done(new Error(error));
-  //       });
-  //   }, util.config.msDelay);
-  // });
+  it("List Access Tokens after Invalidation", function(done) {
+    if (!creds.isValid) return done();
+    setTimeout(() => {
+      s2sMS.Oauth.listClientTokens(
+        accessToken,
+        0, //offest
+        10, //limit
+        {
+          token_type: "client",
+          user_name: creds.email
+        }
+      )
+        .then(response => {
+          // logger.info(
+          //   `List Access Tokens after Invalidation RESPONSE: ${JSON.stringify(response, null, "\t")}`
+          // );
+          // assert(
+          //   response.hasOwnProperty("items") &&
+          //   response.items.length > 0 &&
+          //   response.items[0].hasOwnProperty("access_token")
+          // );
+          done();
+        })
+        .catch(error => {
+          // logger.error(
+          //   `List Access Tokens after Invalidation ERROR: ${JSON.stringify(error, null, "\t")}`
+          // );
+          done(new Error(error));
+        });
+    }, Util.config.msDelay);
+  });
 });

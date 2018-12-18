@@ -35,7 +35,8 @@
     "prod": {}
   },
   "msDelay": 3000,
-  "localDebug": false,
+  "logLevel": "trace",
+  "logPretty": false,
   "msDebug": false,
   "env": "dev"
 }

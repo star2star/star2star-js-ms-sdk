@@ -9,7 +9,6 @@ var Util = require("./utilities");
 var request = require("request-promise");
 var Groups = require("./groups");
 var objectMerge = require("object-merge");
-var logger = Util.logger;
 
 /**
  * @async
@@ -199,8 +198,7 @@ var assignScopedRoleToUserGroup = function () {
             };
 
             Util.addRequestTrace(requestOptions, trace);
-            logger.info("Scoped Role Request " + JSON.stringify(requestOptions.body, null, "\t"));
-            _context2.next = 9;
+            _context2.next = 8;
             return new Promise(function (resolve, reject) {
               request(requestOptions).then(function (responseData) {
                 responseData.statusCode === 204 ? resolve({ status: "ok" }) : reject({ status: "failed" });
@@ -209,20 +207,20 @@ var assignScopedRoleToUserGroup = function () {
               });
             });
 
-          case 9:
+          case 8:
             return _context2.abrupt("return", _context2.sent);
 
-          case 12:
-            _context2.prev = 12;
+          case 11:
+            _context2.prev = 11;
             _context2.t0 = _context2["catch"](0);
             return _context2.abrupt("return", Promise.reject(_context2.t0));
 
-          case 15:
+          case 14:
           case "end":
             return _context2.stop();
         }
       }
-    }, _callee2, undefined, [[0, 12]]);
+    }, _callee2, undefined, [[0, 11]]);
   }));
 
   return function assignScopedRoleToUserGroup() {

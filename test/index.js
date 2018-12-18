@@ -1,52 +1,55 @@
-var assert = require("assert");
-var s2sMS = require("../src/index");
-var fs = require("fs");
-
-let creds = {
-  CPAAS_OAUTH_TOKEN: "Basic your oauth token here",
-  CPAAS_API_VERSION: "v1",
-  email: "email@email.com",
-  password: "pwd",
-  isValid: false
-};
+//mocha reqruies
+require("babel-polyfill");
+const assert = require("assert");
+const mocha = require("mocha");
+const describe = mocha.describe;
+const beforeEach=mocha.beforeEach;
+const it = mocha.it;
+//test requires
+const s2sMS = require("../src/index");
+const Config = require("../src/config.json");
+const Util = require("../src/utilities");
+const logLevel = Util.getLogLevel();
+const logPretty = Util.getLogPretty();
+import Logger from "../src/node-logger";
+const logger = new Logger();
+logger.setLevel(logLevel);
+logger.setPretty(logPretty);
 
 beforeEach(function () {
   s2sMS.setMsHost("https://cpaas.star2starglobal.net");
-  // file system uses full path so will do it like this
-  if (fs.existsSync("./test/credentials.json")) {
-    // do not need test folder here
-    creds = require("./credentials.json");
-  }
 });
 
 describe("MS SDK Index", function () {
   it("s2s-ms module exports", function (done) {
     const msKeys = [ 
-      'Accounts',
-      'Lambda',
-      'Identity',
-      'Messaging',
-      'Objects',
-      'Util',
-      'Task',
-      'setMsHost',
-      'getMsHost',
-      'setMsAuthHost',
-      'setApplicationKey',
-      'getApplicationKey',
-      'Groups',
-      'ShortUrls',
-      'Auth',
-      'Oauth',
-      'Chat',
-      'Contacts',
-      'Media',
-      'Pubsub',
-      'setMSVersion',
-      'Workflow',
-      'Email',
-      'ResourceGroups',
-      'Scheduler'
+      "Accounts",
+      "Lambda",
+      "Identity",
+      "Messaging",
+      "Objects",
+      "Util",
+      "Task",
+      "setMsHost",
+      "getMsHost",
+      "setMsAuthHost",
+      "setApplicationKey",
+      "getApplicationKey",
+      "setEnv",
+      "getEnv",
+      "Groups",
+      "ShortUrls",
+      "Auth",
+      "Oauth",
+      "Chat",
+      "Contacts",
+      "Media",
+      "Pubsub",
+      "setMSVersion",
+      "Workflow",
+      "Email",
+      "ResourceGroups",
+      "Scheduler"
     ];
     assert.deepEqual(Object.keys(s2sMS), msKeys);
     done();
@@ -69,4 +72,13 @@ describe("MS SDK Index", function () {
     assert.equal(s2sMS.getMsHost(), "https://cpaas.star2star.com/api");
     done();
   });
+ 
+  it("set/get env", function (done) {
+    const env = s2sMS.getEnv();
+    assert.equal(env, Config.env);
+    s2sMS.setEnv("prod");
+    assert.equal(s2sMS.getEnv(), "prod");
+    done();
+  });
+
 });
