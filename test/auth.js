@@ -16,6 +16,23 @@ import Logger from "../src/node-logger";
 const logger = new Logger();
 logger.setLevel(logLevel);
 logger.setPretty(logPretty);
+const objectMerge = require("object-merge");
+const newMeta = Util.generateNewMetaData;
+let trace = newMeta();
+
+//utility function to simplify test code
+const mochaAsync = (func, name) => {
+  return async () => {
+    try {
+      const response = await func(name);
+      logger.debug(name, response);
+      return response; 
+    } catch (error) {
+      //mocha will log out the error
+      return Promise.reject(error);
+    }
+  };
+};
 
 let creds = {
   CPAAS_OAUTH_TOKEN: "Basic your oauth token here",
@@ -25,104 +42,143 @@ let creds = {
   isValid: false
 };
 
-describe("Auth MS Test Suite", function() {
-  let accessToken, identityData, userGroupUUID, role, roleBody;
-  let permissions = [];
+describe("Objects MS Test Suite", function() {
+  let accessToken,
+    identityData,
+    permissions,
+    userGroupUUID,
+    role,
+    roleBody;
 
-  before(function() {
-    // file system uses full path so will do it like this
-    if (fs.existsSync("./test/credentials.json")) {
-      // do not need test folder here
-      creds = require("./credentials.json");
-    }
+  before(async () => {
+    try {
+      // file system uses full path so will do it like this
+      if (fs.existsSync("./test/credentials.json")) {
+        // do not need test folder here
+        creds = require("./credentials.json");
+      }
 
-    // For tests, use the dev msHost
-    s2sMS.setMsHost("https://cpaas.star2starglobal.net");
-    s2sMS.setMSVersion(creds.CPAAS_API_VERSION);
-    s2sMS.setMsAuthHost("https://auth.star2starglobal.net");
-    // get accessToken to use in test cases
-    // Return promise so that test cases will not fire until it resolves.
-    return new Promise((resolve, reject) => {
-      s2sMS.Oauth.getAccessToken(
+      // For tests, use the dev msHost
+      s2sMS.setMsHost("https://cpaas.star2starglobal.net");
+      s2sMS.setMSVersion(creds.CPAAS_API_VERSION);
+      s2sMS.setMsAuthHost("https://auth.star2starglobal.net");
+      // get accessToken to use in test cases
+      // Return promise so that test cases will not fire until it resolves.
+      const oauthData = await s2sMS.Oauth.getAccessToken(
         creds.CPAAS_OAUTH_TOKEN,
         creds.email,
         creds.password
-      ).then(oauthData => {
-        //console.log('Got access token and identity data -[Get Object By Data Type] ',  oauthData);
-        accessToken = oauthData.access_token;
-        s2sMS.Identity.getMyIdentityData(accessToken)
-          .then(idData => {
-            s2sMS.Identity.getIdentityDetails(accessToken, idData.user_uuid)
-              .then(identityDetails => {
-                identityData = identityDetails;
-                resolve();
-              })
-              .catch(e1 => {
-                reject(e1);
-              });
-          })
-          .catch(e => {
-            reject(e);
-          });
-      });
-    });
+      );
+      accessToken = oauthData.access_token;
+      const idData = await s2sMS.Identity.getMyIdentityData(accessToken);
+      identityData = await s2sMS.Identity.getIdentityDetails(accessToken, idData.user_uuid);
+    } catch (error){
+      return Promise.reject(error);
+    }
   });
 
-  it("List Permissions", function(done) {
-    if (!creds.isValid) {
-      const err = new Error("Valid credentials must be provided");
-      return done(err);
-    }
+  it("List Permissions", mochaAsync(async () => {
+    if (!creds.isValid) throw new Error("Invalid Credentials");
+    const filters = {
+      "name": "account"
+    };
+    trace = objectMerge({}, trace, Util.generateNewMetaData(trace));
+    const response = await s2sMS.Auth.listPermissions(
+      accessToken,
+      0, // offset
+      2, // limit
+      filters,
+      trace
+    );
+    permissions = response.items;
+    assert(
+      response.hasOwnProperty("items") &&
+      response.items[0].hasOwnProperty("action")
+    );
+    return response;
+  },"List Permissions"));
 
-    const filters = [];
-    filters["name"] = "account";
-
-    s2sMS.Auth.listPermissions(accessToken, 0, 2, filters)
-      .then(response => {
-        //console.log('LIST PERMISSIONS RESPONSE', response);
-        logger.info(`List Permissions RESPONSE: ${JSON.stringify(response, null, "\t")}`);
-        permissions = response.items;
-        assert(
-          response.hasOwnProperty("items") &&
-            response.items[0].hasOwnProperty("action")
-        );
-        done();
-      })
-      .catch(error => {
-        logger.error(`List Permissions ERROR: ${JSON.stringify(error, null, "\t")}`);
-        done(new Error(error));
-      });
-  });
-
-  it("Create User Group", function(done) {
-    if (!creds.isValid) {
-      const err = new Error("Valid credentials must be provided");
-      return done(err);
-    }
-
+  it("Create User Group", mochaAsync(async () => {
+    if (!creds.isValid) throw new Error("Invalid Credentials");
     const body = {
       name: "Unit-Test",
       users: [identityData.uuid],
       description: "A test group"
     };
+    trace = objectMerge({}, trace, Util.generateNewMetaData(trace));
+    const response = await s2sMS.Auth.createUserGroup(
+      accessToken,
+      identityData.account_uuid,
+      body,
+      trace
+    );
+    userGroupUUID = response.uuid;
+    assert(
+      response.hasOwnProperty("uuid") &&
+        response.members[0].uuid === identityData.uuid &&
+        response.account_uuid === identityData.account_uuid
+    );
+    return response;
+  },"Create User Group"));
 
-    s2sMS.Auth.createUserGroup(accessToken, identityData.account_uuid, body)
-      .then(response => {
-        logger.info(`Create User Group RESPONSE: ${JSON.stringify(response, null, "\t")}`);
-        userGroupUUID = response.uuid;
-        assert(
-          response.hasOwnProperty("uuid") &&
-            response.members[0].uuid === identityData.uuid &&
-            response.account_uuid === identityData.account_uuid
-        );
-        done();
-      })
-      .catch(error => {
-        logger.error(`Create User Group ERROR: ${JSON.stringify(error, null, "\t")}`);
-        done(new Error(error));
-      });
-  });
+  it("List User Groups", mochaAsync(async () => {
+    if (!creds.isValid) throw new Error("Invalid Credentials");
+    const filters = {
+      "name": "Unit-Test",
+      "description": "A test group"
+    };
+    trace = objectMerge({}, trace, Util.generateNewMetaData(trace));
+    const response = await s2sMS.Auth.listUserGroups(
+      accessToken,
+      0, //offset
+      10, //limit
+      filters,
+      trace
+    );
+    assert(
+      response.items[0].name === filters.name &&
+      response.items[0].description === filters.description
+    );
+    return response;
+  },"List User Groups"));
 
+  it("Modify Group", mochaAsync(async () => {
+    if (!creds.isValid) throw new Error("Invalid Credentials");
+    const body = {
+      "description": "A modified test group"
+    };
+    trace = objectMerge({}, trace, Util.generateNewMetaData(trace));
+    const response = await s2sMS.Auth.modifyUserGroup(
+      accessToken,
+      userGroupUUID,
+      body,
+      trace
+    );
+    assert(1 === 1);
+    return response;
+  },"Modify Group"));
+
+  it("List User Groups After Modify", mochaAsync(async () => {
+    if (!creds.isValid) throw new Error("Invalid Credentials");
+    const filters = {
+      "name": "Unit-Test",
+      "description": "A modified test group"
+    };
+    trace = objectMerge({}, trace, Util.generateNewMetaData(trace));
+    const response = await s2sMS.Auth.listUserGroups(
+      accessToken,
+      0, //offset
+      10, //limit
+      filters,
+      trace
+    );
+    assert(
+      response.items[0].name === filters.name &&
+      response.items[0].description === filters.description
+    );
+    return response;
+  },"List User Groups After Modify"));
+  
   it("Create Role", function(done) {
     if (!creds.isValid) {
       const err = new Error("Valid credentials must be provided");
@@ -480,58 +536,18 @@ describe("Auth MS Test Suite", function() {
   //     });
   // });
 
-  it("Modify User Groups", function(done) {
-    if (!creds.isValid) {
-      const err = new Error("Valid credentials must be provided");
-      return done(err);
-    }
-    const body = {
-      "description": "new description"
-    };
-    s2sMS.Auth.modifyUserGroup(accessToken, userGroupUUID, body)
-      .then(response => {
-        logger.info(`Modify User Groups RESPONSE: ${JSON.stringify(response, null, "\t")}`);
-        assert(
-          response.hasOwnProperty("description") &&
-          response.description === body.description
-        );
-        done();
-      })
-      .catch(error => {
-        logger.error(`Modify User Groups ERROR: ${JSON.stringify(error, null, "\t")}`);
-        done(new Error(error));
-      });
-  });
+  it("Delete User Group", mochaAsync(async () => {
+    if (!creds.isValid) throw new Error("Invalid Credentials");
+    trace = objectMerge({}, trace, Util.generateNewMetaData(trace));
+    const response = await s2sMS.Groups.deleteGroup(accessToken, userGroupUUID, trace);
+    assert(response.status === "ok");
+    return response;
+  },"Delete User Groups"));
 
-  it("List User Groups", function(done) {
-    if (!creds.isValid) {
-      const err = new Error("Valid credentials must be provided");
-      return done(err);
-    }
-    const filters = [];
-    filters["name"] = "Unit-Test";
-
-    s2sMS.Auth.listUserGroups(accessToken, 0, 10, filters)
-      .then(response => {
-        logger.info(`List User Groups RESPONSE: ${JSON.stringify(response, null, "\t")}`);
-        assert(
-          response.hasOwnProperty("items") &&
-            response.items[0].name === filters["name"]
-        );
-        //Cleanup
-        s2sMS.Groups.deleteGroup(accessToken, userGroupUUID)
-          .then((response) => {
-            logger.info(`List User Groups cleanup RESPONSE: ${JSON.stringify(response, null, "\t")}`);
-            done();
-          })
-          .catch(error => {
-            logger.error(`List User Groups cleanup ERROR: ${JSON.stringify(error, null, "\t")}`);
-            done(new Error(error));
-          });
-      })
-      .catch(error => {
-        logger.error(`List User Groups ERROR: ${JSON.stringify(error, null, "\t")}`);
-        done(new Error(error));
-      });
-  });
+  // it("change me", mochaAsync(async () => {
+  //   if (!creds.isValid) throw new Error("Invalid Credentials");
+  //   const response = await somethingAsync();
+  //   assert(1 === 1);
+  //   return response;
+  // },"change me"));
 });

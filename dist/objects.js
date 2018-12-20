@@ -3,12 +3,22 @@
 
 var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
 
+var _nodeLogger = require("./node-logger");
+
+var _nodeLogger2 = _interopRequireDefault(_nodeLogger);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
 function _asyncToGenerator(fn) { return function () { var gen = fn.apply(this, arguments); return new Promise(function (resolve, reject) { function step(key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { return Promise.resolve(value).then(function (value) { step("next", value); }, function (err) { step("throw", err); }); } } return step("next"); }); }; }
 
-var util = require("./utilities");
+var Util = require("./utilities");
 var request = require("request-promise");
 var objectMerge = require("object-merge");
 var ResourceGroups = require("./resourceGroups");
+
+var logger = new _nodeLogger2.default();
+logger.setLevel(Util.getLogLevel());
+logger.setPretty(Util.getLogPretty());
 
 /**
  * @async
@@ -31,7 +41,7 @@ var getByType = function getByType() {
   var loadContent = arguments.length > 4 && arguments[4] !== undefined ? arguments[4] : "false";
   var trace = arguments.length > 5 && arguments[5] !== undefined ? arguments[5] : {};
 
-  var MS = util.getEndpoint("objects");
+  var MS = Util.getEndpoint("objects");
 
   var requestOptions = {
     method: "GET",
@@ -39,11 +49,11 @@ var getByType = function getByType() {
     headers: {
       Authorization: "Bearer " + accessToken,
       "Content-type": "application/json",
-      "x-api-version": "" + util.getVersion()
+      "x-api-version": "" + Util.getVersion()
     },
     json: true
   };
-  util.addRequestTrace(requestOptions, trace);
+  Util.addRequestTrace(requestOptions, trace);
   return request(requestOptions);
 };
 
@@ -73,14 +83,14 @@ var getDataObjects = function () {
       while (1) {
         switch (_context.prev = _context.next) {
           case 0:
-            MS = util.getEndpoint("objects");
+            MS = Util.getEndpoint("objects");
             requestOptions = {
               method: "GET",
               uri: MS + "/users/" + userUUID + "/allowed-objects",
               headers: {
                 Authorization: "Bearer " + accessToken,
                 "Content-type": "application/json",
-                "x-api-version": "" + util.getVersion()
+                "x-api-version": "" + Util.getVersion()
               },
               qs: {
                 load_content: loadContent
@@ -88,16 +98,20 @@ var getDataObjects = function () {
               json: true
             };
 
-            util.addRequestTrace(requestOptions, trace);
-            //here we determine if we will need to handle aggrigation, pagination, and filtering or send it to the microservice
+            Util.addRequestTrace(requestOptions, trace);
+            _context.next = 5;
+            return new Promise(function (resolve) {
+              return setTimeout(resolve, Util.config.msDelay);
+            });
 
+          case 5:
             if (!filters) {
-              _context.next = 39;
+              _context.next = 46;
               break;
             }
 
             if (!((typeof filters === "undefined" ? "undefined" : _typeof(filters)) !== "object")) {
-              _context.next = 6;
+              _context.next = 8;
               break;
             }
 
@@ -106,7 +120,7 @@ var getDataObjects = function () {
               message: "ERROR: filters is not an object"
             }));
 
-          case 6:
+          case 8:
 
             // sort the filters into those the API handles and those handled by the SDK.
             apiFilters = ["content_type", "description", "name", "sort", "type"];
@@ -119,72 +133,74 @@ var getDataObjects = function () {
                 sdkFilters[filter] = filters[filter];
               }
             });
-            //console.log("Request Query Params", requestOptions.qs);
-            //console.log("sdkFilters",sdkFilters, Object.keys(sdkFilters).length);
+            logger.debug("Request Query Params", requestOptions.qs);
+            logger.debug("sdkFilters", sdkFilters);
             // if the sdkFilters object is empty, the API can handle everything, otherwise the sdk needs to augment the api.
 
             if (!(Object.keys(sdkFilters).length === 0)) {
-              _context.next = 23;
+              _context.next = 27;
               break;
             }
 
             requestOptions.qs.offset = offset;
             requestOptions.qs.limit = limit;
-            _context.prev = 12;
-            _context.next = 15;
+            _context.prev = 16;
+            _context.next = 19;
             return request(requestOptions);
 
-          case 15:
+          case 19:
             return _context.abrupt("return", _context.sent);
 
-          case 18:
-            _context.prev = 18;
-            _context.t0 = _context["catch"](12);
+          case 22:
+            _context.prev = 22;
+            _context.t0 = _context["catch"](16);
             return _context.abrupt("return", Promise.reject(_context.t0));
 
-          case 21:
-            _context.next = 39;
+          case 25:
+            _context.next = 46;
             break;
 
-          case 23:
-            _context.prev = 23;
-            _context.next = 26;
-            return util.aggregate(request, requestOptions, trace);
+          case 27:
+            _context.prev = 27;
+            _context.next = 30;
+            return Util.aggregate(request, requestOptions, trace);
 
-          case 26:
+          case 30:
             response = _context.sent;
 
+            logger.debug("****** AGGREGATE RESPONSE *******", response);
+
             if (!(response.hasOwnProperty("items") && response.items.length > 0)) {
-              _context.next = 33;
+              _context.next = 40;
               break;
             }
 
-            filteredResponse = util.filterResponse(response, sdkFilters);
-            //console.log("******* FILTERED RESPONSE ********",filteredResponse);
+            filteredResponse = Util.filterResponse(response, sdkFilters);
 
-            paginatedResponse = util.paginate(filteredResponse, offset, limit);
-            //console.log("******* PAGINATED RESPONSE ********",paginatedResponse);
+            logger.debug("******* FILTERED RESPONSE ********", filteredResponse);
+            paginatedResponse = Util.paginate(filteredResponse, offset, limit);
 
+            logger.debug("******* PAGINATED RESPONSE ********", paginatedResponse);
             return _context.abrupt("return", paginatedResponse);
 
-          case 33:
+          case 40:
             return _context.abrupt("return", response);
 
-          case 34:
-            _context.next = 39;
+          case 41:
+            _context.next = 46;
             break;
 
-          case 36:
-            _context.prev = 36;
-            _context.t1 = _context["catch"](23);
+          case 43:
+            _context.prev = 43;
+            _context.t1 = _context["catch"](27);
             return _context.abrupt("return", Promise.reject(_context.t1));
 
-          case 39:
+          case 46:
           case "end":
             return _context.stop();
         }
       }
-    }, _callee, undefined, [[12, 18], [23, 36]]);
+    }, _callee, undefined, [[16, 22], [27, 43]]);
   }));
 
   return function getDataObjects() {
@@ -215,7 +231,7 @@ var getDataObjectByType = function getDataObjectByType() {
   var loadContent = arguments.length > 5 && arguments[5] !== undefined ? arguments[5] : "false";
   var trace = arguments.length > 6 && arguments[6] !== undefined ? arguments[6] : {};
 
-  var MS = util.getEndpoint("objects");
+  var MS = Util.getEndpoint("objects");
 
   var requestOptions = {
     method: "GET",
@@ -223,11 +239,11 @@ var getDataObjectByType = function getDataObjectByType() {
     headers: {
       Authorization: "Bearer " + accessToken,
       "Content-type": "application/json",
-      "x-api-version": "" + util.getVersion()
+      "x-api-version": "" + Util.getVersion()
     },
     json: true
   };
-  util.addRequestTrace(requestOptions, trace);
+  Util.addRequestTrace(requestOptions, trace);
   return request(requestOptions);
 };
 
@@ -254,7 +270,7 @@ var getDataObjectByTypeAndName = function getDataObjectByTypeAndName() {
   var loadContent = arguments.length > 6 && arguments[6] !== undefined ? arguments[6] : "false";
   var trace = arguments.length > 7 && arguments[7] !== undefined ? arguments[7] : {};
 
-  var MS = util.getEndpoint("objects");
+  var MS = Util.getEndpoint("objects");
 
   var requestOptions = {
     method: "GET",
@@ -262,11 +278,11 @@ var getDataObjectByTypeAndName = function getDataObjectByTypeAndName() {
     headers: {
       Authorization: "Bearer " + accessToken,
       "Content-type": "application/json",
-      "x-api-version": "" + util.getVersion()
+      "x-api-version": "" + Util.getVersion()
     },
     json: true
   };
-  util.addRequestTrace(requestOptions, trace);
+  Util.addRequestTrace(requestOptions, trace);
   return request(requestOptions);
 };
 
@@ -283,18 +299,18 @@ var getDataObject = function getDataObject() {
   var dataObjectUUID = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : "null uuid";
   var trace = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : {};
 
-  var MS = util.getEndpoint("objects");
+  var MS = Util.getEndpoint("objects");
   var requestOptions = {
     method: "GET",
     uri: MS + "/objects/" + dataObjectUUID,
     headers: {
       Authorization: "Bearer " + accessToken,
       "Content-type": "application/json",
-      "x-api-version": "" + util.getVersion()
+      "x-api-version": "" + Util.getVersion()
     },
     json: true
   };
-  util.addRequestTrace(requestOptions, trace);
+  Util.addRequestTrace(requestOptions, trace);
   return request(requestOptions);
 };
 
@@ -328,8 +344,8 @@ var createUserDataObject = function () {
       while (1) {
         switch (_context2.prev = _context2.next) {
           case 0:
-            MS = util.getEndpoint("objects");
-            msDelay = util.config.msDelay;
+            MS = Util.getEndpoint("objects");
+            msDelay = Util.config.msDelay;
             body = {
               name: objectName,
               type: objectType,
@@ -344,19 +360,19 @@ var createUserDataObject = function () {
               headers: {
                 Authorization: "Bearer " + accessToken,
                 "Content-type": "application/json",
-                "x-api-version": "" + util.getVersion()
+                "x-api-version": "" + Util.getVersion()
               },
               json: true
             };
 
-            util.addRequestTrace(requestOptions, trace);
+            Util.addRequestTrace(requestOptions, trace);
             //create the object first
             newObject = void 0;
             nextTrace = objectMerge({}, trace);
             _context2.prev = 7;
             _context2.next = 10;
             return new Promise(function (resolve) {
-              return setTimeout(resolve, util.config.msDelay);
+              return setTimeout(resolve, Util.config.msDelay);
             });
 
           case 10:
@@ -371,7 +387,7 @@ var createUserDataObject = function () {
               break;
             }
 
-            nextTrace = objectMerge({}, nextTrace, util.generateNewMetaData(nextTrace));
+            nextTrace = objectMerge({}, nextTrace, Util.generateNewMetaData(nextTrace));
             _context2.next = 17;
             return ResourceGroups.createResourceGroups(accessToken, accountUUID, newObject.uuid, "object", //system role type
             users, nextTrace);
@@ -396,7 +412,7 @@ var createUserDataObject = function () {
 
           case 26:
             //this is to allow microservices time ack the new group before deleting.
-            nextTrace = objectMerge({}, nextTrace, util.generateNewMetaData(nextTrace));
+            nextTrace = objectMerge({}, nextTrace, Util.generateNewMetaData(nextTrace));
             _context2.next = 29;
             return deleteDataObject(accessToken, newObject.uuid, nextTrace);
 
@@ -452,7 +468,7 @@ var createDataObject = function createDataObject() {
   var content = arguments.length > 4 && arguments[4] !== undefined ? arguments[4] : {};
   var trace = arguments.length > 5 && arguments[5] !== undefined ? arguments[5] : {};
 
-  var MS = util.getEndpoint("objects");
+  var MS = Util.getEndpoint("objects");
 
   var b = {
     name: objectName,
@@ -469,11 +485,11 @@ var createDataObject = function createDataObject() {
     headers: {
       Authorization: "Bearer " + accessToken,
       "Content-type": "application/json",
-      "x-api-version": "" + util.getVersion()
+      "x-api-version": "" + Util.getVersion()
     },
     json: true
   };
-  util.addRequestTrace(requestOptions, trace);
+  Util.addRequestTrace(requestOptions, trace);
   return request(requestOptions);
 };
 
@@ -495,7 +511,7 @@ var deleteDataObject = function () {
       while (1) {
         switch (_context3.prev = _context3.next) {
           case 0:
-            MS = util.getEndpoint("objects");
+            MS = Util.getEndpoint("objects");
             ResourceGroups = require("./resourceGroups");
             requestOptions = {
               method: "DELETE",
@@ -503,36 +519,42 @@ var deleteDataObject = function () {
               headers: {
                 Authorization: "Bearer " + accessToken,
                 "Content-type": "application/json",
-                "x-api-version": "" + util.getVersion()
+                "x-api-version": "" + Util.getVersion()
               },
               json: true,
               resolveWithFullResponse: true
             };
 
-            util.addRequestTrace(requestOptions, trace);
+            Util.addRequestTrace(requestOptions, trace);
 
             _context3.prev = 4;
             _context3.next = 7;
-            return ResourceGroups.cleanUpResourceGroups(accessToken, data_uuid, util.generateNewMetaData(trace));
+            return new Promise(function (resolve) {
+              return setTimeout(resolve, Util.config.msDelay);
+            });
 
           case 7:
             _context3.next = 9;
-            return request(requestOptions);
+            return ResourceGroups.cleanUpResourceGroups(accessToken, data_uuid, Util.generateNewMetaData(trace));
 
           case 9:
+            _context3.next = 11;
+            return request(requestOptions);
+
+          case 11:
             return _context3.abrupt("return", Promise.resolve({ status: "ok" }));
 
-          case 12:
-            _context3.prev = 12;
+          case 14:
+            _context3.prev = 14;
             _context3.t0 = _context3["catch"](4);
             return _context3.abrupt("return", Promise.reject({ status: "failed", error: _context3.t0 }));
 
-          case 15:
+          case 17:
           case "end":
             return _context3.stop();
         }
       }
-    }, _callee3, undefined, [[4, 12]]);
+    }, _callee3, undefined, [[4, 14]]);
   }));
 
   return function deleteDataObject() {
@@ -564,7 +586,7 @@ var updateDataObject = function () {
       while (1) {
         switch (_context4.prev = _context4.next) {
           case 0:
-            MS = util.getEndpoint("objects");
+            MS = Util.getEndpoint("objects");
             requestOptions = {
               method: "PUT",
               uri: MS + "/objects/" + dataUUID,
@@ -572,12 +594,12 @@ var updateDataObject = function () {
               headers: {
                 Authorization: "Bearer " + accessToken,
                 "Content-type": "application/json",
-                "x-api-version": "" + util.getVersion()
+                "x-api-version": "" + Util.getVersion()
               },
               json: true
             };
 
-            util.addRequestTrace(requestOptions, trace);
+            Util.addRequestTrace(requestOptions, trace);
             nextTrace = objectMerge({}, trace);
             _context4.prev = 4;
 
@@ -586,7 +608,7 @@ var updateDataObject = function () {
               break;
             }
 
-            nextTrace = objectMerge({}, nextTrace, util.generateNewMetaData(nextTrace));
+            nextTrace = objectMerge({}, nextTrace, Util.generateNewMetaData(nextTrace));
             _context4.next = 9;
             return ResourceGroups.updateResourceGroups(accessToken, dataUUID, accountUUID, "object", //specifies the system role to find in config.json
             users, nextTrace);

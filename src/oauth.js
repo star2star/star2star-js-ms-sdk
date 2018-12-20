@@ -1,7 +1,11 @@
 /*global module require */
 "use strict";
-const util = require("./utilities");
+const Util = require("./utilities");
 const request = require("request-promise");
+import Logger from "./node-logger";
+const logger = new Logger();
+logger.setLevel(Util.getLogLevel());
+logger.setPretty(Util.getLogPretty());
 
 /**
  * @async 
@@ -21,8 +25,8 @@ const createClientApp = async (
   trace = {}
 ) => {
   try {
-    await new Promise(resolve => setTimeout(resolve, util.config.msDelay));
-    const MS = util.getAuthHost();
+    await new Promise(resolve => setTimeout(resolve, Util.config.msDelay));
+    const MS = Util.getAuthHost();
     const requestOptions = {
       method: "POST",
       uri: `${MS}/oauth/clients`,
@@ -37,10 +41,10 @@ const createClientApp = async (
       headers: {
         Authorization: `Bearer ${accessToken}`,
         "Content-type": "application/json",
-        "x-api-version": `${util.getVersion()}`
+        "x-api-version": `${Util.getVersion()}`
       }
     };
-    util.addRequestTrace(requestOptions, trace);
+    Util.addRequestTrace(requestOptions, trace);
     return await request(requestOptions);
   } catch (error) {
     return Promise.reject(error);
@@ -90,9 +94,9 @@ const getAccessToken = async (
   trace = {}
 ) => {
   try {
-    await new Promise(resolve => setTimeout(resolve, util.config.msDelay));
-    const MS = util.getAuthHost();
-    const VERSION = util.getVersion();
+    await new Promise(resolve => setTimeout(resolve, Util.config.msDelay));
+    const MS = Util.getAuthHost();
+    const VERSION = Util.getVersion();
     const requestOptions = {
       method: "POST",
       uri: `${MS}/oauth/token`,
@@ -110,7 +114,7 @@ const getAccessToken = async (
       json: true
       // resolveWithFullResponse: true
     };
-    util.addRequestTrace(requestOptions, trace);
+    Util.addRequestTrace(requestOptions, trace);
     return await request(requestOptions);
   } catch (error) {
     return Promise.reject(error);
@@ -126,9 +130,9 @@ const getAccessToken = async (
  */
 const getClientToken = async (oauthToken = "null oauth token", trace = {}) => {
   try {
-    await new Promise(resolve => setTimeout(resolve, util.config.msDelay));
-    const MS = util.getAuthHost();
-    const VERSION = util.getVersion();
+    await new Promise(resolve => setTimeout(resolve, Util.config.msDelay));
+    const MS = Util.getAuthHost();
+    const VERSION = Util.getVersion();
     const requestOptions = {
       method: "POST",
       uri: `${MS}/oauth/token`,
@@ -144,7 +148,7 @@ const getClientToken = async (oauthToken = "null oauth token", trace = {}) => {
       json: true
       // resolveWithFullResponse: true
     };
-    util.addRequestTrace(requestOptions, trace);
+    Util.addRequestTrace(requestOptions, trace);
     return request(requestOptions);
   } catch (error) {
     return Promise.reject(error);
@@ -161,8 +165,8 @@ const getClientToken = async (oauthToken = "null oauth token", trace = {}) => {
  */
 const invalidateToken = async (accessToken = "null accessToken", token = "null token", trace = {}) => {
   try {
-    await new Promise(resolve => setTimeout(resolve, util.config.msDelay)); //delay is to ensure clean-up operations work
-    const MS = util.getAuthHost();
+    await new Promise(resolve => setTimeout(resolve, Util.config.msDelay)); //delay is to ensure clean-up operations work
+    const MS = Util.getAuthHost();
     const requestOptions = {
       method: "POST",
       uri: `${MS}/oauth/invalidate/access`,
@@ -174,10 +178,10 @@ const invalidateToken = async (accessToken = "null accessToken", token = "null t
       headers: {
         "Authorization": `Bearer ${accessToken}`,
         "Content-type": "application/json",
-        "x-api-version": `${util.getVersion()}`
+        "x-api-version": `${Util.getVersion()}`
       }
     };
-    util.addRequestTrace(requestOptions, trace);
+    Util.addRequestTrace(requestOptions, trace);
     const response = await request(requestOptions);
     return response.statusCode === 204 ? Promise.resolve({ status: "ok" }) : Promise.reject({ status: "failed" });
   } catch (error) {
@@ -203,8 +207,8 @@ const listClientTokens = async (
   trace = {}
 ) => {
   try {
-    await new Promise(resolve => setTimeout(resolve, util.config.msDelay));
-    const MS = util.getAuthHost();
+    await new Promise(resolve => setTimeout(resolve, Util.config.msDelay));
+    const MS = Util.getAuthHost();
     const requestOptions = {
       method: "GET",
       uri: `${MS}/oauth/tokens`,
@@ -216,7 +220,7 @@ const listClientTokens = async (
       headers: {
         Authorization: `Bearer ${accessToken}`,
         "Content-type": "application/json",
-        "x-api-version": `${util.getVersion()}`
+        "x-api-version": `${Util.getVersion()}`
       }
     };
     if (filters && typeof filters == "object") {
@@ -224,7 +228,7 @@ const listClientTokens = async (
         requestOptions.qs[filter] = filters[filter];
       });
     }
-    util.addRequestTrace(requestOptions, trace);
+    Util.addRequestTrace(requestOptions, trace);
     return request(requestOptions);
   } catch (error) {
     return Promise.reject(error);
@@ -247,9 +251,9 @@ const refreshAccessToken = async (
   trace = {}
 ) => {
   try {
-    await new Promise(resolve => setTimeout(resolve, util.config.msDelay));
-    const MS = util.getAuthHost();
-    const VERSION = util.getVersion();
+    await new Promise(resolve => setTimeout(resolve, Util.config.msDelay));
+    const MS = Util.getAuthHost();
+    const VERSION = Util.getVersion();
     const requestOptions = {
       method: "POST",
       uri: `${MS}/oauth/token`,
@@ -265,7 +269,7 @@ const refreshAccessToken = async (
       json: true
       // resolveWithFullResponse: true
     };
-    util.addRequestTrace(requestOptions, trace);
+    Util.addRequestTrace(requestOptions, trace);
     return await request(requestOptions);
   } catch (error) {
     return Promise.reject(error);
@@ -287,7 +291,7 @@ const scopeClientApp = async (
   scope = ["default"],
   trace = {}
 ) => {
-  const MS = util.getAuthHost();
+  const MS = Util.getAuthHost();
   const requestOptions = {
     method: "POST",
     uri: `${MS}/oauth/clients/${clientUUID}/scopes`,
@@ -299,12 +303,12 @@ const scopeClientApp = async (
     headers: {
       Authorization: `Bearer ${accessToken}`,
       "Content-type": "application/json",
-      "x-api-version": `${util.getVersion()}`
+      "x-api-version": `${Util.getVersion()}`
     }
   };
-  util.addRequestTrace(requestOptions, trace);
+  Util.addRequestTrace(requestOptions, trace);
   try {
-    await new Promise(resolve => setTimeout(resolve, util.config.msDelay));
+    await new Promise(resolve => setTimeout(resolve, Util.config.msDelay));
     const response = await request(requestOptions);
     if (response.statusCode === 204) {
       return Promise.resolve({"status":"ok"}); 
@@ -326,8 +330,8 @@ const scopeClientApp = async (
  */
 const validateToken = async (accessToken = "null accessToken", token= "null token", trace = {}) => {
   try {
-    await new Promise(resolve => setTimeout(resolve, util.config.msDelay)); //delay is to ensure clean-up operations work
-    const MS = util.getAuthHost();
+    await new Promise(resolve => setTimeout(resolve, Util.config.msDelay)); //delay is to ensure clean-up operations work
+    const MS = Util.getAuthHost();
     const requestOptions = {
       method: "POST",
       uri: `${MS}/oauth/validate/access`,
@@ -339,10 +343,10 @@ const validateToken = async (accessToken = "null accessToken", token= "null toke
       headers: {
         "Authorization": `Bearer ${accessToken}`,
         "Content-type": "application/json",
-        "x-api-version": `${util.getVersion()}`
+        "x-api-version": `${Util.getVersion()}`
       }
     };
-    util.addRequestTrace(requestOptions, trace);
+    Util.addRequestTrace(requestOptions, trace);
     const response = await request(requestOptions);
     return response.statusCode === 204 ? Promise.resolve({ status: "ok" }) : Promise.reject({ status: "failed" });
   } catch (error) {

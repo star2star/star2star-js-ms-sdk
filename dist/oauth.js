@@ -3,10 +3,20 @@
 
 var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
 
+var _nodeLogger = require("./node-logger");
+
+var _nodeLogger2 = _interopRequireDefault(_nodeLogger);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
 function _asyncToGenerator(fn) { return function () { var gen = fn.apply(this, arguments); return new Promise(function (resolve, reject) { function step(key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { return Promise.resolve(value).then(function (value) { step("next", value); }, function (err) { step("throw", err); }); } } return step("next"); }); }; }
 
-var util = require("./utilities");
+var Util = require("./utilities");
 var request = require("request-promise");
+
+var logger = new _nodeLogger2.default();
+logger.setLevel(Util.getLogLevel());
+logger.setPretty(Util.getLogPretty());
 
 /**
  * @async 
@@ -33,11 +43,11 @@ var createClientApp = function () {
             _context.prev = 0;
             _context.next = 3;
             return new Promise(function (resolve) {
-              return setTimeout(resolve, util.config.msDelay);
+              return setTimeout(resolve, Util.config.msDelay);
             });
 
           case 3:
-            MS = util.getAuthHost();
+            MS = Util.getAuthHost();
             requestOptions = {
               method: "POST",
               uri: MS + "/oauth/clients",
@@ -52,11 +62,11 @@ var createClientApp = function () {
               headers: {
                 Authorization: "Bearer " + accessToken,
                 "Content-type": "application/json",
-                "x-api-version": "" + util.getVersion()
+                "x-api-version": "" + Util.getVersion()
               }
             };
 
-            util.addRequestTrace(requestOptions, trace);
+            Util.addRequestTrace(requestOptions, trace);
             _context.next = 8;
             return request(requestOptions);
 
@@ -129,12 +139,12 @@ var getAccessToken = function () {
             _context2.prev = 0;
             _context2.next = 3;
             return new Promise(function (resolve) {
-              return setTimeout(resolve, util.config.msDelay);
+              return setTimeout(resolve, Util.config.msDelay);
             });
 
           case 3:
-            MS = util.getAuthHost();
-            VERSION = util.getVersion();
+            MS = Util.getAuthHost();
+            VERSION = Util.getVersion();
             requestOptions = {
               method: "POST",
               uri: MS + "/oauth/token",
@@ -153,7 +163,7 @@ var getAccessToken = function () {
               // resolveWithFullResponse: true
             };
 
-            util.addRequestTrace(requestOptions, trace);
+            Util.addRequestTrace(requestOptions, trace);
             _context2.next = 9;
             return request(requestOptions);
 
@@ -197,12 +207,12 @@ var getClientToken = function () {
             _context3.prev = 0;
             _context3.next = 3;
             return new Promise(function (resolve) {
-              return setTimeout(resolve, util.config.msDelay);
+              return setTimeout(resolve, Util.config.msDelay);
             });
 
           case 3:
-            MS = util.getAuthHost();
-            VERSION = util.getVersion();
+            MS = Util.getAuthHost();
+            VERSION = Util.getVersion();
             requestOptions = {
               method: "POST",
               uri: MS + "/oauth/token",
@@ -219,7 +229,7 @@ var getClientToken = function () {
               // resolveWithFullResponse: true
             };
 
-            util.addRequestTrace(requestOptions, trace);
+            Util.addRequestTrace(requestOptions, trace);
             return _context3.abrupt("return", request(requestOptions));
 
           case 10:
@@ -261,12 +271,12 @@ var invalidateToken = function () {
             _context4.prev = 0;
             _context4.next = 3;
             return new Promise(function (resolve) {
-              return setTimeout(resolve, util.config.msDelay);
+              return setTimeout(resolve, Util.config.msDelay);
             });
 
           case 3:
             //delay is to ensure clean-up operations work
-            MS = util.getAuthHost();
+            MS = Util.getAuthHost();
             requestOptions = {
               method: "POST",
               uri: MS + "/oauth/invalidate/access",
@@ -278,11 +288,11 @@ var invalidateToken = function () {
               headers: {
                 "Authorization": "Bearer " + accessToken,
                 "Content-type": "application/json",
-                "x-api-version": "" + util.getVersion()
+                "x-api-version": "" + Util.getVersion()
               }
             };
 
-            util.addRequestTrace(requestOptions, trace);
+            Util.addRequestTrace(requestOptions, trace);
             _context4.next = 8;
             return request(requestOptions);
 
@@ -333,11 +343,11 @@ var listClientTokens = function () {
             _context5.prev = 0;
             _context5.next = 3;
             return new Promise(function (resolve) {
-              return setTimeout(resolve, util.config.msDelay);
+              return setTimeout(resolve, Util.config.msDelay);
             });
 
           case 3:
-            MS = util.getAuthHost();
+            MS = Util.getAuthHost();
             requestOptions = {
               method: "GET",
               uri: MS + "/oauth/tokens",
@@ -349,7 +359,7 @@ var listClientTokens = function () {
               headers: {
                 Authorization: "Bearer " + accessToken,
                 "Content-type": "application/json",
-                "x-api-version": "" + util.getVersion()
+                "x-api-version": "" + Util.getVersion()
               }
             };
 
@@ -358,7 +368,7 @@ var listClientTokens = function () {
                 requestOptions.qs[filter] = filters[filter];
               });
             }
-            util.addRequestTrace(requestOptions, trace);
+            Util.addRequestTrace(requestOptions, trace);
             return _context5.abrupt("return", request(requestOptions));
 
           case 10:
@@ -401,12 +411,12 @@ var refreshAccessToken = function () {
             _context6.prev = 0;
             _context6.next = 3;
             return new Promise(function (resolve) {
-              return setTimeout(resolve, util.config.msDelay);
+              return setTimeout(resolve, Util.config.msDelay);
             });
 
           case 3:
-            MS = util.getAuthHost();
-            VERSION = util.getVersion();
+            MS = Util.getAuthHost();
+            VERSION = Util.getVersion();
             requestOptions = {
               method: "POST",
               uri: MS + "/oauth/token",
@@ -423,7 +433,7 @@ var refreshAccessToken = function () {
               // resolveWithFullResponse: true
             };
 
-            util.addRequestTrace(requestOptions, trace);
+            Util.addRequestTrace(requestOptions, trace);
             _context6.next = 9;
             return request(requestOptions);
 
@@ -468,7 +478,7 @@ var scopeClientApp = function () {
       while (1) {
         switch (_context7.prev = _context7.next) {
           case 0:
-            MS = util.getAuthHost();
+            MS = Util.getAuthHost();
             requestOptions = {
               method: "POST",
               uri: MS + "/oauth/clients/" + clientUUID + "/scopes",
@@ -480,15 +490,15 @@ var scopeClientApp = function () {
               headers: {
                 Authorization: "Bearer " + accessToken,
                 "Content-type": "application/json",
-                "x-api-version": "" + util.getVersion()
+                "x-api-version": "" + Util.getVersion()
               }
             };
 
-            util.addRequestTrace(requestOptions, trace);
+            Util.addRequestTrace(requestOptions, trace);
             _context7.prev = 3;
             _context7.next = 6;
             return new Promise(function (resolve) {
-              return setTimeout(resolve, util.config.msDelay);
+              return setTimeout(resolve, Util.config.msDelay);
             });
 
           case 6:
@@ -551,12 +561,12 @@ var validateToken = function () {
             _context8.prev = 0;
             _context8.next = 3;
             return new Promise(function (resolve) {
-              return setTimeout(resolve, util.config.msDelay);
+              return setTimeout(resolve, Util.config.msDelay);
             });
 
           case 3:
             //delay is to ensure clean-up operations work
-            MS = util.getAuthHost();
+            MS = Util.getAuthHost();
             requestOptions = {
               method: "POST",
               uri: MS + "/oauth/validate/access",
@@ -568,11 +578,11 @@ var validateToken = function () {
               headers: {
                 "Authorization": "Bearer " + accessToken,
                 "Content-type": "application/json",
-                "x-api-version": "" + util.getVersion()
+                "x-api-version": "" + Util.getVersion()
               }
             };
 
-            util.addRequestTrace(requestOptions, trace);
+            Util.addRequestTrace(requestOptions, trace);
             _context8.next = 8;
             return request(requestOptions);
 

@@ -1,9 +1,13 @@
 /* global require module*/
 "use strict";
-const util = require("./utilities");
+const Util = require("./utilities");
 const request = require("request-promise");
 const objectMerge = require("object-merge");
 const ResourceGroups = require("./resourceGroups");
+import Logger from "./node-logger";
+const logger = new Logger();
+logger.setLevel(Util.getLogLevel());
+logger.setPretty(Util.getLogPretty());
 
 /**
  * @async
@@ -26,7 +30,7 @@ const getByType = (
   loadContent = "false",
   trace = {}
 ) => {
-  const MS = util.getEndpoint("objects");
+  const MS = Util.getEndpoint("objects");
 
   const requestOptions = {
     method: "GET",
@@ -34,11 +38,11 @@ const getByType = (
     headers: {
       Authorization: `Bearer ${accessToken}`,
       "Content-type": "application/json",
-      "x-api-version": `${util.getVersion()}`
+      "x-api-version": `${Util.getVersion()}`
     },
     json: true
   };
-  util.addRequestTrace(requestOptions, trace);
+  Util.addRequestTrace(requestOptions, trace);
   return request(requestOptions);
 };
 
@@ -64,22 +68,22 @@ const getDataObjects = async (
   filters = undefined,
   trace = {}
 ) => {
-  const MS = util.getEndpoint("objects");
-
+  const MS = Util.getEndpoint("objects");
   const requestOptions = {
     method: "GET",
     uri: `${MS}/users/${userUUID}/allowed-objects`,
     headers: {
       Authorization: `Bearer ${accessToken}`,
       "Content-type": "application/json",
-      "x-api-version": `${util.getVersion()}`
+      "x-api-version": `${Util.getVersion()}`
     },
     qs: {
       load_content: loadContent
     },
     json: true
   };
-  util.addRequestTrace(requestOptions, trace);
+  Util.addRequestTrace(requestOptions, trace);
+  await new Promise(resolve => setTimeout(resolve, Util.config.msDelay));
   //here we determine if we will need to handle aggrigation, pagination, and filtering or send it to the microservice
   if (filters) {
     // filter param has been passed in, make sure it is an array befor proceeding
@@ -100,8 +104,8 @@ const getDataObjects = async (
         sdkFilters[filter] = filters[filter];
       }
     });
-    //console.log("Request Query Params", requestOptions.qs);
-    //console.log("sdkFilters",sdkFilters, Object.keys(sdkFilters).length);
+    logger.debug("Request Query Params", requestOptions.qs);
+    logger.debug("sdkFilters",sdkFilters);
     // if the sdkFilters object is empty, the API can handle everything, otherwise the sdk needs to augment the api.
     if (Object.keys(sdkFilters).length === 0) {
       requestOptions.qs.offset = offset;
@@ -113,17 +117,17 @@ const getDataObjects = async (
       }
     } else {
       try {
-        const response = await util.aggregate(request, requestOptions, trace);
-        //console.log("****** RESPONSE *******",response);
+        const response = await Util.aggregate(request, requestOptions, trace);
+        logger.debug("****** AGGREGATE RESPONSE *******",response);
         if (response.hasOwnProperty("items") && response.items.length > 0) {
-          const filteredResponse = util.filterResponse(response, sdkFilters);
-          //console.log("******* FILTERED RESPONSE ********",filteredResponse);
-          const paginatedResponse = util.paginate(
+          const filteredResponse = Util.filterResponse(response, sdkFilters);
+          logger.debug("******* FILTERED RESPONSE ********",filteredResponse);
+          const paginatedResponse = Util.paginate(
             filteredResponse,
             offset,
             limit
           );
-          //console.log("******* PAGINATED RESPONSE ********",paginatedResponse);
+          logger.debug("******* PAGINATED RESPONSE ********",paginatedResponse);
           return paginatedResponse;
         } else {
           return response;
@@ -158,7 +162,7 @@ const getDataObjectByType = (
   loadContent = "false",
   trace = {}
 ) => {
-  const MS = util.getEndpoint("objects");
+  const MS = Util.getEndpoint("objects");
 
   const requestOptions = {
     method: "GET",
@@ -166,11 +170,11 @@ const getDataObjectByType = (
     headers: {
       Authorization: `Bearer ${accessToken}`,
       "Content-type": "application/json",
-      "x-api-version": `${util.getVersion()}`
+      "x-api-version": `${Util.getVersion()}`
     },
     json: true
   };
-  util.addRequestTrace(requestOptions, trace);
+  Util.addRequestTrace(requestOptions, trace);
   return request(requestOptions);
 };
 
@@ -197,7 +201,7 @@ const getDataObjectByTypeAndName = (
   loadContent = "false",
   trace = {}
 ) => {
-  const MS = util.getEndpoint("objects");
+  const MS = Util.getEndpoint("objects");
 
   const requestOptions = {
     method: "GET",
@@ -205,11 +209,11 @@ const getDataObjectByTypeAndName = (
     headers: {
       Authorization: `Bearer ${accessToken}`,
       "Content-type": "application/json",
-      "x-api-version": `${util.getVersion()}`
+      "x-api-version": `${Util.getVersion()}`
     },
     json: true
   };
-  util.addRequestTrace(requestOptions, trace);
+  Util.addRequestTrace(requestOptions, trace);
   return request(requestOptions);
 };
 
@@ -226,18 +230,18 @@ const getDataObject = (
   dataObjectUUID = "null uuid",
   trace = {}
 ) => {
-  const MS = util.getEndpoint("objects");
+  const MS = Util.getEndpoint("objects");
   const requestOptions = {
     method: "GET",
     uri: `${MS}/objects/${dataObjectUUID}`,
     headers: {
       Authorization: `Bearer ${accessToken}`,
       "Content-type": "application/json",
-      "x-api-version": `${util.getVersion()}`
+      "x-api-version": `${Util.getVersion()}`
     },
     json: true
   };
-  util.addRequestTrace(requestOptions, trace);
+  Util.addRequestTrace(requestOptions, trace);
   return request(requestOptions);
 };
 
@@ -266,8 +270,8 @@ const createUserDataObject = async (
   users = undefined,
   trace = {}
 ) => {
-  const MS = util.getEndpoint("objects");
-  const msDelay = util.config.msDelay;
+  const MS = Util.getEndpoint("objects");
+  const msDelay = Util.config.msDelay;
   const body = {
     name: objectName,
     type: objectType,
@@ -283,16 +287,16 @@ const createUserDataObject = async (
     headers: {
       Authorization: `Bearer ${accessToken}`,
       "Content-type": "application/json",
-      "x-api-version": `${util.getVersion()}`
+      "x-api-version": `${Util.getVersion()}`
     },
     json: true
   };
-  util.addRequestTrace(requestOptions, trace);
+  Util.addRequestTrace(requestOptions, trace);
   //create the object first
   let newObject;
   let nextTrace = objectMerge({}, trace);
   try {
-    await new Promise(resolve => setTimeout(resolve, util.config.msDelay));
+    await new Promise(resolve => setTimeout(resolve, Util.config.msDelay));
     newObject = await request(requestOptions);
     //need to create permissions resource groups
     if (
@@ -300,7 +304,7 @@ const createUserDataObject = async (
       users && 
       typeof users === "object"
     ) {
-      nextTrace = objectMerge({}, nextTrace, util.generateNewMetaData(nextTrace));
+      nextTrace = objectMerge({}, nextTrace, Util.generateNewMetaData(nextTrace));
       await ResourceGroups.createResourceGroups(
         accessToken,
         accountUUID,
@@ -319,7 +323,7 @@ const createUserDataObject = async (
         nextTrace = objectMerge(
           {},
           nextTrace,
-          util.generateNewMetaData(nextTrace)
+          Util.generateNewMetaData(nextTrace)
         );
         await deleteDataObject(accessToken, newObject.uuid, nextTrace); //this will clean up the groups created if there are any.
         return Promise.reject(createError);
@@ -356,7 +360,7 @@ const createDataObject = (
   content = {},
   trace = {}
 ) => {
-  const MS = util.getEndpoint("objects");
+  const MS = Util.getEndpoint("objects");
 
   const b = {
     name: objectName,
@@ -373,11 +377,11 @@ const createDataObject = (
     headers: {
       Authorization: `Bearer ${accessToken}`,
       "Content-type": "application/json",
-      "x-api-version": `${util.getVersion()}`
+      "x-api-version": `${Util.getVersion()}`
     },
     json: true
   };
-  util.addRequestTrace(requestOptions, trace);
+  Util.addRequestTrace(requestOptions, trace);
   return request(requestOptions);
 };
 
@@ -394,7 +398,7 @@ const deleteDataObject = async (
   data_uuid = "not specified",
   trace = {}
 ) => {
-  const MS = util.getEndpoint("objects");
+  const MS = Util.getEndpoint("objects");
   const ResourceGroups = require("./resourceGroups");
   const requestOptions = {
     method: "DELETE",
@@ -402,18 +406,19 @@ const deleteDataObject = async (
     headers: {
       Authorization: `Bearer ${accessToken}`,
       "Content-type": "application/json",
-      "x-api-version": `${util.getVersion()}`
+      "x-api-version": `${Util.getVersion()}`
     },
     json: true,
     resolveWithFullResponse: true
   };
-  util.addRequestTrace(requestOptions, trace);
+  Util.addRequestTrace(requestOptions, trace);
 
   try {
+    await new Promise(resolve => setTimeout(resolve, Util.config.msDelay));
     await ResourceGroups.cleanUpResourceGroups(
       accessToken,
       data_uuid,
-      util.generateNewMetaData(trace)
+      Util.generateNewMetaData(trace)
     );
     await request(requestOptions);
     return Promise.resolve({ status: "ok" });
@@ -441,8 +446,7 @@ const updateDataObject = async (
   users = undefined, //only needed for shared objects
   trace = {}
 ) => {
-  const MS = util.getEndpoint("objects");
-
+  const MS = Util.getEndpoint("objects");
   const requestOptions = {
     method: "PUT",
     uri: `${MS}/objects/${dataUUID}`,
@@ -450,11 +454,11 @@ const updateDataObject = async (
     headers: {
       Authorization: `Bearer ${accessToken}`,
       "Content-type": "application/json",
-      "x-api-version": `${util.getVersion()}`
+      "x-api-version": `${Util.getVersion()}`
     },
     json: true
   };
-  util.addRequestTrace(requestOptions, trace);
+  Util.addRequestTrace(requestOptions, trace);
   let nextTrace = objectMerge({}, trace);
   try {
     if (
@@ -462,7 +466,7 @@ const updateDataObject = async (
       users && 
       typeof users === "object"
     ) {
-      nextTrace = objectMerge({}, nextTrace, util.generateNewMetaData(nextTrace));
+      nextTrace = objectMerge({}, nextTrace, Util.generateNewMetaData(nextTrace));
       await ResourceGroups.updateResourceGroups(
         accessToken,
         dataUUID,

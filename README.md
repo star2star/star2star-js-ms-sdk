@@ -64,6 +64,9 @@ require("babel-polyfill");
 [Please click here for our documentation pages.](https://star2star.github.io/star2star-js-ms-sdk/ "Star2Star Micro Service SDK Documentation")
 
 ## Changes
+* 2.2.22 - Reduced microservice delay work-around for outh repsonse time issue.
+* 2.2.21 - Added microservice delay back as work-around for outh repsonse time.
+* 2.2.20 - Remove microservice delay
 * 2.2.19 - Add updated logger
 * 2.2.18 - Updates to accounts and auth unit tests
 * 2.2.17 - Performance improvements for resource groups

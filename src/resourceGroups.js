@@ -7,7 +7,6 @@ const env = Util.config.env;
 const roles = Util.config.roles[env];
 const msDelay = Util.config.msDelay;
 const objectMerge = require("object-merge");
-const logger = Util.logger;
 
 /**
  * @async
@@ -59,7 +58,6 @@ const createResourceGroups = async (
 
     const groups = await Promise.all(groupPromises);
 
-    logger.info(`Created resource groups: ${JSON.stringify(groups, null, "\t")}`);
     await new Promise(resolve => setTimeout(resolve, msDelay)); //microservices delay :(
     
     // scope the resource to the groups
@@ -76,14 +74,7 @@ const createResourceGroups = async (
         nextTrace
       ));  
     }); 
-    const scopes = await Promise.all(scopePromises);
-    logger.info(
-      `Completed resource group scoping calls: ${JSON.stringify(
-        scopes,
-        null,
-        "\t"
-      )}`
-    );  
+    await Promise.all(scopePromises);  
     return Promise.resolve({ status: "ok" });
   } catch (error) {
     return Promise.reject({ status: "failed", createResourceGroups: error });
@@ -109,7 +100,6 @@ const cleanUpResourceGroups = async (
       resourceUUID,
       trace
     );
-    logger.info(`Found resource groups to clean up: ${JSON.stringify(resourceGroups, null, "\t")}`);
     if (
       resourceGroups.hasOwnProperty("items") &&
       resourceGroups.items.length > 0
@@ -172,7 +162,6 @@ const updateResourceGroups = async (
       resourceUUID,
       nextTrace
     );
-    logger.info(`Resource group lookup success for ${resourceUUID}: ${JSON.stringify(resourceGroups, null, "\t")}`);
     if (
       resourceGroups.hasOwnProperty("items") &&
       resourceGroups.items.length > 0
@@ -182,7 +171,6 @@ const updateResourceGroups = async (
       const updatePromises = [];
       const deletePromises = [];
       resourceGroups.items.forEach(item => {
-        logger.debug(`resource group item: ${JSON.stringify(item, null, "\t")}`);
         if (
           item.hasOwnProperty("user_group") &&
           item.user_group.hasOwnProperty("group_name")
@@ -222,9 +210,7 @@ const updateResourceGroups = async (
           });
         }
       });
-      logger.debug(`updatePromises: ${JSON.stringify(updatePromises, null, "\t")}`);
       const userGroups = await Promise.all(updatePromises);
-      logger.info(`user_groups with members lookup success: ${JSON.stringify(userGroups, null, "\t")}`);
       // update the groups' members
       const memberUpdatePromises = [];
       userGroups.forEach(group => {
@@ -232,7 +218,6 @@ const updateResourceGroups = async (
         const groupType = groupTypeRegex.exec(
           group.name
         );
-        logger.debug(`groupType for updating members: ${JSON.stringify(groupType, null, "\t")}`);
         const addUsers = users[groupType]
           .filter(user => {
             let found = false;
@@ -286,9 +271,7 @@ const updateResourceGroups = async (
         // any remaining are for new groups which will be created below
         delete users[groupType];
       });
-      logger.debug(`memberUpdatePromises: ${JSON.stringify(memberUpdatePromises, null, "\t")}`);
       await Promise.all(memberUpdatePromises);
-      logger.debug(`deletePromises: ${JSON.stringify(deletePromises, null, "\t")}`);
       await Promise.all(deletePromises);       
     }
 
@@ -300,7 +283,6 @@ const updateResourceGroups = async (
         nextTrace,
         Util.generateNewMetaData(nextTrace)
       );
-      logger.info(`Creating New Resource Groups For Resource ${resourceUUID}: ${JSON.stringify(users, null, "\t")}`);
       await createResourceGroups(
         accessToken,
         accountUUID,

@@ -118,7 +118,7 @@ var replaceVariables = function replaceVariables() {
   var objectTree = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
 
   // will search for %xxxxx%
-  var myRegex = /(\%[\w|\d|\.\-\*\/]+\%)/g;
+  var myRegex = /(%[\w|\d|.\-*/]+%)/g;
   var returnString = inputValue;
 
   var arrayOfMatches = inputValue.match(myRegex);
@@ -233,7 +233,8 @@ var aggregate = function () {
       while (1) {
         switch (_context2.prev = _context2.next) {
           case 0:
-            requestOptions.qs.limit = 10; //uncomment to force pagination for testing.
+            //uncomment and set to less than total expected resources to force aggregation for testing.
+            //requestOptions.qs.limit = 1;
             total = void 0, offset = 0;
 
             makeRequest = function () {
@@ -258,16 +259,15 @@ var aggregate = function () {
                         offset = response.metadata.offset + response.metadata.count;
 
                         if (!(total > offset)) {
-                          _context.next = 23;
+                          _context.next = 22;
                           break;
                         }
 
-                        console.log("recursing");
                         requestOptions.qs.offset = offset;
-                        _context.next = 13;
+                        _context.next = 12;
                         return makeRequest(request, requestOptions);
 
-                      case 13:
+                      case 12:
                         nextResponse = _context.sent;
                         items = response.items.concat(nextResponse.items);
 
@@ -275,27 +275,27 @@ var aggregate = function () {
                         response.metadata.offset = 0;
                         response.metadata.count = total;
                         response.metadata.limit = total;
-                        delete response.links; //the links are invalid
+                        delete response.links; //the links are invalid now
+                        return _context.abrupt("return", response);
+
+                      case 22:
                         return _context.abrupt("return", response);
 
                       case 23:
-                        return _context.abrupt("return", response);
-
-                      case 24:
-                        _context.next = 29;
+                        _context.next = 28;
                         break;
 
-                      case 26:
-                        _context.prev = 26;
+                      case 25:
+                        _context.prev = 25;
                         _context.t0 = _context["catch"](2);
                         return _context.abrupt("return", Promise.reject(_context.t0));
 
-                      case 29:
+                      case 28:
                       case "end":
                         return _context.stop();
                     }
                   }
-                }, _callee, undefined, [[2, 26]]);
+                }, _callee, undefined, [[2, 25]]);
               }));
 
               return function makeRequest(_x12, _x13) {
@@ -303,13 +303,13 @@ var aggregate = function () {
               };
             }();
 
-            _context2.next = 5;
+            _context2.next = 4;
             return makeRequest(request, requestOptions, trace);
 
-          case 5:
+          case 4:
             return _context2.abrupt("return", _context2.sent);
 
-          case 6:
+          case 5:
           case "end":
             return _context2.stop();
         }
@@ -351,10 +351,10 @@ var addRequestTrace = function addRequestTrace(request) {
   headerKeys.forEach(function (keyName) {
     if ((typeof trace === "undefined" ? "undefined" : _typeof(trace)) === "object" && trace.hasOwnProperty(keyName)) {
       request.headers[keyName] = trace[keyName];
-      logger.debug("Found Trace " + keyName + ": " + request.headers[keyName]);
+      //logger.debug(`Found Trace ${keyName}: ${request.headers[keyName]}`);
     } else {
       request.headers[keyName] = uuidv4();
-      logger.debug("Assigning Trace " + keyName + ": " + request.headers[keyName]);
+      //logger.debug(`Assigning Trace ${keyName}: ${request.headers[keyName]}`);
     }
   });
   if ((typeof trace === "undefined" ? "undefined" : _typeof(trace)) === "object" && trace.hasOwnProperty("debug")) {

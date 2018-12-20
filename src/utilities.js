@@ -101,7 +101,7 @@ const getValueFromObjectTree = (matchString = "", objectTree = {}) => {
  */
 const replaceVariables = (inputValue = "", objectTree = {}) => {
   // will search for %xxxxx%
-  const myRegex = /(\%[\w|\d|\.\-\*\/]+\%)/g;
+  const myRegex = /(%[\w|\d|.\-*/]+%)/g;
   let returnString = inputValue;
 
   const arrayOfMatches = inputValue.match(myRegex);
@@ -217,7 +217,8 @@ const filterResponse = (response, filters) => {
  * @returns
  */
 const aggregate = async (request, requestOptions, trace = {}) => {
-  requestOptions.qs.limit = 10; //uncomment to force pagination for testing.
+  //uncomment and set to less than total expected resources to force aggregation for testing.
+  //requestOptions.qs.limit = 1;
   let total,
     offset = 0;
 
@@ -229,7 +230,6 @@ const aggregate = async (request, requestOptions, trace = {}) => {
       total = response.metadata.total;
       offset = response.metadata.offset + response.metadata.count;
       if (total > offset) {
-        console.log("recursing");
         requestOptions.qs.offset = offset;
         const nextResponse = await makeRequest(request, requestOptions);
         const items = response.items.concat(nextResponse.items);
@@ -237,10 +237,9 @@ const aggregate = async (request, requestOptions, trace = {}) => {
         response.metadata.offset = 0;
         response.metadata.count = total;
         response.metadata.limit = total;
-        delete response.links; //the links are invalid
+        delete response.links; //the links are invalid now
         return response;
       } else {
-        //console.log("done");
         return response;
       }
     } catch (error) {
@@ -278,10 +277,10 @@ const addRequestTrace = (request, trace = {}) => {
   headerKeys.forEach(keyName => {
     if (typeof trace === "object" && trace.hasOwnProperty(keyName)) {
       request.headers[keyName] = trace[keyName];
-      logger.debug(`Found Trace ${keyName}: ${request.headers[keyName]}`);
+      //logger.debug(`Found Trace ${keyName}: ${request.headers[keyName]}`);
     } else {
       request.headers[keyName] = uuidv4();
-      logger.debug(`Assigning Trace ${keyName}: ${request.headers[keyName]}`);
+      //logger.debug(`Assigning Trace ${keyName}: ${request.headers[keyName]}`);
     }
   });
   if (typeof trace === "object" && trace.hasOwnProperty("debug")) {
