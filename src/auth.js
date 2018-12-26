@@ -486,7 +486,7 @@ const getResourceUsers = async (accessToken = "null accessToken", resourceUUID =
  * @param {object} [trace = {}] - optional microservice lifecycle trace headers
  * @returns
  */
-const listAccessByGroups = (
+const listAccessByGroups = async (
   accessToken = "null accessToken",
   resourceUUID = "null groupUUID",
   trace = {}
@@ -502,6 +502,7 @@ const listAccessByGroups = (
     },
     json: true
   };
+  await new Promise(resolve => setTimeout(resolve, Util.config.msDelay));
   Util.addRequestTrace(requestOptions, trace);
   return request(requestOptions);
 };
@@ -621,7 +622,7 @@ const listPermissions = (
  * @param {object} [trace = {}] - optional microservice lifecycle trace headers
  * @returns {Promise<object>} - Promise resolving to a data object containing a list of user groups
  */
-const listPermissionRoles = (
+const listPermissionRoles = async (
   accessToken = "null accessToken",
   permissionUUID = "null permissionUUID",
   filters = undefined,
@@ -645,6 +646,7 @@ const listPermissionRoles = (
       requestOptions.qs[filter] = filters[filter];
     });
   }
+  await new Promise(resolve => setTimeout(resolve, Util.config.msDelay));
   return request(requestOptions);
 };
 

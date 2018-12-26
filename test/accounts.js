@@ -25,7 +25,7 @@ let identityData;
 const mochaAsync = (func, name) => {
   return async () => {
     try {
-      const response = await func(name);
+      const response = await func();
       logger.debug(name, response);
       return response; 
     } catch (error) {
@@ -79,7 +79,7 @@ describe("Accounts MS Unit Test Suite", function() {
     
   });
 
-  it("Create Account Without Parent-uuid", mochaAsync(async (name) => {
+  it("Create Account Without Parent-uuid", mochaAsync(async () => {
     try {
       if (!creds.isValid) throw new Error("Invalid Credentials");
       const body = {
@@ -110,11 +110,14 @@ describe("Accounts MS Unit Test Suite", function() {
       };
       const response = await s2sMS.Accounts.createAccount(accessToken, body, trace);
       //This test is expected to fail, so use assert here since it should not get this far
-      assert(1 !== 1);
+      assert.ok(false, JSON.stringify(response, null, "\t"));
       return response;
     } catch (error) {
-      assert(error.hasOwnProperty("statusCode") && error.statusCode === 400);
-      logger.debug(name, error);
+      assert.ok(
+        error.hasOwnProperty("statusCode") &&
+        error.statusCode === 400,
+        JSON.stringify(error, null, "\t"));
+      return error;
     }  
   },"Create Account Without Parent-uuid"));
 
@@ -149,7 +152,10 @@ describe("Accounts MS Unit Test Suite", function() {
     trace = objectMerge({}, trace, Util.generateNewMetaData(trace));
     const response = await s2sMS.Accounts.createAccount(accessToken, body, trace);
     //save the account number for other tests
-    assert(response.name === "Unit Test");
+    assert.ok(
+      response.name === "Unit Test",
+      JSON.stringify(response, null, "\t")
+    );
     accountUUID = response.uuid;
     contactUUID = response.contacts[0].uuid;
     return response;
@@ -169,7 +175,10 @@ describe("Accounts MS Unit Test Suite", function() {
         },
         trace
       );
-    assert(response.items.length === 1);
+    assert.ok(
+      response.items.length === 1,
+      JSON.stringify(response, null, "\t")
+    );
     return response;
   },"List Accounts"));
   
@@ -179,8 +188,11 @@ describe("Accounts MS Unit Test Suite", function() {
     await new Promise(resolve => setTimeout(resolve, Util.config.msDelay));
     trace = objectMerge({}, trace, Util.generateNewMetaData(trace));
     const response = await s2sMS.Accounts.getAccount(accessToken, accountUUID, trace);
-    assert(response.uuid === accountUUID);
-    assert(response.relationships.items[0].source.uuid == accountUUID);
+    assert.ok(
+      response.uuid === accountUUID &&
+      response.relationships.items[0].source.uuid == accountUUID,
+      JSON.stringify(response, null, "\t")
+    );
     return response;
   },"Get Account Data and Check Relationships"));
   
@@ -220,7 +232,10 @@ describe("Accounts MS Unit Test Suite", function() {
       body,
       trace
     );
-    assert(response.status === "ok");
+    assert.ok(
+      response.status === "ok",
+      JSON.stringify(response, null, "\t")
+    );
     return response;
   },"Modify Account"));
   
@@ -230,8 +245,11 @@ describe("Accounts MS Unit Test Suite", function() {
     await new Promise(resolve => setTimeout(resolve, Util.config.msDelay));
     trace = objectMerge({}, trace, Util.generateNewMetaData(trace));
     const response = await s2sMS.Accounts.getAccount(accessToken, accountUUID, trace);
-    assert(response.uuid === accountUUID);
-    assert(response.address.line1 === "456 XYZ St");
+    assert.ok(
+      response.uuid === accountUUID &&
+      response.address.line1 === "456 XYZ St",
+      JSON.stringify(response, null, "\t")
+    );
     return response;
   },"Get Account Data After Modify"));
   
@@ -245,9 +263,10 @@ describe("Accounts MS Unit Test Suite", function() {
       10, //limit
       trace 
     );
-    assert(
+    assert.ok(
       response.items.length > 0 &&
-      response.items[0].target.uuid === identityData.account_uuid
+      response.items[0].target.uuid === identityData.account_uuid,
+      JSON.stringify(response, null, "\t")
     );
     return response;
   },"List Account Relationships"));
@@ -256,7 +275,10 @@ describe("Accounts MS Unit Test Suite", function() {
     if (!creds.isValid) throw new Error("Invalid Credentials");
     trace = objectMerge({}, trace, Util.generateNewMetaData(trace));
     const response = await s2sMS.Accounts.suspendAccount(accessToken, accountUUID, trace);
-    assert(response.status === "ok");
+    assert.ok(
+      response.status === "ok",
+      JSON.stringify(response, null, "\t")
+    );
     return response;
   },"Suspend Account"));
 
@@ -264,7 +286,10 @@ describe("Accounts MS Unit Test Suite", function() {
     if (!creds.isValid) throw new Error("Invalid Credentials");
     trace = objectMerge({}, trace, Util.generateNewMetaData(trace));
     const response = await s2sMS.Accounts.reinstateAccount(accessToken, accountUUID, trace);
-    assert(response.status === "ok");
+    assert.ok(
+      response.status === "ok",
+      JSON.stringify(response, null, "\t")
+    );
     return response;
   },"Reinstate Account"));
 
@@ -272,15 +297,22 @@ describe("Accounts MS Unit Test Suite", function() {
     if (!creds.isValid) throw new Error("Invalid Credentials");
     trace = objectMerge({}, trace, Util.generateNewMetaData(trace));
     const response = await s2sMS.Accounts.deleteAccount(accessToken, accountUUID, trace);
-    assert(response.status === "ok");
+    assert.ok(
+      response.status === "ok",
+      JSON.stringify(response, null, "\t")
+    );
     return response;
   },"Delete Account"));
 
   // template
   // it("change me", mochaAsync(async () => {
   //   if (!creds.isValid) throw new Error("Invalid Credentials");
+  //   trace = objectMerge({}, trace, Util.generateNewMetaData(trace));
   //   const response = await somethingAsync();
-  //   assert(1 === 1);
+  //   assert.ok(
+  //     1 === 1,
+  //     JSON.stringify(response, null, "\t")
+  //   );
   //   return response;
   // },"change me"));
 });

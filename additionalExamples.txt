@@ -1,0 +1,1356 @@
+Permissions MS Test Suite
+{
+	"level": "trace",
+	"message": "Microservice Request POST: https://auth.star2starglobal.net/oauth/token",
+	"application": "s2sMsSDK",
+	"timestamp": "2018-12-21T21:03:55.587Z",
+	"metadata": {
+		"x-api-version": "v1",
+		"Content-type": "application/x-www-form-urlencoded",
+		"debug": false,
+		"level": "trace"
+	},
+	"id": "abeb9f2b-58ad-48ba-b37f-295202a5aa41",
+	"trace": "a77f5c93-f594-4a30-ab98-5fe7d35ff37f",
+	"parent": "c64aa4b9-cbe3-4fdd-9179-2ade12c58d1d"
+}
+{
+	"level": "trace",
+	"message": "Microservice Request GET: https://cpaas.star2starglobal.net/identity/users/me",
+	"application": "s2sMsSDK",
+	"timestamp": "2018-12-21T21:03:55.892Z",
+	"metadata": {
+		"Content-type": "application/json",
+		"x-api-version": "v1",
+		"debug": false,
+		"level": "trace"
+	},
+	"id": "0f76cdd6-c168-4db9-8abe-c4f0c572865b",
+	"trace": "1d600300-d707-4250-8572-2894d4b3c156",
+	"parent": "c93f7d1f-7493-4ee1-9ee1-b22d5dac3f8f"
+}
+{
+	"level": "trace",
+	"message": "Microservice Request GET: https://cpaas.star2starglobal.net/identity/identities/9a3e7ba9-a1a1-4080-9e48-b7ba3745dc2b?include=alias",
+	"application": "s2sMsSDK",
+	"timestamp": "2018-12-21T21:03:56.112Z",
+	"metadata": {
+		"Content-type": "application/json",
+		"x-api-version": "v1",
+		"debug": false,
+		"level": "trace"
+	},
+	"id": "4fa124b7-0273-4cb2-8b02-fa4b31265c78",
+	"trace": "148e5de2-a733-4310-82ab-ff97743d1c5c",
+	"parent": "263a1b4e-f6d5-43d4-880d-78bb6aeda0c2"
+}
+{
+	"level": "trace",
+	"message": "Microservice Request GET: https://cpaas.star2starglobal.net/auth/permissions",
+	"application": "s2sMsSDK",
+	"timestamp": "2018-12-21T21:03:56.295Z",
+	"metadata": {
+		"Content-type": "application/json",
+		"x-api-version": "v1",
+		"debug": false,
+		"level": "trace"
+	},
+	"id": "a55466e4-c9b9-4ea7-a165-2e895813f82a",
+	"trace": "0ac2f3ff-b5f0-451f-ba27-568ab86ef019",
+	"parent": "10814897-d55b-4921-b38d-4b9b20382081"
+}
+{
+	"level": "debug",
+	"message": "List Permissions",
+	"application": "s2sMsSDK",
+	"timestamp": "2018-12-21T21:03:56.457Z",
+	"metadata": {
+		"items": [
+			{
+				"uuid": "01e77463-bf4e-453d-8a89-c145f83d3f54",
+				"action": "update",
+				"name": "account.update",
+				"description": "Update an Account",
+				"type": null,
+				"allowed": true,
+				"resource_type": "account"
+			},
+			{
+				"uuid": "20dbccad-831f-49aa-bb30-c6908a9e5e03",
+				"action": "read",
+				"name": "account.read",
+				"description": "Read an Account",
+				"type": null,
+				"allowed": true,
+				"resource_type": "account"
+			}
+		],
+		"metadata": {
+			"total": 5,
+			"offset": 0,
+			"count": 2,
+			"limit": 2
+		},
+		"links": [
+			{
+				"rel": "self",
+				"href": "https://cpaas.star2starglobal.net/auth/permissions?name=account&offset=0&limit=2"
+			},
+			{
+				"rel": "first",
+				"href": "https://cpaas.star2starglobal.net/auth/permissions?name=account&offset=0&limit=2"
+			},
+			{
+				"rel": "next",
+				"href": "https://cpaas.star2starglobal.net/auth/permissions?name=account&offset=2&limit=2"
+			},
+			{
+				"rel": "last",
+				"href": "https://cpaas.star2starglobal.net/auth/permissions?name=account&offset=4&limit=2"
+			}
+		],
+		"level": "debug"
+	}
+}
+    ✓ List Permissions (164ms)
+{
+	"level": "trace",
+	"message": "Microservice Request POST: https://cpaas.star2starglobal.net/auth/accounts/16407512-0bdd-4bf1-9ffd-54c3dd36d4af/user-groups",
+	"application": "s2sMsSDK",
+	"timestamp": "2018-12-21T21:03:56.462Z",
+	"metadata": {
+		"Content-type": "application/json",
+		"x-api-version": "v1",
+		"debug": false,
+		"level": "trace"
+	},
+	"id": "ed12bbe5-0018-47a0-80d4-c261dcd669f2",
+	"trace": "0ac2f3ff-b5f0-451f-ba27-568ab86ef019",
+	"parent": "a55466e4-c9b9-4ea7-a165-2e895813f82a"
+}
+{
+	"level": "debug",
+	"message": "Create User Group",
+	"application": "s2sMsSDK",
+	"timestamp": "2018-12-21T21:03:56.684Z",
+	"metadata": {
+		"uuid": "5032dcaa-73f4-4a75-95cd-89362d75b171",
+		"name": "Unit-Test",
+		"description": "A test group",
+		"type": "role_user",
+		"members": [
+			{
+				"uuid": "9a3e7ba9-a1a1-4080-9e48-b7ba3745dc2b",
+				"type": "user"
+			}
+		],
+		"audit": {
+			"created_by": "",
+			"created_date": "2018-12-21T21:03:57Z",
+			"modified_by": "",
+			"modified_date": "2018-12-21T21:03:57Z"
+		},
+		"account_uuid": "16407512-0bdd-4bf1-9ffd-54c3dd36d4af",
+		"total_members": 1,
+		"level": "debug"
+	}
+}
+    ✓ Create User Group (225ms)
+{
+	"level": "trace",
+	"message": "Microservice Request GET: https://cpaas.star2starglobal.net/auth/user-groups",
+	"application": "s2sMsSDK",
+	"timestamp": "2018-12-21T21:03:56.686Z",
+	"metadata": {
+		"Content-type": "application/json",
+		"x-api-version": "v1",
+		"debug": false,
+		"level": "trace"
+	},
+	"id": "a4fd2fb7-c6f3-4c96-9ffb-68186d596f8d",
+	"trace": "0ac2f3ff-b5f0-451f-ba27-568ab86ef019",
+	"parent": "ed12bbe5-0018-47a0-80d4-c261dcd669f2"
+}
+{
+	"level": "debug",
+	"message": "List User Groups",
+	"application": "s2sMsSDK",
+	"timestamp": "2018-12-21T21:03:56.895Z",
+	"metadata": {
+		"items": [
+			{
+				"name": "Unit-Test",
+				"description": "A test group",
+				"total_members": 1,
+				"type": "role_user",
+				"uuid": "5032dcaa-73f4-4a75-95cd-89362d75b171"
+			}
+		],
+		"metadata": {
+			"total": 1,
+			"offset": 0,
+			"count": 1,
+			"limit": 10
+		},
+		"links": [
+			{
+				"rel": "self",
+				"href": "https://cpaas.star2starglobal.net/auth/user-groups?name=Unit-Test&description=A%20test%20group&sort=name&offset=0&limit=10"
+			},
+			{
+				"rel": "first",
+				"href": "https://cpaas.star2starglobal.net/auth/user-groups?name=Unit-Test&description=A%20test%20group&sort=name&offset=0&limit=10"
+			}
+		],
+		"level": "debug"
+	}
+}
+    ✓ List User Groups (210ms)
+{
+	"level": "trace",
+	"message": "Microservice Request POST: https://cpaas.star2starglobal.net/auth/user-groups/5032dcaa-73f4-4a75-95cd-89362d75b171/modify",
+	"application": "s2sMsSDK",
+	"timestamp": "2018-12-21T21:03:56.897Z",
+	"metadata": {
+		"Content-type": "application/json",
+		"x-api-version": "v1",
+		"debug": false,
+		"level": "trace"
+	},
+	"id": "50f6130c-4b64-4736-bd7c-07a27c9ccb40",
+	"trace": "0ac2f3ff-b5f0-451f-ba27-568ab86ef019",
+	"parent": "a4fd2fb7-c6f3-4c96-9ffb-68186d596f8d"
+}
+{
+	"level": "debug",
+	"message": "Modify Group",
+	"application": "s2sMsSDK",
+	"timestamp": "2018-12-21T21:03:57.126Z",
+	"metadata": {
+		"uuid": "5032dcaa-73f4-4a75-95cd-89362d75b171",
+		"name": "Unit-Test",
+		"description": "A modified test group",
+		"type": "role_user",
+		"members": [
+			{
+				"uuid": "9a3e7ba9-a1a1-4080-9e48-b7ba3745dc2b",
+				"type": "user"
+			}
+		],
+		"audit": {
+			"created_by": "",
+			"created_date": "2018-12-21T21:03:57Z",
+			"modified_by": "",
+			"modified_date": "2018-12-21T21:03:57Z"
+		},
+		"account_uuid": "16407512-0bdd-4bf1-9ffd-54c3dd36d4af",
+		"total_members": 1,
+		"level": "debug"
+	}
+}
+    ✓ Modify Group (230ms)
+{
+	"level": "trace",
+	"message": "Microservice Request GET: https://cpaas.star2starglobal.net/auth/user-groups",
+	"application": "s2sMsSDK",
+	"timestamp": "2018-12-21T21:03:57.128Z",
+	"metadata": {
+		"Content-type": "application/json",
+		"x-api-version": "v1",
+		"debug": false,
+		"level": "trace"
+	},
+	"id": "0d692796-2622-48fa-95b3-00e5179b3d42",
+	"trace": "0ac2f3ff-b5f0-451f-ba27-568ab86ef019",
+	"parent": "50f6130c-4b64-4736-bd7c-07a27c9ccb40"
+}
+{
+	"level": "debug",
+	"message": "List User Groups After Modify",
+	"application": "s2sMsSDK",
+	"timestamp": "2018-12-21T21:03:57.345Z",
+	"metadata": {
+		"items": [
+			{
+				"name": "Unit-Test",
+				"description": "A modified test group",
+				"total_members": 1,
+				"type": "role_user",
+				"uuid": "5032dcaa-73f4-4a75-95cd-89362d75b171"
+			}
+		],
+		"metadata": {
+			"total": 1,
+			"offset": 0,
+			"count": 1,
+			"limit": 10
+		},
+		"links": [
+			{
+				"rel": "self",
+				"href": "https://cpaas.star2starglobal.net/auth/user-groups?name=Unit-Test&description=A%20modified%20test%20group&sort=name&offset=0&limit=10"
+			},
+			{
+				"rel": "first",
+				"href": "https://cpaas.star2starglobal.net/auth/user-groups?name=Unit-Test&description=A%20modified%20test%20group&sort=name&offset=0&limit=10"
+			}
+		],
+		"level": "debug"
+	}
+}
+    ✓ List User Groups After Modify (218ms)
+{
+	"level": "trace",
+	"message": "Microservice Request POST: https://cpaas.star2starglobal.net/auth/accounts/16407512-0bdd-4bf1-9ffd-54c3dd36d4af/roles",
+	"application": "s2sMsSDK",
+	"timestamp": "2018-12-21T21:03:57.347Z",
+	"metadata": {
+		"Content-type": "application/json",
+		"x-api-version": "v1",
+		"debug": false,
+		"level": "trace"
+	},
+	"id": "3a9355c9-2cbb-42fd-8f09-43924844614c",
+	"trace": "0ac2f3ff-b5f0-451f-ba27-568ab86ef019",
+	"parent": "0d692796-2622-48fa-95b3-00e5179b3d42"
+}
+{
+	"level": "debug",
+	"message": "Create Role",
+	"application": "s2sMsSDK",
+	"timestamp": "2018-12-21T21:03:57.561Z",
+	"metadata": {
+		"name": "Unit-Test",
+		"description": "Unit-Test - permissions",
+		"permissions": [
+			"01e77463-bf4e-453d-8a89-c145f83d3f54"
+		],
+		"uuid": "a1a0eef6-1101-499a-b018-425194c4518d",
+		"links": [
+			{
+				"rel": "self",
+				"href": "https://cpaas.star2starglobal.net/auth/groups/a1a0eef6-1101-499a-b018-425194c4518d"
+			},
+			{
+				"rel": "client-groups",
+				"href": "https://cpaas.star2starglobal.net/auth/groups/a1a0eef6-1101-499a-b018-425194c4518d"
+			}
+		],
+		"level": "debug"
+	}
+}
+    ✓ Create Role (215ms)
+{
+	"level": "trace",
+	"message": "Microservice Request GET: https://cpaas.star2starglobal.net/auth/roles",
+	"application": "s2sMsSDK",
+	"timestamp": "2018-12-21T21:03:57.563Z",
+	"metadata": {
+		"Content-type": "application/json",
+		"x-api-version": "v1",
+		"debug": false,
+		"level": "trace"
+	},
+	"id": "3c23e423-530e-40c9-9a59-817c375d95fd",
+	"trace": "0ac2f3ff-b5f0-451f-ba27-568ab86ef019",
+	"parent": "3a9355c9-2cbb-42fd-8f09-43924844614c"
+}
+{
+	"level": "debug",
+	"message": "List Roles After Create",
+	"application": "s2sMsSDK",
+	"timestamp": "2018-12-21T21:03:57.762Z",
+	"metadata": {
+		"items": [
+			{
+				"name": "Unit-Test",
+				"description": "new description",
+				"total_members": 1,
+				"type": "role_permission",
+				"uuid": "1f0ca2db-ec82-46d7-bc92-307a65af08e1"
+			}
+		],
+		"metadata": {
+			"total": 2,
+			"offset": 0,
+			"count": 1,
+			"limit": 1
+		},
+		"links": [
+			{
+				"rel": "self",
+				"href": "https://cpaas.star2starglobal.net/auth/roles?name=Unit-Test&sort=name&offset=0&limit=1"
+			},
+			{
+				"rel": "first",
+				"href": "https://cpaas.star2starglobal.net/auth/roles?name=Unit-Test&sort=name&offset=0&limit=1"
+			},
+			{
+				"rel": "next",
+				"href": "https://cpaas.star2starglobal.net/auth/roles?name=Unit-Test&sort=name&offset=1&limit=1"
+			},
+			{
+				"rel": "last",
+				"href": "https://cpaas.star2starglobal.net/auth/roles?name=Unit-Test&sort=name&offset=1&limit=1"
+			}
+		],
+		"level": "debug"
+	}
+}
+    ✓ List Roles After Create (200ms)
+{
+	"level": "trace",
+	"message": "Microservice Request POST: https://cpaas.star2starglobal.net/auth/roles/a1a0eef6-1101-499a-b018-425194c4518d/permissions",
+	"application": "s2sMsSDK",
+	"timestamp": "2018-12-21T21:03:57.764Z",
+	"metadata": {
+		"Content-type": "application/json",
+		"x-api-version": "v1",
+		"debug": false,
+		"level": "trace"
+	},
+	"id": "28e4f196-cc5e-4b3d-b610-bf94eb69db4b",
+	"trace": "0ac2f3ff-b5f0-451f-ba27-568ab86ef019",
+	"parent": "3c23e423-530e-40c9-9a59-817c375d95fd"
+}
+{
+	"level": "debug",
+	"message": "Assign Permissions to Role",
+	"application": "s2sMsSDK",
+	"timestamp": "2018-12-21T21:03:58.011Z",
+	"metadata": {
+		"status": "ok",
+		"level": "debug"
+	}
+}
+    ✓ Assign Permissions to Role (248ms)
+{
+	"level": "trace",
+	"message": "Microservice Request POST: https://cpaas.star2starglobal.net/auth/roles/a1a0eef6-1101-499a-b018-425194c4518d/modify",
+	"application": "s2sMsSDK",
+	"timestamp": "2018-12-21T21:03:58.013Z",
+	"metadata": {
+		"Content-type": "application/json",
+		"x-api-version": "v1",
+		"debug": false,
+		"level": "trace"
+	},
+	"id": "65a4f44f-e870-4dca-91ca-72d85a973626",
+	"trace": "0ac2f3ff-b5f0-451f-ba27-568ab86ef019",
+	"parent": "28e4f196-cc5e-4b3d-b610-bf94eb69db4b"
+}
+{
+	"level": "debug",
+	"message": "Modfy Role",
+	"application": "s2sMsSDK",
+	"timestamp": "2018-12-21T21:03:58.266Z",
+	"metadata": {
+		"uuid": "a1a0eef6-1101-499a-b018-425194c4518d",
+		"name": "Unit-Test",
+		"description": "new description",
+		"type": "role_permission",
+		"members": [
+			{
+				"uuid": "01e77463-bf4e-453d-8a89-c145f83d3f54",
+				"type": "permission"
+			},
+			{
+				"uuid": "20dbccad-831f-49aa-bb30-c6908a9e5e03",
+				"type": "permission"
+			}
+		],
+		"audit": {
+			"created_by": "",
+			"created_date": "2018-12-21T21:03:57Z",
+			"modified_by": "",
+			"modified_date": "2018-12-21T21:03:58Z"
+		},
+		"account_uuid": "16407512-0bdd-4bf1-9ffd-54c3dd36d4af",
+		"total_members": 2,
+		"level": "debug"
+	}
+}
+    ✓ Modfy Role (254ms)
+{
+	"level": "trace",
+	"message": "Microservice Request GET: https://cpaas.star2starglobal.net/auth/roles",
+	"application": "s2sMsSDK",
+	"timestamp": "2018-12-21T21:03:58.268Z",
+	"metadata": {
+		"Content-type": "application/json",
+		"x-api-version": "v1",
+		"debug": false,
+		"level": "trace"
+	},
+	"id": "3c8c2caa-66e2-4c15-983d-2f0d40c6116f",
+	"trace": "0ac2f3ff-b5f0-451f-ba27-568ab86ef019",
+	"parent": "65a4f44f-e870-4dca-91ca-72d85a973626"
+}
+    1) List Roles After Modify
+{
+	"level": "trace",
+	"message": "Microservice Request POST: https://cpaas.star2starglobal.net/auth/user-groups/5032dcaa-73f4-4a75-95cd-89362d75b171/roles",
+	"application": "s2sMsSDK",
+	"timestamp": "2018-12-21T21:03:58.483Z",
+	"metadata": {
+		"Content-type": "application/json",
+		"x-api-version": "v1",
+		"debug": false,
+		"level": "trace"
+	},
+	"id": "9e69e534-0e54-4156-a021-69f1a5d6bd1f",
+	"trace": "0ac2f3ff-b5f0-451f-ba27-568ab86ef019",
+	"parent": "3c8c2caa-66e2-4c15-983d-2f0d40c6116f"
+}
+{
+	"level": "debug",
+	"message": "Assign Roles to User Group",
+	"application": "s2sMsSDK",
+	"timestamp": "2018-12-21T21:03:58.700Z",
+	"metadata": {
+		"status": "ok",
+		"level": "debug"
+	}
+}
+    ✓ Assign Roles to User Group (218ms)
+{
+	"level": "trace",
+	"message": "Microservice Request GET: https://cpaas.star2starglobal.net/auth/roles/a1a0eef6-1101-499a-b018-425194c4518d/user-groups",
+	"application": "s2sMsSDK",
+	"timestamp": "2018-12-21T21:03:58.702Z",
+	"metadata": {
+		"Content-type": "application/json",
+		"x-api-version": "v1",
+		"debug": false,
+		"level": "trace"
+	},
+	"id": "b3cbc41e-fa69-4a71-b0b2-fcd4f08a2b6f",
+	"trace": "0ac2f3ff-b5f0-451f-ba27-568ab86ef019",
+	"parent": "9e69e534-0e54-4156-a021-69f1a5d6bd1f"
+}
+{
+	"level": "trace",
+	"message": "Microservice Request GET: https://cpaas.star2starglobal.net/auth/roles/a1a0eef6-1101-499a-b018-425194c4518d/user-groups",
+	"application": "s2sMsSDK",
+	"timestamp": "2018-12-21T21:03:58.900Z",
+	"metadata": {
+		"Content-type": "application/json",
+		"x-api-version": "v1",
+		"debug": false,
+		"level": "trace"
+	},
+	"id": "b3cbc41e-fa69-4a71-b0b2-fcd4f08a2b6f",
+	"trace": "0ac2f3ff-b5f0-451f-ba27-568ab86ef019",
+	"parent": "9e69e534-0e54-4156-a021-69f1a5d6bd1f"
+}
+{
+	"level": "debug",
+	"message": "List a Role's Groups",
+	"application": "s2sMsSDK",
+	"timestamp": "2018-12-21T21:03:59.097Z",
+	"metadata": {
+		"validResponse": {
+			"items": [
+				{
+					"name": "Unit-Test",
+					"description": "A modified test group",
+					"uuid": "5032dcaa-73f4-4a75-95cd-89362d75b171"
+				}
+			],
+			"metadata": {
+				"total": 1,
+				"offset": 0,
+				"count": 1,
+				"limit": 100
+			},
+			"links": [
+				{
+					"rel": "self",
+					"href": "https://cpaas.star2starglobal.net/auth/roles/a1a0eef6-1101-499a-b018-425194c4518d/user-groups?sort=name&offset=0&limit=100"
+				},
+				{
+					"rel": "first",
+					"href": "https://cpaas.star2starglobal.net/auth/roles/a1a0eef6-1101-499a-b018-425194c4518d/user-groups?sort=name&offset=0&limit=100"
+				}
+			]
+		},
+		"invalidResponse": {
+			"items": [],
+			"metadata": {
+				"total": 0,
+				"offset": 0,
+				"count": 0,
+				"limit": 100
+			},
+			"links": [
+				{
+					"rel": "self",
+					"href": "https://cpaas.star2starglobal.net/auth/roles/a1a0eef6-1101-499a-b018-425194c4518d/user-groups?name=invalid&sort=name&offset=0&limit=100"
+				},
+				{
+					"rel": "first",
+					"href": "https://cpaas.star2starglobal.net/auth/roles/a1a0eef6-1101-499a-b018-425194c4518d/user-groups?name=invalid&sort=name&offset=0&limit=100"
+				}
+			]
+		},
+		"level": "debug"
+	}
+}
+    ✓ List a Role's Groups (396ms)
+{
+	"level": "trace",
+	"message": "Microservice Request GET: https://cpaas.star2starglobal.net/auth/roles/a1a0eef6-1101-499a-b018-425194c4518d/permissions",
+	"application": "s2sMsSDK",
+	"timestamp": "2018-12-21T21:03:59.099Z",
+	"metadata": {
+		"Content-type": "application/json",
+		"x-api-version": "v1",
+		"debug": false,
+		"level": "trace"
+	},
+	"id": "7714c80b-c30e-43f0-8170-b4ee836a3adb",
+	"trace": "0ac2f3ff-b5f0-451f-ba27-568ab86ef019",
+	"parent": "b3cbc41e-fa69-4a71-b0b2-fcd4f08a2b6f"
+}
+{
+	"level": "debug",
+	"message": "List a Role's Permissions",
+	"application": "s2sMsSDK",
+	"timestamp": "2018-12-21T21:03:59.311Z",
+	"metadata": {
+		"items": [
+			{
+				"name": "account.update",
+				"description": "Update an Account",
+				"uuid": "01e77463-bf4e-453d-8a89-c145f83d3f54"
+			}
+		],
+		"metadata": {
+			"total": 1,
+			"offset": 0,
+			"count": 1,
+			"limit": 100
+		},
+		"links": [
+			{
+				"rel": "self",
+				"href": "https://cpaas.star2starglobal.net/auth/roles/a1a0eef6-1101-499a-b018-425194c4518d/permissions?name=update&sort=name&offset=0&limit=100"
+			},
+			{
+				"rel": "first",
+				"href": "https://cpaas.star2starglobal.net/auth/roles/a1a0eef6-1101-499a-b018-425194c4518d/permissions?name=update&sort=name&offset=0&limit=100"
+			}
+		],
+		"level": "debug"
+	}
+}
+    ✓ List a Role's Permissions (213ms)
+{
+	"level": "trace",
+	"message": "Microservice Request GET: https://cpaas.star2starglobal.net/auth/permissions/01e77463-bf4e-453d-8a89-c145f83d3f54/roles",
+	"application": "s2sMsSDK",
+	"timestamp": "2018-12-21T21:03:59.313Z",
+	"metadata": {
+		"Content-type": "application/json",
+		"x-api-version": "v1",
+		"debug": false,
+		"level": "trace"
+	},
+	"id": "8cf113e6-43dd-4f97-9f82-f92b7aa5100d",
+	"trace": "0ac2f3ff-b5f0-451f-ba27-568ab86ef019",
+	"parent": "7714c80b-c30e-43f0-8170-b4ee836a3adb"
+}
+    2) List a Permission's Roles
+{
+	"level": "trace",
+	"message": "Microservice Request GET: https://cpaas.star2starglobal.net/auth/user-groups/5032dcaa-73f4-4a75-95cd-89362d75b171/roles",
+	"application": "s2sMsSDK",
+	"timestamp": "2018-12-21T21:03:59.500Z",
+	"metadata": {
+		"Content-type": "application/json",
+		"x-api-version": "v1",
+		"debug": false,
+		"level": "trace"
+	},
+	"id": "d00af25c-8c0b-4333-9cd5-292e1ffe45dc",
+	"trace": "9678a143-5b32-4f83-a8ad-a8a4a7373d62",
+	"parent": "5c9750fd-fae3-47ea-8e3c-f08d52c9b2cd"
+}
+{
+	"level": "debug",
+	"message": "List a Group's Roles",
+	"application": "s2sMsSDK",
+	"timestamp": "2018-12-21T21:03:59.731Z",
+	"metadata": {
+		"items": [
+			{
+				"name": "Unit-Test",
+				"description": "new description",
+				"uuid": "a1a0eef6-1101-499a-b018-425194c4518d"
+			}
+		],
+		"metadata": {
+			"total": 1,
+			"offset": 0,
+			"count": 1,
+			"limit": 100
+		},
+		"links": [
+			{
+				"rel": "self",
+				"href": "https://cpaas.star2starglobal.net/auth/user-groups/5032dcaa-73f4-4a75-95cd-89362d75b171/roles?sort=name&offset=0&limit=100"
+			},
+			{
+				"rel": "first",
+				"href": "https://cpaas.star2starglobal.net/auth/user-groups/5032dcaa-73f4-4a75-95cd-89362d75b171/roles?sort=name&offset=0&limit=100"
+			}
+		],
+		"level": "debug"
+	}
+}
+    ✓ List a Group's Roles (232ms)
+{
+	"level": "trace",
+	"message": "Microservice Request DELETE: https://cpaas.star2starglobal.net/groups/groups/5032dcaa-73f4-4a75-95cd-89362d75b171/members",
+	"application": "s2sMsSDK",
+	"timestamp": "2018-12-21T21:03:59.735Z",
+	"metadata": {
+		"Content-type": "application/json",
+		"x-api-version": "v1",
+		"debug": false,
+		"level": "trace"
+	},
+	"id": "493adc72-10a3-480e-a01e-38abe95883e7",
+	"trace": "0ac2f3ff-b5f0-451f-ba27-568ab86ef019",
+	"parent": "6d2156ed-0951-4681-9f81-528025dfc550"
+}
+{
+	"level": "debug",
+	"message": "Remove User Group Member",
+	"application": "s2sMsSDK",
+	"timestamp": "2018-12-21T21:03:59.912Z",
+	"metadata": {
+		"status": "ok",
+		"level": "debug"
+	}
+}
+    ✓ Remove User Group Member (180ms)
+{
+	"level": "trace",
+	"message": "Microservice Request GET: https://cpaas.star2starglobal.net/auth/user-groups",
+	"application": "s2sMsSDK",
+	"timestamp": "2018-12-21T21:03:59.914Z",
+	"metadata": {
+		"Content-type": "application/json",
+		"x-api-version": "v1",
+		"debug": false,
+		"level": "trace"
+	},
+	"id": "e9459c96-6bfb-4ff6-b540-c6b5c5b73d4a",
+	"trace": "0ac2f3ff-b5f0-451f-ba27-568ab86ef019",
+	"parent": "493adc72-10a3-480e-a01e-38abe95883e7"
+}
+    3) List User Groups After Remove Member
+{
+	"level": "trace",
+	"message": "Microservice Request POST: https://cpaas.star2starglobal.net/groups/groups/5032dcaa-73f4-4a75-95cd-89362d75b171/members",
+	"application": "s2sMsSDK",
+	"timestamp": "2018-12-21T21:04:00.127Z",
+	"metadata": {
+		"Content-type": "application/json",
+		"x-api-version": "v1",
+		"debug": false,
+		"level": "trace"
+	},
+	"id": "5677d7f9-83d5-4566-8fe8-63227d868305",
+	"trace": "0ac2f3ff-b5f0-451f-ba27-568ab86ef019",
+	"parent": "e9459c96-6bfb-4ff6-b540-c6b5c5b73d4a"
+}
+{
+	"level": "debug",
+	"message": "Add User Group Member",
+	"application": "s2sMsSDK",
+	"timestamp": "2018-12-21T21:04:00.302Z",
+	"metadata": {
+		"status": "Active",
+		"uuid": "5032dcaa-73f4-4a75-95cd-89362d75b171",
+		"name": "Unit-Test",
+		"description": "A modified test group",
+		"account_uuid": "16407512-0bdd-4bf1-9ffd-54c3dd36d4af",
+		"type": "role_user",
+		"total_members": 1,
+		"level": "debug"
+	}
+}
+    ✓ Add User Group Member (178ms)
+{
+	"level": "trace",
+	"message": "Microservice Request GET: https://cpaas.star2starglobal.net/auth/user-groups",
+	"application": "s2sMsSDK",
+	"timestamp": "2018-12-21T21:04:00.304Z",
+	"metadata": {
+		"Content-type": "application/json",
+		"x-api-version": "v1",
+		"debug": false,
+		"level": "trace"
+	},
+	"id": "a79871b6-a2a8-40d8-b2e1-c9fe3a6e2f7e",
+	"trace": "0ac2f3ff-b5f0-451f-ba27-568ab86ef019",
+	"parent": "5677d7f9-83d5-4566-8fe8-63227d868305"
+}
+{
+	"level": "debug",
+	"message": "List User Groups After Add Member",
+	"application": "s2sMsSDK",
+	"timestamp": "2018-12-21T21:04:00.518Z",
+	"metadata": {
+		"items": [
+			{
+				"name": "Unit-Test",
+				"description": "A modified test group",
+				"total_members": 1,
+				"type": "role_user",
+				"uuid": "5032dcaa-73f4-4a75-95cd-89362d75b171"
+			}
+		],
+		"metadata": {
+			"total": 1,
+			"offset": 0,
+			"count": 1,
+			"limit": 100
+		},
+		"links": [
+			{
+				"rel": "self",
+				"href": "https://cpaas.star2starglobal.net/auth/user-groups?name=Unit-Test&description=A%20modified%20test%20group&sort=name&offset=0&limit=100"
+			},
+			{
+				"rel": "first",
+				"href": "https://cpaas.star2starglobal.net/auth/user-groups?name=Unit-Test&description=A%20modified%20test%20group&sort=name&offset=0&limit=100"
+			}
+		],
+		"level": "debug"
+	}
+}
+    ✓ List User Groups After Add Member (214ms)
+{
+	"level": "trace",
+	"message": "Microservice Request DELETE: https://cpaas.star2starglobal.net/auth/roles/a1a0eef6-1101-499a-b018-425194c4518d/permissions/01e77463-bf4e-453d-8a89-c145f83d3f54",
+	"application": "s2sMsSDK",
+	"timestamp": "2018-12-21T21:04:00.520Z",
+	"metadata": {
+		"Content-type": "application/json",
+		"x-api-version": "v1",
+		"debug": false,
+		"level": "trace"
+	},
+	"id": "23961cff-c890-4232-8d7a-8b29096fd65b",
+	"trace": "0ac2f3ff-b5f0-451f-ba27-568ab86ef019",
+	"parent": "a79871b6-a2a8-40d8-b2e1-c9fe3a6e2f7e"
+}
+{
+	"level": "debug",
+	"message": "Delete Permission From Role With User Group Attached",
+	"application": "s2sMsSDK",
+	"timestamp": "2018-12-21T21:04:00.758Z",
+	"metadata": {
+		"name": "StatusCodeError",
+		"statusCode": 400,
+		"message": "400 - {\"code\":400,\"message\":\"Role a1a0eef6-1101-499a-b018-425194c4518d assigned to user group \",\"trace_id\":\"0ac2f3ff-b5f0-451f-ba27-568ab86ef019\"}",
+		"error": {
+			"code": 400,
+			"message": "Role a1a0eef6-1101-499a-b018-425194c4518d assigned to user group ",
+			"trace_id": "0ac2f3ff-b5f0-451f-ba27-568ab86ef019"
+		},
+		"options": {
+			"method": "DELETE",
+			"uri": "https://cpaas.star2starglobal.net/auth/roles/a1a0eef6-1101-499a-b018-425194c4518d/permissions/01e77463-bf4e-453d-8a89-c145f83d3f54",
+			"headers": {
+				"Authorization": "Bearer eyJraWQiOiI1OGRhOWI1MDVjMGE1YTAwMDFlZmIzMDRlNDUwMWE3NzYyYzY0Zjc3ODE2N2NlZjNkNTBlYThmZSIsImFsZyI6IlJTMjU2In0.eyJzdWIiOiI5YTNlN2JhOS1hMWExLTQwODAtOWU0OC1iN2JhMzc0NWRjMmIiLCJzY3AiOiJtZXNzYWdlLmxpc3QiLCJleHAiOjE1NDU0Mjc3NjQsImlhdCI6MTU0NTQyNDE2NCwiY2lkIjoielZmZXpQd0p0ZHh2a05ZU1VhQVEiLCJwb2xpY3kiOiI1YjM0MzEwOGNlMTY2ZDAwMDEwYzM4NTgifQ.ycB8GBaxjam6kXgJ9xvrKvVkiSwgvpVv3WtA6xC3WMLpLF5tMkzFrw1m45Y128t6-srWjtAA-0-pjRfRS3SDrQ",
+				"Content-type": "application/json",
+				"x-api-version": "v1",
+				"id": "23961cff-c890-4232-8d7a-8b29096fd65b",
+				"trace": "0ac2f3ff-b5f0-451f-ba27-568ab86ef019",
+				"parent": "a79871b6-a2a8-40d8-b2e1-c9fe3a6e2f7e",
+				"debug": false
+			},
+			"resolveWithFullResponse": true,
+			"json": true,
+			"simple": true,
+			"transform2xxOnly": false
+		},
+		"response": {
+			"statusCode": 400,
+			"body": {
+				"$ref": "$[\"error\"]"
+			},
+			"headers": {
+				"server": "nginx/1.13.9",
+				"date": "Fri, 21 Dec 2018 21:04:00 GMT",
+				"content-type": "application/json;charset=UTF-8",
+				"content-length": "140",
+				"connection": "close",
+				"vary": "Origin",
+				"x-application-context": "permission-management:googlecloud:8080",
+				"x-ratelimit-limit": "-1",
+				"x-ratelimit-remaining": "-1",
+				"x-ratelimit-reset": "1543532137",
+				"strict-transport-security": "max-age=15724800; includeSubDomains;",
+				"access-control-allow-origin": "*",
+				"access-control-allow-credentials": "true",
+				"access-control-allow-methods": "PUT, GET, POST, OPTIONS, DELETE",
+				"access-control-allow-headers": "DNT,X-CustomHeader,Keep-Alive,User-Agent,X-Requested-With,If-Modified-Since,Cache-Control,Content-Type,Authorization,accept,x-api-version,X-User-uuid,debug,id,parent,trace"
+			},
+			"request": {
+				"uri": {
+					"protocol": "https:",
+					"slashes": true,
+					"auth": null,
+					"host": "cpaas.star2starglobal.net",
+					"port": 443,
+					"hostname": "cpaas.star2starglobal.net",
+					"hash": null,
+					"search": null,
+					"query": null,
+					"pathname": "/auth/roles/a1a0eef6-1101-499a-b018-425194c4518d/permissions/01e77463-bf4e-453d-8a89-c145f83d3f54",
+					"path": "/auth/roles/a1a0eef6-1101-499a-b018-425194c4518d/permissions/01e77463-bf4e-453d-8a89-c145f83d3f54",
+					"href": "https://cpaas.star2starglobal.net/auth/roles/a1a0eef6-1101-499a-b018-425194c4518d/permissions/01e77463-bf4e-453d-8a89-c145f83d3f54"
+				},
+				"method": "DELETE",
+				"headers": {
+					"Authorization": "Bearer eyJraWQiOiI1OGRhOWI1MDVjMGE1YTAwMDFlZmIzMDRlNDUwMWE3NzYyYzY0Zjc3ODE2N2NlZjNkNTBlYThmZSIsImFsZyI6IlJTMjU2In0.eyJzdWIiOiI5YTNlN2JhOS1hMWExLTQwODAtOWU0OC1iN2JhMzc0NWRjMmIiLCJzY3AiOiJtZXNzYWdlLmxpc3QiLCJleHAiOjE1NDU0Mjc3NjQsImlhdCI6MTU0NTQyNDE2NCwiY2lkIjoielZmZXpQd0p0ZHh2a05ZU1VhQVEiLCJwb2xpY3kiOiI1YjM0MzEwOGNlMTY2ZDAwMDEwYzM4NTgifQ.ycB8GBaxjam6kXgJ9xvrKvVkiSwgvpVv3WtA6xC3WMLpLF5tMkzFrw1m45Y128t6-srWjtAA-0-pjRfRS3SDrQ",
+					"Content-type": "application/json",
+					"x-api-version": "v1",
+					"id": "23961cff-c890-4232-8d7a-8b29096fd65b",
+					"trace": "0ac2f3ff-b5f0-451f-ba27-568ab86ef019",
+					"parent": "a79871b6-a2a8-40d8-b2e1-c9fe3a6e2f7e",
+					"debug": false,
+					"accept": "application/json",
+					"content-length": 0
+				}
+			}
+		},
+		"level": "debug"
+	}
+}
+{
+	"level": "debug",
+	"message": "Delete Permission From Role With User Group Attached",
+	"application": "s2sMsSDK",
+	"timestamp": "2018-12-21T21:04:00.758Z",
+	"metadata": {
+		"level": "debug"
+	}
+}
+    ✓ Delete Permission From Role With User Group Attached (239ms)
+{
+	"level": "trace",
+	"message": "Microservice Request DELETE: https://cpaas.star2starglobal.net/auth/user-groups/5032dcaa-73f4-4a75-95cd-89362d75b171/roles/a1a0eef6-1101-499a-b018-425194c4518d",
+	"application": "s2sMsSDK",
+	"timestamp": "2018-12-21T21:04:00.760Z",
+	"metadata": {
+		"Content-type": "application/json",
+		"x-api-version": "v1",
+		"debug": false,
+		"level": "trace"
+	},
+	"id": "3e922390-270f-4119-9f62-6d2310ebf578",
+	"trace": "0ac2f3ff-b5f0-451f-ba27-568ab86ef019",
+	"parent": "23961cff-c890-4232-8d7a-8b29096fd65b"
+}
+{
+	"level": "trace",
+	"message": "Microservice Request GET: https://cpaas.star2starglobal.net/auth/user-groups/5032dcaa-73f4-4a75-95cd-89362d75b171/roles",
+	"application": "s2sMsSDK",
+	"timestamp": "2018-12-21T21:04:00.963Z",
+	"metadata": {
+		"Content-type": "application/json",
+		"x-api-version": "v1",
+		"debug": false,
+		"level": "trace"
+	},
+	"id": "12c8e0a1-dea9-4b6f-867f-e568ca6e5346",
+	"trace": "764ea8ce-755f-43aa-ab09-ed45a07aeb91",
+	"parent": "8f61487d-7d2e-4035-8bb3-c9b26c8273c7"
+}
+{
+	"level": "debug",
+	"message": "Delete Role From User Group",
+	"application": "s2sMsSDK",
+	"timestamp": "2018-12-21T21:04:01.194Z",
+	"metadata": {
+		"deleteResponse": {
+			"status": "ok"
+		},
+		"listResponse": {
+			"items": [],
+			"metadata": {
+				"total": 0,
+				"offset": 0,
+				"count": 0,
+				"limit": 100
+			},
+			"links": [
+				{
+					"rel": "self",
+					"href": "https://cpaas.star2starglobal.net/auth/user-groups/5032dcaa-73f4-4a75-95cd-89362d75b171/roles?sort=name&offset=0&limit=100"
+				},
+				{
+					"rel": "first",
+					"href": "https://cpaas.star2starglobal.net/auth/user-groups/5032dcaa-73f4-4a75-95cd-89362d75b171/roles?sort=name&offset=0&limit=100"
+				}
+			]
+		},
+		"level": "debug"
+	}
+}
+    ✓ Delete Role From User Group (435ms)
+{
+	"level": "trace",
+	"message": "Microservice Request DELETE: https://cpaas.star2starglobal.net/auth/roles/a1a0eef6-1101-499a-b018-425194c4518d/permissions/01e77463-bf4e-453d-8a89-c145f83d3f54",
+	"application": "s2sMsSDK",
+	"timestamp": "2018-12-21T21:04:01.195Z",
+	"metadata": {
+		"Content-type": "application/json",
+		"x-api-version": "v1",
+		"debug": false,
+		"level": "trace"
+	},
+	"id": "5ce2504e-5094-4624-b457-5c022c8e62b6",
+	"trace": "0ac2f3ff-b5f0-451f-ba27-568ab86ef019",
+	"parent": "3425283d-43af-4fcf-9cd6-f94533e17a62"
+}
+{
+	"level": "debug",
+	"message": "Delete Permission From Role",
+	"application": "s2sMsSDK",
+	"timestamp": "2018-12-21T21:04:01.420Z",
+	"metadata": {
+		"status": "ok",
+		"level": "debug"
+	}
+}
+    ✓ Delete Permission From Role (226ms)
+{
+	"level": "trace",
+	"message": "Microservice Request GET: https://cpaas.star2starglobal.net/auth/roles",
+	"application": "s2sMsSDK",
+	"timestamp": "2018-12-21T21:04:01.421Z",
+	"metadata": {
+		"Content-type": "application/json",
+		"x-api-version": "v1",
+		"debug": false,
+		"level": "trace"
+	},
+	"id": "3eb70d0f-fc64-4c21-bd7b-28571f93036f",
+	"trace": "0ac2f3ff-b5f0-451f-ba27-568ab86ef019",
+	"parent": "5ce2504e-5094-4624-b457-5c022c8e62b6"
+}
+{
+	"level": "debug",
+	"message": "List Roles After Delete Permission",
+	"application": "s2sMsSDK",
+	"timestamp": "2018-12-21T21:04:01.623Z",
+	"metadata": {
+		"items": [
+			{
+				"name": "Unit-Test",
+				"description": "new description",
+				"total_members": 1,
+				"type": "role_permission",
+				"uuid": "1f0ca2db-ec82-46d7-bc92-307a65af08e1"
+			},
+			{
+				"name": "Unit-Test",
+				"description": "new description",
+				"total_members": 1,
+				"type": "role_permission",
+				"uuid": "a1a0eef6-1101-499a-b018-425194c4518d"
+			}
+		],
+		"metadata": {
+			"total": 2,
+			"offset": 0,
+			"count": 2,
+			"limit": 100
+		},
+		"links": [
+			{
+				"rel": "self",
+				"href": "https://cpaas.star2starglobal.net/auth/roles?name=Unit-Test&sort=name&offset=0&limit=100"
+			},
+			{
+				"rel": "first",
+				"href": "https://cpaas.star2starglobal.net/auth/roles?name=Unit-Test&sort=name&offset=0&limit=100"
+			}
+		],
+		"level": "debug"
+	}
+}
+    ✓ List Roles After Delete Permission (202ms)
+{
+	"level": "trace",
+	"message": "Microservice Request POST: https://cpaas.star2starglobal.net/auth/roles/a1a0eef6-1101-499a-b018-425194c4518d/deactivate",
+	"application": "s2sMsSDK",
+	"timestamp": "2018-12-21T21:04:01.624Z",
+	"metadata": {
+		"Content-type": "application/json",
+		"x-api-version": "v1",
+		"debug": false,
+		"level": "trace"
+	},
+	"id": "db217da5-63ab-4137-b2a4-f05e5b4eecf8",
+	"trace": "0ac2f3ff-b5f0-451f-ba27-568ab86ef019",
+	"parent": "3eb70d0f-fc64-4c21-bd7b-28571f93036f"
+}
+{
+	"level": "debug",
+	"message": "Deactivate Role",
+	"application": "s2sMsSDK",
+	"timestamp": "2018-12-21T21:04:01.834Z",
+	"metadata": {
+		"status": "ok",
+		"level": "debug"
+	}
+}
+    ✓ Deactivate Role (212ms)
+{
+	"level": "trace",
+	"message": "Microservice Request POST: https://cpaas.star2starglobal.net/auth/roles/a1a0eef6-1101-499a-b018-425194c4518d/activate",
+	"application": "s2sMsSDK",
+	"timestamp": "2018-12-21T21:04:01.836Z",
+	"metadata": {
+		"Content-type": "application/json",
+		"x-api-version": "v1",
+		"debug": false,
+		"level": "trace"
+	},
+	"id": "8a3c98ca-9fab-4a84-b886-a16c2f045647",
+	"trace": "0ac2f3ff-b5f0-451f-ba27-568ab86ef019",
+	"parent": "db217da5-63ab-4137-b2a4-f05e5b4eecf8"
+}
+{
+	"level": "debug",
+	"message": "Reactivate Role",
+	"application": "s2sMsSDK",
+	"timestamp": "2018-12-21T21:04:02.060Z",
+	"metadata": {
+		"status": "ok",
+		"level": "debug"
+	}
+}
+    ✓ Reactivate Role (225ms)
+{
+	"level": "trace",
+	"message": "Microservice Request DELETE: https://cpaas.star2starglobal.net/auth/roles/a1a0eef6-1101-499a-b018-425194c4518d",
+	"application": "s2sMsSDK",
+	"timestamp": "2018-12-21T21:04:02.062Z",
+	"metadata": {
+		"Content-type": "application/json",
+		"x-api-version": "v1",
+		"debug": false,
+		"level": "trace"
+	},
+	"id": "9ba4690e-c74e-4044-8a79-dbe2dc7c9da2",
+	"trace": "0ac2f3ff-b5f0-451f-ba27-568ab86ef019",
+	"parent": "8a3c98ca-9fab-4a84-b886-a16c2f045647"
+}
+{
+	"level": "debug",
+	"message": "Delete Role",
+	"application": "s2sMsSDK",
+	"timestamp": "2018-12-21T21:04:02.301Z",
+	"metadata": {
+		"status": "ok",
+		"level": "debug"
+	}
+}
+    ✓ Delete Role (240ms)
+{
+	"level": "trace",
+	"message": "Microservice Request DELETE: https://cpaas.star2starglobal.net/groups/groups/5032dcaa-73f4-4a75-95cd-89362d75b171",
+	"application": "s2sMsSDK",
+	"timestamp": "2018-12-21T21:04:02.304Z",
+	"metadata": {
+		"Content-type": "application/json",
+		"x-api-version": "v1",
+		"debug": false,
+		"level": "trace"
+	},
+	"id": "575b2a4d-f471-4ddc-9fb8-863f563be1fe",
+	"trace": "0ac2f3ff-b5f0-451f-ba27-568ab86ef019",
+	"parent": "9ba4690e-c74e-4044-8a79-dbe2dc7c9da2"
+}
+{
+	"level": "debug",
+	"message": "Delete User Groups",
+	"application": "s2sMsSDK",
+	"timestamp": "2018-12-21T21:04:02.477Z",
+	"metadata": {
+		"status": "ok",
+		"level": "debug"
+	}
+}
+    ✓ Delete User Group (175ms)
+{
+	"level": "trace",
+	"message": "Microservice Request GET: https://cpaas.star2starglobal.net/auth/user-groups",
+	"application": "s2sMsSDK",
+	"timestamp": "2018-12-21T21:04:02.479Z",
+	"metadata": {
+		"Content-type": "application/json",
+		"x-api-version": "v1",
+		"debug": false,
+		"level": "trace"
+	},
+	"id": "8c8c5599-8e65-4ff7-bb9a-7a6b12c73bc9",
+	"trace": "0ac2f3ff-b5f0-451f-ba27-568ab86ef019",
+	"parent": "575b2a4d-f471-4ddc-9fb8-863f563be1fe"
+}
+{
+	"level": "trace",
+	"message": "Microservice Request GET: https://cpaas.star2starglobal.net/auth/roles",
+	"application": "s2sMsSDK",
+	"timestamp": "2018-12-21T21:04:02.684Z",
+	"metadata": {
+		"Content-type": "application/json",
+		"x-api-version": "v1",
+		"debug": false,
+		"level": "trace"
+	},
+	"id": "81441423-4ac2-4b9c-9e8c-63f269f45da2",
+	"trace": "0ac2f3ff-b5f0-451f-ba27-568ab86ef019",
+	"parent": "8c8c5599-8e65-4ff7-bb9a-7a6b12c73bc9"
+}
+
+
+  24 passing (7s)
+  3 failing
+
+  1) Permissions MS Test Suite
+       List Roles After Modify:
+
+      AssertionError [ERR_ASSERTION]: {
+	"items": [
+		{
+			"name": "Unit-Test",
+			"description": "new description",
+			"total_members": 1,
+			"type": "role_permission",
+			"uuid": "1f0ca2db-ec82-46d7-bc92-307a65af08e1"
+		}
+	],
+	"metadata": {
+		"total": 2,
+		"offset": 0,
+		"count": 1,
+		"limit": 1
+	},
+	"links": [
+		{
+			"rel": "self",
+			"href": "https://cpaas.star2starglobal.net/auth/roles?name=Unit-Test&sort=name&offset=0&limit=1"
+		},
+		{
+			"rel": "first",
+			"href": "https://cpaas.star2starglobal.net/auth/roles?name=Unit-Test&sort=name&offset=0&limit=1"
+		},
+		{
+			"rel": "next",
+			"href": "https://cpaas.star2starglobal.net/auth/roles?name=Unit-Test&sort=name&offset=1&limit=1"
+		},
+		{
+			"rel": "last",
+			"href": "https://cpaas.star2starglobal.net/auth/roles?name=Unit-Test&sort=name&offset=1&limit=1"
+		}
+	]
+}
+      + expected - actual
+
+      -false
+      +true
+      
+      at Suite._callee12$ (test/auth.js:297:12)
+      at tryCatch (node_modules/babel-polyfill/node_modules/regenerator-runtime/runtime.js:65:40)
+      at Generator.invoke [as _invoke] (node_modules/babel-polyfill/node_modules/regenerator-runtime/runtime.js:303:22)
+      at Generator.prototype.(anonymous function) [as next] (node_modules/babel-polyfill/node_modules/regenerator-runtime/runtime.js:117:21)
+      at step (test/auth.js:9:191)
+      at /Users/nharris/Repos/star2star-js-ms-sdk/test/auth.js:9:361
+
+  2) Permissions MS Test Suite
+       List a Permission's Roles:
+
+      AssertionError [ERR_ASSERTION]: {
+	"items": [],
+	"metadata": {
+		"total": 0,
+		"offset": 0,
+		"count": 0,
+		"limit": 100
+	},
+	"links": [
+		{
+			"rel": "self",
+			"href": "https://cpaas.star2starglobal.net/auth/permissions/01e77463-bf4e-453d-8a89-c145f83d3f54/roles?name=new%20name&sort=name&offset=0&limit=100"
+		},
+		{
+			"rel": "first",
+			"href": "https://cpaas.star2starglobal.net/auth/permissions/01e77463-bf4e-453d-8a89-c145f83d3f54/roles?name=new%20name&sort=name&offset=0&limit=100"
+		}
+	]
+}
+      + expected - actual
+
+      -false
+      +true
+      
+      at Suite._callee16$ (test/auth.js:385:12)
+      at tryCatch (node_modules/babel-polyfill/node_modules/regenerator-runtime/runtime.js:65:40)
+      at Generator.invoke [as _invoke] (node_modules/babel-polyfill/node_modules/regenerator-runtime/runtime.js:303:22)
+      at Generator.prototype.(anonymous function) [as next] (node_modules/babel-polyfill/node_modules/regenerator-runtime/runtime.js:117:21)
+      at step (test/auth.js:9:191)
+      at /Users/nharris/Repos/star2star-js-ms-sdk/test/auth.js:9:361
+
+  3) Permissions MS Test Suite
+       List User Groups After Remove Member:
+
+      AssertionError [ERR_ASSERTION]: {
+	"items": [
+		{
+			"name": "Unit-Test",
+			"description": "A modified test group",
+			"total_members": 1,
+			"type": "role_user",
+			"uuid": "5032dcaa-73f4-4a75-95cd-89362d75b171"
+		}
+	],
+	"metadata": {
+		"total": 1,
+		"offset": 0,
+		"count": 1,
+		"limit": 10
+	},
+	"links": [
+		{
+			"rel": "self",
+			"href": "https://cpaas.star2starglobal.net/auth/user-groups?name=Unit-Test&description=A%20modified%20test%20group&sort=name&offset=0&limit=10"
+		},
+		{
+			"rel": "first",
+			"href": "https://cpaas.star2starglobal.net/auth/user-groups?name=Unit-Test&description=A%20modified%20test%20group&sort=name&offset=0&limit=10"
+		}
+	]
+}
+      + expected - actual
+
+      -false
+      +true
+      
+      at Suite._callee19$ (test/auth.js:443:12)
+      at tryCatch (node_modules/babel-polyfill/node_modules/regenerator-runtime/runtime.js:65:40)
+      at Generator.invoke [as _invoke] (node_modules/babel-polyfill/node_modules/regenerator-runtime/runtime.js:303:22)
+      at Generator.prototype.(anonymous function) [as next] (node_modules/babel-polyfill/node_modules/regenerator-runtime/runtime.js:117:21)
+      at step (test/auth.js:9:191)
+      at /Users/nharris/Repos/star2star-js-ms-sdk/test/auth.js:9:361
+
+

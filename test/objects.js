@@ -76,6 +76,18 @@ describe("Objects MS Test Suite", function() {
     }
   });
 
+  // template
+  // it("change me", mochaAsync(async () => {
+  //   if (!creds.isValid) throw new Error("Invalid Credentials");
+  //   trace = objectMerge({}, trace, Util.generateNewMetaData(trace));
+  //   const response = await somethingAsync();
+  //   assert.ok(
+  //     1 === 1,
+  //     JSON.stringify(response, null, "\t")
+  //   );
+  //   return response;
+  // },"change me"));
+
   it("Create Shared User Object", mochaAsync(async () => {
     if (!creds.isValid) throw new Error("Invalid Credentials");
     const response = await s2sMS.Objects.createUserDataObject(
@@ -95,7 +107,11 @@ describe("Objects MS Test Suite", function() {
       trace
     );
     userObjectUUID = response.uuid;
-    assert(response.content.a === 1 && response.description === "the description");
+    assert.ok(
+      response.content.a === 1 &&
+      response.description === "the description",
+      JSON.stringify(response, null, "\t")
+    );
     return response;
   },"Create Shared User Object"));
 
@@ -114,10 +130,11 @@ describe("Objects MS Test Suite", function() {
       filters,
       trace
     );
-    assert(
+    assert.ok(
       response.items.find((item) => {
         return item.uuid === userObjectUUID;
-      })
+      }),
+      JSON.stringify(response, null, "\t")
     );
     return response;
   },"List Shared User Objects"));
@@ -142,7 +159,11 @@ describe("Objects MS Test Suite", function() {
       },
       trace
     );
-    assert(response.content.a === 2 && response.description === "the modified description");
+    assert.ok(
+      response.content.a === 2 &&
+      response.description === "the modified description",
+      JSON.stringify(response, null, "\t")
+    );
     return response;
   },"Update User Object"));
 
@@ -161,10 +182,11 @@ describe("Objects MS Test Suite", function() {
       filters,
       trace
     );
-    assert(
+    assert.ok(
       response.items.find((item) => {
         return item.uuid === userObjectUUID && item.content.a === 2;
-      })
+      }),
+      JSON.stringify(response, null, "\t")
     );
     return response;
   },"List Shared User Objects After Update"));
@@ -198,7 +220,10 @@ describe("Objects MS Test Suite", function() {
     if (!creds.isValid) throw new Error("Invalid Credentials");
     trace = objectMerge({}, trace, Util.generateNewMetaData(trace));
     const response = await s2sMS.Objects.deleteDataObject(accessToken, userObjectUUID, trace);
-    assert(response.status === "ok");
+    assert.ok(
+      response.status === "ok",
+      JSON.stringify(response, null, "\t")
+    );
     return response;
   },"Delete Shared User Object"));
 
@@ -218,7 +243,11 @@ describe("Objects MS Test Suite", function() {
       trace
     );
     userObjectUUID = response.uuid;
-    assert(response.content.a === 1 && response.description === "the description");
+    assert.ok(
+      response.content.a === 1 &&
+      response.description === "the description",
+      JSON.stringify(response, null, "\t")
+    );
     return response;
   },"Create User Object"));
 
@@ -237,10 +266,11 @@ describe("Objects MS Test Suite", function() {
       filters,
       trace
     );
-    assert(
+    assert.ok(
       response.items.find((item) => {
         return item.uuid === userObjectUUID;
-      })
+      }),
+      JSON.stringify(response, null, "\t")
     );
     return response;
   },"List User Objects"));
@@ -262,9 +292,10 @@ describe("Objects MS Test Suite", function() {
       undefined, // users object not required for private objects
       trace
     );
-    assert(
+    assert.ok(
       response.content.a === 2 && 
-      response.description === "the modified description"
+      response.description === "the modified description",
+      JSON.stringify(response, null, "\t")
     );
     return response;
   },"Update User Object"));
@@ -284,10 +315,11 @@ describe("Objects MS Test Suite", function() {
       filters,
       trace
     );
-    assert(
+    assert.ok(
       response.items.find((item) => {
         return item.uuid === userObjectUUID && item.content.a === 2;
-      })
+      }),
+      JSON.stringify(response, null, "\t")
     );
     return response;
   },"List User Objects After Update"));
@@ -304,7 +336,10 @@ describe("Objects MS Test Suite", function() {
       false, // load_content
       trace
     );
-    assert(response.items[0].name === "Unit-Test");
+    assert.ok(
+      response.items[0].name === "Unit-Test",
+      JSON.stringify(response, null, "\t")
+    );
     return response;
   },"Get User Object By Type"));
   
@@ -336,7 +371,10 @@ describe("Objects MS Test Suite", function() {
       false, // load_content
       trace
     );
-    assert(response.items[0].name === "Other-Unit-Test");
+    assert.ok(
+      response.items[0].name === "Other-Unit-Test",
+      JSON.stringify(response, null, "\t")
+    );
     return response;
   },"Get User Object By Type And Name"));
 
@@ -357,8 +395,9 @@ describe("Objects MS Test Suite", function() {
       filters,
       trace
     );
-    assert(
-      response.items[0].content.status === "inactive"
+    assert.ok(
+      response.items[0].content.status === "inactive",
+      JSON.stringify(response, null, "\t")
     );
     return response;
   },"List Objects with SDK Aggregator, Paginator, and Filter"));
@@ -367,7 +406,10 @@ describe("Objects MS Test Suite", function() {
     if (!creds.isValid) throw new Error("Invalid Credentials");
     trace = objectMerge({}, trace, Util.generateNewMetaData(trace));
     const response = await s2sMS.Objects.deleteDataObject(accessToken, userObjectUUID, trace);
-    assert(response.status === "ok");
+    assert.ok(
+      response.status === "ok",
+      JSON.stringify(response, null, "\t")
+    );
     return response;
   },"Delete  User Object"));
   
@@ -383,9 +425,10 @@ describe("Objects MS Test Suite", function() {
         a: 1
       }
     );
-    assert(
+    assert.ok(
       response.type === "global-unit-test" &&
-      response.content.a === 1
+      response.content.a === 1,
+      JSON.stringify(response, null, "\t")
     );
     objectUUID = response.uuid;
     return response;
@@ -395,9 +438,10 @@ describe("Objects MS Test Suite", function() {
     if (!creds.isValid) throw new Error("Invalid Credentials");
     trace = objectMerge({}, trace, Util.generateNewMetaData(trace));
     const response = await s2sMS.Objects.getDataObject(accessToken, objectUUID, trace);
-    assert(
+    assert.ok(
       response.type === "global-unit-test" &&
-      response.content.a === 1
+      response.content.a === 1,
+      JSON.stringify(response, null, "\t")
     );
     objectUUID = response.uuid;
     return response;
@@ -420,7 +464,11 @@ describe("Objects MS Test Suite", function() {
       undefined, // user object is not needed for globals
       trace
     );
-    assert(response.content.a === 2 && response.description === "the modified description");
+    assert.ok(
+      response.content.a === 2 &&
+      response.description === "the modified description",
+      JSON.stringify(response, null, "\t")
+    );
     return response;
   },"Update Global Object"));
 
@@ -428,9 +476,10 @@ describe("Objects MS Test Suite", function() {
     if (!creds.isValid) throw new Error("Invalid Credentials");
     trace = objectMerge({}, trace, Util.generateNewMetaData(trace));
     const response = await s2sMS.Objects.getDataObject(accessToken, objectUUID, trace);
-    assert(
+    assert.ok(
       response.description === "the modified description" &&
-      response.content.a === 2
+      response.content.a === 2,
+      JSON.stringify(response, null, "\t")
     );
     objectUUID = response.uuid;
     return response;
@@ -440,17 +489,12 @@ describe("Objects MS Test Suite", function() {
     if (!creds.isValid) throw new Error("Invalid Credentials");
     trace = objectMerge({}, trace, Util.generateNewMetaData(trace));
     const response = await s2sMS.Objects.deleteDataObject(accessToken, objectUUID, trace);
-    assert(response.status === "ok");
+    assert.ok(
+      response.status === "ok",
+      JSON.stringify(response, null, "\t")
+    );
     return response;
   },"Delete Global Object"));
-
-  // template
-  // it("change me", mochaAsync(async () => {
-  //   if (!creds.isValid) throw new Error("Invalid Credentials");
-  //   const response = await somethingAsync();
-  //   assert(1 === 1);
-  //   return response;
-  // },"change me"));
 
   // clean up any objects left behind
   after(async () => {
@@ -476,13 +520,4 @@ describe("Objects MS Test Suite", function() {
     });
     await Promise.all(deletePromises);
   });
-
-  // template
-  // it("change me", mochaAsync(async () => {
-  //   if (!creds.isValid) throw new Error("Invalid Credentials");
-  //   const response = await somethingAsync();
-  //   assert(1 === 1);
-  //   return response;
-  // },"change me"));
-
 });

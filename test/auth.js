@@ -5,6 +5,7 @@ const mocha = require("mocha");
 const describe = mocha.describe;
 const it = mocha.it;
 const before = mocha.before;
+const after = mocha.after;
 
 //test requires
 const fs = require("fs");
@@ -42,13 +43,12 @@ let creds = {
   isValid: false
 };
 
-describe("Objects MS Test Suite", function() {
+describe("Permissions MS Test Suite", function() {
   let accessToken,
     identityData,
     permissions,
     userGroupUUID,
-    role,
-    roleBody;
+    role;
 
   before(async () => {
     try {
@@ -77,6 +77,15 @@ describe("Objects MS Test Suite", function() {
     }
   });
 
+  // Template for New Test............
+  // it("change me", mochaAsync(async () => {
+  //   if (!creds.isValid) throw new Error("Invalid Credentials");
+  //   trace = objectMerge({}, trace, Util.generateNewMetaData(trace));
+  //   const response = await somethingAsync();
+  //   assert.ok(1 === 1);
+  //   return response;
+  // },"change me"));
+
   it("List Permissions", mochaAsync(async () => {
     if (!creds.isValid) throw new Error("Invalid Credentials");
     const filters = {
@@ -91,9 +100,10 @@ describe("Objects MS Test Suite", function() {
       trace
     );
     permissions = response.items;
-    assert(
+    assert.ok(
       response.hasOwnProperty("items") &&
-      response.items[0].hasOwnProperty("action")
+      response.items[0].hasOwnProperty("action"),
+      JSON.stringify(response, null, "\t")
     );
     return response;
   },"List Permissions"));
@@ -113,10 +123,11 @@ describe("Objects MS Test Suite", function() {
       trace
     );
     userGroupUUID = response.uuid;
-    assert(
+    assert.ok(
       response.hasOwnProperty("uuid") &&
-        response.members[0].uuid === identityData.uuid &&
-        response.account_uuid === identityData.account_uuid
+      response.members[0].uuid === identityData.uuid &&
+      response.account_uuid === identityData.account_uuid,
+      JSON.stringify(response, null, "\t")
     );
     return response;
   },"Create User Group"));
@@ -135,9 +146,10 @@ describe("Objects MS Test Suite", function() {
       filters,
       trace
     );
-    assert(
+    assert.ok(
       response.items[0].name === filters.name &&
-      response.items[0].description === filters.description
+      response.items[0].description === filters.description,
+      JSON.stringify(response, null, "\t")
     );
     return response;
   },"List User Groups"));
@@ -154,7 +166,10 @@ describe("Objects MS Test Suite", function() {
       body,
       trace
     );
-    assert(1 === 1);
+    assert.ok(
+      response.description === "A modified test group",
+      JSON.stringify(response, null, "\t")
+    );
     return response;
   },"Modify Group"));
 
@@ -172,382 +187,483 @@ describe("Objects MS Test Suite", function() {
       filters,
       trace
     );
-    assert(
+    assert.ok(
       response.items[0].name === filters.name &&
-      response.items[0].description === filters.description
+      response.items[0].description === filters.description,
+      JSON.stringify(response, null, "\t")
     );
     return response;
   },"List User Groups After Modify"));
   
-  it("Create Role", function(done) {
-    if (!creds.isValid) {
-      const err = new Error("Valid credentials must be provided");
-      return done(err);
-    }
-
+  it("Create Role", mochaAsync(async () => {
+    if (!creds.isValid) throw new Error("Invalid Credentials");
     const body = {
       name: "Unit-Test",
       type: "user",
       status: "Active",
       permissions: [permissions[0].uuid]
     };
+    trace = objectMerge({}, trace, Util.generateNewMetaData(trace));
+    const response = await s2sMS.Auth.createRole(
+      accessToken,
+      identityData.account_uuid,
+      body,
+      trace
+    );
+    assert.ok(
+      response.hasOwnProperty("name") &&
+      response.name === "Unit-Test",
+      JSON.stringify(response, null, "\t")
+    );
+    role = response.uuid;
+    return response;
+  },"Create Role"));
 
-    s2sMS.Auth.createRole(accessToken, identityData.account_uuid, body)
-      .then(response => {
-        logger.info(`Create Role RESPONSE: ${JSON.stringify(response, null, "\t")}`);
-        role = response.uuid;
-        assert(
-          response.hasOwnProperty("name") && response.name === "Unit-Test"
-        );
-        done();
-      })
-      .catch(error => {
-        logger.error(`Create Role ERROR: ${JSON.stringify(error, null, "\t")}`);
-        done(new Error(error));
-      });
-  });
+  it("List Roles After Create", mochaAsync(async () => {
+    if (!creds.isValid) throw new Error("Invalid Credentials");
+    const filters = {
+      "name": "Unit-Test"
+    };
+    trace = objectMerge({}, trace, Util.generateNewMetaData(trace));
+    const response = await s2sMS.Auth.listRoles(
+      accessToken,
+      0,
+      100,
+      filters,
+      trace
+    );
+    assert.ok(
+      response.hasOwnProperty("items") &&
+      response.items[0].hasOwnProperty("type") &&
+      response.items[0].type === "role_permission" &&
+      response.items[0].total_members === 1,
+      JSON.stringify(response, null, "\t")
+    );
+    return response;
+  },"List Roles After Create"));
 
-  it("Assign Permissions to Role", function(done) {
-    if (!creds.isValid) {
-      const err = new Error("Valid credentials must be provided");
-      return done(err);
-    }
-
+  it("Assign Permissions to Role", mochaAsync(async () => {
+    if (!creds.isValid) throw new Error("Invalid Credentials");
+    trace = objectMerge({}, trace, Util.generateNewMetaData(trace));
     const body = {
       permissions: [permissions[1].uuid]
     };
+    const response = await s2sMS.Auth.assignPermissionsToRole(
+      accessToken,
+      role,
+      body,
+      trace
+    );
+    assert.ok(
+      response.status === "ok",
+      JSON.stringify(response, null, "\t")
+    );
+    return response;
+  },"Assign Permissions to Role"));
 
-    s2sMS.Auth.assignPermissionsToRole(accessToken, role, body)
-      .then(response => {
-        logger.info(`Assign Permissions to Role RESPONSE: ${JSON.stringify(response, null, "\t")}`);
-        assert(response.status === "ok");
-        done();
-      })
-      .catch(error => {
-        logger.error(`Assign Permissions to Role ERROR: ${JSON.stringify(error, null, "\t")}`);
-        done(new Error(error));
-      });
-  });
+  it("Modfy Role", mochaAsync(async () => {
+    if (!creds.isValid) throw new Error("Invalid Credentials");
+    const body = {
+      "description": "new description"
+    };
+    trace = objectMerge({}, trace, Util.generateNewMetaData(trace));
+    const response = await s2sMS.Auth.modifyRole(
+      accessToken,
+      role,
+      body,
+      trace
+    );
+    assert.ok(
+      response.hasOwnProperty("description") &&
+      response.description === "new description",
+      JSON.stringify(response, null, "\t")
+    );
+    return response;
+  },"Modfy Role"));
+  
+  it("List Roles After Modify", mochaAsync(async () => {
+    if (!creds.isValid) throw new Error("Invalid Credentials");
+    const filters = {
+      "name": "Unit-Test"
+    };
+    trace = objectMerge({}, trace, Util.generateNewMetaData(trace));
+    const response = await s2sMS.Auth.listRoles(
+      accessToken,
+      0, // offset
+      100, // limit
+      filters,
+      trace
+    );
+    assert.ok(
+      response.hasOwnProperty("items") &&
+      response.items[0].hasOwnProperty("type") &&
+      response.items[0].type === "role_permission" &&
+      response.items[0].total_members === 2,
+      JSON.stringify(response, null, "\t")
+    );
+    return response;
+  },"List Roles After Modify"));
 
-  it("List Roles", function(done) {
-    if (!creds.isValid) {
-      const err = new Error("Valid credentials must be provided");
-      return done(err);
-    }
-    const filters = [];
-    filters["name"] = "Unit-Test";
-
-    s2sMS.Auth.listRoles(accessToken, 0, 1, filters)
-      .then(response => {
-        roleBody = response.items[0];
-        logger.info(`List Roles RESPONSE: ${JSON.stringify(response, null, "\t")}`);
-        assert(
-          response.hasOwnProperty("items") &&
-            response.items[0].hasOwnProperty("type") &&
-            response.items[0].type === "role_permission" &&
-            response.items[0].total_members === 2
-        );
-        done();
-      })
-      .catch(error => {
-        logger.error(`List Roles ERROR: ${JSON.stringify(error, null, "\t")}`);
-        done(new Error(error));
-      });
-  });
-
-  it("Modfy Role", function(done) {
-    if (!creds.isValid) {
-      const err = new Error("Valid credentials must be provided");
-      return done(err);
-    }
-    roleBody.name = "new name";
-    roleBody.description = "new description";
-
-    s2sMS.Auth.modifyRole(accessToken, role, roleBody)
-      .then(response => {
-        logger.info(`Modfy Role RESPONSE: ${JSON.stringify(response, null, "\t")}`);
-        assert(response.hasOwnProperty("name") && response.name === "new name");
-        done();
-      })
-      .catch(error => {
-        logger.error(`Modfy Role ERROR: ${JSON.stringify(error, null, "\t")}`);
-        done(new Error(error));
-      });
-  });
-
-  it("Assign Roles to User Group", function(done) {
-    if (!creds.isValid) {
-      const err = new Error("Valid credentials must be provided");
-      return done(err);
-    }
-
+  it("Assign Roles to User Group", mochaAsync(async () => {
+    if (!creds.isValid) throw new Error("Invalid Credentials");
     const body = {
       roles: [role]
     };
+    trace = objectMerge({}, trace, Util.generateNewMetaData(trace));
+    const response = await s2sMS.Auth.assignRolesToUserGroup(
+      accessToken,
+      userGroupUUID,
+      body,
+      trace
+    );
+    assert.ok(
+      response.status === "ok",
+      JSON.stringify(response, null, "\t")
+    );
+    return response;
+  },"Assign Roles to User Group"));
 
-    s2sMS.Auth.assignRolesToUserGroup(accessToken, userGroupUUID, body)
-      .then(response => {
-        logger.info(`Assign Roles to User Group RESPONSE: ${JSON.stringify(response, null, "\t")}`);
-        assert(response.status === "ok");
-        done();
-      })
-      .catch(error => {
-        logger.error(`Assign Roles to User Group ERROR: ${JSON.stringify(error, null, "\t")}`);
-        done(new Error(error));
-      });
-  });
+  it("List a Role's Groups", mochaAsync(async () => {
+    if (!creds.isValid) throw new Error("Invalid Credentials");
+    trace = objectMerge({}, trace, Util.generateNewMetaData(trace));
+    const response = await s2sMS.Auth.listRoleUserGroups(
+      accessToken,
+      role,
+      undefined, // no filters
+      trace
+    );
+    assert.ok(
+      response.items[0].uuid === userGroupUUID,
+      JSON.stringify(response, null, "\t")
+    );
+    const filters = {"name":"invalid"};
+    const invalidResponse = await s2sMS.Auth.listRoleUserGroups(
+      accessToken,
+      role,
+      filters, 
+      trace
+    );
+    assert.ok(
+      invalidResponse.items.length === 0,
+      JSON.stringify(response, null, "\t")
+    );
+    return { "validResponse": response,"invalidResponse": invalidResponse};
+  },"List a Role's Groups"));
 
-  it("List a Role's Groups", function(done) {
-    if (!creds.isValid) {
-      const err = new Error("Valid credentials must be provided");
-      return done(err);
-    }
-    setTimeout(() => {
-      s2sMS.Auth.listRoleUserGroups(accessToken, role)
-        .then(response => {
-          logger.info(`List a Role's Groups RESPONSE: ${JSON.stringify(response, null, "\t")}`);
-          assert(response.items[0].uuid === userGroupUUID);
-          const filters = [];
-          filters["name"] = "invalid"; //should return 0
-          s2sMS.Auth.listRoleUserGroups(accessToken, role, filters)
-            .then(response => {
-              logger.info(`List a Role's Groups RESPONSE: ${JSON.stringify(response, null, "\t")}`);
-              assert(response.items.length === 0);
-              done();
-            })
-            .catch(error => {
-              logger.error(`List a Role's Groups ERROR: ${JSON.stringify(error, null, "\t")}`);
-              done(new Error(error));
-            });
-        })
-        .catch(error => {
-          logger.error(`List a Role's Groups ERROR: ${JSON.stringify(error, null, "\t")}`);
-          done(new Error(error));
-        });
-    }, Util.config.msDelay);
-  });
+  
+  it("List a Role's Permissions", mochaAsync(async () => {
+    if (!creds.isValid) throw new Error("Invalid Credentials");
+    const filters = {
+      "name": "update"
+    };
+    trace = objectMerge({}, trace, Util.generateNewMetaData(trace));
+    const response = await s2sMS.Auth.listRolePermissions(
+      accessToken,
+      role,
+      filters,
+      trace
+    );
+    assert.ok(
+      response.items[0].name === "account.update",
+      JSON.stringify(response, null, "\t")
+    );
+    return response;
+  },"List a Role's Permissions"));
 
-  it("List a Role's Permissions", function(done) {
-    if (!creds.isValid) {
-      const err = new Error("Valid credentials must be provided");
-      return done(err);
-    }
-    const filters = [];
-    filters["name"] = "update";
-    s2sMS.Auth.listRolePermissions(accessToken, role, filters)
-      .then(response => {
-        logger.info(`List a Role's Permissions RESPONSE: ${JSON.stringify(response, null, "\t")}`);
-        assert(response.items[0].name === "account.update");
-        done();
-      })
-      .catch(error => {
-        logger.error(`List a Role's Permissions ERROR: ${JSON.stringify(error, null, "\t")}`);
-        done(new Error(error));
-      });
-  });
+  it("List a Permission's Roles", mochaAsync(async () => {
+    if (!creds.isValid) throw new Error("Invalid Credentials");
+    const filters = {
+      "name": "new name"
+    };
+    trace = objectMerge({}, trace, Util.generateNewMetaData(trace));
+    const response = await s2sMS.Auth.listPermissionRoles(
+      accessToken,
+      permissions[0].uuid,
+      filters,
+      trace
+    );
+    assert.ok(
+      response.hasOwnProperty("itmes") &&
+      response.items.length === 1 &&
+      response.item[0].uuid === role,
+      JSON.stringify(response, null, "\t")
+    );
+    return response;
+  },"List a Permission's Roles"));
 
-  it("List a Permission's Roles", function(done) {
-    if (!creds.isValid) {
-      const err = new Error("Valid credentials must be provided");
-      return done(err);
-    }
-    const filters = [];
-    filters["name"] = "new name";
+  it("List a Group's Roles", mochaAsync(async () => {
+    if (!creds.isValid) throw new Error("Invalid Credentials");
+    trace = objectMerge({}, trace, Util.generateNewMetaData(trace));
+    const response = await s2sMS.Auth.listUserGroupRoles(
+      accessToken,
+      userGroupUUID,
+      trace
+    );
+    assert.ok(
+      response.items[0].uuid === role,
+      JSON.stringify(response, null, "\t")
+    );
+    return response;
+  },"List a Group's Roles"));
 
-    s2sMS.Auth.listPermissionRoles(accessToken, permissions[0].uuid, filters)
-      .then(response => {
-        logger.info(`List a Permission's Roles RESPONSE: ${JSON.stringify(response, null, "\t")}`);
-        assert(
-          response.items.reduce((prev, cur) => {
-            if (!prev) {
-              if (cur.uuid === role) {
-                return cur;
-              }
-            }
-            return prev;
-          }, undefined)
-        );
-        done();
-      })
-      .catch(error => {
-        logger.error(`List a Permission's Roles ERROR: ${JSON.stringify(error, null, "\t")}`);
-        done(new Error(error));
-      });
-  });
+  it("Remove User Group Member", mochaAsync(async () => {
+    if (!creds.isValid) throw new Error("Invalid Credentials");
+    const members = [
+      {
+        uuid: identityData.uuid
+      }
+    ];
+    trace = objectMerge({}, trace, Util.generateNewMetaData(trace));
+    const response = await s2sMS.Groups.deleteGroupMembers(
+      accessToken,
+      userGroupUUID,
+      members, trace
+    );
+    assert.ok(
+      response.status === "ok",
+      JSON.stringify(response, null, "\t")
+    );
+    return response;
+  },"Remove User Group Member"));
 
-  it("List a Group's Roles", function(done) {
-    if (!creds.isValid) {
-      const err = new Error("Valid credentials must be provided");
-      return done(err);
-    }
-    setTimeout(() => {
-      s2sMS.Auth.listUserGroupRoles(accessToken, userGroupUUID)
-        .then(response => {
-          logger.info(`List a Group's Roles RESPONSE: ${JSON.stringify(response, null, "\t")}`);
-          assert(response.items[0].uuid === role);
-          const filters = [];
-          filters["name"] = "invalid"; //should return 0
-          s2sMS.Auth.listUserGroupRoles(accessToken, userGroupUUID, filters)
-            .then(response => {
-              logger.info(`List a Group's Roles RESPONSE: ${JSON.stringify(response, null, "\t")}`);
-              assert(response.items.length === 0);
-              done();
-            })
-            .catch(error => {
-              logger.error(`List a Group's Roles ERROR: ${JSON.stringify(error, null, "\t")}`);
-              done(new Error(error));
-            });
-        })
-        .catch(error => {
-          logger.error(`List a Group's Roles ERROR: ${JSON.stringify(error, null, "\t")}`);
-          done(new Error(error));
-        });
-    }, Util.config.msDelay);
-  });
+  it("List User Groups After Remove Member", mochaAsync(async () => {
+    if (!creds.isValid) throw new Error("Invalid Credentials");
+    const filters = {
+      "name": "Unit-Test",
+      "description": "A modified test group"
+    };
+    trace = objectMerge({}, trace, Util.generateNewMetaData(trace));
+    const response = await s2sMS.Auth.listUserGroups(
+      accessToken,
+      0, //offset
+      10, //limit
+      filters,
+      trace
+    );
+    assert.ok(
+      response.items[0].total_members === 0 &&
+      response.items[0].uuid === userGroupUUID,
+      JSON.stringify(response, null, "\t")
+    );
+    return response;
+  },"List User Groups After Remove Member"));
+  
+  it("Add User Group Member", mochaAsync(async () => {
+    if (!creds.isValid) throw new Error("Invalid Credentials");
+    const members = [
+      {
+        type: "user",
+        uuid: identityData.uuid
+      }
+    ];
+    trace = objectMerge({}, trace, Util.generateNewMetaData(trace));
+    const response = await s2sMS.Groups.addMembersToGroup(
+      accessToken,
+      userGroupUUID,
+      members,
+      trace
+    );
+    assert.ok(
+      response.total_members === 1,
+      JSON.stringify(response, null, "\t")
+    );
+    return response;
+  },"Add User Group Member"));
 
-  //Broken: CCORE-418
-  // it("Delete Permission From Role With User Group Attached", function(done) {
-  //   if (!creds.isValid) {
-  //     const err = new Error("Valid credentials must be provided");
-  //     return done(err);
-  //   }
-  //   setTimeout(() => {
-  //     s2sMS.Auth.deletePermissionFromRole(accessToken, role, permissions[0].uuid)
-  //       .then(response => {
-  //         logger.info(`Delete Permission From Role With User Group Attached RESPONSE: ${JSON.stringify(response, null, "\t")}`);
-  //         done(new Error(response));
-  //       })
-  //       .catch(error => {
-  //         logger.error(`Delete Permission From Role With User Group Attached ERROR: ${JSON.stringify(error, null, "\t")}`);
-  //         if(error.statusCode === 400){
-  //           done();
-  //         } else {
-  //           done (new Error(error));
-  //         }
-  //       });
-  //   }, Util.config.msDelay);
-  // });
+  it("List User Groups After Add Member", mochaAsync(async () => {
+    if (!creds.isValid) throw new Error("Invalid Credentials");
+    const filters = {
+      "name": "Unit-Test",
+      "description": "A modified test group"
+    };
+    trace = objectMerge({}, trace, Util.generateNewMetaData(trace));
+    const response = await s2sMS.Auth.listUserGroups(
+      accessToken,
+      0, //offset
+      100, //limit
+      filters,
+      trace
+    );
+    assert.ok(
+      response.items[0].total_members === 1 &&
+      response.items[0].uuid === userGroupUUID,
+      JSON.stringify(response, null, "\t")
+    );
+    return response;
+  },"List User Groups After Add Member"));
+  
+  
+  it("Delete Permission From Role With User Group Attached", mochaAsync(async (name) => {
+    if (!creds.isValid) throw new Error("Invalid Credentials");
+    try {
+      trace = objectMerge({}, trace, Util.generateNewMetaData(trace));
+      const response = await s2sMS.Auth.deletePermissionFromRole(
+        accessToken,
+        role,
+        permissions[0].uuid,
+        trace
+      );
+      //should not get here until CCORE-418 is resolved
+      assert.ok(
+        false,
+        JSON.stringify(response, null, "\t")
+      );
+      return response;
+    } catch (error) {
+      assert.ok(
+        error.hasOwnProperty("statusCode") &&
+        error.statusCode === 400,
+        JSON.stringify(error, null, "\t")
+      );
+      logger.debug(name, error);
+    } 
+  },"Delete Permission From Role With User Group Attached"));
+  
+  it("Delete Role From User Group", mochaAsync(async () => {
+    if (!creds.isValid) throw new Error("Invalid Credentials");
+    trace = objectMerge({}, trace, Util.generateNewMetaData(trace));
+    const deleteResponse = await s2sMS.Auth.deleteRoleFromUserGroup(
+      accessToken,
+      userGroupUUID,
+      role,
+      trace
+    );
+    assert.ok(
+      deleteResponse.status === "ok",
+      JSON.stringify(deleteResponse, null, "\t")
+    );
+    trace = objectMerge({}, trace, Util.generateNewMetaData(trace));
+    const listResponse = await s2sMS.Auth.listUserGroupRoles(
+      accessToken,
+      userGroupUUID,
+      trace
+    );
+    assert.ok(
+      listResponse.items.length === 0,
+      JSON.stringify(listResponse, null, "\t")
+    );
+    return {"deleteResponse": deleteResponse, "listResponse": listResponse};
+  },"Delete Role From User Group"));
 
-  it("Delete Role From User Group", function(done) {
-    if (!creds.isValid) {
-      const err = new Error("Valid credentials must be provided");
-      return done(err);
-    }
+  it("Delete Permission From Role", mochaAsync(async () => {
+    if (!creds.isValid) throw new Error("Invalid Credentials");
+    trace = objectMerge({}, trace, Util.generateNewMetaData(trace));
+    const response = await s2sMS.Auth.deletePermissionFromRole(
+      accessToken,
+      role,
+      permissions[0].uuid,
+      trace
+    );
+    assert.ok(
+      response.status === "ok",
+      JSON.stringify(response, null, "\t")
+    );
+    return response;
+  },"Delete Permission From Role"));
 
-    s2sMS.Auth.deleteRoleFromUserGroup(accessToken, userGroupUUID, role)
-      .then(response => {
-        logger.info(`Delete Role From User Group RESPONSE: ${JSON.stringify(response, null, "\t")}`);
-        assert(response.status === "ok");
-        setTimeout(() => {
-          s2sMS.Auth.listUserGroupRoles(accessToken, userGroupUUID)
-            .then(response => {
-              logger.info(`Delete Role From User Group RESPONSE: ${JSON.stringify(response, null, "\t")}`);
-              assert(response.items.length === 0);
-              done();
-            })
-            .catch(error => {
-              logger.info(`Delete Role From User Group ERROR: ${JSON.stringify(error, null, "\t")}`);
-              done(new Error(error));
-            });
-        }, Util.config.msDelay);
-      })
-      .catch(error => {
-        logger.info(`Delete Role From User Group ERROR: ${JSON.stringify(error, null, "\t")}`);
-        done(new Error(error));
-      });
-  });
+  it("List Roles After Delete Permission", mochaAsync(async () => {
+    if (!creds.isValid) throw new Error("Invalid Credentials");
+    const filters = {
+      "name": "Unit-Test"
+    };
+    trace = objectMerge({}, trace, Util.generateNewMetaData(trace));
+    const response = await s2sMS.Auth.listRoles(
+      accessToken,
+      0, // offset
+      100, // limit
+      filters,
+      trace
+    );
+    assert.ok(
+      response.hasOwnProperty("items") &&
+      response.items[0].hasOwnProperty("type") &&
+      response.items[0].type === "role_permission" &&
+      response.items[0].total_members === 1,
+      JSON.stringify(response, null, "\t")
+    );
+    return response;
+  },"List Roles After Delete Permission"));
 
-  //Broken: CCORE-418
-  // it("Delete Permission From Role", function(done) {
-  //   if (!creds.isValid) {
-  //     const err = new Error("Valid credentials must be provided");
-  //     return done(err);
-  //   }
-  //   setTimeout(() => {
-  //     s2sMS.Auth.deletePermissionFromRole(
-  //       accessToken,
-  //       role,
-  //       permissions[0].uuid
-  //     )
-  //       .then(response => {
-  //         logger.info(`Delete Permission From Role RESPONSE: ${JSON.stringify(response, null, "\t")}`);
-  //         assert(response.status === "ok");
-  //         done();
-  //       })
-  //       .catch(error => {
-  //         logger.error(`Delete Permission From Role ERROR: ${JSON.stringify(error, null, "\t")}`);
-  //         done(new Error(error));
-  //       });
-  //   }, Util.config.msDelay);
-  // });
+  it("Deactivate Role", mochaAsync(async () => {
+    if (!creds.isValid) throw new Error("Invalid Credentials");
+    trace = objectMerge({}, trace, Util.generateNewMetaData(trace));
+    const response = await s2sMS.Auth.deactivateRole(accessToken, role, trace);
+    assert.ok(
+      response.status === "ok",
+      JSON.stringify(response, null, "\t")
+    );
+    return response;
+  },"Deactivate Role"));
 
-  it("Deactivate Role", function(done) {
-    if (!creds.isValid) {
-      const err = new Error("Valid credentials must be provided");
-      return done(err);
-    }
+  it("Reactivate Role", mochaAsync(async () => {
+    if (!creds.isValid) throw new Error("Invalid Credentials");
+    trace = objectMerge({}, trace, Util.generateNewMetaData(trace));
+    const response = await s2sMS.Auth.activateRole(accessToken, role, trace);
+    assert.ok(
+      response.status === "ok",
+      JSON.stringify(response, null, "\t")
+    );
+    return response;
+  },"Reactivate Role"));
 
-    s2sMS.Auth.deactivateRole(accessToken, role)
-      .then(response => {
-        logger.info(`Deactivate Role RESPONSE: ${JSON.stringify(response, null, "\t")}`);
-        assert(response.status === "ok");
-        done();
-      })
-      .catch(error => {
-        logger.error(`Deactivate Role ERROR: ${JSON.stringify(error, null, "\t")}`);
-        done(new Error(error));
-      });
-  });
-
-  it("Reactivate Role", function(done) {
-    if (!creds.isValid) {
-      const err = new Error("Valid credentials must be provided");
-      return done(err);
-    }
-
-    s2sMS.Auth.activateRole(accessToken, role)
-      .then(response => {
-        logger.info(`Reactivate Role RESPONSE: ${JSON.stringify(response, null, "\t")}`);
-        assert(response.status === "ok");
-        done();
-      })
-      .catch(error => {
-        logger.error(`Reactivate Role ERROR: ${JSON.stringify(error, null, "\t")}`);
-        done(new Error(error));
-      });
-  });
-
-  //Broken: CCORE-216
-  // it("Delete Role", function(done) {
-  //   if (!creds.isValid) {
-  //     const err = new Error("Valid credentials must be provided");
-  //     return done(err);
-  //   }
-
-  //   s2sMS.Auth.deleteRole(accessToken, role)
-  //     .then(response => {
-  //       logger.info(`Delete Role RESPONSE: ${JSON.stringify(response, null, "\t")}`);
-  //       assert(response.status === "ok");
-  //       done();
-  //     })
-  //     .catch(error => {
-  //       logger.error(`Delete Role RESPONSE: ${JSON.stringify(error, null, "\t")}`);
-  //       done(new Error(error));
-  //     });
-  // });
-
+  it("Delete Role", mochaAsync(async () => {
+    if (!creds.isValid) throw new Error("Invalid Credentials");
+    trace = objectMerge({}, trace, Util.generateNewMetaData(trace));
+    const response = await s2sMS.Auth.deleteRole(accessToken, role, trace);
+    assert.ok(
+      response.status === "ok",
+      JSON.stringify(response, null, "\t")
+    );
+    return response;
+  },"Delete Role"));
+  
   it("Delete User Group", mochaAsync(async () => {
     if (!creds.isValid) throw new Error("Invalid Credentials");
     trace = objectMerge({}, trace, Util.generateNewMetaData(trace));
     const response = await s2sMS.Groups.deleteGroup(accessToken, userGroupUUID, trace);
-    assert(response.status === "ok");
+    assert.ok(
+      response.status === "ok",
+      JSON.stringify(response, null, "\t")
+    );
     return response;
   },"Delete User Groups"));
 
-  // it("change me", mochaAsync(async () => {
-  //   if (!creds.isValid) throw new Error("Invalid Credentials");
-  //   const response = await somethingAsync();
-  //   assert(1 === 1);
-  //   return response;
-  // },"change me"));
+  // clean up any objects left behind
+  after(async () => {
+    const filters = {
+      "name": "Unit-Test"
+    };
+    trace = objectMerge({}, trace, Util.generateNewMetaData(trace));
+    const groupsResponse = await s2sMS.Auth.listUserGroups(
+      accessToken,
+      0, //offset
+      100, //limit
+      filters,
+      trace
+    );
+    const deletePromises = [];
+    groupsResponse.items.forEach(item => {
+      trace = objectMerge({}, trace, Util.generateNewMetaData(trace));
+      deletePromises.push(
+        s2sMS.Groups.deleteGroup(accessToken, item.uuid, trace)
+      );
+    });
+
+    filters.name = "new name";
+    trace = objectMerge({}, trace, Util.generateNewMetaData(trace));
+    const rolesResponse = await s2sMS.Auth.listRoles(
+      accessToken,
+      0, //offset
+      100, //limit
+      filters,
+      trace
+    );
+    rolesResponse.items.forEach(item => {
+      trace = objectMerge({}, trace, Util.generateNewMetaData(trace));
+      deletePromises.push(
+        s2sMS.Auth.deleteRole(accessToken, item.uuid, trace)
+      );
+    });
+    await Promise.all(deletePromises);
+  });
 });
