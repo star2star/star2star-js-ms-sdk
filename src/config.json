@@ -34,7 +34,7 @@
     "test": {},
     "prod": {}
   },
-  "msDelay": 5000,
+  "msDelay": 1000,
   "logLevel": "trace",
   "logPretty": false,
   "msDebug": false,

@@ -567,25 +567,48 @@ var getResourceUsers = function () {
  * @param {object} [trace = {}] - optional microservice lifecycle trace headers
  * @returns
  */
-var listAccessByGroups = function listAccessByGroups() {
-  var accessToken = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : "null accessToken";
-  var resourceUUID = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : "null groupUUID";
-  var trace = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : {};
+var listAccessByGroups = function () {
+  var _ref6 = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee5() {
+    var accessToken = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : "null accessToken";
+    var resourceUUID = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : "null groupUUID";
+    var trace = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : {};
+    var MS, requestOptions;
+    return regeneratorRuntime.wrap(function _callee5$(_context5) {
+      while (1) {
+        switch (_context5.prev = _context5.next) {
+          case 0:
+            MS = Util.getEndpoint("auth");
+            requestOptions = {
+              method: "GET",
+              uri: MS + "/resources/" + resourceUUID + "/user-groups/access",
+              headers: {
+                Authorization: "Bearer " + accessToken,
+                "Content-type": "application/json",
+                "x-api-version": "" + Util.getVersion()
+              },
+              json: true
+            };
+            _context5.next = 4;
+            return new Promise(function (resolve) {
+              return setTimeout(resolve, Util.config.msDelay);
+            });
 
-  var MS = Util.getEndpoint("auth");
-  var requestOptions = {
-    method: "GET",
-    uri: MS + "/resources/" + resourceUUID + "/user-groups/access",
-    headers: {
-      Authorization: "Bearer " + accessToken,
-      "Content-type": "application/json",
-      "x-api-version": "" + Util.getVersion()
-    },
-    json: true
+          case 4:
+            Util.addRequestTrace(requestOptions, trace);
+            return _context5.abrupt("return", request(requestOptions));
+
+          case 6:
+          case "end":
+            return _context5.stop();
+        }
+      }
+    }, _callee5, undefined);
+  }));
+
+  return function listAccessByGroups() {
+    return _ref6.apply(this, arguments);
   };
-  Util.addRequestTrace(requestOptions, trace);
-  return request(requestOptions);
-};
+}();
 
 /**
  * @async
@@ -702,32 +725,56 @@ var listPermissions = function listPermissions() {
  * @param {object} [trace = {}] - optional microservice lifecycle trace headers
  * @returns {Promise<object>} - Promise resolving to a data object containing a list of user groups
  */
-var listPermissionRoles = function listPermissionRoles() {
-  var accessToken = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : "null accessToken";
-  var permissionUUID = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : "null permissionUUID";
-  var filters = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : undefined;
-  var trace = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : {};
+var listPermissionRoles = function () {
+  var _ref7 = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee6() {
+    var accessToken = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : "null accessToken";
+    var permissionUUID = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : "null permissionUUID";
+    var filters = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : undefined;
+    var trace = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : {};
+    var MS, requestOptions;
+    return regeneratorRuntime.wrap(function _callee6$(_context6) {
+      while (1) {
+        switch (_context6.prev = _context6.next) {
+          case 0:
+            MS = Util.getEndpoint("auth");
+            requestOptions = {
+              method: "GET",
+              uri: MS + "/permissions/" + permissionUUID + "/roles",
+              headers: {
+                Authorization: "Bearer " + accessToken,
+                "Content-type": "application/json",
+                "x-api-version": "" + Util.getVersion()
+              },
+              json: true
+            };
 
-  var MS = Util.getEndpoint("auth");
-  var requestOptions = {
-    method: "GET",
-    uri: MS + "/permissions/" + permissionUUID + "/roles",
-    headers: {
-      Authorization: "Bearer " + accessToken,
-      "Content-type": "application/json",
-      "x-api-version": "" + Util.getVersion()
-    },
-    json: true
+            Util.addRequestTrace(requestOptions, trace);
+            if (filters) {
+              requestOptions.qs = {};
+              Object.keys(filters).forEach(function (filter) {
+                requestOptions.qs[filter] = filters[filter];
+              });
+            }
+            _context6.next = 6;
+            return new Promise(function (resolve) {
+              return setTimeout(resolve, Util.config.msDelay);
+            });
+
+          case 6:
+            return _context6.abrupt("return", request(requestOptions));
+
+          case 7:
+          case "end":
+            return _context6.stop();
+        }
+      }
+    }, _callee6, undefined);
+  }));
+
+  return function listPermissionRoles() {
+    return _ref7.apply(this, arguments);
   };
-  Util.addRequestTrace(requestOptions, trace);
-  if (filters) {
-    requestOptions.qs = {};
-    Object.keys(filters).forEach(function (filter) {
-      requestOptions.qs[filter] = filters[filter];
-    });
-  }
-  return request(requestOptions);
-};
+}();
 
 /**
  * @async

@@ -18,12 +18,15 @@ import Logger from "../src/node-logger";
 const logger = new Logger();
 logger.setLevel(logLevel);
 logger.setPretty(logPretty);
+const objectMerge = require("object-merge");
+const newMeta = Util.generateNewMetaData;
+let trace = newMeta();
 
 //utility function to simplify test code
 const mochaAsync = (func, name) => {
   return async () => {
     try {
-      const response = await func();
+      const response = await func(name);
       logger.debug(name, response);
       return response; 
     } catch (error) {
@@ -120,14 +123,24 @@ describe("Objects MS Test Suite", function() {
         }
       );
       workflowUUID = workflow.uuid;
-      logger.info(`Workflow UUID: ${workflowUUID}`);
+      logger.debug(`Workflow UUID: ${workflowUUID}`);
     } catch(error) {
       return Promise.reject(error);
     }  
   });
 
+  // Template for New Test............
+  // it("change me", mochaAsync(async () => {
+  //   if (!creds.isValid) throw new Error("Invalid Credentials");
+  //   trace = objectMerge({}, trace, Util.generateNewMetaData(trace));
+  //   const response = await somethingAsync();
+  //   assert.ok(1 === 1);
+  //   return response;
+  // },"change me"));
+
   it("Shedule Event", mochaAsync(async () => {
     if (!creds.isValid) throw new Error("Invalid Credentials");
+    trace = objectMerge({}, trace, Util.generateNewMetaData(trace));
     const response = await s2sMS.Scheduler.scheduleEvent(
       accessToken,
       identityData.uuid, //user_uuid
@@ -150,40 +163,72 @@ describe("Objects MS Test Suite", function() {
       }, //notification
       {
         "someImportantMeta": true
-      } // metadata
+      }, // metadata
+      trace
     );
-    assert(1 === 1);
     event = response;
+    assert.ok(
+      response.user_uuid === identityData.uuid &&
+      response.timezone === "America/New_York" &&
+      response.description === "A Unit Test Scheduled Event" &&
+      response.frequency.type === "once" &&
+      response.trigger.workflow_uuid === workflowUUID &&
+      response.metadata.someImportantMeta === true,
+      JSON.stringify(response, null, "\t")
+    );
     return response;
   },"Shedule Event"));
 
   it("List Events", mochaAsync(async () => {
     if (!creds.isValid) throw new Error("Invalid Credentials");
+    trace = objectMerge({}, trace, Util.generateNewMetaData(trace));
     //update event body
     const response = await s2sMS.Scheduler.listEvents(
       accessToken,
       0, //offset
-      5 //limit
+      5, //limit
+      trace
     );
-    assert(1 === 1);
+    assert(
+      response.items[0].uuid === event.uuid,
+      JSON.stringify(response, null, "\t")
+    );
     return response;
   },"List Events"));
 
-  // it("Get Event", function(done) {
-  //   if (!creds.isValid) return done();
-  //   s2sMS.Scheduler.getEvent(
-  //     accessToken,
-  //     event.uuid
-  //   )
-  //     .then(responseData => {
-  //       logger.trace(`Get Event RESPONSE: ${JSON.stringify(responseData, null, "\t")}`);
-  //       done();
-  //     })
-  //     .catch(error => {
-  //       logger.error(`Get Event ERROR: ${JSON.stringify(error, null, "\t")}`);
-  //       done(new Error(JSON.stringify(error)));
-  //     });
-  // });
+  it("Get Event", mochaAsync(async () => {
+    if (!creds.isValid) throw new Error("Invalid Credentials");
+    trace = objectMerge({}, trace, Util.generateNewMetaData(trace));
+    const response = await s2sMS.Scheduler.getEvent(
+      accessToken,
+      event.uuid,
+      trace
+    );
+    assert.ok(response.uuid === event.uuid,
+      JSON.stringify(response, null, "\t")
+    );
+    return response;
+  },"Get Event"));
+
+  it("Check Event Fired", mochaAsync(async () => {
+    if (!creds.isValid) throw new Error("Invalid Credentials");
+    //setting the timout for this test to overide mocha config.
+    //this.timeout(90000);
+    //wait for the scheduler to run the workflow
+    await new Promise(resolve => setTimeout(resolve, 70000));
+
+    trace = objectMerge({}, trace, Util.generateNewMetaData(trace));
+    const response = await s2sMS.Workflow.getWfTemplateHistory(
+      accessToken,
+      workflowUUID,
+      0, // offset
+      10, // limit
+      undefined, // filters
+      trace
+    );
+    assert.ok(1 === 1); // figure this out once scheduler is firing events.
+    return response;
+  },"Check Event Fired")).timeout(90000);
 
   // it("Update Event", function(done) {
   //   if (!creds.isValid) return done();
@@ -205,12 +250,17 @@ describe("Objects MS Test Suite", function() {
   
   it("Delete Event", mochaAsync(async () => {
     if (!creds.isValid) throw new Error("Invalid Credentials");
+    trace = objectMerge({}, trace, Util.generateNewMetaData(trace));
     //update event body
     const response = await s2sMS.Scheduler.deleteEvent(
       accessToken,
-      event.uuid
+      event.uuid,
+      trace
     );
-    assert(response.status === "ok");
+    assert(
+      response.status === "ok",
+      JSON.stringify(response, null, "\t")
+    );
     return response;
   },"Delete Event"));
 
@@ -220,11 +270,3 @@ describe("Objects MS Test Suite", function() {
   }, "Post Test Clean Up"));
 });
 
-// template
-// it("change me", mochaAsync(async () => {
-//   if (!creds.isValid) throw new Error("Invalid Credentials");
-//   //update event body
-//   const response = await somethingAsync();
-//   assert(1 === 1);
-//   return response;
-// },"change me"));
