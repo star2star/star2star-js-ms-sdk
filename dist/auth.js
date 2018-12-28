@@ -103,7 +103,6 @@ var assignRolesToUserGroup = function () {
       while (1) {
         switch (_context.prev = _context.next) {
           case 0:
-            _context.prev = 0;
             MS = Util.getEndpoint("auth");
             requestOptions = {
               method: "POST",
@@ -119,7 +118,7 @@ var assignRolesToUserGroup = function () {
             };
 
             Util.addRequestTrace(requestOptions, trace);
-            _context.next = 6;
+            _context.next = 5;
             return new Promise(function (resolve, reject) {
               request(requestOptions).then(function (responseData) {
                 responseData.statusCode === 204 ? resolve({ status: "ok" }) : reject({ status: "failed" });
@@ -128,20 +127,15 @@ var assignRolesToUserGroup = function () {
               });
             });
 
-          case 6:
+          case 5:
             return _context.abrupt("return", _context.sent);
 
-          case 9:
-            _context.prev = 9;
-            _context.t0 = _context["catch"](0);
-            return _context.abrupt("return", Promise.reject(_context.t0));
-
-          case 12:
+          case 6:
           case "end":
             return _context.stop();
         }
       }
-    }, _callee, undefined, [[0, 9]]);
+    }, _callee, undefined);
   }));
 
   return function assignRolesToUserGroup() {
@@ -173,13 +167,12 @@ var assignScopedRoleToUserGroup = function () {
       while (1) {
         switch (_context2.prev = _context2.next) {
           case 0:
-            _context2.prev = 0;
-            _context2.next = 3;
+            _context2.next = 2;
             return new Promise(function (resolve) {
               return setTimeout(resolve, Util.config.msDelay);
             });
 
-          case 3:
+          case 2:
             MS = Util.getEndpoint("auth");
             requestOptions = {
               method: "POST",
@@ -198,7 +191,7 @@ var assignScopedRoleToUserGroup = function () {
             };
 
             Util.addRequestTrace(requestOptions, trace);
-            _context2.next = 8;
+            _context2.next = 7;
             return new Promise(function (resolve, reject) {
               request(requestOptions).then(function (responseData) {
                 responseData.statusCode === 204 ? resolve({ status: "ok" }) : reject({ status: "failed" });
@@ -207,20 +200,15 @@ var assignScopedRoleToUserGroup = function () {
               });
             });
 
-          case 8:
+          case 7:
             return _context2.abrupt("return", _context2.sent);
 
-          case 11:
-            _context2.prev = 11;
-            _context2.t0 = _context2["catch"](0);
-            return _context2.abrupt("return", Promise.reject(_context2.t0));
-
-          case 14:
+          case 8:
           case "end":
             return _context2.stop();
         }
       }
-    }, _callee2, undefined, [[0, 11]]);
+    }, _callee2, undefined);
   }));
 
   return function assignScopedRoleToUserGroup() {
@@ -277,13 +265,12 @@ var createUserGroup = function () {
       while (1) {
         switch (_context3.prev = _context3.next) {
           case 0:
-            _context3.prev = 0;
-            _context3.next = 3;
+            _context3.next = 2;
             return new Promise(function (resolve) {
               return setTimeout(resolve, Util.config.msDelay);
             });
 
-          case 3:
+          case 2:
             MS = Util.getEndpoint("auth");
             requestOptions = {
               method: "POST",
@@ -298,23 +285,18 @@ var createUserGroup = function () {
             };
 
             Util.addRequestTrace(requestOptions, trace);
-            _context3.next = 8;
+            _context3.next = 7;
             return request(requestOptions);
 
-          case 8:
+          case 7:
             return _context3.abrupt("return", _context3.sent);
 
-          case 11:
-            _context3.prev = 11;
-            _context3.t0 = _context3["catch"](0);
-            return _context3.abrupt("return", Promise.reject(_context3.t0));
-
-          case 14:
+          case 8:
           case "end":
             return _context3.stop();
         }
       }
-    }, _callee3, undefined, [[0, 11]]);
+    }, _callee3, undefined);
   }));
 
   return function createUserGroup() {
@@ -684,37 +666,54 @@ var listUserGroupRoles = function listUserGroupRoles() {
  * @param {object} [trace = {}] - optional microservice lifecycle trace headers
  * @returns {Promise<object>} - Promise resolving to a data object containing a list of permissions
  */
-var listPermissions = function listPermissions() {
-  var accessToken = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : "null accessToken";
-  var offset = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : "0";
-  var limit = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : "10";
-  var filters = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : undefined;
-  var trace = arguments.length > 4 && arguments[4] !== undefined ? arguments[4] : {};
+var listPermissions = function () {
+  var _ref7 = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee6() {
+    var accessToken = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : "null accessToken";
+    var offset = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : "0";
+    var limit = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : "10";
+    var filters = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : undefined;
+    var trace = arguments.length > 4 && arguments[4] !== undefined ? arguments[4] : {};
+    var MS, requestOptions;
+    return regeneratorRuntime.wrap(function _callee6$(_context6) {
+      while (1) {
+        switch (_context6.prev = _context6.next) {
+          case 0:
+            MS = Util.getEndpoint("auth");
+            requestOptions = {
+              method: "GET",
+              uri: MS + "/permissions",
+              headers: {
+                Authorization: "Bearer " + accessToken,
+                "Content-type": "application/json",
+                "x-api-version": "" + Util.getVersion()
+              },
+              qs: {
+                offset: offset,
+                limit: limit
+              },
+              json: true
+            };
 
-  var MS = Util.getEndpoint("auth");
-  var requestOptions = {
-    method: "GET",
-    uri: MS + "/permissions",
-    headers: {
-      Authorization: "Bearer " + accessToken,
-      "Content-type": "application/json",
-      "x-api-version": "" + Util.getVersion()
-    },
-    qs: {
-      offset: offset,
-      limit: limit
-    },
-    json: true
+            Util.addRequestTrace(requestOptions, trace);
+            if (filters) {
+              Object.keys(filters).forEach(function (filter) {
+                requestOptions.qs[filter] = filters[filter];
+              });
+            }
+            return _context6.abrupt("return", request(requestOptions));
+
+          case 5:
+          case "end":
+            return _context6.stop();
+        }
+      }
+    }, _callee6, undefined);
+  }));
+
+  return function listPermissions() {
+    return _ref7.apply(this, arguments);
   };
-  Util.addRequestTrace(requestOptions, trace);
-  if (filters) {
-    Object.keys(filters).forEach(function (filter) {
-      requestOptions.qs[filter] = filters[filter];
-    });
-  }
-
-  return request(requestOptions);
-};
+}();
 
 /**
  * @async
@@ -726,15 +725,15 @@ var listPermissions = function listPermissions() {
  * @returns {Promise<object>} - Promise resolving to a data object containing a list of user groups
  */
 var listPermissionRoles = function () {
-  var _ref7 = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee6() {
+  var _ref8 = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee7() {
     var accessToken = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : "null accessToken";
     var permissionUUID = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : "null permissionUUID";
     var filters = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : undefined;
     var trace = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : {};
     var MS, requestOptions;
-    return regeneratorRuntime.wrap(function _callee6$(_context6) {
+    return regeneratorRuntime.wrap(function _callee7$(_context7) {
       while (1) {
-        switch (_context6.prev = _context6.next) {
+        switch (_context7.prev = _context7.next) {
           case 0:
             MS = Util.getEndpoint("auth");
             requestOptions = {
@@ -755,24 +754,24 @@ var listPermissionRoles = function () {
                 requestOptions.qs[filter] = filters[filter];
               });
             }
-            _context6.next = 6;
+            _context7.next = 6;
             return new Promise(function (resolve) {
               return setTimeout(resolve, Util.config.msDelay);
             });
 
           case 6:
-            return _context6.abrupt("return", request(requestOptions));
+            return _context7.abrupt("return", request(requestOptions));
 
           case 7:
           case "end":
-            return _context6.stop();
+            return _context7.stop();
         }
       }
-    }, _callee6, undefined);
+    }, _callee7, undefined);
   }));
 
   return function listPermissionRoles() {
-    return _ref7.apply(this, arguments);
+    return _ref8.apply(this, arguments);
   };
 }();
 

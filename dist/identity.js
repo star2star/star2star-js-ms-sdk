@@ -26,13 +26,12 @@ var createIdentity = function () {
       while (1) {
         switch (_context.prev = _context.next) {
           case 0:
-            _context.prev = 0;
-            _context.next = 3;
+            _context.next = 2;
             return new Promise(function (resolve) {
               return setTimeout(resolve, util.config.msDelay);
             });
 
-          case 3:
+          case 2:
             MS = util.getEndpoint("identity");
             requestOptions = {
               method: "POST",
@@ -47,23 +46,18 @@ var createIdentity = function () {
             };
 
             util.addRequestTrace(requestOptions, trace);
-            _context.next = 8;
+            _context.next = 7;
             return request(requestOptions);
 
-          case 8:
+          case 7:
             return _context.abrupt("return", _context.sent);
 
-          case 11:
-            _context.prev = 11;
-            _context.t0 = _context["catch"](0);
-            return _context.abrupt("return", Promise.reject(_context.t0));
-
-          case 14:
+          case 8:
           case "end":
             return _context.stop();
         }
       }
-    }, _callee, undefined, [[0, 11]]);
+    }, _callee, undefined);
   }));
 
   return function createIdentity() {
@@ -267,13 +261,12 @@ var deleteIdentity = function () {
       while (1) {
         switch (_context2.prev = _context2.next) {
           case 0:
-            _context2.prev = 0;
-            _context2.next = 3;
+            _context2.next = 2;
             return new Promise(function (resolve) {
               return setTimeout(resolve, util.config.msDelay);
             });
 
-          case 3:
+          case 2:
             MS = util.getEndpoint("identity");
             requestOptions = {
               method: "DELETE",
@@ -288,24 +281,19 @@ var deleteIdentity = function () {
             };
 
             util.addRequestTrace(requestOptions, trace);
-            _context2.next = 8;
+            _context2.next = 7;
             return request(requestOptions);
 
-          case 8:
+          case 7:
             response = _context2.sent;
             return _context2.abrupt("return", response.statusCode === 204 ? Promise.resolve({ status: "ok" }) : Promise.reject({ status: "failed" }));
 
-          case 12:
-            _context2.prev = 12;
-            _context2.t0 = _context2["catch"](0);
-            return _context2.abrupt("return", Promise.reject({ status: "failed", "error": _context2.t0 }));
-
-          case 15:
+          case 9:
           case "end":
             return _context2.stop();
         }
       }
-    }, _callee2, undefined, [[0, 12]]);
+    }, _callee2, undefined);
   }));
 
   return function deleteIdentity() {
@@ -428,13 +416,12 @@ var listIdentitiesByAccount = function () {
       while (1) {
         switch (_context3.prev = _context3.next) {
           case 0:
-            _context3.prev = 0;
-            _context3.next = 3;
+            _context3.next = 2;
             return new Promise(function (resolve) {
               return setTimeout(resolve, util.config.msDelay);
             });
 
-          case 3:
+          case 2:
             MS = util.getEndpoint("identity");
             requestOptions = {
               method: "GET",
@@ -458,23 +445,18 @@ var listIdentitiesByAccount = function () {
               });
             }
             //console.log("REQUEST********",requestOptions);
-            _context3.next = 9;
+            _context3.next = 8;
             return request(requestOptions);
 
-          case 9:
+          case 8:
             return _context3.abrupt("return", _context3.sent);
 
-          case 12:
-            _context3.prev = 12;
-            _context3.t0 = _context3["catch"](0);
-            return _context3.abrupt("return", Promise.reject(_context3.t0));
-
-          case 15:
+          case 9:
           case "end":
             return _context3.stop();
         }
       }
-    }, _callee3, undefined, [[0, 12]]);
+    }, _callee3, undefined);
   }));
 
   return function listIdentitiesByAccount() {
@@ -504,13 +486,12 @@ var lookupIdentity = function () {
       while (1) {
         switch (_context4.prev = _context4.next) {
           case 0:
-            _context4.prev = 0;
-            _context4.next = 3;
+            _context4.next = 2;
             return new Promise(function (resolve) {
               return setTimeout(resolve, util.config.msDelay);
             });
 
-          case 3:
+          case 2:
             MS = util.getEndpoint("identity");
             requestOptions = {
               method: "GET",
@@ -534,23 +515,18 @@ var lookupIdentity = function () {
               });
             }
             //console.log("REQUEST********",requestOptions);
-            _context4.next = 9;
+            _context4.next = 8;
             return request(requestOptions);
 
-          case 9:
+          case 8:
             return _context4.abrupt("return", _context4.sent);
 
-          case 12:
-            _context4.prev = 12;
-            _context4.t0 = _context4["catch"](0);
-            return _context4.abrupt("return", Promise.reject(_context4.t0));
-
-          case 15:
+          case 9:
           case "end":
             return _context4.stop();
         }
       }
-    }, _callee4, undefined, [[0, 12]]);
+    }, _callee4, undefined);
   }));
 
   return function lookupIdentity() {

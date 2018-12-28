@@ -110,31 +110,24 @@ const getDataObjects = async (
     if (Object.keys(sdkFilters).length === 0) {
       requestOptions.qs.offset = offset;
       requestOptions.qs.limit = limit;
-      try {
-        return await request(requestOptions);
-      } catch (error) {
-        return Promise.reject(error);
-      }
+      return await request(requestOptions);
     } else {
-      try {
-        const response = await Util.aggregate(request, requestOptions, trace);
-        logger.debug("****** AGGREGATE RESPONSE *******",response);
-        if (response.hasOwnProperty("items") && response.items.length > 0) {
-          const filteredResponse = Util.filterResponse(response, sdkFilters);
-          logger.debug("******* FILTERED RESPONSE ********",filteredResponse);
-          const paginatedResponse = Util.paginate(
-            filteredResponse,
-            offset,
-            limit
-          );
-          logger.debug("******* PAGINATED RESPONSE ********",paginatedResponse);
-          return paginatedResponse;
-        } else {
-          return response;
-        }
-      } catch (error) {
-        return Promise.reject(error);
+      const response = await Util.aggregate(request, requestOptions, trace);
+      logger.debug("****** AGGREGATE RESPONSE *******",response);
+      if (response.hasOwnProperty("items") && response.items.length > 0) {
+        const filteredResponse = Util.filterResponse(response, sdkFilters);
+        logger.debug("******* FILTERED RESPONSE ********",filteredResponse);
+        const paginatedResponse = Util.paginate(
+          filteredResponse,
+          offset,
+          limit
+        );
+        logger.debug("******* PAGINATED RESPONSE ********",paginatedResponse);
+        return paginatedResponse;
+      } else {
+        return response;
       }
+      
     }
   }
 };
@@ -413,18 +406,14 @@ const deleteDataObject = async (
   };
   Util.addRequestTrace(requestOptions, trace);
 
-  try {
-    await new Promise(resolve => setTimeout(resolve, Util.config.msDelay));
-    await ResourceGroups.cleanUpResourceGroups(
-      accessToken,
-      data_uuid,
-      Util.generateNewMetaData(trace)
-    );
-    await request(requestOptions);
-    return Promise.resolve({ status: "ok" });
-  } catch (error) {
-    return Promise.reject({ status: "failed", error: error });
-  }
+  await new Promise(resolve => setTimeout(resolve, Util.config.msDelay));
+  await ResourceGroups.cleanUpResourceGroups(
+    accessToken,
+    data_uuid,
+    Util.generateNewMetaData(trace)
+  );
+  await request(requestOptions);
+  return Promise.resolve({ status: "ok" });
 };
 
 /**
@@ -460,26 +449,22 @@ const updateDataObject = async (
   };
   Util.addRequestTrace(requestOptions, trace);
   let nextTrace = objectMerge({}, trace);
-  try {
-    if (
-      accountUUID &&
+  if (
+    accountUUID &&
       users && 
       typeof users === "object"
-    ) {
-      nextTrace = objectMerge({}, nextTrace, Util.generateNewMetaData(nextTrace));
-      await ResourceGroups.updateResourceGroups(
-        accessToken,
-        dataUUID,
-        accountUUID,
-        "object", //specifies the system role to find in config.json
-        users,
-        nextTrace
-      );
-    }
-    return await request(requestOptions);
-  } catch (error) {
-    return Promise.reject(error);
+  ) {
+    nextTrace = objectMerge({}, nextTrace, Util.generateNewMetaData(nextTrace));
+    await ResourceGroups.updateResourceGroups(
+      accessToken,
+      dataUUID,
+      accountUUID,
+      "object", //specifies the system role to find in config.json
+      users,
+      nextTrace
+    );
   }
+  return await request(requestOptions);
 };
 
 module.exports = {

@@ -106,7 +106,7 @@ var getDataObjects = function () {
 
           case 5:
             if (!filters) {
-              _context.next = 46;
+              _context.next = 34;
               break;
             }
 
@@ -138,40 +138,29 @@ var getDataObjects = function () {
             // if the sdkFilters object is empty, the API can handle everything, otherwise the sdk needs to augment the api.
 
             if (!(Object.keys(sdkFilters).length === 0)) {
-              _context.next = 27;
+              _context.next = 21;
               break;
             }
 
             requestOptions.qs.offset = offset;
             requestOptions.qs.limit = limit;
-            _context.prev = 16;
-            _context.next = 19;
+            _context.next = 18;
             return request(requestOptions);
 
-          case 19:
+          case 18:
             return _context.abrupt("return", _context.sent);
 
-          case 22:
-            _context.prev = 22;
-            _context.t0 = _context["catch"](16);
-            return _context.abrupt("return", Promise.reject(_context.t0));
-
-          case 25:
-            _context.next = 46;
-            break;
-
-          case 27:
-            _context.prev = 27;
-            _context.next = 30;
+          case 21:
+            _context.next = 23;
             return Util.aggregate(request, requestOptions, trace);
 
-          case 30:
+          case 23:
             response = _context.sent;
 
             logger.debug("****** AGGREGATE RESPONSE *******", response);
 
             if (!(response.hasOwnProperty("items") && response.items.length > 0)) {
-              _context.next = 40;
+              _context.next = 33;
               break;
             }
 
@@ -183,24 +172,15 @@ var getDataObjects = function () {
             logger.debug("******* PAGINATED RESPONSE ********", paginatedResponse);
             return _context.abrupt("return", paginatedResponse);
 
-          case 40:
+          case 33:
             return _context.abrupt("return", response);
 
-          case 41:
-            _context.next = 46;
-            break;
-
-          case 43:
-            _context.prev = 43;
-            _context.t1 = _context["catch"](27);
-            return _context.abrupt("return", Promise.reject(_context.t1));
-
-          case 46:
+          case 34:
           case "end":
             return _context.stop();
         }
       }
-    }, _callee, undefined, [[16, 22], [27, 43]]);
+    }, _callee, undefined);
   }));
 
   return function getDataObjects() {
@@ -527,34 +507,28 @@ var deleteDataObject = function () {
 
             Util.addRequestTrace(requestOptions, trace);
 
-            _context3.prev = 4;
-            _context3.next = 7;
+            _context3.next = 6;
             return new Promise(function (resolve) {
               return setTimeout(resolve, Util.config.msDelay);
             });
 
-          case 7:
-            _context3.next = 9;
+          case 6:
+            _context3.next = 8;
             return ResourceGroups.cleanUpResourceGroups(accessToken, data_uuid, Util.generateNewMetaData(trace));
 
-          case 9:
-            _context3.next = 11;
+          case 8:
+            _context3.next = 10;
             return request(requestOptions);
 
-          case 11:
+          case 10:
             return _context3.abrupt("return", Promise.resolve({ status: "ok" }));
 
-          case 14:
-            _context3.prev = 14;
-            _context3.t0 = _context3["catch"](4);
-            return _context3.abrupt("return", Promise.reject({ status: "failed", error: _context3.t0 }));
-
-          case 17:
+          case 11:
           case "end":
             return _context3.stop();
         }
       }
-    }, _callee3, undefined, [[4, 14]]);
+    }, _callee3, undefined);
   }));
 
   return function deleteDataObject() {
@@ -601,36 +575,30 @@ var updateDataObject = function () {
 
             Util.addRequestTrace(requestOptions, trace);
             nextTrace = objectMerge({}, trace);
-            _context4.prev = 4;
 
             if (!(accountUUID && users && (typeof users === "undefined" ? "undefined" : _typeof(users)) === "object")) {
-              _context4.next = 9;
+              _context4.next = 8;
               break;
             }
 
             nextTrace = objectMerge({}, nextTrace, Util.generateNewMetaData(nextTrace));
-            _context4.next = 9;
+            _context4.next = 8;
             return ResourceGroups.updateResourceGroups(accessToken, dataUUID, accountUUID, "object", //specifies the system role to find in config.json
             users, nextTrace);
 
-          case 9:
-            _context4.next = 11;
+          case 8:
+            _context4.next = 10;
             return request(requestOptions);
 
-          case 11:
+          case 10:
             return _context4.abrupt("return", _context4.sent);
 
-          case 14:
-            _context4.prev = 14;
-            _context4.t0 = _context4["catch"](4);
-            return _context4.abrupt("return", Promise.reject(_context4.t0));
-
-          case 17:
+          case 11:
           case "end":
             return _context4.stop();
         }
       }
-    }, _callee4, undefined, [[4, 14]]);
+    }, _callee4, undefined);
   }));
 
   return function updateDataObject() {

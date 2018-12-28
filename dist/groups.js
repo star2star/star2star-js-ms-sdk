@@ -168,13 +168,12 @@ var deleteGroup = function () {
       while (1) {
         switch (_context.prev = _context.next) {
           case 0:
-            _context.prev = 0;
-            _context.next = 3;
+            _context.next = 2;
             return new Promise(function (resolve) {
               return setTimeout(resolve, util.config.msDelay);
             });
 
-          case 3:
+          case 2:
             MS = util.getEndpoint("groups");
             requestOptions = {
               method: "DELETE",
@@ -189,7 +188,7 @@ var deleteGroup = function () {
             };
 
             util.addRequestTrace(requestOptions, trace);
-            _context.next = 8;
+            _context.next = 7;
             return new Promise(function (resolve, reject) {
               request(requestOptions).then(function (responseData) {
                 responseData.statusCode === 204 ? resolve({ status: "ok" }) : reject({ status: "failed" });
@@ -198,20 +197,15 @@ var deleteGroup = function () {
               });
             });
 
-          case 8:
+          case 7:
             return _context.abrupt("return", _context.sent);
 
-          case 11:
-            _context.prev = 11;
-            _context.t0 = _context["catch"](0);
-            return _context.abrupt("return", Promise.reject(_context.t0));
-
-          case 14:
+          case 8:
           case "end":
             return _context.stop();
         }
       }
-    }, _callee, undefined, [[0, 11]]);
+    }, _callee, undefined);
   }));
 
   return function deleteGroup() {
@@ -239,13 +233,12 @@ var addMembersToGroup = function () {
       while (1) {
         switch (_context2.prev = _context2.next) {
           case 0:
-            _context2.prev = 0;
-            _context2.next = 3;
+            _context2.next = 2;
             return new Promise(function (resolve) {
               return setTimeout(resolve, util.config.msDelay);
             });
 
-          case 3:
+          case 2:
             MS = util.getEndpoint("groups");
             requestOptions = {
               method: "POST",
@@ -261,23 +254,18 @@ var addMembersToGroup = function () {
 
             util.addRequestTrace(requestOptions, trace);
             // console.log("request options", JSON.stringify(requestOptions));
-            _context2.next = 8;
+            _context2.next = 7;
             return request(requestOptions);
 
-          case 8:
+          case 7:
             return _context2.abrupt("return", _context2.sent);
 
-          case 11:
-            _context2.prev = 11;
-            _context2.t0 = _context2["catch"](0);
-            return _context2.abrupt("return", Promise.reject(_context2.t0));
-
-          case 14:
+          case 8:
           case "end":
             return _context2.stop();
         }
       }
-    }, _callee2, undefined, [[0, 11]]);
+    }, _callee2, undefined);
   }));
 
   return function addMembersToGroup() {
@@ -305,13 +293,12 @@ var deleteGroupMembers = function () {
       while (1) {
         switch (_context3.prev = _context3.next) {
           case 0:
-            _context3.prev = 0;
-            _context3.next = 3;
+            _context3.next = 2;
             return new Promise(function (resolve) {
               return setTimeout(resolve, util.config.msDelay);
             });
 
-          case 3:
+          case 2:
             MS = util.getEndpoint("groups");
             requestOptions = {
               method: "DELETE",
@@ -327,7 +314,7 @@ var deleteGroupMembers = function () {
             };
 
             util.addRequestTrace(requestOptions, trace);
-            _context3.next = 8;
+            _context3.next = 7;
             return new Promise(function (resolve, reject) {
               request(requestOptions).then(function (responseData) {
                 responseData.statusCode === 204 ? resolve({ status: "ok" }) : reject({ status: "failed" });
@@ -336,20 +323,15 @@ var deleteGroupMembers = function () {
               });
             });
 
-          case 8:
+          case 7:
             return _context3.abrupt("return", _context3.sent);
 
-          case 11:
-            _context3.prev = 11;
-            _context3.t0 = _context3["catch"](0);
-            return _context3.abrupt("return", Promise.reject(_context3.t0));
-
-          case 14:
+          case 8:
           case "end":
             return _context3.stop();
         }
       }
-    }, _callee3, undefined, [[0, 11]]);
+    }, _callee3, undefined);
   }));
 
   return function deleteGroupMembers() {

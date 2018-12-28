@@ -160,35 +160,31 @@ const deleteGroup = async (
   groupUUID = "not specified",
   trace = {}
 ) => {
-  try {
-    await new Promise(resolve => setTimeout(resolve, util.config.msDelay));
-    const MS = util.getEndpoint("groups");
-    const requestOptions = {
-      method: "DELETE",
-      uri: `${MS}/groups/${groupUUID}`,
-      headers: {
-        "Content-type": "application/json",
-        Authorization: `Bearer ${accessToken}`,
-        "x-api-version": `${util.getVersion()}`
-      },
-      resolveWithFullResponse: true,
-      json: true
-    };
-    util.addRequestTrace(requestOptions, trace);
-    return await new Promise(function(resolve, reject) {
-      request(requestOptions)
-        .then(function(responseData) {
-          responseData.statusCode === 204
-            ? resolve({ status: "ok" })
-            : reject({ status: "failed" });
-        })
-        .catch(function(error) {
-          reject(error);
-        });
-    });
-  } catch (error) {
-    return Promise.reject(error);
-  }
+  await new Promise(resolve => setTimeout(resolve, util.config.msDelay));
+  const MS = util.getEndpoint("groups");
+  const requestOptions = {
+    method: "DELETE",
+    uri: `${MS}/groups/${groupUUID}`,
+    headers: {
+      "Content-type": "application/json",
+      Authorization: `Bearer ${accessToken}`,
+      "x-api-version": `${util.getVersion()}`
+    },
+    resolveWithFullResponse: true,
+    json: true
+  };
+  util.addRequestTrace(requestOptions, trace);
+  return await new Promise(function(resolve, reject) {
+    request(requestOptions)
+      .then(function(responseData) {
+        responseData.statusCode === 204
+          ? resolve({ status: "ok" })
+          : reject({ status: "failed" });
+      })
+      .catch(function(error) {
+        reject(error);
+      });
+  });
 };
 
 /**
@@ -206,26 +202,23 @@ const addMembersToGroup = async (
   members = [],
   trace = {}
 ) => {
-  try {
-    await new Promise(resolve => setTimeout(resolve, util.config.msDelay));
-    const MS = util.getEndpoint("groups");
-    const requestOptions = {
-      method: "POST",
-      uri: `${MS}/groups/${groupUUID}/members`,
-      body: members,
-      headers: {
-        "Content-type": "application/json",
-        Authorization: `Bearer ${accessToken}`,
-        "x-api-version": `${util.getVersion()}`
-      },
-      json: true
-    };
-    util.addRequestTrace(requestOptions, trace);
-    // console.log("request options", JSON.stringify(requestOptions));
-    return await request(requestOptions);
-  } catch (error) {
-    return Promise.reject(error);
-  }
+  await new Promise(resolve => setTimeout(resolve, util.config.msDelay));
+  const MS = util.getEndpoint("groups");
+  const requestOptions = {
+    method: "POST",
+    uri: `${MS}/groups/${groupUUID}/members`,
+    body: members,
+    headers: {
+      "Content-type": "application/json",
+      Authorization: `Bearer ${accessToken}`,
+      "x-api-version": `${util.getVersion()}`
+    },
+    json: true
+  };
+  util.addRequestTrace(requestOptions, trace);
+  // console.log("request options", JSON.stringify(requestOptions));
+  return await request(requestOptions);
+
 };
 
 /**
@@ -242,37 +235,33 @@ const deleteGroupMembers = async (
   groupUuid = "null groupUuid",
   members = [],
   trace = {}
-) => {
-  try {
-    await new Promise(resolve => setTimeout(resolve, util.config.msDelay));
-    const MS = util.getEndpoint("groups");
-    const requestOptions = {
-      method: "DELETE",
-      uri: `${MS}/groups/${groupUuid}/members`,
-      headers: {
-        "Content-type": "application/json",
-        Authorization: `Bearer ${accessToken}`,
-        "x-api-version": `${util.getVersion()}`
-      },
-      body: members,
-      resolveWithFullResponse: true,
-      json: true
-    };
-    util.addRequestTrace(requestOptions, trace);
-    return await new Promise(function(resolve, reject) {
-      request(requestOptions)
-        .then(function(responseData) {
-          responseData.statusCode === 204
-            ? resolve({ status: "ok" })
-            : reject({ status: "failed" });
-        })
-        .catch(function(error) {
-          reject(error);
-        });
-    });
-  } catch (error) {
-    return Promise.reject(error);
-  } 
+) => { 
+  await new Promise(resolve => setTimeout(resolve, util.config.msDelay));
+  const MS = util.getEndpoint("groups");
+  const requestOptions = {
+    method: "DELETE",
+    uri: `${MS}/groups/${groupUuid}/members`,
+    headers: {
+      "Content-type": "application/json",
+      Authorization: `Bearer ${accessToken}`,
+      "x-api-version": `${util.getVersion()}`
+    },
+    body: members,
+    resolveWithFullResponse: true,
+    json: true
+  };
+  util.addRequestTrace(requestOptions, trace);
+  return await new Promise(function(resolve, reject) {
+    request(requestOptions)
+      .then(function(responseData) {
+        responseData.statusCode === 204
+          ? resolve({ status: "ok" })
+          : reject({ status: "failed" });
+      })
+      .catch(function(error) {
+        reject(error);
+      });
+  });
 };
 
 /**

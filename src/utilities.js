@@ -225,25 +225,21 @@ const aggregate = async (request, requestOptions, trace = {}) => {
   const makeRequest = async (request, requestOptions, trace = {}) => {
     const nextTrace = generateNewMetaData(trace);
     addRequestTrace(requestOptions, nextTrace);
-    try {
-      const response = await request(requestOptions);
-      total = response.metadata.total;
-      offset = response.metadata.offset + response.metadata.count;
-      if (total > offset) {
-        requestOptions.qs.offset = offset;
-        const nextResponse = await makeRequest(request, requestOptions);
-        const items = response.items.concat(nextResponse.items);
-        response.items = items;
-        response.metadata.offset = 0;
-        response.metadata.count = total;
-        response.metadata.limit = total;
-        delete response.links; //the links are invalid now
-        return response;
-      } else {
-        return response;
-      }
-    } catch (error) {
-      return Promise.reject(error);
+    const response = await request(requestOptions);
+    total = response.metadata.total;
+    offset = response.metadata.offset + response.metadata.count;
+    if (total > offset) {
+      requestOptions.qs.offset = offset;
+      const nextResponse = await makeRequest(request, requestOptions);
+      const items = response.items.concat(nextResponse.items);
+      response.items = items;
+      response.metadata.offset = 0;
+      response.metadata.count = total;
+      response.metadata.limit = total;
+      delete response.links; //the links are invalid now
+      return response;
+    } else {
+      return response;
     }
   };
 

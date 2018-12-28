@@ -64,6 +64,7 @@ require("babel-polyfill");
 [Please click here for our documentation pages.](https://star2star.github.io/star2star-js-ms-sdk/ "Star2Star Micro Service SDK Documentation")
 
 ## Changes
+* 2.2.25 - Don't need try-catch in several places.
 * 2.2.24 - Async/Await Unit test updates for chat and scheduler
 * 2.2.23 - Async/Await Unit test updates for accounts, auth, and objects.
 * 2.2.22 - Reduced microservice delay work-around for outh repsonse time issue.

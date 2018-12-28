@@ -96,13 +96,12 @@ var createAccount = function () {
       while (1) {
         switch (_context.prev = _context.next) {
           case 0:
-            _context.prev = 0;
-            _context.next = 3;
+            _context.next = 2;
             return new Promise(function (resolve) {
               return setTimeout(resolve, util.config.msDelay);
             });
 
-          case 3:
+          case 2:
             MS = util.getEndpoint("accounts");
             requestOptions = {
               method: "POST",
@@ -118,23 +117,18 @@ var createAccount = function () {
 
             util.addRequestTrace(requestOptions, trace);
 
-            _context.next = 8;
+            _context.next = 7;
             return request(requestOptions);
 
-          case 8:
+          case 7:
             return _context.abrupt("return", _context.sent);
 
-          case 11:
-            _context.prev = 11;
-            _context.t0 = _context["catch"](0);
-            return _context.abrupt("return", Promise.reject(_context.t0));
-
-          case 14:
+          case 8:
           case "end":
             return _context.stop();
         }
       }
-    }, _callee, undefined, [[0, 11]]);
+    }, _callee, undefined);
   }));
 
   return function createAccount() {
@@ -349,13 +343,12 @@ var deleteAccount = function () {
       while (1) {
         switch (_context2.prev = _context2.next) {
           case 0:
-            _context2.prev = 0;
-            _context2.next = 3;
+            _context2.next = 2;
             return new Promise(function (resolve) {
               return setTimeout(resolve, util.config.msDelay);
             });
 
-          case 3:
+          case 2:
             MS = util.getEndpoint("accounts");
             requestOptions = {
               method: "DELETE",
@@ -371,7 +364,7 @@ var deleteAccount = function () {
 
             util.addRequestTrace(requestOptions, trace);
 
-            _context2.next = 8;
+            _context2.next = 7;
             return new Promise(function (resolve, reject) {
               request(requestOptions).then(function (responseData) {
                 responseData.statusCode === 204 ? resolve({ status: "ok" }) : reject({ status: "failed" });
@@ -380,20 +373,15 @@ var deleteAccount = function () {
               });
             });
 
-          case 8:
+          case 7:
             return _context2.abrupt("return", _context2.sent);
 
-          case 11:
-            _context2.prev = 11;
-            _context2.t0 = _context2["catch"](0);
-            return _context2.abrupt("return", Promise.reject(_context2.t0));
-
-          case 14:
+          case 8:
           case "end":
             return _context2.stop();
         }
       }
-    }, _callee2, undefined, [[0, 11]]);
+    }, _callee2, undefined);
   }));
 
   return function deleteAccount() {

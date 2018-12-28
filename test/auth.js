@@ -21,20 +21,6 @@ const objectMerge = require("object-merge");
 const newMeta = Util.generateNewMetaData;
 let trace = newMeta();
 
-//utility function to simplify test code
-const mochaAsync = (func, name) => {
-  return async () => {
-    try {
-      const response = await func(name);
-      logger.debug(name, response);
-      return response; 
-    } catch (error) {
-      //mocha will log out the error
-      return Promise.reject(error);
-    }
-  };
-};
-
 let creds = {
   CPAAS_OAUTH_TOKEN: "Basic your oauth token here",
   CPAAS_API_VERSION: "v1",
@@ -51,32 +37,28 @@ describe("Permissions MS Test Suite", function() {
     role;
 
   before(async () => {
-    try {
-      // file system uses full path so will do it like this
-      if (fs.existsSync("./test/credentials.json")) {
-        // do not need test folder here
-        creds = require("./credentials.json");
-      }
-
-      // For tests, use the dev msHost
-      s2sMS.setMsHost("https://cpaas.star2starglobal.net");
-      s2sMS.setMSVersion(creds.CPAAS_API_VERSION);
-      s2sMS.setMsAuthHost("https://auth.star2starglobal.net");
-      // get accessToken to use in test cases
-      // Return promise so that test cases will not fire until it resolves.
-      const oauthData = await s2sMS.Oauth.getAccessToken(
-        creds.CPAAS_OAUTH_TOKEN,
-        creds.email,
-        creds.password
-      );
-      accessToken = oauthData.access_token;
-      const idData = await s2sMS.Identity.getMyIdentityData(accessToken);
-      identityData = await s2sMS.Identity.getIdentityDetails(accessToken, idData.user_uuid);
-    } catch (error){
-      return Promise.reject(error);
+    // file system uses full path so will do it like this
+    if (fs.existsSync("./test/credentials.json")) {
+      // do not need test folder here
+      creds = require("./credentials.json");
     }
-  });
 
+    // For tests, use the dev msHost
+    s2sMS.setMsHost("https://cpaas.star2starglobal.net");
+    s2sMS.setMSVersion(creds.CPAAS_API_VERSION);
+    s2sMS.setMsAuthHost("https://auth.star2starglobal.net");
+    // get accessToken to use in test cases
+    // Return promise so that test cases will not fire until it resolves.
+    const oauthData = await s2sMS.Oauth.getAccessToken(
+      creds.CPAAS_OAUTH_TOKEN,
+      creds.email,
+      creds.password
+    );
+    accessToken = oauthData.access_token;
+    const idData = await s2sMS.Identity.getMyIdentityData(accessToken);
+    identityData = await s2sMS.Identity.getIdentityDetails(accessToken, idData.user_uuid);
+  });
+  
   // Template for New Test............
   // it("change me", mochaAsync(async () => {
   //   if (!creds.isValid) throw new Error("Invalid Credentials");
@@ -86,7 +68,7 @@ describe("Permissions MS Test Suite", function() {
   //   return response;
   // },"change me"));
 
-  it("List Permissions", mochaAsync(async () => {
+  it("List Permissions", async () => {
     if (!creds.isValid) throw new Error("Invalid Credentials");
     const filters = {
       "name": "account"
@@ -105,10 +87,10 @@ describe("Permissions MS Test Suite", function() {
       response.items[0].hasOwnProperty("action"),
       JSON.stringify(response, null, "\t")
     );
-    return response;
-  },"List Permissions"));
+    logger.debug(this.ctx.test.title, response);
+  });
 
-  it("Create User Group", mochaAsync(async () => {
+  it("Create User Group", async () => {
     if (!creds.isValid) throw new Error("Invalid Credentials");
     const body = {
       name: "Unit-Test",
@@ -129,10 +111,10 @@ describe("Permissions MS Test Suite", function() {
       response.account_uuid === identityData.account_uuid,
       JSON.stringify(response, null, "\t")
     );
-    return response;
-  },"Create User Group"));
+    logger.debug(this.ctx.test.title, response);
+  });
 
-  it("List User Groups", mochaAsync(async () => {
+  it("List User Groups", async () => {
     if (!creds.isValid) throw new Error("Invalid Credentials");
     const filters = {
       "name": "Unit-Test",
@@ -151,10 +133,10 @@ describe("Permissions MS Test Suite", function() {
       response.items[0].description === filters.description,
       JSON.stringify(response, null, "\t")
     );
-    return response;
-  },"List User Groups"));
+    logger.debug(this.ctx.test.title, response);
+  });
 
-  it("Modify Group", mochaAsync(async () => {
+  it("Modify Group", async () => {
     if (!creds.isValid) throw new Error("Invalid Credentials");
     const body = {
       "description": "A modified test group"
@@ -170,10 +152,10 @@ describe("Permissions MS Test Suite", function() {
       response.description === "A modified test group",
       JSON.stringify(response, null, "\t")
     );
-    return response;
-  },"Modify Group"));
+    logger.debug(this.ctx.test.title, response);
+  });
 
-  it("List User Groups After Modify", mochaAsync(async () => {
+  it("List User Groups After Modify", async () => {
     if (!creds.isValid) throw new Error("Invalid Credentials");
     const filters = {
       "name": "Unit-Test",
@@ -192,10 +174,10 @@ describe("Permissions MS Test Suite", function() {
       response.items[0].description === filters.description,
       JSON.stringify(response, null, "\t")
     );
-    return response;
-  },"List User Groups After Modify"));
+    logger.debug(this.ctx.test.title, response);
+  });
   
-  it("Create Role", mochaAsync(async () => {
+  it("Create Role", async () => {
     if (!creds.isValid) throw new Error("Invalid Credentials");
     const body = {
       name: "Unit-Test",
@@ -216,10 +198,10 @@ describe("Permissions MS Test Suite", function() {
       JSON.stringify(response, null, "\t")
     );
     role = response.uuid;
-    return response;
-  },"Create Role"));
+    logger.debug(this.ctx.test.title, response);
+  });
 
-  it("List Roles After Create", mochaAsync(async () => {
+  it("List Roles After Create", async () => {
     if (!creds.isValid) throw new Error("Invalid Credentials");
     const filters = {
       "name": "Unit-Test"
@@ -239,10 +221,10 @@ describe("Permissions MS Test Suite", function() {
       response.items[0].total_members === 1,
       JSON.stringify(response, null, "\t")
     );
-    return response;
-  },"List Roles After Create"));
+    logger.debug(this.ctx.test.title, response);
+  });
 
-  it("Assign Permissions to Role", mochaAsync(async () => {
+  it("Assign Permissions to Role", async () => {
     if (!creds.isValid) throw new Error("Invalid Credentials");
     trace = objectMerge({}, trace, Util.generateNewMetaData(trace));
     const body = {
@@ -258,10 +240,10 @@ describe("Permissions MS Test Suite", function() {
       response.status === "ok",
       JSON.stringify(response, null, "\t")
     );
-    return response;
-  },"Assign Permissions to Role"));
+    logger.debug(this.ctx.test.title, response);
+  });
 
-  it("Modfy Role", mochaAsync(async () => {
+  it("Modfy Role", async () => {
     if (!creds.isValid) throw new Error("Invalid Credentials");
     const body = {
       "description": "new description"
@@ -278,10 +260,10 @@ describe("Permissions MS Test Suite", function() {
       response.description === "new description",
       JSON.stringify(response, null, "\t")
     );
-    return response;
-  },"Modfy Role"));
+    logger.debug(this.ctx.test.title, response);
+  });
   
-  it("List Roles After Modify", mochaAsync(async () => {
+  it("List Roles After Modify", async () => {
     if (!creds.isValid) throw new Error("Invalid Credentials");
     const filters = {
       "name": "Unit-Test"
@@ -301,10 +283,10 @@ describe("Permissions MS Test Suite", function() {
       response.items[0].total_members === 2,
       JSON.stringify(response, null, "\t")
     );
-    return response;
-  },"List Roles After Modify"));
+    logger.debug(this.ctx.test.title, response);
+  });
 
-  it("Assign Roles to User Group", mochaAsync(async () => {
+  it("Assign Roles to User Group", async () => {
     if (!creds.isValid) throw new Error("Invalid Credentials");
     const body = {
       roles: [role]
@@ -320,10 +302,10 @@ describe("Permissions MS Test Suite", function() {
       response.status === "ok",
       JSON.stringify(response, null, "\t")
     );
-    return response;
-  },"Assign Roles to User Group"));
+    logger.debug(this.ctx.test.title, response);
+  });
 
-  it("List a Role's Groups", mochaAsync(async () => {
+  it("List a Role's Groups", async () => {
     if (!creds.isValid) throw new Error("Invalid Credentials");
     trace = objectMerge({}, trace, Util.generateNewMetaData(trace));
     const response = await s2sMS.Auth.listRoleUserGroups(
@@ -347,11 +329,11 @@ describe("Permissions MS Test Suite", function() {
       invalidResponse.items.length === 0,
       JSON.stringify(response, null, "\t")
     );
-    return { "validResponse": response,"invalidResponse": invalidResponse};
-  },"List a Role's Groups"));
+    logger.debug(this.ctx.test.title, { "validResponse": response,"invalidResponse": invalidResponse});
+  });
 
   
-  it("List a Role's Permissions", mochaAsync(async () => {
+  it("List a Role's Permissions", async () => {
     if (!creds.isValid) throw new Error("Invalid Credentials");
     const filters = {
       "name": "update"
@@ -367,10 +349,10 @@ describe("Permissions MS Test Suite", function() {
       response.items[0].name === "account.update",
       JSON.stringify(response, null, "\t")
     );
-    return response;
-  },"List a Role's Permissions"));
+    logger.debug(this.ctx.test.title, response);
+  });
 
-  it("List a Permission's Roles", mochaAsync(async () => {
+  it("List a Permission's Roles", async () => {
     if (!creds.isValid) throw new Error("Invalid Credentials");
     const filters = {
       "name": "new name"
@@ -388,10 +370,10 @@ describe("Permissions MS Test Suite", function() {
       response.item[0].uuid === role,
       JSON.stringify(response, null, "\t")
     );
-    return response;
-  },"List a Permission's Roles"));
+    logger.debug(this.ctx.test.title, response);
+  });
 
-  it("List a Group's Roles", mochaAsync(async () => {
+  it("List a Group's Roles", async () => {
     if (!creds.isValid) throw new Error("Invalid Credentials");
     trace = objectMerge({}, trace, Util.generateNewMetaData(trace));
     const response = await s2sMS.Auth.listUserGroupRoles(
@@ -403,10 +385,10 @@ describe("Permissions MS Test Suite", function() {
       response.items[0].uuid === role,
       JSON.stringify(response, null, "\t")
     );
-    return response;
-  },"List a Group's Roles"));
+    logger.debug(this.ctx.test.title, response);
+  });
 
-  it("Remove User Group Member", mochaAsync(async () => {
+  it("Remove User Group Member", async () => {
     if (!creds.isValid) throw new Error("Invalid Credentials");
     const members = [
       {
@@ -423,10 +405,10 @@ describe("Permissions MS Test Suite", function() {
       response.status === "ok",
       JSON.stringify(response, null, "\t")
     );
-    return response;
-  },"Remove User Group Member"));
+    logger.debug(this.ctx.test.title, response);
+  });
 
-  it("List User Groups After Remove Member", mochaAsync(async () => {
+  it("List User Groups After Remove Member", async () => {
     if (!creds.isValid) throw new Error("Invalid Credentials");
     const filters = {
       "name": "Unit-Test",
@@ -445,10 +427,10 @@ describe("Permissions MS Test Suite", function() {
       response.items[0].uuid === userGroupUUID,
       JSON.stringify(response, null, "\t")
     );
-    return response;
-  },"List User Groups After Remove Member"));
+    logger.debug(this.ctx.test.title, response);
+  });
   
-  it("Add User Group Member", mochaAsync(async () => {
+  it("Add User Group Member", async () => {
     if (!creds.isValid) throw new Error("Invalid Credentials");
     const members = [
       {
@@ -467,10 +449,10 @@ describe("Permissions MS Test Suite", function() {
       response.total_members === 1,
       JSON.stringify(response, null, "\t")
     );
-    return response;
-  },"Add User Group Member"));
+    logger.debug(this.ctx.test.title, response);
+  });
 
-  it("List User Groups After Add Member", mochaAsync(async () => {
+  it("List User Groups After Add Member", async () => {
     if (!creds.isValid) throw new Error("Invalid Credentials");
     const filters = {
       "name": "Unit-Test",
@@ -489,11 +471,11 @@ describe("Permissions MS Test Suite", function() {
       response.items[0].uuid === userGroupUUID,
       JSON.stringify(response, null, "\t")
     );
-    return response;
-  },"List User Groups After Add Member"));
+    logger.debug(this.ctx.test.title, response);
+  });
   
   
-  it("Delete Permission From Role With User Group Attached", mochaAsync(async (name) => {
+  it("Delete Permission From Role With User Group Attached", async () => {
     if (!creds.isValid) throw new Error("Invalid Credentials");
     try {
       trace = objectMerge({}, trace, Util.generateNewMetaData(trace));
@@ -508,18 +490,17 @@ describe("Permissions MS Test Suite", function() {
         false,
         JSON.stringify(response, null, "\t")
       );
-      return response;
     } catch (error) {
       assert.ok(
         error.hasOwnProperty("statusCode") &&
         error.statusCode === 400,
         JSON.stringify(error, null, "\t")
       );
-      logger.debug(name, error);
+      logger.debug(this.ctx.test.title, error);
     } 
-  },"Delete Permission From Role With User Group Attached"));
+  });
   
-  it("Delete Role From User Group", mochaAsync(async () => {
+  it("Delete Role From User Group", async () => {
     if (!creds.isValid) throw new Error("Invalid Credentials");
     trace = objectMerge({}, trace, Util.generateNewMetaData(trace));
     const deleteResponse = await s2sMS.Auth.deleteRoleFromUserGroup(
@@ -542,10 +523,10 @@ describe("Permissions MS Test Suite", function() {
       listResponse.items.length === 0,
       JSON.stringify(listResponse, null, "\t")
     );
-    return {"deleteResponse": deleteResponse, "listResponse": listResponse};
-  },"Delete Role From User Group"));
+    logger.debug(this.ctx.test.title, {"deleteResponse": deleteResponse, "listResponse": listResponse});
+  });
 
-  it("Delete Permission From Role", mochaAsync(async () => {
+  it("Delete Permission From Role", async () => {
     if (!creds.isValid) throw new Error("Invalid Credentials");
     trace = objectMerge({}, trace, Util.generateNewMetaData(trace));
     const response = await s2sMS.Auth.deletePermissionFromRole(
@@ -558,10 +539,10 @@ describe("Permissions MS Test Suite", function() {
       response.status === "ok",
       JSON.stringify(response, null, "\t")
     );
-    return response;
-  },"Delete Permission From Role"));
+    logger.debug(this.ctx.test.title, response);
+  });
 
-  it("List Roles After Delete Permission", mochaAsync(async () => {
+  it("List Roles After Delete Permission", async () => {
     if (!creds.isValid) throw new Error("Invalid Credentials");
     const filters = {
       "name": "Unit-Test"
@@ -581,10 +562,10 @@ describe("Permissions MS Test Suite", function() {
       response.items[0].total_members === 1,
       JSON.stringify(response, null, "\t")
     );
-    return response;
-  },"List Roles After Delete Permission"));
+    logger.debug(this.ctx.test.title, response);
+  });
 
-  it("Deactivate Role", mochaAsync(async () => {
+  it("Deactivate Role", async () => {
     if (!creds.isValid) throw new Error("Invalid Credentials");
     trace = objectMerge({}, trace, Util.generateNewMetaData(trace));
     const response = await s2sMS.Auth.deactivateRole(accessToken, role, trace);
@@ -592,10 +573,10 @@ describe("Permissions MS Test Suite", function() {
       response.status === "ok",
       JSON.stringify(response, null, "\t")
     );
-    return response;
-  },"Deactivate Role"));
+    logger.debug(this.ctx.test.title, response);
+  });
 
-  it("Reactivate Role", mochaAsync(async () => {
+  it("Reactivate Role", async () => {
     if (!creds.isValid) throw new Error("Invalid Credentials");
     trace = objectMerge({}, trace, Util.generateNewMetaData(trace));
     const response = await s2sMS.Auth.activateRole(accessToken, role, trace);
@@ -603,10 +584,10 @@ describe("Permissions MS Test Suite", function() {
       response.status === "ok",
       JSON.stringify(response, null, "\t")
     );
-    return response;
-  },"Reactivate Role"));
+    logger.debug(this.ctx.test.title, response);
+  });
 
-  it("Delete Role", mochaAsync(async () => {
+  it("Delete Role", async () => {
     if (!creds.isValid) throw new Error("Invalid Credentials");
     trace = objectMerge({}, trace, Util.generateNewMetaData(trace));
     const response = await s2sMS.Auth.deleteRole(accessToken, role, trace);
@@ -614,10 +595,10 @@ describe("Permissions MS Test Suite", function() {
       response.status === "ok",
       JSON.stringify(response, null, "\t")
     );
-    return response;
-  },"Delete Role"));
+    logger.debug(this.ctx.test.title, response);
+  });
   
-  it("Delete User Group", mochaAsync(async () => {
+  it("Delete User Group", async () => {
     if (!creds.isValid) throw new Error("Invalid Credentials");
     trace = objectMerge({}, trace, Util.generateNewMetaData(trace));
     const response = await s2sMS.Groups.deleteGroup(accessToken, userGroupUUID, trace);
@@ -625,8 +606,8 @@ describe("Permissions MS Test Suite", function() {
       response.status === "ok",
       JSON.stringify(response, null, "\t")
     );
-    return response;
-  },"Delete User Groups"));
+    logger.debug(this.ctx.test.title, response);
+  });
 
   // clean up any objects left behind
   after(async () => {

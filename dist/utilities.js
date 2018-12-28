@@ -248,26 +248,25 @@ var aggregate = function () {
                         nextTrace = generateNewMetaData(trace);
 
                         addRequestTrace(requestOptions, nextTrace);
-                        _context.prev = 2;
-                        _context.next = 5;
+                        _context.next = 4;
                         return request(requestOptions);
 
-                      case 5:
+                      case 4:
                         response = _context.sent;
 
                         total = response.metadata.total;
                         offset = response.metadata.offset + response.metadata.count;
 
                         if (!(total > offset)) {
-                          _context.next = 22;
+                          _context.next = 21;
                           break;
                         }
 
                         requestOptions.qs.offset = offset;
-                        _context.next = 12;
+                        _context.next = 11;
                         return makeRequest(request, requestOptions);
 
-                      case 12:
+                      case 11:
                         nextResponse = _context.sent;
                         items = response.items.concat(nextResponse.items);
 
@@ -278,24 +277,15 @@ var aggregate = function () {
                         delete response.links; //the links are invalid now
                         return _context.abrupt("return", response);
 
-                      case 22:
+                      case 21:
                         return _context.abrupt("return", response);
 
-                      case 23:
-                        _context.next = 28;
-                        break;
-
-                      case 25:
-                        _context.prev = 25;
-                        _context.t0 = _context["catch"](2);
-                        return _context.abrupt("return", Promise.reject(_context.t0));
-
-                      case 28:
+                      case 22:
                       case "end":
                         return _context.stop();
                     }
                   }
-                }, _callee, undefined, [[2, 25]]);
+                }, _callee, undefined);
               }));
 
               return function makeRequest(_x12, _x13) {

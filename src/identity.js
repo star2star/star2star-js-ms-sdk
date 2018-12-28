@@ -18,26 +18,21 @@ const createIdentity = async (
   body = "null body",
   trace = {}
 ) => {
-  try {
-    await new Promise(resolve => setTimeout(resolve, util.config.msDelay));
-    const MS = util.getEndpoint("identity");
-    const requestOptions = {
-      method: "POST",
-      uri: `${MS}/accounts/${accountUUID}/identities`,
-      headers: {
-        Authorization: `Bearer ${accessToken}`,
-        "Content-type": "application/json",
-        "x-api-version": `${util.getVersion()}`
-      },
-      body: body,
-      json: true
-    };
-    util.addRequestTrace(requestOptions, trace);
-    return await request(requestOptions);
-  } catch (error) {
-    return Promise.reject(error);
-  }
-  
+  await new Promise(resolve => setTimeout(resolve, util.config.msDelay));
+  const MS = util.getEndpoint("identity");
+  const requestOptions = {
+    method: "POST",
+    uri: `${MS}/accounts/${accountUUID}/identities`,
+    headers: {
+      Authorization: `Bearer ${accessToken}`,
+      "Content-type": "application/json",
+      "x-api-version": `${util.getVersion()}`
+    },
+    body: body,
+    json: true
+  };
+  util.addRequestTrace(requestOptions, trace);
+  return await request(requestOptions);
 };
 
 /**
@@ -247,26 +242,22 @@ const deleteIdentity = async (
   userUuid = "null uuid",
   trace = {}
 ) => {
-  try {
-    await new Promise(resolve => setTimeout(resolve, util.config.msDelay));
-    const MS = util.getEndpoint("identity");
-    const requestOptions = {
-      method: "DELETE",
-      uri: `${MS}/identities/${userUuid}`,
-      headers: {
-        Authorization: `Bearer ${accessToken}`,
-        "Content-type": "application/json",
-        "x-api-version": `${util.getVersion()}`
-      },
-      json: true,
-      resolveWithFullResponse: true
-    };
-    util.addRequestTrace(requestOptions, trace);
-    const response = await request(requestOptions);
-    return response.statusCode === 204 ? Promise.resolve({ status: "ok" }) : Promise.reject({ status: "failed" });
-  } catch (error) {
-    return Promise.reject({ status: "failed", "error": error});
-  }
+  await new Promise(resolve => setTimeout(resolve, util.config.msDelay));
+  const MS = util.getEndpoint("identity");
+  const requestOptions = {
+    method: "DELETE",
+    uri: `${MS}/identities/${userUuid}`,
+    headers: {
+      Authorization: `Bearer ${accessToken}`,
+      "Content-type": "application/json",
+      "x-api-version": `${util.getVersion()}`
+    },
+    json: true,
+    resolveWithFullResponse: true
+  };
+  util.addRequestTrace(requestOptions, trace);
+  const response = await request(requestOptions);
+  return response.statusCode === 204 ? Promise.resolve({ status: "ok" }) : Promise.reject({ status: "failed" });
 };
 
 /**
@@ -376,35 +367,30 @@ const listIdentitiesByAccount = async (
   filters = undefined,
   trace = {}
 ) => {
-  try {
-    await new Promise(resolve => setTimeout(resolve, util.config.msDelay));
-    const MS = util.getEndpoint("identity");
-    const requestOptions = {
-      method: "GET",
-      uri: `${MS}/accounts/${accountUUID}/identities`,
-      qs: {
-        offset: offset,
-        limit: limit
-      },
-      headers: {
-        Authorization: `Bearer ${accessToken}`,
-        "Content-type": "application/json",
-        "x-api-version": `${util.getVersion()}`
-      },
-      json: true
-    };
-    util.addRequestTrace(requestOptions, trace);
-    if (filters) {
-      Object.keys(filters).forEach(filter => {
-        requestOptions.qs[filter] = filters[filter];
-      });
-    }
-    //console.log("REQUEST********",requestOptions);
-    return await request(requestOptions);
-  } catch (error) {
-    return Promise.reject(error);
+  await new Promise(resolve => setTimeout(resolve, util.config.msDelay));
+  const MS = util.getEndpoint("identity");
+  const requestOptions = {
+    method: "GET",
+    uri: `${MS}/accounts/${accountUUID}/identities`,
+    qs: {
+      offset: offset,
+      limit: limit
+    },
+    headers: {
+      Authorization: `Bearer ${accessToken}`,
+      "Content-type": "application/json",
+      "x-api-version": `${util.getVersion()}`
+    },
+    json: true
+  };
+  util.addRequestTrace(requestOptions, trace);
+  if (filters) {
+    Object.keys(filters).forEach(filter => {
+      requestOptions.qs[filter] = filters[filter];
+    });
   }
-  
+  //console.log("REQUEST********",requestOptions);
+  return await request(requestOptions); 
 };
 
 /**
@@ -424,35 +410,30 @@ const lookupIdentity = async (
   filters = undefined,
   trace = {}
 ) => {
-  try {
-    await new Promise(resolve => setTimeout(resolve, util.config.msDelay));
-    const MS = util.getEndpoint("identity");
-    const requestOptions = {
-      method: "GET",
-      uri: `${MS}/identities`,
-      qs: {
-        offset: offset,
-        limit: limit
-      },
-      headers: {
-        Authorization: `Bearer ${accessToken}`,
-        "Content-type": "application/json",
-        "x-api-version": `${util.getVersion()}`
-      },
-      json: true
-    };
-    util.addRequestTrace(requestOptions, trace);
-    if (filters) {
-      Object.keys(filters).forEach(filter => {
-        requestOptions.qs[filter] = filters[filter];
-      });
-    }
-    //console.log("REQUEST********",requestOptions);
-    return await request(requestOptions);
-  } catch (error) {
-    return Promise.reject(error);
+  await new Promise(resolve => setTimeout(resolve, util.config.msDelay));
+  const MS = util.getEndpoint("identity");
+  const requestOptions = {
+    method: "GET",
+    uri: `${MS}/identities`,
+    qs: {
+      offset: offset,
+      limit: limit
+    },
+    headers: {
+      Authorization: `Bearer ${accessToken}`,
+      "Content-type": "application/json",
+      "x-api-version": `${util.getVersion()}`
+    },
+    json: true
+  };
+  util.addRequestTrace(requestOptions, trace);
+  if (filters) {
+    Object.keys(filters).forEach(filter => {
+      requestOptions.qs[filter] = filters[filter];
+    });
   }
-  
+  //console.log("REQUEST********",requestOptions);
+  return await request(requestOptions); 
 };
 
 /**

@@ -1,14 +1,14 @@
 {
   "name": "star2star-js-ms-sdk",
-  "version": "2.2.24",
+  "version": "2.2.25",
   "description": "Star2Star JavaScript Micro Service SDK",
   "main": "./dist/index.js",
   "scripts": {
     "init": "mkdir dist",
     "clean": "rm -rf dist && touch package-lock.json && rm package-lock.json && rm -rf node_modules",
-    "test": "env MS_LOGLEVEL=silent mocha --timeout 30000 --require babel-register",
-    "trace": "env MS_LOGLEVEL=trace mocha --timeout 30000 --require babel-register",
-    "debug": "env MS_LOGLEVEL=debug env MS_LOGPRETTY=true mocha --timeout 30000 --require babel-register",
+    "test": "env MS_LOGLEVEL=silent mocha --timeout 10000 --require babel-register",
+    "trace": "env MS_LOGLEVEL=trace mocha --timeout 10000 --require babel-register",
+    "debug": "env MS_LOGLEVEL=debug env MS_LOGPRETTY=true mocha --timeout 10000 --require babel-register",
     "prebuild": "npm run clean && npm install",
     "build": "babel src -d dist --presets es2015",
     "postbuild": "cp src/config.json dist/config.json",

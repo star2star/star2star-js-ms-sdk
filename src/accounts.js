@@ -88,26 +88,22 @@ const createAccount = async (
   body = "null body",
   trace = {}
 ) => {
-  try {
-    await new Promise(resolve => setTimeout(resolve, util.config.msDelay));
-    const MS = util.getEndpoint("accounts");
-    const requestOptions = {
-      method: "POST",
-      uri: `${MS}/accounts`,
-      body: body,
-      headers: {
-        Authorization: `Bearer ${accessToken}`,
-        "Content-type": "application/json",
-        "x-api-version": `${util.getVersion()}`
-      },
-      json: true
-    };
-    util.addRequestTrace(requestOptions, trace);
+  await new Promise(resolve => setTimeout(resolve, util.config.msDelay));
+  const MS = util.getEndpoint("accounts");
+  const requestOptions = {
+    method: "POST",
+    uri: `${MS}/accounts`,
+    body: body,
+    headers: {
+      Authorization: `Bearer ${accessToken}`,
+      "Content-type": "application/json",
+      "x-api-version": `${util.getVersion()}`
+    },
+    json: true
+  };
+  util.addRequestTrace(requestOptions, trace);
 
-    return await request(requestOptions);
-  } catch (error) {
-    return Promise.reject(error);
-  } 
+  return await request(requestOptions);  
 };
 
 /**
@@ -324,36 +320,32 @@ const deleteAccount = async (
   accountUUID = "null account uuid",
   trace = {}
 ) => {
-  try {
-    await new Promise(resolve => setTimeout(resolve, util.config.msDelay));
-    const MS = util.getEndpoint("accounts");
-    const requestOptions = {
-      method: "DELETE",
-      uri: `${MS}/accounts/${accountUUID}`,
-      resolveWithFullResponse: true,
-      json: true,
-      headers: {
-        Authorization: `Bearer ${accessToken}`,
-        "Content-type": "application/json",
-        "x-api-version": `${util.getVersion()}`
-      }
-    };
-    util.addRequestTrace(requestOptions, trace);
-    
-    return await new Promise(function(resolve, reject) {
-      request(requestOptions)
-        .then(function(responseData) {
-          responseData.statusCode === 204
-            ? resolve({ status: "ok" })
-            : reject({ status: "failed" });
-        })
-        .catch(function(error) {
-          reject(error);
-        });
-    });
-  } catch (error) {
-    return Promise.reject(error);
-  }
+  await new Promise(resolve => setTimeout(resolve, util.config.msDelay));
+  const MS = util.getEndpoint("accounts");
+  const requestOptions = {
+    method: "DELETE",
+    uri: `${MS}/accounts/${accountUUID}`,
+    resolveWithFullResponse: true,
+    json: true,
+    headers: {
+      Authorization: `Bearer ${accessToken}`,
+      "Content-type": "application/json",
+      "x-api-version": `${util.getVersion()}`
+    }
+  };
+  util.addRequestTrace(requestOptions, trace);
+  
+  return await new Promise(function(resolve, reject) {
+    request(requestOptions)
+      .then(function(responseData) {
+        responseData.statusCode === 204
+          ? resolve({ status: "ok" })
+          : reject({ status: "failed" });
+      })
+      .catch(function(error) {
+        reject(error);
+      });
+  });
 };
 
 module.exports = {

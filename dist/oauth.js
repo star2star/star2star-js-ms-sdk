@@ -40,13 +40,12 @@ var createClientApp = function () {
       while (1) {
         switch (_context.prev = _context.next) {
           case 0:
-            _context.prev = 0;
-            _context.next = 3;
+            _context.next = 2;
             return new Promise(function (resolve) {
               return setTimeout(resolve, Util.config.msDelay);
             });
 
-          case 3:
+          case 2:
             MS = Util.getAuthHost();
             requestOptions = {
               method: "POST",
@@ -67,23 +66,18 @@ var createClientApp = function () {
             };
 
             Util.addRequestTrace(requestOptions, trace);
-            _context.next = 8;
+            _context.next = 7;
             return request(requestOptions);
 
-          case 8:
+          case 7:
             return _context.abrupt("return", _context.sent);
 
-          case 11:
-            _context.prev = 11;
-            _context.t0 = _context["catch"](0);
-            return _context.abrupt("return", Promise.reject(_context.t0));
-
-          case 14:
+          case 8:
           case "end":
             return _context.stop();
         }
       }
-    }, _callee, undefined, [[0, 11]]);
+    }, _callee, undefined);
   }));
 
   return function createClientApp() {
@@ -102,16 +96,12 @@ var generateBasicToken = function generateBasicToken() {
   var publicID = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : "null publicID";
   var secret = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : "null secret";
 
-  try {
-    var basicToken = undefined;
-    basicToken = Buffer.from(publicID + ":" + secret).toString("base64");
-    if (!basicToken) {
-      throw new Error("base64 encoding failed");
-    } else {
-      return Promise.resolve(basicToken);
-    }
-  } catch (error) {
-    return Promise.reject(error);
+  var basicToken = undefined;
+  basicToken = Buffer.from(publicID + ":" + secret).toString("base64");
+  if (!basicToken) {
+    throw new Error("base64 encoding failed");
+  } else {
+    return Promise.resolve(basicToken);
   }
 };
 
@@ -136,13 +126,12 @@ var getAccessToken = function () {
       while (1) {
         switch (_context2.prev = _context2.next) {
           case 0:
-            _context2.prev = 0;
-            _context2.next = 3;
+            _context2.next = 2;
             return new Promise(function (resolve) {
               return setTimeout(resolve, Util.config.msDelay);
             });
 
-          case 3:
+          case 2:
             MS = Util.getAuthHost();
             VERSION = Util.getVersion();
             requestOptions = {
@@ -164,23 +153,18 @@ var getAccessToken = function () {
             };
 
             Util.addRequestTrace(requestOptions, trace);
-            _context2.next = 9;
+            _context2.next = 8;
             return request(requestOptions);
 
-          case 9:
+          case 8:
             return _context2.abrupt("return", _context2.sent);
 
-          case 12:
-            _context2.prev = 12;
-            _context2.t0 = _context2["catch"](0);
-            return _context2.abrupt("return", Promise.reject(_context2.t0));
-
-          case 15:
+          case 9:
           case "end":
             return _context2.stop();
         }
       }
-    }, _callee2, undefined, [[0, 12]]);
+    }, _callee2, undefined);
   }));
 
   return function getAccessToken() {
@@ -204,13 +188,12 @@ var getClientToken = function () {
       while (1) {
         switch (_context3.prev = _context3.next) {
           case 0:
-            _context3.prev = 0;
-            _context3.next = 3;
+            _context3.next = 2;
             return new Promise(function (resolve) {
               return setTimeout(resolve, Util.config.msDelay);
             });
 
-          case 3:
+          case 2:
             MS = Util.getAuthHost();
             VERSION = Util.getVersion();
             requestOptions = {
@@ -232,17 +215,12 @@ var getClientToken = function () {
             Util.addRequestTrace(requestOptions, trace);
             return _context3.abrupt("return", request(requestOptions));
 
-          case 10:
-            _context3.prev = 10;
-            _context3.t0 = _context3["catch"](0);
-            return _context3.abrupt("return", Promise.reject(_context3.t0));
-
-          case 13:
+          case 7:
           case "end":
             return _context3.stop();
         }
       }
-    }, _callee3, undefined, [[0, 10]]);
+    }, _callee3, undefined);
   }));
 
   return function getClientToken() {
@@ -268,13 +246,12 @@ var invalidateToken = function () {
       while (1) {
         switch (_context4.prev = _context4.next) {
           case 0:
-            _context4.prev = 0;
-            _context4.next = 3;
+            _context4.next = 2;
             return new Promise(function (resolve) {
               return setTimeout(resolve, Util.config.msDelay);
             });
 
-          case 3:
+          case 2:
             //delay is to ensure clean-up operations work
             MS = Util.getAuthHost();
             requestOptions = {
@@ -293,24 +270,19 @@ var invalidateToken = function () {
             };
 
             Util.addRequestTrace(requestOptions, trace);
-            _context4.next = 8;
+            _context4.next = 7;
             return request(requestOptions);
 
-          case 8:
+          case 7:
             response = _context4.sent;
             return _context4.abrupt("return", response.statusCode === 204 ? Promise.resolve({ status: "ok" }) : Promise.reject({ status: "failed" }));
 
-          case 12:
-            _context4.prev = 12;
-            _context4.t0 = _context4["catch"](0);
-            return _context4.abrupt("return", Promise.reject({ status: "failed", "error": _context4.t0 }));
-
-          case 15:
+          case 9:
           case "end":
             return _context4.stop();
         }
       }
-    }, _callee4, undefined, [[0, 12]]);
+    }, _callee4, undefined);
   }));
 
   return function invalidateToken() {
@@ -340,13 +312,12 @@ var listClientTokens = function () {
       while (1) {
         switch (_context5.prev = _context5.next) {
           case 0:
-            _context5.prev = 0;
-            _context5.next = 3;
+            _context5.next = 2;
             return new Promise(function (resolve) {
               return setTimeout(resolve, Util.config.msDelay);
             });
 
-          case 3:
+          case 2:
             MS = Util.getAuthHost();
             requestOptions = {
               method: "GET",
@@ -371,17 +342,12 @@ var listClientTokens = function () {
             Util.addRequestTrace(requestOptions, trace);
             return _context5.abrupt("return", request(requestOptions));
 
-          case 10:
-            _context5.prev = 10;
-            _context5.t0 = _context5["catch"](0);
-            return _context5.abrupt("return", Promise.reject(_context5.t0));
-
-          case 13:
+          case 7:
           case "end":
             return _context5.stop();
         }
       }
-    }, _callee5, undefined, [[0, 10]]);
+    }, _callee5, undefined);
   }));
 
   return function listClientTokens() {
@@ -408,13 +374,12 @@ var refreshAccessToken = function () {
       while (1) {
         switch (_context6.prev = _context6.next) {
           case 0:
-            _context6.prev = 0;
-            _context6.next = 3;
+            _context6.next = 2;
             return new Promise(function (resolve) {
               return setTimeout(resolve, Util.config.msDelay);
             });
 
-          case 3:
+          case 2:
             MS = Util.getAuthHost();
             VERSION = Util.getVersion();
             requestOptions = {
@@ -434,23 +399,18 @@ var refreshAccessToken = function () {
             };
 
             Util.addRequestTrace(requestOptions, trace);
-            _context6.next = 9;
+            _context6.next = 8;
             return request(requestOptions);
 
-          case 9:
+          case 8:
             return _context6.abrupt("return", _context6.sent);
 
-          case 12:
-            _context6.prev = 12;
-            _context6.t0 = _context6["catch"](0);
-            return _context6.abrupt("return", Promise.reject(_context6.t0));
-
-          case 15:
+          case 9:
           case "end":
             return _context6.stop();
         }
       }
-    }, _callee6, undefined, [[0, 12]]);
+    }, _callee6, undefined);
   }));
 
   return function refreshAccessToken() {
@@ -495,44 +455,34 @@ var scopeClientApp = function () {
             };
 
             Util.addRequestTrace(requestOptions, trace);
-            _context7.prev = 3;
-            _context7.next = 6;
+            _context7.next = 5;
             return new Promise(function (resolve) {
               return setTimeout(resolve, Util.config.msDelay);
             });
 
-          case 6:
-            _context7.next = 8;
+          case 5:
+            _context7.next = 7;
             return request(requestOptions);
 
-          case 8:
+          case 7:
             response = _context7.sent;
 
             if (!(response.statusCode === 204)) {
-              _context7.next = 13;
+              _context7.next = 12;
               break;
             }
 
             return _context7.abrupt("return", Promise.resolve({ "status": "ok" }));
 
-          case 13:
+          case 12:
             return _context7.abrupt("return", Promise.reject({ "status": "failed" }));
 
-          case 14:
-            _context7.next = 19;
-            break;
-
-          case 16:
-            _context7.prev = 16;
-            _context7.t0 = _context7["catch"](3);
-            return _context7.abrupt("return", Promise.reject(_context7.t0));
-
-          case 19:
+          case 13:
           case "end":
             return _context7.stop();
         }
       }
-    }, _callee7, undefined, [[3, 16]]);
+    }, _callee7, undefined);
   }));
 
   return function scopeClientApp() {
@@ -558,13 +508,12 @@ var validateToken = function () {
       while (1) {
         switch (_context8.prev = _context8.next) {
           case 0:
-            _context8.prev = 0;
-            _context8.next = 3;
+            _context8.next = 2;
             return new Promise(function (resolve) {
               return setTimeout(resolve, Util.config.msDelay);
             });
 
-          case 3:
+          case 2:
             //delay is to ensure clean-up operations work
             MS = Util.getAuthHost();
             requestOptions = {
@@ -583,24 +532,19 @@ var validateToken = function () {
             };
 
             Util.addRequestTrace(requestOptions, trace);
-            _context8.next = 8;
+            _context8.next = 7;
             return request(requestOptions);
 
-          case 8:
+          case 7:
             response = _context8.sent;
             return _context8.abrupt("return", response.statusCode === 204 ? Promise.resolve({ status: "ok" }) : Promise.reject({ status: "failed" }));
 
-          case 12:
-            _context8.prev = 12;
-            _context8.t0 = _context8["catch"](0);
-            return _context8.abrupt("return", Promise.reject({ status: "failed", "error": _context8.t0 }));
-
-          case 15:
+          case 9:
           case "end":
             return _context8.stop();
         }
       }
-    }, _callee8, undefined, [[0, 12]]);
+    }, _callee8, undefined);
   }));
 
   return function validateToken() {
