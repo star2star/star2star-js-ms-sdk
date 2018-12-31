@@ -155,6 +155,57 @@ const sendSMS = (
  * @param {object} [trace = {}] - optional microservice lifecycle trace headers
  * @returns {Promise<object>} - Promise resolving to a data object containing the sms number
  */
+
+/**
+ *
+ *
+ * @param {string} [accessToken="null accessToken"] - cpaas access token
+ * @param {string} [userUUID="null userUUID"] - user uuid
+ * @param {number} [offset=0] - pagination offest
+ * @param {number} [limit=10] - pagination limit
+ * @param {object} [trace={}] - optional microservice lifecycle trace headers
+* @returns {Promise<object>} - Promise resolving to user conversations
+ */
+const retrieveConversations = (
+  accessToken = "null accessToken",
+  userUUID = "null userUUID",
+  offset = 0,
+  limit = 10,
+  trace = {}
+) => {
+  const MS = util.getEndpoint("messaging");
+
+  const requestOptions = {
+    method: "GET",
+    uri: `${MS}/users/${userUUID}/conversations`,
+    headers: {
+      Authorization: `Bearer ${accessToken}`,
+      "x-api-version": `${util.getVersion()}`,
+      "Content-type": "application/json"
+    },
+    qs: {
+      "offset": offset,
+      "limit": limit,
+      "sort": "-last_message_datetime",
+      "expand": "messages",
+      "messages.limit": 1,
+      "messages.sort" : "-datetime"
+    },
+    json: true
+  };
+  util.addRequestTrace(requestOptions, trace);
+  return request(requestOptions);
+};
+
+
+/**
+ * @async
+ * @description This function will get user sms number.
+ * @param {string} accessToken - cpaas access Token
+ * @param {string} userUuid - the user uuid making the request
+ * @param {object} [trace = {}] - optional microservice lifecycle trace headers
+ * @returns {Promise<object>} - Promise resolving to a data object containing the sms number
+ */
 const getSMSNumber = (accessToken, userUuid, trace = {}) => {
   return new Promise((resolve, reject) => {
     const MS = util.getEndpoint("identity");
@@ -248,9 +299,10 @@ const sendSimpleSMS = (
 };
 
 module.exports = {
+  getConversationUuid,
   getSMSNumber,
+  retrieveConversations,
   sendSimpleSMS,
   sendSMS,
-  sendSMSMessage,
-  getConversationUuid
+  sendSMSMessage
 };

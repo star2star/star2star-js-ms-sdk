@@ -54,6 +54,7 @@ toc:
       - deleteContact
       - getContacts
       - listContacts
+      - updateContact
   - name: Email
     children:
       - sendEmail
@@ -103,13 +104,15 @@ toc:
       - invokeLambda
   - name: Media
     children:
+      - getMediaFileUrl
       - deleteMedia
       - listUserMedia
       - uploadFile
   - name: Messaging
-    children: 
+    children:
+      - getConversationUuid 
       - getSMSNumber
-      - getConversationUuid
+      - retrieveConversations
       - sendSimpleSMS
       - sendSMS
       - sendSMSMessage

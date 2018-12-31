@@ -128,8 +128,40 @@ var listContacts = function listContacts() {
   });
 };
 
+/**
+ * @async
+ * @description This function will update a contact
+ * @param {string} [accessToken="null access_token"] - cpaas access token
+ * @param {string} [contactUUID="null contactUUID"] - contact uuid
+ * @param {string} [body="null body"] - contact data (PUT)
+ * @param {object} [trace={}] - optional microservice lifecycle trace headers
+ * @returns {Promise<object>} - Promise resolving to updated contact data
+ */
+var updateContact = function updateContact() {
+  var accessToken = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : "null access_token";
+  var contactUUID = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : "null contactUUID";
+  var body = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : "null body";
+  var trace = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : {};
+
+  var MS = util.getEndpoint("contacts");
+  var requestOptions = {
+    method: "PUT",
+    uri: MS + "/contacts/" + contactUUID,
+    body: body,
+    headers: {
+      Authorization: "Bearer " + accessToken,
+      "Content-type": "application/json",
+      "x-api-version": "" + util.getVersion()
+    },
+    json: true
+  };
+  util.addRequestTrace(requestOptions, trace);ß;
+  return request(requestOptions);
+};
+
 module.exports = {
   createUserContact: createUserContact,
   deleteContact: deleteContact,
-  listContacts: listContacts
+  listContacts: listContacts,
+  updateContact: updateContact
 };

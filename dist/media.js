@@ -6,6 +6,38 @@ var util = require("./utilities");
 
 /**
  * @async
+ * @description This function will return media file metadata including a URL
+ * @param {string} [accessToken="null accessToken"] - cpaas access token
+ * @param {string} [fileUUID="null fileUUID"] - file UUID
+ * @param {object} [trace={}] - optional microservice lifecycle trace headers
+ * @returns {Promise<object>} - Promise resolving to a data object containing file meta-data
+ */
+var getMediaFileUrl = function getMediaFileUrl() {
+  var accessToken = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : "null accessToken";
+  var fileUUID = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : "null fileUUID";
+  var trace = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : {};
+
+  var MS = util.getEndpoint("media");
+
+  var requestOptions = {
+    method: "GET",
+    uri: MS + "/" + fileUUID,
+    headers: {
+      "Content-type": "application/json",
+      Authorization: "Bearer " + accessToken,
+      "x-api-version": "" + util.getVersion()
+    },
+    qs: {
+      "content_url": true
+    },
+    json: true
+  };
+  util.addRequestTrace(requestOptions, trace);
+  return request(requestOptions);
+};
+
+/**
+ * @async
  * @description This function will ask the cpaas media service for the list of user's files they have uploaded.
  * @param {string} [user_uuid="no user uuid provided"] - UUID for user
  * @param {string} [accessToken="null accessToken"] - Access token for cpaas systems
@@ -103,7 +135,9 @@ var deleteMedia = function deleteMedia() {
 };
 
 module.exports = {
+  deleteMedia: deleteMedia,
+  getMediaFileUrl: getMediaFileUrl,
   listUserMedia: listUserMedia,
-  uploadFile: uploadFile,
-  deleteMedia: deleteMedia
+  uploadFile: uploadFile
+
 };

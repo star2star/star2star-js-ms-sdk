@@ -127,6 +127,56 @@ var sendSMS = function sendSMS(accessToken, userUuid, msg, fromPhoneNumber, toPh
  * @param {object} [trace = {}] - optional microservice lifecycle trace headers
  * @returns {Promise<object>} - Promise resolving to a data object containing the sms number
  */
+
+/**
+ *
+ *
+ * @param {string} [accessToken="null accessToken"] - cpaas access token
+ * @param {string} [userUUID="null userUUID"] - user uuid
+ * @param {number} [offset=0] - pagination offest
+ * @param {number} [limit=10] - pagination limit
+ * @param {object} [trace={}] - optional microservice lifecycle trace headers
+* @returns {Promise<object>} - Promise resolving to user conversations
+ */
+var retrieveConversations = function retrieveConversations() {
+  var accessToken = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : "null accessToken";
+  var userUUID = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : "null userUUID";
+  var offset = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : 0;
+  var limit = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : 10;
+  var trace = arguments.length > 4 && arguments[4] !== undefined ? arguments[4] : {};
+
+  var MS = util.getEndpoint("messaging");
+
+  var requestOptions = {
+    method: "GET",
+    uri: MS + "/users/" + userUUID + "/conversations",
+    headers: {
+      Authorization: "Bearer " + accessToken,
+      "x-api-version": "" + util.getVersion(),
+      "Content-type": "application/json"
+    },
+    qs: {
+      "offset": offset,
+      "limit": limit,
+      "sort": "-last_message_datetime",
+      "expand": "messages",
+      "messages.limit": 1,
+      "messages.sort": "-datetime"
+    },
+    json: true
+  };
+  util.addRequestTrace(requestOptions, trace);
+  return request(requestOptions);
+};
+
+/**
+ * @async
+ * @description This function will get user sms number.
+ * @param {string} accessToken - cpaas access Token
+ * @param {string} userUuid - the user uuid making the request
+ * @param {object} [trace = {}] - optional microservice lifecycle trace headers
+ * @returns {Promise<object>} - Promise resolving to a data object containing the sms number
+ */
 var getSMSNumber = function getSMSNumber(accessToken, userUuid) {
   var trace = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : {};
 
@@ -218,9 +268,10 @@ var sendSimpleSMS = function sendSimpleSMS() {
 };
 
 module.exports = {
+  getConversationUuid: getConversationUuid,
   getSMSNumber: getSMSNumber,
+  retrieveConversations: retrieveConversations,
   sendSimpleSMS: sendSimpleSMS,
   sendSMS: sendSMS,
-  sendSMSMessage: sendSMSMessage,
-  getConversationUuid: getConversationUuid
+  sendSMSMessage: sendSMSMessage
 };
