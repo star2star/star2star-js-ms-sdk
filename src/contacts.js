@@ -93,7 +93,7 @@ const getContacts = (
     },
     json: true
   };
-  util.addRequestTrace(requestOptions, trace);ß
+  util.addRequestTrace(requestOptions, trace);
   return request(requestOptions);
 };
 
@@ -156,7 +156,7 @@ const updateContact = (
     },
     json: true
   };
-  util.addRequestTrace(requestOptions, trace);ß
+  util.addRequestTrace(requestOptions, trace);
   return request(requestOptions);
 };
 
