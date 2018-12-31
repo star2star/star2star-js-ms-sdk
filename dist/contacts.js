@@ -94,7 +94,7 @@ var getContacts = function getContacts() {
     },
     json: true
   };
-  util.addRequestTrace(requestOptions, trace);ß;
+  util.addRequestTrace(requestOptions, trace);
   return request(requestOptions);
 };
 
@@ -155,7 +155,7 @@ var updateContact = function updateContact() {
     },
     json: true
   };
-  util.addRequestTrace(requestOptions, trace);ß;
+  util.addRequestTrace(requestOptions, trace);
   return request(requestOptions);
 };
 
