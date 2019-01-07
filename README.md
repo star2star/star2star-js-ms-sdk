@@ -64,6 +64,7 @@ require("babel-polyfill");
 [Please click here for our documentation pages.](https://star2star.github.io/star2star-js-ms-sdk/ "Star2Star Micro Service SDK Documentation")
 
 ## Changes
+* 2.2.28 - Add create conversation with meta
 * 2.2.27 - Contacts issue ReferenceError - is not defined
 * 2.2.26 - Updates to Contacts API support
 * 2.2.25 - Don't need try-catch in several places.

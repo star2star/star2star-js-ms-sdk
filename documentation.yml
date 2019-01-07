@@ -110,6 +110,7 @@ toc:
       - uploadFile
   - name: Messaging
     children:
+      - getConversation
       - getConversationUuid 
       - getSMSNumber
       - retrieveConversations

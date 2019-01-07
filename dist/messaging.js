@@ -1,8 +1,61 @@
 /* global require module*/
 "use strict";
 
+function _asyncToGenerator(fn) { return function () { var gen = fn.apply(this, arguments); return new Promise(function (resolve, reject) { function step(key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { return Promise.resolve(value).then(function (value) { step("next", value); }, function (err) { step("throw", err); }); } } return step("next"); }); }; }
+
 var util = require("./utilities");
 var request = require("request-promise");
+
+/**
+ * @async
+ * @description This function creates a new conversation and returns metadata.
+ * @param {string} [accessToken="null accessToken"] - cpaas application token
+ * @param {string} [userUuid="null userUuid"] - user uuid
+ * @param {string} [toPhoneNumber="null toPhoneNumber"] - Destination phone number for the conversation
+ * @param {*} [trace={}] - options microservice lifecycle tracking headers
+ * @returns {Promise<object>} A promise resolving to a conversation metadata object
+ */
+var getConversation = function () {
+  var _ref = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee() {
+    var accessToken = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : "null accessToken";
+    var userUuid = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : "null userUuid";
+    var toPhoneNumber = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : "null toPhoneNumber";
+    var trace = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : {};
+    var MS, requestOptions;
+    return regeneratorRuntime.wrap(function _callee$(_context) {
+      while (1) {
+        switch (_context.prev = _context.next) {
+          case 0:
+            MS = util.getEndpoint("Messaging");
+            requestOptions = {
+              method: "POST",
+              uri: MS + "/users/" + userUuid + "/conversations",
+              body: {
+                phone_numbers: [toPhoneNumber]
+              },
+              headers: {
+                "Content-Type": "application/json",
+                Authorization: "Bearer " + accessToken,
+                "x-api-version": "" + util.getVersion()
+              },
+              json: true
+            };
+
+            util.addRequestTrace(requestOptions, trace);
+            return _context.abrupt("return", request(requestOptions));
+
+          case 4:
+          case "end":
+            return _context.stop();
+        }
+      }
+    }, _callee, undefined);
+  }));
+
+  return function getConversation() {
+    return _ref.apply(this, arguments);
+  };
+}(); // end function getConversation
 
 /**
  * @async
@@ -268,6 +321,7 @@ var sendSimpleSMS = function sendSimpleSMS() {
 };
 
 module.exports = {
+  getConversation: getConversation,
   getConversationUuid: getConversationUuid,
   getSMSNumber: getSMSNumber,
   retrieveConversations: retrieveConversations,

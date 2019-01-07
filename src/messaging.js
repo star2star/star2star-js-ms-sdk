@@ -5,6 +5,39 @@ const request = require("request-promise");
 
 /**
  * @async
+ * @description This function creates a new conversation and returns metadata.
+ * @param {string} [accessToken="null accessToken"] - cpaas application token
+ * @param {string} [userUuid="null userUuid"] - user uuid
+ * @param {string} [toPhoneNumber="null toPhoneNumber"] - Destination phone number for the conversation
+ * @param {*} [trace={}] - options microservice lifecycle tracking headers
+ * @returns {Promise<object>} A promise resolving to a conversation metadata object
+ */
+const getConversation = async (
+  accessToken = "null accessToken",
+  userUuid = "null userUuid",
+  toPhoneNumber = "null toPhoneNumber",
+  trace = {}
+) => {
+  const MS = util.getEndpoint("Messaging");
+  const requestOptions = {
+    method: "POST",
+    uri: `${MS}/users/${userUuid}/conversations`,
+    body: {
+      phone_numbers: [toPhoneNumber]
+    },
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${accessToken}`,
+      "x-api-version": `${util.getVersion()}`
+    },
+    json: true
+  };
+  util.addRequestTrace(requestOptions, trace);
+  return request(requestOptions);
+}; // end function getConversation
+
+/**
+ * @async
  * @description This function will retrieve the conversation uuid for whom you are sending it to.
  * @param {string} accessToken - Access token for cpaas systems
  * @param {string} userUuid - The user uuid making the request
@@ -299,6 +332,7 @@ const sendSimpleSMS = (
 };
 
 module.exports = {
+  getConversation,
   getConversationUuid,
   getSMSNumber,
   retrieveConversations,
