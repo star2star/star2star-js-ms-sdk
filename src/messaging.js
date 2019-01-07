@@ -9,7 +9,7 @@ const request = require("request-promise");
  * @param {string} [accessToken="null accessToken"] - cpaas application token
  * @param {string} [userUuid="null userUuid"] - user uuid
  * @param {string} [toPhoneNumber="null toPhoneNumber"] - Destination phone number for the conversation
- * @param {*} [trace={}] - options microservice lifecycle tracking headers
+ * @param {object} [trace={}] - options microservice lifecycle tracking headers
  * @returns {Promise<object>} A promise resolving to a conversation metadata object
  */
 const getConversation = async (
@@ -80,6 +80,62 @@ const getConversationUuid = (
       });
   }); // end promise
 }; // end function getConversation UUID
+
+
+/**
+ * @async
+ * @description This function will send messages in multiple formats
+ * @param {string} [accessToken="null accessToken"] - cpaas access token
+ * @param {string} [userUUID="null userUUID"] - user uuid
+ * @param {string} [conversationUUID="null conversationUUID"] - conversation uuid
+ * @param {string} [fromPhoneNumber="null fromPhoneNumber"] - sender phone number
+ * @param {string} [channel="sms"] - channel (sms or mms)
+ * @param {string} [content={
+ *     "type": "text",
+ *     "body": "null body"
+ *   }] - message to be sent
+ * @param {object} [trace={}] - optional microservice lifecycle headers
+ * @returns {Promise<object>} - promise resolving to a message confirmation object
+ */
+const sendMessage = async (
+  accessToken = "null accessToken",
+  userUUID = "null userUUID",
+  conversationUUID = "null conversationUUID",
+  fromPhoneNumber = "null fromPhoneNumber",
+  channel = "sms",
+  content = {
+    "type": "text",
+    "body": "null body"
+  },
+  trace = {}
+) => {
+  const objectBody = {
+    to: conversationUUID,
+    from: fromPhoneNumber,
+    channel: channel,
+    content: [
+      {
+        type: content.hasOwnProperty("type") ? content.type: "text",
+        body: content.hasOwnProperty("body") ? content.body : ""
+      }
+    ]
+  };
+  const MS = util.getEndpoint("Messaging");
+  const requestOptions = {
+    method: "POST",
+    uri: `${MS}/users/${userUUID}/messages`,
+    body: objectBody,
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${accessToken}`,
+      "x-api-version": `${util.getVersion()}`
+    },
+    json: true
+  };
+  util.addRequestTrace(requestOptions, trace);
+  return request(requestOptions);
+};
+
 
 /**
  * @async
@@ -336,6 +392,7 @@ module.exports = {
   getConversationUuid,
   getSMSNumber,
   retrieveConversations,
+  sendMessage,
   sendSimpleSMS,
   sendSMS,
   sendSMSMessage

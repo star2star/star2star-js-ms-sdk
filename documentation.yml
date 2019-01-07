@@ -114,6 +114,7 @@ toc:
       - getConversationUuid 
       - getSMSNumber
       - retrieveConversations
+      - sendMessage
       - sendSimpleSMS
       - sendSMS
       - sendSMSMessage

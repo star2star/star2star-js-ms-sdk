@@ -12,7 +12,7 @@ var request = require("request-promise");
  * @param {string} [accessToken="null accessToken"] - cpaas application token
  * @param {string} [userUuid="null userUuid"] - user uuid
  * @param {string} [toPhoneNumber="null toPhoneNumber"] - Destination phone number for the conversation
- * @param {*} [trace={}] - options microservice lifecycle tracking headers
+ * @param {object} [trace={}] - options microservice lifecycle tracking headers
  * @returns {Promise<object>} A promise resolving to a conversation metadata object
  */
 var getConversation = function () {
@@ -96,6 +96,77 @@ var getConversationUuid = function getConversationUuid(accessToken, userUuid, to
     });
   }); // end promise
 }; // end function getConversation UUID
+
+
+/**
+ * @async
+ * @description This function will send messages in multiple formats
+ * @param {string} [accessToken="null accessToken"] - cpaas access token
+ * @param {string} [userUUID="null userUUID"] - user uuid
+ * @param {string} [conversationUUID="null conversationUUID"] - conversation uuid
+ * @param {string} [fromPhoneNumber="null fromPhoneNumber"] - sender phone number
+ * @param {string} [channel="sms"] - channel (sms or mms)
+ * @param {string} [content={
+ *     "type": "text",
+ *     "body": "null body"
+ *   }] - message to be sent
+ * @param {object} [trace={}] - optional microservice lifecycle headers
+ * @returns {Promise<object>} - promise resolving to a message confirmation object
+ */
+var sendMessage = function () {
+  var _ref2 = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee2() {
+    var accessToken = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : "null accessToken";
+    var userUUID = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : "null userUUID";
+    var conversationUUID = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : "null conversationUUID";
+    var fromPhoneNumber = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : "null fromPhoneNumber";
+    var channel = arguments.length > 4 && arguments[4] !== undefined ? arguments[4] : "sms";
+    var content = arguments.length > 5 && arguments[5] !== undefined ? arguments[5] : {
+      "type": "text",
+      "body": "null body"
+    };
+    var trace = arguments.length > 6 && arguments[6] !== undefined ? arguments[6] : {};
+    var objectBody, MS, requestOptions;
+    return regeneratorRuntime.wrap(function _callee2$(_context2) {
+      while (1) {
+        switch (_context2.prev = _context2.next) {
+          case 0:
+            objectBody = {
+              to: conversationUUID,
+              from: fromPhoneNumber,
+              channel: channel,
+              content: [{
+                type: content.hasOwnProperty("type") ? content.type : "text",
+                body: content.hasOwnProperty("body") ? content.body : ""
+              }]
+            };
+            MS = util.getEndpoint("Messaging");
+            requestOptions = {
+              method: "POST",
+              uri: MS + "/users/" + userUUID + "/messages",
+              body: objectBody,
+              headers: {
+                "Content-Type": "application/json",
+                Authorization: "Bearer " + accessToken,
+                "x-api-version": "" + util.getVersion()
+              },
+              json: true
+            };
+
+            util.addRequestTrace(requestOptions, trace);
+            return _context2.abrupt("return", request(requestOptions));
+
+          case 5:
+          case "end":
+            return _context2.stop();
+        }
+      }
+    }, _callee2, undefined);
+  }));
+
+  return function sendMessage() {
+    return _ref2.apply(this, arguments);
+  };
+}();
 
 /**
  * @async
@@ -325,6 +396,7 @@ module.exports = {
   getConversationUuid: getConversationUuid,
   getSMSNumber: getSMSNumber,
   retrieveConversations: retrieveConversations,
+  sendMessage: sendMessage,
   sendSimpleSMS: sendSimpleSMS,
   sendSMS: sendSMS,
   sendSMSMessage: sendSMSMessage
