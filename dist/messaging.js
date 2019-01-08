@@ -244,17 +244,6 @@ var sendSMS = function sendSMS(accessToken, userUuid, msg, fromPhoneNumber, toPh
 };
 
 /**
- * @async
- * @description This function will get user sms number.
- * @param {string} accessToken - cpaas access Token
- * @param {string} userUuid - the user uuid making the request
- * @param {object} [trace = {}] - optional microservice lifecycle trace headers
- * @returns {Promise<object>} - Promise resolving to a data object containing the sms number
- */
-
-/**
- *
- *
  * @param {string} [accessToken="null accessToken"] - cpaas access token
  * @param {string} [userUUID="null userUUID"] - user uuid
  * @param {number} [offset=0] - pagination offest
@@ -286,6 +275,43 @@ var retrieveConversations = function retrieveConversations() {
       "expand": "messages",
       "messages.limit": 1,
       "messages.sort": "-datetime"
+    },
+    json: true
+  };
+  util.addRequestTrace(requestOptions, trace);
+  return request(requestOptions);
+};
+
+/**
+ * @async
+ * @description This function returns message history
+ * @param {string} [accessToken="null accessToken"] - cpaas access token
+ * @param {string} [conversationUUID="null conversationUUID"] - conversation uuid
+ * @param {number} [offset=0] - pagination offset
+ * @param {number} [limit=100] - pagination limit
+ * @param {object} [trace={}] - microservice lifecycle headers
+ * @returns {Promise<object>} - Promise resolving to to a message history object.
+ */
+var retrieveMessages = function retrieveMessages() {
+  var accessToken = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : "null accessToken";
+  var conversationUUID = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : "null conversationUUID";
+  var offset = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : 0;
+  var limit = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : 100;
+  var trace = arguments.length > 4 && arguments[4] !== undefined ? arguments[4] : {};
+
+  var MS = util.getEndpoint("messaging");
+  var requestOptions = {
+    method: "GET",
+    uri: MS + "/conversations/" + conversationUUID + "/messages",
+    headers: {
+      Authorization: "Bearer " + accessToken,
+      "x-api-version": "" + util.getVersion(),
+      "Content-type": "application/json"
+    },
+    qs: {
+      "offset": offset,
+      "limit": limit,
+      "sort": "-datetime"
     },
     json: true
   };
@@ -391,11 +417,44 @@ var sendSimpleSMS = function sendSimpleSMS() {
   return request(requestOptions);
 };
 
+/**
+ * @async
+ * @deprecated - This function will mark all conversations read
+ * @param {string} [accessToken="null accessToken"] - cpaas access token
+ * @param {string} [conversationUUID="null conversationUUID"] - conversation uuid
+ * @param {object} [trace={}] - microservice lifecyce headers
+ * @returns {Promise} - Promise resolving to a modified conversation object
+ */
+var markAllConversationMessagesRead = function markAllConversationMessagesRead() {
+  var accessToken = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : "null accessToken";
+  var conversationUUID = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : "null conversationUUID";
+  var trace = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : {};
+
+  var MS = util.getEndpoint("messaging");
+  var requestOptions = {
+    method: "POST",
+    uri: MS + "/conversations/" + conversationUUID + "/messages/modify",
+    headers: {
+      Authorization: "Bearer " + accessToken,
+      "x-api-version": "" + util.getVersion(),
+      "Content-type": "application/json"
+    },
+    body: {
+      "tags": ["@read"]
+    },
+    json: true
+  };
+  util.addRequestTrace(requestOptions, trace);
+  return request(requestOptions);
+};
+
 module.exports = {
   getConversation: getConversation,
   getConversationUuid: getConversationUuid,
   getSMSNumber: getSMSNumber,
+  markAllConversationMessagesRead: markAllConversationMessagesRead,
   retrieveConversations: retrieveConversations,
+  retrieveMessages: retrieveMessages,
   sendMessage: sendMessage,
   sendSimpleSMS: sendSimpleSMS,
   sendSMS: sendSMS,

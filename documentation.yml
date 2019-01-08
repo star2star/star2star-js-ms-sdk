@@ -113,7 +113,9 @@ toc:
       - getConversation
       - getConversationUuid 
       - getSMSNumber
+      - markAllConversationMessagesRead
       - retrieveConversations
+      - retrieveMessages
       - sendMessage
       - sendSimpleSMS
       - sendSMS
@@ -131,6 +133,7 @@ toc:
       - validateToken
   - name: Objects
     children:
+      - getByType
       - getDataObject
       - getDataObjects
       - getDataObjectByType
