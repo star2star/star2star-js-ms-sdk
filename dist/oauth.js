@@ -144,7 +144,7 @@ var getAccessToken = function () {
               },
               form: {
                 grant_type: "password",
-                scope: "message.list",
+                scope: "default",
                 email: email,
                 password: pwd
               },
