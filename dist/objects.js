@@ -1,25 +1,317 @@
 /* global require module*/
 "use strict";
 
-var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
+require("core-js/modules/es6.array.copy-within");
 
-var _nodeLogger = require("./node-logger");
+require("core-js/modules/es6.array.every");
 
-var _nodeLogger2 = _interopRequireDefault(_nodeLogger);
+require("core-js/modules/es6.array.fill");
+
+require("core-js/modules/es6.array.filter");
+
+require("core-js/modules/es6.array.find");
+
+require("core-js/modules/es6.array.find-index");
+
+require("core-js/modules/es6.array.for-each");
+
+require("core-js/modules/es6.array.from");
+
+require("core-js/modules/es7.array.includes");
+
+require("core-js/modules/es6.array.index-of");
+
+require("core-js/modules/es6.array.is-array");
+
+require("core-js/modules/es6.array.iterator");
+
+require("core-js/modules/es6.array.last-index-of");
+
+require("core-js/modules/es6.array.map");
+
+require("core-js/modules/es6.array.of");
+
+require("core-js/modules/es6.array.reduce");
+
+require("core-js/modules/es6.array.reduce-right");
+
+require("core-js/modules/es6.array.some");
+
+require("core-js/modules/es6.array.sort");
+
+require("core-js/modules/es6.array.species");
+
+require("core-js/modules/es6.date.now");
+
+require("core-js/modules/es6.date.to-iso-string");
+
+require("core-js/modules/es6.date.to-json");
+
+require("core-js/modules/es6.date.to-primitive");
+
+require("core-js/modules/es6.date.to-string");
+
+require("core-js/modules/es6.function.bind");
+
+require("core-js/modules/es6.function.has-instance");
+
+require("core-js/modules/es6.function.name");
+
+require("core-js/modules/es6.map");
+
+require("core-js/modules/es6.math.acosh");
+
+require("core-js/modules/es6.math.asinh");
+
+require("core-js/modules/es6.math.atanh");
+
+require("core-js/modules/es6.math.cbrt");
+
+require("core-js/modules/es6.math.clz32");
+
+require("core-js/modules/es6.math.cosh");
+
+require("core-js/modules/es6.math.expm1");
+
+require("core-js/modules/es6.math.fround");
+
+require("core-js/modules/es6.math.hypot");
+
+require("core-js/modules/es6.math.imul");
+
+require("core-js/modules/es6.math.log1p");
+
+require("core-js/modules/es6.math.log10");
+
+require("core-js/modules/es6.math.log2");
+
+require("core-js/modules/es6.math.sign");
+
+require("core-js/modules/es6.math.sinh");
+
+require("core-js/modules/es6.math.tanh");
+
+require("core-js/modules/es6.math.trunc");
+
+require("core-js/modules/es6.number.constructor");
+
+require("core-js/modules/es6.number.epsilon");
+
+require("core-js/modules/es6.number.is-finite");
+
+require("core-js/modules/es6.number.is-integer");
+
+require("core-js/modules/es6.number.is-nan");
+
+require("core-js/modules/es6.number.is-safe-integer");
+
+require("core-js/modules/es6.number.max-safe-integer");
+
+require("core-js/modules/es6.number.min-safe-integer");
+
+require("core-js/modules/es6.number.parse-float");
+
+require("core-js/modules/es6.number.parse-int");
+
+require("core-js/modules/es6.object.assign");
+
+require("core-js/modules/es6.object.create");
+
+require("core-js/modules/es7.object.define-getter");
+
+require("core-js/modules/es7.object.define-setter");
+
+require("core-js/modules/es6.object.define-property");
+
+require("core-js/modules/es6.object.define-properties");
+
+require("core-js/modules/es7.object.entries");
+
+require("core-js/modules/es6.object.freeze");
+
+require("core-js/modules/es6.object.get-own-property-descriptor");
+
+require("core-js/modules/es7.object.get-own-property-descriptors");
+
+require("core-js/modules/es6.object.get-own-property-names");
+
+require("core-js/modules/es6.object.get-prototype-of");
+
+require("core-js/modules/es7.object.lookup-getter");
+
+require("core-js/modules/es7.object.lookup-setter");
+
+require("core-js/modules/es6.object.prevent-extensions");
+
+require("core-js/modules/es6.object.is");
+
+require("core-js/modules/es6.object.is-frozen");
+
+require("core-js/modules/es6.object.is-sealed");
+
+require("core-js/modules/es6.object.is-extensible");
+
+require("core-js/modules/es6.object.keys");
+
+require("core-js/modules/es6.object.seal");
+
+require("core-js/modules/es6.object.set-prototype-of");
+
+require("core-js/modules/es7.object.values");
+
+require("core-js/modules/es6.promise");
+
+require("core-js/modules/es7.promise.finally");
+
+require("core-js/modules/es6.reflect.apply");
+
+require("core-js/modules/es6.reflect.construct");
+
+require("core-js/modules/es6.reflect.define-property");
+
+require("core-js/modules/es6.reflect.delete-property");
+
+require("core-js/modules/es6.reflect.get");
+
+require("core-js/modules/es6.reflect.get-own-property-descriptor");
+
+require("core-js/modules/es6.reflect.get-prototype-of");
+
+require("core-js/modules/es6.reflect.has");
+
+require("core-js/modules/es6.reflect.is-extensible");
+
+require("core-js/modules/es6.reflect.own-keys");
+
+require("core-js/modules/es6.reflect.prevent-extensions");
+
+require("core-js/modules/es6.reflect.set");
+
+require("core-js/modules/es6.reflect.set-prototype-of");
+
+require("core-js/modules/es6.regexp.constructor");
+
+require("core-js/modules/es6.regexp.flags");
+
+require("core-js/modules/es6.regexp.match");
+
+require("core-js/modules/es6.regexp.replace");
+
+require("core-js/modules/es6.regexp.split");
+
+require("core-js/modules/es6.regexp.search");
+
+require("core-js/modules/es6.regexp.to-string");
+
+require("core-js/modules/es6.set");
+
+require("core-js/modules/es6.symbol");
+
+require("core-js/modules/es7.symbol.async-iterator");
+
+require("core-js/modules/es6.string.anchor");
+
+require("core-js/modules/es6.string.big");
+
+require("core-js/modules/es6.string.blink");
+
+require("core-js/modules/es6.string.bold");
+
+require("core-js/modules/es6.string.code-point-at");
+
+require("core-js/modules/es6.string.ends-with");
+
+require("core-js/modules/es6.string.fixed");
+
+require("core-js/modules/es6.string.fontcolor");
+
+require("core-js/modules/es6.string.fontsize");
+
+require("core-js/modules/es6.string.from-code-point");
+
+require("core-js/modules/es6.string.includes");
+
+require("core-js/modules/es6.string.italics");
+
+require("core-js/modules/es6.string.iterator");
+
+require("core-js/modules/es6.string.link");
+
+require("core-js/modules/es7.string.pad-start");
+
+require("core-js/modules/es7.string.pad-end");
+
+require("core-js/modules/es6.string.raw");
+
+require("core-js/modules/es6.string.repeat");
+
+require("core-js/modules/es6.string.small");
+
+require("core-js/modules/es6.string.starts-with");
+
+require("core-js/modules/es6.string.strike");
+
+require("core-js/modules/es6.string.sub");
+
+require("core-js/modules/es6.string.sup");
+
+require("core-js/modules/es6.string.trim");
+
+require("core-js/modules/es6.typed.array-buffer");
+
+require("core-js/modules/es6.typed.data-view");
+
+require("core-js/modules/es6.typed.int8-array");
+
+require("core-js/modules/es6.typed.uint8-array");
+
+require("core-js/modules/es6.typed.uint8-clamped-array");
+
+require("core-js/modules/es6.typed.int16-array");
+
+require("core-js/modules/es6.typed.uint16-array");
+
+require("core-js/modules/es6.typed.int32-array");
+
+require("core-js/modules/es6.typed.uint32-array");
+
+require("core-js/modules/es6.typed.float32-array");
+
+require("core-js/modules/es6.typed.float64-array");
+
+require("core-js/modules/es6.weak-map");
+
+require("core-js/modules/es6.weak-set");
+
+require("core-js/modules/web.timers");
+
+require("core-js/modules/web.immediate");
+
+require("core-js/modules/web.dom.iterable");
+
+require("regenerator-runtime/runtime");
+
+var _nodeLogger = _interopRequireDefault(require("../src/node-logger"));
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-function _asyncToGenerator(fn) { return function () { var gen = fn.apply(this, arguments); return new Promise(function (resolve, reject) { function step(key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { return Promise.resolve(value).then(function (value) { step("next", value); }, function (err) { step("throw", err); }); } } return step("next"); }); }; }
+function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+
+function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { Promise.resolve(value).then(_next, _throw); } }
+
+function _asyncToGenerator(fn) { return function () { var self = this, args = arguments; return new Promise(function (resolve, reject) { var gen = fn.apply(self, args); function _next(value) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "next", value); } function _throw(err) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "throw", err); } _next(undefined); }); }; }
 
 var Util = require("./utilities");
+
 var request = require("request-promise");
+
 var objectMerge = require("object-merge");
+
 var ResourceGroups = require("./resourceGroups");
 
-var logger = new _nodeLogger2.default();
+var logger = new _nodeLogger.default();
 logger.setLevel(Util.getLogLevel());
 logger.setPretty(Util.getLogPretty());
-
 /**
  * @async
  * @name Get By Type
@@ -33,6 +325,7 @@ logger.setPretty(Util.getLogPretty());
  * @param {object} [trace = {}] - microservice lifecycle trace headers
  * @returns {Promise<array>} Promise resolving to an array of data objects
  */
+
 var getByType = function getByType() {
   var accessToken = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : "null accessToken";
   var dataObjectType = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : "data_object";
@@ -40,23 +333,20 @@ var getByType = function getByType() {
   var limit = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : 10;
   var loadContent = arguments.length > 4 && arguments[4] !== undefined ? arguments[4] : "false";
   var trace = arguments.length > 5 && arguments[5] !== undefined ? arguments[5] : {};
-
   var MS = Util.getEndpoint("objects");
-
   var requestOptions = {
     method: "GET",
-    uri: MS + "/objects?type=" + dataObjectType + "&load_content=" + loadContent + "&sort=name&offset=" + offset + "&limit=" + limit,
+    uri: "".concat(MS, "/objects?type=").concat(dataObjectType, "&load_content=").concat(loadContent, "&sort=name&offset=").concat(offset, "&limit=").concat(limit),
     headers: {
-      Authorization: "Bearer " + accessToken,
+      Authorization: "Bearer ".concat(accessToken),
       "Content-type": "application/json",
-      "x-api-version": "" + Util.getVersion()
+      "x-api-version": "".concat(Util.getVersion())
     },
     json: true
   };
   Util.addRequestTrace(requestOptions, trace);
   return request(requestOptions);
 };
-
 /**
  * @async
  * @description This function returns objects permitted to user with flexible filtering.
@@ -69,49 +359,68 @@ var getByType = function getByType() {
  * @param {object} [trace = {}] - microservice lifecycle trace headers
  * @returns {Promise} - Promise resolving to a list of objects
  */
-var getDataObjects = function () {
-  var _ref = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee() {
-    var accessToken = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : "null accessToken";
-    var userUUID = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : "null userUUID";
-    var offset = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : 0;
-    var limit = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : 10;
-    var loadContent = arguments.length > 4 && arguments[4] !== undefined ? arguments[4] : false;
-    var filters = arguments.length > 5 && arguments[5] !== undefined ? arguments[5] : undefined;
-    var trace = arguments.length > 6 && arguments[6] !== undefined ? arguments[6] : {};
-    var MS, requestOptions, apiFilters, sdkFilters, response, filteredResponse, paginatedResponse;
+
+
+var getDataObjects =
+/*#__PURE__*/
+function () {
+  var _ref = _asyncToGenerator(
+  /*#__PURE__*/
+  regeneratorRuntime.mark(function _callee() {
+    var accessToken,
+        userUUID,
+        offset,
+        limit,
+        loadContent,
+        filters,
+        trace,
+        MS,
+        requestOptions,
+        apiFilters,
+        sdkFilters,
+        response,
+        filteredResponse,
+        paginatedResponse,
+        _args = arguments;
     return regeneratorRuntime.wrap(function _callee$(_context) {
       while (1) {
         switch (_context.prev = _context.next) {
           case 0:
+            accessToken = _args.length > 0 && _args[0] !== undefined ? _args[0] : "null accessToken";
+            userUUID = _args.length > 1 && _args[1] !== undefined ? _args[1] : "null userUUID";
+            offset = _args.length > 2 && _args[2] !== undefined ? _args[2] : 0;
+            limit = _args.length > 3 && _args[3] !== undefined ? _args[3] : 10;
+            loadContent = _args.length > 4 && _args[4] !== undefined ? _args[4] : false;
+            filters = _args.length > 5 && _args[5] !== undefined ? _args[5] : undefined;
+            trace = _args.length > 6 && _args[6] !== undefined ? _args[6] : {};
             MS = Util.getEndpoint("objects");
             requestOptions = {
               method: "GET",
-              uri: MS + "/users/" + userUUID + "/allowed-objects",
+              uri: "".concat(MS, "/users/").concat(userUUID, "/allowed-objects"),
               headers: {
-                Authorization: "Bearer " + accessToken,
+                Authorization: "Bearer ".concat(accessToken),
                 "Content-type": "application/json",
-                "x-api-version": "" + Util.getVersion()
+                "x-api-version": "".concat(Util.getVersion())
               },
               qs: {
                 load_content: loadContent
               },
               json: true
             };
-
             Util.addRequestTrace(requestOptions, trace);
-            _context.next = 5;
+            _context.next = 12;
             return new Promise(function (resolve) {
               return setTimeout(resolve, Util.config.msDelay);
             });
 
-          case 5:
+          case 12:
             if (!filters) {
-              _context.next = 34;
+              _context.next = 41;
               break;
             }
 
-            if (!((typeof filters === "undefined" ? "undefined" : _typeof(filters)) !== "object")) {
-              _context.next = 8;
+            if (!(_typeof(filters) !== "object")) {
+              _context.next = 15;
               break;
             }
 
@@ -120,12 +429,10 @@ var getDataObjects = function () {
               message: "ERROR: filters is not an object"
             }));
 
-          case 8:
-
+          case 15:
             // sort the filters into those the API handles and those handled by the SDK.
             apiFilters = ["content_type", "description", "name", "sort", "type"];
             sdkFilters = {};
-
             Object.keys(filters).forEach(function (filter) {
               if (apiFilters.includes(filter)) {
                 requestOptions.qs[filter] = filters[filter];
@@ -134,60 +441,55 @@ var getDataObjects = function () {
               }
             });
             logger.debug("Request Query Params", requestOptions.qs);
-            logger.debug("sdkFilters", sdkFilters);
-            // if the sdkFilters object is empty, the API can handle everything, otherwise the sdk needs to augment the api.
+            logger.debug("sdkFilters", sdkFilters); // if the sdkFilters object is empty, the API can handle everything, otherwise the sdk needs to augment the api.
 
             if (!(Object.keys(sdkFilters).length === 0)) {
-              _context.next = 21;
+              _context.next = 28;
               break;
             }
 
             requestOptions.qs.offset = offset;
             requestOptions.qs.limit = limit;
-            _context.next = 18;
+            _context.next = 25;
             return request(requestOptions);
 
-          case 18:
+          case 25:
             return _context.abrupt("return", _context.sent);
 
-          case 21:
-            _context.next = 23;
+          case 28:
+            _context.next = 30;
             return Util.aggregate(request, requestOptions, trace);
 
-          case 23:
+          case 30:
             response = _context.sent;
-
             logger.debug("****** AGGREGATE RESPONSE *******", response);
 
             if (!(response.hasOwnProperty("items") && response.items.length > 0)) {
-              _context.next = 33;
+              _context.next = 40;
               break;
             }
 
             filteredResponse = Util.filterResponse(response, sdkFilters);
-
             logger.debug("******* FILTERED RESPONSE ********", filteredResponse);
             paginatedResponse = Util.paginate(filteredResponse, offset, limit);
-
             logger.debug("******* PAGINATED RESPONSE ********", paginatedResponse);
             return _context.abrupt("return", paginatedResponse);
 
-          case 33:
+          case 40:
             return _context.abrupt("return", response);
 
-          case 34:
+          case 41:
           case "end":
             return _context.stop();
         }
       }
-    }, _callee, undefined);
+    }, _callee, this);
   }));
 
   return function getDataObjects() {
     return _ref.apply(this, arguments);
   };
 }();
-
 /**
  * @async
  * @name Get Data Object By Type
@@ -202,6 +504,8 @@ var getDataObjects = function () {
  * @param {object} [trace = {}] - microservice lifecycle trace headers
  * @returns {Promise<array>} Promise resolving to an array of data objects
  */
+
+
 var getDataObjectByType = function getDataObjectByType() {
   var userUUID = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : "null user uuid";
   var accessToken = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : "null accessToken";
@@ -210,23 +514,20 @@ var getDataObjectByType = function getDataObjectByType() {
   var limit = arguments.length > 4 && arguments[4] !== undefined ? arguments[4] : 10;
   var loadContent = arguments.length > 5 && arguments[5] !== undefined ? arguments[5] : "false";
   var trace = arguments.length > 6 && arguments[6] !== undefined ? arguments[6] : {};
-
   var MS = Util.getEndpoint("objects");
-
   var requestOptions = {
     method: "GET",
-    uri: MS + "/users/" + userUUID + "/allowed-objects?type=" + dataObjectType + "&load_content=" + loadContent + "&sort=name&offset=" + offset + "&limit=" + limit,
+    uri: "".concat(MS, "/users/").concat(userUUID, "/allowed-objects?type=").concat(dataObjectType, "&load_content=").concat(loadContent, "&sort=name&offset=").concat(offset, "&limit=").concat(limit),
     headers: {
-      Authorization: "Bearer " + accessToken,
+      Authorization: "Bearer ".concat(accessToken),
       "Content-type": "application/json",
-      "x-api-version": "" + Util.getVersion()
+      "x-api-version": "".concat(Util.getVersion())
     },
     json: true
   };
   Util.addRequestTrace(requestOptions, trace);
   return request(requestOptions);
 };
-
 /**
  * @async
  * @description This function will ask the cpaas data object service for a specific
@@ -240,6 +541,8 @@ var getDataObjectByType = function getDataObjectByType() {
  * @param {object} [trace = {}] - microservice lifecycle trace headers
  * @returns {Promise<array>} Promise resolving to an array of data objects
  */
+
+
 var getDataObjectByTypeAndName = function getDataObjectByTypeAndName() {
   var userUUID = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : "null user uuid";
   var accessToken = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : "null accessToken";
@@ -249,23 +552,20 @@ var getDataObjectByTypeAndName = function getDataObjectByTypeAndName() {
   var limit = arguments.length > 5 && arguments[5] !== undefined ? arguments[5] : 10;
   var loadContent = arguments.length > 6 && arguments[6] !== undefined ? arguments[6] : "false";
   var trace = arguments.length > 7 && arguments[7] !== undefined ? arguments[7] : {};
-
   var MS = Util.getEndpoint("objects");
-
   var requestOptions = {
     method: "GET",
-    uri: MS + "/users/" + userUUID + "/allowed-objects?type=" + dataObjectType + "&load_content=" + loadContent + "&name=" + dataObjectName + "&offset=" + offset + "&limit=" + limit,
+    uri: "".concat(MS, "/users/").concat(userUUID, "/allowed-objects?type=").concat(dataObjectType, "&load_content=").concat(loadContent, "&name=").concat(dataObjectName, "&offset=").concat(offset, "&limit=").concat(limit),
     headers: {
-      Authorization: "Bearer " + accessToken,
+      Authorization: "Bearer ".concat(accessToken),
       "Content-type": "application/json",
-      "x-api-version": "" + Util.getVersion()
+      "x-api-version": "".concat(Util.getVersion())
     },
     json: true
   };
   Util.addRequestTrace(requestOptions, trace);
   return request(requestOptions);
 };
-
 /**
  * @async
  * @description This function will ask the cpaas data object service for a specific object.
@@ -274,26 +574,26 @@ var getDataObjectByTypeAndName = function getDataObjectByTypeAndName() {
  * @param {object} [trace = {}] - microservice lifecycle trace headers
  * @returns {Promise<object>} Promise resolving to a data object
  */
+
+
 var getDataObject = function getDataObject() {
   var accessToken = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : "null accessToken";
   var dataObjectUUID = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : "null uuid";
   var trace = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : {};
-
   var MS = Util.getEndpoint("objects");
   var requestOptions = {
     method: "GET",
-    uri: MS + "/objects/" + dataObjectUUID,
+    uri: "".concat(MS, "/objects/").concat(dataObjectUUID),
     headers: {
-      Authorization: "Bearer " + accessToken,
+      Authorization: "Bearer ".concat(accessToken),
       "Content-type": "application/json",
-      "x-api-version": "" + Util.getVersion()
+      "x-api-version": "".concat(Util.getVersion())
     },
     json: true
   };
   Util.addRequestTrace(requestOptions, trace);
   return request(requestOptions);
 };
-
 /**
  * @async
  * @description This function will create a new user data object.
@@ -308,22 +608,43 @@ var getDataObject = function getDataObject() {
  * @param {object} [trace = {}] - microservice lifecycle trace headers
  * @returns {Promise<object>} Promise resolving to a data object
  */
-var createUserDataObject = function () {
-  var _ref2 = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee2() {
-    var userUUID = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : "null user uuid";
-    var accessToken = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : "null accessToken";
-    var objectName = arguments[2];
-    var objectType = arguments[3];
-    var objectDescription = arguments[4];
-    var content = arguments.length > 5 && arguments[5] !== undefined ? arguments[5] : {};
-    var accountUUID = arguments.length > 6 && arguments[6] !== undefined ? arguments[6] : undefined;
-    var users = arguments.length > 7 && arguments[7] !== undefined ? arguments[7] : undefined;
-    var trace = arguments.length > 8 && arguments[8] !== undefined ? arguments[8] : {};
-    var MS, msDelay, body, requestOptions, newObject, nextTrace;
+
+
+var createUserDataObject =
+/*#__PURE__*/
+function () {
+  var _ref2 = _asyncToGenerator(
+  /*#__PURE__*/
+  regeneratorRuntime.mark(function _callee2() {
+    var userUUID,
+        accessToken,
+        objectName,
+        objectType,
+        objectDescription,
+        content,
+        accountUUID,
+        users,
+        trace,
+        MS,
+        msDelay,
+        body,
+        requestOptions,
+        newObject,
+        nextTrace,
+        _args2 = arguments;
     return regeneratorRuntime.wrap(function _callee2$(_context2) {
       while (1) {
         switch (_context2.prev = _context2.next) {
           case 0:
+            userUUID = _args2.length > 0 && _args2[0] !== undefined ? _args2[0] : "null user uuid";
+            accessToken = _args2.length > 1 && _args2[1] !== undefined ? _args2[1] : "null accessToken";
+            objectName = _args2.length > 2 ? _args2[2] : undefined;
+            objectType = _args2.length > 3 ? _args2[3] : undefined;
+            objectDescription = _args2.length > 4 ? _args2[4] : undefined;
+            content = _args2.length > 5 && _args2[5] !== undefined ? _args2[5] : {};
+            accountUUID = _args2.length > 6 && _args2[6] !== undefined ? _args2[6] : undefined;
+            users = _args2.length > 7 && _args2[7] !== undefined ? _args2[7] : undefined;
+            trace = _args2.length > 8 && _args2[8] !== undefined ? _args2[8] : {};
             MS = Util.getEndpoint("objects");
             msDelay = Util.config.msDelay;
             body = {
@@ -335,73 +656,71 @@ var createUserDataObject = function () {
             };
             requestOptions = {
               method: "POST",
-              uri: MS + "/users/" + userUUID + "/objects",
+              uri: "".concat(MS, "/users/").concat(userUUID, "/objects"),
               body: body,
               headers: {
-                Authorization: "Bearer " + accessToken,
+                Authorization: "Bearer ".concat(accessToken),
                 "Content-type": "application/json",
-                "x-api-version": "" + Util.getVersion()
+                "x-api-version": "".concat(Util.getVersion())
               },
               json: true
             };
+            Util.addRequestTrace(requestOptions, trace); //create the object first
 
-            Util.addRequestTrace(requestOptions, trace);
-            //create the object first
-            newObject = void 0;
             nextTrace = objectMerge({}, trace);
-            _context2.prev = 7;
-            _context2.next = 10;
+            _context2.prev = 15;
+            _context2.next = 18;
             return new Promise(function (resolve) {
               return setTimeout(resolve, Util.config.msDelay);
             });
 
-          case 10:
-            _context2.next = 12;
+          case 18:
+            _context2.next = 20;
             return request(requestOptions);
 
-          case 12:
+          case 20:
             newObject = _context2.sent;
 
-            if (!(accountUUID && users && (typeof users === "undefined" ? "undefined" : _typeof(users)) === "object")) {
-              _context2.next = 17;
+            if (!(accountUUID && users && _typeof(users) === "object")) {
+              _context2.next = 25;
               break;
             }
 
             nextTrace = objectMerge({}, nextTrace, Util.generateNewMetaData(nextTrace));
-            _context2.next = 17;
+            _context2.next = 25;
             return ResourceGroups.createResourceGroups(accessToken, accountUUID, newObject.uuid, "object", //system role type
             users, nextTrace);
 
-          case 17:
+          case 25:
             return _context2.abrupt("return", newObject);
 
-          case 20:
-            _context2.prev = 20;
-            _context2.t0 = _context2["catch"](7);
+          case 28:
+            _context2.prev = 28;
+            _context2.t0 = _context2["catch"](15);
 
             if (!(newObject && newObject.hasOwnProperty("uuid"))) {
-              _context2.next = 37;
+              _context2.next = 45;
               break;
             }
 
-            _context2.prev = 23;
-            _context2.next = 26;
+            _context2.prev = 31;
+            _context2.next = 34;
             return new Promise(function (resolve) {
               return setTimeout(resolve, msDelay);
             });
 
-          case 26:
+          case 34:
             //this is to allow microservices time ack the new group before deleting.
             nextTrace = objectMerge({}, nextTrace, Util.generateNewMetaData(nextTrace));
-            _context2.next = 29;
+            _context2.next = 37;
             return deleteDataObject(accessToken, newObject.uuid, nextTrace);
 
-          case 29:
+          case 37:
             return _context2.abrupt("return", Promise.reject(_context2.t0));
 
-          case 32:
-            _context2.prev = 32;
-            _context2.t1 = _context2["catch"](23);
+          case 40:
+            _context2.prev = 40;
+            _context2.t1 = _context2["catch"](31);
             return _context2.abrupt("return", Promise.reject({
               errors: {
                 create: _context2.t0,
@@ -409,26 +728,25 @@ var createUserDataObject = function () {
               }
             }));
 
-          case 35:
-            _context2.next = 38;
+          case 43:
+            _context2.next = 46;
             break;
 
-          case 37:
+          case 45:
             return _context2.abrupt("return", Promise.reject(_context2.t0));
 
-          case 38:
+          case 46:
           case "end":
             return _context2.stop();
         }
       }
-    }, _callee2, undefined, [[7, 20], [23, 32]]);
+    }, _callee2, this, [[15, 28], [31, 40]]);
   }));
 
   return function createUserDataObject() {
     return _ref2.apply(this, arguments);
   };
 }();
-
 /**
  * @async
  * @description This function will create a new data object.
@@ -440,39 +758,38 @@ var createUserDataObject = function () {
  * @param {object} [trace = {}] - microservice lifecycle trace headers
  * @returns {Promise<object>} Promise resolving to a data object
  */
+
+
 var createDataObject = function createDataObject() {
   var accessToken = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : "null accessToken";
-  var objectName = arguments[1];
-  var objectType = arguments[2];
-  var objectDescription = arguments[3];
+  var objectName = arguments.length > 1 ? arguments[1] : undefined;
+  var objectType = arguments.length > 2 ? arguments[2] : undefined;
+  var objectDescription = arguments.length > 3 ? arguments[3] : undefined;
   var content = arguments.length > 4 && arguments[4] !== undefined ? arguments[4] : {};
   var trace = arguments.length > 5 && arguments[5] !== undefined ? arguments[5] : {};
-
   var MS = Util.getEndpoint("objects");
-
   var b = {
     name: objectName,
     type: objectType,
     description: objectDescription,
     content_type: "application/json",
     content: content
-  };
-  //console.log('bbbbbbbb', b)
+  }; //console.log('bbbbbbbb', b)
+
   var requestOptions = {
     method: "POST",
-    uri: MS + "/objects",
+    uri: "".concat(MS, "/objects"),
     body: b,
     headers: {
-      Authorization: "Bearer " + accessToken,
+      Authorization: "Bearer ".concat(accessToken),
       "Content-type": "application/json",
-      "x-api-version": "" + Util.getVersion()
+      "x-api-version": "".concat(Util.getVersion())
     },
     json: true
   };
   Util.addRequestTrace(requestOptions, trace);
   return request(requestOptions);
 };
-
 /**
  * @async
  * @description This function will delete a data object and any resource groups associated with that object.
@@ -481,61 +798,72 @@ var createDataObject = function createDataObject() {
  * @param {object} [trace = {}] - microservice lifecycle trace headers
  * @returns {Promise<object>} Promise resolving to a data object
  */
-var deleteDataObject = function () {
-  var _ref3 = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee3() {
-    var accessToken = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : "null accessToken";
-    var data_uuid = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : "not specified";
-    var trace = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : {};
-    var MS, ResourceGroups, requestOptions;
+
+
+var deleteDataObject =
+/*#__PURE__*/
+function () {
+  var _ref3 = _asyncToGenerator(
+  /*#__PURE__*/
+  regeneratorRuntime.mark(function _callee3() {
+    var accessToken,
+        data_uuid,
+        trace,
+        MS,
+        ResourceGroups,
+        requestOptions,
+        _args3 = arguments;
     return regeneratorRuntime.wrap(function _callee3$(_context3) {
       while (1) {
         switch (_context3.prev = _context3.next) {
           case 0:
+            accessToken = _args3.length > 0 && _args3[0] !== undefined ? _args3[0] : "null accessToken";
+            data_uuid = _args3.length > 1 && _args3[1] !== undefined ? _args3[1] : "not specified";
+            trace = _args3.length > 2 && _args3[2] !== undefined ? _args3[2] : {};
             MS = Util.getEndpoint("objects");
             ResourceGroups = require("./resourceGroups");
             requestOptions = {
               method: "DELETE",
-              uri: MS + "/objects/" + data_uuid,
+              uri: "".concat(MS, "/objects/").concat(data_uuid),
               headers: {
-                Authorization: "Bearer " + accessToken,
+                Authorization: "Bearer ".concat(accessToken),
                 "Content-type": "application/json",
-                "x-api-version": "" + Util.getVersion()
+                "x-api-version": "".concat(Util.getVersion())
               },
               json: true,
               resolveWithFullResponse: true
             };
-
             Util.addRequestTrace(requestOptions, trace);
-
-            _context3.next = 6;
+            _context3.next = 9;
             return new Promise(function (resolve) {
               return setTimeout(resolve, Util.config.msDelay);
             });
 
-          case 6:
-            _context3.next = 8;
+          case 9:
+            _context3.next = 11;
             return ResourceGroups.cleanUpResourceGroups(accessToken, data_uuid, Util.generateNewMetaData(trace));
 
-          case 8:
-            _context3.next = 10;
+          case 11:
+            _context3.next = 13;
             return request(requestOptions);
 
-          case 10:
-            return _context3.abrupt("return", Promise.resolve({ status: "ok" }));
+          case 13:
+            return _context3.abrupt("return", Promise.resolve({
+              status: "ok"
+            }));
 
-          case 11:
+          case 14:
           case "end":
             return _context3.stop();
         }
       }
-    }, _callee3, undefined);
+    }, _callee3, this);
   }));
 
   return function deleteDataObject() {
     return _ref3.apply(this, arguments);
   };
 }();
-
 /**
  * @async
  * @description This function will update an existing data object.
@@ -547,58 +875,72 @@ var deleteDataObject = function () {
  * @param {object} [trace = {}] - microservice lifecycle trace headers
  * @returns {Promise<object>} Promise resolving to a data object
  */
-var updateDataObject = function () {
-  var _ref4 = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee4() {
-    var accessToken = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : "null accessToken";
-    var dataUUID = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : "uuid not specified";
-    var body = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : {};
-    var accountUUID = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : undefined;
-    var users = arguments.length > 4 && arguments[4] !== undefined ? arguments[4] : undefined;
-    var trace = arguments.length > 5 && arguments[5] !== undefined ? arguments[5] : {};
-    var MS, requestOptions, nextTrace;
+
+
+var updateDataObject =
+/*#__PURE__*/
+function () {
+  var _ref4 = _asyncToGenerator(
+  /*#__PURE__*/
+  regeneratorRuntime.mark(function _callee4() {
+    var accessToken,
+        dataUUID,
+        body,
+        accountUUID,
+        users,
+        trace,
+        MS,
+        requestOptions,
+        nextTrace,
+        _args4 = arguments;
     return regeneratorRuntime.wrap(function _callee4$(_context4) {
       while (1) {
         switch (_context4.prev = _context4.next) {
           case 0:
+            accessToken = _args4.length > 0 && _args4[0] !== undefined ? _args4[0] : "null accessToken";
+            dataUUID = _args4.length > 1 && _args4[1] !== undefined ? _args4[1] : "uuid not specified";
+            body = _args4.length > 2 && _args4[2] !== undefined ? _args4[2] : {};
+            accountUUID = _args4.length > 3 && _args4[3] !== undefined ? _args4[3] : undefined;
+            users = _args4.length > 4 && _args4[4] !== undefined ? _args4[4] : undefined;
+            trace = _args4.length > 5 && _args4[5] !== undefined ? _args4[5] : {};
             MS = Util.getEndpoint("objects");
             requestOptions = {
               method: "PUT",
-              uri: MS + "/objects/" + dataUUID,
+              uri: "".concat(MS, "/objects/").concat(dataUUID),
               body: body,
               headers: {
-                Authorization: "Bearer " + accessToken,
+                Authorization: "Bearer ".concat(accessToken),
                 "Content-type": "application/json",
-                "x-api-version": "" + Util.getVersion()
+                "x-api-version": "".concat(Util.getVersion())
               },
               json: true
             };
-
             Util.addRequestTrace(requestOptions, trace);
             nextTrace = objectMerge({}, trace);
 
-            if (!(accountUUID && users && (typeof users === "undefined" ? "undefined" : _typeof(users)) === "object")) {
-              _context4.next = 8;
+            if (!(accountUUID && users && _typeof(users) === "object")) {
+              _context4.next = 14;
               break;
             }
 
             nextTrace = objectMerge({}, nextTrace, Util.generateNewMetaData(nextTrace));
-            _context4.next = 8;
+            _context4.next = 14;
             return ResourceGroups.updateResourceGroups(accessToken, dataUUID, accountUUID, "object", //specifies the system role to find in config.json
             users, nextTrace);
 
-          case 8:
-            _context4.next = 10;
+          case 14:
+            _context4.next = 16;
             return request(requestOptions);
 
-          case 10:
+          case 16:
             return _context4.abrupt("return", _context4.sent);
 
-          case 11:
+          case 17:
           case "end":
             return _context4.stop();
         }
       }
-    }, _callee4, undefined);
+    }, _callee4, this);
   }));
 
   return function updateDataObject() {

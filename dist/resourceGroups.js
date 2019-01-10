@@ -1,20 +1,321 @@
 /* global require module*/
 "use strict";
 
-var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
+require("core-js/modules/es6.array.copy-within");
 
-function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } else { return Array.from(arr); } }
+require("core-js/modules/es6.array.every");
 
-function _asyncToGenerator(fn) { return function () { var gen = fn.apply(this, arguments); return new Promise(function (resolve, reject) { function step(key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { return Promise.resolve(value).then(function (value) { step("next", value); }, function (err) { step("throw", err); }); } } return step("next"); }); }; }
+require("core-js/modules/es6.array.fill");
+
+require("core-js/modules/es6.array.filter");
+
+require("core-js/modules/es6.array.find");
+
+require("core-js/modules/es6.array.find-index");
+
+require("core-js/modules/es6.array.for-each");
+
+require("core-js/modules/es6.array.from");
+
+require("core-js/modules/es7.array.includes");
+
+require("core-js/modules/es6.array.index-of");
+
+require("core-js/modules/es6.array.is-array");
+
+require("core-js/modules/es6.array.iterator");
+
+require("core-js/modules/es6.array.last-index-of");
+
+require("core-js/modules/es6.array.map");
+
+require("core-js/modules/es6.array.of");
+
+require("core-js/modules/es6.array.reduce");
+
+require("core-js/modules/es6.array.reduce-right");
+
+require("core-js/modules/es6.array.some");
+
+require("core-js/modules/es6.array.sort");
+
+require("core-js/modules/es6.array.species");
+
+require("core-js/modules/es6.date.now");
+
+require("core-js/modules/es6.date.to-iso-string");
+
+require("core-js/modules/es6.date.to-json");
+
+require("core-js/modules/es6.date.to-primitive");
+
+require("core-js/modules/es6.date.to-string");
+
+require("core-js/modules/es6.function.bind");
+
+require("core-js/modules/es6.function.has-instance");
+
+require("core-js/modules/es6.function.name");
+
+require("core-js/modules/es6.map");
+
+require("core-js/modules/es6.math.acosh");
+
+require("core-js/modules/es6.math.asinh");
+
+require("core-js/modules/es6.math.atanh");
+
+require("core-js/modules/es6.math.cbrt");
+
+require("core-js/modules/es6.math.clz32");
+
+require("core-js/modules/es6.math.cosh");
+
+require("core-js/modules/es6.math.expm1");
+
+require("core-js/modules/es6.math.fround");
+
+require("core-js/modules/es6.math.hypot");
+
+require("core-js/modules/es6.math.imul");
+
+require("core-js/modules/es6.math.log1p");
+
+require("core-js/modules/es6.math.log10");
+
+require("core-js/modules/es6.math.log2");
+
+require("core-js/modules/es6.math.sign");
+
+require("core-js/modules/es6.math.sinh");
+
+require("core-js/modules/es6.math.tanh");
+
+require("core-js/modules/es6.math.trunc");
+
+require("core-js/modules/es6.number.constructor");
+
+require("core-js/modules/es6.number.epsilon");
+
+require("core-js/modules/es6.number.is-finite");
+
+require("core-js/modules/es6.number.is-integer");
+
+require("core-js/modules/es6.number.is-nan");
+
+require("core-js/modules/es6.number.is-safe-integer");
+
+require("core-js/modules/es6.number.max-safe-integer");
+
+require("core-js/modules/es6.number.min-safe-integer");
+
+require("core-js/modules/es6.number.parse-float");
+
+require("core-js/modules/es6.number.parse-int");
+
+require("core-js/modules/es6.object.assign");
+
+require("core-js/modules/es6.object.create");
+
+require("core-js/modules/es7.object.define-getter");
+
+require("core-js/modules/es7.object.define-setter");
+
+require("core-js/modules/es6.object.define-property");
+
+require("core-js/modules/es6.object.define-properties");
+
+require("core-js/modules/es7.object.entries");
+
+require("core-js/modules/es6.object.freeze");
+
+require("core-js/modules/es6.object.get-own-property-descriptor");
+
+require("core-js/modules/es7.object.get-own-property-descriptors");
+
+require("core-js/modules/es6.object.get-own-property-names");
+
+require("core-js/modules/es6.object.get-prototype-of");
+
+require("core-js/modules/es7.object.lookup-getter");
+
+require("core-js/modules/es7.object.lookup-setter");
+
+require("core-js/modules/es6.object.prevent-extensions");
+
+require("core-js/modules/es6.object.is");
+
+require("core-js/modules/es6.object.is-frozen");
+
+require("core-js/modules/es6.object.is-sealed");
+
+require("core-js/modules/es6.object.is-extensible");
+
+require("core-js/modules/es6.object.keys");
+
+require("core-js/modules/es6.object.seal");
+
+require("core-js/modules/es6.object.set-prototype-of");
+
+require("core-js/modules/es7.object.values");
+
+require("core-js/modules/es6.promise");
+
+require("core-js/modules/es7.promise.finally");
+
+require("core-js/modules/es6.reflect.apply");
+
+require("core-js/modules/es6.reflect.construct");
+
+require("core-js/modules/es6.reflect.define-property");
+
+require("core-js/modules/es6.reflect.delete-property");
+
+require("core-js/modules/es6.reflect.get");
+
+require("core-js/modules/es6.reflect.get-own-property-descriptor");
+
+require("core-js/modules/es6.reflect.get-prototype-of");
+
+require("core-js/modules/es6.reflect.has");
+
+require("core-js/modules/es6.reflect.is-extensible");
+
+require("core-js/modules/es6.reflect.own-keys");
+
+require("core-js/modules/es6.reflect.prevent-extensions");
+
+require("core-js/modules/es6.reflect.set");
+
+require("core-js/modules/es6.reflect.set-prototype-of");
+
+require("core-js/modules/es6.regexp.constructor");
+
+require("core-js/modules/es6.regexp.flags");
+
+require("core-js/modules/es6.regexp.match");
+
+require("core-js/modules/es6.regexp.replace");
+
+require("core-js/modules/es6.regexp.split");
+
+require("core-js/modules/es6.regexp.search");
+
+require("core-js/modules/es6.regexp.to-string");
+
+require("core-js/modules/es6.set");
+
+require("core-js/modules/es6.symbol");
+
+require("core-js/modules/es7.symbol.async-iterator");
+
+require("core-js/modules/es6.string.anchor");
+
+require("core-js/modules/es6.string.big");
+
+require("core-js/modules/es6.string.blink");
+
+require("core-js/modules/es6.string.bold");
+
+require("core-js/modules/es6.string.code-point-at");
+
+require("core-js/modules/es6.string.ends-with");
+
+require("core-js/modules/es6.string.fixed");
+
+require("core-js/modules/es6.string.fontcolor");
+
+require("core-js/modules/es6.string.fontsize");
+
+require("core-js/modules/es6.string.from-code-point");
+
+require("core-js/modules/es6.string.includes");
+
+require("core-js/modules/es6.string.italics");
+
+require("core-js/modules/es6.string.iterator");
+
+require("core-js/modules/es6.string.link");
+
+require("core-js/modules/es7.string.pad-start");
+
+require("core-js/modules/es7.string.pad-end");
+
+require("core-js/modules/es6.string.raw");
+
+require("core-js/modules/es6.string.repeat");
+
+require("core-js/modules/es6.string.small");
+
+require("core-js/modules/es6.string.starts-with");
+
+require("core-js/modules/es6.string.strike");
+
+require("core-js/modules/es6.string.sub");
+
+require("core-js/modules/es6.string.sup");
+
+require("core-js/modules/es6.string.trim");
+
+require("core-js/modules/es6.typed.array-buffer");
+
+require("core-js/modules/es6.typed.data-view");
+
+require("core-js/modules/es6.typed.int8-array");
+
+require("core-js/modules/es6.typed.uint8-array");
+
+require("core-js/modules/es6.typed.uint8-clamped-array");
+
+require("core-js/modules/es6.typed.int16-array");
+
+require("core-js/modules/es6.typed.uint16-array");
+
+require("core-js/modules/es6.typed.int32-array");
+
+require("core-js/modules/es6.typed.uint32-array");
+
+require("core-js/modules/es6.typed.float32-array");
+
+require("core-js/modules/es6.typed.float64-array");
+
+require("core-js/modules/es6.weak-map");
+
+require("core-js/modules/es6.weak-set");
+
+require("core-js/modules/web.timers");
+
+require("core-js/modules/web.immediate");
+
+require("core-js/modules/web.dom.iterable");
+
+require("regenerator-runtime/runtime");
+
+function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+
+function _toConsumableArray(arr) { return _arrayWithoutHoles(arr) || _iterableToArray(arr) || _nonIterableSpread(); }
+
+function _nonIterableSpread() { throw new TypeError("Invalid attempt to spread non-iterable instance"); }
+
+function _iterableToArray(iter) { if (Symbol.iterator in Object(iter) || Object.prototype.toString.call(iter) === "[object Arguments]") return Array.from(iter); }
+
+function _arrayWithoutHoles(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = new Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } }
+
+function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { Promise.resolve(value).then(_next, _throw); } }
+
+function _asyncToGenerator(fn) { return function () { var self = this, args = arguments; return new Promise(function (resolve, reject) { var gen = fn.apply(self, args); function _next(value) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "next", value); } function _throw(err) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "throw", err); } _next(undefined); }); }; }
 
 var Util = require("./utilities");
+
 var Auth = require("./auth");
+
 var Groups = require("./groups");
+
 var env = Util.config.env;
 var roles = Util.config.roles[env];
 var msDelay = Util.config.msDelay;
-var objectMerge = require("object-merge");
 
+var objectMerge = require("object-merge");
 /**
  * @async
  * @description This function will create the permissions group for a resource uuid.
@@ -26,23 +327,40 @@ var objectMerge = require("object-merge");
  * @param {object} [trace = {}] - optional microservice lifecycle trace headers
  * @returns {Promise} - promise resolving to an object containing a status message
  */
-var createResourceGroups = function () {
-  var _ref = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee() {
-    var accessToken = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : "null access token";
-    var accountUUID = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : "null accountUUID";
-    var resourceUUID = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : "null resourceUUID";
-    var type = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : undefined;
-    var users = arguments.length > 4 && arguments[4] !== undefined ? arguments[4] : {};
-    var trace = arguments.length > 5 && arguments[5] !== undefined ? arguments[5] : {};
-    var nextTrace, groupPromises, scopePromises, groupTypeRegex, groups;
+
+
+var createResourceGroups =
+/*#__PURE__*/
+function () {
+  var _ref = _asyncToGenerator(
+  /*#__PURE__*/
+  regeneratorRuntime.mark(function _callee() {
+    var accessToken,
+        accountUUID,
+        resourceUUID,
+        type,
+        users,
+        trace,
+        nextTrace,
+        groupPromises,
+        scopePromises,
+        groupTypeRegex,
+        groups,
+        _args = arguments;
     return regeneratorRuntime.wrap(function _callee$(_context) {
       while (1) {
         switch (_context.prev = _context.next) {
           case 0:
-            _context.prev = 0;
+            accessToken = _args.length > 0 && _args[0] !== undefined ? _args[0] : "null access token";
+            accountUUID = _args.length > 1 && _args[1] !== undefined ? _args[1] : "null accountUUID";
+            resourceUUID = _args.length > 2 && _args[2] !== undefined ? _args[2] : "null resourceUUID";
+            type = _args.length > 3 && _args[3] !== undefined ? _args[3] : undefined;
+            users = _args.length > 4 && _args[4] !== undefined ? _args[4] : {};
+            trace = _args.length > 5 && _args[5] !== undefined ? _args[5] : {};
+            _context.prev = 6;
 
             if (type) {
-              _context.next = 3;
+              _context.next = 9;
               break;
             }
 
@@ -51,36 +369,33 @@ var createResourceGroups = function () {
               "message": "Unable to create resource groups. Resource type not defined."
             }));
 
-          case 3:
+          case 9:
             //create the groups
             nextTrace = objectMerge({}, trace);
             groupPromises = [];
             scopePromises = [];
             groupTypeRegex = /^[r,u,d]{1,3}/;
-
             Object.keys(users).forEach(function (prop) {
               var userGroup = {
-                name: prop + ": " + resourceUUID,
-                users: [].concat(_toConsumableArray(users[prop])),
+                name: "".concat(prop, ": ").concat(resourceUUID),
+                users: _toConsumableArray(users[prop]),
                 description: "resource group"
               };
               nextTrace = objectMerge({}, nextTrace, Util.generateNewMetaData(nextTrace));
               groupPromises.push(Auth.createUserGroup(accessToken, accountUUID, userGroup, nextTrace));
             });
-
-            _context.next = 10;
+            _context.next = 16;
             return Promise.all(groupPromises);
 
-          case 10:
+          case 16:
             groups = _context.sent;
-            _context.next = 13;
+            _context.next = 19;
             return new Promise(function (resolve) {
               return setTimeout(resolve, msDelay);
             });
 
-          case 13:
+          case 19:
             //microservices delay :(
-
             // scope the resource to the groups
             groups.forEach(function (group) {
               //extract the group type from the group name
@@ -88,30 +403,34 @@ var createResourceGroups = function () {
               nextTrace = objectMerge({}, nextTrace, Util.generateNewMetaData(nextTrace));
               scopePromises.push(Auth.assignScopedRoleToUserGroup(accessToken, group.uuid, roles[type][groupType], "resource", [resourceUUID], nextTrace));
             });
-            _context.next = 16;
+            _context.next = 22;
             return Promise.all(scopePromises);
 
-          case 16:
-            return _context.abrupt("return", Promise.resolve({ status: "ok" }));
-
-          case 19:
-            _context.prev = 19;
-            _context.t0 = _context["catch"](0);
-            return _context.abrupt("return", Promise.reject({ status: "failed", createResourceGroups: _context.t0 }));
-
           case 22:
+            return _context.abrupt("return", Promise.resolve({
+              status: "ok"
+            }));
+
+          case 25:
+            _context.prev = 25;
+            _context.t0 = _context["catch"](6);
+            return _context.abrupt("return", Promise.reject({
+              status: "failed",
+              createResourceGroups: _context.t0
+            }));
+
+          case 28:
           case "end":
             return _context.stop();
         }
       }
-    }, _callee, undefined, [[0, 19]]);
+    }, _callee, this, [[6, 25]]);
   }));
 
   return function createResourceGroups() {
     return _ref.apply(this, arguments);
   };
 }();
-
 /**
  * @async
  * @description This function will remove any permissions groups associated with a resource.
@@ -120,66 +439,78 @@ var createResourceGroups = function () {
  * @param {object} [trace = {}] - optional microservice lifecycle trace headers
  * @returns {Promise} - promise resolving to a status message.
  */
-var cleanUpResourceGroups = function () {
-  var _ref2 = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee2() {
-    var accessToken = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : "null accessToken";
-    var resourceUUID = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : "null resourceUUID";
-    var trace = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : {};
-    var resourceGroups, nextTrace, groupsToDelete;
+
+
+var cleanUpResourceGroups =
+/*#__PURE__*/
+function () {
+  var _ref2 = _asyncToGenerator(
+  /*#__PURE__*/
+  regeneratorRuntime.mark(function _callee2() {
+    var accessToken,
+        resourceUUID,
+        trace,
+        resourceGroups,
+        nextTrace,
+        groupsToDelete,
+        _args2 = arguments;
     return regeneratorRuntime.wrap(function _callee2$(_context2) {
       while (1) {
         switch (_context2.prev = _context2.next) {
           case 0:
-            _context2.prev = 0;
-            _context2.next = 3;
+            accessToken = _args2.length > 0 && _args2[0] !== undefined ? _args2[0] : "null accessToken";
+            resourceUUID = _args2.length > 1 && _args2[1] !== undefined ? _args2[1] : "null resourceUUID";
+            trace = _args2.length > 2 && _args2[2] !== undefined ? _args2[2] : {};
+            _context2.prev = 3;
+            _context2.next = 6;
             return Auth.listAccessByGroups(accessToken, resourceUUID, trace);
 
-          case 3:
+          case 6:
             resourceGroups = _context2.sent;
 
             if (!(resourceGroups.hasOwnProperty("items") && resourceGroups.items.length > 0)) {
-              _context2.next = 11;
+              _context2.next = 14;
               break;
             }
 
             nextTrace = objectMerge({}, trace);
             groupsToDelete = [];
-
             resourceGroups.items.forEach(function (group) {
               groupsToDelete.push(Groups.deleteGroup(accessToken, group.user_group.uuid, nextTrace));
               nextTrace = objectMerge({}, nextTrace, Util.generateNewMetaData(nextTrace));
             });
-            _context2.next = 10;
+            _context2.next = 13;
             return Promise.all(groupsToDelete);
 
-          case 10:
-            Promise.resolve({ "status": "ok" });
+          case 13:
+            Promise.resolve({
+              "status": "ok"
+            });
 
-          case 11:
-            _context2.next = 16;
+          case 14:
+            _context2.next = 19;
             break;
 
-          case 13:
-            _context2.prev = 13;
-            _context2.t0 = _context2["catch"](0);
+          case 16:
+            _context2.prev = 16;
+            _context2.t0 = _context2["catch"](3);
             return _context2.abrupt("return", Promise.reject({
               "status": "failed",
               "cleanUpResourceGroups": _context2.t0
             }));
 
-          case 16:
+          case 19:
           case "end":
             return _context2.stop();
         }
       }
-    }, _callee2, undefined, [[0, 13]]);
+    }, _callee2, this, [[3, 16]]);
   }));
 
   return function cleanUpResourceGroups() {
     return _ref2.apply(this, arguments);
   };
 }();
-
 /**
  * @async
  * @description This function will update a resources permissions groups.
@@ -189,23 +520,42 @@ var cleanUpResourceGroups = function () {
  * @param {object} [trace = {}] - microservice lifecycle trace headers
  * @returns {Promise<object>} Promise resolving to confirmation of updated groups
  */
-var updateResourceGroups = function () {
-  var _ref3 = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee3() {
-    var accessToken = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : "null accessToken";
-    var resourceUUID = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : "uuid not specified";
-    var accountUUID = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : "null accountUUID";
-    var type = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : undefined;
-    var users = arguments.length > 4 && arguments[4] !== undefined ? arguments[4] : {};
-    var trace = arguments.length > 5 && arguments[5] !== undefined ? arguments[5] : {};
-    var nextTrace, resourceGroups, groupTypeRegex, updatePromises, deletePromises, userGroups, memberUpdatePromises;
+
+
+var updateResourceGroups =
+/*#__PURE__*/
+function () {
+  var _ref3 = _asyncToGenerator(
+  /*#__PURE__*/
+  regeneratorRuntime.mark(function _callee3() {
+    var accessToken,
+        resourceUUID,
+        accountUUID,
+        type,
+        users,
+        trace,
+        nextTrace,
+        resourceGroups,
+        groupTypeRegex,
+        updatePromises,
+        deletePromises,
+        userGroups,
+        memberUpdatePromises,
+        _args3 = arguments;
     return regeneratorRuntime.wrap(function _callee3$(_context3) {
       while (1) {
         switch (_context3.prev = _context3.next) {
           case 0:
-            _context3.prev = 0;
+            accessToken = _args3.length > 0 && _args3[0] !== undefined ? _args3[0] : "null accessToken";
+            resourceUUID = _args3.length > 1 && _args3[1] !== undefined ? _args3[1] : "uuid not specified";
+            accountUUID = _args3.length > 2 && _args3[2] !== undefined ? _args3[2] : "null accountUUID";
+            type = _args3.length > 3 && _args3[3] !== undefined ? _args3[3] : undefined;
+            users = _args3.length > 4 && _args3[4] !== undefined ? _args3[4] : {};
+            trace = _args3.length > 5 && _args3[5] !== undefined ? _args3[5] : {};
+            _context3.prev = 6;
 
             if (type) {
-              _context3.next = 3;
+              _context3.next = 9;
               break;
             }
 
@@ -214,16 +564,16 @@ var updateResourceGroups = function () {
               "message": "Unable to update resource groups. Resource type not defined."
             }));
 
-          case 3:
+          case 9:
             nextTrace = objectMerge({}, trace);
-            _context3.next = 6;
+            _context3.next = 12;
             return Auth.listAccessByGroups(accessToken, resourceUUID, nextTrace);
 
-          case 6:
+          case 12:
             resourceGroups = _context3.sent;
 
             if (!(resourceGroups.hasOwnProperty("items") && resourceGroups.items.length > 0)) {
-              _context3.next = 21;
+              _context3.next = 27;
               break;
             }
 
@@ -231,16 +581,16 @@ var updateResourceGroups = function () {
             groupTypeRegex = /^[r,u,d]{1,3}/;
             updatePromises = [];
             deletePromises = [];
-
             resourceGroups.items.forEach(function (item) {
               if (item.hasOwnProperty("user_group") && item.user_group.hasOwnProperty("group_name")) {
-                var groupType = groupTypeRegex.exec(item.user_group.group_name);
-                // A resource group exists for this set of permissions.
-                if ((typeof users === "undefined" ? "undefined" : _typeof(users)) === "object" && users.hasOwnProperty(groupType)) {
+                var groupType = groupTypeRegex.exec(item.user_group.group_name); // A resource group exists for this set of permissions.
+
+                if (_typeof(users) === "object" && users.hasOwnProperty(groupType)) {
                   nextTrace = objectMerge({}, nextTrace, Util.generateNewMetaData(nextTrace));
                   updatePromises.push(Groups.getGroup(accessToken, item.user_group.uuid, {
                     expand: "members",
                     members_limit: 999 //hopefully we don't need pagination here. nh TODO call util.aggregate?
+
                   }, nextTrace));
                 } else {
                   // we no longer have any users for this resource group, so delete it
@@ -254,15 +604,13 @@ var updateResourceGroups = function () {
                 });
               }
             });
-            _context3.next = 14;
+            _context3.next = 20;
             return Promise.all(updatePromises);
 
-          case 14:
+          case 20:
             userGroups = _context3.sent;
-
             // update the groups' members
             memberUpdatePromises = [];
-
             userGroups.forEach(function (group) {
               //add the new users to the group
               var groupType = groupTypeRegex.exec(group.name);
@@ -275,13 +623,18 @@ var updateResourceGroups = function () {
                 });
                 return !found;
               }).map(function (user) {
-                return { uuid: user, type: "user" };
+                return {
+                  uuid: user,
+                  type: "user"
+                };
               });
+
               if (addUsers && addUsers.length > 0) {
                 nextTrace = objectMerge({}, nextTrace, Util.generateNewMetaData(nextTrace));
                 memberUpdatePromises.push(Groups.addMembersToGroup(accessToken, group.uuid, addUsers, nextTrace));
-              }
-              //delete the old users from the group
+              } //delete the old users from the group
+
+
               var deleteUsers = group.members.items.filter(function (groupUser) {
                 var found = false;
                 users[groupType].forEach(function (user) {
@@ -291,51 +644,57 @@ var updateResourceGroups = function () {
                 });
                 return !found;
               }).map(function (groupUser) {
-                return { uuid: groupUser.uuid };
+                return {
+                  uuid: groupUser.uuid
+                };
               });
+
               if (deleteUsers && deleteUsers.length > 0) {
                 nextTrace = objectMerge({}, nextTrace, Util.generateNewMetaData(nextTrace));
                 memberUpdatePromises.push(Groups.deleteGroupMembers(accessToken, group.uuid, deleteUsers, nextTrace));
-              }
-              // remove the group type property from the users object
+              } // remove the group type property from the users object
               // any remaining are for new groups which will be created below
+
+
               delete users[groupType];
             });
-            _context3.next = 19;
+            _context3.next = 25;
             return Promise.all(memberUpdatePromises);
 
-          case 19:
-            _context3.next = 21;
+          case 25:
+            _context3.next = 27;
             return Promise.all(deletePromises);
 
-          case 21:
+          case 27:
             if (!(Object.keys(users).length > 0)) {
-              _context3.next = 25;
+              _context3.next = 31;
               break;
             }
 
             nextTrace = objectMerge({}, nextTrace, Util.generateNewMetaData(nextTrace));
-            _context3.next = 25;
+            _context3.next = 31;
             return createResourceGroups(accessToken, accountUUID, resourceUUID, "object", //system role type
             users, trace);
 
-          case 25:
-            return _context3.abrupt("return", Promise.resolve({ "status": "ok" }));
+          case 31:
+            return _context3.abrupt("return", Promise.resolve({
+              "status": "ok"
+            }));
 
-          case 28:
-            _context3.prev = 28;
-            _context3.t0 = _context3["catch"](0);
+          case 34:
+            _context3.prev = 34;
+            _context3.t0 = _context3["catch"](6);
             return _context3.abrupt("return", Promise.reject({
               "status": "failed",
               "updateResourceGroups": _context3.t0
             }));
 
-          case 31:
+          case 37:
           case "end":
             return _context3.stop();
         }
       }
-    }, _callee3, undefined, [[0, 28]]);
+    }, _callee3, this, [[6, 34]]);
   }));
 
   return function updateResourceGroups() {

@@ -1,10 +1,11 @@
 /* global require module*/
 "use strict";
+import "@babel/polyfill";
 const Util = require("./utilities");
 const request = require("request-promise");
 const objectMerge = require("object-merge");
 const ResourceGroups = require("./resourceGroups");
-import Logger from "./node-logger";
+import Logger from "../src/node-logger";
 const logger = new Logger();
 logger.setLevel(Util.getLogLevel());
 logger.setPretty(Util.getLogPretty());

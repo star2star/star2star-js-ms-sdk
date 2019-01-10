@@ -278,7 +278,7 @@
       }
     }
 
-    // Cache some important sizes when drag starts, so we don't have to do that
+    // Cache some import Logger from "./node-logger";ant sizes when drag starts, so we don't have to do that
     // continously:
     //
     // `size`: The total size of the pair. First + second + first gutter + second gutter.

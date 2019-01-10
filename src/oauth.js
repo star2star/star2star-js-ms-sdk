@@ -1,11 +1,8 @@
 /*global module require */
 "use strict";
+import "@babel/polyfill";
 const Util = require("./utilities");
 const request = require("request-promise");
-import Logger from "./node-logger";
-const logger = new Logger();
-logger.setLevel(Util.getLogLevel());
-logger.setPretty(Util.getLogPretty());
 
 /**
  * @async 
@@ -82,6 +79,7 @@ const getAccessToken = async (
   oauthToken = "null oauth token",
   email = "null email",
   pwd = "null pwd",
+  scope = "default",
   trace = {}
 ) => {
   await new Promise(resolve => setTimeout(resolve, Util.config.msDelay));
@@ -97,7 +95,7 @@ const getAccessToken = async (
     },
     form: {
       grant_type: "password",
-      scope: "default",
+      scope: scope,
       email: email,
       password: pwd
     },

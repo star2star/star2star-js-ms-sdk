@@ -1,61 +1,354 @@
 /* global require process module*/
 "use strict";
 
-var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
+require("core-js/modules/es6.array.copy-within");
 
-var _nodeLogger = require("./node-logger");
+require("core-js/modules/es6.array.every");
 
-var _nodeLogger2 = _interopRequireDefault(_nodeLogger);
+require("core-js/modules/es6.array.fill");
+
+require("core-js/modules/es6.array.filter");
+
+require("core-js/modules/es6.array.find");
+
+require("core-js/modules/es6.array.find-index");
+
+require("core-js/modules/es6.array.for-each");
+
+require("core-js/modules/es6.array.from");
+
+require("core-js/modules/es7.array.includes");
+
+require("core-js/modules/es6.array.index-of");
+
+require("core-js/modules/es6.array.is-array");
+
+require("core-js/modules/es6.array.iterator");
+
+require("core-js/modules/es6.array.last-index-of");
+
+require("core-js/modules/es6.array.map");
+
+require("core-js/modules/es6.array.of");
+
+require("core-js/modules/es6.array.reduce");
+
+require("core-js/modules/es6.array.reduce-right");
+
+require("core-js/modules/es6.array.some");
+
+require("core-js/modules/es6.array.sort");
+
+require("core-js/modules/es6.array.species");
+
+require("core-js/modules/es6.date.now");
+
+require("core-js/modules/es6.date.to-iso-string");
+
+require("core-js/modules/es6.date.to-json");
+
+require("core-js/modules/es6.date.to-primitive");
+
+require("core-js/modules/es6.date.to-string");
+
+require("core-js/modules/es6.function.bind");
+
+require("core-js/modules/es6.function.has-instance");
+
+require("core-js/modules/es6.function.name");
+
+require("core-js/modules/es6.map");
+
+require("core-js/modules/es6.math.acosh");
+
+require("core-js/modules/es6.math.asinh");
+
+require("core-js/modules/es6.math.atanh");
+
+require("core-js/modules/es6.math.cbrt");
+
+require("core-js/modules/es6.math.clz32");
+
+require("core-js/modules/es6.math.cosh");
+
+require("core-js/modules/es6.math.expm1");
+
+require("core-js/modules/es6.math.fround");
+
+require("core-js/modules/es6.math.hypot");
+
+require("core-js/modules/es6.math.imul");
+
+require("core-js/modules/es6.math.log1p");
+
+require("core-js/modules/es6.math.log10");
+
+require("core-js/modules/es6.math.log2");
+
+require("core-js/modules/es6.math.sign");
+
+require("core-js/modules/es6.math.sinh");
+
+require("core-js/modules/es6.math.tanh");
+
+require("core-js/modules/es6.math.trunc");
+
+require("core-js/modules/es6.number.constructor");
+
+require("core-js/modules/es6.number.epsilon");
+
+require("core-js/modules/es6.number.is-finite");
+
+require("core-js/modules/es6.number.is-integer");
+
+require("core-js/modules/es6.number.is-nan");
+
+require("core-js/modules/es6.number.is-safe-integer");
+
+require("core-js/modules/es6.number.max-safe-integer");
+
+require("core-js/modules/es6.number.min-safe-integer");
+
+require("core-js/modules/es6.number.parse-float");
+
+require("core-js/modules/es6.number.parse-int");
+
+require("core-js/modules/es6.object.assign");
+
+require("core-js/modules/es6.object.create");
+
+require("core-js/modules/es7.object.define-getter");
+
+require("core-js/modules/es7.object.define-setter");
+
+require("core-js/modules/es6.object.define-property");
+
+require("core-js/modules/es6.object.define-properties");
+
+require("core-js/modules/es7.object.entries");
+
+require("core-js/modules/es6.object.freeze");
+
+require("core-js/modules/es6.object.get-own-property-descriptor");
+
+require("core-js/modules/es7.object.get-own-property-descriptors");
+
+require("core-js/modules/es6.object.get-own-property-names");
+
+require("core-js/modules/es6.object.get-prototype-of");
+
+require("core-js/modules/es7.object.lookup-getter");
+
+require("core-js/modules/es7.object.lookup-setter");
+
+require("core-js/modules/es6.object.prevent-extensions");
+
+require("core-js/modules/es6.object.is");
+
+require("core-js/modules/es6.object.is-frozen");
+
+require("core-js/modules/es6.object.is-sealed");
+
+require("core-js/modules/es6.object.is-extensible");
+
+require("core-js/modules/es6.object.keys");
+
+require("core-js/modules/es6.object.seal");
+
+require("core-js/modules/es6.object.set-prototype-of");
+
+require("core-js/modules/es7.object.values");
+
+require("core-js/modules/es6.promise");
+
+require("core-js/modules/es7.promise.finally");
+
+require("core-js/modules/es6.reflect.apply");
+
+require("core-js/modules/es6.reflect.construct");
+
+require("core-js/modules/es6.reflect.define-property");
+
+require("core-js/modules/es6.reflect.delete-property");
+
+require("core-js/modules/es6.reflect.get");
+
+require("core-js/modules/es6.reflect.get-own-property-descriptor");
+
+require("core-js/modules/es6.reflect.get-prototype-of");
+
+require("core-js/modules/es6.reflect.has");
+
+require("core-js/modules/es6.reflect.is-extensible");
+
+require("core-js/modules/es6.reflect.own-keys");
+
+require("core-js/modules/es6.reflect.prevent-extensions");
+
+require("core-js/modules/es6.reflect.set");
+
+require("core-js/modules/es6.reflect.set-prototype-of");
+
+require("core-js/modules/es6.regexp.constructor");
+
+require("core-js/modules/es6.regexp.flags");
+
+require("core-js/modules/es6.regexp.match");
+
+require("core-js/modules/es6.regexp.replace");
+
+require("core-js/modules/es6.regexp.split");
+
+require("core-js/modules/es6.regexp.search");
+
+require("core-js/modules/es6.regexp.to-string");
+
+require("core-js/modules/es6.set");
+
+require("core-js/modules/es6.symbol");
+
+require("core-js/modules/es7.symbol.async-iterator");
+
+require("core-js/modules/es6.string.anchor");
+
+require("core-js/modules/es6.string.big");
+
+require("core-js/modules/es6.string.blink");
+
+require("core-js/modules/es6.string.bold");
+
+require("core-js/modules/es6.string.code-point-at");
+
+require("core-js/modules/es6.string.ends-with");
+
+require("core-js/modules/es6.string.fixed");
+
+require("core-js/modules/es6.string.fontcolor");
+
+require("core-js/modules/es6.string.fontsize");
+
+require("core-js/modules/es6.string.from-code-point");
+
+require("core-js/modules/es6.string.includes");
+
+require("core-js/modules/es6.string.italics");
+
+require("core-js/modules/es6.string.iterator");
+
+require("core-js/modules/es6.string.link");
+
+require("core-js/modules/es7.string.pad-start");
+
+require("core-js/modules/es7.string.pad-end");
+
+require("core-js/modules/es6.string.raw");
+
+require("core-js/modules/es6.string.repeat");
+
+require("core-js/modules/es6.string.small");
+
+require("core-js/modules/es6.string.starts-with");
+
+require("core-js/modules/es6.string.strike");
+
+require("core-js/modules/es6.string.sub");
+
+require("core-js/modules/es6.string.sup");
+
+require("core-js/modules/es6.string.trim");
+
+require("core-js/modules/es6.typed.array-buffer");
+
+require("core-js/modules/es6.typed.data-view");
+
+require("core-js/modules/es6.typed.int8-array");
+
+require("core-js/modules/es6.typed.uint8-array");
+
+require("core-js/modules/es6.typed.uint8-clamped-array");
+
+require("core-js/modules/es6.typed.int16-array");
+
+require("core-js/modules/es6.typed.uint16-array");
+
+require("core-js/modules/es6.typed.int32-array");
+
+require("core-js/modules/es6.typed.uint32-array");
+
+require("core-js/modules/es6.typed.float32-array");
+
+require("core-js/modules/es6.typed.float64-array");
+
+require("core-js/modules/es6.weak-map");
+
+require("core-js/modules/es6.weak-set");
+
+require("core-js/modules/web.timers");
+
+require("core-js/modules/web.immediate");
+
+require("core-js/modules/web.dom.iterable");
+
+require("regenerator-runtime/runtime");
+
+var _nodeLogger = _interopRequireDefault(require("./node-logger"));
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-function _asyncToGenerator(fn) { return function () { var gen = fn.apply(this, arguments); return new Promise(function (resolve, reject) { function step(key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { return Promise.resolve(value).then(function (value) { step("next", value); }, function (err) { step("throw", err); }); } } return step("next"); }); }; }
+function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { Promise.resolve(value).then(_next, _throw); } }
+
+function _asyncToGenerator(fn) { return function () { var self = this, args = arguments; return new Promise(function (resolve, reject) { var gen = fn.apply(self, args); function _next(value) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "next", value); } function _throw(err) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "throw", err); } _next(undefined); }); }; }
+
+function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
 
 var config = require("./config.json");
+
 var uuidv4 = require("uuid/v4");
 
-var logger = new _nodeLogger2.default();
-
+var logger = new _nodeLogger.default();
 /**
  *
  * @description This function will determine microservice endpoint URI.
  * @param {string} [microservice="NOTHING"] - the string that we are matching on
  * @returns {string} - the configured value or undefined
  */
+
 var getEndpoint = function getEndpoint() {
   var microservice = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : "NOTHING";
-
   var upperMS = microservice.toUpperCase();
   var env = isBrowser() ? window.s2sJsMsSdk : process.env;
   return config.microservices[upperMS] ? env.MS_HOST + config.microservices[upperMS] : undefined;
 };
-
 /**
  *
  * @description This function will determine microservice authentication endpoint URI.
  * @param {string} [microservice="NOTHING"] - the string that we are matching on
  * @returns {string} - the configured value or undefined
  */
+
+
 var getAuthHost = function getAuthHost() {
   return isBrowser() ? window.s2sJsMsSdk.AUTH_HOST : process.env.AUTH_HOST;
 };
-
 /**
  *
  * @description This function will determine microservice version.
  * @returns {string} - the configured string value or undefined
  */
+
+
 var getVersion = function getVersion() {
   var env = isBrowser() ? window.s2sJsMsSdk : process.env;
   return env.MS_VERSION ? env.MS_VERSION : config.ms_version;
 };
-
 /**
  *
  * @description This function will lookup static items to be replaced.
  * @param {string} matchString - the string that we are matching on.
  * @returns {string} - the string value or undefined
  */
+
+
 var replaceStaticValues = function replaceStaticValues(matchString) {
   var TDATE = new Date();
   var MONTH = "" + (TDATE.getMonth() + 1);
@@ -65,11 +358,10 @@ var replaceStaticValues = function replaceStaticValues(matchString) {
     YYYY: TDATE.getFullYear(),
     MM: ("0" + MONTH).substring(MONTH.length + 1 - 2),
     DD: ("0" + MYDAY).substring(MYDAY.length + 1 - 2)
-  };
-  //console.log('matchstring:',("0"+DAY).substring((DAY.length+1 - 2)), matchString, DAY, aValues)
+  }; //console.log('matchstring:',("0"+DAY).substring((DAY.length+1 - 2)), matchString, DAY, aValues)
+
   return aValues[matchString];
 };
-
 /**
  *
  * @description This function will get the value from the object tree, recursively.
@@ -77,17 +369,20 @@ var replaceStaticValues = function replaceStaticValues(matchString) {
  * @param {object} [objectTree={}] - the json object to search
  * @returns {string} - the string value or undefined
  */
+
+
 var getValueFromObjectTree = function getValueFromObjectTree() {
   var matchString = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : "";
   var objectTree = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
-
   var mString = matchString.replace(/%/g, "");
   var sValue = replaceStaticValues(mString);
+
   if (sValue) {
     return sValue;
   }
-  var xReturn = void 0;
-  //console.log('---', mString, matchString, objectTree)
+
+  var xReturn; //console.log('---', mString, matchString, objectTree)
+
   if (Object.keys(objectTree).indexOf(mString) > -1) {
     //console.log('rrrr', matchString, objectTree[mString])
     xReturn = objectTree[mString];
@@ -99,13 +394,14 @@ var getValueFromObjectTree = function getValueFromObjectTree() {
           return getValueFromObjectTree(mString, objectTree[c]);
         }
       }
+
       return p;
     }, undefined);
-  }
-  //console.log('bbbb', matchString, xReturn)
+  } //console.log('bbbb', matchString, xReturn)
+
+
   return xReturn;
 };
-
 /**
  *
  * @description This function will take in an inputValue String and replace variables from objectTree.
@@ -113,32 +409,32 @@ var getValueFromObjectTree = function getValueFromObjectTree() {
  * @param {*} [objectTree={}] - json Object to search
  * @returns {string} - replaced inputValue
  */
+
+
 var replaceVariables = function replaceVariables() {
   var inputValue = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : "";
   var objectTree = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
-
   // will search for %xxxxx%
   var myRegex = /(%[\w|\d|.\-*/]+%)/g;
   var returnString = inputValue;
-
   var arrayOfMatches = inputValue.match(myRegex);
-
   arrayOfMatches !== null && arrayOfMatches.forEach(function (theMatch) {
-    var retrievedValue = getValueFromObjectTree(theMatch, objectTree);
-    //console.log('^^^^^^^^', theMatch, retrievedValue)
+    var retrievedValue = getValueFromObjectTree(theMatch, objectTree); //console.log('^^^^^^^^', theMatch, retrievedValue)
+
     returnString = returnString.replace(theMatch, retrievedValue ? retrievedValue : theMatch);
   });
-
   return returnString;
 };
-
 /**
  *
  * @description This function will create a new UUID
  * @returns {string} - new UUID
  */
+
+
 var createUUID = function createUUID() {
   var d = new Date().getTime();
+
   if (typeof performance !== "undefined" && typeof performance.now === "function") {
     d += performance.now(); //use high-precision timer if available
   }
@@ -149,7 +445,6 @@ var createUUID = function createUUID() {
     return (c === "x" ? r : r & 0x3 | 0x8).toString(16);
   });
 };
-
 /**
  *
  * @description This function returns a portion of a response in a paginated format.
@@ -158,10 +453,11 @@ var createUUID = function createUUID() {
  * @param {number} [limit=10] - reponse items limit
  * @returns {object} - response object with format {"items":[],"meatadata":{}}
  */
+
+
 var paginate = function paginate(response) {
   var offset = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 0;
   var limit = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : 10;
-
   var total = response.items.length;
   var paginatedResponse = {
     items: response.items.slice(offset, offset + limit)
@@ -175,7 +471,6 @@ var paginate = function paginate(response) {
   };
   return paginatedResponse;
 };
-
 /**
  *
  * @description This function filters an API response in an "AND" format. Returned items must match filter
@@ -183,15 +478,18 @@ var paginate = function paginate(response) {
  * @param {array} [filter=[]] - Array of filters to apply to API response object
  * @returns {object} - Response object with format {"items":[]}
  */
+
+
 var filterResponse = function filterResponse(response, filters) {
   //console.log("*****FILTERS*****", filters);
   Object.keys(filters).forEach(function (filter) {
     var filteredResponse = response.items.filter(function (filterItem) {
       var found = false;
+
       var doFilter = function doFilter(obj, filter) {
         Object.keys(obj).forEach(function (prop) {
-          if (found) return;
-          //not seaching through arrays
+          if (found) return; //not seaching through arrays
+
           if (!Array.isArray(obj[prop])) {
             if (typeof obj[prop] === "string" || typeof obj[prop] === "number" || typeof obj[prop] === "boolean") {
               // console.log("PROP", prop);
@@ -205,19 +503,18 @@ var filterResponse = function filterResponse(response, filters) {
               return doFilter(obj[prop], filter);
             }
           }
-        });
-        //console.log("FOUND", found);
+        }); //console.log("FOUND", found);
+
         return found;
       };
+
       return doFilter(filterItem, filter);
     });
-    response.items = filteredResponse;
-    //console.log("FILTERED RESPONSE", filteredResponse);
-  });
-  //console.log("FINAL RESPONSE ARRAY", response.items.length, response.items);
+    response.items = filteredResponse; //console.log("FILTERED RESPONSE", filteredResponse);
+  }); //console.log("FINAL RESPONSE ARRAY", response.items.length, response.items);
+
   return response;
 };
-
 /**
  * @async
  * @description This utility will fetch all items for a GET call and return them as a single response.
@@ -225,98 +522,116 @@ var filterResponse = function filterResponse(response, filters) {
  * @param {object} requestOptions
  * @returns
  */
-var aggregate = function () {
-  var _ref = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee2(request, requestOptions) {
-    var trace = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : {};
-    var total, offset, makeRequest;
+
+
+var aggregate =
+/*#__PURE__*/
+function () {
+  var _ref = _asyncToGenerator(
+  /*#__PURE__*/
+  regeneratorRuntime.mark(function _callee2(request, requestOptions) {
+    var trace,
+        total,
+        offset,
+        makeRequest,
+        _args2 = arguments;
     return regeneratorRuntime.wrap(function _callee2$(_context2) {
       while (1) {
         switch (_context2.prev = _context2.next) {
           case 0:
+            trace = _args2.length > 2 && _args2[2] !== undefined ? _args2[2] : {};
             //uncomment and set to less than total expected resources to force aggregation for testing.
             //requestOptions.qs.limit = 1;
-            total = void 0, offset = 0;
+            offset = 0;
 
-            makeRequest = function () {
-              var _ref2 = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee(request, requestOptions) {
-                var trace = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : {};
-                var nextTrace, response, nextResponse, items;
+            makeRequest =
+            /*#__PURE__*/
+            function () {
+              var _ref2 = _asyncToGenerator(
+              /*#__PURE__*/
+              regeneratorRuntime.mark(function _callee(request, requestOptions) {
+                var trace,
+                    nextTrace,
+                    response,
+                    nextResponse,
+                    items,
+                    _args = arguments;
                 return regeneratorRuntime.wrap(function _callee$(_context) {
                   while (1) {
                     switch (_context.prev = _context.next) {
                       case 0:
+                        trace = _args.length > 2 && _args[2] !== undefined ? _args[2] : {};
                         nextTrace = generateNewMetaData(trace);
-
                         addRequestTrace(requestOptions, nextTrace);
-                        _context.next = 4;
+                        _context.next = 5;
                         return request(requestOptions);
 
-                      case 4:
+                      case 5:
                         response = _context.sent;
-
                         total = response.metadata.total;
                         offset = response.metadata.offset + response.metadata.count;
 
                         if (!(total > offset)) {
-                          _context.next = 21;
+                          _context.next = 22;
                           break;
                         }
 
                         requestOptions.qs.offset = offset;
-                        _context.next = 11;
+                        _context.next = 12;
                         return makeRequest(request, requestOptions);
 
-                      case 11:
+                      case 12:
                         nextResponse = _context.sent;
                         items = response.items.concat(nextResponse.items);
-
                         response.items = items;
                         response.metadata.offset = 0;
                         response.metadata.count = total;
                         response.metadata.limit = total;
                         delete response.links; //the links are invalid now
-                        return _context.abrupt("return", response);
 
-                      case 21:
                         return _context.abrupt("return", response);
 
                       case 22:
+                        return _context.abrupt("return", response);
+
+                      case 23:
                       case "end":
                         return _context.stop();
                     }
                   }
-                }, _callee, undefined);
+                }, _callee, this);
               }));
 
-              return function makeRequest(_x12, _x13) {
+              return function makeRequest(_x3, _x4) {
                 return _ref2.apply(this, arguments);
               };
             }();
 
-            _context2.next = 4;
+            _context2.next = 5;
             return makeRequest(request, requestOptions, trace);
 
-          case 4:
+          case 5:
             return _context2.abrupt("return", _context2.sent);
 
-          case 5:
+          case 6:
           case "end":
             return _context2.stop();
         }
       }
-    }, _callee2, undefined);
+    }, _callee2, this);
   }));
 
-  return function aggregate(_x9, _x10) {
+  return function aggregate(_x, _x2) {
     return _ref.apply(this, arguments);
   };
 }();
-
 /**
  * @description Returns true is window is found and sets sdk namespace if needed.
  *
  * @returns
  */
+
+
 var isBrowser = function isBrowser() {
   if (typeof window === "undefined") {
     return false;
@@ -324,45 +639,42 @@ var isBrowser = function isBrowser() {
     if (!window.hasOwnProperty("s2sJsMsSdk")) {
       window.s2sJsMsSdk = {};
     }
+
     return true;
   }
 };
 
 var addRequestTrace = function addRequestTrace(request) {
   var trace = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
-
   //defaults to "trace" if MS_LOGLEVEL is undefined.
-  logger.setLevel(getLogLevel());
-  //defaults to "false" if MS_LOGPRETTY is undefined.
+  logger.setLevel(getLogLevel()); //defaults to "false" if MS_LOGPRETTY is undefined.
+
   logger.setPretty(getLogPretty());
-
   var headerKeys = ["id", "trace", "parent"];
-
   headerKeys.forEach(function (keyName) {
-    if ((typeof trace === "undefined" ? "undefined" : _typeof(trace)) === "object" && trace.hasOwnProperty(keyName)) {
-      request.headers[keyName] = trace[keyName];
-      //logger.debug(`Found Trace ${keyName}: ${request.headers[keyName]}`);
+    if (_typeof(trace) === "object" && trace.hasOwnProperty(keyName)) {
+      request.headers[keyName] = trace[keyName]; //logger.debug(`Found Trace ${keyName}: ${request.headers[keyName]}`);
     } else {
-      request.headers[keyName] = uuidv4();
-      //logger.debug(`Assigning Trace ${keyName}: ${request.headers[keyName]}`);
+      request.headers[keyName] = uuidv4(); //logger.debug(`Assigning Trace ${keyName}: ${request.headers[keyName]}`);
     }
   });
-  if ((typeof trace === "undefined" ? "undefined" : _typeof(trace)) === "object" && trace.hasOwnProperty("debug")) {
+
+  if (_typeof(trace) === "object" && trace.hasOwnProperty("debug")) {
     request.headers["debug"] = trace["debug"];
   } else if (config.msDebug) {
     request.headers["debug"] = true;
   } else {
     request.headers["debug"] = false;
   }
-  logger.trace("Microservice Request " + request.method + ": " + request.uri, request.headers);
 
+  logger.trace("Microservice Request ".concat(request.method, ": ").concat(request.uri), request.headers);
   return request;
 };
 
 var generateNewMetaData = function generateNewMetaData() {
   var oldMetaData = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
-
   var rObject = {};
+
   if (oldMetaData.hasOwnProperty("id")) {
     rObject.parent = oldMetaData.id;
   }
@@ -382,24 +694,25 @@ var generateNewMetaData = function generateNewMetaData() {
   }
 
   rObject.id = uuidv4();
-
   return rObject;
 };
-
 /**
  *
  * @description This function sets the log level. Disabled in browsers.
  * @param {string} logLevel
  */
+
+
 var setLogLevel = function setLogLevel(logLevel) {
   isBrowser() ? window.s2sJsMsSdk.MS_LOGLEVEL = "silent" : process.env.MS_LOGLEVEL = logLevel;
 };
-
 /**
  *
  * @description - This function retreives the currently configured log level. "silent" in browsers.
  * @returns {string} - log level.
  */
+
+
 var getLogLevel = function getLogLevel() {
   if (isBrowser()) {
     //winston logger is not configured to run in browser
@@ -407,23 +720,26 @@ var getLogLevel = function getLogLevel() {
   } else if (!process.env.hasOwnProperty("MS_LOGLEVEL")) {
     setLogLevel(config.logLevel);
   }
+
   return process.env.MS_LOGLEVEL;
 };
-
 /**
  *
  * @description This function sets the log level. Disabled in browsers.
  * @param {string} logLevel
  */
+
+
 var setLogPretty = function setLogPretty(isPretty) {
   isBrowser() ? window.s2sJsMsSdk.MS_LOGPRETTY = isPretty : process.env.MS_LOGPRETY = isPretty;
 };
-
 /**
  *
  * @description - This function retreives the currently configured log level. "silent" in browsers.
  * @returns {string} - log level.
  */
+
+
 var getLogPretty = function getLogPretty() {
   if (isBrowser()) {
     //winston logger is not configured to run in browser
@@ -431,6 +747,7 @@ var getLogPretty = function getLogPretty() {
   } else if (!process.env.hasOwnProperty("MS_LOGPRETTY")) {
     setLogPretty(config.logPretty);
   }
+
   return !process.env.MS_LOGPRETTY || process.env.MS_LOGPRETTY === "false" ? false : true;
 };
 
@@ -441,11 +758,16 @@ module.exports = {
   config: config,
   replaceVariables: replaceVariables,
   createUUID: createUUID,
-  aggregate: aggregate, //TODO Unit test 9/27/18 nh
-  filterResponse: filterResponse, //TODO Unit test 9/27/18 nh
-  paginate: paginate, //TODO Unit test 9/27/18 nh
-  isBrowser: isBrowser, //TODO Unit test 10/05/18 nh
-  addRequestTrace: addRequestTrace, //TODO Unit test 10/10/18 nh
+  aggregate: aggregate,
+  //TODO Unit test 9/27/18 nh
+  filterResponse: filterResponse,
+  //TODO Unit test 9/27/18 nh
+  paginate: paginate,
+  //TODO Unit test 9/27/18 nh
+  isBrowser: isBrowser,
+  //TODO Unit test 10/05/18 nh
+  addRequestTrace: addRequestTrace,
+  //TODO Unit test 10/10/18 nh
   generateNewMetaData: generateNewMetaData,
   setLogLevel: setLogLevel,
   getLogLevel: getLogLevel,
