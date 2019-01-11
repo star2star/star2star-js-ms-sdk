@@ -409,10 +409,7 @@ var getConversationUuid = function getConversationUuid(accessToken, userUuid, to
  * @param {string} [conversationUUID="null conversationUUID"] - conversation uuid
  * @param {string} [fromPhoneNumber="null fromPhoneNumber"] - sender phone number
  * @param {string} [channel="sms"] - channel (sms or mms)
- * @param {string} [content={
- *     "type": "text",
- *     "body": "null body"
- *   }] - message to be sent
+ * @param {array} [content=[]] - array of content objects
  * @param {object} [trace={}] - optional microservice lifecycle headers
  * @returns {Promise<object>} - promise resolving to a message confirmation object
  */
@@ -444,19 +441,13 @@ function () {
             conversationUUID = _args2.length > 2 && _args2[2] !== undefined ? _args2[2] : "null conversationUUID";
             fromPhoneNumber = _args2.length > 3 && _args2[3] !== undefined ? _args2[3] : "null fromPhoneNumber";
             channel = _args2.length > 4 && _args2[4] !== undefined ? _args2[4] : "sms";
-            content = _args2.length > 5 && _args2[5] !== undefined ? _args2[5] : {
-              "type": "text",
-              "body": "null body"
-            };
+            content = _args2.length > 5 && _args2[5] !== undefined ? _args2[5] : [];
             trace = _args2.length > 6 && _args2[6] !== undefined ? _args2[6] : {};
             objectBody = {
               to: conversationUUID,
               from: fromPhoneNumber,
               channel: channel,
-              content: [{
-                type: content.hasOwnProperty("type") ? content.type : "text",
-                body: content.hasOwnProperty("body") ? content.body : ""
-              }]
+              content: content
             };
             MS = util.getEndpoint("Messaging");
             requestOptions = {

@@ -5,7 +5,7 @@ const Util = require("./utilities");
 const request = require("request-promise");
 const objectMerge = require("object-merge");
 const ResourceGroups = require("./resourceGroups");
-import Logger from "../src/node-logger";
+import Logger from "./node-logger";
 const logger = new Logger();
 logger.setLevel(Util.getLogLevel());
 logger.setPretty(Util.getLogPretty());

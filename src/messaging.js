@@ -91,10 +91,7 @@ const getConversationUuid = (
  * @param {string} [conversationUUID="null conversationUUID"] - conversation uuid
  * @param {string} [fromPhoneNumber="null fromPhoneNumber"] - sender phone number
  * @param {string} [channel="sms"] - channel (sms or mms)
- * @param {string} [content={
- *     "type": "text",
- *     "body": "null body"
- *   }] - message to be sent
+ * @param {array} [content=[]] - array of content objects
  * @param {object} [trace={}] - optional microservice lifecycle headers
  * @returns {Promise<object>} - promise resolving to a message confirmation object
  */
@@ -104,22 +101,14 @@ const sendMessage = async (
   conversationUUID = "null conversationUUID",
   fromPhoneNumber = "null fromPhoneNumber",
   channel = "sms",
-  content = {
-    "type": "text",
-    "body": "null body"
-  },
+  content = [],
   trace = {}
 ) => {
   const objectBody = {
     to: conversationUUID,
     from: fromPhoneNumber,
     channel: channel,
-    content: [
-      {
-        type: content.hasOwnProperty("type") ? content.type: "text",
-        body: content.hasOwnProperty("body") ? content.body : ""
-      }
-    ]
+    content: content
   };
   const MS = util.getEndpoint("Messaging");
   const requestOptions = {

@@ -291,7 +291,7 @@ require("core-js/modules/web.dom.iterable");
 
 require("regenerator-runtime/runtime");
 
-var _nodeLogger = _interopRequireDefault(require("../src/node-logger"));
+var _nodeLogger = _interopRequireDefault(require("./node-logger"));
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
