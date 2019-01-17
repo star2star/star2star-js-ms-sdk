@@ -311,7 +311,7 @@ var getMediaFileUrl = function getMediaFileUrl() {
   var MS = util.getEndpoint("media");
   var requestOptions = {
     method: "GET",
-    uri: "".concat(MS, "/").concat(fileUUID),
+    uri: "".concat(MS, "/media/").concat(fileUUID),
     headers: {
       "Content-type": "application/json",
       Authorization: "Bearer ".concat(accessToken),

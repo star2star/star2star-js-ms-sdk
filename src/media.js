@@ -21,7 +21,7 @@ const getMediaFileUrl = (
 
   const requestOptions = {
     method: "GET",
-    uri: `${MS}/${fileUUID}`,
+    uri: `${MS}/media/${fileUUID}`,
     headers: {
       "Content-type": "application/json",
       Authorization: `Bearer ${accessToken}`,
