@@ -64,6 +64,7 @@ require("babel-polyfill");
 [Please click here for our documentation pages.](https://star2star.github.io/star2star-js-ms-sdk/ "Star2Star Micro Service SDK Documentation")
 
 ## Changes
+* 2.2.36 - Get single subscription
 * 2.2.35 - Fix bug in media service 
 * 2.2.34 - Fix build bug
 * 2.2.33 - Fix path bug and sendMessage content

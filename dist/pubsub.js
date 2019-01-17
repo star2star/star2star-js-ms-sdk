@@ -296,65 +296,6 @@ var request = require("request-promise");
 var util = require("./utilities");
 /**
  * @async
- * @description This function will ask the cpaas pubsub service for the list of user's subscriptions.
- * @param {string} [user_uuid="no user uuid provided"] - uuid for a star2star user
- * @param {string} [accessToken="null accessToken"] - access token for cpaas systems
- * @param {object} [trace = {}] - optional microservice lifecycle trace headers
- * @returns {Promise<object>} - Promise resolving to a data object containing a list of subscriptions for this user
- */
-
-
-var listUserSubscriptions = function listUserSubscriptions() {
-  var user_uuid = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : "no user uuid provided";
-  var accessToken = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : "null accessToken";
-  var trace = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : {};
-  var MS = util.getEndpoint("pubsub");
-  var requestOptions = {
-    method: "GET",
-    uri: "".concat(MS, "/subscriptions"),
-    headers: {
-      Authorization: "Bearer ".concat(accessToken),
-      "Content-type": "application/json",
-      "x-api-version": "".concat(util.getVersion())
-    },
-    qs: {
-      user_uuid: user_uuid
-    },
-    json: true
-  };
-  util.addRequestTrace(requestOptions, trace);
-  return request(requestOptions);
-};
-/**
- * @async
- * @description This function will delete a user subscriptions based on subscription id.
- * @param {string} [subscription_uuid="no subscription uuid provided"] - uuid for a star2star user
- * @param {string} [accessToken="null accessToken"] - access token for cpaas systems
- * @param {object} [trace = {}] - optional microservice lifecycle trace headers
- * @returns {Promise<empty>} - Promise resolving success or failure.
- */
-
-
-var deleteSubscription = function deleteSubscription() {
-  var subscription_uuid = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : "no subscription uuid provided";
-  var accessToken = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : "null accessToken";
-  var trace = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : {};
-  var MS = util.getEndpoint("pubsub");
-  var requestOptions = {
-    method: "DELETE",
-    uri: "".concat(MS, "/subscriptions/").concat(subscription_uuid),
-    headers: {
-      Authorization: "Bearer ".concat(accessToken),
-      "Content-type": "application/json",
-      "x-api-version": "".concat(util.getVersion())
-    },
-    json: true
-  };
-  util.addRequestTrace(requestOptions, trace);
-  return request(requestOptions);
-};
-/**
- * @async
  * @description This function will add a subscription.
  * @param {string} [user_uuid="no user uuid provided"] - uuid for a star2star user
  * @param {string} [account_uuid="account uuid not provided "] - account to subscribe to
@@ -401,9 +342,97 @@ var addSubscription = function addSubscription() {
   util.addRequestTrace(requestOptions, trace);
   return request(requestOptions);
 };
+/**
+ * @async
+ * @description This function will delete a user subscriptions based on subscription id.
+ * @param {string} [subscription_uuid="no subscription uuid provided"] - uuid for a star2star user
+ * @param {string} [accessToken="null accessToken"] - access token for cpaas systems
+ * @param {object} [trace = {}] - optional microservice lifecycle trace headers
+ * @returns {Promise<empty>} - Promise resolving success or failure.
+ */
+
+
+var deleteSubscription = function deleteSubscription() {
+  var subscription_uuid = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : "no subscription uuid provided";
+  var accessToken = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : "null accessToken";
+  var trace = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : {};
+  var MS = util.getEndpoint("pubsub");
+  var requestOptions = {
+    method: "DELETE",
+    uri: "".concat(MS, "/subscriptions/").concat(subscription_uuid),
+    headers: {
+      Authorization: "Bearer ".concat(accessToken),
+      "Content-type": "application/json",
+      "x-api-version": "".concat(util.getVersion())
+    },
+    json: true
+  };
+  util.addRequestTrace(requestOptions, trace);
+  return request(requestOptions);
+};
+/**
+ * @async
+ * @description This function will get a user subscription based on subscription id.
+ * @param {string} [subscription_uuid="no subscription uuid provided"] - uuid for a star2star user
+ * @param {string} [accessToken="null accessToken"] - access token for cpaas systems
+ * @param {object} [trace = {}] - optional microservice lifecycle trace headers
+ * @returns {Promise<empty>} - Promise resolving success or failure.
+ */
+
+
+var getSubscription = function getSubscription() {
+  var subscription_uuid = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : "no subscription uuid provided";
+  var accessToken = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : "null accessToken";
+  var trace = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : {};
+  var MS = util.getEndpoint("pubsub");
+  var requestOptions = {
+    method: "GET",
+    uri: "".concat(MS, "/subscriptions/").concat(subscription_uuid),
+    headers: {
+      Authorization: "Bearer ".concat(accessToken),
+      "Content-type": "application/json",
+      "x-api-version": "".concat(util.getVersion())
+    },
+    json: true
+  };
+  util.addRequestTrace(requestOptions, trace);
+  return request(requestOptions);
+};
+/**
+ * @async
+ * @description This function will ask the cpaas pubsub service for the list of user's subscriptions.
+ * @param {string} [user_uuid="no user uuid provided"] - uuid for a star2star user
+ * @param {string} [accessToken="null accessToken"] - access token for cpaas systems
+ * @param {object} [trace = {}] - optional microservice lifecycle trace headers
+ * @returns {Promise<object>} - Promise resolving to a data object containing a list of subscriptions for this user
+ */
+
+
+var listUserSubscriptions = function listUserSubscriptions() {
+  var user_uuid = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : "no user uuid provided";
+  var accessToken = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : "null accessToken";
+  var trace = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : {};
+  var MS = util.getEndpoint("pubsub");
+  var requestOptions = {
+    method: "GET",
+    uri: "".concat(MS, "/subscriptions"),
+    headers: {
+      Authorization: "Bearer ".concat(accessToken),
+      "Content-type": "application/json",
+      "x-api-version": "".concat(util.getVersion())
+    },
+    qs: {
+      user_uuid: user_uuid
+    },
+    json: true
+  };
+  util.addRequestTrace(requestOptions, trace);
+  return request(requestOptions);
+};
 
 module.exports = {
-  listUserSubscriptions: listUserSubscriptions,
+  addSubscription: addSubscription,
   deleteSubscription: deleteSubscription,
-  addSubscription: addSubscription
+  getSubscription: getSubscription,
+  listUserSubscriptions: listUserSubscriptions
 };

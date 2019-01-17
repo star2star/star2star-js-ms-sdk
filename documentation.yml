@@ -146,6 +146,7 @@ toc:
     children: 
       - addSubscription
       - deleteSubscription
+      - getSubscription
       - listUserSubscriptions
   - name: Resource Groups
     children:
