@@ -543,29 +543,61 @@ var getDataObjectByType = function getDataObjectByType() {
  */
 
 
-var getDataObjectByTypeAndName = function getDataObjectByTypeAndName() {
-  var userUUID = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : "null user uuid";
-  var accessToken = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : "null accessToken";
-  var dataObjectType = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : "data_object";
-  var dataObjectName = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : "noName";
-  var offset = arguments.length > 4 && arguments[4] !== undefined ? arguments[4] : 0;
-  var limit = arguments.length > 5 && arguments[5] !== undefined ? arguments[5] : 10;
-  var loadContent = arguments.length > 6 && arguments[6] !== undefined ? arguments[6] : "false";
-  var trace = arguments.length > 7 && arguments[7] !== undefined ? arguments[7] : {};
-  var MS = Util.getEndpoint("objects");
-  var requestOptions = {
-    method: "GET",
-    uri: "".concat(MS, "/users/").concat(userUUID, "/allowed-objects?type=").concat(dataObjectType, "&load_content=").concat(loadContent, "&name=").concat(dataObjectName, "&offset=").concat(offset, "&limit=").concat(limit),
-    headers: {
-      Authorization: "Bearer ".concat(accessToken),
-      "Content-type": "application/json",
-      "x-api-version": "".concat(Util.getVersion())
-    },
-    json: true
+var getDataObjectByTypeAndName =
+/*#__PURE__*/
+function () {
+  var _ref2 = _asyncToGenerator(
+  /*#__PURE__*/
+  regeneratorRuntime.mark(function _callee2() {
+    var userUUID,
+        accessToken,
+        dataObjectType,
+        dataObjectName,
+        offset,
+        limit,
+        loadContent,
+        trace,
+        MS,
+        requestOptions,
+        _args2 = arguments;
+    return regeneratorRuntime.wrap(function _callee2$(_context2) {
+      while (1) {
+        switch (_context2.prev = _context2.next) {
+          case 0:
+            userUUID = _args2.length > 0 && _args2[0] !== undefined ? _args2[0] : "null user uuid";
+            accessToken = _args2.length > 1 && _args2[1] !== undefined ? _args2[1] : "null accessToken";
+            dataObjectType = _args2.length > 2 && _args2[2] !== undefined ? _args2[2] : "data_object";
+            dataObjectName = _args2.length > 3 && _args2[3] !== undefined ? _args2[3] : "noName";
+            offset = _args2.length > 4 && _args2[4] !== undefined ? _args2[4] : 0;
+            limit = _args2.length > 5 && _args2[5] !== undefined ? _args2[5] : 10;
+            loadContent = _args2.length > 6 && _args2[6] !== undefined ? _args2[6] : "false";
+            trace = _args2.length > 7 && _args2[7] !== undefined ? _args2[7] : {};
+            MS = Util.getEndpoint("objects");
+            requestOptions = {
+              method: "GET",
+              uri: "".concat(MS, "/users/").concat(userUUID, "/allowed-objects?type=").concat(dataObjectType, "&load_content=").concat(loadContent, "&name=").concat(dataObjectName, "&offset=").concat(offset, "&limit=").concat(limit),
+              headers: {
+                Authorization: "Bearer ".concat(accessToken),
+                "Content-type": "application/json",
+                "x-api-version": "".concat(Util.getVersion())
+              },
+              json: true
+            };
+            Util.addRequestTrace(requestOptions, trace);
+            return _context2.abrupt("return", request(requestOptions));
+
+          case 12:
+          case "end":
+            return _context2.stop();
+        }
+      }
+    }, _callee2, this);
+  }));
+
+  return function getDataObjectByTypeAndName() {
+    return _ref2.apply(this, arguments);
   };
-  Util.addRequestTrace(requestOptions, trace);
-  return request(requestOptions);
-};
+}();
 /**
  * @async
  * @description This function will ask the cpaas data object service for a specific object.
@@ -587,7 +619,8 @@ var getDataObject = function getDataObject() {
     headers: {
       Authorization: "Bearer ".concat(accessToken),
       "Content-type": "application/json",
-      "x-api-version": "".concat(Util.getVersion())
+      "x-api-version": "".concat(Util.getVersion()),
+      "cache-contro": "no-cache"
     },
     json: true
   };
@@ -613,9 +646,9 @@ var getDataObject = function getDataObject() {
 var createUserDataObject =
 /*#__PURE__*/
 function () {
-  var _ref2 = _asyncToGenerator(
+  var _ref3 = _asyncToGenerator(
   /*#__PURE__*/
-  regeneratorRuntime.mark(function _callee2() {
+  regeneratorRuntime.mark(function _callee3() {
     var userUUID,
         accessToken,
         objectName,
@@ -631,20 +664,20 @@ function () {
         requestOptions,
         newObject,
         nextTrace,
-        _args2 = arguments;
-    return regeneratorRuntime.wrap(function _callee2$(_context2) {
+        _args3 = arguments;
+    return regeneratorRuntime.wrap(function _callee3$(_context3) {
       while (1) {
-        switch (_context2.prev = _context2.next) {
+        switch (_context3.prev = _context3.next) {
           case 0:
-            userUUID = _args2.length > 0 && _args2[0] !== undefined ? _args2[0] : "null user uuid";
-            accessToken = _args2.length > 1 && _args2[1] !== undefined ? _args2[1] : "null accessToken";
-            objectName = _args2.length > 2 ? _args2[2] : undefined;
-            objectType = _args2.length > 3 ? _args2[3] : undefined;
-            objectDescription = _args2.length > 4 ? _args2[4] : undefined;
-            content = _args2.length > 5 && _args2[5] !== undefined ? _args2[5] : {};
-            accountUUID = _args2.length > 6 && _args2[6] !== undefined ? _args2[6] : undefined;
-            users = _args2.length > 7 && _args2[7] !== undefined ? _args2[7] : undefined;
-            trace = _args2.length > 8 && _args2[8] !== undefined ? _args2[8] : {};
+            userUUID = _args3.length > 0 && _args3[0] !== undefined ? _args3[0] : "null user uuid";
+            accessToken = _args3.length > 1 && _args3[1] !== undefined ? _args3[1] : "null accessToken";
+            objectName = _args3.length > 2 ? _args3[2] : undefined;
+            objectType = _args3.length > 3 ? _args3[3] : undefined;
+            objectDescription = _args3.length > 4 ? _args3[4] : undefined;
+            content = _args3.length > 5 && _args3[5] !== undefined ? _args3[5] : {};
+            accountUUID = _args3.length > 6 && _args3[6] !== undefined ? _args3[6] : undefined;
+            users = _args3.length > 7 && _args3[7] !== undefined ? _args3[7] : undefined;
+            trace = _args3.length > 8 && _args3[8] !== undefined ? _args3[8] : {};
             MS = Util.getEndpoint("objects");
             msDelay = Util.config.msDelay;
             body = {
@@ -668,43 +701,42 @@ function () {
             Util.addRequestTrace(requestOptions, trace); //create the object first
 
             nextTrace = objectMerge({}, trace);
-            _context2.prev = 15;
-            _context2.next = 18;
-            return new Promise(function (resolve) {
-              return setTimeout(resolve, Util.config.msDelay);
-            });
-
-          case 18:
-            _context2.next = 20;
+            _context3.prev = 15;
+            _context3.next = 18;
             return request(requestOptions);
 
-          case 20:
-            newObject = _context2.sent;
+          case 18:
+            newObject = _context3.sent;
+            _context3.next = 21;
+            return Util.pendingResource(function () {
+              return getDataObject(accessToken, newObject.uuid, nextTrace);
+            }, newObject.hasOwnProperty("resource_status") ? newObject.resource_status : "ready");
 
+          case 21:
             if (!(accountUUID && users && _typeof(users) === "object")) {
-              _context2.next = 25;
+              _context3.next = 25;
               break;
             }
 
             nextTrace = objectMerge({}, nextTrace, Util.generateNewMetaData(nextTrace));
-            _context2.next = 25;
+            _context3.next = 25;
             return ResourceGroups.createResourceGroups(accessToken, accountUUID, newObject.uuid, "object", //system role type
             users, nextTrace);
 
           case 25:
-            return _context2.abrupt("return", newObject);
+            return _context3.abrupt("return", newObject);
 
           case 28:
-            _context2.prev = 28;
-            _context2.t0 = _context2["catch"](15);
+            _context3.prev = 28;
+            _context3.t0 = _context3["catch"](15);
 
             if (!(newObject && newObject.hasOwnProperty("uuid"))) {
-              _context2.next = 45;
+              _context3.next = 45;
               break;
             }
 
-            _context2.prev = 31;
-            _context2.next = 34;
+            _context3.prev = 31;
+            _context3.next = 34;
             return new Promise(function (resolve) {
               return setTimeout(resolve, msDelay);
             });
@@ -712,39 +744,39 @@ function () {
           case 34:
             //this is to allow microservices time ack the new group before deleting.
             nextTrace = objectMerge({}, nextTrace, Util.generateNewMetaData(nextTrace));
-            _context2.next = 37;
+            _context3.next = 37;
             return deleteDataObject(accessToken, newObject.uuid, nextTrace);
 
           case 37:
-            return _context2.abrupt("return", Promise.reject(_context2.t0));
+            return _context3.abrupt("return", Promise.reject(_context3.t0));
 
           case 40:
-            _context2.prev = 40;
-            _context2.t1 = _context2["catch"](31);
-            return _context2.abrupt("return", Promise.reject({
+            _context3.prev = 40;
+            _context3.t1 = _context3["catch"](31);
+            return _context3.abrupt("return", Promise.reject({
               errors: {
-                create: _context2.t0,
-                cleanup: _context2.t1
+                create: _context3.t0,
+                cleanup: _context3.t1
               }
             }));
 
           case 43:
-            _context2.next = 46;
+            _context3.next = 46;
             break;
 
           case 45:
-            return _context2.abrupt("return", Promise.reject(_context2.t0));
+            return _context3.abrupt("return", Promise.reject(_context3.t0));
 
           case 46:
           case "end":
-            return _context2.stop();
+            return _context3.stop();
         }
       }
-    }, _callee2, this, [[15, 28], [31, 40]]);
+    }, _callee3, this, [[15, 28], [31, 40]]);
   }));
 
   return function createUserDataObject() {
-    return _ref2.apply(this, arguments);
+    return _ref3.apply(this, arguments);
   };
 }();
 /**
@@ -760,41 +792,84 @@ function () {
  */
 
 
-var createDataObject = function createDataObject() {
-  var accessToken = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : "null accessToken";
-  var objectName = arguments.length > 1 ? arguments[1] : undefined;
-  var objectType = arguments.length > 2 ? arguments[2] : undefined;
-  var objectDescription = arguments.length > 3 ? arguments[3] : undefined;
-  var content = arguments.length > 4 && arguments[4] !== undefined ? arguments[4] : {};
-  var trace = arguments.length > 5 && arguments[5] !== undefined ? arguments[5] : {};
-  var MS = Util.getEndpoint("objects");
-  var b = {
-    name: objectName,
-    type: objectType,
-    description: objectDescription,
-    content_type: "application/json",
-    content: content
-  }; //console.log('bbbbbbbb', b)
+var createDataObject =
+/*#__PURE__*/
+function () {
+  var _ref4 = _asyncToGenerator(
+  /*#__PURE__*/
+  regeneratorRuntime.mark(function _callee4() {
+    var accessToken,
+        objectName,
+        objectType,
+        objectDescription,
+        content,
+        trace,
+        MS,
+        b,
+        requestOptions,
+        newObject,
+        _args4 = arguments;
+    return regeneratorRuntime.wrap(function _callee4$(_context4) {
+      while (1) {
+        switch (_context4.prev = _context4.next) {
+          case 0:
+            accessToken = _args4.length > 0 && _args4[0] !== undefined ? _args4[0] : "null accessToken";
+            objectName = _args4.length > 1 ? _args4[1] : undefined;
+            objectType = _args4.length > 2 ? _args4[2] : undefined;
+            objectDescription = _args4.length > 3 ? _args4[3] : undefined;
+            content = _args4.length > 4 && _args4[4] !== undefined ? _args4[4] : {};
+            trace = _args4.length > 5 && _args4[5] !== undefined ? _args4[5] : {};
+            MS = Util.getEndpoint("objects");
+            b = {
+              name: objectName,
+              type: objectType,
+              description: objectDescription,
+              content_type: "application/json",
+              content: content
+            }; //console.log('bbbbbbbb', b)
 
-  var requestOptions = {
-    method: "POST",
-    uri: "".concat(MS, "/objects"),
-    body: b,
-    headers: {
-      Authorization: "Bearer ".concat(accessToken),
-      "Content-type": "application/json",
-      "x-api-version": "".concat(Util.getVersion())
-    },
-    json: true
+            requestOptions = {
+              method: "POST",
+              uri: "".concat(MS, "/objects"),
+              body: b,
+              headers: {
+                Authorization: "Bearer ".concat(accessToken),
+                "Content-type": "application/json",
+                "x-api-version": "".concat(Util.getVersion())
+              },
+              json: true
+            };
+            Util.addRequestTrace(requestOptions, trace);
+            _context4.next = 12;
+            return request(requestOptions);
+
+          case 12:
+            newObject = _context4.sent;
+            _context4.next = 15;
+            return Util.pendingResource(function () {
+              return getDataObject(accessToken, newObject.uuid, Util.generateNewMetaData(trace));
+            }, newObject.hasOwnProperty("resource_status") ? newObject.resource_status : "ready");
+
+          case 15:
+            return _context4.abrupt("return", newObject);
+
+          case 16:
+          case "end":
+            return _context4.stop();
+        }
+      }
+    }, _callee4, this);
+  }));
+
+  return function createDataObject() {
+    return _ref4.apply(this, arguments);
   };
-  Util.addRequestTrace(requestOptions, trace);
-  return request(requestOptions);
-};
+}();
 /**
  * @async
  * @description This function will delete a data object and any resource groups associated with that object.
  * @param {string} [accessToken="null accessToken"] - accessToken
- * @param {string} [data_uuid="not specified"] - data object UUID
+ * @param {string} [dataUUID="not specified"] - data object UUID
  * @param {object} [trace = {}] - microservice lifecycle trace headers
  * @returns {Promise<object>} Promise resolving to a data object
  */
@@ -803,28 +878,30 @@ var createDataObject = function createDataObject() {
 var deleteDataObject =
 /*#__PURE__*/
 function () {
-  var _ref3 = _asyncToGenerator(
+  var _ref5 = _asyncToGenerator(
   /*#__PURE__*/
-  regeneratorRuntime.mark(function _callee3() {
+  regeneratorRuntime.mark(function _callee5() {
     var accessToken,
-        data_uuid,
+        dataUUID,
         trace,
         MS,
         ResourceGroups,
         requestOptions,
-        _args3 = arguments;
-    return regeneratorRuntime.wrap(function _callee3$(_context3) {
+        nextTrace,
+        response,
+        _args5 = arguments;
+    return regeneratorRuntime.wrap(function _callee5$(_context5) {
       while (1) {
-        switch (_context3.prev = _context3.next) {
+        switch (_context5.prev = _context5.next) {
           case 0:
-            accessToken = _args3.length > 0 && _args3[0] !== undefined ? _args3[0] : "null accessToken";
-            data_uuid = _args3.length > 1 && _args3[1] !== undefined ? _args3[1] : "not specified";
-            trace = _args3.length > 2 && _args3[2] !== undefined ? _args3[2] : {};
+            accessToken = _args5.length > 0 && _args5[0] !== undefined ? _args5[0] : "null accessToken";
+            dataUUID = _args5.length > 1 && _args5[1] !== undefined ? _args5[1] : "null dataUUID";
+            trace = _args5.length > 2 && _args5[2] !== undefined ? _args5[2] : {};
             MS = Util.getEndpoint("objects");
             ResourceGroups = require("./resourceGroups");
             requestOptions = {
               method: "DELETE",
-              uri: "".concat(MS, "/objects/").concat(data_uuid),
+              uri: "".concat(MS, "/objects/").concat(dataUUID),
               headers: {
                 Authorization: "Bearer ".concat(accessToken),
                 "Content-type": "application/json",
@@ -834,34 +911,38 @@ function () {
               resolveWithFullResponse: true
             };
             Util.addRequestTrace(requestOptions, trace);
-            _context3.next = 9;
-            return new Promise(function (resolve) {
-              return setTimeout(resolve, Util.config.msDelay);
-            });
+            nextTrace = objectMerge({}, trace, Util.generateNewMetaData(trace));
+            _context5.next = 10;
+            return ResourceGroups.cleanUpResourceGroups(accessToken, dataUUID, nextTrace);
 
-          case 9:
-            _context3.next = 11;
-            return ResourceGroups.cleanUpResourceGroups(accessToken, data_uuid, Util.generateNewMetaData(trace));
-
-          case 11:
-            _context3.next = 13;
+          case 10:
+            _context5.next = 12;
             return request(requestOptions);
 
-          case 13:
-            return _context3.abrupt("return", Promise.resolve({
+          case 12:
+            response = _context5.sent;
+            // create returns a 202....suspend return until the new resource is ready
+            nextTrace = objectMerge({}, trace, Util.generateNewMetaData(nextTrace));
+            _context5.next = 16;
+            return Util.pendingResource(function () {
+              return deleteDataObject(accessToken, dataUUID, nextTrace);
+            }, response.hasOwnProperty("resource_status") ? response.resource_status : "deleting");
+
+          case 16:
+            return _context5.abrupt("return", Promise.resolve({
               status: "ok"
             }));
 
-          case 14:
+          case 17:
           case "end":
-            return _context3.stop();
+            return _context5.stop();
         }
       }
-    }, _callee3, this);
+    }, _callee5, this);
   }));
 
   return function deleteDataObject() {
-    return _ref3.apply(this, arguments);
+    return _ref5.apply(this, arguments);
   };
 }();
 /**
@@ -880,9 +961,9 @@ function () {
 var updateDataObject =
 /*#__PURE__*/
 function () {
-  var _ref4 = _asyncToGenerator(
+  var _ref6 = _asyncToGenerator(
   /*#__PURE__*/
-  regeneratorRuntime.mark(function _callee4() {
+  regeneratorRuntime.mark(function _callee6() {
     var accessToken,
         dataUUID,
         body,
@@ -892,17 +973,18 @@ function () {
         MS,
         requestOptions,
         nextTrace,
-        _args4 = arguments;
-    return regeneratorRuntime.wrap(function _callee4$(_context4) {
+        updatedObj,
+        _args6 = arguments;
+    return regeneratorRuntime.wrap(function _callee6$(_context6) {
       while (1) {
-        switch (_context4.prev = _context4.next) {
+        switch (_context6.prev = _context6.next) {
           case 0:
-            accessToken = _args4.length > 0 && _args4[0] !== undefined ? _args4[0] : "null accessToken";
-            dataUUID = _args4.length > 1 && _args4[1] !== undefined ? _args4[1] : "uuid not specified";
-            body = _args4.length > 2 && _args4[2] !== undefined ? _args4[2] : {};
-            accountUUID = _args4.length > 3 && _args4[3] !== undefined ? _args4[3] : undefined;
-            users = _args4.length > 4 && _args4[4] !== undefined ? _args4[4] : undefined;
-            trace = _args4.length > 5 && _args4[5] !== undefined ? _args4[5] : {};
+            accessToken = _args6.length > 0 && _args6[0] !== undefined ? _args6[0] : "null accessToken";
+            dataUUID = _args6.length > 1 && _args6[1] !== undefined ? _args6[1] : "uuid not specified";
+            body = _args6.length > 2 && _args6[2] !== undefined ? _args6[2] : {};
+            accountUUID = _args6.length > 3 && _args6[3] !== undefined ? _args6[3] : undefined;
+            users = _args6.length > 4 && _args6[4] !== undefined ? _args6[4] : undefined;
+            trace = _args6.length > 5 && _args6[5] !== undefined ? _args6[5] : {};
             MS = Util.getEndpoint("objects");
             requestOptions = {
               method: "PUT",
@@ -919,32 +1001,41 @@ function () {
             nextTrace = objectMerge({}, trace);
 
             if (!(accountUUID && users && _typeof(users) === "object")) {
-              _context4.next = 14;
+              _context6.next = 14;
               break;
             }
 
             nextTrace = objectMerge({}, nextTrace, Util.generateNewMetaData(nextTrace));
-            _context4.next = 14;
+            _context6.next = 14;
             return ResourceGroups.updateResourceGroups(accessToken, dataUUID, accountUUID, "object", //specifies the system role to find in config.json
             users, nextTrace);
 
           case 14:
-            _context4.next = 16;
+            _context6.next = 16;
             return request(requestOptions);
 
           case 16:
-            return _context4.abrupt("return", _context4.sent);
+            updatedObj = _context6.sent;
+            // create returns a 202....suspend return until the new resource is ready
+            nextTrace = objectMerge({}, trace, Util.generateNewMetaData(nextTrace));
+            _context6.next = 20;
+            return Util.pendingResource(function () {
+              return getDataObject(accessToken, dataUUID, nextTrace);
+            }, updatedObj.hasOwnProperty("resource_status") ? updatedObj.resource_status : "updating");
 
-          case 17:
+          case 20:
+            return _context6.abrupt("return", updatedObj);
+
+          case 21:
           case "end":
-            return _context4.stop();
+            return _context6.stop();
         }
       }
-    }, _callee4, this);
+    }, _callee6, this);
   }));
 
   return function updateDataObject() {
-    return _ref4.apply(this, arguments);
+    return _ref6.apply(this, arguments);
   };
 }();
 

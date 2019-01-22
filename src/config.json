@@ -35,6 +35,8 @@
     "prod": {}
   },
   "msDelay": 1000,
+  "pollInterval": 1000,
+  "pollTimeout": 9000,
   "logLevel": "trace",
   "logPretty": false,
   "msDebug": false,

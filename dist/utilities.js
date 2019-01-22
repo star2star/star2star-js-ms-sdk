@@ -750,6 +750,118 @@ var getLogPretty = function getLogPretty() {
 
   return !process.env.MS_LOGPRETTY || process.env.MS_LOGPRETTY === "false" ? false : true;
 };
+/**
+ * @async
+ * @description This function takes in a request and polls the microservice until it is ready
+ * @param {function} verifyFunc - function that is used to confirm resource is ready.
+ * @param {string} startingResourceStatus - argument to specify expected resolution or skip polling if ready
+ * @returns {Promise} - Promise resolved when verify func is successful.
+ */
+
+
+var pendingResource =
+/*#__PURE__*/
+function () {
+  var _ref3 = _asyncToGenerator(
+  /*#__PURE__*/
+  regeneratorRuntime.mark(function _callee3(verifyFunc) {
+    var startingResourceStatus,
+        expires,
+        response,
+        _args3 = arguments;
+    return regeneratorRuntime.wrap(function _callee3$(_context3) {
+      while (1) {
+        switch (_context3.prev = _context3.next) {
+          case 0:
+            startingResourceStatus = _args3.length > 1 && _args3[1] !== undefined ? _args3[1] : "ready";
+            _context3.prev = 1;
+            expires = Date.now() + config.pollTimeout;
+
+          case 3:
+            if (!(Date.now() < expires)) {
+              _context3.next = 22;
+              break;
+            }
+
+            _context3.next = 6;
+            return verifyFunc();
+
+          case 6:
+            response = _context3.sent;
+
+            if (!response.hasOwnProperty("resource_status")) {
+              _context3.next = 17;
+              break;
+            }
+
+            _context3.t0 = response.resource_status;
+            _context3.next = _context3.t0 === "new" ? 11 : _context3.t0 === "updating" ? 11 : _context3.t0 === "deleting" ? 11 : _context3.t0 === "ready" ? 12 : _context3.t0 === "not_updated" ? 13 : _context3.t0 === "not_deleted" ? 13 : 14;
+            break;
+
+          case 11:
+            return _context3.abrupt("break", 15);
+
+          case 12:
+            return _context3.abrupt("return", response);
+
+          case 13:
+            throw Error("unable to complete request: ".concat(response.resource_status));
+
+          case 14:
+            throw Error("unrecognized resource_status property: ".concat(response.resource_status, " in response"));
+
+          case 15:
+            _context3.next = 18;
+            break;
+
+          case 17:
+            throw Error("resource_status missing from response");
+
+          case 18:
+            _context3.next = 20;
+            return new Promise(function (resolve) {
+              return setTimeout(resolve, config.pollInterval);
+            });
+
+          case 20:
+            _context3.next = 3;
+            break;
+
+          case 22:
+            throw Error("request timeout");
+
+          case 25:
+            _context3.prev = 25;
+            _context3.t1 = _context3["catch"](1);
+
+            if (!(startingResourceStatus === "deleting" && _context3.t1.hasOwnProperty("statusCode") && _context3.t1.statusCode === 404)) {
+              _context3.next = 30;
+              break;
+            }
+
+            console.log("deleted........", _context3.t1.message);
+            return _context3.abrupt("return", Promise.resolve({
+              "status": "ok"
+            }));
+
+          case 30:
+            return _context3.abrupt("return", Promise.reject({
+              "statusCode": 500,
+              "message": _context3.t1.hasOwnProperty("message") ? _context3.t1.message : _context3.t1
+            }));
+
+          case 31:
+          case "end":
+            return _context3.stop();
+        }
+      }
+    }, _callee3, this, [[1, 25]]);
+  }));
+
+  return function pendingResource(_x5) {
+    return _ref3.apply(this, arguments);
+  };
+}();
 
 module.exports = {
   getEndpoint: getEndpoint,
@@ -772,5 +884,6 @@ module.exports = {
   setLogLevel: setLogLevel,
   getLogLevel: getLogLevel,
   setLogPretty: setLogPretty,
-  getLogPretty: getLogPretty
+  getLogPretty: getLogPretty,
+  pendingResource: pendingResource
 };

@@ -185,7 +185,7 @@ const getDataObjectByType = (
  * @param {object} [trace = {}] - microservice lifecycle trace headers
  * @returns {Promise<array>} Promise resolving to an array of data objects
  */
-const getDataObjectByTypeAndName = (
+const getDataObjectByTypeAndName = async (
   userUUID = "null user uuid",
   accessToken = "null accessToken",
   dataObjectType = "data_object",
@@ -231,7 +231,8 @@ const getDataObject = (
     headers: {
       Authorization: `Bearer ${accessToken}`,
       "Content-type": "application/json",
-      "x-api-version": `${Util.getVersion()}`
+      "x-api-version": `${Util.getVersion()}`,
+      "cache-contro":"no-cache"
     },
     json: true
   };
@@ -290,8 +291,15 @@ const createUserDataObject = async (
   let newObject;
   let nextTrace = objectMerge({}, trace);
   try {
-    await new Promise(resolve => setTimeout(resolve, Util.config.msDelay));
     newObject = await request(requestOptions);
+    // create returns a 202....suspend return until the new resource is ready
+    await Util.pendingResource(
+      function(){
+        return getDataObject(accessToken, newObject.uuid, nextTrace);
+      },
+      newObject.hasOwnProperty("resource_status") ? newObject.resource_status : "ready"
+    );
+    
     //need to create permissions resource groups
     if (
       accountUUID &&
@@ -346,7 +354,7 @@ const createUserDataObject = async (
  * @param {object} [trace = {}] - microservice lifecycle trace headers
  * @returns {Promise<object>} Promise resolving to a data object
  */
-const createDataObject = (
+const createDataObject = async (
   accessToken = "null accessToken",
   objectName,
   objectType,
@@ -376,27 +384,35 @@ const createDataObject = (
     json: true
   };
   Util.addRequestTrace(requestOptions, trace);
-  return request(requestOptions);
+  const newObject = await request(requestOptions);
+  // create returns a 202....suspend return until the new resource is ready
+  await Util.pendingResource(
+    function(){
+      return getDataObject(accessToken, newObject.uuid, Util.generateNewMetaData(trace));
+    },
+    newObject.hasOwnProperty("resource_status") ? newObject.resource_status : "ready"
+  );
+  return newObject;
 };
 
 /**
  * @async
  * @description This function will delete a data object and any resource groups associated with that object.
  * @param {string} [accessToken="null accessToken"] - accessToken
- * @param {string} [data_uuid="not specified"] - data object UUID
+ * @param {string} [dataUUID="not specified"] - data object UUID
  * @param {object} [trace = {}] - microservice lifecycle trace headers
  * @returns {Promise<object>} Promise resolving to a data object
  */
 const deleteDataObject = async (
   accessToken = "null accessToken",
-  data_uuid = "not specified",
+  dataUUID = "null dataUUID",
   trace = {}
 ) => {
   const MS = Util.getEndpoint("objects");
   const ResourceGroups = require("./resourceGroups");
   const requestOptions = {
     method: "DELETE",
-    uri: `${MS}/objects/${data_uuid}`,
+    uri: `${MS}/objects/${dataUUID}`,
     headers: {
       Authorization: `Bearer ${accessToken}`,
       "Content-type": "application/json",
@@ -406,14 +422,22 @@ const deleteDataObject = async (
     resolveWithFullResponse: true
   };
   Util.addRequestTrace(requestOptions, trace);
-
-  await new Promise(resolve => setTimeout(resolve, Util.config.msDelay));
+  let nextTrace = objectMerge({}, trace, Util.generateNewMetaData(trace));
   await ResourceGroups.cleanUpResourceGroups(
     accessToken,
-    data_uuid,
-    Util.generateNewMetaData(trace)
+    dataUUID,
+    nextTrace
   );
-  await request(requestOptions);
+
+  const response = await request(requestOptions);
+  // create returns a 202....suspend return until the new resource is ready
+  nextTrace = objectMerge({}, trace, Util.generateNewMetaData(nextTrace));
+  await Util.pendingResource(
+    function(){
+      return deleteDataObject(accessToken, dataUUID, nextTrace);
+    },
+    response.hasOwnProperty("resource_status") ? response.resource_status : "deleting"
+  );
   return Promise.resolve({ status: "ok" });
 };
 
@@ -465,7 +489,16 @@ const updateDataObject = async (
       nextTrace
     );
   }
-  return await request(requestOptions);
+  const updatedObj =  await request(requestOptions);
+  // create returns a 202....suspend return until the new resource is ready
+  nextTrace = objectMerge({}, trace, Util.generateNewMetaData(nextTrace));
+  await Util.pendingResource(
+    function(){
+      return getDataObject(accessToken, dataUUID, nextTrace);
+    },
+    updatedObj.hasOwnProperty("resource_status") ? updatedObj.resource_status : "updating"
+  );
+  return updatedObj;
 };
 
 module.exports = {

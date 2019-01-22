@@ -208,6 +208,7 @@ toc:
       - getValueFromObjectTree
       - isBrowser
       - paginate
+      - pendingResource
       - replaceStaticValues
       - replaceVariables
       - setLogLevel

@@ -365,6 +365,58 @@ const getLogPretty = () => {
   return !process.env.MS_LOGPRETTY || process.env.MS_LOGPRETTY === "false" ? false : true;
 };
 
+/**
+ * @async
+ * @description This function takes in a request and polls the microservice until it is ready
+ * @param {function} verifyFunc - function that is used to confirm resource is ready.
+ * @param {string} startingResourceStatus - argument to specify expected resolution or skip polling if ready
+ * @returns {Promise} - Promise resolved when verify func is successful.
+ */
+const pendingResource = async (verifyFunc, startingResourceStatus = "ready") => {
+  try {
+    const expires = Date.now() + config.pollTimeout;
+    while (Date.now() < expires) {
+      let response = await verifyFunc();
+      if(response.hasOwnProperty("resource_status")){
+        switch(response.resource_status) {
+        case "new":
+        case "updating":
+        case "deleting":
+          break;
+        case "ready":
+          return response;
+        case "not_updated":
+        case "not_deleted":
+          throw Error(`unable to complete request: ${response.resource_status}`);
+        default:
+          throw Error(`unrecognized resource_status property: ${response.resource_status} in response`);
+        }
+      } else {
+        throw Error("resource_status missing from response");
+      }
+      await new Promise(resolve => setTimeout(resolve, config.pollInterval));
+    }
+    throw Error("request timeout");
+    
+  } catch (error) {
+    // a fetch on an item we are deleting should return a 404 when complete.
+    if(
+      startingResourceStatus === "deleting" &&
+      error.hasOwnProperty("statusCode") &&
+      error.statusCode === 404
+    ){
+      console.log("deleted........", error.message);
+      return Promise.resolve({"status":"ok"});
+    }
+    return Promise.reject(
+      {
+        "statusCode": 500,
+        "message": error.hasOwnProperty("message") ? error.message : error 
+      }
+    );
+  }
+};
+
 module.exports = {
   getEndpoint,
   getAuthHost,
@@ -381,5 +433,6 @@ module.exports = {
   setLogLevel,
   getLogLevel,
   setLogPretty,
-  getLogPretty
+  getLogPretty,
+  pendingResource
 };
