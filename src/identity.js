@@ -263,6 +263,34 @@ const deleteIdentity = async (
 
 /**
  * @async
+ * @description This function returns a single identity object
+ * @param {string} [accessToken="null accessToken"] - cpaas access token
+ * @param {string} [userUuid="null uuid"] - user uuid
+ * @param {objet} [trace={}] - optional microservice lifcycle headers
+ * @returns {Promise} - promise resolving to identity object
+ */
+const getIdentity = (
+  accessToken = "null accessToken",
+  userUuid = "null uuid",
+  trace = {}
+) => {
+  const MS = util.getEndpoint("identity");
+  const requestOptions = {
+    method: "GET",
+    uri: `${MS}/identities/${userUuid}`,
+    headers: {
+      Authorization: `Bearer ${accessToken}`,
+      "Content-type": "application/json",
+      "x-api-version": `${util.getVersion()}`
+    },
+    json: true
+  };
+  util.addRequestTrace(requestOptions, trace);
+  return request(requestOptions);
+};
+
+/**
+ * @async
  * @description This function will call the identity microservice with the credentials and
  * accessToken you passed in.
  * @param {string} [accessToken="null access token"] - access token for cpaas systems
@@ -561,6 +589,7 @@ module.exports = {
   getMyIdentityData,
   listIdentitiesByAccount,
   lookupIdentity,
+  getIdentity,
   getIdentityDetails,
   generatePasswordToken,
   resetPassword,

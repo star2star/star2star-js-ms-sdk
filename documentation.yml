@@ -52,6 +52,7 @@ toc:
     children:
       - createUserContact
       - deleteContact
+      - exportContacts
       - getContacts
       - listContacts
       - updateContact
@@ -78,6 +79,7 @@ toc:
       - deleteIdentity
       - generatePasswordToken
       - getMyIdentityData
+      - getIdentity
       - getIdentityDetails
       - listIdentitiesByAccount
       - login

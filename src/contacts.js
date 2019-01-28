@@ -45,15 +45,61 @@ const createUserContact = (
  * @param {object} [trace = {}] - optional microservice lifecycle trace headers
  * @returns {Promise} - Promise resolving to a data object
  */
-const deleteContact = (
+const deleteContact = async (
   accessToken = "null accessToken",
   contactUUID = "null contact uuid",
   trace = {}
 ) => {
+  try{
+    const MS = util.getEndpoint("contacts");
+    const requestOptions = {
+      method: "DELETE",
+      uri: `${MS}/contacts/${contactUUID}`,
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+        "Content-type": "application/json",
+        "x-api-version": `${util.getVersion()}`
+      },
+      resolveWithFullResponse: true,
+      json: true
+    };
+    util.addRequestTrace(requestOptions, trace);
+    const response = await request(requestOptions);
+    if(response.hasOwnProperty("statusCode") && response.statusCode === 204) {
+      return Promise.resolve({"status": "ok"});
+    }
+    throw response;
+  } catch (error) {
+   return Promise.reject({
+     "statusCode": error.hasOwnProperty("statusCode") ? error.statusCode : 500,
+     //js errors should have a message. non 204 response codes should have a statusMessage
+     "message": error.hasOwnProperty("message") ? error.message : error.statusMessage
+   })
+  }
+  
+};
+
+/**
+ * @async
+ * @description - This function will return 
+ * @param {string} [accessToken="null access token"]
+ * @param {string} [user_uuid="null user uuid"]
+ * @param {*} [trace={}]
+ * @returns
+ */
+const exportContacts = async (
+  accessToken = "null access token",
+  user_uuid = "null user uuid",
+  trace = {}
+) => {
   const MS = util.getEndpoint("contacts");
   const requestOptions = {
-    method: "DELETE",
-    uri: `${MS}/contacts/${contactUUID}`,
+    method: "GET",
+    uri: `${MS}/users/${user_uuid}/contacts`,
+    qs: {
+      "offset": 0,
+      "limit": 999
+    },
     headers: {
       Authorization: `Bearer ${accessToken}`,
       "Content-type": "application/json",
@@ -62,8 +108,10 @@ const deleteContact = (
     json: true
   };
   util.addRequestTrace(requestOptions, trace);
-  return request(requestOptions);
+  const response = await util.aggregate(request, requestOptions, trace);
+  return response;
 };
+
 
 /**
  * @async
@@ -164,6 +212,7 @@ const updateContact = (
 module.exports = {
   createUserContact,
   deleteContact,
+  exportContacts,
   listContacts,
   updateContact
 };

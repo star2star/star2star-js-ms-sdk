@@ -295,6 +295,10 @@ function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { va
 
 function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
 
+function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { Promise.resolve(value).then(_next, _throw); } }
+
+function _asyncToGenerator(fn) { return function () { var self = this, args = arguments; return new Promise(function (resolve, reject) { var gen = fn.apply(self, args); function _next(value) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "next", value); } function _throw(err) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "throw", err); } _next(undefined); }); }; }
+
 var request = require("request-promise");
 
 var util = require("./utilities");
@@ -340,24 +344,144 @@ var createUserContact = function createUserContact() {
  */
 
 
-var deleteContact = function deleteContact() {
-  var accessToken = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : "null accessToken";
-  var contactUUID = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : "null contact uuid";
-  var trace = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : {};
-  var MS = util.getEndpoint("contacts");
-  var requestOptions = {
-    method: "DELETE",
-    uri: "".concat(MS, "/contacts/").concat(contactUUID),
-    headers: {
-      Authorization: "Bearer ".concat(accessToken),
-      "Content-type": "application/json",
-      "x-api-version": "".concat(util.getVersion())
-    },
-    json: true
+var deleteContact =
+/*#__PURE__*/
+function () {
+  var _ref = _asyncToGenerator(
+  /*#__PURE__*/
+  regeneratorRuntime.mark(function _callee() {
+    var accessToken,
+        contactUUID,
+        trace,
+        MS,
+        requestOptions,
+        response,
+        _args = arguments;
+    return regeneratorRuntime.wrap(function _callee$(_context) {
+      while (1) {
+        switch (_context.prev = _context.next) {
+          case 0:
+            accessToken = _args.length > 0 && _args[0] !== undefined ? _args[0] : "null accessToken";
+            contactUUID = _args.length > 1 && _args[1] !== undefined ? _args[1] : "null contact uuid";
+            trace = _args.length > 2 && _args[2] !== undefined ? _args[2] : {};
+            _context.prev = 3;
+            MS = util.getEndpoint("contacts");
+            requestOptions = {
+              method: "DELETE",
+              uri: "".concat(MS, "/contacts/").concat(contactUUID),
+              headers: {
+                Authorization: "Bearer ".concat(accessToken),
+                "Content-type": "application/json",
+                "x-api-version": "".concat(util.getVersion())
+              },
+              resolveWithFullResponse: true,
+              json: true
+            };
+            util.addRequestTrace(requestOptions, trace);
+            _context.next = 9;
+            return request(requestOptions);
+
+          case 9:
+            response = _context.sent;
+
+            if (!(response.hasOwnProperty("statusCode") && response.statusCode === 204)) {
+              _context.next = 12;
+              break;
+            }
+
+            return _context.abrupt("return", Promise.resolve({
+              "status": "ok"
+            }));
+
+          case 12:
+            throw response;
+
+          case 15:
+            _context.prev = 15;
+            _context.t0 = _context["catch"](3);
+            return _context.abrupt("return", Promise.reject({
+              "statusCode": _context.t0.hasOwnProperty("statusCode") ? _context.t0.statusCode : 500,
+              //js errors should have a message. non 204 response codes should have a statusMessage
+              "message": _context.t0.hasOwnProperty("message") ? _context.t0.message : _context.t0.statusMessage
+            }));
+
+          case 18:
+          case "end":
+            return _context.stop();
+        }
+      }
+    }, _callee, this, [[3, 15]]);
+  }));
+
+  return function deleteContact() {
+    return _ref.apply(this, arguments);
   };
-  util.addRequestTrace(requestOptions, trace);
-  return request(requestOptions);
-};
+}();
+/**
+ * @async
+ * @description - This function will return 
+ * @param {string} [accessToken="null access token"]
+ * @param {string} [user_uuid="null user uuid"]
+ * @param {*} [trace={}]
+ * @returns
+ */
+
+
+var exportContacts =
+/*#__PURE__*/
+function () {
+  var _ref2 = _asyncToGenerator(
+  /*#__PURE__*/
+  regeneratorRuntime.mark(function _callee2() {
+    var accessToken,
+        user_uuid,
+        trace,
+        MS,
+        requestOptions,
+        response,
+        _args2 = arguments;
+    return regeneratorRuntime.wrap(function _callee2$(_context2) {
+      while (1) {
+        switch (_context2.prev = _context2.next) {
+          case 0:
+            accessToken = _args2.length > 0 && _args2[0] !== undefined ? _args2[0] : "null access token";
+            user_uuid = _args2.length > 1 && _args2[1] !== undefined ? _args2[1] : "null user uuid";
+            trace = _args2.length > 2 && _args2[2] !== undefined ? _args2[2] : {};
+            MS = util.getEndpoint("contacts");
+            requestOptions = {
+              method: "GET",
+              uri: "".concat(MS, "/users/").concat(user_uuid, "/contacts"),
+              qs: {
+                "offset": 0,
+                "limit": 999
+              },
+              headers: {
+                Authorization: "Bearer ".concat(accessToken),
+                "Content-type": "application/json",
+                "x-api-version": "".concat(util.getVersion())
+              },
+              json: true
+            };
+            util.addRequestTrace(requestOptions, trace);
+            _context2.next = 8;
+            return util.aggregate(request, requestOptions, trace);
+
+          case 8:
+            response = _context2.sent;
+            return _context2.abrupt("return", response);
+
+          case 10:
+          case "end":
+            return _context2.stop();
+        }
+      }
+    }, _callee2, this);
+  }));
+
+  return function exportContacts() {
+    return _ref2.apply(this, arguments);
+  };
+}();
 /**
  * @async
  * @description This function will ask the cpaas contacts service to get user contacts based on input criteria
@@ -454,6 +578,7 @@ var updateContact = function updateContact() {
 module.exports = {
   createUserContact: createUserContact,
   deleteContact: deleteContact,
+  exportContacts: exportContacts,
   listContacts: listContacts,
   updateContact: updateContact
 };

@@ -64,6 +64,9 @@ require("babel-polyfill");
 [Please click here for our documentation pages.](https://star2star.github.io/star2star-js-ms-sdk/ "Star2Star Micro Service SDK Documentation")
 
 ## Changes
+* 3.0.3 - Updates to contacts
+* 3.0.2 - Fix documentation error
+* 3.0.1 - Add get single identity
 * 3.0.0 - Support for async Star2Star Microservices using polling.
 * 2.2.36 - Get single subscription
 * 2.2.35 - Fix bug in media service 
