@@ -400,6 +400,37 @@ var modifyIdentity = function modifyIdentity() {
 };
 /**
  * @async
+ * @description This function updates properties of an identity
+ * @param {string} [accessToken="null accessToken"] - cpaas access token
+ * @param {string} [userUuid="null userUuid"] - user uuid
+ * @param {object} [body="null body"] - property body
+ * @param {object} [trace={}] - optional microservice lifecycle headers
+ * @returns {Promise} - return a promise containing the updataded idenity
+ */
+
+
+var modifyIdentityProps = function modifyIdentityProps() {
+  var accessToken = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : "null accessToken";
+  var userUuid = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : "null userUuid";
+  var body = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : "null body";
+  var trace = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : {};
+  var MS = util.getEndpoint("identity");
+  var requestOptions = {
+    method: "POST",
+    uri: "".concat(MS, "/identities/").concat(userUuid, "/properties/modify"),
+    headers: {
+      Authorization: "Bearer ".concat(accessToken),
+      "Content-type": "application/json",
+      "x-api-version": "".concat(util.getVersion())
+    },
+    body: body,
+    json: true
+  };
+  util.addRequestTrace(requestOptions, trace);
+  return request(requestOptions);
+};
+/**
+ * @async
  * @description This function will deactivate a user/identity.
  * @param {string} [accessToken="null accessToken"]
  * @param {string} [userUuid="null userUuid"]
@@ -1038,6 +1069,7 @@ module.exports = {
   createAlias: createAlias,
   createIdentity: createIdentity,
   modifyIdentity: modifyIdentity,
+  modifyIdentityProps: modifyIdentityProps,
   reactivateIdentity: reactivateIdentity,
   deactivateIdentity: deactivateIdentity,
   updateAliasWithDID: updateAliasWithDID,
