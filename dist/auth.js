@@ -1228,6 +1228,51 @@ var listRoles = function listRoles() {
 };
 /**
  * @async
+ * @description This function lists roles.
+ * @param {string} [accessToken="null accessToken"] - cpaas access token
+ * @param {string} [user_uuid="null user_uuid"] - user_uuid
+ * @param {string} [offset="0"] - pagination offset
+ * @param {string} [limit="10"] - pagination limit
+ * @param {array} [filters=undefined] - array of filter query parameters
+ * @param {object} [trace = {}] - optional microservice lifecycle trace headers
+ * @returns {Promise<object>} - Promise resolving to a data object containing a list of roles
+ */
+
+
+var listRolesForUser = function listRolesForUser() {
+  var accessToken = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : "null accessToken";
+  var user_uuid = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : "null user_uuid";
+  var offset = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : "0";
+  var limit = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : "10";
+  var filters = arguments.length > 4 && arguments[4] !== undefined ? arguments[4] : undefined;
+  var trace = arguments.length > 5 && arguments[5] !== undefined ? arguments[5] : {};
+  var MS = Util.getEndpoint("auth");
+  var requestOptions = {
+    method: "GET",
+    uri: "".concat(MS, "/users/").concat(user_uuid, "/roles"),
+    headers: {
+      Authorization: "Bearer ".concat(accessToken),
+      "Content-type": "application/json",
+      "x-api-version": "".concat(Util.getVersion())
+    },
+    qs: {
+      offset: offset,
+      limit: limit
+    },
+    json: true
+  };
+  Util.addRequestTrace(requestOptions, trace);
+
+  if (filters) {
+    Object.keys(filters).forEach(function (filter) {
+      requestOptions.qs[filter] = filters[filter];
+    });
+  }
+
+  return request(requestOptions);
+};
+/**
+ * @async
  * @description This function lists user groups a role is assigned to.
  * @param {string} [accessToken="null accessToken"] - cpaas access token
  * @param {string} [roleUUID="null roleUUID"] - role uuid
@@ -1429,6 +1474,7 @@ module.exports = {
   listRoleUserGroups: listRoleUserGroups,
   listRolePermissions: listRolePermissions,
   listRoles: listRoles,
+  listRolesForUser: listRolesForUser,
   listUserGroups: listUserGroups,
   modifyRole: modifyRole,
   modifyUserGroup: modifyUserGroup

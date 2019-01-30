@@ -681,6 +681,50 @@ const listRoles = (
 
 /**
  * @async
+ * @description This function lists roles.
+ * @param {string} [accessToken="null accessToken"] - cpaas access token
+ * @param {string} [user_uuid="null user_uuid"] - user_uuid
+ * @param {string} [offset="0"] - pagination offset
+ * @param {string} [limit="10"] - pagination limit
+ * @param {array} [filters=undefined] - array of filter query parameters
+ * @param {object} [trace = {}] - optional microservice lifecycle trace headers
+ * @returns {Promise<object>} - Promise resolving to a data object containing a list of roles
+ */
+const listRolesForUser = (
+  accessToken = "null accessToken",
+  user_uuid = "null user_uuid",
+  offset = "0",
+  limit = "10",
+  filters = undefined,
+  trace = {}
+) => {
+  const MS = Util.getEndpoint("auth");
+  const requestOptions = {
+    method: "GET",
+    uri: `${MS}/users/${user_uuid}/roles`,
+    headers: {
+      Authorization: `Bearer ${accessToken}`,
+      "Content-type": "application/json",
+      "x-api-version": `${Util.getVersion()}`
+    },
+    qs: {
+      offset: offset,
+      limit: limit
+    },
+    json: true
+  };
+  Util.addRequestTrace(requestOptions, trace);
+  if (filters) {
+    Object.keys(filters).forEach(filter => {
+      requestOptions.qs[filter] = filters[filter];
+    });
+  }
+
+  return request(requestOptions);
+};
+
+/**
+ * @async
  * @description This function lists user groups a role is assigned to.
  * @param {string} [accessToken="null accessToken"] - cpaas access token
  * @param {string} [roleUUID="null roleUUID"] - role uuid
@@ -876,6 +920,7 @@ module.exports = {
   listRoleUserGroups,
   listRolePermissions,
   listRoles,
+  listRolesForUser,
   listUserGroups,
   modifyRole,
   modifyUserGroup
