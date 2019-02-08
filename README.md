@@ -64,6 +64,7 @@ require("babel-polyfill");
 [Please click here for our documentation pages.](https://star2star.github.io/star2star-js-ms-sdk/ "Star2Star Micro Service SDK Documentation")
 
 ## Changes
+* 3.0.6 - Update async polling utility
 * 3.0.5 - List Roles for a specific User
 * 3.0.4 - Add modify identity properties
 * 3.0.3 - Updates to contacts

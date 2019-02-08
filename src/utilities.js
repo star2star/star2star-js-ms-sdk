@@ -372,27 +372,29 @@ const getLogPretty = () => {
  * @param {string} startingResourceStatus - argument to specify expected resolution or skip polling if ready
  * @returns {Promise} - Promise resolved when verify func is successful.
  */
-const pendingResource = async (verifyFunc, startingResourceStatus = "ready") => {
+const pendingResource = async (verifyFunc, startingResourceStatus = "complete") => {
   try {
+    // if the startingResourceStatus is complete, there is nothing to do since the resource is ready
+    if (startingResourceStatus === "complete") {
+      return Promise.resolve({"status":"ok"});
+    }
+    // starting resource is not complete, poll the verify endpoint
     const expires = Date.now() + config.pollTimeout;
     while (Date.now() < expires) {
       let response = await verifyFunc();
       if(response.hasOwnProperty("resource_status")){
         switch(response.resource_status) {
-        case "new":
-        case "updating":
-        case "deleting":
+        case "processing":
           break;
-        case "ready":
+        case "complete":
           return response;
-        case "not_updated":
-        case "not_deleted":
-          throw Error(`unable to complete request: ${response.resource_status}`);
+        case "failure":
+          throw Error(`failure: ${JSON.stringify(response)}`);
         default:
-          throw Error(`unrecognized resource_status property: ${response.resource_status} in response`);
+          throw Error(`unrecognized resource_status: ${JSON.stringify(response)}`);
         }
       } else {
-        throw Error("resource_status missing from response");
+        throw Error(`resource_status missing from response: ${JSON.stringify(response)}`);
       }
       await new Promise(resolve => setTimeout(resolve, config.pollInterval));
     }
@@ -405,7 +407,7 @@ const pendingResource = async (verifyFunc, startingResourceStatus = "ready") => 
       error.hasOwnProperty("statusCode") &&
       error.statusCode === 404
     ){
-      console.log("deleted........", error.message);
+      //console.log("deleted........", error.message);
       return Promise.resolve({"status":"ok"});
     }
     return Promise.reject(

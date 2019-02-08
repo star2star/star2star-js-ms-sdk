@@ -773,89 +773,100 @@ function () {
       while (1) {
         switch (_context3.prev = _context3.next) {
           case 0:
-            startingResourceStatus = _args3.length > 1 && _args3[1] !== undefined ? _args3[1] : "ready";
+            startingResourceStatus = _args3.length > 1 && _args3[1] !== undefined ? _args3[1] : "complete";
             _context3.prev = 1;
-            expires = Date.now() + config.pollTimeout;
 
-          case 3:
-            if (!(Date.now() < expires)) {
-              _context3.next = 22;
+            if (!(startingResourceStatus === "complete")) {
+              _context3.next = 4;
               break;
             }
 
-            _context3.next = 6;
-            return verifyFunc();
-
-          case 6:
-            response = _context3.sent;
-
-            if (!response.hasOwnProperty("resource_status")) {
-              _context3.next = 17;
-              break;
-            }
-
-            _context3.t0 = response.resource_status;
-            _context3.next = _context3.t0 === "new" ? 11 : _context3.t0 === "updating" ? 11 : _context3.t0 === "deleting" ? 11 : _context3.t0 === "ready" ? 12 : _context3.t0 === "not_updated" ? 13 : _context3.t0 === "not_deleted" ? 13 : 14;
-            break;
-
-          case 11:
-            return _context3.abrupt("break", 15);
-
-          case 12:
-            return _context3.abrupt("return", response);
-
-          case 13:
-            throw Error("unable to complete request: ".concat(response.resource_status));
-
-          case 14:
-            throw Error("unrecognized resource_status property: ".concat(response.resource_status, " in response"));
-
-          case 15:
-            _context3.next = 18;
-            break;
-
-          case 17:
-            throw Error("resource_status missing from response");
-
-          case 18:
-            _context3.next = 20;
-            return new Promise(function (resolve) {
-              return setTimeout(resolve, config.pollInterval);
-            });
-
-          case 20:
-            _context3.next = 3;
-            break;
-
-          case 22:
-            throw Error("request timeout");
-
-          case 25:
-            _context3.prev = 25;
-            _context3.t1 = _context3["catch"](1);
-
-            if (!(startingResourceStatus === "deleting" && _context3.t1.hasOwnProperty("statusCode") && _context3.t1.statusCode === 404)) {
-              _context3.next = 30;
-              break;
-            }
-
-            console.log("deleted........", _context3.t1.message);
             return _context3.abrupt("return", Promise.resolve({
               "status": "ok"
             }));
 
-          case 30:
+          case 4:
+            // starting resource is not complete, poll the verify endpoint
+            expires = Date.now() + config.pollTimeout;
+
+          case 5:
+            if (!(Date.now() < expires)) {
+              _context3.next = 24;
+              break;
+            }
+
+            _context3.next = 8;
+            return verifyFunc();
+
+          case 8:
+            response = _context3.sent;
+
+            if (!response.hasOwnProperty("resource_status")) {
+              _context3.next = 19;
+              break;
+            }
+
+            _context3.t0 = response.resource_status;
+            _context3.next = _context3.t0 === "processing" ? 13 : _context3.t0 === "complete" ? 14 : _context3.t0 === "failure" ? 15 : 16;
+            break;
+
+          case 13:
+            return _context3.abrupt("break", 17);
+
+          case 14:
+            return _context3.abrupt("return", response);
+
+          case 15:
+            throw Error("failure: ".concat(JSON.stringify(response)));
+
+          case 16:
+            throw Error("unrecognized resource_status: ".concat(JSON.stringify(response)));
+
+          case 17:
+            _context3.next = 20;
+            break;
+
+          case 19:
+            throw Error("resource_status missing from response: ".concat(JSON.stringify(response)));
+
+          case 20:
+            _context3.next = 22;
+            return new Promise(function (resolve) {
+              return setTimeout(resolve, config.pollInterval);
+            });
+
+          case 22:
+            _context3.next = 5;
+            break;
+
+          case 24:
+            throw Error("request timeout");
+
+          case 27:
+            _context3.prev = 27;
+            _context3.t1 = _context3["catch"](1);
+
+            if (!(startingResourceStatus === "deleting" && _context3.t1.hasOwnProperty("statusCode") && _context3.t1.statusCode === 404)) {
+              _context3.next = 31;
+              break;
+            }
+
+            return _context3.abrupt("return", Promise.resolve({
+              "status": "ok"
+            }));
+
+          case 31:
             return _context3.abrupt("return", Promise.reject({
               "statusCode": 500,
               "message": _context3.t1.hasOwnProperty("message") ? _context3.t1.message : _context3.t1
             }));
 
-          case 31:
+          case 32:
           case "end":
             return _context3.stop();
         }
       }
-    }, _callee3, this, [[1, 25]]);
+    }, _callee3, this, [[1, 27]]);
   }));
 
   return function pendingResource(_x5) {

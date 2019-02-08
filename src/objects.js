@@ -297,7 +297,7 @@ const createUserDataObject = async (
       function(){
         return getDataObject(accessToken, newObject.uuid, nextTrace);
       },
-      newObject.hasOwnProperty("resource_status") ? newObject.resource_status : "ready"
+      newObject.hasOwnProperty("resource_status") ? newObject.resource_status : "processing"
     );
     
     //need to create permissions resource groups
@@ -390,7 +390,7 @@ const createDataObject = async (
     function(){
       return getDataObject(accessToken, newObject.uuid, Util.generateNewMetaData(trace));
     },
-    newObject.hasOwnProperty("resource_status") ? newObject.resource_status : "ready"
+    newObject.hasOwnProperty("resource_status") ? newObject.resource_status : "processing"
   );
   return newObject;
 };
@@ -496,7 +496,7 @@ const updateDataObject = async (
     function(){
       return getDataObject(accessToken, dataUUID, nextTrace);
     },
-    updatedObj.hasOwnProperty("resource_status") ? updatedObj.resource_status : "updating"
+    updatedObj.hasOwnProperty("resource_status") ? updatedObj.resource_status : "processing"
   );
   return updatedObj;
 };

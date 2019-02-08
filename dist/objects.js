@@ -710,7 +710,7 @@ function () {
             _context3.next = 21;
             return Util.pendingResource(function () {
               return getDataObject(accessToken, newObject.uuid, nextTrace);
-            }, newObject.hasOwnProperty("resource_status") ? newObject.resource_status : "ready");
+            }, newObject.hasOwnProperty("resource_status") ? newObject.resource_status : "processing");
 
           case 21:
             if (!(accountUUID && users && _typeof(users) === "object")) {
@@ -848,7 +848,7 @@ function () {
             _context4.next = 15;
             return Util.pendingResource(function () {
               return getDataObject(accessToken, newObject.uuid, Util.generateNewMetaData(trace));
-            }, newObject.hasOwnProperty("resource_status") ? newObject.resource_status : "ready");
+            }, newObject.hasOwnProperty("resource_status") ? newObject.resource_status : "processing");
 
           case 15:
             return _context4.abrupt("return", newObject);
@@ -1021,7 +1021,7 @@ function () {
             _context6.next = 20;
             return Util.pendingResource(function () {
               return getDataObject(accessToken, dataUUID, nextTrace);
-            }, updatedObj.hasOwnProperty("resource_status") ? updatedObj.resource_status : "updating");
+            }, updatedObj.hasOwnProperty("resource_status") ? updatedObj.resource_status : "processing");
 
           case 20:
             return _context6.abrupt("return", updatedObj);
