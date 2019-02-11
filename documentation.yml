@@ -23,6 +23,8 @@ toc:
       - deletePermissionFromRole
       - deleteRole
       - deleteRoleFromUserGroup
+      - getResourceUsers
+      - getRole
       - listAccessByGroups
       - listAccessByPermissions
       - listUserGroupRoles

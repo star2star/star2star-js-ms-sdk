@@ -224,6 +224,27 @@ describe("Permissions MS Test Suite", function() {
     logger.debug(this.ctx.test.title, response);
   });
 
+  it("Get Role By UUID", async () => {
+    if (!creds.isValid) throw new Error("Invalid Credentials");
+    trace = objectMerge({}, trace, Util.generateNewMetaData(trace));
+    const response = await s2sMS.Auth.getRole(
+      accessToken,
+      role,
+      trace
+    );
+    logger.debug("GET ONE ROLE RESPONSE",response);
+    assert.ok(
+      response.hasOwnProperty("name"),
+      response.name === "Unit-Test" &&
+      response.hasOwnProperty("members") &&
+      Array.isArray(response.members) &&
+      response.members[0].hasOwnProperty("uuid") &&
+      response.members[0].uuid === permissions[0].uuid,
+      JSON.stringify(response, null, "\t")
+    );
+    logger.debug(this.ctx.test.title, response);
+  });
+
   it("Assign Permissions to Role", async () => {
     if (!creds.isValid) throw new Error("Invalid Credentials");
     trace = objectMerge({}, trace, Util.generateNewMetaData(trace));

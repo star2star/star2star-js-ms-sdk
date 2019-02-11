@@ -496,6 +496,14 @@ const deleteRoleFromUserGroup = (
   });
 };
 
+/**
+ * @async
+ * @description This function will return the users that have permissions for a given resource
+ * @param {string} [accessToken="null accessToken"] - cpaas access token
+ * @param {string} [resourceUUID="null resourceUUID"] - resource uuid
+ * @param {object} [trace={}] - optional microservice lifecycle headers
+ * @returns {Promise<object>} - promise resolving to a users object
+ */
 const getResourceUsers = async (accessToken = "null accessToken", resourceUUID = "null resourceUUID", trace = {}) => {
   const groups = await listAccessByGroups(accessToken, resourceUUID, trace);
   let nextTrace = objectMerge({}, trace);
@@ -526,6 +534,44 @@ const getResourceUsers = async (accessToken = "null accessToken", resourceUUID =
   }
   return users;
 };
+
+/**
+ * @async
+ * @description This function returns a single role by uuid.
+ * @param {string} [accessToken="null accessToken"] - cpaas access token
+ * @param {string} [roleUUID="null roleUUID"] - role uuid
+ * @param {object} [trace = {}] - optional microservice lifecycle trace headers
+ * @returns {Promise<object>} - Promise resolving to a role object
+ */
+const getRole = async (
+  accessToken = "null accessToken",
+  roleUUID = "null roleUUID",
+  trace = {}
+) => {
+  try {
+    const MS = Util.getEndpoint("auth");
+    const requestOptions = {
+      method: "GET",
+      uri: `${MS}/roles/${roleUUID}`,
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+        "Content-type": "application/json",
+        "x-api-version": `${Util.getVersion()}`
+      },
+      json: true
+    };
+    Util.addRequestTrace(requestOptions, trace);
+    const response = await request(requestOptions);
+    return response;
+  } catch (error) {
+    return Promise.reject({
+      "status": "failed",
+      "message": error.hasOwnProperty("message") ? error.message : JSON.stringify(error)
+    });
+  }
+  
+};
+
 
 /**
  * @async
@@ -1001,6 +1047,7 @@ module.exports = {
   deleteRole,
   deleteRoleFromUserGroup,
   getResourceUsers,
+  getRole,
   listAccessByGroups,
   listAccessByPermissions,
   listUserGroupRoles,
