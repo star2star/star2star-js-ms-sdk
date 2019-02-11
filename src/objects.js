@@ -84,7 +84,6 @@ const getDataObjects = async (
     json: true
   };
   Util.addRequestTrace(requestOptions, trace);
-  await new Promise(resolve => setTimeout(resolve, Util.config.msDelay));
   //here we determine if we will need to handle aggrigation, pagination, and filtering or send it to the microservice
   if (filters) {
     // filter param has been passed in, make sure it is an array befor proceeding
@@ -266,7 +265,6 @@ const createUserDataObject = async (
   trace = {}
 ) => {
   const MS = Util.getEndpoint("objects");
-  const msDelay = Util.config.msDelay;
   const body = {
     name: objectName,
     type: objectType,
@@ -284,6 +282,7 @@ const createUserDataObject = async (
       "Content-type": "application/json",
       "x-api-version": `${Util.getVersion()}`
     },
+    resolveWithFullResponse: true,
     json: true
   };
   Util.addRequestTrace(requestOptions, trace);
@@ -291,14 +290,20 @@ const createUserDataObject = async (
   let newObject;
   let nextTrace = objectMerge({}, trace);
   try {
-    newObject = await request(requestOptions);
+    const response = await request(requestOptions);
+    newObject = response.body;
     // create returns a 202....suspend return until the new resource is ready
-    await Util.pendingResource(
-      function(){
-        return getDataObject(accessToken, newObject.uuid, nextTrace);
-      },
-      newObject.hasOwnProperty("resource_status") ? newObject.resource_status : "processing"
-    );
+    if (response.hasOwnProperty("statusCode") && 
+        response.statusCode === 202 &&
+        response.headers.hasOwnProperty("location"))
+    {    
+      await Util.pendingResource(
+        response.headers.location,
+        requestOptions, //reusing the request options instead of passing in multiple params
+        trace,
+        newObject.hasOwnProperty("resource_status") ? newObject.resource_status : "complete"
+      );
+    }
     
     //need to create permissions resource groups
     if (
@@ -321,7 +326,6 @@ const createUserDataObject = async (
     //delete the object if we have one
     if (newObject && newObject.hasOwnProperty("uuid")) {
       try {
-        await new Promise(resolve => setTimeout(resolve, msDelay)); //this is to allow microservices time ack the new group before deleting.
         nextTrace = objectMerge(
           {},
           nextTrace,
@@ -381,17 +385,24 @@ const createDataObject = async (
       "Content-type": "application/json",
       "x-api-version": `${Util.getVersion()}`
     },
+    resolveWithFullResponse: true,
     json: true
   };
   Util.addRequestTrace(requestOptions, trace);
-  const newObject = await request(requestOptions);
+  const response = await request(requestOptions);
+  const newObject = response.body;
   // create returns a 202....suspend return until the new resource is ready
-  await Util.pendingResource(
-    function(){
-      return getDataObject(accessToken, newObject.uuid, Util.generateNewMetaData(trace));
-    },
-    newObject.hasOwnProperty("resource_status") ? newObject.resource_status : "processing"
-  );
+  if (response.hasOwnProperty("statusCode") && 
+        response.statusCode === 202 &&
+        response.headers.hasOwnProperty("location"))
+  {    
+    await Util.pendingResource(
+      response.headers.location,
+      requestOptions, //reusing the request options instead of passing in multiple params
+      trace,
+      newObject.hasOwnProperty("resource_status") ? newObject.resource_status : "complete"
+    );
+  }
   return newObject;
 };
 
@@ -430,14 +441,18 @@ const deleteDataObject = async (
   );
 
   const response = await request(requestOptions);
-  // create returns a 202....suspend return until the new resource is ready
-  nextTrace = objectMerge({}, trace, Util.generateNewMetaData(nextTrace));
-  await Util.pendingResource(
-    function(){
-      return deleteDataObject(accessToken, dataUUID, nextTrace);
-    },
-    response.hasOwnProperty("resource_status") ? response.resource_status : "deleting"
-  );
+  // delete returns a 202....suspend return until the new resource is ready
+  if (response.hasOwnProperty("statusCode") && 
+        response.statusCode === 202 &&
+        response.headers.hasOwnProperty("location"))
+  {    
+    await Util.pendingResource(
+      response.headers.location,
+      requestOptions, //reusing the request options instead of passing in multiple params
+      trace,
+      "deleting"
+    );
+  }
   return Promise.resolve({ status: "ok" });
 };
 
@@ -470,6 +485,7 @@ const updateDataObject = async (
       "Content-type": "application/json",
       "x-api-version": `${Util.getVersion()}`
     },
+    resolveWithFullResponse: true,
     json: true
   };
   Util.addRequestTrace(requestOptions, trace);
@@ -489,15 +505,20 @@ const updateDataObject = async (
       nextTrace
     );
   }
-  const updatedObj =  await request(requestOptions);
-  // create returns a 202....suspend return until the new resource is ready
-  nextTrace = objectMerge({}, trace, Util.generateNewMetaData(nextTrace));
-  await Util.pendingResource(
-    function(){
-      return getDataObject(accessToken, dataUUID, nextTrace);
-    },
-    updatedObj.hasOwnProperty("resource_status") ? updatedObj.resource_status : "processing"
-  );
+  const response =  await request(requestOptions);
+  const updatedObj = response.body ;
+  // update returns a 202....suspend return until the new resource is ready
+  if (response.hasOwnProperty("statusCode") && 
+      response.statusCode === 202 &&
+      response.headers.hasOwnProperty("location"))
+  {  
+    await Util.pendingResource(
+      response.headers.location,
+      requestOptions, //reusing the request options instead of passing in multiple params
+      trace,
+      updatedObj.hasOwnProperty("resource_status") ? updatedObj.resource_status : "complete"
+    );
+  }
   return updatedObj;
 };
 

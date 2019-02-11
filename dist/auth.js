@@ -314,35 +314,82 @@ var objectMerge = require("object-merge");
  */
 
 
-var activateRole = function activateRole() {
-  var accessToken = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : "null accessToken";
-  var roleUUID = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : "null roleUUID";
-  var trace = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : {};
-  var MS = Util.getEndpoint("auth");
-  var requestOptions = {
-    method: "POST",
-    uri: "".concat(MS, "/roles/").concat(roleUUID, "/activate"),
-    headers: {
-      Authorization: "Bearer ".concat(accessToken),
-      "Content-type": "application/json",
-      "x-api-version": "".concat(Util.getVersion())
-    },
-    resolveWithFullResponse: true,
-    json: true
+var activateRole =
+/*#__PURE__*/
+function () {
+  var _ref = _asyncToGenerator(
+  /*#__PURE__*/
+  regeneratorRuntime.mark(function _callee() {
+    var accessToken,
+        roleUUID,
+        trace,
+        MS,
+        requestOptions,
+        response,
+        role,
+        _args = arguments;
+    return regeneratorRuntime.wrap(function _callee$(_context) {
+      while (1) {
+        switch (_context.prev = _context.next) {
+          case 0:
+            accessToken = _args.length > 0 && _args[0] !== undefined ? _args[0] : "null accessToken";
+            roleUUID = _args.length > 1 && _args[1] !== undefined ? _args[1] : "null roleUUID";
+            trace = _args.length > 2 && _args[2] !== undefined ? _args[2] : {};
+            _context.prev = 3;
+            MS = Util.getEndpoint("auth");
+            requestOptions = {
+              method: "POST",
+              uri: "".concat(MS, "/roles/").concat(roleUUID, "/activate"),
+              headers: {
+                Authorization: "Bearer ".concat(accessToken),
+                "Content-type": "application/json",
+                "x-api-version": "".concat(Util.getVersion())
+              },
+              resolveWithFullResponse: true,
+              json: true
+            };
+            Util.addRequestTrace(requestOptions, trace);
+            _context.next = 9;
+            return request(requestOptions);
+
+          case 9:
+            response = _context.sent;
+            role = response.body; // create returns a 202....suspend return until the new resource is ready
+
+            if (!(response.hasOwnProperty("statusCode") && response.statusCode === 202 && response.headers.hasOwnProperty("location"))) {
+              _context.next = 14;
+              break;
+            }
+
+            _context.next = 14;
+            return Util.pendingResource(response.headers.location, requestOptions, //reusing the request options instead of passing in multiple params
+            trace, role.hasOwnProperty("resource_status") ? role.resource_status : "complete");
+
+          case 14:
+            return _context.abrupt("return", {
+              status: "ok"
+            });
+
+          case 17:
+            _context.prev = 17;
+            _context.t0 = _context["catch"](3);
+            return _context.abrupt("return", Promise.reject({
+              "status": "failed",
+              "message": _context.t0.hasOwnProperty("message") ? _context.t0.message : JSON.stringify(_context.t0)
+            }));
+
+          case 20:
+          case "end":
+            return _context.stop();
+        }
+      }
+    }, _callee, this, [[3, 17]]);
+  }));
+
+  return function activateRole() {
+    return _ref.apply(this, arguments);
   };
-  Util.addRequestTrace(requestOptions, trace);
-  return new Promise(function (resolve, reject) {
-    request(requestOptions).then(function (responseData) {
-      responseData.statusCode === 204 ? resolve({
-        status: "ok"
-      }) : reject({
-        status: "failed"
-      });
-    }).catch(function (error) {
-      reject(error);
-    });
-  });
-};
+}();
 /**
  * @async
  * @description This function will assign a permission to a role.
@@ -399,24 +446,24 @@ var assignPermissionsToRole = function assignPermissionsToRole() {
 var assignRolesToUserGroup =
 /*#__PURE__*/
 function () {
-  var _ref = _asyncToGenerator(
+  var _ref2 = _asyncToGenerator(
   /*#__PURE__*/
-  regeneratorRuntime.mark(function _callee() {
+  regeneratorRuntime.mark(function _callee2() {
     var accessToken,
         userGroupUUID,
         body,
         trace,
         MS,
         requestOptions,
-        _args = arguments;
-    return regeneratorRuntime.wrap(function _callee$(_context) {
+        _args2 = arguments;
+    return regeneratorRuntime.wrap(function _callee2$(_context2) {
       while (1) {
-        switch (_context.prev = _context.next) {
+        switch (_context2.prev = _context2.next) {
           case 0:
-            accessToken = _args.length > 0 && _args[0] !== undefined ? _args[0] : "null accessToken";
-            userGroupUUID = _args.length > 1 && _args[1] !== undefined ? _args[1] : "null groupUUID";
-            body = _args.length > 2 && _args[2] !== undefined ? _args[2] : "null body";
-            trace = _args.length > 3 && _args[3] !== undefined ? _args[3] : {};
+            accessToken = _args2.length > 0 && _args2[0] !== undefined ? _args2[0] : "null accessToken";
+            userGroupUUID = _args2.length > 1 && _args2[1] !== undefined ? _args2[1] : "null groupUUID";
+            body = _args2.length > 2 && _args2[2] !== undefined ? _args2[2] : "null body";
+            trace = _args2.length > 3 && _args2[3] !== undefined ? _args2[3] : {};
             MS = Util.getEndpoint("auth");
             requestOptions = {
               method: "POST",
@@ -431,7 +478,7 @@ function () {
               json: true
             };
             Util.addRequestTrace(requestOptions, trace);
-            _context.next = 9;
+            _context2.next = 9;
             return new Promise(function (resolve, reject) {
               request(requestOptions).then(function (responseData) {
                 responseData.statusCode === 204 ? resolve({
@@ -445,18 +492,18 @@ function () {
             });
 
           case 9:
-            return _context.abrupt("return", _context.sent);
+            return _context2.abrupt("return", _context2.sent);
 
           case 10:
           case "end":
-            return _context.stop();
+            return _context2.stop();
         }
       }
-    }, _callee, this);
+    }, _callee2, this);
   }));
 
   return function assignRolesToUserGroup() {
-    return _ref.apply(this, arguments);
+    return _ref2.apply(this, arguments);
   };
 }();
 /**
@@ -475,9 +522,9 @@ function () {
 var assignScopedRoleToUserGroup =
 /*#__PURE__*/
 function () {
-  var _ref2 = _asyncToGenerator(
+  var _ref3 = _asyncToGenerator(
   /*#__PURE__*/
-  regeneratorRuntime.mark(function _callee2() {
+  regeneratorRuntime.mark(function _callee3() {
     var accessToken,
         userGroupUUID,
         roleUUID,
@@ -486,23 +533,17 @@ function () {
         trace,
         MS,
         requestOptions,
-        _args2 = arguments;
-    return regeneratorRuntime.wrap(function _callee2$(_context2) {
+        _args3 = arguments;
+    return regeneratorRuntime.wrap(function _callee3$(_context3) {
       while (1) {
-        switch (_context2.prev = _context2.next) {
+        switch (_context3.prev = _context3.next) {
           case 0:
-            accessToken = _args2.length > 0 && _args2[0] !== undefined ? _args2[0] : "null access token";
-            userGroupUUID = _args2.length > 1 && _args2[1] !== undefined ? _args2[1] : "null userGroupUUID";
-            roleUUID = _args2.length > 2 && _args2[2] !== undefined ? _args2[2] : "null roleUUID";
-            type = _args2.length > 3 && _args2[3] !== undefined ? _args2[3] : "account";
-            data = _args2.length > 4 && _args2[4] !== undefined ? _args2[4] : "null resourceUUID";
-            trace = _args2.length > 5 && _args2[5] !== undefined ? _args2[5] : {};
-            _context2.next = 8;
-            return new Promise(function (resolve) {
-              return setTimeout(resolve, Util.config.msDelay);
-            });
-
-          case 8:
+            accessToken = _args3.length > 0 && _args3[0] !== undefined ? _args3[0] : "null access token";
+            userGroupUUID = _args3.length > 1 && _args3[1] !== undefined ? _args3[1] : "null userGroupUUID";
+            roleUUID = _args3.length > 2 && _args3[2] !== undefined ? _args3[2] : "null roleUUID";
+            type = _args3.length > 3 && _args3[3] !== undefined ? _args3[3] : "account";
+            data = _args3.length > 4 && _args3[4] !== undefined ? _args3[4] : "null resourceUUID";
+            trace = _args3.length > 5 && _args3[5] !== undefined ? _args3[5] : {};
             MS = Util.getEndpoint("auth");
             requestOptions = {
               method: "POST",
@@ -520,7 +561,7 @@ function () {
               json: true
             };
             Util.addRequestTrace(requestOptions, trace);
-            _context2.next = 13;
+            _context3.next = 11;
             return new Promise(function (resolve, reject) {
               request(requestOptions).then(function (responseData) {
                 responseData.statusCode === 204 ? resolve({
@@ -533,19 +574,19 @@ function () {
               });
             });
 
-          case 13:
-            return _context2.abrupt("return", _context2.sent);
+          case 11:
+            return _context3.abrupt("return", _context3.sent);
 
-          case 14:
+          case 12:
           case "end":
-            return _context2.stop();
+            return _context3.stop();
         }
       }
-    }, _callee2, this);
+    }, _callee3, this);
   }));
 
   return function assignScopedRoleToUserGroup() {
-    return _ref2.apply(this, arguments);
+    return _ref3.apply(this, arguments);
   };
 }();
 /**
@@ -591,30 +632,26 @@ var createPermission = function createPermission() {
 var createUserGroup =
 /*#__PURE__*/
 function () {
-  var _ref4 = _asyncToGenerator(
+  var _ref5 = _asyncToGenerator(
   /*#__PURE__*/
-  regeneratorRuntime.mark(function _callee3() {
+  regeneratorRuntime.mark(function _callee4() {
     var accessToken,
         accountUUID,
         body,
         trace,
         MS,
         requestOptions,
-        _args3 = arguments;
-    return regeneratorRuntime.wrap(function _callee3$(_context3) {
+        response,
+        newGroup,
+        _args4 = arguments;
+    return regeneratorRuntime.wrap(function _callee4$(_context4) {
       while (1) {
-        switch (_context3.prev = _context3.next) {
+        switch (_context4.prev = _context4.next) {
           case 0:
-            accessToken = _args3.length > 0 && _args3[0] !== undefined ? _args3[0] : "null accessToken";
-            accountUUID = _args3.length > 1 && _args3[1] !== undefined ? _args3[1] : "null accountUUID";
-            body = _args3.length > 2 && _args3[2] !== undefined ? _args3[2] : "null body";
-            trace = _args3.length > 3 && _args3[3] !== undefined ? _args3[3] : {};
-            _context3.next = 6;
-            return new Promise(function (resolve) {
-              return setTimeout(resolve, Util.config.msDelay);
-            });
-
-          case 6:
+            accessToken = _args4.length > 0 && _args4[0] !== undefined ? _args4[0] : "null accessToken";
+            accountUUID = _args4.length > 1 && _args4[1] !== undefined ? _args4[1] : "null accountUUID";
+            body = _args4.length > 2 && _args4[2] !== undefined ? _args4[2] : "null body";
+            trace = _args4.length > 3 && _args4[3] !== undefined ? _args4[3] : {};
             MS = Util.getEndpoint("auth");
             requestOptions = {
               method: "POST",
@@ -625,25 +662,39 @@ function () {
                 "x-api-version": "".concat(Util.getVersion())
               },
               body: body,
-              json: true
+              json: true,
+              resolveWithFullResponse: true
             };
             Util.addRequestTrace(requestOptions, trace);
-            _context3.next = 11;
+            _context4.next = 9;
             return request(requestOptions);
 
-          case 11:
-            return _context3.abrupt("return", _context3.sent);
+          case 9:
+            response = _context4.sent;
+            newGroup = response.body; // create returns a 202....suspend return until the new resource is ready
 
-          case 12:
+            if (!(response.hasOwnProperty("statusCode") && response.statusCode === 202 && response.headers.hasOwnProperty("location"))) {
+              _context4.next = 14;
+              break;
+            }
+
+            _context4.next = 14;
+            return Util.pendingResource(response.headers.location, requestOptions, //reusing the request options instead of passing in multiple params
+            trace, newGroup.hasOwnProperty("resource_status") ? newGroup.resource_status : "complete");
+
+          case 14:
+            return _context4.abrupt("return", newGroup);
+
+          case 15:
           case "end":
-            return _context3.stop();
+            return _context4.stop();
         }
       }
-    }, _callee3, this);
+    }, _callee4, this);
   }));
 
   return function createUserGroup() {
-    return _ref4.apply(this, arguments);
+    return _ref5.apply(this, arguments);
   };
 }();
 /**
@@ -657,26 +708,74 @@ function () {
  */
 
 
-var createRole = function createRole() {
-  var accessToken = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : "null accessToken";
-  var accountUUID = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : "null accountUUID";
-  var body = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : "null body";
-  var trace = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : {};
-  var MS = Util.getEndpoint("auth");
-  var requestOptions = {
-    method: "POST",
-    uri: "".concat(MS, "/accounts/").concat(accountUUID, "/roles"),
-    headers: {
-      Authorization: "Bearer ".concat(accessToken),
-      "Content-type": "application/json",
-      "x-api-version": "".concat(Util.getVersion())
-    },
-    body: body,
-    json: true
+var createRole =
+/*#__PURE__*/
+function () {
+  var _ref6 = _asyncToGenerator(
+  /*#__PURE__*/
+  regeneratorRuntime.mark(function _callee5() {
+    var accessToken,
+        accountUUID,
+        body,
+        trace,
+        MS,
+        requestOptions,
+        response,
+        newRole,
+        _args5 = arguments;
+    return regeneratorRuntime.wrap(function _callee5$(_context5) {
+      while (1) {
+        switch (_context5.prev = _context5.next) {
+          case 0:
+            accessToken = _args5.length > 0 && _args5[0] !== undefined ? _args5[0] : "null accessToken";
+            accountUUID = _args5.length > 1 && _args5[1] !== undefined ? _args5[1] : "null accountUUID";
+            body = _args5.length > 2 && _args5[2] !== undefined ? _args5[2] : "null body";
+            trace = _args5.length > 3 && _args5[3] !== undefined ? _args5[3] : {};
+            MS = Util.getEndpoint("auth");
+            requestOptions = {
+              method: "POST",
+              uri: "".concat(MS, "/accounts/").concat(accountUUID, "/roles"),
+              headers: {
+                Authorization: "Bearer ".concat(accessToken),
+                "Content-type": "application/json",
+                "x-api-version": "".concat(Util.getVersion())
+              },
+              body: body,
+              json: true,
+              resolveWithFullResponse: true
+            };
+            Util.addRequestTrace(requestOptions, trace);
+            _context5.next = 9;
+            return request(requestOptions);
+
+          case 9:
+            response = _context5.sent;
+            newRole = response.body; // create returns a 202....suspend return until the new resource is ready
+
+            if (!(response.hasOwnProperty("statusCode") && response.statusCode === 202 && response.headers.hasOwnProperty("location"))) {
+              _context5.next = 14;
+              break;
+            }
+
+            _context5.next = 14;
+            return Util.pendingResource(response.headers.location, requestOptions, //reusing the request options instead of passing in multiple params
+            trace, newRole.hasOwnProperty("resource_status") ? newRole.resource_status : "complete");
+
+          case 14:
+            return _context5.abrupt("return", newRole);
+
+          case 15:
+          case "end":
+            return _context5.stop();
+        }
+      }
+    }, _callee5, this);
+  }));
+
+  return function createRole() {
+    return _ref6.apply(this, arguments);
   };
-  Util.addRequestTrace(requestOptions, trace);
-  return request(requestOptions);
-};
+}();
 /**
  * @async
  * @description This function deactivates a role.
@@ -687,35 +786,82 @@ var createRole = function createRole() {
  */
 
 
-var deactivateRole = function deactivateRole() {
-  var accessToken = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : "null accessToken";
-  var roleUUID = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : "null roleUUID";
-  var trace = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : {};
-  var MS = Util.getEndpoint("auth");
-  var requestOptions = {
-    method: "POST",
-    uri: "".concat(MS, "/roles/").concat(roleUUID, "/deactivate"),
-    headers: {
-      Authorization: "Bearer ".concat(accessToken),
-      "Content-type": "application/json",
-      "x-api-version": "".concat(Util.getVersion())
-    },
-    resolveWithFullResponse: true,
-    json: true
+var deactivateRole =
+/*#__PURE__*/
+function () {
+  var _ref7 = _asyncToGenerator(
+  /*#__PURE__*/
+  regeneratorRuntime.mark(function _callee6() {
+    var accessToken,
+        roleUUID,
+        trace,
+        MS,
+        requestOptions,
+        response,
+        role,
+        _args6 = arguments;
+    return regeneratorRuntime.wrap(function _callee6$(_context6) {
+      while (1) {
+        switch (_context6.prev = _context6.next) {
+          case 0:
+            accessToken = _args6.length > 0 && _args6[0] !== undefined ? _args6[0] : "null accessToken";
+            roleUUID = _args6.length > 1 && _args6[1] !== undefined ? _args6[1] : "null roleUUID";
+            trace = _args6.length > 2 && _args6[2] !== undefined ? _args6[2] : {};
+            _context6.prev = 3;
+            MS = Util.getEndpoint("auth");
+            requestOptions = {
+              method: "POST",
+              uri: "".concat(MS, "").concat(roleUUID, "/deactivate"),
+              headers: {
+                Authorization: "Bearer ".concat(accessToken),
+                "Content-type": "application/json",
+                "x-api-version": "".concat(Util.getVersion())
+              },
+              resolveWithFullResponse: true,
+              json: true
+            };
+            Util.addRequestTrace(requestOptions, trace);
+            _context6.next = 9;
+            return request(requestOptions);
+
+          case 9:
+            response = _context6.sent;
+            role = response.body; // create returns a 202....suspend return until the new resource is ready
+
+            if (!(response.hasOwnProperty("statusCode") && response.statusCode === 202 && response.headers.hasOwnProperty("location"))) {
+              _context6.next = 14;
+              break;
+            }
+
+            _context6.next = 14;
+            return Util.pendingResource(response.headers.location, requestOptions, //reusing the request options instead of passing in multiple params
+            trace, role.hasOwnProperty("resource_status") ? role.resource_status : "complete");
+
+          case 14:
+            return _context6.abrupt("return", {
+              "status": "ok"
+            });
+
+          case 17:
+            _context6.prev = 17;
+            _context6.t0 = _context6["catch"](3);
+            return _context6.abrupt("return", Promise.reject({
+              "status": "failed",
+              "message": _context6.t0.hasOwnProperty("message") ? _context6.t0.message : JSON.stringify(_context6.t0)
+            }));
+
+          case 20:
+          case "end":
+            return _context6.stop();
+        }
+      }
+    }, _callee6, this, [[3, 17]]);
+  }));
+
+  return function deactivateRole() {
+    return _ref7.apply(this, arguments);
   };
-  Util.addRequestTrace(requestOptions, trace);
-  return new Promise(function (resolve, reject) {
-    request(requestOptions).then(function (responseData) {
-      responseData.statusCode === 204 ? resolve({
-        status: "ok"
-      }) : reject({
-        status: "failed"
-      });
-    }).catch(function (error) {
-      reject(error);
-    });
-  });
-};
+}();
 /**
  * @async
  * @description This function deletes a permission from a role.
@@ -765,37 +911,90 @@ var deletePermissionFromRole = function deletePermissionFromRole() {
  * @param {object} [trace = {}] - optional microservice lifecycle trace headers
  * @returns {Promise<object>} - Promise resolving to a status data object
  */
+//FIXME 202 location header to be fixed....nh 2/8/19
 
 
-var deleteRole = function deleteRole() {
-  var accessToken = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : "null accessToken";
-  var roleUUID = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : "null roleUUID";
-  var trace = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : {};
-  var MS = Util.getEndpoint("auth");
-  var requestOptions = {
-    method: "DELETE",
-    uri: "".concat(MS, "/roles/").concat(roleUUID),
-    headers: {
-      Authorization: "Bearer ".concat(accessToken),
-      "Content-type": "application/json",
-      "x-api-version": "".concat(Util.getVersion())
-    },
-    resolveWithFullResponse: true,
-    json: true
+var deleteRole =
+/*#__PURE__*/
+function () {
+  var _ref8 = _asyncToGenerator(
+  /*#__PURE__*/
+  regeneratorRuntime.mark(function _callee7() {
+    var accessToken,
+        roleUUID,
+        trace,
+        MS,
+        requestOptions,
+        response,
+        _args7 = arguments;
+    return regeneratorRuntime.wrap(function _callee7$(_context7) {
+      while (1) {
+        switch (_context7.prev = _context7.next) {
+          case 0:
+            accessToken = _args7.length > 0 && _args7[0] !== undefined ? _args7[0] : "null accessToken";
+            roleUUID = _args7.length > 1 && _args7[1] !== undefined ? _args7[1] : "null roleUUID";
+            trace = _args7.length > 2 && _args7[2] !== undefined ? _args7[2] : {};
+            _context7.prev = 3;
+            MS = Util.getEndpoint("auth");
+            requestOptions = {
+              method: "DELETE",
+              uri: "".concat(MS, "/roles/").concat(roleUUID),
+              headers: {
+                Authorization: "Bearer ".concat(accessToken),
+                "Content-type": "application/json",
+                "x-api-version": "".concat(Util.getVersion())
+              },
+              resolveWithFullResponse: true,
+              json: true
+            };
+            Util.addRequestTrace(requestOptions, trace);
+            _context7.next = 9;
+            return request(requestOptions);
+
+          case 9:
+            response = _context7.sent;
+            _context7.next = 12;
+            return new Promise(function (resolve) {
+              return setTimeout(resolve, Util.config.msDelay);
+            });
+
+          case 12:
+            if (!(response.statusCode === 202)) {
+              _context7.next = 16;
+              break;
+            }
+
+            return _context7.abrupt("return", {
+              "status": "ok"
+            });
+
+          case 16:
+            throw "unexpected status code: ".concat(response.statusCode);
+
+          case 17:
+            _context7.next = 22;
+            break;
+
+          case 19:
+            _context7.prev = 19;
+            _context7.t0 = _context7["catch"](3);
+            return _context7.abrupt("return", Promise.reject({
+              "status": "failed",
+              "message": _context7.t0.hasOwnProperty("message") ? _context7.t0.message : JSON.stringify(_context7.t0)
+            }));
+
+          case 22:
+          case "end":
+            return _context7.stop();
+        }
+      }
+    }, _callee7, this, [[3, 19]]);
+  }));
+
+  return function deleteRole() {
+    return _ref8.apply(this, arguments);
   };
-  Util.addRequestTrace(requestOptions, trace);
-  return new Promise(function (resolve, reject) {
-    request(requestOptions).then(function (responseData) {
-      responseData.statusCode === 204 ? resolve({
-        status: "ok"
-      }) : reject({
-        status: "failed"
-      });
-    }).catch(function (error) {
-      reject(error);
-    });
-  });
-};
+}();
 /**
  * @async
  * @description This function deletes a role from a user-group.
@@ -841,9 +1040,9 @@ var deleteRoleFromUserGroup = function deleteRoleFromUserGroup() {
 var getResourceUsers =
 /*#__PURE__*/
 function () {
-  var _ref5 = _asyncToGenerator(
+  var _ref9 = _asyncToGenerator(
   /*#__PURE__*/
-  regeneratorRuntime.mark(function _callee4() {
+  regeneratorRuntime.mark(function _callee8() {
     var accessToken,
         resourceUUID,
         trace,
@@ -854,35 +1053,35 @@ function () {
         group,
         groupName,
         groupUsers,
-        _args4 = arguments;
-    return regeneratorRuntime.wrap(function _callee4$(_context4) {
+        _args8 = arguments;
+    return regeneratorRuntime.wrap(function _callee8$(_context8) {
       while (1) {
-        switch (_context4.prev = _context4.next) {
+        switch (_context8.prev = _context8.next) {
           case 0:
-            accessToken = _args4.length > 0 && _args4[0] !== undefined ? _args4[0] : "null accessToken";
-            resourceUUID = _args4.length > 1 && _args4[1] !== undefined ? _args4[1] : "null resourceUUID";
-            trace = _args4.length > 2 && _args4[2] !== undefined ? _args4[2] : {};
-            _context4.next = 5;
+            accessToken = _args8.length > 0 && _args8[0] !== undefined ? _args8[0] : "null accessToken";
+            resourceUUID = _args8.length > 1 && _args8[1] !== undefined ? _args8[1] : "null resourceUUID";
+            trace = _args8.length > 2 && _args8[2] !== undefined ? _args8[2] : {};
+            _context8.next = 5;
             return listAccessByGroups(accessToken, resourceUUID, trace);
 
           case 5:
-            groups = _context4.sent;
+            groups = _context8.sent;
             nextTrace = objectMerge({}, trace);
             users = {};
             groupTypeRegex = /^[r,u,d]{1,3}/;
-            _context4.t0 = regeneratorRuntime.keys(groups.items);
+            _context8.t0 = regeneratorRuntime.keys(groups.items);
 
           case 10:
-            if ((_context4.t1 = _context4.t0()).done) {
-              _context4.next = 21;
+            if ((_context8.t1 = _context8.t0()).done) {
+              _context8.next = 21;
               break;
             }
 
-            group = _context4.t1.value;
+            group = _context8.t1.value;
             groupName = groupTypeRegex.exec(groups.items[group].user_group.group_name);
             users[groupName] = [];
             nextTrace = objectMerge({}, nextTrace, Util.generateNewMetaData(nextTrace));
-            _context4.next = 17;
+            _context8.next = 17;
             return Groups.getGroup(accessToken, groups.items[group].user_group.uuid, {
               "expand": "members",
               "members_limit": 999 //hopefully we don't need pagination here. nh
@@ -890,26 +1089,26 @@ function () {
             }, nextTrace);
 
           case 17:
-            groupUsers = _context4.sent;
+            groupUsers = _context8.sent;
             users[groupName] = groupUsers.members.items.map(function (item) {
               return item.uuid;
             });
-            _context4.next = 10;
+            _context8.next = 10;
             break;
 
           case 21:
-            return _context4.abrupt("return", users);
+            return _context8.abrupt("return", users);
 
           case 22:
           case "end":
-            return _context4.stop();
+            return _context8.stop();
         }
       }
-    }, _callee4, this);
+    }, _callee8, this);
   }));
 
   return function getResourceUsers() {
-    return _ref5.apply(this, arguments);
+    return _ref9.apply(this, arguments);
   };
 }();
 /**
@@ -925,22 +1124,22 @@ function () {
 var listAccessByGroups =
 /*#__PURE__*/
 function () {
-  var _ref6 = _asyncToGenerator(
+  var _ref10 = _asyncToGenerator(
   /*#__PURE__*/
-  regeneratorRuntime.mark(function _callee5() {
+  regeneratorRuntime.mark(function _callee9() {
     var accessToken,
         resourceUUID,
         trace,
         MS,
         requestOptions,
-        _args5 = arguments;
-    return regeneratorRuntime.wrap(function _callee5$(_context5) {
+        _args9 = arguments;
+    return regeneratorRuntime.wrap(function _callee9$(_context9) {
       while (1) {
-        switch (_context5.prev = _context5.next) {
+        switch (_context9.prev = _context9.next) {
           case 0:
-            accessToken = _args5.length > 0 && _args5[0] !== undefined ? _args5[0] : "null accessToken";
-            resourceUUID = _args5.length > 1 && _args5[1] !== undefined ? _args5[1] : "null groupUUID";
-            trace = _args5.length > 2 && _args5[2] !== undefined ? _args5[2] : {};
+            accessToken = _args9.length > 0 && _args9[0] !== undefined ? _args9[0] : "null accessToken";
+            resourceUUID = _args9.length > 1 && _args9[1] !== undefined ? _args9[1] : "null groupUUID";
+            trace = _args9.length > 2 && _args9[2] !== undefined ? _args9[2] : {};
             MS = Util.getEndpoint("auth");
             requestOptions = {
               method: "GET",
@@ -952,25 +1151,19 @@ function () {
               },
               json: true
             };
-            _context5.next = 7;
-            return new Promise(function (resolve) {
-              return setTimeout(resolve, Util.config.msDelay);
-            });
+            Util.addRequestTrace(requestOptions, trace);
+            return _context9.abrupt("return", request(requestOptions));
 
           case 7:
-            Util.addRequestTrace(requestOptions, trace);
-            return _context5.abrupt("return", request(requestOptions));
-
-          case 9:
           case "end":
-            return _context5.stop();
+            return _context9.stop();
         }
       }
-    }, _callee5, this);
+    }, _callee9, this);
   }));
 
   return function listAccessByGroups() {
-    return _ref6.apply(this, arguments);
+    return _ref10.apply(this, arguments);
   };
 }();
 /**
@@ -1054,9 +1247,9 @@ var listUserGroupRoles = function listUserGroupRoles() {
 var listPermissions =
 /*#__PURE__*/
 function () {
-  var _ref7 = _asyncToGenerator(
+  var _ref11 = _asyncToGenerator(
   /*#__PURE__*/
-  regeneratorRuntime.mark(function _callee6() {
+  regeneratorRuntime.mark(function _callee10() {
     var accessToken,
         offset,
         limit,
@@ -1064,16 +1257,16 @@ function () {
         trace,
         MS,
         requestOptions,
-        _args6 = arguments;
-    return regeneratorRuntime.wrap(function _callee6$(_context6) {
+        _args10 = arguments;
+    return regeneratorRuntime.wrap(function _callee10$(_context10) {
       while (1) {
-        switch (_context6.prev = _context6.next) {
+        switch (_context10.prev = _context10.next) {
           case 0:
-            accessToken = _args6.length > 0 && _args6[0] !== undefined ? _args6[0] : "null accessToken";
-            offset = _args6.length > 1 && _args6[1] !== undefined ? _args6[1] : "0";
-            limit = _args6.length > 2 && _args6[2] !== undefined ? _args6[2] : "10";
-            filters = _args6.length > 3 && _args6[3] !== undefined ? _args6[3] : undefined;
-            trace = _args6.length > 4 && _args6[4] !== undefined ? _args6[4] : {};
+            accessToken = _args10.length > 0 && _args10[0] !== undefined ? _args10[0] : "null accessToken";
+            offset = _args10.length > 1 && _args10[1] !== undefined ? _args10[1] : "0";
+            limit = _args10.length > 2 && _args10[2] !== undefined ? _args10[2] : "10";
+            filters = _args10.length > 3 && _args10[3] !== undefined ? _args10[3] : undefined;
+            trace = _args10.length > 4 && _args10[4] !== undefined ? _args10[4] : {};
             MS = Util.getEndpoint("auth");
             requestOptions = {
               method: "GET",
@@ -1097,18 +1290,18 @@ function () {
               });
             }
 
-            return _context6.abrupt("return", request(requestOptions));
+            return _context10.abrupt("return", request(requestOptions));
 
           case 10:
           case "end":
-            return _context6.stop();
+            return _context10.stop();
         }
       }
-    }, _callee6, this);
+    }, _callee10, this);
   }));
 
   return function listPermissions() {
-    return _ref7.apply(this, arguments);
+    return _ref11.apply(this, arguments);
   };
 }();
 /**
@@ -1125,24 +1318,24 @@ function () {
 var listPermissionRoles =
 /*#__PURE__*/
 function () {
-  var _ref8 = _asyncToGenerator(
+  var _ref12 = _asyncToGenerator(
   /*#__PURE__*/
-  regeneratorRuntime.mark(function _callee7() {
+  regeneratorRuntime.mark(function _callee11() {
     var accessToken,
         permissionUUID,
         filters,
         trace,
         MS,
         requestOptions,
-        _args7 = arguments;
-    return regeneratorRuntime.wrap(function _callee7$(_context7) {
+        _args11 = arguments;
+    return regeneratorRuntime.wrap(function _callee11$(_context11) {
       while (1) {
-        switch (_context7.prev = _context7.next) {
+        switch (_context11.prev = _context11.next) {
           case 0:
-            accessToken = _args7.length > 0 && _args7[0] !== undefined ? _args7[0] : "null accessToken";
-            permissionUUID = _args7.length > 1 && _args7[1] !== undefined ? _args7[1] : "null permissionUUID";
-            filters = _args7.length > 2 && _args7[2] !== undefined ? _args7[2] : undefined;
-            trace = _args7.length > 3 && _args7[3] !== undefined ? _args7[3] : {};
+            accessToken = _args11.length > 0 && _args11[0] !== undefined ? _args11[0] : "null accessToken";
+            permissionUUID = _args11.length > 1 && _args11[1] !== undefined ? _args11[1] : "null permissionUUID";
+            filters = _args11.length > 2 && _args11[2] !== undefined ? _args11[2] : undefined;
+            trace = _args11.length > 3 && _args11[3] !== undefined ? _args11[3] : {};
             MS = Util.getEndpoint("auth");
             requestOptions = {
               method: "GET",
@@ -1163,24 +1356,18 @@ function () {
               });
             }
 
-            _context7.next = 10;
-            return new Promise(function (resolve) {
-              return setTimeout(resolve, Util.config.msDelay);
-            });
+            return _context11.abrupt("return", request(requestOptions));
 
-          case 10:
-            return _context7.abrupt("return", request(requestOptions));
-
-          case 11:
+          case 9:
           case "end":
-            return _context7.stop();
+            return _context11.stop();
         }
       }
-    }, _callee7, this);
+    }, _callee11, this);
   }));
 
   return function listPermissionRoles() {
-    return _ref8.apply(this, arguments);
+    return _ref12.apply(this, arguments);
   };
 }();
 /**
@@ -1401,26 +1588,74 @@ var listUserGroups = function listUserGroups() {
  */
 
 
-var modifyRole = function modifyRole() {
-  var accessToken = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : "null accessToken";
-  var roleUUID = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : "null roleUUID";
-  var body = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : "null body";
-  var trace = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : {};
-  var MS = Util.getEndpoint("auth");
-  var requestOptions = {
-    method: "POST",
-    uri: "".concat(MS, "/roles/").concat(roleUUID, "/modify"),
-    headers: {
-      Authorization: "Bearer ".concat(accessToken),
-      "Content-type": "application/json",
-      "x-api-version": "".concat(Util.getVersion())
-    },
-    body: body,
-    json: true
+var modifyRole =
+/*#__PURE__*/
+function () {
+  var _ref13 = _asyncToGenerator(
+  /*#__PURE__*/
+  regeneratorRuntime.mark(function _callee12() {
+    var accessToken,
+        roleUUID,
+        body,
+        trace,
+        MS,
+        requestOptions,
+        response,
+        role,
+        _args12 = arguments;
+    return regeneratorRuntime.wrap(function _callee12$(_context12) {
+      while (1) {
+        switch (_context12.prev = _context12.next) {
+          case 0:
+            accessToken = _args12.length > 0 && _args12[0] !== undefined ? _args12[0] : "null accessToken";
+            roleUUID = _args12.length > 1 && _args12[1] !== undefined ? _args12[1] : "null roleUUID";
+            body = _args12.length > 2 && _args12[2] !== undefined ? _args12[2] : "null body";
+            trace = _args12.length > 3 && _args12[3] !== undefined ? _args12[3] : {};
+            MS = Util.getEndpoint("auth");
+            requestOptions = {
+              method: "POST",
+              uri: "".concat(MS, "/roles/").concat(roleUUID, "/modify"),
+              headers: {
+                Authorization: "Bearer ".concat(accessToken),
+                "Content-type": "application/json",
+                "x-api-version": "".concat(Util.getVersion())
+              },
+              body: body,
+              json: true,
+              resolveWithFullResponse: true
+            };
+            Util.addRequestTrace(requestOptions, trace);
+            _context12.next = 9;
+            return request(requestOptions);
+
+          case 9:
+            response = _context12.sent;
+            role = response.body; // create returns a 202....suspend return until the new resource is ready
+
+            if (!(response.hasOwnProperty("statusCode") && response.statusCode === 202 && response.headers.hasOwnProperty("location"))) {
+              _context12.next = 14;
+              break;
+            }
+
+            _context12.next = 14;
+            return Util.pendingResource(response.headers.location, requestOptions, //reusing the request options instead of passing in multiple params
+            trace, role.hasOwnProperty("resource_status") ? role.resource_status : "complete");
+
+          case 14:
+            return _context12.abrupt("return", role);
+
+          case 15:
+          case "end":
+            return _context12.stop();
+        }
+      }
+    }, _callee12, this);
+  }));
+
+  return function modifyRole() {
+    return _ref13.apply(this, arguments);
   };
-  Util.addRequestTrace(requestOptions, trace);
-  return request(requestOptions);
-};
+}();
 /**
  * @async
  * @description This method will change the user-group name and/or description
@@ -1432,26 +1667,74 @@ var modifyRole = function modifyRole() {
  */
 
 
-var modifyUserGroup = function modifyUserGroup() {
-  var accessToken = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : "null accessToken";
-  var groupUUID = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : "null groupUUID";
-  var body = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : "null body";
-  var trace = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : {};
-  var MS = Util.getEndpoint("auth");
-  var requestOptions = {
-    method: "POST",
-    uri: "".concat(MS, "/user-groups/").concat(groupUUID, "/modify"),
-    headers: {
-      Authorization: "Bearer ".concat(accessToken),
-      "Content-type": "application/json",
-      "x-api-version": "".concat(Util.getVersion())
-    },
-    body: body,
-    json: true
+var modifyUserGroup =
+/*#__PURE__*/
+function () {
+  var _ref14 = _asyncToGenerator(
+  /*#__PURE__*/
+  regeneratorRuntime.mark(function _callee13() {
+    var accessToken,
+        groupUUID,
+        body,
+        trace,
+        MS,
+        requestOptions,
+        response,
+        userGroup,
+        _args13 = arguments;
+    return regeneratorRuntime.wrap(function _callee13$(_context13) {
+      while (1) {
+        switch (_context13.prev = _context13.next) {
+          case 0:
+            accessToken = _args13.length > 0 && _args13[0] !== undefined ? _args13[0] : "null accessToken";
+            groupUUID = _args13.length > 1 && _args13[1] !== undefined ? _args13[1] : "null groupUUID";
+            body = _args13.length > 2 && _args13[2] !== undefined ? _args13[2] : "null body";
+            trace = _args13.length > 3 && _args13[3] !== undefined ? _args13[3] : {};
+            MS = Util.getEndpoint("auth");
+            requestOptions = {
+              method: "POST",
+              uri: "".concat(MS, "/user-groups/").concat(groupUUID, "/modify"),
+              headers: {
+                Authorization: "Bearer ".concat(accessToken),
+                "Content-type": "application/json",
+                "x-api-version": "".concat(Util.getVersion())
+              },
+              body: body,
+              resolveWithFullResponse: true,
+              json: true
+            };
+            Util.addRequestTrace(requestOptions, trace);
+            _context13.next = 9;
+            return request(requestOptions);
+
+          case 9:
+            response = _context13.sent;
+            userGroup = response.body; // create returns a 202....suspend return until the new resource is ready
+
+            if (!(response.hasOwnProperty("statusCode") && response.statusCode === 202 && response.headers.hasOwnProperty("location"))) {
+              _context13.next = 14;
+              break;
+            }
+
+            _context13.next = 14;
+            return Util.pendingResource(response.headers.location, requestOptions, //reusing the request options instead of passing in multiple params
+            trace, userGroup.hasOwnProperty("resource_status") ? userGroup.resource_status : "complete");
+
+          case 14:
+            return _context13.abrupt("return", userGroup);
+
+          case 15:
+          case "end":
+            return _context13.stop();
+        }
+      }
+    }, _callee13, this);
+  }));
+
+  return function modifyUserGroup() {
+    return _ref14.apply(this, arguments);
   };
-  Util.addRequestTrace(requestOptions, trace);
-  return request(requestOptions);
-};
+}();
 
 module.exports = {
   activateRole: activateRole,

@@ -355,9 +355,10 @@ describe("Permissions MS Test Suite", function() {
   it("List a Permission's Roles", async () => {
     if (!creds.isValid) throw new Error("Invalid Credentials");
     const filters = {
-      "name": "new name"
+      "name": "Unit-Test"
     };
     trace = objectMerge({}, trace, Util.generateNewMetaData(trace));
+    await new Promise(resolve => setTimeout(resolve, Util.config.msDelay));
     const response = await s2sMS.Auth.listPermissionRoles(
       accessToken,
       permissions[0].uuid,
@@ -365,9 +366,9 @@ describe("Permissions MS Test Suite", function() {
       trace
     );
     assert.ok(
-      response.hasOwnProperty("itmes") &&
+      response.hasOwnProperty("items") &&
       response.items.length === 1 &&
-      response.item[0].uuid === role,
+      (response.items[0].uuid === role || response.item[1].uuid === role),
       JSON.stringify(response, null, "\t")
     );
     logger.debug(this.ctx.test.title, response);
@@ -596,6 +597,7 @@ describe("Permissions MS Test Suite", function() {
       JSON.stringify(response, null, "\t")
     );
     logger.debug(this.ctx.test.title, response);
+    return true;
   });
   
   it("Delete User Group", async () => {

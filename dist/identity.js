@@ -321,6 +321,8 @@ function () {
         trace,
         MS,
         requestOptions,
+        response,
+        identity,
         _args = arguments;
     return regeneratorRuntime.wrap(function _callee$(_context) {
       while (1) {
@@ -330,12 +332,6 @@ function () {
             accountUUID = _args.length > 1 && _args[1] !== undefined ? _args[1] : "null accountUUID";
             body = _args.length > 2 && _args[2] !== undefined ? _args[2] : "null body";
             trace = _args.length > 3 && _args[3] !== undefined ? _args[3] : {};
-            _context.next = 6;
-            return new Promise(function (resolve) {
-              return setTimeout(resolve, util.config.msDelay);
-            });
-
-          case 6:
             MS = util.getEndpoint("identity");
             requestOptions = {
               method: "POST",
@@ -346,16 +342,30 @@ function () {
                 "x-api-version": "".concat(util.getVersion())
               },
               body: body,
-              json: true
+              json: true,
+              resolveWithFullResponse: true
             };
             util.addRequestTrace(requestOptions, trace);
-            _context.next = 11;
+            _context.next = 9;
             return request(requestOptions);
 
-          case 11:
-            return _context.abrupt("return", _context.sent);
+          case 9:
+            response = _context.sent;
+            identity = response.body; // update returns a 202....suspend return until the new resource is ready
 
-          case 12:
+            if (!(response.hasOwnProperty("statusCode") && response.statusCode === 202 && response.headers.hasOwnProperty("location"))) {
+              _context.next = 14;
+              break;
+            }
+
+            _context.next = 14;
+            return util.pendingResource(response.headers.location, requestOptions, //reusing the request options instead of passing in multiple params
+            trace, identity.hasOwnProperty("resource_status") ? identity.resource_status : "complete");
+
+          case 14:
+            return _context.abrupt("return", identity);
+
+          case 15:
           case "end":
             return _context.stop();
         }
@@ -622,12 +632,7 @@ function () {
             accessToken = _args2.length > 0 && _args2[0] !== undefined ? _args2[0] : "null accessToken";
             userUuid = _args2.length > 1 && _args2[1] !== undefined ? _args2[1] : "null uuid";
             trace = _args2.length > 2 && _args2[2] !== undefined ? _args2[2] : {};
-            _context2.next = 5;
-            return new Promise(function (resolve) {
-              return setTimeout(resolve, util.config.msDelay);
-            });
-
-          case 5:
+            _context2.prev = 3;
             MS = util.getEndpoint("identity");
             requestOptions = {
               method: "DELETE",
@@ -641,23 +646,40 @@ function () {
               resolveWithFullResponse: true
             };
             util.addRequestTrace(requestOptions, trace);
-            _context2.next = 10;
+            _context2.next = 9;
             return request(requestOptions);
 
-          case 10:
+          case 9:
             response = _context2.sent;
-            return _context2.abrupt("return", response.statusCode === 204 ? Promise.resolve({
-              status: "ok"
-            }) : Promise.reject({
-              status: "failed"
+
+            if (!(response.hasOwnProperty("statusCode") && response.statusCode === 202 && response.headers.hasOwnProperty("location"))) {
+              _context2.next = 13;
+              break;
+            }
+
+            _context2.next = 13;
+            return util.pendingResource(response.headers.location, requestOptions, //reusing the request options instead of passing in multiple params
+            trace, "deleting");
+
+          case 13:
+            return _context2.abrupt("return", Promise.resolve({
+              "status": "ok"
             }));
 
-          case 12:
+          case 16:
+            _context2.prev = 16;
+            _context2.t0 = _context2["catch"](3);
+            return _context2.abrupt("return", Promise.reject({
+              "status": "failed",
+              "message": _context2.t0.hasOwnProperty("message") ? _context2.t0.message : JSON.stringify(_context2.t0)
+            }));
+
+          case 19:
           case "end":
             return _context2.stop();
         }
       }
-    }, _callee2, this);
+    }, _callee2, this, [[3, 16]]);
   }));
 
   return function deleteIdentity() {
@@ -821,12 +843,6 @@ function () {
             limit = _args3.length > 3 && _args3[3] !== undefined ? _args3[3] : 10;
             filters = _args3.length > 4 && _args3[4] !== undefined ? _args3[4] : undefined;
             trace = _args3.length > 5 && _args3[5] !== undefined ? _args3[5] : {};
-            _context3.next = 8;
-            return new Promise(function (resolve) {
-              return setTimeout(resolve, util.config.msDelay);
-            });
-
-          case 8:
             MS = util.getEndpoint("identity");
             requestOptions = {
               method: "GET",
@@ -851,13 +867,13 @@ function () {
             } //console.log("REQUEST********",requestOptions);
 
 
-            _context3.next = 14;
+            _context3.next = 12;
             return request(requestOptions);
 
-          case 14:
+          case 12:
             return _context3.abrupt("return", _context3.sent);
 
-          case 15:
+          case 13:
           case "end":
             return _context3.stop();
         }
@@ -904,12 +920,6 @@ function () {
             limit = _args4.length > 2 && _args4[2] !== undefined ? _args4[2] : 10;
             filters = _args4.length > 3 && _args4[3] !== undefined ? _args4[3] : undefined;
             trace = _args4.length > 4 && _args4[4] !== undefined ? _args4[4] : {};
-            _context4.next = 7;
-            return new Promise(function (resolve) {
-              return setTimeout(resolve, util.config.msDelay);
-            });
-
-          case 7:
             MS = util.getEndpoint("identity");
             requestOptions = {
               method: "GET",
@@ -934,13 +944,13 @@ function () {
             } //console.log("REQUEST********",requestOptions);
 
 
-            _context4.next = 13;
+            _context4.next = 11;
             return request(requestOptions);
 
-          case 13:
+          case 11:
             return _context4.abrupt("return", _context4.sent);
 
-          case 14:
+          case 12:
           case "end":
             return _context4.stop();
         }

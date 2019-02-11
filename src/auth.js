@@ -14,35 +14,48 @@ const objectMerge = require("object-merge");
  * @param {object} [trace = {}] - optional microservice lifecycle trace headers
  * @returns {Promise<object>} - Promise resolving to a status data object
  */
-const activateRole = (
+const activateRole = async (
   accessToken = "null accessToken",
   roleUUID = "null roleUUID",
   trace = {}
 ) => {
-  const MS = Util.getEndpoint("auth");
-  const requestOptions = {
-    method: "POST",
-    uri: `${MS}/roles/${roleUUID}/activate`,
-    headers: {
-      Authorization: `Bearer ${accessToken}`,
-      "Content-type": "application/json",
-      "x-api-version": `${Util.getVersion()}`
-    },
-    resolveWithFullResponse: true,
-    json: true
-  };
-  Util.addRequestTrace(requestOptions, trace);
-  return new Promise(function(resolve, reject) {
-    request(requestOptions)
-      .then(function(responseData) {
-        responseData.statusCode === 204
-          ? resolve({ status: "ok" })
-          : reject({ status: "failed" });
-      })
-      .catch(function(error) {
-        reject(error);
-      });
-  });
+  try{
+    const MS = Util.getEndpoint("auth");
+    const requestOptions = {
+      method: "POST",
+      uri: `${MS}/roles/${roleUUID}/activate`,
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+        "Content-type": "application/json",
+        "x-api-version": `${Util.getVersion()}`
+      },
+      resolveWithFullResponse: true,
+      json: true
+    };
+    Util.addRequestTrace(requestOptions, trace);
+    const response = await request(requestOptions);
+    const role = response.body;
+    // create returns a 202....suspend return until the new resource is ready
+    if (response.hasOwnProperty("statusCode") && 
+        response.statusCode === 202 &&
+        response.headers.hasOwnProperty("location"))
+    {    
+      await Util.pendingResource(
+        response.headers.location,
+        requestOptions, //reusing the request options instead of passing in multiple params
+        trace,
+        role.hasOwnProperty("resource_status") ? role.resource_status : "complete"
+      );
+    }
+    return { status: "ok" };
+  } catch(error){
+    return Promise.reject(
+      {
+        "status": "failed",
+        "message": error.hasOwnProperty("message") ? error.message : JSON.stringify(error)
+      }
+    );
+  }
 };
 
 /**
@@ -148,7 +161,6 @@ const assignScopedRoleToUserGroup = async (
   data = "null resourceUUID",
   trace = {}
 ) => {
-  await new Promise(resolve => setTimeout(resolve, Util.config.msDelay));
   const MS = Util.getEndpoint("auth");
   const requestOptions = {
     method: "POST",
@@ -227,7 +239,6 @@ const createUserGroup = async (
   body = "null body",
   trace = {}
 ) => {
-  await new Promise(resolve => setTimeout(resolve, Util.config.msDelay));
   const MS = Util.getEndpoint("auth");
   const requestOptions = {
     method: "POST",
@@ -238,10 +249,26 @@ const createUserGroup = async (
       "x-api-version": `${Util.getVersion()}`
     },
     body: body,
-    json: true
+    json: true,
+    resolveWithFullResponse: true
   };
   Util.addRequestTrace(requestOptions, trace);
-  return await request(requestOptions);
+  const response = await request(requestOptions);
+  const newGroup = response.body;
+  // create returns a 202....suspend return until the new resource is ready
+  if (response.hasOwnProperty("statusCode") && 
+        response.statusCode === 202 &&
+        response.headers.hasOwnProperty("location"))
+  {    
+    await Util.pendingResource(
+      response.headers.location,
+      requestOptions, //reusing the request options instead of passing in multiple params
+      trace,
+      newGroup.hasOwnProperty("resource_status") ? newGroup.resource_status : "complete"
+    );
+  }
+
+  return newGroup;
 };
 
 /**
@@ -253,7 +280,7 @@ const createUserGroup = async (
  * @param {object} [trace = {}] - optional microservice lifecycle trace headers
  * @returns {Promise<object>} - Promise resolving to a role data object
  */
-const createRole = (
+const createRole = async (
   accessToken = "null accessToken",
   accountUUID = "null accountUUID",
   body = "null body",
@@ -269,10 +296,25 @@ const createRole = (
       "x-api-version": `${Util.getVersion()}`
     },
     body: body,
-    json: true
+    json: true,
+    resolveWithFullResponse: true
   };
   Util.addRequestTrace(requestOptions, trace);
-  return request(requestOptions);
+  const response = await request(requestOptions);
+  const newRole = response.body;
+  // create returns a 202....suspend return until the new resource is ready
+  if (response.hasOwnProperty("statusCode") && 
+      response.statusCode === 202 &&
+      response.headers.hasOwnProperty("location"))
+  {    
+    await Util.pendingResource(
+      response.headers.location,
+      requestOptions, //reusing the request options instead of passing in multiple params
+      trace,
+      newRole.hasOwnProperty("resource_status") ? newRole.resource_status : "complete"
+    );
+  }
+  return newRole;
 };
 
 /**
@@ -283,35 +325,49 @@ const createRole = (
  * @param {object} [trace = {}] - optional microservice lifecycle trace headers
  * @returns {Promise<object>} - Promise resolving to a status data object
  */
-const deactivateRole = (
+const deactivateRole = async (
   accessToken = "null accessToken",
   roleUUID = "null roleUUID",
   trace = {}
 ) => {
-  const MS = Util.getEndpoint("auth");
-  const requestOptions = {
-    method: "POST",
-    uri: `${MS}/roles/${roleUUID}/deactivate`,
-    headers: {
-      Authorization: `Bearer ${accessToken}`,
-      "Content-type": "application/json",
-      "x-api-version": `${Util.getVersion()}`
-    },
-    resolveWithFullResponse: true,
-    json: true
-  };
-  Util.addRequestTrace(requestOptions, trace);
-  return new Promise(function(resolve, reject) {
-    request(requestOptions)
-      .then(function(responseData) {
-        responseData.statusCode === 204
-          ? resolve({ status: "ok" })
-          : reject({ status: "failed" });
-      })
-      .catch(function(error) {
-        reject(error);
-      });
-  });
+  try{
+    const MS = Util.getEndpoint("auth");
+    const requestOptions = {
+      method: "POST",
+      uri: `${MS}/roles/${roleUUID}/deactivate`,
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+        "Content-type": "application/json",
+        "x-api-version": `${Util.getVersion()}`
+      },
+      resolveWithFullResponse: true,
+      json: true
+    };
+    Util.addRequestTrace(requestOptions, trace);
+    const response = await request(requestOptions);
+    const role = response.body;
+    // create returns a 202....suspend return until the new resource is ready
+    if (response.hasOwnProperty("statusCode") && 
+        response.statusCode === 202 &&
+        response.headers.hasOwnProperty("location"))
+    {    
+      await Util.pendingResource(
+        response.headers.location,
+        requestOptions, //reusing the request options instead of passing in multiple params
+        trace,
+        role.hasOwnProperty("resource_status") ? role.resource_status : "complete"
+      );
+    }
+    return {"status": "ok"};
+  } catch(error){
+    return Promise.reject(
+      {
+        "status": "failed",
+        "message": error.hasOwnProperty("message") ? error.message : JSON.stringify(error)
+      }
+    );
+  }
+  
 };
 
 /**
@@ -363,35 +419,40 @@ const deletePermissionFromRole = (
  * @param {object} [trace = {}] - optional microservice lifecycle trace headers
  * @returns {Promise<object>} - Promise resolving to a status data object
  */
-const deleteRole = (
+//FIXME 202 location header to be fixed....nh 2/8/19
+const deleteRole = async (
   accessToken = "null accessToken",
   roleUUID = "null roleUUID",
   trace = {}
 ) => {
-  const MS = Util.getEndpoint("auth");
-  const requestOptions = {
-    method: "DELETE",
-    uri: `${MS}/roles/${roleUUID}`,
-    headers: {
-      Authorization: `Bearer ${accessToken}`,
-      "Content-type": "application/json",
-      "x-api-version": `${Util.getVersion()}`
-    },
-    resolveWithFullResponse: true,
-    json: true
-  };
-  Util.addRequestTrace(requestOptions, trace);
-  return new Promise(function(resolve, reject) {
-    request(requestOptions)
-      .then(function(responseData) {
-        responseData.statusCode === 204
-          ? resolve({ status: "ok" })
-          : reject({ status: "failed" });
-      })
-      .catch(function(error) {
-        reject(error);
-      });
-  });
+  try {
+    const MS = Util.getEndpoint("auth");
+    const requestOptions = {
+      method: "DELETE",
+      uri: `${MS}/roles/${roleUUID}`,
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+        "Content-type": "application/json",
+        "x-api-version": `${Util.getVersion()}`
+      },
+      resolveWithFullResponse: true,
+      json: true
+    };
+    Util.addRequestTrace(requestOptions, trace);
+    const response = await request(requestOptions);
+    await new Promise(resolve => setTimeout(resolve, Util.config.msDelay));
+    if (response.statusCode === 202){
+      return {"status": "ok"};
+    } else {
+      throw (`unexpected status code: ${response.statusCode}`);
+    }
+  } catch (error) {
+    return Promise.reject({
+      "status": "failed",
+      "message": error.hasOwnProperty("message") ? error.message : JSON.stringify(error)
+    });
+  }
+  
 };
 
 /**
@@ -490,7 +551,6 @@ const listAccessByGroups = async (
     },
     json: true
   };
-  await new Promise(resolve => setTimeout(resolve, Util.config.msDelay));
   Util.addRequestTrace(requestOptions, trace);
   return request(requestOptions);
 };
@@ -633,7 +693,6 @@ const listPermissionRoles = async (
       requestOptions.qs[filter] = filters[filter];
     });
   }
-  await new Promise(resolve => setTimeout(resolve, Util.config.msDelay));
   return request(requestOptions);
 };
 
@@ -846,7 +905,7 @@ const listUserGroups = (
  * @param {object} [trace = {}] - optional microservice lifecycle trace headers
  * @returns {Promise<object>} - Promise resolving to a permission data object
  */
-const modifyRole = (
+const modifyRole = async (
   accessToken = "null accessToken",
   roleUUID = "null roleUUID",
   body = "null body",
@@ -862,10 +921,25 @@ const modifyRole = (
       "x-api-version": `${Util.getVersion()}`
     },
     body: body,
-    json: true
+    json: true,
+    resolveWithFullResponse: true
   };
   Util.addRequestTrace(requestOptions, trace);
-  return request(requestOptions);
+  const response = await request(requestOptions);
+  const role = response.body;
+  // create returns a 202....suspend return until the new resource is ready
+  if (response.hasOwnProperty("statusCode") && 
+        response.statusCode === 202 &&
+        response.headers.hasOwnProperty("location"))
+  {    
+    await Util.pendingResource(
+      response.headers.location,
+      requestOptions, //reusing the request options instead of passing in multiple params
+      trace,
+      role.hasOwnProperty("resource_status") ? role.resource_status : "complete"
+    );
+  }
+  return role;
 };
 
 /**
@@ -877,7 +951,7 @@ const modifyRole = (
  * @param {object} [trace = {}] - optional microservice lifecycle trace headers
  * @returns {Promise<object>} - Promise resolving to a group object.
  */
-const modifyUserGroup = (
+const modifyUserGroup = async (
   accessToken = "null accessToken",
   groupUUID = "null groupUUID",
   body = "null body",
@@ -893,10 +967,25 @@ const modifyUserGroup = (
       "x-api-version": `${Util.getVersion()}`
     },
     body: body,
+    resolveWithFullResponse: true,
     json: true
   };
   Util.addRequestTrace(requestOptions, trace);
-  return request(requestOptions);
+  const response = await request(requestOptions);
+  const userGroup = response.body;
+  // create returns a 202....suspend return until the new resource is ready
+  if (response.hasOwnProperty("statusCode") && 
+        response.statusCode === 202 &&
+        response.headers.hasOwnProperty("location"))
+  {    
+    await Util.pendingResource(
+      response.headers.location,
+      requestOptions, //reusing the request options instead of passing in multiple params
+      trace,
+      userGroup.hasOwnProperty("resource_status") ? userGroup.resource_status : "complete"
+    );
+  }
+  return userGroup;
 };
 
 module.exports = {

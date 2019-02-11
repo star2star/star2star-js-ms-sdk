@@ -161,31 +161,43 @@ const deleteGroup = async (
   groupUUID = "not specified",
   trace = {}
 ) => {
-  await new Promise(resolve => setTimeout(resolve, util.config.msDelay));
-  const MS = util.getEndpoint("groups");
-  const requestOptions = {
-    method: "DELETE",
-    uri: `${MS}/groups/${groupUUID}`,
-    headers: {
-      "Content-type": "application/json",
-      Authorization: `Bearer ${accessToken}`,
-      "x-api-version": `${util.getVersion()}`
-    },
-    resolveWithFullResponse: true,
-    json: true
-  };
-  util.addRequestTrace(requestOptions, trace);
-  return await new Promise(function(resolve, reject) {
-    request(requestOptions)
-      .then(function(responseData) {
-        responseData.statusCode === 204
-          ? resolve({ status: "ok" })
-          : reject({ status: "failed" });
-      })
-      .catch(function(error) {
-        reject(error);
-      });
-  });
+  try {
+    const MS = util.getEndpoint("groups");
+    const requestOptions = {
+      method: "DELETE",
+      uri: `${MS}/groups/${groupUUID}`,
+      headers: {
+        "Content-type": "application/json",
+        Authorization: `Bearer ${accessToken}`,
+        "x-api-version": `${util.getVersion()}`
+      },
+      resolveWithFullResponse: true,
+      json: true
+    };
+    util.addRequestTrace(requestOptions, trace);
+    const response =  await request(requestOptions);
+    // delete returns a 202....suspend return until the new resource is ready
+    if (response.hasOwnProperty("statusCode") && 
+          response.statusCode === 202 &&
+          response.headers.hasOwnProperty("location"))
+    {    
+      await util.pendingResource(
+        response.headers.location,
+        requestOptions, //reusing the request options instead of passing in multiple params
+        trace,
+        "deleting"
+      );
+    }
+    return Promise.resolve({"status":"ok"});
+  } catch(error){
+    return Promise.reject(
+      {
+        "status": "failed",
+        "message": error.hasOwnProperty("message") ? error.message : JSON.stringify(error)
+      }
+    );
+  }
+  
 };
 
 /**
@@ -203,7 +215,6 @@ const addMembersToGroup = async (
   members = [],
   trace = {}
 ) => {
-  await new Promise(resolve => setTimeout(resolve, util.config.msDelay));
   const MS = util.getEndpoint("groups");
   const requestOptions = {
     method: "POST",
@@ -237,7 +248,6 @@ const deleteGroupMembers = async (
   members = [],
   trace = {}
 ) => { 
-  await new Promise(resolve => setTimeout(resolve, util.config.msDelay));
   const MS = util.getEndpoint("groups");
   const requestOptions = {
     method: "DELETE",

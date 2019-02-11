@@ -313,7 +313,6 @@ var Groups = require("./groups");
 
 var env = Util.config.env;
 var roles = Util.config.roles[env];
-var msDelay = Util.config.msDelay;
 
 var objectMerge = require("object-merge");
 /**
@@ -389,13 +388,6 @@ function () {
 
           case 16:
             groups = _context.sent;
-            _context.next = 19;
-            return new Promise(function (resolve) {
-              return setTimeout(resolve, msDelay);
-            });
-
-          case 19:
-            //microservices delay :(
             // scope the resource to the groups
             groups.forEach(function (group) {
               //extract the group type from the group name
@@ -403,28 +395,28 @@ function () {
               nextTrace = objectMerge({}, nextTrace, Util.generateNewMetaData(nextTrace));
               scopePromises.push(Auth.assignScopedRoleToUserGroup(accessToken, group.uuid, roles[type][groupType], "resource", [resourceUUID], nextTrace));
             });
-            _context.next = 22;
+            _context.next = 20;
             return Promise.all(scopePromises);
 
-          case 22:
+          case 20:
             return _context.abrupt("return", Promise.resolve({
               status: "ok"
             }));
 
-          case 25:
-            _context.prev = 25;
+          case 23:
+            _context.prev = 23;
             _context.t0 = _context["catch"](6);
             return _context.abrupt("return", Promise.reject({
               status: "failed",
               createResourceGroups: _context.t0
             }));
 
-          case 28:
+          case 26:
           case "end":
             return _context.stop();
         }
       }
-    }, _callee, this, [[6, 25]]);
+    }, _callee, this, [[6, 23]]);
   }));
 
   return function createResourceGroups() {

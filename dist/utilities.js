@@ -305,6 +305,10 @@ var config = require("./config.json");
 
 var uuidv4 = require("uuid/v4");
 
+var request = require("request-promise");
+
+var objectMerge = require("object-merge");
+
 var logger = new _nodeLogger.default();
 /**
  *
@@ -764,20 +768,23 @@ var pendingResource =
 function () {
   var _ref3 = _asyncToGenerator(
   /*#__PURE__*/
-  regeneratorRuntime.mark(function _callee3(verifyFunc) {
+  regeneratorRuntime.mark(function _callee3(resourceLoc, requestOptions, trace) {
     var startingResourceStatus,
+        nextTrace,
         expires,
+        rawResponse,
         response,
         _args3 = arguments;
     return regeneratorRuntime.wrap(function _callee3$(_context3) {
       while (1) {
         switch (_context3.prev = _context3.next) {
           case 0:
-            startingResourceStatus = _args3.length > 1 && _args3[1] !== undefined ? _args3[1] : "complete";
-            _context3.prev = 1;
+            startingResourceStatus = _args3.length > 3 && _args3[3] !== undefined ? _args3[3] : "complete";
+            logger.debug("Pending Resource Location", resourceLoc);
+            _context3.prev = 2;
 
             if (!(startingResourceStatus === "complete")) {
-              _context3.next = 4;
+              _context3.next = 5;
               break;
             }
 
@@ -785,91 +792,102 @@ function () {
               "status": "ok"
             }));
 
-          case 4:
-            // starting resource is not complete, poll the verify endpoint
+          case 5:
+            //update our requestOptions for the verification URL
+            requestOptions.method = "GET";
+            requestOptions.uri = resourceLoc;
+            requestOptions.body = {}; //clear any body data
+            //add trace headers
+
+            nextTrace = objectMerge({}, generateNewMetaData(trace));
+            addRequestTrace(requestOptions, nextTrace); // starting resource is not complete, poll the verify endpoint
+
             expires = Date.now() + config.pollTimeout;
 
-          case 5:
+          case 11:
             if (!(Date.now() < expires)) {
-              _context3.next = 24;
+              _context3.next = 32;
               break;
             }
 
-            _context3.next = 8;
-            return verifyFunc();
+            _context3.next = 14;
+            return request(requestOptions);
 
-          case 8:
-            response = _context3.sent;
+          case 14:
+            rawResponse = _context3.sent;
+            response = rawResponse.body;
+            logger.debug("Pending Resource verification GET response", response);
 
             if (!response.hasOwnProperty("resource_status")) {
-              _context3.next = 19;
+              _context3.next = 27;
               break;
             }
 
             _context3.t0 = response.resource_status;
-            _context3.next = _context3.t0 === "processing" ? 13 : _context3.t0 === "complete" ? 14 : _context3.t0 === "failure" ? 15 : 16;
+            _context3.next = _context3.t0 === "processing" ? 21 : _context3.t0 === "complete" ? 22 : _context3.t0 === "failure" ? 23 : 24;
             break;
 
-          case 13:
-            return _context3.abrupt("break", 17);
+          case 21:
+            return _context3.abrupt("break", 25);
 
-          case 14:
+          case 22:
             return _context3.abrupt("return", response);
 
-          case 15:
+          case 23:
             throw Error("failure: ".concat(JSON.stringify(response)));
 
-          case 16:
+          case 24:
             throw Error("unrecognized resource_status: ".concat(JSON.stringify(response)));
 
-          case 17:
-            _context3.next = 20;
+          case 25:
+            _context3.next = 28;
             break;
 
-          case 19:
+          case 27:
             throw Error("resource_status missing from response: ".concat(JSON.stringify(response)));
 
-          case 20:
-            _context3.next = 22;
+          case 28:
+            _context3.next = 30;
             return new Promise(function (resolve) {
               return setTimeout(resolve, config.pollInterval);
             });
 
-          case 22:
-            _context3.next = 5;
+          case 30:
+            _context3.next = 11;
             break;
 
-          case 24:
+          case 32:
             throw Error("request timeout");
 
-          case 27:
-            _context3.prev = 27;
-            _context3.t1 = _context3["catch"](1);
+          case 35:
+            _context3.prev = 35;
+            _context3.t1 = _context3["catch"](2);
 
             if (!(startingResourceStatus === "deleting" && _context3.t1.hasOwnProperty("statusCode") && _context3.t1.statusCode === 404)) {
-              _context3.next = 31;
+              _context3.next = 40;
               break;
             }
 
+            logger.debug("Pending Resource Deleted", _context3.t1.message);
             return _context3.abrupt("return", Promise.resolve({
               "status": "ok"
             }));
 
-          case 31:
+          case 40:
             return _context3.abrupt("return", Promise.reject({
               "statusCode": 500,
               "message": _context3.t1.hasOwnProperty("message") ? _context3.t1.message : _context3.t1
             }));
 
-          case 32:
+          case 41:
           case "end":
             return _context3.stop();
         }
       }
-    }, _callee3, this, [[1, 27]]);
+    }, _callee3, this, [[2, 35]]);
   }));
 
-  return function pendingResource(_x5) {
+  return function pendingResource(_x5, _x6, _x7) {
     return _ref3.apply(this, arguments);
   };
 }();

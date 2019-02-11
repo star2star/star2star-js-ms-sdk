@@ -3,6 +3,8 @@
 import "@babel/polyfill";
 const config = require("./config.json");
 const uuidv4 = require("uuid/v4");
+const request = require("request-promise");
+const objectMerge = require("object-merge");
 import Logger from "./node-logger";
 const logger = new Logger();
 
@@ -372,16 +374,27 @@ const getLogPretty = () => {
  * @param {string} startingResourceStatus - argument to specify expected resolution or skip polling if ready
  * @returns {Promise} - Promise resolved when verify func is successful.
  */
-const pendingResource = async (verifyFunc, startingResourceStatus = "complete") => {
+const pendingResource = async (resourceLoc, requestOptions, trace, startingResourceStatus = "complete") => {
+  logger.debug("Pending Resource Location", resourceLoc);
   try {
     // if the startingResourceStatus is complete, there is nothing to do since the resource is ready
     if (startingResourceStatus === "complete") {
       return Promise.resolve({"status":"ok"});
     }
+    //update our requestOptions for the verification URL
+    requestOptions.method = "GET";
+    requestOptions.uri = resourceLoc;
+    requestOptions.body = {}; //clear any body data
+    
+    //add trace headers
+    const nextTrace = objectMerge({}, generateNewMetaData(trace));
+    addRequestTrace(requestOptions, nextTrace);
     // starting resource is not complete, poll the verify endpoint
     const expires = Date.now() + config.pollTimeout;
     while (Date.now() < expires) {
-      let response = await verifyFunc();
+      let rawResponse = await request(requestOptions);
+      let response = rawResponse.body;
+      logger.debug("Pending Resource verification GET response", response);
       if(response.hasOwnProperty("resource_status")){
         switch(response.resource_status) {
         case "processing":
@@ -407,7 +420,7 @@ const pendingResource = async (verifyFunc, startingResourceStatus = "complete") 
       error.hasOwnProperty("statusCode") &&
       error.statusCode === 404
     ){
-      //console.log("deleted........", error.message);
+      logger.debug("Pending Resource Deleted", error.message);
       return Promise.resolve({"status":"ok"});
     }
     return Promise.reject(

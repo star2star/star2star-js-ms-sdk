@@ -185,7 +185,6 @@ describe("Accounts MS Unit Test Suite", function() {
   it("Get Account Data and Check Relationships", mochaAsync(async () => {
     if (!creds.isValid) throw new Error("Invalid Credentials");
     //Workaround for CSRVS-181
-    await new Promise(resolve => setTimeout(resolve, Util.config.msDelay));
     trace = objectMerge({}, trace, Util.generateNewMetaData(trace));
     const response = await s2sMS.Accounts.getAccount(accessToken, accountUUID, trace);
     assert.ok(
@@ -242,7 +241,6 @@ describe("Accounts MS Unit Test Suite", function() {
   it("Get Account Data After Modify", mochaAsync(async () => {
     if (!creds.isValid) throw new Error("Invalid Credentials");
     //Workaround for CSRVS-181
-    await new Promise(resolve => setTimeout(resolve, Util.config.msDelay));
     trace = objectMerge({}, trace, Util.generateNewMetaData(trace));
     const response = await s2sMS.Accounts.getAccount(accessToken, accountUUID, trace);
     assert.ok(
@@ -263,9 +261,14 @@ describe("Accounts MS Unit Test Suite", function() {
       10, //limit
       trace 
     );
+    logger.debug("account uuid ***********", identityData.account_uuid);
     assert.ok(
       response.items.length > 0 &&
-      response.items[0].target.uuid === identityData.account_uuid,
+      response.items.filter(item => {
+        if (item.target.type === "MasterReseller") {
+          return item.target.uuid === identityData.account_uuid;
+        }
+      }),
       JSON.stringify(response, null, "\t")
     );
     return response;

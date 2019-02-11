@@ -21,7 +21,6 @@ const createClientApp = async (
   description = "null description",
   trace = {}
 ) => {
-  await new Promise(resolve => setTimeout(resolve, Util.config.msDelay));
   const MS = Util.getAuthHost();
   const requestOptions = {
     method: "POST",
@@ -41,7 +40,9 @@ const createClientApp = async (
     }
   };
   Util.addRequestTrace(requestOptions, trace);
-  return await request(requestOptions);  
+  const response =  request(requestOptions);
+  await new Promise(resolve => setTimeout(resolve, Util.config.msDelay));
+  return response;  
 };
 
 /**
@@ -82,7 +83,6 @@ const getAccessToken = async (
   scope = "default",
   trace = {}
 ) => {
-  await new Promise(resolve => setTimeout(resolve, Util.config.msDelay));
   const MS = Util.getAuthHost();
   const VERSION = Util.getVersion();
   const requestOptions = {
@@ -103,7 +103,9 @@ const getAccessToken = async (
     // resolveWithFullResponse: true
   };
   Util.addRequestTrace(requestOptions, trace);
-  return await request(requestOptions);
+  const response =  await request(requestOptions);
+  await new Promise(resolve => setTimeout(resolve, Util.config.msDelay));
+  return response;
 };
 
 /**
@@ -114,7 +116,6 @@ const getAccessToken = async (
  * @returns {Promise<object>} - Promise resolving to an oauth token data object
  */
 const getClientToken = async (oauthToken = "null oauth token", trace = {}) => {
-  await new Promise(resolve => setTimeout(resolve, Util.config.msDelay));
   const MS = Util.getAuthHost();
   const VERSION = Util.getVersion();
   const requestOptions = {
@@ -133,7 +134,10 @@ const getClientToken = async (oauthToken = "null oauth token", trace = {}) => {
     // resolveWithFullResponse: true
   };
   Util.addRequestTrace(requestOptions, trace);
-  return request(requestOptions);
+  const response = request(requestOptions);
+  await new Promise(resolve => setTimeout(resolve, Util.config.msDelay));
+  return response;
+
 };
 
 /**
@@ -145,7 +149,6 @@ const getClientToken = async (oauthToken = "null oauth token", trace = {}) => {
  * @returns {Promise} - promise thatdoes stuff
  */
 const invalidateToken = async (accessToken = "null accessToken", token = "null token", trace = {}) => {
-  await new Promise(resolve => setTimeout(resolve, Util.config.msDelay)); //delay is to ensure clean-up operations work
   const MS = Util.getAuthHost();
   const requestOptions = {
     method: "POST",
@@ -183,7 +186,6 @@ const listClientTokens = async (
   filters = undefined,
   trace = {}
 ) => {
-  await new Promise(resolve => setTimeout(resolve, Util.config.msDelay));
   const MS = Util.getAuthHost();
   const requestOptions = {
     method: "GET",
@@ -222,7 +224,6 @@ const refreshAccessToken = async (
   refreshToken = "null refresh token",
   trace = {}
 ) => {
-  await new Promise(resolve => setTimeout(resolve, Util.config.msDelay));
   const MS = Util.getAuthHost();
   const VERSION = Util.getVersion();
   const requestOptions = {
@@ -275,8 +276,8 @@ const scopeClientApp = async (
     }
   };
   Util.addRequestTrace(requestOptions, trace);
-  await new Promise(resolve => setTimeout(resolve, Util.config.msDelay));
   const response = await request(requestOptions);
+  await new Promise(resolve => setTimeout(resolve, Util.config.msDelay));
   if (response.statusCode === 204) {
     return Promise.resolve({"status":"ok"}); 
   } else {
@@ -293,7 +294,6 @@ const scopeClientApp = async (
  * @returns {Promise} - promise thatdoes stuff
  */
 const validateToken = async (accessToken = "null accessToken", token= "null token", trace = {}) => {
-  await new Promise(resolve => setTimeout(resolve, Util.config.msDelay)); //delay is to ensure clean-up operations work
   const MS = Util.getAuthHost();
   const requestOptions = {
     method: "POST",

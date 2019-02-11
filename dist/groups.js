@@ -469,6 +469,7 @@ function () {
         trace,
         MS,
         requestOptions,
+        response,
         _args = arguments;
     return regeneratorRuntime.wrap(function _callee$(_context) {
       while (1) {
@@ -477,12 +478,7 @@ function () {
             accessToken = _args.length > 0 && _args[0] !== undefined ? _args[0] : "null accessToken";
             groupUUID = _args.length > 1 && _args[1] !== undefined ? _args[1] : "not specified";
             trace = _args.length > 2 && _args[2] !== undefined ? _args[2] : {};
-            _context.next = 5;
-            return new Promise(function (resolve) {
-              return setTimeout(resolve, util.config.msDelay);
-            });
-
-          case 5:
+            _context.prev = 3;
             MS = util.getEndpoint("groups");
             requestOptions = {
               method: "DELETE",
@@ -496,28 +492,40 @@ function () {
               json: true
             };
             util.addRequestTrace(requestOptions, trace);
-            _context.next = 10;
-            return new Promise(function (resolve, reject) {
-              request(requestOptions).then(function (responseData) {
-                responseData.statusCode === 204 ? resolve({
-                  status: "ok"
-                }) : reject({
-                  status: "failed"
-                });
-              }).catch(function (error) {
-                reject(error);
-              });
-            });
+            _context.next = 9;
+            return request(requestOptions);
 
-          case 10:
-            return _context.abrupt("return", _context.sent);
+          case 9:
+            response = _context.sent;
 
-          case 11:
+            if (!(response.hasOwnProperty("statusCode") && response.statusCode === 202 && response.headers.hasOwnProperty("location"))) {
+              _context.next = 13;
+              break;
+            }
+
+            _context.next = 13;
+            return util.pendingResource(response.headers.location, requestOptions, //reusing the request options instead of passing in multiple params
+            trace, "deleting");
+
+          case 13:
+            return _context.abrupt("return", Promise.resolve({
+              "status": "ok"
+            }));
+
+          case 16:
+            _context.prev = 16;
+            _context.t0 = _context["catch"](3);
+            return _context.abrupt("return", Promise.reject({
+              "status": "failed",
+              "message": _context.t0.hasOwnProperty("message") ? _context.t0.message : JSON.stringify(_context.t0)
+            }));
+
+          case 19:
           case "end":
             return _context.stop();
         }
       }
-    }, _callee, this);
+    }, _callee, this, [[3, 16]]);
   }));
 
   return function deleteGroup() {
@@ -556,12 +564,6 @@ function () {
             groupUUID = _args2.length > 1 && _args2[1] !== undefined ? _args2[1] : "group uuid not specified";
             members = _args2.length > 2 && _args2[2] !== undefined ? _args2[2] : [];
             trace = _args2.length > 3 && _args2[3] !== undefined ? _args2[3] : {};
-            _context2.next = 6;
-            return new Promise(function (resolve) {
-              return setTimeout(resolve, util.config.msDelay);
-            });
-
-          case 6:
             MS = util.getEndpoint("groups");
             requestOptions = {
               method: "POST",
@@ -576,13 +578,13 @@ function () {
             };
             util.addRequestTrace(requestOptions, trace); // console.log("request options", JSON.stringify(requestOptions));
 
-            _context2.next = 11;
+            _context2.next = 9;
             return request(requestOptions);
 
-          case 11:
+          case 9:
             return _context2.abrupt("return", _context2.sent);
 
-          case 12:
+          case 10:
           case "end":
             return _context2.stop();
         }
@@ -626,12 +628,6 @@ function () {
             groupUuid = _args3.length > 1 && _args3[1] !== undefined ? _args3[1] : "null groupUuid";
             members = _args3.length > 2 && _args3[2] !== undefined ? _args3[2] : [];
             trace = _args3.length > 3 && _args3[3] !== undefined ? _args3[3] : {};
-            _context3.next = 6;
-            return new Promise(function (resolve) {
-              return setTimeout(resolve, util.config.msDelay);
-            });
-
-          case 6:
             MS = util.getEndpoint("groups");
             requestOptions = {
               method: "DELETE",
@@ -646,7 +642,7 @@ function () {
               json: true
             };
             util.addRequestTrace(requestOptions, trace);
-            _context3.next = 11;
+            _context3.next = 9;
             return new Promise(function (resolve, reject) {
               request(requestOptions).then(function (responseData) {
                 responseData.statusCode === 204 ? resolve({
@@ -659,10 +655,10 @@ function () {
               });
             });
 
-          case 11:
+          case 9:
             return _context3.abrupt("return", _context3.sent);
 
-          case 12:
+          case 10:
           case "end":
             return _context3.stop();
         }

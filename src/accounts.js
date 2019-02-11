@@ -89,7 +89,6 @@ const createAccount = async (
   body = "null body",
   trace = {}
 ) => {
-  await new Promise(resolve => setTimeout(resolve, util.config.msDelay));
   const MS = util.getEndpoint("accounts");
   const requestOptions = {
     method: "POST",
@@ -100,11 +99,25 @@ const createAccount = async (
       "Content-type": "application/json",
       "x-api-version": `${util.getVersion()}`
     },
-    json: true
+    json: true,
+    resolveWithFullResponse: true
   };
   util.addRequestTrace(requestOptions, trace);
-
-  return await request(requestOptions);  
+  const response = await request(requestOptions);
+  const newAccount = response.body;
+  // create returns a 202....suspend return until the new resource is ready
+  if (response.hasOwnProperty("statusCode") && 
+        response.statusCode === 202 &&
+        response.headers.hasOwnProperty("location"))
+  {    
+    await util.pendingResource(
+      response.headers.location,
+      requestOptions, //reusing the request options instead of passing in multiple params
+      trace,
+      newAccount.hasOwnProperty("resource_status") ? newAccount.resource_status : "complete"
+    );
+  }
+  return newAccount;  
 };
 
 /**
@@ -321,32 +334,42 @@ const deleteAccount = async (
   accountUUID = "null account uuid",
   trace = {}
 ) => {
-  await new Promise(resolve => setTimeout(resolve, util.config.msDelay));
-  const MS = util.getEndpoint("accounts");
-  const requestOptions = {
-    method: "DELETE",
-    uri: `${MS}/accounts/${accountUUID}`,
-    resolveWithFullResponse: true,
-    json: true,
-    headers: {
-      Authorization: `Bearer ${accessToken}`,
-      "Content-type": "application/json",
-      "x-api-version": `${util.getVersion()}`
+  try {
+    const MS = util.getEndpoint("accounts");
+    const requestOptions = {
+      method: "DELETE",
+      uri: `${MS}/accounts/${accountUUID}`,
+      resolveWithFullResponse: true,
+      json: true,
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+        "Content-type": "application/json",
+        "x-api-version": `${util.getVersion()}`
+      }
+    };
+    util.addRequestTrace(requestOptions, trace);
+    const response = await request(requestOptions);
+    // delete returns a 202....suspend return until the new resource is ready
+    if (response.hasOwnProperty("statusCode") && 
+        response.statusCode === 202 &&
+        response.headers.hasOwnProperty("location"))
+    {    
+      await util.pendingResource(
+        response.headers.location,
+        requestOptions, //reusing the request options instead of passing in multiple params
+        trace,
+        "deleting"
+      );
     }
-  };
-  util.addRequestTrace(requestOptions, trace);
-  
-  return await new Promise(function(resolve, reject) {
-    request(requestOptions)
-      .then(function(responseData) {
-        responseData.statusCode === 204
-          ? resolve({ status: "ok" })
-          : reject({ status: "failed" });
-      })
-      .catch(function(error) {
-        reject(error);
-      });
-  });
+    return {"status": "ok"};
+  } catch(error){
+    return Promise.reject(
+      {
+        "status": "failed",
+        "message": error.hasOwnProperty("message") ? error.message : JSON.stringify(error)
+      }
+    );
+  } 
 };
 
 module.exports = {

@@ -407,20 +407,15 @@ function () {
               },
               json: true
             };
-            Util.addRequestTrace(requestOptions, trace);
-            _context.next = 12;
-            return new Promise(function (resolve) {
-              return setTimeout(resolve, Util.config.msDelay);
-            });
+            Util.addRequestTrace(requestOptions, trace); //here we determine if we will need to handle aggrigation, pagination, and filtering or send it to the microservice
 
-          case 12:
             if (!filters) {
-              _context.next = 41;
+              _context.next = 39;
               break;
             }
 
             if (!(_typeof(filters) !== "object")) {
-              _context.next = 15;
+              _context.next = 13;
               break;
             }
 
@@ -429,7 +424,7 @@ function () {
               message: "ERROR: filters is not an object"
             }));
 
-          case 15:
+          case 13:
             // sort the filters into those the API handles and those handled by the SDK.
             apiFilters = ["content_type", "description", "name", "sort", "type"];
             sdkFilters = {};
@@ -444,28 +439,28 @@ function () {
             logger.debug("sdkFilters", sdkFilters); // if the sdkFilters object is empty, the API can handle everything, otherwise the sdk needs to augment the api.
 
             if (!(Object.keys(sdkFilters).length === 0)) {
-              _context.next = 28;
+              _context.next = 26;
               break;
             }
 
             requestOptions.qs.offset = offset;
             requestOptions.qs.limit = limit;
-            _context.next = 25;
+            _context.next = 23;
             return request(requestOptions);
 
-          case 25:
+          case 23:
             return _context.abrupt("return", _context.sent);
 
-          case 28:
-            _context.next = 30;
+          case 26:
+            _context.next = 28;
             return Util.aggregate(request, requestOptions, trace);
 
-          case 30:
+          case 28:
             response = _context.sent;
             logger.debug("****** AGGREGATE RESPONSE *******", response);
 
             if (!(response.hasOwnProperty("items") && response.items.length > 0)) {
-              _context.next = 40;
+              _context.next = 38;
               break;
             }
 
@@ -475,10 +470,10 @@ function () {
             logger.debug("******* PAGINATED RESPONSE ********", paginatedResponse);
             return _context.abrupt("return", paginatedResponse);
 
-          case 40:
+          case 38:
             return _context.abrupt("return", response);
 
-          case 41:
+          case 39:
           case "end":
             return _context.stop();
         }
@@ -659,11 +654,11 @@ function () {
         users,
         trace,
         MS,
-        msDelay,
         body,
         requestOptions,
         newObject,
         nextTrace,
+        response,
         _args3 = arguments;
     return regeneratorRuntime.wrap(function _callee3$(_context3) {
       while (1) {
@@ -679,7 +674,6 @@ function () {
             users = _args3.length > 7 && _args3[7] !== undefined ? _args3[7] : undefined;
             trace = _args3.length > 8 && _args3[8] !== undefined ? _args3[8] : {};
             MS = Util.getEndpoint("objects");
-            msDelay = Util.config.msDelay;
             body = {
               name: objectName,
               type: objectType,
@@ -696,63 +690,63 @@ function () {
                 "Content-type": "application/json",
                 "x-api-version": "".concat(Util.getVersion())
               },
+              resolveWithFullResponse: true,
               json: true
             };
             Util.addRequestTrace(requestOptions, trace); //create the object first
 
             nextTrace = objectMerge({}, trace);
-            _context3.prev = 15;
-            _context3.next = 18;
+            _context3.prev = 14;
+            _context3.next = 17;
             return request(requestOptions);
 
-          case 18:
-            newObject = _context3.sent;
-            _context3.next = 21;
-            return Util.pendingResource(function () {
-              return getDataObject(accessToken, newObject.uuid, nextTrace);
-            }, newObject.hasOwnProperty("resource_status") ? newObject.resource_status : "processing");
+          case 17:
+            response = _context3.sent;
+            newObject = response.body; // create returns a 202....suspend return until the new resource is ready
 
-          case 21:
+            if (!(response.hasOwnProperty("statusCode") && response.statusCode === 202 && response.headers.hasOwnProperty("location"))) {
+              _context3.next = 22;
+              break;
+            }
+
+            _context3.next = 22;
+            return Util.pendingResource(response.headers.location, requestOptions, //reusing the request options instead of passing in multiple params
+            trace, newObject.hasOwnProperty("resource_status") ? newObject.resource_status : "complete");
+
+          case 22:
             if (!(accountUUID && users && _typeof(users) === "object")) {
-              _context3.next = 25;
+              _context3.next = 26;
               break;
             }
 
             nextTrace = objectMerge({}, nextTrace, Util.generateNewMetaData(nextTrace));
-            _context3.next = 25;
+            _context3.next = 26;
             return ResourceGroups.createResourceGroups(accessToken, accountUUID, newObject.uuid, "object", //system role type
             users, nextTrace);
 
-          case 25:
+          case 26:
             return _context3.abrupt("return", newObject);
 
-          case 28:
-            _context3.prev = 28;
-            _context3.t0 = _context3["catch"](15);
+          case 29:
+            _context3.prev = 29;
+            _context3.t0 = _context3["catch"](14);
 
             if (!(newObject && newObject.hasOwnProperty("uuid"))) {
-              _context3.next = 45;
+              _context3.next = 44;
               break;
             }
 
-            _context3.prev = 31;
-            _context3.next = 34;
-            return new Promise(function (resolve) {
-              return setTimeout(resolve, msDelay);
-            });
-
-          case 34:
-            //this is to allow microservices time ack the new group before deleting.
+            _context3.prev = 32;
             nextTrace = objectMerge({}, nextTrace, Util.generateNewMetaData(nextTrace));
-            _context3.next = 37;
+            _context3.next = 36;
             return deleteDataObject(accessToken, newObject.uuid, nextTrace);
 
-          case 37:
+          case 36:
             return _context3.abrupt("return", Promise.reject(_context3.t0));
 
-          case 40:
-            _context3.prev = 40;
-            _context3.t1 = _context3["catch"](31);
+          case 39:
+            _context3.prev = 39;
+            _context3.t1 = _context3["catch"](32);
             return _context3.abrupt("return", Promise.reject({
               errors: {
                 create: _context3.t0,
@@ -760,19 +754,19 @@ function () {
               }
             }));
 
-          case 43:
-            _context3.next = 46;
+          case 42:
+            _context3.next = 45;
             break;
 
-          case 45:
+          case 44:
             return _context3.abrupt("return", Promise.reject(_context3.t0));
 
-          case 46:
+          case 45:
           case "end":
             return _context3.stop();
         }
       }
-    }, _callee3, this, [[15, 28], [31, 40]]);
+    }, _callee3, this, [[14, 29], [32, 39]]);
   }));
 
   return function createUserDataObject() {
@@ -807,6 +801,7 @@ function () {
         MS,
         b,
         requestOptions,
+        response,
         newObject,
         _args4 = arguments;
     return regeneratorRuntime.wrap(function _callee4$(_context4) {
@@ -837,6 +832,7 @@ function () {
                 "Content-type": "application/json",
                 "x-api-version": "".concat(Util.getVersion())
               },
+              resolveWithFullResponse: true,
               json: true
             };
             Util.addRequestTrace(requestOptions, trace);
@@ -844,16 +840,22 @@ function () {
             return request(requestOptions);
 
           case 12:
-            newObject = _context4.sent;
-            _context4.next = 15;
-            return Util.pendingResource(function () {
-              return getDataObject(accessToken, newObject.uuid, Util.generateNewMetaData(trace));
-            }, newObject.hasOwnProperty("resource_status") ? newObject.resource_status : "processing");
+            response = _context4.sent;
+            newObject = response.body; // create returns a 202....suspend return until the new resource is ready
 
-          case 15:
+            if (!(response.hasOwnProperty("statusCode") && response.statusCode === 202 && response.headers.hasOwnProperty("location"))) {
+              _context4.next = 17;
+              break;
+            }
+
+            _context4.next = 17;
+            return Util.pendingResource(response.headers.location, requestOptions, //reusing the request options instead of passing in multiple params
+            trace, newObject.hasOwnProperty("resource_status") ? newObject.resource_status : "complete");
+
+          case 17:
             return _context4.abrupt("return", newObject);
 
-          case 16:
+          case 18:
           case "end":
             return _context4.stop();
         }
@@ -921,12 +923,15 @@ function () {
 
           case 12:
             response = _context5.sent;
-            // create returns a 202....suspend return until the new resource is ready
-            nextTrace = objectMerge({}, trace, Util.generateNewMetaData(nextTrace));
+
+            if (!(response.hasOwnProperty("statusCode") && response.statusCode === 202 && response.headers.hasOwnProperty("location"))) {
+              _context5.next = 16;
+              break;
+            }
+
             _context5.next = 16;
-            return Util.pendingResource(function () {
-              return deleteDataObject(accessToken, dataUUID, nextTrace);
-            }, response.hasOwnProperty("resource_status") ? response.resource_status : "deleting");
+            return Util.pendingResource(response.headers.location, requestOptions, //reusing the request options instead of passing in multiple params
+            trace, "deleting");
 
           case 16:
             return _context5.abrupt("return", Promise.resolve({
@@ -973,6 +978,7 @@ function () {
         MS,
         requestOptions,
         nextTrace,
+        response,
         updatedObj,
         _args6 = arguments;
     return regeneratorRuntime.wrap(function _callee6$(_context6) {
@@ -995,6 +1001,7 @@ function () {
                 "Content-type": "application/json",
                 "x-api-version": "".concat(Util.getVersion())
               },
+              resolveWithFullResponse: true,
               json: true
             };
             Util.addRequestTrace(requestOptions, trace);
@@ -1015,18 +1022,22 @@ function () {
             return request(requestOptions);
 
           case 16:
-            updatedObj = _context6.sent;
-            // create returns a 202....suspend return until the new resource is ready
-            nextTrace = objectMerge({}, trace, Util.generateNewMetaData(nextTrace));
-            _context6.next = 20;
-            return Util.pendingResource(function () {
-              return getDataObject(accessToken, dataUUID, nextTrace);
-            }, updatedObj.hasOwnProperty("resource_status") ? updatedObj.resource_status : "processing");
+            response = _context6.sent;
+            updatedObj = response.body; // update returns a 202....suspend return until the new resource is ready
 
-          case 20:
-            return _context6.abrupt("return", updatedObj);
+            if (!(response.hasOwnProperty("statusCode") && response.statusCode === 202 && response.headers.hasOwnProperty("location"))) {
+              _context6.next = 21;
+              break;
+            }
+
+            _context6.next = 21;
+            return Util.pendingResource(response.headers.location, requestOptions, //reusing the request options instead of passing in multiple params
+            trace, updatedObj.hasOwnProperty("resource_status") ? updatedObj.resource_status : "complete");
 
           case 21:
+            return _context6.abrupt("return", updatedObj);
+
+          case 22:
           case "end":
             return _context6.stop();
         }

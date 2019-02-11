@@ -6,7 +6,6 @@ const Auth = require("./auth");
 const Groups = require("./groups");
 const env = Util.config.env;
 const roles = Util.config.roles[env];
-const msDelay = Util.config.msDelay;
 const objectMerge = require("object-merge");
 
 /**
@@ -58,8 +57,6 @@ const createResourceGroups = async (
     });
 
     const groups = await Promise.all(groupPromises);
-
-    await new Promise(resolve => setTimeout(resolve, msDelay)); //microservices delay :(
     
     // scope the resource to the groups
     groups.forEach(group => {

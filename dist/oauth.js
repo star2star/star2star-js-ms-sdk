@@ -325,6 +325,7 @@ function () {
         trace,
         MS,
         requestOptions,
+        response,
         _args = arguments;
     return regeneratorRuntime.wrap(function _callee$(_context) {
       while (1) {
@@ -335,12 +336,6 @@ function () {
             name = _args.length > 2 && _args[2] !== undefined ? _args[2] : "null name";
             description = _args.length > 3 && _args[3] !== undefined ? _args[3] : "null description";
             trace = _args.length > 4 && _args[4] !== undefined ? _args[4] : {};
-            _context.next = 7;
-            return new Promise(function (resolve) {
-              return setTimeout(resolve, Util.config.msDelay);
-            });
-
-          case 7:
             MS = Util.getAuthHost();
             requestOptions = {
               method: "POST",
@@ -360,13 +355,16 @@ function () {
               }
             };
             Util.addRequestTrace(requestOptions, trace);
-            _context.next = 12;
-            return request(requestOptions);
+            response = request(requestOptions);
+            _context.next = 11;
+            return new Promise(function (resolve) {
+              return setTimeout(resolve, Util.config.msDelay);
+            });
+
+          case 11:
+            return _context.abrupt("return", response);
 
           case 12:
-            return _context.abrupt("return", _context.sent);
-
-          case 13:
           case "end":
             return _context.stop();
         }
@@ -425,6 +423,7 @@ function () {
         MS,
         VERSION,
         requestOptions,
+        response,
         _args2 = arguments;
     return regeneratorRuntime.wrap(function _callee2$(_context2) {
       while (1) {
@@ -435,12 +434,6 @@ function () {
             pwd = _args2.length > 2 && _args2[2] !== undefined ? _args2[2] : "null pwd";
             scope = _args2.length > 3 && _args2[3] !== undefined ? _args2[3] : "default";
             trace = _args2.length > 4 && _args2[4] !== undefined ? _args2[4] : {};
-            _context2.next = 7;
-            return new Promise(function (resolve) {
-              return setTimeout(resolve, Util.config.msDelay);
-            });
-
-          case 7:
             MS = Util.getAuthHost();
             VERSION = Util.getVersion();
             requestOptions = {
@@ -461,13 +454,20 @@ function () {
 
             };
             Util.addRequestTrace(requestOptions, trace);
-            _context2.next = 13;
+            _context2.next = 11;
             return request(requestOptions);
 
-          case 13:
-            return _context2.abrupt("return", _context2.sent);
+          case 11:
+            response = _context2.sent;
+            _context2.next = 14;
+            return new Promise(function (resolve) {
+              return setTimeout(resolve, Util.config.msDelay);
+            });
 
           case 14:
+            return _context2.abrupt("return", response);
+
+          case 15:
           case "end":
             return _context2.stop();
         }
@@ -499,6 +499,7 @@ function () {
         MS,
         VERSION,
         requestOptions,
+        response,
         _args3 = arguments;
     return regeneratorRuntime.wrap(function _callee3$(_context3) {
       while (1) {
@@ -506,12 +507,6 @@ function () {
           case 0:
             oauthToken = _args3.length > 0 && _args3[0] !== undefined ? _args3[0] : "null oauth token";
             trace = _args3.length > 1 && _args3[1] !== undefined ? _args3[1] : {};
-            _context3.next = 4;
-            return new Promise(function (resolve) {
-              return setTimeout(resolve, Util.config.msDelay);
-            });
-
-          case 4:
             MS = Util.getAuthHost();
             VERSION = Util.getVersion();
             requestOptions = {
@@ -530,9 +525,16 @@ function () {
 
             };
             Util.addRequestTrace(requestOptions, trace);
-            return _context3.abrupt("return", request(requestOptions));
+            response = request(requestOptions);
+            _context3.next = 9;
+            return new Promise(function (resolve) {
+              return setTimeout(resolve, Util.config.msDelay);
+            });
 
           case 9:
+            return _context3.abrupt("return", response);
+
+          case 10:
           case "end":
             return _context3.stop();
         }
@@ -574,13 +576,6 @@ function () {
             accessToken = _args4.length > 0 && _args4[0] !== undefined ? _args4[0] : "null accessToken";
             token = _args4.length > 1 && _args4[1] !== undefined ? _args4[1] : "null token";
             trace = _args4.length > 2 && _args4[2] !== undefined ? _args4[2] : {};
-            _context4.next = 5;
-            return new Promise(function (resolve) {
-              return setTimeout(resolve, Util.config.msDelay);
-            });
-
-          case 5:
-            //delay is to ensure clean-up operations work
             MS = Util.getAuthHost();
             requestOptions = {
               method: "POST",
@@ -597,10 +592,10 @@ function () {
               }
             };
             Util.addRequestTrace(requestOptions, trace);
-            _context4.next = 10;
+            _context4.next = 8;
             return request(requestOptions);
 
-          case 10:
+          case 8:
             response = _context4.sent;
             return _context4.abrupt("return", response.statusCode === 204 ? Promise.resolve({
               status: "ok"
@@ -608,7 +603,7 @@ function () {
               status: "failed"
             }));
 
-          case 12:
+          case 10:
           case "end":
             return _context4.stop();
         }
@@ -655,12 +650,6 @@ function () {
             limit = _args5.length > 2 && _args5[2] !== undefined ? _args5[2] : 10;
             filters = _args5.length > 3 && _args5[3] !== undefined ? _args5[3] : undefined;
             trace = _args5.length > 4 && _args5[4] !== undefined ? _args5[4] : {};
-            _context5.next = 7;
-            return new Promise(function (resolve) {
-              return setTimeout(resolve, Util.config.msDelay);
-            });
-
-          case 7:
             MS = Util.getAuthHost();
             requestOptions = {
               method: "GET",
@@ -686,7 +675,7 @@ function () {
             Util.addRequestTrace(requestOptions, trace);
             return _context5.abrupt("return", request(requestOptions));
 
-          case 12:
+          case 10:
           case "end":
             return _context5.stop();
         }
@@ -729,12 +718,6 @@ function () {
             oauthToken = _args6.length > 0 && _args6[0] !== undefined ? _args6[0] : "null oauth token";
             refreshToken = _args6.length > 1 && _args6[1] !== undefined ? _args6[1] : "null refresh token";
             trace = _args6.length > 2 && _args6[2] !== undefined ? _args6[2] : {};
-            _context6.next = 5;
-            return new Promise(function (resolve) {
-              return setTimeout(resolve, Util.config.msDelay);
-            });
-
-          case 5:
             MS = Util.getAuthHost();
             VERSION = Util.getVersion();
             requestOptions = {
@@ -753,13 +736,13 @@ function () {
 
             };
             Util.addRequestTrace(requestOptions, trace);
-            _context6.next = 11;
+            _context6.next = 9;
             return request(requestOptions);
 
-          case 11:
+          case 9:
             return _context6.abrupt("return", _context6.sent);
 
-          case 12:
+          case 10:
           case "end":
             return _context6.stop();
         }
@@ -821,17 +804,16 @@ function () {
             };
             Util.addRequestTrace(requestOptions, trace);
             _context7.next = 9;
+            return request(requestOptions);
+
+          case 9:
+            response = _context7.sent;
+            _context7.next = 12;
             return new Promise(function (resolve) {
               return setTimeout(resolve, Util.config.msDelay);
             });
 
-          case 9:
-            _context7.next = 11;
-            return request(requestOptions);
-
-          case 11:
-            response = _context7.sent;
-
+          case 12:
             if (!(response.statusCode === 204)) {
               _context7.next = 16;
               break;
@@ -888,13 +870,6 @@ function () {
             accessToken = _args8.length > 0 && _args8[0] !== undefined ? _args8[0] : "null accessToken";
             token = _args8.length > 1 && _args8[1] !== undefined ? _args8[1] : "null token";
             trace = _args8.length > 2 && _args8[2] !== undefined ? _args8[2] : {};
-            _context8.next = 5;
-            return new Promise(function (resolve) {
-              return setTimeout(resolve, Util.config.msDelay);
-            });
-
-          case 5:
-            //delay is to ensure clean-up operations work
             MS = Util.getAuthHost();
             requestOptions = {
               method: "POST",
@@ -911,10 +886,10 @@ function () {
               }
             };
             Util.addRequestTrace(requestOptions, trace);
-            _context8.next = 10;
+            _context8.next = 8;
             return request(requestOptions);
 
-          case 10:
+          case 8:
             response = _context8.sent;
             return _context8.abrupt("return", response.statusCode === 204 ? Promise.resolve({
               status: "ok"
@@ -922,7 +897,7 @@ function () {
               status: "failed"
             }));
 
-          case 12:
+          case 10:
           case "end":
             return _context8.stop();
         }

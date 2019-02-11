@@ -393,6 +393,8 @@ function () {
         trace,
         MS,
         requestOptions,
+        response,
+        newAccount,
         _args = arguments;
     return regeneratorRuntime.wrap(function _callee$(_context) {
       while (1) {
@@ -401,12 +403,6 @@ function () {
             accessToken = _args.length > 0 && _args[0] !== undefined ? _args[0] : "null accessToken";
             body = _args.length > 1 && _args[1] !== undefined ? _args[1] : "null body";
             trace = _args.length > 2 && _args[2] !== undefined ? _args[2] : {};
-            _context.next = 5;
-            return new Promise(function (resolve) {
-              return setTimeout(resolve, util.config.msDelay);
-            });
-
-          case 5:
             MS = util.getEndpoint("accounts");
             requestOptions = {
               method: "POST",
@@ -417,16 +413,30 @@ function () {
                 "Content-type": "application/json",
                 "x-api-version": "".concat(util.getVersion())
               },
-              json: true
+              json: true,
+              resolveWithFullResponse: true
             };
             util.addRequestTrace(requestOptions, trace);
-            _context.next = 10;
+            _context.next = 8;
             return request(requestOptions);
 
-          case 10:
-            return _context.abrupt("return", _context.sent);
+          case 8:
+            response = _context.sent;
+            newAccount = response.body; // create returns a 202....suspend return until the new resource is ready
 
-          case 11:
+            if (!(response.hasOwnProperty("statusCode") && response.statusCode === 202 && response.headers.hasOwnProperty("location"))) {
+              _context.next = 13;
+              break;
+            }
+
+            _context.next = 13;
+            return util.pendingResource(response.headers.location, requestOptions, //reusing the request options instead of passing in multiple params
+            trace, newAccount.hasOwnProperty("resource_status") ? newAccount.resource_status : "complete");
+
+          case 13:
+            return _context.abrupt("return", newAccount);
+
+          case 14:
           case "end":
             return _context.stop();
         }
@@ -657,6 +667,7 @@ function () {
         trace,
         MS,
         requestOptions,
+        response,
         _args2 = arguments;
     return regeneratorRuntime.wrap(function _callee2$(_context2) {
       while (1) {
@@ -665,12 +676,7 @@ function () {
             accessToken = _args2.length > 0 && _args2[0] !== undefined ? _args2[0] : "null access token";
             accountUUID = _args2.length > 1 && _args2[1] !== undefined ? _args2[1] : "null account uuid";
             trace = _args2.length > 2 && _args2[2] !== undefined ? _args2[2] : {};
-            _context2.next = 5;
-            return new Promise(function (resolve) {
-              return setTimeout(resolve, util.config.msDelay);
-            });
-
-          case 5:
+            _context2.prev = 3;
             MS = util.getEndpoint("accounts");
             requestOptions = {
               method: "DELETE",
@@ -684,28 +690,40 @@ function () {
               }
             };
             util.addRequestTrace(requestOptions, trace);
-            _context2.next = 10;
-            return new Promise(function (resolve, reject) {
-              request(requestOptions).then(function (responseData) {
-                responseData.statusCode === 204 ? resolve({
-                  status: "ok"
-                }) : reject({
-                  status: "failed"
-                });
-              }).catch(function (error) {
-                reject(error);
-              });
+            _context2.next = 9;
+            return request(requestOptions);
+
+          case 9:
+            response = _context2.sent;
+
+            if (!(response.hasOwnProperty("statusCode") && response.statusCode === 202 && response.headers.hasOwnProperty("location"))) {
+              _context2.next = 13;
+              break;
+            }
+
+            _context2.next = 13;
+            return util.pendingResource(response.headers.location, requestOptions, //reusing the request options instead of passing in multiple params
+            trace, "deleting");
+
+          case 13:
+            return _context2.abrupt("return", {
+              "status": "ok"
             });
 
-          case 10:
-            return _context2.abrupt("return", _context2.sent);
+          case 16:
+            _context2.prev = 16;
+            _context2.t0 = _context2["catch"](3);
+            return _context2.abrupt("return", Promise.reject({
+              "status": "failed",
+              "message": _context2.t0.hasOwnProperty("message") ? _context2.t0.message : JSON.stringify(_context2.t0)
+            }));
 
-          case 11:
+          case 19:
           case "end":
             return _context2.stop();
         }
       }
-    }, _callee2, this);
+    }, _callee2, this, [[3, 16]]);
   }));
 
   return function deleteAccount() {

@@ -19,7 +19,6 @@ const createIdentity = async (
   body = "null body",
   trace = {}
 ) => {
-  await new Promise(resolve => setTimeout(resolve, util.config.msDelay));
   const MS = util.getEndpoint("identity");
   const requestOptions = {
     method: "POST",
@@ -30,10 +29,25 @@ const createIdentity = async (
       "x-api-version": `${util.getVersion()}`
     },
     body: body,
-    json: true
+    json: true,
+    resolveWithFullResponse: true
   };
   util.addRequestTrace(requestOptions, trace);
-  return await request(requestOptions);
+  const response = await request(requestOptions);
+  const identity = response.body;
+  // update returns a 202....suspend return until the new resource is ready
+  if (response.hasOwnProperty("statusCode") && 
+      response.statusCode === 202 &&
+      response.headers.hasOwnProperty("location"))
+  {  
+    await util.pendingResource(
+      response.headers.location,
+      requestOptions, //reusing the request options instead of passing in multiple params
+      trace,
+      identity.hasOwnProperty("resource_status") ? identity.resource_status : "complete"
+    );
+  }
+  return identity;
 };
 
 /**
@@ -274,22 +288,42 @@ const deleteIdentity = async (
   userUuid = "null uuid",
   trace = {}
 ) => {
-  await new Promise(resolve => setTimeout(resolve, util.config.msDelay));
-  const MS = util.getEndpoint("identity");
-  const requestOptions = {
-    method: "DELETE",
-    uri: `${MS}/identities/${userUuid}`,
-    headers: {
-      Authorization: `Bearer ${accessToken}`,
-      "Content-type": "application/json",
-      "x-api-version": `${util.getVersion()}`
-    },
-    json: true,
-    resolveWithFullResponse: true
-  };
-  util.addRequestTrace(requestOptions, trace);
-  const response = await request(requestOptions);
-  return response.statusCode === 204 ? Promise.resolve({ status: "ok" }) : Promise.reject({ status: "failed" });
+  try{
+    const MS = util.getEndpoint("identity");
+    const requestOptions = {
+      method: "DELETE",
+      uri: `${MS}/identities/${userUuid}`,
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+        "Content-type": "application/json",
+        "x-api-version": `${util.getVersion()}`
+      },
+      json: true,
+      resolveWithFullResponse: true
+    };
+    util.addRequestTrace(requestOptions, trace);
+    const response =  await request(requestOptions);
+    // delete returns a 202....suspend return until the new resource is ready
+    if (response.hasOwnProperty("statusCode") && 
+          response.statusCode === 202 &&
+          response.headers.hasOwnProperty("location"))
+    {    
+      await util.pendingResource(
+        response.headers.location,
+        requestOptions, //reusing the request options instead of passing in multiple params
+        trace,
+        "deleting"
+      );
+    }
+    return Promise.resolve({"status":"ok"});
+  } catch(error) {
+    return Promise.reject(
+      {
+        "status": "failed",
+        "message": error.hasOwnProperty("message") ? error.message : JSON.stringify(error)
+      }
+    );
+  }
 };
 
 /**
@@ -427,7 +461,6 @@ const listIdentitiesByAccount = async (
   filters = undefined,
   trace = {}
 ) => {
-  await new Promise(resolve => setTimeout(resolve, util.config.msDelay));
   const MS = util.getEndpoint("identity");
   const requestOptions = {
     method: "GET",
@@ -470,7 +503,6 @@ const lookupIdentity = async (
   filters = undefined,
   trace = {}
 ) => {
-  await new Promise(resolve => setTimeout(resolve, util.config.msDelay));
   const MS = util.getEndpoint("identity");
   const requestOptions = {
     method: "GET",
