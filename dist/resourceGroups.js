@@ -291,6 +291,10 @@ require("core-js/modules/web.dom.iterable");
 
 require("regenerator-runtime/runtime");
 
+var _nodeLogger = _interopRequireDefault(require("./node-logger"));
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
 function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
 
 function _toConsumableArray(arr) { return _arrayWithoutHoles(arr) || _iterableToArray(arr) || _nonIterableSpread(); }
@@ -315,6 +319,10 @@ var env = Util.config.env;
 var roles = Util.config.roles[env];
 
 var objectMerge = require("object-merge");
+
+var logger = new _nodeLogger.default();
+logger.setLevel(Util.getLogLevel());
+logger.setPretty(Util.getLogPretty());
 /**
  * @async
  * @description This function will create the permissions group for a resource uuid.
@@ -326,7 +334,6 @@ var objectMerge = require("object-merge");
  * @param {object} [trace = {}] - optional microservice lifecycle trace headers
  * @returns {Promise} - promise resolving to an object containing a status message
  */
-
 
 var createResourceGroups =
 /*#__PURE__*/
@@ -357,9 +364,10 @@ function () {
             users = _args.length > 4 && _args[4] !== undefined ? _args[4] : {};
             trace = _args.length > 5 && _args[5] !== undefined ? _args[5] : {};
             _context.prev = 6;
+            logger.debug("Creating Resource Group ".concat(resourceUUID, ". Users Object:"), users);
 
             if (type) {
-              _context.next = 9;
+              _context.next = 10;
               break;
             }
 
@@ -368,7 +376,7 @@ function () {
               "message": "Unable to create resource groups. Resource type not defined."
             }));
 
-          case 9:
+          case 10:
             //create the groups
             nextTrace = objectMerge({}, trace);
             groupPromises = [];
@@ -380,43 +388,48 @@ function () {
                 users: _toConsumableArray(users[prop]),
                 description: "resource group"
               };
+              logger.debug("Creating Resource Group. User-Group:", userGroup);
               nextTrace = objectMerge({}, nextTrace, Util.generateNewMetaData(nextTrace));
               groupPromises.push(Auth.createUserGroup(accessToken, accountUUID, userGroup, nextTrace));
             });
-            _context.next = 16;
+            _context.next = 17;
             return Promise.all(groupPromises);
 
-          case 16:
+          case 17:
             groups = _context.sent;
-            // scope the resource to the groups
+            logger.debug("Creating Resource Group, Created User Groups:", groups); // scope the resource to the groups
+
             groups.forEach(function (group) {
               //extract the group type from the group name
               var groupType = groupTypeRegex.exec(group.name);
               nextTrace = objectMerge({}, nextTrace, Util.generateNewMetaData(nextTrace));
               scopePromises.push(Auth.assignScopedRoleToUserGroup(accessToken, group.uuid, roles[type][groupType], "resource", [resourceUUID], nextTrace));
+              logger.debug("Creating Resource Group. Scope Params:", "group.uuid: ".concat(group.uuid), "roles[type][groupType]: ".concat(roles[type][groupType]), "[resourceUUID]: [".concat(resourceUUID, "]"));
             });
-            _context.next = 20;
+            _context.next = 22;
             return Promise.all(scopePromises);
 
-          case 20:
+          case 22:
+            logger.debug("Creating Resource Group Success");
             return _context.abrupt("return", Promise.resolve({
               status: "ok"
             }));
 
-          case 23:
-            _context.prev = 23;
+          case 26:
+            _context.prev = 26;
             _context.t0 = _context["catch"](6);
+            logger.debug("Creating Resource Group Failed", _context.t0);
             return _context.abrupt("return", Promise.reject({
               status: "failed",
               createResourceGroups: _context.t0
             }));
 
-          case 26:
+          case 30:
           case "end":
             return _context.stop();
         }
       }
-    }, _callee, this, [[6, 23]]);
+    }, _callee, this, [[6, 26]]);
   }));
 
   return function createResourceGroups() {
@@ -454,14 +467,16 @@ function () {
             resourceUUID = _args2.length > 1 && _args2[1] !== undefined ? _args2[1] : "null resourceUUID";
             trace = _args2.length > 2 && _args2[2] !== undefined ? _args2[2] : {};
             _context2.prev = 3;
-            _context2.next = 6;
+            logger.debug("Cleaning up Resource Groups For ".concat(resourceUUID));
+            _context2.next = 7;
             return Auth.listAccessByGroups(accessToken, resourceUUID, trace);
 
-          case 6:
+          case 7:
             resourceGroups = _context2.sent;
+            logger.debug("Cleaning up Resource Groups", resourceGroups);
 
             if (!(resourceGroups.hasOwnProperty("items") && resourceGroups.items.length > 0)) {
-              _context2.next = 14;
+              _context2.next = 17;
               break;
             }
 
@@ -471,32 +486,34 @@ function () {
               groupsToDelete.push(Groups.deleteGroup(accessToken, group.user_group.uuid, nextTrace));
               nextTrace = objectMerge({}, nextTrace, Util.generateNewMetaData(nextTrace));
             });
-            _context2.next = 13;
+            _context2.next = 15;
             return Promise.all(groupsToDelete);
 
-          case 13:
+          case 15:
+            logger.debug("Cleaning up Resource Groups Successful");
             Promise.resolve({
               "status": "ok"
             });
 
-          case 14:
-            _context2.next = 19;
+          case 17:
+            _context2.next = 23;
             break;
 
-          case 16:
-            _context2.prev = 16;
+          case 19:
+            _context2.prev = 19;
             _context2.t0 = _context2["catch"](3);
+            logger.debug("Cleaning up Resource Groups Failed", _context2.t0);
             return _context2.abrupt("return", Promise.reject({
               "status": "failed",
               "cleanUpResourceGroups": _context2.t0
             }));
 
-          case 19:
+          case 23:
           case "end":
             return _context2.stop();
         }
       }
-    }, _callee2, this, [[3, 16]]);
+    }, _callee2, this, [[3, 19]]);
   }));
 
   return function cleanUpResourceGroups() {
@@ -557,15 +574,17 @@ function () {
             }));
 
           case 9:
+            logger.debug("Updating Resource Groups For ".concat(resourceUUID));
             nextTrace = objectMerge({}, trace);
-            _context3.next = 12;
+            _context3.next = 13;
             return Auth.listAccessByGroups(accessToken, resourceUUID, nextTrace);
 
-          case 12:
+          case 13:
             resourceGroups = _context3.sent;
+            logger.debug("Updating Resource Groups For ".concat(resourceUUID, ": Groups Found"), resourceGroups);
 
             if (!(resourceGroups.hasOwnProperty("items") && resourceGroups.items.length > 0)) {
-              _context3.next = 27;
+              _context3.next = 29;
               break;
             }
 
@@ -575,9 +594,11 @@ function () {
             deletePromises = [];
             resourceGroups.items.forEach(function (item) {
               if (item.hasOwnProperty("user_group") && item.user_group.hasOwnProperty("group_name")) {
-                var groupType = groupTypeRegex.exec(item.user_group.group_name); // A resource group exists for this set of permissions.
+                var groupType = groupTypeRegex.exec(item.user_group.group_name);
+                logger.debug("Updating Resource Groups For ".concat(resourceUUID, ": Group Type"), groupType); // A resource group exists for this set of permissions.
 
-                if (_typeof(users) === "object" && users.hasOwnProperty(groupType)) {
+                if (_typeof(users) === "object" && users.hasOwnProperty(groupType) && users[groupType].length > 0) {
+                  logger.debug("Updating Resource Groups For ".concat(resourceUUID, ": Fetching Group"), item.user_group.uuid);
                   nextTrace = objectMerge({}, nextTrace, Util.generateNewMetaData(nextTrace));
                   updatePromises.push(Groups.getGroup(accessToken, item.user_group.uuid, {
                     expand: "members",
@@ -586,7 +607,9 @@ function () {
                   }, nextTrace));
                 } else {
                   // we no longer have any users for this resource group, so delete it
-                  deletePromises.push(Groups.deleteGroup(accessToken, item.user_group.uuid));
+                  logger.debug("Updating Resource Groups For ".concat(resourceUUID, ": Deleting Group"), item.user_group.uuid);
+                  nextTrace = objectMerge({}, nextTrace, Util.generateNewMetaData(nextTrace));
+                  deletePromises.push(Groups.deleteGroup(accessToken, item.user_group.uuid, trace));
                 }
               } else {
                 // Unexpected item format. Bail out....
@@ -596,10 +619,10 @@ function () {
                 });
               }
             });
-            _context3.next = 20;
+            _context3.next = 22;
             return Promise.all(updatePromises);
 
-          case 20:
+          case 22:
             userGroups = _context3.sent;
             // update the groups' members
             memberUpdatePromises = [];
@@ -650,43 +673,45 @@ function () {
 
               delete users[groupType];
             });
-            _context3.next = 25;
+            _context3.next = 27;
             return Promise.all(memberUpdatePromises);
 
-          case 25:
-            _context3.next = 27;
+          case 27:
+            _context3.next = 29;
             return Promise.all(deletePromises);
 
-          case 27:
+          case 29:
             if (!(Object.keys(users).length > 0)) {
-              _context3.next = 31;
+              _context3.next = 34;
               break;
             }
 
             nextTrace = objectMerge({}, nextTrace, Util.generateNewMetaData(nextTrace));
-            _context3.next = 31;
+            logger.debug("Updating Resource Groups For ".concat(resourceUUID, ": Creating New Groups"), users);
+            _context3.next = 34;
             return createResourceGroups(accessToken, accountUUID, resourceUUID, "object", //system role type
             users, trace);
 
-          case 31:
+          case 34:
             return _context3.abrupt("return", Promise.resolve({
               "status": "ok"
             }));
 
-          case 34:
-            _context3.prev = 34;
+          case 37:
+            _context3.prev = 37;
             _context3.t0 = _context3["catch"](6);
+            logger.debug("Updating Resource Groups For ".concat(resourceUUID, " Failed"), _context3.t0);
             return _context3.abrupt("return", Promise.reject({
               "status": "failed",
               "updateResourceGroups": _context3.t0
             }));
 
-          case 37:
+          case 41:
           case "end":
             return _context3.stop();
         }
       }
-    }, _callee3, this, [[6, 34]]);
+    }, _callee3, this, [[6, 37]]);
   }));
 
   return function updateResourceGroups() {

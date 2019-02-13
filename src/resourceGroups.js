@@ -7,6 +7,10 @@ const Groups = require("./groups");
 const env = Util.config.env;
 const roles = Util.config.roles[env];
 const objectMerge = require("object-merge");
+import Logger from "./node-logger";
+const logger = new Logger();
+logger.setLevel(Util.getLogLevel());
+logger.setPretty(Util.getLogPretty());
 
 /**
  * @async
@@ -28,6 +32,7 @@ const createResourceGroups = async (
   trace = {}
 ) => {
   try {
+    logger.debug(`Creating Resource Group ${resourceUUID}. Users Object:`,users);
     if (!type) {
       return Promise.reject(
         {
@@ -47,6 +52,8 @@ const createResourceGroups = async (
         users: [...users[prop]],
         description: "resource group"
       };
+      logger.debug("Creating Resource Group. User-Group:",userGroup);
+
       nextTrace = objectMerge({}, nextTrace, Util.generateNewMetaData(nextTrace));
       groupPromises.push(Auth.createUserGroup(
         accessToken,
@@ -57,7 +64,8 @@ const createResourceGroups = async (
     });
 
     const groups = await Promise.all(groupPromises);
-    
+    logger.debug("Creating Resource Group, Created User Groups:",groups);
+
     // scope the resource to the groups
     groups.forEach(group => {
       //extract the group type from the group name
@@ -70,11 +78,20 @@ const createResourceGroups = async (
         "resource",
         [resourceUUID],
         nextTrace
-      ));  
+      ));
+      logger.debug(
+        "Creating Resource Group. Scope Params:",
+        `group.uuid: ${group.uuid}`,
+        `roles[type][groupType]: ${roles[type][groupType]}`,
+        `[resourceUUID]: [${resourceUUID}]`
+      );
+  
     }); 
-    await Promise.all(scopePromises);  
+    await Promise.all(scopePromises);
+    logger.debug("Creating Resource Group Success");  
     return Promise.resolve({ status: "ok" });
   } catch (error) {
+    logger.debug("Creating Resource Group Failed", error);
     return Promise.reject({ status: "failed", createResourceGroups: error });
   }
 };
@@ -93,11 +110,13 @@ const cleanUpResourceGroups = async (
   trace = {}
 ) => {
   try {
+    logger.debug(`Cleaning up Resource Groups For ${resourceUUID}`);
     const resourceGroups = await Auth.listAccessByGroups(
       accessToken,
       resourceUUID,
       trace
     );
+    logger.debug("Cleaning up Resource Groups", resourceGroups);
     if (
       resourceGroups.hasOwnProperty("items") &&
       resourceGroups.items.length > 0
@@ -116,9 +135,11 @@ const cleanUpResourceGroups = async (
         nextTrace = objectMerge({}, nextTrace, Util.generateNewMetaData(nextTrace));
       });
       await Promise.all(groupsToDelete);
+      logger.debug("Cleaning up Resource Groups Successful");
       Promise.resolve({"status":"ok"});
     }
   } catch (error) {
+    logger.debug("Cleaning up Resource Groups Failed", error);
     return Promise.reject(
       {
         "status": "failed",
@@ -154,12 +175,14 @@ const updateResourceGroups = async (
         }
       );
     }
+    logger.debug(`Updating Resource Groups For ${resourceUUID}`);
     let nextTrace = objectMerge({}, trace);
     const resourceGroups = await Auth.listAccessByGroups(
       accessToken,
       resourceUUID,
       nextTrace
     );
+    logger.debug(`Updating Resource Groups For ${resourceUUID}: Groups Found`, resourceGroups);
     if (
       resourceGroups.hasOwnProperty("items") &&
       resourceGroups.items.length > 0
@@ -176,8 +199,10 @@ const updateResourceGroups = async (
           const groupType = groupTypeRegex.exec(
             item.user_group.group_name
           );
+          logger.debug(`Updating Resource Groups For ${resourceUUID}: Group Type`, groupType);
           // A resource group exists for this set of permissions.
-          if (typeof users === "object" && users.hasOwnProperty(groupType)) {
+          if (typeof users === "object" && users.hasOwnProperty(groupType) && users[groupType].length > 0) {
+            logger.debug(`Updating Resource Groups For ${resourceUUID}: Fetching Group`, item.user_group.uuid);
             nextTrace = objectMerge({}, nextTrace, Util.generateNewMetaData(nextTrace));
             updatePromises.push(
               Groups.getGroup(
@@ -193,10 +218,13 @@ const updateResourceGroups = async (
             
           } else {
             // we no longer have any users for this resource group, so delete it
+            logger.debug(`Updating Resource Groups For ${resourceUUID}: Deleting Group`, item.user_group.uuid);
+            nextTrace = objectMerge({}, nextTrace, Util.generateNewMetaData(nextTrace));
             deletePromises.push(
               Groups.deleteGroup(
                 accessToken,
-                item.user_group.uuid
+                item.user_group.uuid,
+                trace
               )
             );  
           }
@@ -281,6 +309,7 @@ const updateResourceGroups = async (
         nextTrace,
         Util.generateNewMetaData(nextTrace)
       );
+      logger.debug(`Updating Resource Groups For ${resourceUUID}: Creating New Groups`, users);
       await createResourceGroups(
         accessToken,
         accountUUID,
@@ -292,6 +321,7 @@ const updateResourceGroups = async (
     }
     return Promise.resolve({"status":"ok"});
   } catch (error) {
+    logger.debug(`Updating Resource Groups For ${resourceUUID} Failed`, error);
     return Promise.reject(
       {
         "status": "failed",

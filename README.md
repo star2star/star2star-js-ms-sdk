@@ -64,6 +64,7 @@ require("babel-polyfill");
 [Please click here for our documentation pages.](https://star2star.github.io/star2star-js-ms-sdk/ "Star2Star Micro Service SDK Documentation")
 
 ## Changes
+* 3.0.9 - Add empty group guarding for resource groups update
 * 3.0.8 - Add get single role
 * 3.0.7 - Use headers for polling utility
 * 3.0.6 - Update async polling utility

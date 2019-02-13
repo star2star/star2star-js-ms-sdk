@@ -154,8 +154,8 @@ describe("Objects MS Test Suite", function() {
       },
       identityData.account_uuid,
       {
-        rd: [identityData.uuid],
-        d: [identityData.uuid] //users read, update, delete permissions
+        rud: ["e000d783-3606-4f83-98e8-2ac458a36505"],
+        rd: [identityData.uuid]
       },
       trace
     );
