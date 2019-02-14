@@ -59,11 +59,18 @@ You need to require or import Logger from "./node-logger"; babel polyfill it at 
 require("babel-polyfill");
 ```
 
+When running in node you can specify the log level and pretty print using environment variables
+
+```javascript
+process.env.MS_LOGLEVEL = "debug" //silent, trace, info, error
+process.env.MS_LOGPRETTY = true // defaults to false
+```
 ## Methods
 
 [Please click here for our documentation pages.](https://star2star.github.io/star2star-js-ms-sdk/ "Star2Star Micro Service SDK Documentation")
 
 ## Changes
+* 3.0.10 - Simplify logging to use process.env and fix resourse group update bug
 * 3.0.9 - Add empty group guarding for resource groups update
 * 3.0.8 - Add get single role
 * 3.0.7 - Use headers for polling utility

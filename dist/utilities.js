@@ -650,10 +650,8 @@ var isBrowser = function isBrowser() {
 
 var addRequestTrace = function addRequestTrace(request) {
   var trace = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
-  //defaults to "trace" if MS_LOGLEVEL is undefined.
-  logger.setLevel(getLogLevel()); //defaults to "false" if MS_LOGPRETTY is undefined.
+  getLogger(); //ensures log levels are read in from process.ENV
 
-  logger.setPretty(getLogPretty());
   var headerKeys = ["id", "trace", "parent"];
   headerKeys.forEach(function (keyName) {
     if (_typeof(trace) === "object" && trace.hasOwnProperty(keyName)) {
@@ -702,57 +700,17 @@ var generateNewMetaData = function generateNewMetaData() {
 };
 /**
  *
- * @description This function sets the log level. Disabled in browsers.
- * @param {string} logLevel
+ * @description This function returns a pointer to the logger instance
+ * @returns {instance<Class>} - instance of node-logger class
  */
 
 
-var setLogLevel = function setLogLevel(logLevel) {
-  isBrowser() ? window.s2sJsMsSdk.MS_LOGLEVEL = "silent" : process.env.MS_LOGLEVEL = logLevel;
-};
-/**
- *
- * @description - This function retreives the currently configured log level. "silent" in browsers.
- * @returns {string} - log level.
- */
+var getLogger = function getLogger() {
+  logger.setLevel(process.env.MS_LOGLEVEL); // when run in a browser this will be undefined and default to silent
 
+  logger.setPretty(process.env.MS_LOGPRETTY); // when run in a browser this will be undefined and default to false
 
-var getLogLevel = function getLogLevel() {
-  if (isBrowser()) {
-    //winston logger is not configured to run in browser
-    return "silent";
-  } else if (!process.env.hasOwnProperty("MS_LOGLEVEL")) {
-    setLogLevel(config.logLevel);
-  }
-
-  return process.env.MS_LOGLEVEL;
-};
-/**
- *
- * @description This function sets the log level. Disabled in browsers.
- * @param {string} logLevel
- */
-
-
-var setLogPretty = function setLogPretty(isPretty) {
-  isBrowser() ? window.s2sJsMsSdk.MS_LOGPRETTY = isPretty : process.env.MS_LOGPRETY = isPretty;
-};
-/**
- *
- * @description - This function retreives the currently configured log level. "silent" in browsers.
- * @returns {string} - log level.
- */
-
-
-var getLogPretty = function getLogPretty() {
-  if (isBrowser()) {
-    //winston logger is not configured to run in browser
-    return false;
-  } else if (!process.env.hasOwnProperty("MS_LOGPRETTY")) {
-    setLogPretty(config.logPretty);
-  }
-
-  return !process.env.MS_LOGPRETTY || process.env.MS_LOGPRETTY === "false" ? false : true;
+  return logger;
 };
 /**
  * @async
@@ -780,11 +738,13 @@ function () {
         switch (_context3.prev = _context3.next) {
           case 0:
             startingResourceStatus = _args3.length > 3 && _args3[3] !== undefined ? _args3[3] : "complete";
+            getLogger(); //ensures log levels are read in from process.ENV
+
             logger.debug("Pending Resource Location", resourceLoc);
-            _context3.prev = 2;
+            _context3.prev = 3;
 
             if (!(startingResourceStatus === "complete")) {
-              _context3.next = 5;
+              _context3.next = 6;
               break;
             }
 
@@ -792,7 +752,7 @@ function () {
               "status": "ok"
             }));
 
-          case 5:
+          case 6:
             //update our requestOptions for the verification URL
             requestOptions.method = "GET";
             requestOptions.uri = resourceLoc;
@@ -804,67 +764,67 @@ function () {
 
             expires = Date.now() + config.pollTimeout;
 
-          case 11:
+          case 12:
             if (!(Date.now() < expires)) {
-              _context3.next = 32;
+              _context3.next = 33;
               break;
             }
 
-            _context3.next = 14;
+            _context3.next = 15;
             return request(requestOptions);
 
-          case 14:
+          case 15:
             rawResponse = _context3.sent;
             response = rawResponse.body;
             logger.debug("Pending Resource verification GET response", response);
 
             if (!response.hasOwnProperty("resource_status")) {
-              _context3.next = 27;
+              _context3.next = 28;
               break;
             }
 
             _context3.t0 = response.resource_status;
-            _context3.next = _context3.t0 === "processing" ? 21 : _context3.t0 === "complete" ? 22 : _context3.t0 === "failure" ? 23 : 24;
+            _context3.next = _context3.t0 === "processing" ? 22 : _context3.t0 === "complete" ? 23 : _context3.t0 === "failure" ? 24 : 25;
             break;
-
-          case 21:
-            return _context3.abrupt("break", 25);
 
           case 22:
-            return _context3.abrupt("return", response);
+            return _context3.abrupt("break", 26);
 
           case 23:
-            throw Error("failure: ".concat(JSON.stringify(response)));
+            return _context3.abrupt("return", response);
 
           case 24:
-            throw Error("unrecognized resource_status: ".concat(JSON.stringify(response)));
+            throw Error("failure: ".concat(JSON.stringify(response)));
 
           case 25:
-            _context3.next = 28;
+            throw Error("unrecognized resource_status: ".concat(JSON.stringify(response)));
+
+          case 26:
+            _context3.next = 29;
             break;
 
-          case 27:
+          case 28:
             throw Error("resource_status missing from response: ".concat(JSON.stringify(response)));
 
-          case 28:
-            _context3.next = 30;
+          case 29:
+            _context3.next = 31;
             return new Promise(function (resolve) {
               return setTimeout(resolve, config.pollInterval);
             });
 
-          case 30:
-            _context3.next = 11;
+          case 31:
+            _context3.next = 12;
             break;
 
-          case 32:
+          case 33:
             throw Error("request timeout");
 
-          case 35:
-            _context3.prev = 35;
-            _context3.t1 = _context3["catch"](2);
+          case 36:
+            _context3.prev = 36;
+            _context3.t1 = _context3["catch"](3);
 
             if (!(startingResourceStatus === "deleting" && _context3.t1.hasOwnProperty("statusCode") && _context3.t1.statusCode === 404)) {
-              _context3.next = 40;
+              _context3.next = 41;
               break;
             }
 
@@ -873,18 +833,18 @@ function () {
               "status": "ok"
             }));
 
-          case 40:
+          case 41:
             return _context3.abrupt("return", Promise.reject({
               "statusCode": 500,
               "message": _context3.t1.hasOwnProperty("message") ? _context3.t1.message : _context3.t1
             }));
 
-          case 41:
+          case 42:
           case "end":
             return _context3.stop();
         }
       }
-    }, _callee3, this, [[2, 35]]);
+    }, _callee3, this, [[3, 36]]);
   }));
 
   return function pendingResource(_x5, _x6, _x7) {
@@ -910,9 +870,6 @@ module.exports = {
   addRequestTrace: addRequestTrace,
   //TODO Unit test 10/10/18 nh
   generateNewMetaData: generateNewMetaData,
-  setLogLevel: setLogLevel,
-  getLogLevel: getLogLevel,
-  setLogPretty: setLogPretty,
-  getLogPretty: getLogPretty,
+  getLogger: getLogger,
   pendingResource: pendingResource
 };

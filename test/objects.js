@@ -11,12 +11,7 @@ const after = mocha.after;
 const fs = require("fs");
 const s2sMS = require("../src/index");
 const Util = require("../src/utilities");
-const logLevel = Util.getLogLevel();
-const logPretty = Util.getLogPretty();
-import Logger from "../src/node-logger";
-const logger = new Logger();
-logger.setLevel(logLevel);
-logger.setPretty(logPretty);
+const logger = Util.getLogger();
 const objectMerge = require("object-merge");
 const newMeta = Util.generateNewMetaData;
 let trace = newMeta();
@@ -102,7 +97,7 @@ describe("Objects MS Test Suite", function() {
       identityData.account_uuid, // combined with users creates resource group scoping
       {
         rud: [identityData.uuid],
-        d: ["57852400-6650-466b-bdc2-bc128e6ccaca"] //users read, update, delete permissions
+        d: [creds.testIdentity] //users read, update, delete permissions
       },
       trace
     );
@@ -154,7 +149,7 @@ describe("Objects MS Test Suite", function() {
       },
       identityData.account_uuid,
       {
-        rud: ["e000d783-3606-4f83-98e8-2ac458a36505"],
+        rud: [creds.testIdentity],
         rd: [identityData.uuid]
       },
       trace

@@ -291,10 +291,6 @@ require("core-js/modules/web.dom.iterable");
 
 require("regenerator-runtime/runtime");
 
-var _nodeLogger = _interopRequireDefault(require("./node-logger"));
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
 function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
 
 function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { Promise.resolve(value).then(_next, _throw); } }
@@ -309,9 +305,7 @@ var objectMerge = require("object-merge");
 
 var ResourceGroups = require("./resourceGroups");
 
-var logger = new _nodeLogger.default();
-logger.setLevel(Util.getLogLevel());
-logger.setPretty(Util.getLogPretty());
+var logger = Util.getLogger();
 /**
  * @async
  * @name Get By Type
@@ -1007,7 +1001,8 @@ function () {
             Util.addRequestTrace(requestOptions, trace);
             nextTrace = objectMerge({}, trace);
 
-            if (!(accountUUID && users && _typeof(users) === "object")) {
+            if (!accountUUID //required to update associated resource groups.
+            ) {
               _context6.next = 14;
               break;
             }

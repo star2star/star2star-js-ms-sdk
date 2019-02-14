@@ -11,12 +11,7 @@ const before = mocha.before;
 const fs = require("fs");
 const s2sMS = require("../src/index");
 const Util = require("../src/utilities");
-const logLevel = Util.getLogLevel();
-const logPretty = Util.getLogPretty();
-import Logger from "../src/node-logger";
-const logger = new Logger();
-logger.setLevel(logLevel);
-logger.setPretty(logPretty);
+const logger = Util.getLogger();
 
 let creds = {
   CPAAS_OAUTH_TOKEN: "Basic your oauth token here",

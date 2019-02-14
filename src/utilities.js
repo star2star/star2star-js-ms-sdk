@@ -7,7 +7,6 @@ const request = require("request-promise");
 const objectMerge = require("object-merge");
 import Logger from "./node-logger";
 const logger = new Logger();
-
 /**
  *
  * @description This function will determine microservice endpoint URI.
@@ -266,11 +265,7 @@ const isBrowser = () => {
 };
 
 const addRequestTrace = (request, trace = {}) => {
-  //defaults to "trace" if MS_LOGLEVEL is undefined.
-  logger.setLevel(getLogLevel());
-  //defaults to "false" if MS_LOGPRETTY is undefined.
-  logger.setPretty(getLogPretty());
-
+  getLogger(); //ensures log levels are read in from process.ENV
   const headerKeys = ["id", "trace", "parent"];
 
   headerKeys.forEach(keyName => {
@@ -319,52 +314,16 @@ const generateNewMetaData = (oldMetaData = {}) => {
   return rObject;
 };
 
-/**
- *
- * @description This function sets the log level. Disabled in browsers.
- * @param {string} logLevel
- */
-const setLogLevel = (logLevel) => {
-  isBrowser() ? window.s2sJsMsSdk.MS_LOGLEVEL = "silent" : process.env.MS_LOGLEVEL = logLevel;
-};
 
 /**
  *
- * @description - This function retreives the currently configured log level. "silent" in browsers.
- * @returns {string} - log level.
+ * @description This function returns a pointer to the logger instance
+ * @returns {instance<Class>} - instance of node-logger class
  */
-const getLogLevel = () => {
-  if(isBrowser()){
-    //winston logger is not configured to run in browser
-    return "silent";
-  } else if (!process.env.hasOwnProperty("MS_LOGLEVEL")){
-    setLogLevel(config.logLevel);
-  }
-  return process.env.MS_LOGLEVEL;
-};
-
-/**
- *
- * @description This function sets the log level. Disabled in browsers.
- * @param {string} logLevel
- */
-const setLogPretty = (isPretty) => {
-  isBrowser() ? window.s2sJsMsSdk.MS_LOGPRETTY = isPretty : process.env.MS_LOGPRETY = isPretty;
-};
-
-/**
- *
- * @description - This function retreives the currently configured log level. "silent" in browsers.
- * @returns {string} - log level.
- */
-const getLogPretty = () => {
-  if(isBrowser()){
-    //winston logger is not configured to run in browser
-    return false;
-  } else if (!process.env.hasOwnProperty("MS_LOGPRETTY")){
-    setLogPretty(config.logPretty);
-  }
-  return !process.env.MS_LOGPRETTY || process.env.MS_LOGPRETTY === "false" ? false : true;
+const getLogger = () => {
+  logger.setLevel(process.env.MS_LOGLEVEL); // when run in a browser this will be undefined and default to silent
+  logger.setPretty(process.env.MS_LOGPRETTY); // when run in a browser this will be undefined and default to false
+  return logger;
 };
 
 /**
@@ -375,6 +334,7 @@ const getLogPretty = () => {
  * @returns {Promise} - Promise resolved when verify func is successful.
  */
 const pendingResource = async (resourceLoc, requestOptions, trace, startingResourceStatus = "complete") => {
+  getLogger(); //ensures log levels are read in from process.ENV
   logger.debug("Pending Resource Location", resourceLoc);
   try {
     // if the startingResourceStatus is complete, there is nothing to do since the resource is ready
@@ -445,9 +405,6 @@ module.exports = {
   isBrowser, //TODO Unit test 10/05/18 nh
   addRequestTrace, //TODO Unit test 10/10/18 nh
   generateNewMetaData,
-  setLogLevel,
-  getLogLevel,
-  setLogPretty,
-  getLogPretty,
+  getLogger,
   pendingResource
 };

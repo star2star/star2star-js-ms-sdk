@@ -7,10 +7,7 @@ const Groups = require("./groups");
 const env = Util.config.env;
 const roles = Util.config.roles[env];
 const objectMerge = require("object-merge");
-import Logger from "./node-logger";
-const logger = new Logger();
-logger.setLevel(Util.getLogLevel());
-logger.setPretty(Util.getLogPretty());
+const logger = Util.getLogger();
 
 /**
  * @async

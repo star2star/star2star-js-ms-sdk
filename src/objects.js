@@ -5,10 +5,7 @@ const Util = require("./utilities");
 const request = require("request-promise");
 const objectMerge = require("object-merge");
 const ResourceGroups = require("./resourceGroups");
-import Logger from "./node-logger";
-const logger = new Logger();
-logger.setLevel(Util.getLogLevel());
-logger.setPretty(Util.getLogPretty());
+const logger = Util.getLogger();
 
 /**
  * @async
@@ -491,9 +488,7 @@ const updateDataObject = async (
   Util.addRequestTrace(requestOptions, trace);
   let nextTrace = objectMerge({}, trace);
   if (
-    accountUUID &&
-      users && 
-      typeof users === "object"
+    accountUUID //required to update associated resource groups.
   ) {
     nextTrace = objectMerge({}, nextTrace, Util.generateNewMetaData(nextTrace));
     await ResourceGroups.updateResourceGroups(

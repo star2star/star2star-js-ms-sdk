@@ -9,12 +9,7 @@ const it = mocha.it;
 const s2sMS = require("../src/index");
 const Config = require("../src/config.json");
 const Util = require("../src/utilities");
-const logLevel = Util.getLogLevel();
-const logPretty = Util.getLogPretty();
-import Logger from "../src/node-logger";
-const logger = new Logger();
-logger.setLevel(logLevel);
-logger.setPretty(logPretty);
+const logger = Util.getLogger();
 
 beforeEach(function () {
   s2sMS.setMsHost("https://cpaas.star2starglobal.net");
