@@ -247,6 +247,21 @@ describe("Objects MS Test Suite", function() {
     return response;
   },"Create User Object"));
 
+  it("Get One User Object", mochaAsync(async () => {
+    if (!creds.isValid) throw new Error("Invalid Credentials");
+    trace = objectMerge({}, trace, Util.generateNewMetaData(trace));
+    const response = await s2sMS.Objects.getDataObject(
+      accessToken,
+      userObjectUUID,
+      trace
+    );
+    assert.ok(
+      1===1,
+      JSON.stringify(response, null, "\t")
+    );
+    return response;
+  },"Get One User Object"));
+
   it("List User Objects", mochaAsync(async () => {
     if (!creds.isValid) throw new Error("Invalid Credentials");
     const filters = {

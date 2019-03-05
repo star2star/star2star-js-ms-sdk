@@ -730,7 +730,6 @@ function () {
     var startingResourceStatus,
         nextTrace,
         expires,
-        rawResponse,
         response,
         _args3 = arguments;
     return regeneratorRuntime.wrap(function _callee3$(_context3) {
@@ -754,10 +753,9 @@ function () {
 
           case 6:
             //update our requestOptions for the verification URL
-            requestOptions.method = "GET";
+            requestOptions.method = "HEAD";
             requestOptions.uri = resourceLoc;
-            requestOptions.body = {}; //clear any body data
-            //add trace headers
+            delete requestOptions.body; //add trace headers
 
             nextTrace = objectMerge({}, generateNewMetaData(trace));
             addRequestTrace(requestOptions, nextTrace); // starting resource is not complete, poll the verify endpoint
@@ -766,7 +764,7 @@ function () {
 
           case 12:
             if (!(Date.now() < expires)) {
-              _context3.next = 33;
+              _context3.next = 32;
               break;
             }
 
@@ -774,57 +772,58 @@ function () {
             return request(requestOptions);
 
           case 15:
-            rawResponse = _context3.sent;
-            response = rawResponse.body;
-            logger.debug("Pending Resource verification GET response", response);
+            response = _context3.sent;
+            logger.debug("Pending Resource verification GET response", response.headers);
 
-            if (!response.hasOwnProperty("resource_status")) {
-              _context3.next = 28;
+            if (!response.headers.hasOwnProperty("x-resource-status")) {
+              _context3.next = 27;
               break;
             }
 
-            _context3.t0 = response.resource_status;
-            _context3.next = _context3.t0 === "processing" ? 22 : _context3.t0 === "complete" ? 23 : _context3.t0 === "failure" ? 24 : 25;
+            _context3.t0 = response.headers["x-resource-status"];
+            _context3.next = _context3.t0 === "processing" ? 21 : _context3.t0 === "complete" ? 22 : _context3.t0 === "failure" ? 23 : 24;
             break;
+
+          case 21:
+            return _context3.abrupt("break", 25);
 
           case 22:
-            return _context3.abrupt("break", 26);
+            return _context3.abrupt("return", Promise.resolve({
+              "status": "ok"
+            }));
 
           case 23:
-            return _context3.abrupt("return", response);
-
-          case 24:
             throw Error("failure: ".concat(JSON.stringify(response)));
 
-          case 25:
+          case 24:
             throw Error("unrecognized resource_status: ".concat(JSON.stringify(response)));
 
-          case 26:
-            _context3.next = 29;
+          case 25:
+            _context3.next = 28;
             break;
 
-          case 28:
+          case 27:
             throw Error("resource_status missing from response: ".concat(JSON.stringify(response)));
 
-          case 29:
-            _context3.next = 31;
+          case 28:
+            _context3.next = 30;
             return new Promise(function (resolve) {
               return setTimeout(resolve, config.pollInterval);
             });
 
-          case 31:
+          case 30:
             _context3.next = 12;
             break;
 
-          case 33:
+          case 32:
             throw Error("request timeout");
 
-          case 36:
-            _context3.prev = 36;
+          case 35:
+            _context3.prev = 35;
             _context3.t1 = _context3["catch"](3);
 
             if (!(startingResourceStatus === "deleting" && _context3.t1.hasOwnProperty("statusCode") && _context3.t1.statusCode === 404)) {
-              _context3.next = 41;
+              _context3.next = 40;
               break;
             }
 
@@ -833,18 +832,18 @@ function () {
               "status": "ok"
             }));
 
-          case 41:
+          case 40:
             return _context3.abrupt("return", Promise.reject({
               "statusCode": 500,
               "message": _context3.t1.hasOwnProperty("message") ? _context3.t1.message : _context3.t1
             }));
 
-          case 42:
+          case 41:
           case "end":
             return _context3.stop();
         }
       }
-    }, _callee3, this, [[3, 36]]);
+    }, _callee3, this, [[3, 35]]);
   }));
 
   return function pendingResource(_x5, _x6, _x7) {

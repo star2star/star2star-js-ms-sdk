@@ -70,6 +70,7 @@ process.env.MS_LOGPRETTY = true // defaults to false
 [Please click here for our documentation pages.](https://star2star.github.io/star2star-js-ms-sdk/ "Star2Star Micro Service SDK Documentation")
 
 ## Changes
+* 3.0.11 - Switch to HEAD for pending resource polling
 * 3.0.10 - Simplify logging to use process.env and fix resourse group update bug
 * 3.0.9 - Add empty group guarding for resource groups update
 * 3.0.8 - Add get single role

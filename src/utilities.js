@@ -342,9 +342,9 @@ const pendingResource = async (resourceLoc, requestOptions, trace, startingResou
       return Promise.resolve({"status":"ok"});
     }
     //update our requestOptions for the verification URL
-    requestOptions.method = "GET";
+    requestOptions.method = "HEAD";
     requestOptions.uri = resourceLoc;
-    requestOptions.body = {}; //clear any body data
+    delete requestOptions.body;
     
     //add trace headers
     const nextTrace = objectMerge({}, generateNewMetaData(trace));
@@ -352,15 +352,14 @@ const pendingResource = async (resourceLoc, requestOptions, trace, startingResou
     // starting resource is not complete, poll the verify endpoint
     const expires = Date.now() + config.pollTimeout;
     while (Date.now() < expires) {
-      let rawResponse = await request(requestOptions);
-      let response = rawResponse.body;
-      logger.debug("Pending Resource verification GET response", response);
-      if(response.hasOwnProperty("resource_status")){
-        switch(response.resource_status) {
+      let response = await request(requestOptions);
+      logger.debug("Pending Resource verification GET response", response.headers);
+      if(response.headers.hasOwnProperty("x-resource-status")){
+        switch(response.headers["x-resource-status"]) {
         case "processing":
           break;
         case "complete":
-          return response;
+          return Promise.resolve({"status":"ok"});
         case "failure":
           throw Error(`failure: ${JSON.stringify(response)}`);
         default:
