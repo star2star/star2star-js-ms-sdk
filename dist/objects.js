@@ -472,7 +472,7 @@ function () {
             return _context.stop();
         }
       }
-    }, _callee, this);
+    }, _callee);
   }));
 
   return function getDataObjects() {
@@ -580,7 +580,7 @@ function () {
             return _context2.stop();
         }
       }
-    }, _callee2, this);
+    }, _callee2);
   }));
 
   return function getDataObjectByTypeAndName() {
@@ -760,7 +760,7 @@ function () {
             return _context3.stop();
         }
       }
-    }, _callee3, this, [[14, 29], [32, 39]]);
+    }, _callee3, null, [[14, 29], [32, 39]]);
   }));
 
   return function createUserDataObject() {
@@ -854,7 +854,7 @@ function () {
             return _context4.stop();
         }
       }
-    }, _callee4, this);
+    }, _callee4);
   }));
 
   return function createDataObject() {
@@ -937,7 +937,7 @@ function () {
             return _context5.stop();
         }
       }
-    }, _callee5, this);
+    }, _callee5);
   }));
 
   return function deleteDataObject() {
@@ -1037,7 +1037,7 @@ function () {
             return _context6.stop();
         }
       }
-    }, _callee6, this);
+    }, _callee6);
   }));
 
   return function updateDataObject() {

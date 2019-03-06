@@ -370,7 +370,7 @@ function () {
             return _context.stop();
         }
       }
-    }, _callee, this);
+    }, _callee);
   }));
 
   return function createIdentity() {
@@ -679,7 +679,7 @@ function () {
             return _context2.stop();
         }
       }
-    }, _callee2, this, [[3, 16]]);
+    }, _callee2, null, [[3, 16]]);
   }));
 
   return function deleteIdentity() {
@@ -794,7 +794,7 @@ var getIdentityDetails = function getIdentityDetails() {
   var MS = util.getEndpoint("identity");
   var requestOptions = {
     method: "GET",
-    uri: "".concat(MS, "/identities/").concat(user_uuid, "?include=alias"),
+    uri: "".concat(MS, "/identities/").concat(user_uuid, "?include=alias&include=properties"),
     headers: {
       Authorization: "Bearer ".concat(accessToken),
       "Content-type": "application/json",
@@ -878,7 +878,7 @@ function () {
             return _context3.stop();
         }
       }
-    }, _callee3, this);
+    }, _callee3);
   }));
 
   return function listIdentitiesByAccount() {
@@ -955,7 +955,7 @@ function () {
             return _context4.stop();
         }
       }
-    }, _callee4, this);
+    }, _callee4);
   }));
 
   return function lookupIdentity() {

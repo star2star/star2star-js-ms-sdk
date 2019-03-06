@@ -377,7 +377,7 @@ function () {
             return _context.stop();
         }
       }
-    }, _callee, this, [[3, 17]]);
+    }, _callee, null, [[3, 17]]);
   }));
 
   return function deleteEvent() {

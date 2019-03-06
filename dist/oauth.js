@@ -369,7 +369,7 @@ function () {
             return _context.stop();
         }
       }
-    }, _callee, this);
+    }, _callee);
   }));
 
   return function createClientApp() {
@@ -472,7 +472,7 @@ function () {
             return _context2.stop();
         }
       }
-    }, _callee2, this);
+    }, _callee2);
   }));
 
   return function getAccessToken() {
@@ -539,7 +539,7 @@ function () {
             return _context3.stop();
         }
       }
-    }, _callee3, this);
+    }, _callee3);
   }));
 
   return function getClientToken() {
@@ -608,7 +608,7 @@ function () {
             return _context4.stop();
         }
       }
-    }, _callee4, this);
+    }, _callee4);
   }));
 
   return function invalidateToken() {
@@ -680,7 +680,7 @@ function () {
             return _context5.stop();
         }
       }
-    }, _callee5, this);
+    }, _callee5);
   }));
 
   return function listClientTokens() {
@@ -747,7 +747,7 @@ function () {
             return _context6.stop();
         }
       }
-    }, _callee6, this);
+    }, _callee6);
   }));
 
   return function refreshAccessToken() {
@@ -833,7 +833,7 @@ function () {
             return _context7.stop();
         }
       }
-    }, _callee7, this);
+    }, _callee7);
   }));
 
   return function scopeClientApp() {
@@ -902,7 +902,7 @@ function () {
             return _context8.stop();
         }
       }
-    }, _callee8, this);
+    }, _callee8);
   }));
 
   return function validateToken() {

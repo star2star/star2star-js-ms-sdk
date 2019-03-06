@@ -430,7 +430,7 @@ const getIdentityDetails = (
   const MS = util.getEndpoint("identity");
   const requestOptions = {
     method: "GET",
-    uri: `${MS}/identities/${user_uuid}?include=alias`,
+    uri: `${MS}/identities/${user_uuid}?include=alias&include=properties`,
     headers: {
       Authorization: `Bearer ${accessToken}`,
       "Content-type": "application/json",

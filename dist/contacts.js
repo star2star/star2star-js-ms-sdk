@@ -410,7 +410,7 @@ function () {
             return _context.stop();
         }
       }
-    }, _callee, this, [[3, 15]]);
+    }, _callee, null, [[3, 15]]);
   }));
 
   return function deleteContact() {
@@ -475,7 +475,7 @@ function () {
             return _context2.stop();
         }
       }
-    }, _callee2, this);
+    }, _callee2);
   }));
 
   return function exportContacts() {

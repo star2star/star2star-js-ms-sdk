@@ -603,7 +603,7 @@ function () {
                         return _context.stop();
                     }
                   }
-                }, _callee, this);
+                }, _callee);
               }));
 
               return function makeRequest(_x3, _x4) {
@@ -622,7 +622,7 @@ function () {
             return _context2.stop();
         }
       }
-    }, _callee2, this);
+    }, _callee2);
   }));
 
   return function aggregate(_x, _x2) {
@@ -773,7 +773,7 @@ function () {
 
           case 15:
             response = _context3.sent;
-            logger.debug("Pending Resource verification GET response", response.headers);
+            logger.debug("Pending Resource verification HEAD response", response.headers);
 
             if (!response.headers.hasOwnProperty("x-resource-status")) {
               _context3.next = 27;
@@ -843,7 +843,7 @@ function () {
             return _context3.stop();
         }
       }
-    }, _callee3, this, [[3, 35]]);
+    }, _callee3, null, [[3, 35]]);
   }));
 
   return function pendingResource(_x5, _x6, _x7) {

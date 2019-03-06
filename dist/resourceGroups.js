@@ -423,7 +423,7 @@ function () {
             return _context.stop();
         }
       }
-    }, _callee, this, [[6, 26]]);
+    }, _callee, null, [[6, 26]]);
   }));
 
   return function createResourceGroups() {
@@ -507,7 +507,7 @@ function () {
             return _context2.stop();
         }
       }
-    }, _callee2, this, [[3, 19]]);
+    }, _callee2, null, [[3, 19]]);
   }));
 
   return function cleanUpResourceGroups() {
@@ -705,7 +705,7 @@ function () {
             return _context3.stop();
         }
       }
-    }, _callee3, this, [[6, 37]]);
+    }, _callee3, null, [[6, 37]]);
   }));
 
   return function updateResourceGroups() {

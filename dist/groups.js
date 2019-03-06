@@ -525,7 +525,7 @@ function () {
             return _context.stop();
         }
       }
-    }, _callee, this, [[3, 16]]);
+    }, _callee, null, [[3, 16]]);
   }));
 
   return function deleteGroup() {
@@ -589,7 +589,7 @@ function () {
             return _context2.stop();
         }
       }
-    }, _callee2, this);
+    }, _callee2);
   }));
 
   return function addMembersToGroup() {
@@ -663,7 +663,7 @@ function () {
             return _context3.stop();
         }
       }
-    }, _callee3, this);
+    }, _callee3);
   }));
 
   return function deleteGroupMembers() {

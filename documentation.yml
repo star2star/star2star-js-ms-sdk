@@ -207,8 +207,6 @@ toc:
       - createUUID
       - filterResponse
       - getEndpoint
-      - getLogLevel
-      - getLogPretty
       - getVersion
       - getValueFromObjectTree
       - isBrowser
@@ -216,7 +214,5 @@ toc:
       - pendingResource
       - replaceStaticValues
       - replaceVariables
-      - setLogLevel
-      - setLogPretty
 
      

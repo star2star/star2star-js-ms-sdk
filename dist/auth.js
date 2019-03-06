@@ -383,7 +383,7 @@ function () {
             return _context.stop();
         }
       }
-    }, _callee, this, [[3, 17]]);
+    }, _callee, null, [[3, 17]]);
   }));
 
   return function activateRole() {
@@ -499,7 +499,7 @@ function () {
             return _context2.stop();
         }
       }
-    }, _callee2, this);
+    }, _callee2);
   }));
 
   return function assignRolesToUserGroup() {
@@ -582,7 +582,7 @@ function () {
             return _context3.stop();
         }
       }
-    }, _callee3, this);
+    }, _callee3);
   }));
 
   return function assignScopedRoleToUserGroup() {
@@ -690,7 +690,7 @@ function () {
             return _context4.stop();
         }
       }
-    }, _callee4, this);
+    }, _callee4);
   }));
 
   return function createUserGroup() {
@@ -769,7 +769,7 @@ function () {
             return _context5.stop();
         }
       }
-    }, _callee5, this);
+    }, _callee5);
   }));
 
   return function createRole() {
@@ -855,7 +855,7 @@ function () {
             return _context6.stop();
         }
       }
-    }, _callee6, this, [[3, 17]]);
+    }, _callee6, null, [[3, 17]]);
   }));
 
   return function deactivateRole() {
@@ -988,7 +988,7 @@ function () {
             return _context7.stop();
         }
       }
-    }, _callee7, this, [[3, 19]]);
+    }, _callee7, null, [[3, 19]]);
   }));
 
   return function deleteRole() {
@@ -1113,7 +1113,7 @@ function () {
             return _context8.stop();
         }
       }
-    }, _callee8, this);
+    }, _callee8);
   }));
 
   return function getResourceUsers() {
@@ -1183,7 +1183,7 @@ function () {
             return _context9.stop();
         }
       }
-    }, _callee9, this, [[3, 13]]);
+    }, _callee9, null, [[3, 13]]);
   }));
 
   return function getRole() {
@@ -1238,7 +1238,7 @@ function () {
             return _context10.stop();
         }
       }
-    }, _callee10, this);
+    }, _callee10);
   }));
 
   return function listAccessByGroups() {
@@ -1376,7 +1376,7 @@ function () {
             return _context11.stop();
         }
       }
-    }, _callee11, this);
+    }, _callee11);
   }));
 
   return function listPermissions() {
@@ -1442,7 +1442,7 @@ function () {
             return _context12.stop();
         }
       }
-    }, _callee12, this);
+    }, _callee12);
   }));
 
   return function listPermissionRoles() {
@@ -1728,7 +1728,7 @@ function () {
             return _context13.stop();
         }
       }
-    }, _callee13, this);
+    }, _callee13);
   }));
 
   return function modifyRole() {
@@ -1807,7 +1807,7 @@ function () {
             return _context14.stop();
         }
       }
-    }, _callee14, this);
+    }, _callee14);
   }));
 
   return function modifyUserGroup() {
