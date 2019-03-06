@@ -739,7 +739,7 @@ function () {
             startingResourceStatus = _args3.length > 3 && _args3[3] !== undefined ? _args3[3] : "complete";
             getLogger(); //ensures log levels are read in from process.ENV
 
-            logger.debug("Pending Resource Location", resourceLoc);
+            logger.debug("Pending Resource Location", resourceLoc, requestOptions);
             _context3.prev = 3;
 
             if (!(startingResourceStatus === "complete")) {

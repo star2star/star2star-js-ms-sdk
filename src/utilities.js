@@ -335,7 +335,7 @@ const getLogger = () => {
  */
 const pendingResource = async (resourceLoc, requestOptions, trace, startingResourceStatus = "complete") => {
   getLogger(); //ensures log levels are read in from process.ENV
-  logger.debug("Pending Resource Location", resourceLoc);
+  logger.debug("Pending Resource Location", resourceLoc, requestOptions);
   try {
     // if the startingResourceStatus is complete, there is nothing to do since the resource is ready
     if (startingResourceStatus === "complete") {
@@ -353,7 +353,7 @@ const pendingResource = async (resourceLoc, requestOptions, trace, startingResou
     const expires = Date.now() + config.pollTimeout;
     while (Date.now() < expires) {
       let response = await request(requestOptions);
-      logger.debug("Pending Resource verification GET response", response.headers);
+      logger.debug("Pending Resource verification HEAD response", response.headers);
       if(response.headers.hasOwnProperty("x-resource-status")){
         switch(response.headers["x-resource-status"]) {
         case "processing":
