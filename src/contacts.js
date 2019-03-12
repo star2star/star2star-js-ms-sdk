@@ -148,34 +148,45 @@ const getContacts = (
 
 /**
  * @async
- * @description This function will call getContacts one or more times to list all user contacts
- * @param {string} [user_uuid="null user uuid"]
- * @param {object} [params={}] - object containing query params
- * @param {*} accessToken - access token
- * @param {object} [trace = {}] - optional microservice lifecycle trace headers
- * @param {object} [trace = {}] - optional microservice lifecycle trace headers
- * @returns {Promise<object>} - Promise resolving to a data object containing collection of user contacts
+ * @description This function will list a user's contacts
+ * @param {string} [accessToken="null access_token"] - cpaas access token
+ * @param {string} [user_uuid="null user_uuid"] - user uuid
+ * @param {number} [offset=0] - pagination offset
+ * @param {number} [limit=10] - pagination limit
+ * @param {object} [filters={}] - optional filters or search params
+ * @param {object} [trace={}] - optional microservice lifecycle headers
+ * @returns
  */
 const listContacts = (
-  user_uuid = "missing uuid",
-  params,
-  accessToken,
+  accessToken = "null access_token",
+  user_uuid = "null user_uuid",
+  offset = 0,
+  limit = 10,
+  filters = undefined,
   trace = {}
 ) => {
-  return new Promise((resolve, reject) => {
-    // this array will accumulate the contact list
-    let returnContacts = [];
-    let parameters = {};
-    // make initial call to get first contacts
-    getContacts(user_uuid, params, accessToken, trace)
-      .then(contactData => {
-        resolve(contactData);
-      })
-      .catch(e => {
-        console.log("Error getting contacts", e);
-        reject(e);
-      });
-  });
+  const MS = util.getEndpoint("contacts");
+  const requestOptions = {
+    method: "GET",
+    uri: `${MS}/users/${user_uuid}/contacts`,
+    qs: {
+      offset: offset,
+      limit: limit
+    },
+    headers: {
+      Authorization: `Bearer ${accessToken}`,
+      "Content-type": "application/json",
+      "x-api-version": `${util.getVersion()}`
+    },
+    json: true
+  };
+  util.addRequestTrace(requestOptions, trace);
+  if (filters) {
+    Object.keys(filters).forEach(filter => {
+      requestOptions.qs[filter] = filters[filter];
+    });
+  }
+  return request(requestOptions); 
 };
 
 /**

@@ -147,7 +147,14 @@ describe("Contacts MS Test Suite", function() {
   it("List Contacts", mochaAsync(async () => {
     if (!creds.isValid) throw new Error("Invalid Credentials");
     trace = objectMerge({}, trace, Util.generateNewMetaData(trace));
-    const response = await s2sMS.Contacts.listContacts(identityData.uuid, {}, accessToken);
+    const response = await s2sMS.Contacts.listContacts(
+      accessToken,
+      identityData.uuid,
+      0, //offset
+      10, //limit
+      undefined, //filters...waiting on CSRVS-249 to test these
+      {} //trace headers
+    );
     assert.ok(
       response.hasOwnProperty("items") &&
       Array.isArray(response.items),

@@ -70,6 +70,7 @@ process.env.MS_LOGPRETTY = true // defaults to false
 [Please click here for our documentation pages.](https://star2star.github.io/star2star-js-ms-sdk/ "Star2Star Micro Service SDK Documentation")
 
 ## Changes
+* 3.0.13 - Add pagination to list user contacts
 * 3.0.12 - Add additional properties query param to get identity
 * 3.0.11 - Switch to HEAD for pending resource polling
 * 3.0.10 - Simplify logging to use process.env and fix resourse group update bug

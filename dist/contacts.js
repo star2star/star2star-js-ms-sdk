@@ -515,33 +515,48 @@ var getContacts = function getContacts() {
 };
 /**
  * @async
- * @description This function will call getContacts one or more times to list all user contacts
- * @param {string} [user_uuid="null user uuid"]
- * @param {object} [params={}] - object containing query params
- * @param {*} accessToken - access token
- * @param {object} [trace = {}] - optional microservice lifecycle trace headers
- * @param {object} [trace = {}] - optional microservice lifecycle trace headers
- * @returns {Promise<object>} - Promise resolving to a data object containing collection of user contacts
+ * @description This function will list a user's contacts
+ * @param {string} [accessToken="null access_token"] - cpaas access token
+ * @param {string} [user_uuid="null user_uuid"] - user uuid
+ * @param {number} [offset=0] - pagination offset
+ * @param {number} [limit=10] - pagination limit
+ * @param {object} [filters={}] - optional filters or search params
+ * @param {object} [trace={}] - optional microservice lifecycle headers
+ * @returns
  */
 
 
 var listContacts = function listContacts() {
-  var user_uuid = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : "missing uuid";
-  var params = arguments.length > 1 ? arguments[1] : undefined;
-  var accessToken = arguments.length > 2 ? arguments[2] : undefined;
-  var trace = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : {};
-  return new Promise(function (resolve, reject) {
-    // this array will accumulate the contact list
-    var returnContacts = [];
-    var parameters = {}; // make initial call to get first contacts
+  var accessToken = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : "null access_token";
+  var user_uuid = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : "null user_uuid";
+  var offset = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : 0;
+  var limit = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : 10;
+  var filters = arguments.length > 4 && arguments[4] !== undefined ? arguments[4] : undefined;
+  var trace = arguments.length > 5 && arguments[5] !== undefined ? arguments[5] : {};
+  var MS = util.getEndpoint("contacts");
+  var requestOptions = {
+    method: "GET",
+    uri: "".concat(MS, "/users/").concat(user_uuid, "/contacts"),
+    qs: {
+      offset: offset,
+      limit: limit
+    },
+    headers: {
+      Authorization: "Bearer ".concat(accessToken),
+      "Content-type": "application/json",
+      "x-api-version": "".concat(util.getVersion())
+    },
+    json: true
+  };
+  util.addRequestTrace(requestOptions, trace);
 
-    getContacts(user_uuid, params, accessToken, trace).then(function (contactData) {
-      resolve(contactData);
-    }).catch(function (e) {
-      console.log("Error getting contacts", e);
-      reject(e);
+  if (filters) {
+    Object.keys(filters).forEach(function (filter) {
+      requestOptions.qs[filter] = filters[filter];
     });
-  });
+  }
+
+  return request(requestOptions);
 };
 /**
  * @async
