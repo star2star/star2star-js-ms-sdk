@@ -8,8 +8,7 @@ const it = mocha.it;
 //test requires
 const s2sMS = require("../src/index");
 const Config = require("../src/config.json");
-const Util = require("../src/utilities");
-const logger = Util.getLogger();
+const creds = require("./credentials.json");
 
 beforeEach(function () {
   s2sMS.setMsHost(creds.MS_HOST);
@@ -57,14 +56,9 @@ describe("MS SDK Index", function () {
     done();
   });
 
-  it("set/get baseUrl development  ", function (done) {
-    assert.equal(s2sMS.getMsHost(), "https://cpaas.star2starglobal.net");
-    done();
-  });
-
   it("set/get msHost production ", function (done) {
-    s2sMS.setMsHost("https://cpaas.star2star.com/api");
-    assert.equal(s2sMS.getMsHost(), "https://cpaas.star2star.com/api");
+    s2sMS.setMsHost(creds.MS_HOST);
+    assert.equal(s2sMS.getMsHost(), creds.MS_HOST);
     done();
   });
  

@@ -14,7 +14,6 @@ const logger = Util.getLogger();
 const objectMerge = require("object-merge");
 const newMeta = Util.generateNewMetaData;
 let trace = newMeta();
-let identityData;
 
 //utility function to simplify test code
 const mochaAsync = (func, name) => {

@@ -115,7 +115,7 @@ const uploadFile = (
  * @param {object} [trace = {}] - optional microservice lifecycle trace headers
  * @returns {Promise<empty>} - Promise resolving success or failure.
  */
-const deleteMedia = (
+const deleteMedia = async (
   file_id = "no file_id provided",
   accessToken = "null accessToken",
   trace = {}
@@ -129,10 +129,16 @@ const deleteMedia = (
       Authorization: `Bearer ${accessToken}`,
       "x-api-version": `${util.getVersion()}`
     },
-    json: true
+    json: true,
+    resolveWithFullResponse: true
   };
   util.addRequestTrace(requestOptions, trace);
-  return request(requestOptions);
+  const response = await request(requestOptions);
+  if(response.statusCode === 204) {
+    return {"status": "ok"};
+  } else {
+    return {"status": "failed"};
+  }
 };
 
 module.exports = {

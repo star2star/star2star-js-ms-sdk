@@ -11,6 +11,23 @@ const fs = require("fs");
 const s2sMS = require("../src/index");
 const Util = require("../src/utilities");
 const logger = Util.getLogger();
+const objectMerge = require("object-merge");
+const newMeta = Util.generateNewMetaData;
+let trace = newMeta();
+
+//utility function to simplify test code
+const mochaAsync = (func, name) => {
+  return async () => {
+    try {
+      const response = await func();
+      logger.debug(name, response);
+      return response; 
+    } catch (error) {
+      //mocha will log out the error
+      return Promise.reject(error);
+    }
+  };
+};
 
 let creds = {
   CPAAS_OAUTH_TOKEN: "Basic your oauth token here",
@@ -22,125 +39,97 @@ let creds = {
 
 let accessToken;
 
-describe("Lambda MS", function() {
-  before(function() {
-    // file system uses full path so will do it like this
-    if (fs.existsSync("./test/credentials.json")) {
+describe("Lamda MS Unit Test Suite", function() {
+  before(async () => {
+    try {
+      // file system uses full path so will do it like this
+      if (fs.existsSync("./test/credentials.json")) {
       // do not need test folder here
-      creds = require("./credentials.json");
-    }
+        creds = require("./credentials.json");
+      }
 
-    // For tests, use the dev msHost
-    s2sMS.setMsHost(creds.MS_HOST);
-    s2sMS.setMSVersion(creds.CPAAS_API_VERSION);
-    s2sMS.setMsAuthHost(creds.AUTH_HOST);
-    // get accessToken to use in test cases
-    // Return promise so that test cases will not fire until it resolves.
-    return new Promise((resolve, reject) => {
-      s2sMS.Oauth.getAccessToken(
+      // For tests, use the dev msHost
+      s2sMS.setMsHost(creds.MS_HOST);
+      s2sMS.setMSVersion(creds.CPAAS_API_VERSION);
+      s2sMS.setMsAuthHost(creds.AUTH_HOST);
+      // get accessToken to use in test cases
+      // Return promise so that test cases will not fire until it resolves.
+    
+      const oauthData = await s2sMS.Oauth.getAccessToken(
         creds.CPAAS_OAUTH_TOKEN,
         creds.email,
         creds.password
-      )
-        .then(oauthData => {
-          //console.log('Got access token and identity data -[Get Object By Data Type] ',  oauthData);
-          accessToken = oauthData.access_token;
-          resolve();
-        })
-        .catch(e => {
-          reject(e);
-        });
-    });
+      );
+      accessToken = oauthData.access_token;
+    } catch (error) {
+      return Promise.reject(error);
+    }  
   });
 
-  it("list lambdas", function(done) {
-    if (!creds.isValid) return done();
-
-    s2sMS.Lambda.listLambdas(accessToken)
-      .then(lambdaResponse => {
-        //console.log('Response from list lambda', lambdaResponse);
-        assert(
-          lambdaResponse.length > 0 && lambdaResponse[0].hasOwnProperty("name")
-        );
-        done();
-      })
-      .catch(error => {
-        console.log("Error invoking valid lambda [invoke good lambda]", error);
-        done(new Error(error));
-      });
-  });
-
-  it("invokeGoodLambda", function(done) {
-    if (!creds.isValid) return done();
+  it("list lambdas", mochaAsync(async () => {
+    if (!creds.isValid) throw new Error("Invalid Credentials");
+    trace = objectMerge({}, trace, Util.generateNewMetaData(trace));
+    const response = await s2sMS.Lambda.listLambdas(accessToken, trace);
+    assert.ok(
+      response.items.length > 0 &&
+      response.items[0].hasOwnProperty("name"),
+      JSON.stringify(response, null, "\t")
+    );
+    return response;
+  },"list lambdas"));
+  
+  it("invokeGoodLambda", mochaAsync(async () => {
+    if (!creds.isValid) throw new Error("Invalid Credentials");
+    trace = objectMerge({}, trace, Util.generateNewMetaData(trace));
     const params = {
-      a: 1,
-      b: "test"
+      x: 1,
+      y: 2
     };
+    const response = await s2sMS.Lambda.invokeLambda(
+      accessToken,
+      "james-add-numbers",
+      params,
+      trace
+    );
+    assert.ok(
+      response.add === 3,
+      JSON.stringify(response, null, "\t")
+    );
+    return response;
+  },"invokeGoodLambda"));
 
-    s2sMS.Lambda.invokeLambda(accessToken, "abc", params)
-      .then(lambdaResponse => {
-        // console.log('Response from invokeLambda [invokeGoodLambda]', lambdaResponse)
-        const validResponse = {
-          message: "abc successfully finished",
-          parameters: params
-        };
-        assert.deepEqual(lambdaResponse, validResponse);
-        done();
-      })
-      .catch(error => {
-        console.log("Error invoking valid lambda [invoke good lambda]", error);
-        done(new Error(error));
-      });
-  });
-
-  it("invokeBadLambda", function(done) {
-    if (!creds.isValid) return done();
-    s2sMS.Lambda.invokeLambda(accessToken, "this one does not exists", {
-      env: "dev"
-    }).catch(lambdaResponse => {
-      //console.log(lambdaResponse)
-      assert.equal(lambdaResponse.statusCode, 404);
-      done();
-    });
-  });
-
-  // TODO - do we need this test????
-  // it("invoke default-all-notify lambda", function (done) {
-  //   if (!creds.isValid) return done();
-  //   const params = {
-  //     params: {
-  //       title: "911: ",
-  //       body: "Called from zone: SRQ Main extension: Room 2701 at Thu Nov 16 2017 16:10:19 GMT+0000 (UTC) "
-  //     },
-  //     cfg: {
-  //       _outDataSamples: ["5a0db856818133001743490d"],
-  //       _selectedDataSamples: [],
-  //       _account: "59fcdca30f014f001733fda1",
-  //       CPAAS_KEY: "588a5e9bf5612d00d8eb7df1e29a4b390b1448a66324533c29dce7ec",
-  //       email: "jschimmoeller@schimmoeller.net",
-  //       password: "2017star"
-  //     },
-  //     config: config,
-  //     subscribers: [{
-  //       uuid: "1",
-  //       name: "James",
-  //       modality: "sms",
-  //       value: "+19418076677"
-  //     }],
-  //     env: "dev"
-  //   };
-  //
-  //   s2sMS.Lambda.invokeLambda(creds.CPAAS_KEY, "default-all-notify", params)
-  //     .then(lambdaResponse => {
-  //       //console.log('=======', lambdaResponse)
-  //       const validResponse = "sms successfully finished";
-  //       assert.deepEqual(lambdaResponse.message, validResponse);
-  //       done();
-  //     })
-  //     .catch(e => {
-  //       console.log("-----", e);
-  //       assert(false);
-  //       done();
-  //     });
-  // });
+  it("invokeBadLambda", mochaAsync(async () => {
+    try {
+      if (!creds.isValid) throw new Error("Invalid Credentials");
+      trace = objectMerge({}, trace, Util.generateNewMetaData(trace));
+      const response = await s2sMS.Lambda.invokeLambda(
+        accessToken, 
+        "this one does not exist",
+        {env: "dev"},
+        trace
+      );
+      assert.ok(
+        false,
+        JSON.stringify(response, null, "\t")
+      );
+      return response;
+    } catch(error) {
+      assert.ok(
+        error.statusCode === 404,
+        JSON.stringify(error, null, "\t")
+      );
+    }
+  },"invokeBadLambda")); 
+  
+  // template
+  // it("change me", mochaAsync(async () => {
+  //   if (!creds.isValid) throw new Error("Invalid Credentials");
+  //   trace = objectMerge({}, trace, Util.generateNewMetaData(trace));
+  //   const response = await somethingAsync();
+  //   assert.ok(
+  //     1 === 1,
+  //     JSON.stringify(response, null, "\t")
+  //   );
+  //   return response;
+  // },"change me")); 
 });
