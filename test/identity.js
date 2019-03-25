@@ -11,6 +11,24 @@ const fs = require("fs");
 const s2sMS = require("../src/index");
 const Util = require("../src/utilities");
 const logger = Util.getLogger();
+const objectMerge = require("object-merge");
+const newMeta = Util.generateNewMetaData;
+let trace = newMeta();
+let identityData;
+
+//utility function to simplify test code
+const mochaAsync = (func, name) => {
+  return async () => {
+    try {
+      const response = await func();
+      logger.debug(name, response);
+      return response; 
+    } catch (error) {
+      //mocha will log out the error
+      return Promise.reject(error);
+    }
+  };
+};
 
 let creds = {
   CPAAS_OAUTH_TOKEN: "Basic your oauth token here",
@@ -23,57 +41,49 @@ let creds = {
 describe("Identity MS Unit Test Suite", function () {
 
   let accessToken, identityData, testUUID, testGroupUuid;
-  let time = new Date().getTime().toString().slice(-10); //FIXME Temporary until DELETE is fixed
 
-  before(function () {
-    // file system uses full path so will do it like this
-    if (fs.existsSync("./test/credentials.json")) {
+  before(async () => {
+    try {
+      // file system uses full path so will do it like this
+      if (fs.existsSync("./test/credentials.json")) {
       // do not need test folder here
-      creds = require("./credentials.json");
-    }
+        creds = require("./credentials.json");
+      }
 
-    // For tests, use the dev msHost
-    s2sMS.setMsHost("https://cpaas.star2starglobal.net");
-    s2sMS.setMSVersion(creds.CPAAS_API_VERSION);
-    s2sMS.setMsAuthHost("https://auth.star2starglobal.net");
-    // get accessToken to use in test cases
-    // Return promise so that test cases will not fire until it resolves.
-    return new Promise((resolve, reject)=>{
-      s2sMS.Oauth.getAccessToken(
+      // For tests, use the dev msHost
+      s2sMS.setMsHost(creds.MS_HOST);
+      s2sMS.setMSVersion(creds.CPAAS_API_VERSION);
+      s2sMS.setMsAuthHost(creds.AUTH_HOST);
+      // get accessToken to use in test cases
+      // Return promise so that test cases will not fire until it resolves.
+    
+      const oauthData = await s2sMS.Oauth.getAccessToken(
         creds.CPAAS_OAUTH_TOKEN,
         creds.email,
         creds.password
-      )
-        .then(oauthData => {
-          //console.log('Got access token and identity data -[Get Object By Data Type] ',  oauthData);
-          accessToken = oauthData.access_token;
-          s2sMS.Identity.getMyIdentityData(accessToken).then((idData)=>{
-            s2sMS.Identity.getIdentityDetails(accessToken, idData.user_uuid).then((identityDetails)=>{
-              identityData = identityDetails;
-              resolve();
-            }).catch((e1)=>{
-              reject(e1);
-            });
-          }).catch((e)=>{
-            reject(e);
-          });
-        });
-    });
+      );
+      accessToken = oauthData.access_token;
+      const idData = await s2sMS.Identity.getMyIdentityData(accessToken);
+      identityData = await s2sMS.Identity.getIdentityDetails(accessToken, idData.user_uuid);
+    } catch (error) {
+      return Promise.reject(error);
+    }
   });
 
-  it("Create Identity", function (done) {
-    if (!creds.isValid) return done();
+  it("Create Identity", mochaAsync(async () => {
+    if (!creds.isValid) throw new Error("Invalid Credentials");
+    trace = objectMerge({}, trace, Util.generateNewMetaData(trace));
     const body = {
       "account_uuid": identityData.account_uuid,
       "type": "user",
       "first_name": "Larry",
       "middle_name": "The",
       "last_name": "CableGuy",
-      "username": "larry"+time+"@fake.email",
+      "username": "larry@fake.email",
       "status": "Active",
       "provider": "local",
-      "email": "larry"+time+"@fake.email",
-      "phone": time,
+      "email": "larry@fake.email",
+      "phone": "5555555555",
       "address": {
         "city": "Somewhere",
         "state": "AK",
@@ -82,416 +92,330 @@ describe("Identity MS Unit Test Suite", function () {
       }, 
       "reference": "Free form text"
     };
-    s2sMS.Identity.createIdentity(accessToken, identityData.account_uuid, body)
-      .then(identity => {
-        // console.log('Created user', identity.uuid);
-        testUUID = identity.uuid;
-        assert(identity.uuid !== undefined);
-        done();
-      })
-      .catch((error) => {
-        console.log("Error creating identity", error);
-        done(new Error(error));
-      });
-  });
-
-  it("Create DID Identity Alias", function (done) {
-    if (!creds.isValid) return done();
-    const body = {
-      "nickname": "larry"+time+"@fake.email",
-      "email": "larry"+time+"@fake.email",
-      "sms": time
-    };    
-    s2sMS.Identity.createAlias(
+    const response = await s2sMS.Identity.createIdentity(
       accessToken,
-      testUUID,
-      body
-    ).then(response => {
-      assert(response.status === "ok");
-      s2sMS.Identity.getIdentityDetails(accessToken,testUUID)
-        .then(response => {
-          //console.log("UPDATED IDENTITY",response);
-          assert(response.aliases[0].sms === time);
-          done();
-        })
-        .catch(error => {
-          console.log("Error Getting Updated Identity", error);
-          done(new Error(error));
-        });
-    })
-      .catch(error => {
-        console.log("Error updating alias [create alias]", error);
-        done(new Error(error));
-      });
-  });
+      identityData.account_uuid,
+      body,
+      trace
+    );
+    testUUID = response.uuid;
+    assert.ok(
+      response.uuid !== undefined,
+      JSON.stringify(response, null, "\t")
+    );
+    return response;
+  },"Create Identity"));
   
-  it("Update DID Identity Alias", function (done) {
-    if (!creds.isValid) return done();
-    time++; //FIXME incrementing our time to use for new sms until delete is fixed.    
-    s2sMS.Identity.updateAliasWithDID(
+  it("Create DID Identity Alias", mochaAsync(async () => {
+    if (!creds.isValid) throw new Error("Invalid Credentials");
+    trace = objectMerge({}, trace, Util.generateNewMetaData(trace));
+    const body = {
+      "nickname": "larry1@fake.email",
+      "email": "larry@fake.email",
+      "sms": "5555555556"
+    };
+    await s2sMS.Identity.createAlias(
       accessToken,
       testUUID,
-      time
-    ).then(response => {
-      assert(response.status === "ok");
-      s2sMS.Identity.getIdentityDetails(accessToken,testUUID)
-        .then(response => {
-          // console.log("UPDATED SMS",response.aliases[0].sms);
-          assert(response.aliases[0].sms == time);
-          done();
-        })
-        .catch(error => {
-          console.log("Error Getting Updated Identity", error);
-          done(new Error(error));
-        });
-    })
-      .catch(error => {
-        console.log("Error updating alias [create alias]", error);
-        done(new Error(error));
-      });
-  });
+      body,
+      trace
+    );
+    trace = objectMerge({}, trace, Util.generateNewMetaData(trace));
+    const response = await s2sMS.Identity.getIdentityDetails(accessToken,testUUID, trace);
+    assert.ok(
+      response.aliases[0].sms === "5555555556",
+      JSON.stringify(response, null, "\t")
+    );
+    return response;
+  },"Create DID Identity Alias"));
 
-  //moved messaging tests here so we can user our temporary identity. NH
-
-  it("Valid SMS Number", function (done) {
-    if (!creds.isValid) return done();
-    s2sMS.Messaging.getSMSNumber(accessToken, testUUID)
-      .then((sms) => {
-        //console.log('SSSMMMSSS', sms);
-        assert(sms == time);
-        done();
-      })
-      .catch((error) => {
-        console.log("Error getting SMS Number", JSON.stringify(error));
-        done(new Error(error));
-      });         
-  });
-
-  it("GetSMS for Invalid USER UUID", function (done) {
-    if (!creds.isValid) return done();
-    s2sMS.Messaging.getSMSNumber(accessToken, "bad")
-      .then(response => {
-        console.log("This call should fail", response);
-        done(new Error(response));
-      })
-      .catch(error => {
-      //console.log('Got expected error with invalid uuid [getsms for invalid user]', error);
-        assert(error.statusCode === 400);
-        done();
-      });
-  });
-
-
-  /* FIXME once CSRVS-155 is figured out
-   it("Send SMS", function (done) {
-     if (!creds.isValid) return done();
-     s2sMS.Messaging.sendSMS(
-       accessToken,
-       testUUID,
-       "msg",
-       time,
-       "9412340001"
-       )
-       .then(response => {
-         console.log("SMS set", response);
-         //assert(response.content[0].body === "msg");
-         done();
-       })
-       .catch(error => {
-         console.log("Unable to send message.", error);
-         done(new Error(error));
-       });
-   });
-*/
-  // End messaging tests 
-
-  it("Modify Identity", function (done) {
-    if (!creds.isValid) return done();
-    // console.log('Created guest user [create Alias]', identityData.uuid);
+  it("Update DID Identity Alias", mochaAsync(async () => {
+    if (!creds.isValid) throw new Error("Invalid Credentials");
+    trace = objectMerge({}, trace, Util.generateNewMetaData(trace));
+    await s2sMS.Identity.updateAliasWithDID(
+      accessToken,
+      testUUID,
+      "5555555557",
+      trace
+    );
+    trace = objectMerge({}, trace, Util.generateNewMetaData(trace));
+    const response = await s2sMS.Identity.getIdentityDetails(accessToken,testUUID, trace);
+    assert.ok(
+      response.aliases[0].sms === "5555555557",
+      JSON.stringify(response, null, "\t")
+    );
+    return response;
+  },"Update DID Identity Alias"));
+ 
+  it("Modify Identity", mochaAsync(async () => {
+    if (!creds.isValid) throw new Error("Invalid Credentials");
+    trace = objectMerge({}, trace, Util.generateNewMetaData(trace));
     const body = {first_name: "Bob"};
-    s2sMS.Identity.modifyIdentity(
+    const response = await s2sMS.Identity.modifyIdentity(
       accessToken,
       testUUID,
-      body
-    ).then((response) => {
-      //console.log('alias data', aliasData);
-      assert(response.first_name === "Bob");
-      done();
-    })
-      .catch((error) => {
-        console.log("Error updating alias [create alias]", error);
-        done(new Error(error));
-      });
-  });
-
-  //TODO these return 204s but are broken
-
-  it("Deactivate Identity", function (done) {
-    if (!creds.isValid) return done();
-    s2sMS.Identity.deactivateIdentity(accessToken, testUUID)
-      .then((response) => {
-        //console.log('Deleted guest user:', testUUID);
-        assert(response.status === "ok");
-        done();
-      })
-      .catch((error) => {
-        console.log("Error deleting user [create user]", error);
-        done(new Error(error));
-      });
-  });
-
-  it("Reactivate Identity", function (done) {
-    if (!creds.isValid) return done();
-    s2sMS.Identity.reactivateIdentity(accessToken, testUUID)
-      .then((response) => {
-        //console.log('Deleted guest user:', testUUID);
-        assert(response.status === "ok");
-        done();
-      })
-      .catch((error) => {
-        console.log("Error deleting user [create user]", error);
-        done(new Error(error));
-      });
-  });
-
-  it("Delete Identity and Confirm Identity is Removed from User-groups", function (done){
-    if (!creds.isValid) return done();
+      body,
+      trace
+    );
+    assert.ok(
+      response.first_name === "Bob",
+      JSON.stringify(response, null, "\t")
+    );
+    return response;
+  },"Modify Identity"));
+  
+  it("Deactivate Identity", mochaAsync(async () => {
+    if (!creds.isValid) throw new Error("Invalid Credentials");
+    trace = objectMerge({}, trace, Util.generateNewMetaData(trace));
+    const response = await s2sMS.Identity.deactivateIdentity(accessToken, testUUID, trace);
+    assert.ok(
+      response.status === "ok",
+      JSON.stringify(response, null, "\t")
+    );
+    return response;
+  },"Deactivate Identity"));
+  
+  it("Reactivate Identity", mochaAsync(async () => {
+    if (!creds.isValid) throw new Error("Invalid Credentials");
+    trace = objectMerge({}, trace, Util.generateNewMetaData(trace));
+    const response = await s2sMS.Identity.reactivateIdentity(accessToken, testUUID, trace);
+    assert.ok(
+      response.status === "ok",
+      JSON.stringify(response, null, "\t")
+    );
+    return response;
+  },"Reactivate Identity"));
+  
+  it("Delete Identity and Confirm Identity is Removed from User-groups", mochaAsync(async () => {
+    if (!creds.isValid) throw new Error("Invalid Credentials");
+    trace = objectMerge({}, trace, Util.generateNewMetaData(trace));
     //create group
     const body = {
       "account_id": identityData.account_uuid,
-      "description": "A test group", //FIXME Revisit when CCORE-181 is fixed
+      "description": "A test group",
       "members": [
-        {
-          "uuid": "fake-uuid"
-        }
       ],
       "name": "Test",
       "type": "user"
     };
-
-    s2sMS.Groups.createGroup(
+    const testGroup = await s2sMS.Groups.createGroup(
       accessToken,
-      body
-    ).then(responseData => {
-      testGroupUuid = responseData.uuid; //Use this uuid for other tests.
-      //console.log(responseData);
-      assert(
-        responseData.name === "Test"
+      body,
+      trace
+    );
+    testGroupUuid = testGroup.uuid;
+
+    //add the test identity to the group
+    trace = objectMerge({}, trace, Util.generateNewMetaData(trace));
+    const testMembers = [{
+      type: "user",
+      uuid: testUUID
+    }];
+    const addMember = await s2sMS.Groups.addMembersToGroup(
+      accessToken,
+      testGroupUuid,
+      testMembers,
+      trace
+    );
+    
+    // delete the identity
+    trace = objectMerge({}, trace, Util.generateNewMetaData(trace));
+    const deleteIdentity = await s2sMS.Identity.deleteIdentity(accessToken, testUUID, trace);
+    const response = await s2sMS.Groups.listGroups(
+      accessToken,
+      0, //offset
+      10, //limit
+      {"member_uuid" : testUUID}, //filters
+      trace
+    );
+    assert.ok(
+      testGroup.name === "Test" &&
+      addMember.name === "Test" &&
+      addMember.total_members === 1 &&
+      deleteIdentity.status === "ok" &&
+      response.hasOwnProperty("items") &&
+      response.items.length === 0,
+      JSON.stringify(response, null, "\t")
+    );
+    return response;
+  },"Delete Identity and Confirm Identity is Removed from User-groups"));
+  
+  it("Login with Good Credentials", mochaAsync(async () => {
+    if (!creds.isValid) throw new Error("Invalid Credentials");
+    trace = objectMerge({}, trace, Util.generateNewMetaData(trace));
+    const response = await s2sMS.Identity.login(
+      accessToken,
+      creds.email,
+      creds.password,
+      trace
+    );
+    assert.ok(
+      response !== null,
+      JSON.stringify(response, null, "\t")
+    );
+    return response;
+  },"Login with Good Credentials"));
+
+  it("Login with Bad Credentials", mochaAsync(async () => {
+    try {
+      if (!creds.isValid) throw new Error("Invalid Credentials");
+      trace = objectMerge({}, trace, Util.generateNewMetaData(trace));
+      const response = await s2sMS.Identity.login(accessToken, creds.email, "bad", trace);
+      assert.ok(
+        false,
+        JSON.stringify(response, null, "\t")
       );
-      //add the test identity to the group
-      const testMembers = [{
-        type: "user",
-        uuid: testUUID
-      }];
-      s2sMS.Groups.addMembersToGroup(
-        accessToken,
-        testGroupUuid,
-        testMembers
-      ).then(responseData => {
-        //console.log("Add Members response %j", responseData);
-        assert(
-          responseData.name === "Test" &&
-              responseData.total_members === 2
-        );
-        //delete the identity
-        s2sMS.Identity.deleteIdentity(accessToken, testUUID)
-          .then((response) => {
-            //console.log('Deleted guest user:', testUUID);
-            assert(response.status === "ok");
-            //check that testUUID is not a member of any groups
-            const filters = [];
-            filters["member_uuid"] = testUUID;
-            s2sMS.Groups.listGroups(
-              accessToken,
-              0, //offset
-              10, //limit
-              filters
-            ).then(responseData => {
-              console.log(responseData);
-              assert(responseData.hasOwnProperty("items") && responseData.items.length === 0); //FIXME CCORE-178
-              done();
-            })
-              .catch((error) => {
-                console.log("Error List User Groups", error);
-                done(new Error(error));
-              });
-          })
-          .catch((error) => {
-            console.log("Error deleting user [create user]", error);
-            done(new Error(error));
-          });
-      })
-        .catch((error) => {
-          console.log("Error adding member to group [create/add members/delete]", error);
-          done(new Error(error));
-        });
-    })
-      .catch((error) => {
-        console.log("Error Create Group", error);
-        done(new Error(error));
-      });
-  });
+      return response;
+    } catch (error) {
+      assert.ok(
+        error.statusCode === 401,
+        JSON.stringify(error, null, "\t")
+      );
+      return error;
+    } 
+  },"Login with Bad Credentials"));
 
-  it("Login with Good Credentials", function (done) {
-    if (!creds.isValid) return done();
-    s2sMS.Identity
-      .login(accessToken, creds.email, creds.password)
-      .then(login => {
-        assert(login !== null);
-        done();
-      })
-      .catch((error) => {
-        console.log("Error login [login with good credentials]", error);
-        done(new Error(error));
-      });
-  });
+  it("Get My Identity Data", mochaAsync(async () => {
+    if (!creds.isValid) throw new Error("Invalid Credentials");
+    trace = objectMerge({}, trace, Util.generateNewMetaData(trace));
+    const response = await s2sMS.Identity.getMyIdentityData(accessToken, trace);
+    assert.ok(
+      response.hasOwnProperty("user_uuid") &&
+      response.email === creds.email,
+      JSON.stringify(response, null, "\t")
+    );
+    return response;
+  },"Get My Identity Data"));
 
-  it("Login with Bad Credentials", function (done) {
-    if (!creds.isValid) return done();
-    s2sMS.Identity.login(accessToken, creds.email, "bad").catch(login => {
-      // console.log('Bad Creds login status code: %j', identityData);
-      assert(login.statusCode === 401);
-      done();
-    })
-      .catch((error) => {
-        //console.log('Error logging in with BAD credentials', error);
-        done(new Error(error));
-      });
-  });
-
-  it("Get My Identity Data", function (done) {
-    if (!creds.isValid) return done();
-    s2sMS.Identity.getMyIdentityData(accessToken)
-      .then((response) => {
-        // console.log('get My Identity data response: %j', JSON.parse(identityData));
-        response.hasOwnProperty("uuid");
-        done();
-      })
-      .catch((error) => {
-        //console.log('Error getting my identity data', error);
-        done(new Error(error));
-      });
-  });
-
-  it("Get My Account's Identities", function (done) {
-    if (!creds.isValid) return done();
-    const filters = {
-      "username": identityData.email
-    };
-    s2sMS.Identity.listIdentitiesByAccount(
+  it("Get My Account's Identities", mochaAsync(async () => {
+    if (!creds.isValid) throw new Error("Invalid Credentials");
+    trace = objectMerge({}, trace, Util.generateNewMetaData(trace));
+    // const filters = {
+    //   "username": identityData.email
+    // };
+    const response = await s2sMS.Identity.listIdentitiesByAccount(
       accessToken,
       identityData.account_uuid,
       0, //offset
-      1, //limit
-      filters
-    )
-      .then((response) => {
-        logger.info("Get My Account's Identities RESPONSE:", JSON.stringify(response, null, "\t"));
-        assert(
-          response.hasOwnProperty("items") &&
-          Array.isArray(response.items) &&
-          response.items[0].uuid === identityData.uuid
-        );
-        done();
-      })
-      .catch((error) => {
-        logger.error("Get My Account's Identities", JSON.stringify(error, null, "\t"));
-        done(new Error(error));
-      });
-  });
-
-  it("Lookup Identity with known user", function (done) {
-    if (!creds.isValid) return done();
+      10, //limit
+      {"username": identityData.email},
+      trace
+    );
+    assert.ok(
+      response.hasOwnProperty("items") &&
+      Array.isArray(response.items) &&
+      response.items[0].uuid === identityData.uuid,
+      JSON.stringify(response, null, "\t")
+    );
+    return response;
+  },"Get My Account's Identities"));
+  
+  it("Lookup Identity with known user", mochaAsync(async () => {
+    if (!creds.isValid) throw new Error("Invalid Credentials");
+    trace = objectMerge({}, trace, Util.generateNewMetaData(trace));
     const filters = [];
     filters["username"] = creds.email;
+    const response = await s2sMS.Identity.lookupIdentity(
+      accessToken,
+      0,
+      10,
+      {"username": creds.email},
+      trace
+    );
+    assert.ok(
+      response.items.length === 1,
+      JSON.stringify(response, null, "\t")
+    );
+    return response;
+  },"Lookup Identity with known user"));
 
-    s2sMS.Identity
-      .lookupIdentity(accessToken, 0, 10, filters)
-      .then(response => {
-        // console.log('iiiii %j', response);
-        assert(response.items.length === 1);
-        done();
-      })
-      .catch(e => {
-        console.log("error in lookupIdentity", e);
-        done(e);
-      });
-  });
+  it("Lookup Identity with unknown user", mochaAsync(async () => {
+    if (!creds.isValid) throw new Error("Invalid Credentials");
+    trace = objectMerge({}, trace, Util.generateNewMetaData(trace));
+    const response = await s2sMS.Identity.lookupIdentity(
+      accessToken,
+      1,
+      10,
+      {"username": "test333@test.com"},
+      trace
+    );
+    assert.ok(
+      response.items.length === 0,
+      JSON.stringify(response, null, "\t")
+    );
+    return response;
+  },"Lookup Identity with unknown user"));
+  
+  it("Generate Password Token", mochaAsync(async () => {
+    if (!creds.isValid) throw new Error("Invalid Credentials");
+    trace = objectMerge({}, trace, Util.generateNewMetaData(trace));
+    const response = await s2sMS.Identity.generatePasswordToken(
+      accessToken,
+      creds.email,
+      trace
+    );
+    assert.ok(
+      response.status === "ok",
+      JSON.stringify(response, null, "\t")
+    );
+    return response;
+  },"Generate Password Token"));
 
-  it("Lookup Identity with unknown user", function (done) {
-    if (!creds.isValid) return done();
-    const filters = [];
-    filters["username"] = "test333@test.com";
-    s2sMS.Identity
-      .lookupIdentity(accessToken, 1, 10, filters)
-      .then(response => {
-        // console.log("iiiii %j", response);
-        assert(response.items.length === 0);
-        done();
-      })
-      .catch(e => {
-        console.log("error in lookupIdentity", e);
-        done();
-      });
-  });
+  it("Reset Password", mochaAsync(async () => {
+    try{
+      if (!creds.isValid) throw new Error("Invalid Credentials");
+      trace = objectMerge({}, trace, Util.generateNewMetaData(trace));
+      const token = "aa38787e-e967-43de-b1ff-d907681dba59";
+      const body = {
+        email : creds.email,
+        password: creds.password
+      };
+      const response = await s2sMS.Identity.resetPassword(
+        accessToken,
+        token,
+        body,
+        trace
+      );
+      assert.ok(
+        false,
+        JSON.stringify(response, null, "\t")
+      );
+      return response;
+    } catch(error){
+      assert.ok(
+        error.statusCode === 404,
+        JSON.stringify(error, null, "\t")
+      );
+      return error;
+    }
+  },"Reset Password"));
 
-  it("Generate Password Token", function (done) {
-    if (!creds.isValid) return done();
-    s2sMS.Identity
-      .generatePasswordToken(accessToken, creds.email)
-      .then(response => {
-        assert(response.status === "ok");
-        done();
-      })
-      .catch(e => {
-        console.log("error in generate password token", e);
-        done();
-      });
-  });
-
-  it("Reset Password", function (done) {
-    if (!creds.isValid) return done();
-    // This token is expired
-    const token = "48b1d304-50d8-489a-aece-79546024277a";
-    const body = {
-      email : creds.email,
-      password: creds.password
-    };
-    s2sMS.Identity
-      .resetPassword(accessToken, token, body)
-      .then(response => {
-        //If this is successful, we have a problem.
-        console.log("Unexpected Response!",response);
-        assert(1 === 0);
-        done(new Error(response));
-      })
-      .catch(error => {
-        // Expecting a specific error as this token is already used.
-        //console.log("error in reset password", error.message);
-        if(error.statusCode === 404){
-          done();
-        } else {
-          done( new Error(error));
-        }
-      });
-  });
-
-  it("Validate Password Token", function (done) {
-    if (!creds.isValid) return done();
-
+  it("Validate Password Token", mochaAsync(async () => {
+    if (!creds.isValid) throw new Error("Invalid Credentials");
+    trace = objectMerge({}, trace, Util.generateNewMetaData(trace));
     // This token is expired, but we get a different response if the token was never valid or the call failed.
-    const token = "48b1d304-50d8-489a-aece-79546024277a";
-    
-    s2sMS.Identity
-      .validatePasswordToken(accessToken, token)
-      .then(tokenData => {
-        // console.log("iiiii %j", identityData);
-        assert(tokenData.hasOwnProperty("token"));
-        done();
-      })
-      .catch(() => {
-        //console.log("error in validate token", e);
-        done();
-      });
-  });
+    const token = "aa38787e-e967-43de-b1ff-d907681dba59";
+    const response = await s2sMS.Identity.validatePasswordToken(
+      accessToken,
+      token,
+      trace
+    );
+    assert.ok(
+      response.email === null,
+      JSON.stringify(response, null, "\t")
+    );
+    return response;
+  },"Validate Password Token"));
+
+  // template
+  // it("change me", mochaAsync(async () => {
+  //   if (!creds.isValid) throw new Error("Invalid Credentials");
+  //   trace = objectMerge({}, trace, Util.generateNewMetaData(trace));
+  //   const response = await somethingAsync();
+  //   assert.ok(
+  //     1 === 1,
+  //     JSON.stringify(response, null, "\t")
+  //   );
+  //   return response;
+  // },"change me"));
 });

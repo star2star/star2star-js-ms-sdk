@@ -41,9 +41,9 @@ describe("Workflow", function() {
     }
 
     // For tests, use the dev msHost
-    s2sMS.setMsHost("https://cpaas.star2starglobal.net");
+    s2sMS.setMsHost(creds.MS_HOST);
     s2sMS.setMSVersion(creds.CPAAS_API_VERSION);
-    s2sMS.setMsAuthHost("https://auth.star2starglobal.net");
+    s2sMS.setMsAuthHost(creds.AUTH_HOST);
     // get accessToken to use in test cases
     // Return promise so that test cases will not fire until it resolves.
     return new Promise((resolve, reject) => {

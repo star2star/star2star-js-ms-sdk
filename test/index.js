@@ -12,7 +12,7 @@ const Util = require("../src/utilities");
 const logger = Util.getLogger();
 
 beforeEach(function () {
-  s2sMS.setMsHost("https://cpaas.star2starglobal.net");
+  s2sMS.setMsHost(creds.MS_HOST);
 });
 
 describe("MS SDK Index", function () {

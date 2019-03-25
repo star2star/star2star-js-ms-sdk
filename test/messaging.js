@@ -34,9 +34,9 @@ describe("Identity MS Unit Test Suite", function () {
     }
 
     // For tests, use the dev msHost
-    s2sMS.setMsHost("https://cpaas.star2starglobal.net");
+    s2sMS.setMsHost(creds.MS_HOST);
     s2sMS.setMSVersion(creds.CPAAS_API_VERSION);
-    s2sMS.setMsAuthHost("https://auth.star2starglobal.net");
+    s2sMS.setMsAuthHost(creds.AUTH_HOST);
     // get accessToken to use in test cases
     // Return promise so that test cases will not fire until it resolves.
     return new Promise((resolve, reject)=>{
@@ -80,4 +80,59 @@ describe("Identity MS Unit Test Suite", function () {
         done(new Error(error));
       });
   });
+
+  //moved messaging tests here so we can user our temporary identity. NH
+
+  it("Valid SMS Number", function (done) {
+    if (!creds.isValid) return done();
+    s2sMS.Messaging.getSMSNumber(accessToken, testUUID)
+      .then((sms) => {
+        //console.log('SSSMMMSSS', sms);
+        assert(sms == time);
+        done();
+      })
+      .catch((error) => {
+        console.log("Error getting SMS Number", JSON.stringify(error));
+        done(new Error(error));
+      });         
+  });
+
+  it("GetSMS for Invalid USER UUID", function (done) {
+    if (!creds.isValid) return done();
+    s2sMS.Messaging.getSMSNumber(accessToken, "bad")
+      .then(response => {
+        console.log("This call should fail", response);
+        done(new Error(response));
+      })
+      .catch(error => {
+      //console.log('Got expected error with invalid uuid [getsms for invalid user]', error);
+        assert(error.statusCode === 400);
+        done();
+      });
+  });
+
+
+  /* FIXME once CSRVS-155 is figured out
+   it("Send SMS", function (done) {
+     if (!creds.isValid) return done();
+     s2sMS.Messaging.sendSMS(
+       accessToken,
+       testUUID,
+       "msg",
+       time,
+       "9412340001"
+       )
+       .then(response => {
+         console.log("SMS set", response);
+         //assert(response.content[0].body === "msg");
+         done();
+       })
+       .catch(error => {
+         console.log("Unable to send message.", error);
+         done(new Error(error));
+       });
+   });
+*/
+  // End messaging tests 
+  
 });

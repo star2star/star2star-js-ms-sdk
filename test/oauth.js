@@ -35,9 +35,9 @@ describe("Oauth MS", function() {
       // do not need test folder here
       creds = require("./credentials.json");
     }
-    s2sMS.setMsHost("https://cpaas.star2starglobal.net");
+    s2sMS.setMsHost(creds.MS_HOST);
     s2sMS.setMSVersion(creds.CPAAS_API_VERSION);
-    s2sMS.setMsAuthHost("https://auth.star2starglobal.net");
+    s2sMS.setMsAuthHost(creds.AUTH_HOST);
   });
 
   it("Get Access Token", function(done) {

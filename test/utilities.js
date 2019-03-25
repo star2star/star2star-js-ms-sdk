@@ -13,8 +13,8 @@ var config = require("../src/config.json");
 const logger = Util.getLogger();
 
 beforeEach(function () {
-  s2sMS.setMsHost("https://cpaas.star2starglobal.net");
-  s2sMS.setMsAuthHost("https://auth.star2starglobal.net");
+  s2sMS.setMsHost(creds.MS_HOST);
+  s2sMS.setMsAuthHost(creds.AUTH_HOST);
 });
 
 describe("Util", function () {
