@@ -39,7 +39,7 @@ let creds = {
   isValid: false
 };
 
-describe("Objects MS Test Suite", function() {
+describe("Scheduler MS Test Suite", function() {
   let accessToken, identityData, event, workflowUUID;
 
   before(async function() {
@@ -204,8 +204,9 @@ describe("Objects MS Test Suite", function() {
     );
     return response;
   },"Get Event"));
-
+  
   it("Check Event Fired", mochaAsync(async () => {
+    console.log("******* \"Check Event Fired\" is running, and can take several seconds to complete. *******");
     if (!creds.isValid) throw new Error("Invalid Credentials");
     //setting the timout for this test to overide mocha config.
     //this.timeout(90000);
@@ -221,27 +222,39 @@ describe("Objects MS Test Suite", function() {
       undefined, // filters
       trace
     );
-    assert.ok(1 === 1); // figure this out once scheduler is firing events.
+    assert.ok(
+      response.hasOwnProperty("items") &&
+      response.items.length > 0 &&
+      response.items[0].template_uuid === workflowUUID &&
+      response.items[0].result_type === "complete",
+      JSON.stringify(response, null, "\t")
+    );
     return response;
   },"Check Event Fired")).timeout(90000);
 
-  // it("Update Event", function(done) {
-  //   if (!creds.isValid) return done();
-  //   //update event body
-  //   s2sMS.Scheduler.updateEvent(
-  //     accessToken,
-  //     event
-  //   )
-  //     .then(responseData => {
-  //       logger.info(`Update Event RESPONSE: ${JSON.stringify(responseData, null, "\t")}`);
-  //       done();
-  //     })
-  //     .catch(error => {
-  //       logger.error(`Update Event ERROR: ${JSON.stringify(error, null, "\t")}`);
-  //       done(new Error(JSON.stringify(error)));
-  //     });
-  // });
-
+  it("Update Event", mochaAsync(async () => {
+    if (!creds.isValid) throw new Error("Invalid Credentials");
+    trace = objectMerge({}, trace, Util.generateNewMetaData(trace));
+    event.start_datetime = new Date(Date.now() + 60000).toISOString();
+    event.frequency.type = "once";
+    delete event.frequency.interval;
+    delete event.frequency.count;
+    delete event.frequency.end_datetime;
+    delete event.frequency.day_of_week;
+    delete event.frequency.day_of_month;
+    delete event.frequency.specific_weekday;
+    const response = await s2sMS.Scheduler.updateEvent(
+      accessToken,
+      event.uuid,
+      event,
+      trace
+    );
+    assert.ok(
+      response.frequency.type === "once",
+      JSON.stringify(response, null, "\t")
+    );
+    return response;
+  },"Update Event"));
   
   it("Delete Event", mochaAsync(async () => {
     if (!creds.isValid) throw new Error("Invalid Credentials");
@@ -258,6 +271,19 @@ describe("Objects MS Test Suite", function() {
     );
     return response;
   },"Delete Event"));
+
+  // template
+  // it("change me", mochaAsync(async () => {
+  //   if (!creds.isValid) throw new Error("Invalid Credentials");
+  //   trace = objectMerge({}, trace, Util.generateNewMetaData(trace));
+  //   const response = await somethingAsync();
+  //   assert.ok(
+  //     1 === 1,
+  //     JSON.stringify(response, null, "\t")
+  //   );
+  //   return response;
+  // },"change me"));
+
 
   // clean up
   after(mochaAsync(async () => {

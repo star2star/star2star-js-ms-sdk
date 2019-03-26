@@ -10,7 +10,7 @@ const beforeEach = mocha.beforeEach;
 const s2sMS = require("../src/index");
 const Util = require("../src/utilities");
 var config = require("../src/config.json");
-const logger = Util.getLogger();
+const creds = require("./credentials.json");
 
 beforeEach(function () {
   s2sMS.setMsHost(creds.MS_HOST);
@@ -113,7 +113,7 @@ describe("Util", function () {
 
   it("test getEndpoint valid", function (done) {
     const prodEndPoint = Util.getEndpoint("IDENTITY");
-    assert.equal("https://cpaas.star2starglobal.net/identity", prodEndPoint);
+    assert.equal(`${creds.MS_HOST}/identity`, prodEndPoint);
     done();
   });
 
@@ -149,13 +149,13 @@ describe("Util", function () {
 
   it("test getEndpoint valid - lowercase ", function (done) {
     const prodEndPoint = Util.getEndpoint("identity");
-    assert.equal("https://cpaas.star2starglobal.net/identity", prodEndPoint);
+    assert.equal(`${creds.MS_HOST}/identity`, prodEndPoint);
     done();
   });
 
   it("test getAuthHost valid - lowercase ", function (done) {
     const prodAuthHost = Util.getAuthHost();
-    assert.equal("https://auth.star2starglobal.net", prodAuthHost);
+    assert.equal(creds.AUTH_HOST, prodAuthHost);
     done();
   });
 

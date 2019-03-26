@@ -11,6 +11,23 @@ const fs = require("fs");
 const s2sMS = require("../src/index");
 const Util = require("../src/utilities");
 const logger = Util.getLogger();
+const objectMerge = require("object-merge");
+const newMeta = Util.generateNewMetaData;
+let trace = newMeta();
+
+//utility function to simplify test code
+const mochaAsync = (func, name) => {
+  return async () => {
+    try {
+      const response = await func();
+      logger.debug(name, response);
+      return response; 
+    } catch (error) {
+      //mocha will log out the error
+      return Promise.reject(error);
+    }
+  };
+};
 
 let creds = {
   CPAAS_OAUTH_TOKEN: "Basic your oauth token here",
@@ -20,88 +37,86 @@ let creds = {
   isValid: false
 };
 
-describe("ShortUrls Test Suite", function () {
+describe("Pubsub MS Unit Test Suite", function () {
 
-  let accessToken, identityData;
+  let accessToken,
+    oauthData,
+    identityData,
+    shortCode;
 
-  before(function () {
-    // file system uses full path so will do it like this
-    if (fs.existsSync("./test/credentials.json")) {
+  before(async () => {
+    try {
+      // file system uses full path so will do it like this
+      if (fs.existsSync("./test/credentials.json")) {
       // do not need test folder here
-      creds = require("./credentials.json");
-    }
+        creds = require("./credentials.json");
+      }
 
-    // For tests, use the dev msHost
-    s2sMS.setMsHost(creds.MS_HOST);
-    s2sMS.setMSVersion(creds.CPAAS_API_VERSION);
-    s2sMS.setMsAuthHost(creds.AUTH_HOST);
-    // get accessToken to use in test cases
-    // Return promise so that test cases will not fire until it resolves.
-    return new Promise((resolve, reject)=>{
-      s2sMS.Oauth.getAccessToken(
+      // For tests, use the dev msHost
+      s2sMS.setMsHost(creds.MS_HOST);
+      s2sMS.setMSVersion(creds.CPAAS_API_VERSION);
+      s2sMS.setMsAuthHost(creds.AUTH_HOST);
+      // get accessToken to use in test cases
+      // Return promise so that test cases will not fire until it resolves.
+    
+      oauthData = await s2sMS.Oauth.getAccessToken(
         creds.CPAAS_OAUTH_TOKEN,
         creds.email,
         creds.password
-      )
-        .then(oauthData => {
-          //console.log('Got access token and identity data -[Get Object By Data Type] ',  oauthData);
-          accessToken = oauthData.access_token;
-          s2sMS.Identity.getMyIdentityData(accessToken).then((idData)=>{
-            s2sMS.Identity.getIdentityDetails(accessToken, idData.user_uuid).then((identityDetails)=>{
-              identityData = identityDetails;
-              resolve();
-            }).catch((e1)=>{
-              reject(e1);
-            });
-          }).catch((e)=>{
-            reject(e);
-          });
-        });
-    });
+      );
+      accessToken = oauthData.access_token;
+      const idData = await s2sMS.Identity.getMyIdentityData(accessToken);
+      identityData = await s2sMS.Identity.getIdentityDetails(accessToken, idData.user_uuid);
+    } catch (error) {
+      return Promise.reject(error);
+    }
   });
+ 
 
-  it("create / list / delete ", function (done) {
-    if (!creds.isValid) return done();
-    
-    const options = {
-      url: "http://www.google.com"
-    };
-    s2sMS.ShortUrls.createShortUrl(
+  it("Create Short URL", mochaAsync(async () => {
+    if (!creds.isValid) throw new Error("Invalid Credentials");
+    trace = objectMerge({}, trace, Util.generateNewMetaData(trace));
+    const response = await s2sMS.ShortUrls.createShortUrl(
       accessToken,
-      options
-    ).then(response => {
-      //console.log('------->', response);
-      assert(response.hasOwnProperty("short_url_link"));
-      s2sMS.ShortUrls.listShortUrls(
-        identityData.uuid,
-        accessToken
-      ).then(response => {
-        //console.log('List of ShortUrls', response);
-        //TODO issue CSRVS-77 content rename to items 
-        assert(response.hasOwnProperty("content") && response.content.length > 0);
-        setTimeout(()=>{
-          s2sMS.ShortUrls.deleteShortCode(
-            identityData.uuid,
-            accessToken,
-            response.content[0].short_code
-          ).then(response => {
-            //console.log(response);
-            assert(response.status === "ok");
-            done();
-          }).catch(error=>{
-            console.log("Error Deleting ShortUrl", error);
-            done(new Error(error));
-          });
-        }, 1000);
-      })
-        .catch((error) => {
-          console.log("Error listing shortUrls", error);
-          done(new Error(error));
-        });
-    })
-      .catch((error) => {
-        console.log("Error creating shortUrl ", error);
-        done(new Error(error));
-      });
-  });
+      { "url": "http://www.google.com"},
+      trace
+    );
+    shortCode = response.short_code;
+    assert.ok(
+      response.hasOwnProperty("short_url_link"),
+      JSON.stringify(response, null, "\t")
+    );
+    return response;
+  },"Create Short URL"));
+
+  it("List Short URLs", mochaAsync(async () => {
+    if (!creds.isValid) throw new Error("Invalid Credentials");
+    trace = objectMerge({}, trace, Util.generateNewMetaData(trace));
+    const response = await s2sMS.ShortUrls.listShortUrls(
+      identityData.uuid,
+      accessToken,
+      trace
+    );
+    assert.ok(
+      response.hasOwnProperty("items") && response.items.length > 0,
+      JSON.stringify(response, null, "\t")
+    );
+    return response;
+  },"List Short URLs"));
+
+  it("Delete Short URL", mochaAsync(async () => {
+    if (!creds.isValid) throw new Error("Invalid Credentials");
+    trace = objectMerge({}, trace, Util.generateNewMetaData(trace));
+    const response = await s2sMS.ShortUrls.deleteShortCode(
+      identityData.uuid,
+      accessToken,
+      shortCode,
+      trace
+    );
+    assert.ok(
+      response.status === "ok",
+      JSON.stringify(response, null, "\t")
+    );
+    return response;
+  },"Delete Short URL"));
 });

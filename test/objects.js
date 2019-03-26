@@ -531,4 +531,16 @@ describe("Objects MS Test Suite", function() {
     });
     await Promise.all(deletePromises);
   });
+
+  // template
+  // it("change me", mochaAsync(async () => {
+  //   if (!creds.isValid) throw new Error("Invalid Credentials");
+  //   trace = objectMerge({}, trace, Util.generateNewMetaData(trace));
+  //   const response = await somethingAsync();
+  //   assert.ok(
+  //     1 === 1,
+  //     JSON.stringify(response, null, "\t")
+  //   );
+  //   return response;
+  // },"change me"));
 });

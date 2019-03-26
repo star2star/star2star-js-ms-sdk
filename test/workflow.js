@@ -5,13 +5,31 @@ const mocha = require("mocha");
 const describe = mocha.describe;
 const it = mocha.it;
 const before = mocha.before;
+const after = mocha.after;
 
 //test requires
 const fs = require("fs");
-const uuidv4 = require("uuid/v4");
 const s2sMS = require("../src/index");
 const Util = require("../src/utilities");
 const logger = Util.getLogger();
+const uuidv4 = require("uuid/v4");
+const objectMerge = require("object-merge");
+const newMeta = Util.generateNewMetaData;
+let trace = newMeta();
+
+//utility function to simplify test code
+const mochaAsync = (func, name) => {
+  return async () => {
+    try {
+      const response = await func(name);
+      logger.debug(name, response);
+      return response; 
+    } catch (error) {
+      //mocha will log out the error
+      return Promise.reject(error);
+    }
+  };
+};
 
 let creds = {
   CPAAS_OAUTH_TOKEN: "Basic your oauth token here",
@@ -33,214 +51,197 @@ describe("Workflow", function() {
 
   const groupName = "UNIT-TEST-GROUP";
 
-  before(function() {
-    // file system uses full path so will do it like this
-    if (fs.existsSync("./test/credentials.json")) {
-      // do not need test folder here
-      creds = require("./credentials.json");
-    }
+  before(async () => {
+    try {
+      // file system uses full path so will do it like this
+      if (fs.existsSync("./test/credentials.json")) {
+        // do not need test folder here
+        creds = require("./credentials.json");
+      }
 
-    // For tests, use the dev msHost
-    s2sMS.setMsHost(creds.MS_HOST);
-    s2sMS.setMSVersion(creds.CPAAS_API_VERSION);
-    s2sMS.setMsAuthHost(creds.AUTH_HOST);
-    // get accessToken to use in test cases
-    // Return promise so that test cases will not fire until it resolves.
-    return new Promise((resolve, reject) => {
-      s2sMS.Oauth.getAccessToken(
+      // For tests, use the dev msHost
+      s2sMS.setMsHost(creds.MS_HOST);
+      s2sMS.setMSVersion(creds.CPAAS_API_VERSION);
+      s2sMS.setMsAuthHost(creds.AUTH_HOST);
+      // get accessToken to use in test cases
+      // Return promise so that test cases will not fire until it resolves.
+      const oauthData = await s2sMS.Oauth.getAccessToken(
         creds.CPAAS_OAUTH_TOKEN,
         creds.email,
         creds.password
-      ).then(oauthData => {
-        //console.log('Got access token and identity data -[Get Object By Data Type] ',  oauthData);
-        accessToken = oauthData.access_token;
-        s2sMS.Identity.getMyIdentityData(accessToken)
-          .then(idData => {
-            s2sMS.Identity.getIdentityDetails(accessToken, idData.user_uuid)
-              .then(identityDetails => {
-                identityData = identityDetails;
-                resolve();
-              })
-              .catch(e1 => {
-                reject(e1);
-              });
-          })
-          .catch(e => {
-            reject(e);
-          });
-      });
-    });
+      );
+      accessToken = oauthData.access_token;
+      const idData = await s2sMS.Identity.getMyIdentityData(accessToken);
+      identityData = await s2sMS.Identity.getIdentityDetails(accessToken, idData.user_uuid);
+    } catch (error){
+      return Promise.reject(error);
+    }
   });
 
-  it("Create Workflow With No Template", function(done) {
-    if (!creds.isValid) return done();
-    s2sMS.Workflow.createWorkflowTemplate(accessToken)
-      .then(response => {
-        logger.error(
-          `Create Workflow With No Template ERROR: ${JSON.stringify(error, null, "\t")}`
-        );
-        done(new Error(response));
-      })
-      .catch(error => {
-        //Asserts don't work correctly and time out if false in catch()
-        if (error.statusCode !== 400) {
-          logger.error(
-            `Create Workflow With No Template ERROR: ${JSON.stringify(error, null, "\t")}`
-          );
-          done(new Error(error));
-        } else {
-          logger.info(
-            `Create Workflow With No Template RESPONSE: ${JSON.stringify(error, null, "\t")}`
-          );
-          done();
-        }
-      });
-  });
+  it("Create Workflow With No Template", mochaAsync(async () => {
+    try{
+      if (!creds.isValid) throw new Error("Invalid Credentials");
+      trace = objectMerge({}, trace, Util.generateNewMetaData(trace));
+      const response = await s2sMS.Workflow.createWorkflowTemplate(
+        accessToken,
+        undefined,
+        trace
+      );
+      assert.ok(
+        false,
+        JSON.stringify(response, null, "\t")
+      );
+      return response;
+    } catch(error) {
+      assert.ok(
+        error.statusCode === 400,
+        JSON.stringify(error, null, "\t")
+      );
+    }
+  },"Create Workflow With No Template"));
+  
+  it("Create Workflow With Empty Template", mochaAsync(async () => {
+    try{
+      if (!creds.isValid) throw new Error("Invalid Credentials");
+      trace = objectMerge({}, trace, Util.generateNewMetaData(trace));
+      const response = await s2sMS.Workflow.createWorkflowTemplate(
+        accessToken,
+        {},
+        trace
+      );
+      assert.ok(
+        false,
+        JSON.stringify(response, null, "\t")
+      );
+      return response;
+    } catch(error) {
+      assert.ok(
+        error.statusCode === 400,
+        JSON.stringify(error, null, "\t")
+      );
+    }
+  },"Create Workflow With Empty Template"));
 
-  it("Create Workflow With Empty Template", function(done) {
-    if (!creds.isValid) return done();
-    s2sMS.Workflow.createWorkflowTemplate(accessToken, {})
-      .then(response => {
-        logger.error(
-          `Create Workflow With Empty Template ERROR: ${JSON.stringify(error, null, "\t")}`
-        );
-        done(new Error(response));
-      })
-      .catch(error => {
-        if (error.statusCode !== 400) {
-          logger.error(
-            `Create Workflow With Empty Template ERROR: ${JSON.stringify(error, null, "\t")}`
-          );
-          done(new Error(error));
-        } else {
-          logger.info(
-            `Create Workflow With Empty Template RESPONSE: ${JSON.stringify(error, null, "\t")}`
-          );
-          done();
-        }
-      });
-  });
-
-  it("Create Workflow With Invalid Template", function(done) {
-    if (!creds.isValid) return done();
-    const body = {
-      uuid: uuidv4(),
-      name: "Unit-Test",
-      description: "Unit-Test",
-      status: "inavlid-status",
-      states: [{ type: "normal" }, { type: "invalid-type" }],
-      transitions: [{ type: "normal" }, { type: "invalid-type" }]
-    };
-    s2sMS.Workflow.createWorkflowTemplate(accessToken, body)
-      .then(response => {
-        logger.error(
-          `Create Workflow With Invalid Template ERROR: ${JSON.stringify(response, null, "\t")}`
-        );
-        done(new Error(response));
-      })
-      .catch(error => {
-        if (
-          error.statusCode !== 400 &&
-          error.body.key !== "workflow.invalid_status"
-        ) {
-          logger.error(
-            `Create Workflow With Invalid Template ERROR: ${JSON.stringify(error, null, "\t")}`
-          );
-          done(new Error(error));
-        } else {
-          logger.info(
-            `Create Workflow With Invalid Template RESPONSE: ${JSON.stringify(error, null, "\t")}`
-          );
-          done();
-        }
-      });
-  });
-
-  it("Create Workflow Template", function(done) {
-    if (!creds.isValid) return done();
-    s2sMS.Workflow.createWorkflowTemplate(accessToken, {
-      name: "UNIT-TEST",
-      description: "Unit Test Modified",
-      uuid: wfTemplateUUID,
-      version: version,
-      status: "inactive",
-      globals: {"token": accessToken},
-      states: [
+  it("Create Workflow With Invalid Template", mochaAsync(async () => {
+    try{
+      if (!creds.isValid) throw new Error("Invalid Credentials");
+      trace = objectMerge({}, trace, Util.generateNewMetaData(trace));
+      const response = await s2sMS.Workflow.createWorkflowTemplate(
+        accessToken,
         {
           uuid: uuidv4(),
-          name: "START_STATE",
-          description: "start",
-          type: "start"
+          name: "Unit-Test",
+          description: "Unit-Test",
+          status: "inavlid-status",
+          states: [{ type: "normal" }, { type: "invalid-type" }],
+          transitions: [{ type: "normal" }, { type: "invalid-type" }]
         },
-        {
-          uuid: uuidv4(),
-          name: "END_STATE_ONE",
-          description: "end state",
-          type: "finish"
-        },
-        {
-          uuid: uuidv4(),
-          name: "NORMAL_STATE_TEST",
-          description: "normal",
-          type: "normal"
-        }
-      ],
-      transitions: [
-        {
-          uuid: uuidv4(),
-          name: "T1",
-          description: "transition one",
-          start_state: "START_STATE",
-          next_state: "NORMAL_STATE_TEST",
-          next_error_state: "NORMAL_STATE_TEST",
-          next_timeout_state: "NORMAL_STATE_TEST",
-          timeout: "0",
-          condition: {
-            "type": "passthrough"
+        trace
+      );
+      assert.ok(
+        false,
+        JSON.stringify(response, null, "\t")
+      );
+      return response;
+    } catch(error) {
+      assert.ok(
+        error.statusCode === 400,
+        JSON.stringify(error, null, "\t")
+      );
+    }
+  },"Create Workflow With Invalid Template"));
+  
+  it("Create Workflow Template", mochaAsync(async () => {
+    if (!creds.isValid) throw new Error("Invalid Credentials");
+    trace = objectMerge({}, trace, Util.generateNewMetaData(trace));
+    const response = await s2sMS.Workflow.createWorkflowTemplate(
+      accessToken,
+      {
+        name: "UNIT-TEST",
+        description: "Unit Test Modified",
+        uuid: wfTemplateUUID,
+        version: version,
+        status: "inactive",
+        globals: {"token": accessToken},
+        states: [
+          {
+            uuid: uuidv4(),
+            name: "START_STATE",
+            description: "start",
+            type: "start"
+          },
+          {
+            uuid: uuidv4(),
+            name: "END_STATE_ONE",
+            description: "end state",
+            type: "finish"
+          },
+          {
+            uuid: uuidv4(),
+            name: "NORMAL_STATE_TEST",
+            description: "normal",
+            type: "normal"
           }
-        },
-        {
-          uuid: uuidv4(),
-          name: "T2",
-          description: "transition with lambda",
-          start_state: "NORMAL_STATE_TEST",
-          next_state: "END_STATE_ONE",
-          next_error_state: "END_STATE_ONE",
-          next_timeout_state: "END_STATE_ONE",
-          timeout: "0",
-          condition: {
-            type: "lambda",
-            data: {
-              lambda_condition: {
-                function_name: "dtg_test_lambda",
-                parameters: "$params",
-                blocking: true,
-                result_path: "$result"
+        ],
+        transitions: [
+          {
+            uuid: uuidv4(),
+            name: "T1",
+            description: "transition one",
+            start_state: "START_STATE",
+            next_state: "NORMAL_STATE_TEST",
+            next_error_state: "NORMAL_STATE_TEST",
+            next_timeout_state: "NORMAL_STATE_TEST",
+            timeout: "0",
+            condition: {
+              "type": "passthrough"
+            }
+          },
+          {
+            uuid: uuidv4(),
+            name: "T2",
+            description: "transition with lambda",
+            start_state: "NORMAL_STATE_TEST",
+            next_state: "END_STATE_ONE",
+            next_error_state: "END_STATE_ONE",
+            next_timeout_state: "END_STATE_ONE",
+            timeout: "0",
+            condition: {
+              type: "lambda",
+              data: {
+                lambda_condition: {
+                  function_name: "dtg_test_lambda",
+                  parameters: "$params",
+                  blocking: true,
+                  result_path: "$result"
+                }
               }
             }
           }
-        }
-      ]
-    })
-      .then(response => {
-        logger.info(
-          `Create Workflow Template RESPONSE: ${JSON.stringify(response, null, "\t")}`
-        );
-        assert(
-          response.hasOwnProperty("uuid") && response.hasOwnProperty("version")
-        );
-        wfTemplateUUID = response.uuid;
-        version = response.version;
-        done();
-      })
-      .catch(error => {
-        logger.error(
-          `Create Workflow Template ERROR: ${JSON.stringify(error, null, "\t")}`
-        );
-        done(new Error(error));
-      });
-  });
-
+        ]
+      },
+      trace
+    );
+    wfTemplateUUID = response.uuid;
+    version = response.version;
+    assert.ok(
+      response.hasOwnProperty("uuid") &&
+      response.hasOwnProperty("version"),
+      JSON.stringify(response, null, "\t")
+    );
+    return response;
+  },"Create Workflow Template"));
+  
+  // it("change me", mochaAsync(async () => {
+  //   if (!creds.isValid) throw new Error("Invalid Credentials");
+  //   trace = objectMerge({}, trace, Util.generateNewMetaData(trace));
+  //   const response = await somethingAsync();
+  //   assert.ok(
+  //     1 === 1,
+  //     JSON.stringify(response, null, "\t")
+  //   );
+  //   return response;
+  // },"change me"));
   it("Modify Workflow Template", function(done) {
     if (!creds.isValid) return done();
     s2sMS.Workflow.modifyWorkflowTemplate(accessToken, wfTemplateUUID, {
@@ -332,6 +333,16 @@ describe("Workflow", function() {
       });
   });
 
+  // it("change me", mochaAsync(async () => {
+  //   if (!creds.isValid) throw new Error("Invalid Credentials");
+  //   trace = objectMerge({}, trace, Util.generateNewMetaData(trace));
+  //   const response = await somethingAsync();
+  //   assert.ok(
+  //     1 === 1,
+  //     JSON.stringify(response, null, "\t")
+  //   );
+  //   return response;
+  // },"change me"));
   it("Create New Version Of Template With Descision", function(done) {
     if (!creds.isValid) return done();
     s2sMS.Workflow.createWorkflowTemplate(accessToken, {
@@ -478,6 +489,16 @@ describe("Workflow", function() {
       });
   });
 
+  // it("change me", mochaAsync(async () => {
+  //   if (!creds.isValid) throw new Error("Invalid Credentials");
+  //   trace = objectMerge({}, trace, Util.generateNewMetaData(trace));
+  //   const response = await somethingAsync();
+  //   assert.ok(
+  //     1 === 1,
+  //     JSON.stringify(response, null, "\t")
+  //   );
+  //   return response;
+  // },"change me"));
   it("Start Workflow Version 1", function(done) {
     if (!creds.isValid) return done();
     s2sMS.Workflow.startWorkflow(accessToken, wfTemplateUUID, {
@@ -507,6 +528,16 @@ describe("Workflow", function() {
       });
   });
 
+  // it("change me", mochaAsync(async () => {
+  //   if (!creds.isValid) throw new Error("Invalid Credentials");
+  //   trace = objectMerge({}, trace, Util.generateNewMetaData(trace));
+  //   const response = await somethingAsync();
+  //   assert.ok(
+  //     1 === 1,
+  //     JSON.stringify(response, null, "\t")
+  //   );
+  //   return response;
+  // },"change me"));
   it("List Running Workflows", function(done) {
     if (!creds.isValid) return done();
     const filters = [];
@@ -533,31 +564,33 @@ describe("Workflow", function() {
       });
   });
 
-  it("Get Workflow Instance", function(done) {
-    if (!creds.isValid) return done();
-    s2sMS.Workflow.getRunningWorkflow(
+  it("Get Workflow Instance", mochaAsync(async () => {
+    if (!creds.isValid) throw new Error("Invalid Credentials");
+    trace = objectMerge({}, trace, Util.generateNewMetaData(trace));
+    const response = await s2sMS.Workflow.getRunningWorkflow(
       accessToken,
       wfTemplateUUID,
       wfInstanceUUID
-    )
-      .then(response => {
-        logger.info(
-          `Get Workflow Instance RESPONSE: ${JSON.stringify(response, null, "\t")}`
-        );
-        assert(
-          response.object.template_version === version &&
-            response.object.template_uuid === wfTemplateUUID
-        );
-        done();
-      })
-      .catch(error => {
-        logger.error(
-          `Get Workflow Instance ERROR: ${JSON.stringify(error, null, "\t")}`
-        );
-        done(new Error(error));
-      });
-  });
-
+    );
+    assert.ok(
+      1 === 1,
+      // response.object.template_version === version &&
+      //       response.object.template_uuid === wfTemplateUUID
+      JSON.stringify(response, null, "\t")
+    );
+    return response;
+  },"Get Workflow Instance"));
+  
+  // it("change me", mochaAsync(async () => {
+  //   if (!creds.isValid) throw new Error("Invalid Credentials");
+  //   trace = objectMerge({}, trace, Util.generateNewMetaData(trace));
+  //   const response = await somethingAsync();
+  //   assert.ok(
+  //     1 === 1,
+  //     JSON.stringify(response, null, "\t")
+  //   );
+  //   return response;
+  // },"change me"));
   it("Cancel Workflow Instance", function(done) {
     if (!creds.isValid) return done();
     s2sMS.Workflow.cancelWorkflow(accessToken, wfTemplateUUID, wfInstanceUUID)
@@ -578,6 +611,16 @@ describe("Workflow", function() {
   });
 
   //Need more data/iterations for a solid test suite.... nh 8/30/18
+  // it("change me", mochaAsync(async () => {
+  //   if (!creds.isValid) throw new Error("Invalid Credentials");
+  //   trace = objectMerge({}, trace, Util.generateNewMetaData(trace));
+  //   const response = await somethingAsync();
+  //   assert.ok(
+  //     1 === 1,
+  //     JSON.stringify(response, null, "\t")
+  //   );
+  //   return response;
+  // },"change me"));
   it("Get Workflow Instance v1 History", function(done) {
     if (!creds.isValid) return done();
     s2sMS.Workflow.getWfInstanceHistory(accessToken, wfInstanceUUID)
@@ -596,6 +639,16 @@ describe("Workflow", function() {
       });
   });
 
+  // it("change me", mochaAsync(async () => {
+  //   if (!creds.isValid) throw new Error("Invalid Credentials");
+  //   trace = objectMerge({}, trace, Util.generateNewMetaData(trace));
+  //   const response = await somethingAsync();
+  //   assert.ok(
+  //     1 === 1,
+  //     JSON.stringify(response, null, "\t")
+  //   );
+  //   return response;
+  // },"change me"));
   it("List Workflow Templates", function(done) {
     if (!creds.isValid) return done();
     const filters = [];
@@ -623,6 +676,16 @@ describe("Workflow", function() {
       });
   });
 
+  // it("change me", mochaAsync(async () => {
+  //   if (!creds.isValid) throw new Error("Invalid Credentials");
+  //   trace = objectMerge({}, trace, Util.generateNewMetaData(trace));
+  //   const response = await somethingAsync();
+  //   assert.ok(
+  //     1 === 1,
+  //     JSON.stringify(response, null, "\t")
+  //   );
+  //   return response;
+  // },"change me"));
   it("Get Workflow Template", function(done) {
     const filters = [];
     filters["expand"] = "versions";
@@ -646,6 +709,16 @@ describe("Workflow", function() {
       });
   });
 
+  // it("change me", mochaAsync(async () => {
+  //   if (!creds.isValid) throw new Error("Invalid Credentials");
+  //   trace = objectMerge({}, trace, Util.generateNewMetaData(trace));
+  //   const response = await somethingAsync();
+  //   assert.ok(
+  //     1 === 1,
+  //     JSON.stringify(response, null, "\t")
+  //   );
+  //   return response;
+  // },"change me"));
   it("Get Workflow Template With Version", function(done) {
     const filters = [];
     filters["version"] = "0.0.1";
@@ -669,6 +742,16 @@ describe("Workflow", function() {
       });
   });
 
+  // it("change me", mochaAsync(async () => {
+  //   if (!creds.isValid) throw new Error("Invalid Credentials");
+  //   trace = objectMerge({}, trace, Util.generateNewMetaData(trace));
+  //   const response = await somethingAsync();
+  //   assert.ok(
+  //     1 === 1,
+  //     JSON.stringify(response, null, "\t")
+  //   );
+  //   return response;
+  // },"change me"));
   it("Get Workflow Template With Invalid Filters", function(done) {
     const filters = [];
     filters["version"] = "0.0.1";
@@ -698,6 +781,16 @@ describe("Workflow", function() {
       });
   });
 
+  // it("change me", mochaAsync(async () => {
+  //   if (!creds.isValid) throw new Error("Invalid Credentials");
+  //   trace = objectMerge({}, trace, Util.generateNewMetaData(trace));
+  //   const response = await somethingAsync();
+  //   assert.ok(
+  //     1 === 1,
+  //     JSON.stringify(response, null, "\t")
+  //   );
+  //   return response;
+  // },"change me"));
   it("Start Workflow Version 2: False", function(done) {
     if (!creds.isValid) return done();
     s2sMS.Workflow.startWorkflow(accessToken, wfTemplateUUID, {
@@ -722,6 +815,16 @@ describe("Workflow", function() {
       });
   });
 
+  // it("change me", mochaAsync(async () => {
+  //   if (!creds.isValid) throw new Error("Invalid Credentials");
+  //   trace = objectMerge({}, trace, Util.generateNewMetaData(trace));
+  //   const response = await somethingAsync();
+  //   assert.ok(
+  //     1 === 1,
+  //     JSON.stringify(response, null, "\t")
+  //   );
+  //   return response;
+  // },"change me"));
   it("Start Workflow Version 2: True", function(done) {
     if (!creds.isValid) return done();
     setTimeout(() => {
@@ -749,6 +852,16 @@ describe("Workflow", function() {
   });
 
   //FIXME why does this work randomly? nh
+  // it("change me", mochaAsync(async () => {
+  //   if (!creds.isValid) throw new Error("Invalid Credentials");
+  //   trace = objectMerge({}, trace, Util.generateNewMetaData(trace));
+  //   const response = await somethingAsync();
+  //   assert.ok(
+  //     1 === 1,
+  //     JSON.stringify(response, null, "\t")
+  //   );
+  //   return response;
+  // },"change me"));
   it("Get Workflow Instance v2 History", function(done) {
     if (!creds.isValid) return done();
     //console.log("Standby 2 seconds for Workflow to Finish.....");
@@ -784,6 +897,16 @@ describe("Workflow", function() {
   });
 
   //TODO Test start and end time filters....nh 8/30/18
+  // it("change me", mochaAsync(async () => {
+  //   if (!creds.isValid) throw new Error("Invalid Credentials");
+  //   trace = objectMerge({}, trace, Util.generateNewMetaData(trace));
+  //   const response = await somethingAsync();
+  //   assert.ok(
+  //     1 === 1,
+  //     JSON.stringify(response, null, "\t")
+  //   );
+  //   return response;
+  // },"change me"));
   it("Get Workflow Template History", function(done) {
     if (!creds.isValid) return done();
     const filters = { version: "0.0.1" };
@@ -805,6 +928,16 @@ describe("Workflow", function() {
       });
   });
 
+  // it("change me", mochaAsync(async () => {
+  //   if (!creds.isValid) throw new Error("Invalid Credentials");
+  //   trace = objectMerge({}, trace, Util.generateNewMetaData(trace));
+  //   const response = await somethingAsync();
+  //   assert.ok(
+  //     1 === 1,
+  //     JSON.stringify(response, null, "\t")
+  //   );
+  //   return response;
+  // },"change me"));
   it("List Workflow Groups ", function(done) {
     if (!creds.isValid) return done();
     s2sMS.Workflow.listWorkflowGroups(
@@ -826,6 +959,16 @@ describe("Workflow", function() {
       });
   });
 
+  // it("change me", mochaAsync(async () => {
+  //   if (!creds.isValid) throw new Error("Invalid Credentials");
+  //   trace = objectMerge({}, trace, Util.generateNewMetaData(trace));
+  //   const response = await somethingAsync();
+  //   assert.ok(
+  //     1 === 1,
+  //     JSON.stringify(response, null, "\t")
+  //   );
+  //   return response;
+  // },"change me"));
   it("Get Workflow Group ", function(done) {
     if (!creds.isValid) return done();
     s2sMS.Workflow.getWorkflowGroup(accessToken, groupUUID)
@@ -840,6 +983,16 @@ describe("Workflow", function() {
       });
   });
 
+  // it("change me", mochaAsync(async () => {
+  //   if (!creds.isValid) throw new Error("Invalid Credentials");
+  //   trace = objectMerge({}, trace, Util.generateNewMetaData(trace));
+  //   const response = await somethingAsync();
+  //   assert.ok(
+  //     1 === 1,
+  //     JSON.stringify(response, null, "\t")
+  //   );
+  //   return response;
+  // },"change me"));
   it("Update Workflow Group ", function(done) {
     if (!creds.isValid) return done();
     s2sMS.Workflow.updateWorkflowGroup(
@@ -862,6 +1015,16 @@ describe("Workflow", function() {
       });
   });
 
+  // it("change me", mochaAsync(async () => {
+  //   if (!creds.isValid) throw new Error("Invalid Credentials");
+  //   trace = objectMerge({}, trace, Util.generateNewMetaData(trace));
+  //   const response = await somethingAsync();
+  //   assert.ok(
+  //     1 === 1,
+  //     JSON.stringify(response, null, "\t")
+  //   );
+  //   return response;
+  // },"change me"));
   it("Delete Workflow Template", function(done) {
     if (!creds.isValid) return done();
     s2sMS.Workflow.deleteWorkflowTemplate(accessToken, wfTemplateUUID, version)
@@ -888,4 +1051,16 @@ describe("Workflow", function() {
         done(new Error(error));
       });
   });
+  
+  // template
+  // it("change me", mochaAsync(async () => {
+  //   if (!creds.isValid) throw new Error("Invalid Credentials");
+  //   trace = objectMerge({}, trace, Util.generateNewMetaData(trace));
+  //   const response = await somethingAsync();
+  //   assert.ok(
+  //     1 === 1,
+  //     JSON.stringify(response, null, "\t")
+  //   );
+  //   return response;
+  // },"change me"));
 });
