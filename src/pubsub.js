@@ -62,7 +62,7 @@ const addSubscription = (
  * @param {object} [trace = {}] - optional microservice lifecycle trace headers
  * @returns {Promise<empty>} - Promise resolving success or failure.
  */
-const deleteSubscription = (
+const deleteSubscription = async (
   subscription_uuid = "no subscription uuid provided",
   accessToken = "null accessToken",
   trace = {}
@@ -77,11 +77,15 @@ const deleteSubscription = (
       "Content-type": "application/json",
       "x-api-version": `${util.getVersion()}`
     },
-
+    resolveWithFullResponse: true,
     json: true
   };
   util.addRequestTrace(requestOptions, trace);
-  return request(requestOptions);
+  const response = await request(requestOptions);
+  if (response.hasOwnProperty("statusCode") && response.statusCode === 204) {
+    return {"status": "ok"};
+  }
+  return Promise.reject({"status": "failed"}); 
 };
 
 /**

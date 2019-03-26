@@ -6,9 +6,9 @@
   "scripts": {
     "init": "mkdir dist",
     "clean": "rm -rf dist && touch package-lock.json && rm package-lock.json && rm -rf node_modules && npm install",
-    "test": "env MS_LOGLEVEL=silent mocha --timeout 10000 --require @babel/register",
-    "trace": "env MS_LOGLEVEL=trace mocha --timeout 10000 --require @babel/register",
-    "debug": "env MS_LOGLEVEL=debug env MS_LOGPRETTY=true mocha --timeout 10000 --require @babel/register",
+    "test": "env MS_LOGLEVEL=silent NODE_TLS_REJECT_UNAUTHORIZED=0 mocha --timeout 15000 --require @babel/register",
+    "trace": "env MS_LOGLEVEL=trace NODE_TLS_REJECT_UNAUTHORIZED=0 mocha --timeout 15000 --require @babel/register",
+    "debug": "env MS_LOGLEVEL=debug NODE_TLS_REJECT_UNAUTHORIZED=0 MS_LOGPRETTY=true mocha --timeout 15000 --require @babel/register",
     "build": "./node_modules/.bin/babel --config-file ./babel.config.js src -d dist",
     "postbuild": "cp src/config.json dist/config.json",
     "doc": "documentation build src/index.js -f html -o . --config documentation.yml"

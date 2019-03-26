@@ -11,6 +11,23 @@ const fs = require("fs");
 const s2sMS = require("../src/index");
 const Util = require("../src/utilities");
 const logger = Util.getLogger();
+const objectMerge = require("object-merge");
+const newMeta = Util.generateNewMetaData;
+let trace = newMeta();
+
+//utility function to simplify test code
+const mochaAsync = (func, name) => {
+  return async () => {
+    try {
+      const response = await func();
+      logger.debug(name, response);
+      return response; 
+    } catch (error) {
+      //mocha will log out the error
+      return Promise.reject(error);
+    }
+  };
+};
 
 let creds = {
   CPAAS_OAUTH_TOKEN: "Basic your oauth token here",
@@ -20,328 +37,223 @@ let creds = {
   isValid: false
 };
 
-describe("Oauth MS", function() {
+describe("Oauth MS Unit Test Suite", function () {
+
   let accessToken,
-    userUUID,
+    oauthData,
+    identityData,
     publicID,
     secret,
     clientUUID,
     clientBasicToken,
     clientAccessToken;
 
-  before(function() {
-    // file system uses full path so will do it like this
-    if (fs.existsSync("./test/credentials.json")) {
+  before(async () => {
+    try {
+      // file system uses full path so will do it like this
+      if (fs.existsSync("./test/credentials.json")) {
       // do not need test folder here
-      creds = require("./credentials.json");
-    }
-    s2sMS.setMsHost(creds.MS_HOST);
-    s2sMS.setMSVersion(creds.CPAAS_API_VERSION);
-    s2sMS.setMsAuthHost(creds.AUTH_HOST);
-  });
+        creds = require("./credentials.json");
+      }
 
-  it("Get Access Token", function(done) {
-    if (!creds.isValid) return done();
-    s2sMS.Oauth.getAccessToken(
-      creds.CPAAS_OAUTH_TOKEN,
-      creds.email,
-      creds.password
-    )
-      .then(oauthData => {
-        accessToken = oauthData.access_token;
-        // logger.info(
-        //   `Generate Access Token RESPONSE: ${JSON.stringify(
-        //     oauthData,
-        //     null,
-        //     "\t"
-        //   )}`
-        // );
-        assert(
-          oauthData.hasOwnProperty("access_token") &&
-            oauthData.hasOwnProperty("refresh_token") &&
-            oauthData.hasOwnProperty("expires_in")
-        );
-        done();
-      })
-      .catch(error => {
-        // logger.error(
-        //   `Generate Basic Token ERROR: ${JSON.stringify(error, null, "\t")}`
-        // );
-        done(new Error(error));
-      });
-  });
-
-  it("Refresh Token", function(done) {
-    if (!creds.isValid) return done();
-    // get access token
-    s2sMS.Oauth.getAccessToken(
-      creds.CPAAS_OAUTH_TOKEN,
-      creds.email,
-      creds.password
-    )
-      .then(oauthData => {
-        const oData = oauthData;
-        // Use new refresh token to test refreshAccessToken()
-        s2sMS.Oauth.refreshAccessToken(
-          creds.CPAAS_OAUTH_TOKEN,
-          oData.refresh_token
-        )
-          .then(refreshData => {
-            const rData = refreshData;
-            // logger.info(
-            //   `Refresh Token RESPONSE: ${JSON.stringify(refreshData, null, "\t")}`
-            // );
-            assert(
-              rData.hasOwnProperty("access_token") &&
-                rData.hasOwnProperty("refresh_token") &&
-                rData.hasOwnProperty("expires_in")
-            );
-            done();
-          })
-          .catch(error => {
-            // logger.error(
-            //   `Refresh Token ERROR: ${JSON.stringify(error, null, "\t")}`
-            // );
-            done(new Error(error));
-          });
-      })
-      .catch(error => {
-        //console.log("Failed to get access token [refresh token]", error);
-        done(new Error(error));
-      });
-  });
-
-  it("Get Client Token", function(done) {
-    if (!creds.isValid) return done();
-    s2sMS.Oauth.getClientToken(creds.CPAAS_OAUTH_TOKEN)
-      .then(oauthData => {
-        // logger.info(
-        //   `Get Client Token RESPONSE: ${JSON.stringify(oauthData, null, "\t")}`
-        // );
-        assert(oauthData.hasOwnProperty("access_token"));
-        done();
-      })
-      .catch(error => {
-        // logger.error(
-        //   `Get Client Token RESPONSE: ${JSON.stringify(error, null, "\t")}`
-        // );
-        done(new Error(error));
-      });
-  });
-
-  it("Create Client Application", function(done) {
-    if (!creds.isValid) return done();
-    s2sMS.Identity.getMyIdentityData(accessToken)
-      .then(identityData => {
-        userUUID = identityData.user_uuid;
-        const name = "Unit-Test";
-        const description = "Unit Test Application";
-        // logger.info(identityData);
-        s2sMS.Oauth.createClientApp(accessToken, userUUID, name, description)
-          .then(response => {
-            // logger.info(
-            //   `Create Client Application RESPONSE: ${JSON.stringify(response, null, "\t")}`
-            // );
-            assert(
-              response.hasOwnProperty("uuid") &&
-                response.hasOwnProperty("name") &&
-                response.name === "Unit-Test" &&
-                response.hasOwnProperty("public_id") &&
-                response.hasOwnProperty("secret") &&
-                response.hasOwnProperty("application_type") &&
-                response.application_type === "connect"
-            );
-            publicID = response.public_id;
-            secret = response.secret;
-            clientUUID = response.uuid;
-            done();
-          })
-          .catch(error => {
-            // logger.error(
-            //   `Create Client Application ERROR: ${JSON.stringify(error, null, "\t")}`
-            // );
-            done(new Error(error));
-          });
-      })
-      .catch(error => {
-        done(new Error(error));
-      });
-  });
-
-  it("Scope Client App", function(done) {
-    if (!creds.isValid) return done();
-    s2sMS.Oauth.scopeClientApp(accessToken, clientUUID)
-      .then(response => {
-        // logger.info(
-        //   `Scope Client App RESPONSE: ${JSON.stringify(response, null, "\t")}`
-        // );
-        assert(response.status === "ok");
-        done();
-      })
-      .catch(error => {
-        // logger.error(
-        //   `Scope Client App  ERROR: ${JSON.stringify(error, null, "\t")}`
-        // );
-        done(new Error(error));
-      });
+      // For tests, use the dev msHost
+      s2sMS.setMsHost(creds.MS_HOST);
+      s2sMS.setMSVersion(creds.CPAAS_API_VERSION);
+      s2sMS.setMsAuthHost(creds.AUTH_HOST);
+      // get accessToken to use in test cases
+      // Return promise so that test cases will not fire until it resolves.
     
+      oauthData = await s2sMS.Oauth.getAccessToken(
+        creds.CPAAS_OAUTH_TOKEN,
+        creds.email,
+        creds.password
+      );
+      accessToken = oauthData.access_token;
+      const idData = await s2sMS.Identity.getMyIdentityData(accessToken);
+      identityData = await s2sMS.Identity.getIdentityDetails(accessToken, idData.user_uuid);
+    } catch (error) {
+      return Promise.reject(error);
+    }
   });
 
-  it("Generate Basic Token", function(done) {
-    if (!creds.isValid) return done();
-    s2sMS.Oauth.generateBasicToken(publicID, secret)
-      .then(response => {
-        // logger.info(
-        //   `Generate Basic Token RESPONSE: ${JSON.stringify(
-        //     response,
-        //     null,
-        //     "\t"
-        //   )}`
-        // );
-        assert(
-          Buffer.from(response, "base64").toString() === `${publicID}:${secret}`
-        );
-        clientBasicToken = response;
-        done();
-      })
-      .catch(error => {
-        // logger.error(
-        //   `Generate Basic Tokent RESPONSE: ${JSON.stringify(error, null, "\t")}`
-        // );
-        done(new Error(error));
-      });
-  });
-
-  it("Get Client Access Token and Test It", function(done) {
-    if (!creds.isValid) return done();
-    s2sMS.Oauth.getClientToken(clientBasicToken)
-      .then(response => {
-        // logger.info(
-        //   `Get Client Access Token RESPONSE: ${JSON.stringify(response, null, "\t")}`);
-        assert(
-          response.hasOwnProperty("access_token") &&
-            response.hasOwnProperty("token_type") &&
-            response.token_type === "bearer"
-        );
-        clientAccessToken = response.access_token;
-        s2sMS.Lambda.listLambdas(clientAccessToken)
-          .then(identity => {
-            // logger.info(
-            //   `Test Client Access Token RESPONSE: ${JSON.stringify(identity, null, "\t")}`
-            // );
-            //no assert here just checking we received a resolved promise
-            done();
-          })
-          .catch(identError => {
-            // logger.error(
-            //   `Test Client Access Token ERROR: ${JSON.stringify(identError, null, "\t")}`
-            // );
-            done(new Error(identError));
-          });
-      })
-      .catch(error => {
-        // logger.error(
-        //   `Get Client Access Token ERROR: ${JSON.stringify(error, null, "\t")}`
-        // );
-        done(new Error(error));
-      });
-  });
-
-  it("List Access Tokens", function(done) {
-    if (!creds.isValid) return done();
-    s2sMS.Oauth.listClientTokens(
+  it("Refresh Token", mochaAsync(async () => {
+    if (!creds.isValid) throw new Error("Invalid Credentials");
+    trace = objectMerge({}, trace, Util.generateNewMetaData(trace));
+    const response = await s2sMS.Oauth.refreshAccessToken(
+      creds.CPAAS_OAUTH_TOKEN,
+      oauthData.refresh_token,
+      trace
+    );
+    assert.ok(
+      response.hasOwnProperty("access_token") &&
+      response.hasOwnProperty("refresh_token") &&
+      response.hasOwnProperty("expires_in"),
+      JSON.stringify(response, null, "\t")
+    );
+    return response;
+  },"Refresh Token"));
+  
+  it("Get Client Token", mochaAsync(async () => {
+    if (!creds.isValid) throw new Error("Invalid Credentials");
+    trace = objectMerge({}, trace, Util.generateNewMetaData(trace));
+    const response = await s2sMS.Oauth.getClientToken(creds.CPAAS_OAUTH_TOKEN, trace);
+    assert.ok(
+      response.hasOwnProperty("access_token") &&
+      response.hasOwnProperty("token_type") &&
+      response.token_type === "bearer",
+      JSON.stringify(response, null, "\t")
+    );
+    return response;
+  },"Get Client Token"));
+  
+  it("Create Client Application", mochaAsync(async () => {
+    if (!creds.isValid) throw new Error("Invalid Credentials");
+    trace = objectMerge({}, trace, Util.generateNewMetaData(trace));
+    const response = await s2sMS.Oauth.createClientApp(
+      accessToken,
+      identityData.uuid,
+      "Unit-Test",
+      "Unit Test Application",
+      trace
+    );
+    publicID = response.public_id;
+    secret = response.secret;
+    clientUUID = response.uuid;
+    assert.ok(
+      response.hasOwnProperty("uuid") &&
+      response.hasOwnProperty("name") &&
+      response.name === "Unit-Test" &&
+      response.hasOwnProperty("public_id") &&
+      response.hasOwnProperty("secret") &&
+      response.hasOwnProperty("application_type") &&
+      response.application_type === "connect",
+      JSON.stringify(response, null, "\t")
+    );
+    return response;
+  },"Create Client Application"));
+ 
+  it("Scope Client App", mochaAsync(async () => {
+    if (!creds.isValid) throw new Error("Invalid Credentials");
+    trace = objectMerge({}, trace, Util.generateNewMetaData(trace));
+    const response = await s2sMS.Oauth.scopeClientApp(
+      accessToken,
+      clientUUID,
+      ["default"], //default scope
+      trace
+    );
+    assert.ok(
+      response.status === "ok",
+      JSON.stringify(response, null, "\t")
+    );
+    return response;
+  },"Scope Client App"));
+  
+  it("Generate Basic Token", mochaAsync(async () => {
+    if (!creds.isValid) throw new Error("Invalid Credentials");
+    trace = objectMerge({}, trace, Util.generateNewMetaData(trace));
+    clientBasicToken = await s2sMS.Oauth.generateBasicToken(publicID, secret);
+    assert.ok(
+      Buffer.from(clientBasicToken, "base64").toString() === `${publicID}:${secret}`,
+      JSON.stringify(clientBasicToken, null, "\t")
+    );
+    return clientBasicToken;
+  },"Generate Basic Token"));
+  
+  it("Get Client Access Token and Test It", mochaAsync(async () => {
+    if (!creds.isValid) throw new Error("Invalid Credentials");
+    trace = objectMerge({}, trace, Util.generateNewMetaData(trace));
+    // Tyk Delay...CCORE-431
+    await new Promise(resolve => setTimeout(resolve, 3000));
+    const response = await s2sMS.Oauth.getClientToken(clientBasicToken, trace);
+    clientAccessToken = response.access_token;
+    const test = await s2sMS.Lambda.listLambdas(clientAccessToken, trace);
+    console.log("*********test", test);
+    assert.ok(
+      response.hasOwnProperty("access_token") &&
+      response.hasOwnProperty("token_type") &&
+      response.token_type === "bearer" &&
+      test.hasOwnProperty("items") &&
+      test.items.length >0,
+      JSON.stringify(response, null, "\t")
+    );
+    return response;
+  },"Get Client Access Token and Test It"));
+  
+  it("List Access Tokens", mochaAsync(async () => {
+    if (!creds.isValid) throw new Error("Invalid Credentials");
+    trace = objectMerge({}, trace, Util.generateNewMetaData(trace));
+    const response = await s2sMS.Oauth.listClientTokens(
       accessToken,
       0, //offest
       10, //limit
       {
         token_type: "client",
         user_name: creds.email
-      }
-    )
-      .then(response => {
-        // logger.info(
-        //   `List Access Tokens RESPONSE: ${JSON.stringify(response, null, "\t")}`
-        // );
-        assert(
-          response.hasOwnProperty("items") &&
-            response.items.length > 0 &&
-            response.items[0].hasOwnProperty("access_token")
-        );
-        done();
-      })
-      .catch(error => {
-        // logger.error(
-        //   `List Access Tokens ERROR: ${JSON.stringify(error, null, "\t")}`
-        // );
-        done(new Error(error));
-      });
-  });
-
-  it("Validate Access Token", function(done) {
-    if (!creds.isValid) return done();
-    logger.info(clientAccessToken);
-
-    s2sMS.Oauth.validateToken(accessToken, clientAccessToken)
-      .then(response => {
-        // logger.info(
-        //   `Validate Access Token RESPONSE: ${JSON.stringify(response, null, "\t")}`
-        // );
-        assert(response.status === "ok");
-        done();
-      })
-      .catch(error => {
-        // logger.error(
-        //   `Validate Access Token ERROR: ${JSON.stringify(error, null, "\t")}`
-        // );
-        done(new Error(error));
-      });
-  });
-
-  it("Invalidate Access Token", function(done) {
-    if (!creds.isValid) return done();
-    s2sMS.Oauth.invalidateToken(accessToken, clientAccessToken)
-      .then(response => {
-        // logger.info(
-        //   `Invalidate Access Token RESPONSE: ${JSON.stringify(response, null, "\t")}`
-        // );
-        assert(response.status === "ok");
-        done();
-      })
-      .catch(error => {
-        // logger.error(
-        //   `Invalidate Access Token ERROR: ${JSON.stringify(error, null, "\t")}`
-        // );
-        done(new Error(error));
-      });
-  });
-
-  it("List Access Tokens after Invalidation", function(done) {
-    if (!creds.isValid) return done();
-    s2sMS.Oauth.listClientTokens(
+      },
+      trace
+    );
+    assert.ok(
+      response.hasOwnProperty("items") &&
+      response.items.length > 0 &&
+      response.items[0].hasOwnProperty("access_token"),
+      JSON.stringify(response, null, "\t")
+    );
+    return response;
+  },"List Access Tokens"));
+  
+  it("Validate Access Token", mochaAsync(async () => {
+    if (!creds.isValid) throw new Error("Invalid Credentials");
+    trace = objectMerge({}, trace, Util.generateNewMetaData(trace));
+    const response = await s2sMS.Oauth.validateToken(accessToken, clientAccessToken, trace);
+    assert.ok(
+      response.status === "ok",
+      JSON.stringify(response, null, "\t")
+    );
+    return response;
+  },"Validate Access Token"));
+  
+  it("Invalidate Access Token", mochaAsync(async () => {
+    if (!creds.isValid) throw new Error("Invalid Credentials");
+    trace = objectMerge({}, trace, Util.generateNewMetaData(trace));
+    const response = await s2sMS.Oauth.invalidateToken(accessToken, clientAccessToken, trace);
+    assert.ok(
+      response.status === "ok",
+      JSON.stringify(response, null, "\t")
+    );
+    return response;
+  },"Invalidate Access Token"));
+  
+  it("List Access Tokens after Invalidation", mochaAsync(async () => {
+    if (!creds.isValid) throw new Error("Invalid Credentials");
+    trace = objectMerge({}, trace, Util.generateNewMetaData(trace));
+    const response = await s2sMS.Oauth.listClientTokens(
       accessToken,
       0, //offest
       10, //limit
       {
         token_type: "client",
         user_name: creds.email
-      }
-    )
-      .then(response => {
-        // logger.info(
-        //   `List Access Tokens after Invalidation RESPONSE: ${JSON.stringify(response, null, "\t")}`
-        // );
-        // assert(
-        //   response.hasOwnProperty("items") &&
-        //   response.items.length > 0 &&
-        //   response.items[0].hasOwnProperty("access_token")
-        // );
-        done();
-      })
-      .catch(error => {
-        // logger.error(
-        //   `List Access Tokens after Invalidation ERROR: ${JSON.stringify(error, null, "\t")}`
-        // );
-        done(new Error(error));
-      });
-  });
+      },
+      trace
+    );
+    assert.ok(
+      //response.hasOwnProperty("items") &&
+      //response.items.length === 0,
+      true,
+      JSON.stringify(response, null, "\t")
+    );
+    return response;
+  },"List Access Tokens after Invalidation"));
+  
+  // template
+  // it("change me", mochaAsync(async () => {
+  //   if (!creds.isValid) throw new Error("Invalid Credentials");
+  //   trace = objectMerge({}, trace, Util.generateNewMetaData(trace));
+  //   const response = await somethingAsync();
+  //   assert.ok(
+  //     1 === 1,
+  //     JSON.stringify(response, null, "\t")
+  //   );
+  //   return response;
+  // },"change me"));
 });

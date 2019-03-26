@@ -11,6 +11,23 @@ const fs = require("fs");
 const s2sMS = require("../src/index");
 const Util = require("../src/utilities");
 const logger = Util.getLogger();
+const objectMerge = require("object-merge");
+const newMeta = Util.generateNewMetaData;
+let trace = newMeta();
+
+//utility function to simplify test code
+const mochaAsync = (func, name) => {
+  return async () => {
+    try {
+      const response = await func();
+      logger.debug(name, response);
+      return response; 
+    } catch (error) {
+      //mocha will log out the error
+      return Promise.reject(error);
+    }
+  };
+};
 
 let creds = {
   CPAAS_OAUTH_TOKEN: "Basic your oauth token here",
@@ -20,112 +37,105 @@ let creds = {
   isValid: false
 };
 
-describe("PubSub Test Suite", function () {
+describe("Pubsub MS Unit Test Suite", function () {
 
-  let accessToken, identityData;
+  let accessToken,
+    oauthData,
+    sub_uuid;
 
-  before(function () {
-    // file system uses full path so will do it like this
-    if (fs.existsSync("./test/credentials.json")) {
+  before(async () => {
+    try {
+      // file system uses full path so will do it like this
+      if (fs.existsSync("./test/credentials.json")) {
       // do not need test folder here
-      creds = require("./credentials.json");
-    }
+        creds = require("./credentials.json");
+      }
 
-    // For tests, use the dev msHost
-    s2sMS.setMsHost(creds.MS_HOST);
-    s2sMS.setMSVersion(creds.CPAAS_API_VERSION);
-    s2sMS.setMsAuthHost(creds.AUTH_HOST);
-    // get accessToken to use in test cases
-    // Return promise so that test cases will not fire until it resolves.
-    return new Promise((resolve, reject)=>{
-      s2sMS.Oauth.getAccessToken(
+      // For tests, use the dev msHost
+      s2sMS.setMsHost(creds.MS_HOST);
+      s2sMS.setMSVersion(creds.CPAAS_API_VERSION);
+      s2sMS.setMsAuthHost(creds.AUTH_HOST);
+      // get accessToken to use in test cases
+      // Return promise so that test cases will not fire until it resolves.
+    
+      oauthData = await s2sMS.Oauth.getAccessToken(
         creds.CPAAS_OAUTH_TOKEN,
         creds.email,
         creds.password
-      )
-        .then(oauthData => {
-          //console.log('Got access token and identity data -[Get Object By Data Type] ',  oauthData);
-          accessToken = oauthData.access_token;
-          s2sMS.Identity.getMyIdentityData(accessToken).then((idData)=>{
-            s2sMS.Identity.getIdentityDetails(accessToken, idData.user_uuid).then((identityDetails)=>{
-              identityData = identityDetails;
-              resolve();
-            }).catch((e1)=>{
-              reject(e1);
-            });
-          }).catch((e)=>{
-            reject(e);
-          });
-        });
-    });
+      );
+      accessToken = oauthData.access_token;
+    } catch (error) {
+      return Promise.reject(error);
+    }
   });
  
-  it("List user subscriptions", function (done) {
-    if (!creds.isValid) return done();
-    s2sMS.Pubsub.listUserSubscriptions(
+  it("List user subscriptions", mochaAsync(async () => {
+    if (!creds.isValid) throw new Error("Invalid Credentials");
+    trace = objectMerge({}, trace, Util.generateNewMetaData(trace));
+    const response = await s2sMS.Pubsub.listUserSubscriptions(
       "0904f8d5-627f-4ff5-b34d-68dc96487b1e",
-      accessToken
-    ).then(responseData => {
-      //console.log(responseData);
-      // TODO other asserts?
-      assert(
-        responseData.hasOwnProperty("items") &&
-          responseData.hasOwnProperty("metadata")
-      );
-      done();
-    })
-      .catch((error) => {
-        console.log("Error list user subscriptions", error);
-        done(new Error(error));
-      });
-  });
+      accessToken,
+      trace
+    );
+    assert.ok(
+      response.hasOwnProperty("items") &&
+      response.hasOwnProperty("metadata"),
+      JSON.stringify(response, null, "\t")
+    );
+    return response;
+  },"List user subscriptions")); 
 
-  let sub_uuid; 
-
-  it("add subscription", function (done) {
-    if (!creds.isValid) return done();
+  it("add subscription", mochaAsync(async () => {
+    if (!creds.isValid) throw new Error("Invalid Credentials");
+    trace = objectMerge({}, trace, Util.generateNewMetaData(trace));
     const subscriptions = {
       identity: ["identity_property_change"]
     };
     const criteria = [{
       user_uuid: "0904f8d5-627f-4ff5-b34d-68dc96487b1e"
     }];
-
-    s2sMS.Pubsub.addSubscription( 
+    const response = await s2sMS.Pubsub.addSubscription( 
       "0904f8d5-627f-4ff5-b34d-68dc96487b1e",
       "47113ee7-ddbe-4388-aade-717c36ec17c7",
       "http://localhost:8001/foo",
       [],
       criteria,
       subscriptions, 
-      accessToken
-    ).then(responseData => {
-      //console.log(responseData);
-      // TODO other asserts?
-      sub_uuid = responseData.subscription_uuid;
-
-      assert(responseData.hasOwnProperty("subscription_uuid"), "add subscription failed ... no subscription uuid found" );
-      done();
-    })
-      .catch((error) => {
-        console.log("Error adding subscription", error);
-        done(new Error(error));
-      });
-  });
-
-  it("delete subscription", function (done) {
-    if (!creds.isValid) return done();
-    s2sMS.Pubsub.deleteSubscription( 
+      accessToken,
+      trace
+    );
+    sub_uuid = response.subscription_uuid;
+    assert.ok(
+      response.hasOwnProperty("subscription_uuid"),
+      JSON.stringify(response, null, "\t")
+    );
+    return response;
+  },"add subscription"));
+  
+  it("delete subscription", mochaAsync(async () => {
+    if (!creds.isValid) throw new Error("Invalid Credentials");
+    trace = objectMerge({}, trace, Util.generateNewMetaData(trace));
+    const response = await s2sMS.Pubsub.deleteSubscription( 
       sub_uuid, 
-      accessToken
-    ).then(responseData => {
-      //console.log(responseData);
-      assert(true );
-      done();
-    })
-      .catch((error) => {
-        console.log("Error deleting subscription", error);
-        done(new Error(error));
-      });
-  });
+      accessToken,
+      trace
+    );
+    assert.ok(
+      response.status === "ok",
+      JSON.stringify(response, null, "\t")
+    );
+    return response;
+  },"delete subscription"));
+
+  // template
+  // it("change me", mochaAsync(async () => {
+  //   if (!creds.isValid) throw new Error("Invalid Credentials");
+  //   trace = objectMerge({}, trace, Util.generateNewMetaData(trace));
+  //   const response = await somethingAsync();
+  //   assert.ok(
+  //     1 === 1,
+  //     JSON.stringify(response, null, "\t")
+  //   );
+  //   return response;
+  // },"change me"));
 });
