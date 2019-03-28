@@ -21,11 +21,11 @@ const getMediaFileUrl = function getMediaFileUrl() {
   const MS = util.getEndpoint("media");
   const requestOptions = {
     method: "GET",
-    uri: `${MS}/media/${fileUUID}`,
+    uri: "".concat(MS, "/media/").concat(fileUUID),
     headers: {
       "Content-type": "application/json",
-      Authorization: `Bearer ${accessToken}`,
-      "x-api-version": `${util.getVersion()}`
+      Authorization: "Bearer ".concat(accessToken),
+      "x-api-version": "".concat(util.getVersion())
     },
     qs: {
       "content_url": true
@@ -52,11 +52,11 @@ const listUserMedia = function listUserMedia() {
   const MS = util.getEndpoint("media");
   const requestOptions = {
     method: "GET",
-    uri: `${MS}/users/${user_uuid}/media`,
+    uri: "".concat(MS, "/users/").concat(user_uuid, "/media"),
     headers: {
       "Content-type": "application/json",
-      Authorization: `Bearer ${accessToken}`,
-      "x-api-version": `${util.getVersion()}`
+      Authorization: "Bearer ".concat(accessToken),
+      "x-api-version": "".concat(util.getVersion())
     },
     json: true
   };
@@ -85,10 +85,10 @@ const uploadFile = function uploadFile() {
 
   const requestOptions = {
     method: "POST",
-    uri: `${MS}/users/${user_uuid}/media`,
+    uri: "".concat(MS, "/users/").concat(user_uuid, "/media"),
     headers: {
-      Authorization: `Bearer ${accessToken}`,
-      "x-api-version": `${util.getVersion()}`
+      Authorization: "Bearer ".concat(accessToken),
+      "x-api-version": "".concat(util.getVersion())
     },
     formData: {
       file: {
@@ -121,10 +121,10 @@ const deleteMedia = async function deleteMedia() {
   const MS = util.getEndpoint("media");
   const requestOptions = {
     method: "DELETE",
-    uri: `${MS}/media/${file_id}`,
+    uri: "".concat(MS, "/media/").concat(file_id),
     headers: {
-      Authorization: `Bearer ${accessToken}`,
-      "x-api-version": `${util.getVersion()}`
+      Authorization: "Bearer ".concat(accessToken),
+      "x-api-version": "".concat(util.getVersion())
     },
     json: true,
     resolveWithFullResponse: true

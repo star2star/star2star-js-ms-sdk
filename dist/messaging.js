@@ -23,14 +23,14 @@ const getConversation = async function getConversation() {
   const MS = util.getEndpoint("Messaging");
   const requestOptions = {
     method: "POST",
-    uri: `${MS}/users/${userUuid}/conversations`,
+    uri: "".concat(MS, "/users/").concat(userUuid, "/conversations"),
     body: {
       phone_numbers: [toPhoneNumber]
     },
     headers: {
       "Content-Type": "application/json",
-      Authorization: `Bearer ${accessToken}`,
-      "x-api-version": `${util.getVersion()}`
+      Authorization: "Bearer ".concat(accessToken),
+      "x-api-version": "".concat(util.getVersion())
     },
     json: true
   };
@@ -55,14 +55,14 @@ const getConversationUuid = function getConversationUuid(accessToken, userUuid, 
     const MS = util.getEndpoint("Messaging");
     const requestOptions = {
       method: "POST",
-      uri: `${MS}/users/${userUuid}/conversations`,
+      uri: "".concat(MS, "/users/").concat(userUuid, "/conversations"),
       body: {
         phone_numbers: [toPhoneNumber]
       },
       headers: {
         "Content-Type": "application/json",
-        Authorization: `Bearer ${accessToken}`,
-        "x-api-version": `${util.getVersion()}`
+        Authorization: "Bearer ".concat(accessToken),
+        "x-api-version": "".concat(util.getVersion())
       },
       json: true
     };
@@ -110,12 +110,12 @@ const sendMessage = async function sendMessage() {
   const MS = util.getEndpoint("Messaging");
   const requestOptions = {
     method: "POST",
-    uri: `${MS}/users/${userUUID}/messages`,
+    uri: "".concat(MS, "/users/").concat(userUUID, "/messages"),
     body: objectBody,
     headers: {
       "Content-Type": "application/json",
-      Authorization: `Bearer ${accessToken}`,
-      "x-api-version": `${util.getVersion()}`
+      Authorization: "Bearer ".concat(accessToken),
+      "x-api-version": "".concat(util.getVersion())
     },
     json: true
   };
@@ -139,23 +139,23 @@ const sendSMSMessage = function sendSMSMessage(accessToken, convesationUUID, use
   let trace = arguments.length > 5 && arguments[5] !== undefined ? arguments[5] : {};
   return new Promise((resolve, reject) => {
     const objectBody = {
-      to: `${convesationUUID}`,
-      from: `${fromPhoneNumber}`,
+      to: "".concat(convesationUUID),
+      from: "".concat(fromPhoneNumber),
       channel: "sms",
       content: [{
         type: "text",
-        body: `${msg}`
+        body: "".concat(msg)
       }]
     };
     const MS = util.getEndpoint("Messaging");
     const requestOptions = {
       method: "POST",
-      uri: `${MS}/users/${userUuid}/messages`,
+      uri: "".concat(MS, "/users/").concat(userUuid, "/messages"),
       body: objectBody,
       headers: {
         "Content-Type": "application/json",
-        Authorization: `Bearer ${accessToken}`,
-        "x-api-version": `${util.getVersion()}`
+        Authorization: "Bearer ".concat(accessToken),
+        "x-api-version": "".concat(util.getVersion())
       },
       json: true
     };
@@ -165,7 +165,7 @@ const sendSMSMessage = function sendSMSMessage(accessToken, convesationUUID, use
       resolve(response);
     }).catch(e => {
       //console.log(e)
-      reject(`sendSMSMessage errored: ${e}`);
+      reject("sendSMSMessage errored: ".concat(e));
     });
   });
 };
@@ -216,10 +216,10 @@ const retrieveConversations = function retrieveConversations() {
   const MS = util.getEndpoint("messaging");
   const requestOptions = {
     method: "GET",
-    uri: `${MS}/users/${userUUID}/conversations`,
+    uri: "".concat(MS, "/users/").concat(userUUID, "/conversations"),
     headers: {
-      Authorization: `Bearer ${accessToken}`,
-      "x-api-version": `${util.getVersion()}`,
+      Authorization: "Bearer ".concat(accessToken),
+      "x-api-version": "".concat(util.getVersion()),
       "Content-type": "application/json"
     },
     qs: {
@@ -256,10 +256,10 @@ const retrieveMessages = function retrieveMessages() {
   const MS = util.getEndpoint("messaging");
   const requestOptions = {
     method: "GET",
-    uri: `${MS}/conversations/${conversationUUID}/messages`,
+    uri: "".concat(MS, "/conversations/").concat(conversationUUID, "/messages"),
     headers: {
-      Authorization: `Bearer ${accessToken}`,
-      "x-api-version": `${util.getVersion()}`,
+      Authorization: "Bearer ".concat(accessToken),
+      "x-api-version": "".concat(util.getVersion()),
       "Content-type": "application/json"
     },
     qs: {
@@ -288,10 +288,10 @@ const getSMSNumber = function getSMSNumber(accessToken, userUuid) {
     const MS = util.getEndpoint("identity");
     const requestOptions = {
       method: "GET",
-      uri: `${MS}/identities/${userUuid}?include=alias`,
+      uri: "".concat(MS, "/identities/").concat(userUuid, "?include=alias"),
       headers: {
-        Authorization: `Bearer ${accessToken}`,
-        "x-api-version": `${util.getVersion()}`,
+        Authorization: "Bearer ".concat(accessToken),
+        "x-api-version": "".concat(util.getVersion()),
         "Content-type": "application/json"
       },
       json: true
@@ -313,12 +313,12 @@ const getSMSNumber = function getSMSNumber(accessToken, userUuid) {
           resolve(smsNbr);
         } else {
           reject({
-            message: `No sms number in alias: ${smsResponse}`
+            message: "No sms number in alias: ".concat(smsResponse)
           });
         }
       } else {
         reject({
-          message: `No aliases in sms response ${smsResponse}`
+          message: "No aliases in sms response ".concat(smsResponse)
         });
       }
     }).catch(error => {
@@ -351,10 +351,10 @@ const sendSimpleSMS = function sendSimpleSMS() {
   const MS = util.getEndpoint("sms");
   const requestOptions = {
     method: "POST",
-    uri: `${MS}/messages/send`,
+    uri: "".concat(MS, "/messages/send"),
     headers: {
-      Authorization: `Bearer ${accessToken}`,
-      "x-api-version": `${util.getVersion()}`,
+      Authorization: "Bearer ".concat(accessToken),
+      "x-api-version": "".concat(util.getVersion()),
       "Content-type": "application/json"
     },
     body: {
@@ -388,10 +388,10 @@ const markAllConversationMessagesRead = function markAllConversationMessagesRead
   const MS = util.getEndpoint("messaging");
   const requestOptions = {
     method: "POST",
-    uri: `${MS}/conversations/${conversationUUID}/messages/modify`,
+    uri: "".concat(MS, "/conversations/").concat(conversationUUID, "/messages/modify"),
     headers: {
-      Authorization: `Bearer ${accessToken}`,
-      "x-api-version": `${util.getVersion()}`,
+      Authorization: "Bearer ".concat(accessToken),
+      "x-api-version": "".concat(util.getVersion()),
       "Content-type": "application/json"
     },
     body: {

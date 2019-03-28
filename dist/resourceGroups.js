@@ -1,8 +1,6 @@
 /* global require module*/
 "use strict";
 
-require("core-js/modules/web.dom.iterable");
-
 const Util = require("./utilities");
 
 const Auth = require("./auth");
@@ -36,7 +34,7 @@ const createResourceGroups = async function createResourceGroups() {
   let trace = arguments.length > 5 && arguments[5] !== undefined ? arguments[5] : {};
 
   try {
-    logger.debug(`Creating Resource Group ${resourceUUID}. Users Object:`, users);
+    logger.debug("Creating Resource Group ".concat(resourceUUID, ". Users Object:"), users);
 
     if (!type) {
       return Promise.reject({
@@ -52,7 +50,7 @@ const createResourceGroups = async function createResourceGroups() {
     const groupTypeRegex = /^[r,u,d]{1,3}/;
     Object.keys(users).forEach(prop => {
       const userGroup = {
-        name: `${prop}: ${resourceUUID}`,
+        name: "".concat(prop, ": ").concat(resourceUUID),
         users: [...users[prop]],
         description: "resource group"
       };
@@ -68,7 +66,7 @@ const createResourceGroups = async function createResourceGroups() {
       const groupType = groupTypeRegex.exec(group.name);
       nextTrace = objectMerge({}, nextTrace, Util.generateNewMetaData(nextTrace));
       scopePromises.push(Auth.assignScopedRoleToUserGroup(accessToken, group.uuid, roles[type][groupType], "resource", [resourceUUID], nextTrace));
-      logger.debug("Creating Resource Group. Scope Params:", `group.uuid: ${group.uuid}`, `roles[type][groupType]: ${roles[type][groupType]}`, `[resourceUUID]: [${resourceUUID}]`);
+      logger.debug("Creating Resource Group. Scope Params:", "group.uuid: ".concat(group.uuid), "roles[type][groupType]: ".concat(roles[type][groupType]), "[resourceUUID]: [".concat(resourceUUID, "]"));
     });
     await Promise.all(scopePromises);
     logger.debug("Creating Resource Group Success");
@@ -99,7 +97,7 @@ const cleanUpResourceGroups = async function cleanUpResourceGroups() {
   let trace = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : {};
 
   try {
-    logger.debug(`Cleaning up Resource Groups For ${resourceUUID}`);
+    logger.debug("Cleaning up Resource Groups For ".concat(resourceUUID));
     const resourceGroups = await Auth.listAccessByGroups(accessToken, resourceUUID, trace);
     logger.debug("Cleaning up Resource Groups", resourceGroups);
 
@@ -151,10 +149,10 @@ const updateResourceGroups = async function updateResourceGroups() {
       });
     }
 
-    logger.debug(`Updating Resource Groups For ${resourceUUID}`);
+    logger.debug("Updating Resource Groups For ".concat(resourceUUID));
     let nextTrace = objectMerge({}, trace);
     const resourceGroups = await Auth.listAccessByGroups(accessToken, resourceUUID, nextTrace);
-    logger.debug(`Updating Resource Groups For ${resourceUUID}: Groups Found`, resourceGroups);
+    logger.debug("Updating Resource Groups For ".concat(resourceUUID, ": Groups Found"), resourceGroups);
 
     if (resourceGroups.hasOwnProperty("items") && resourceGroups.items.length > 0) {
       //extract the type of group from the name
@@ -164,10 +162,10 @@ const updateResourceGroups = async function updateResourceGroups() {
       resourceGroups.items.forEach(item => {
         if (item.hasOwnProperty("user_group") && item.user_group.hasOwnProperty("group_name")) {
           const groupType = groupTypeRegex.exec(item.user_group.group_name);
-          logger.debug(`Updating Resource Groups For ${resourceUUID}: Group Type`, groupType); // A resource group exists for this set of permissions.
+          logger.debug("Updating Resource Groups For ".concat(resourceUUID, ": Group Type"), groupType); // A resource group exists for this set of permissions.
 
           if (typeof users === "object" && users.hasOwnProperty(groupType) && users[groupType].length > 0) {
-            logger.debug(`Updating Resource Groups For ${resourceUUID}: Fetching Group`, item.user_group.uuid);
+            logger.debug("Updating Resource Groups For ".concat(resourceUUID, ": Fetching Group"), item.user_group.uuid);
             nextTrace = objectMerge({}, nextTrace, Util.generateNewMetaData(nextTrace));
             updatePromises.push(Groups.getGroup(accessToken, item.user_group.uuid, {
               expand: "members",
@@ -176,7 +174,7 @@ const updateResourceGroups = async function updateResourceGroups() {
             }, nextTrace));
           } else {
             // we no longer have any users for this resource group, so delete it
-            logger.debug(`Updating Resource Groups For ${resourceUUID}: Deleting Group`, item.user_group.uuid);
+            logger.debug("Updating Resource Groups For ".concat(resourceUUID, ": Deleting Group"), item.user_group.uuid);
             nextTrace = objectMerge({}, nextTrace, Util.generateNewMetaData(nextTrace));
             deletePromises.push(Groups.deleteGroup(accessToken, item.user_group.uuid, trace));
           }
@@ -246,7 +244,7 @@ const updateResourceGroups = async function updateResourceGroups() {
 
     if (Object.keys(users).length > 0) {
       nextTrace = objectMerge({}, nextTrace, Util.generateNewMetaData(nextTrace));
-      logger.debug(`Updating Resource Groups For ${resourceUUID}: Creating New Groups`, users);
+      logger.debug("Updating Resource Groups For ".concat(resourceUUID, ": Creating New Groups"), users);
       await createResourceGroups(accessToken, accountUUID, resourceUUID, "object", //system role type
       users, trace);
     }
@@ -255,7 +253,7 @@ const updateResourceGroups = async function updateResourceGroups() {
       "status": "ok"
     });
   } catch (error) {
-    logger.debug(`Updating Resource Groups For ${resourceUUID} Failed`, error);
+    logger.debug("Updating Resource Groups For ".concat(resourceUUID, " Failed"), error);
     return Promise.reject({
       "status": "failed",
       "updateResourceGroups": error

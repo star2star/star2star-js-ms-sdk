@@ -1,8 +1,6 @@
 /*global module require */
 "use strict";
 
-require("core-js/modules/web.dom.iterable");
-
 const util = require("./utilities");
 
 const request = require("request-promise");
@@ -25,11 +23,11 @@ const createIdentity = async function createIdentity() {
   const MS = util.getEndpoint("identity");
   const requestOptions = {
     method: "POST",
-    uri: `${MS}/accounts/${accountUUID}/identities`,
+    uri: "".concat(MS, "/accounts/").concat(accountUUID, "/identities"),
     headers: {
-      Authorization: `Bearer ${accessToken}`,
+      Authorization: "Bearer ".concat(accessToken),
       "Content-type": "application/json",
-      "x-api-version": `${util.getVersion()}`
+      "x-api-version": "".concat(util.getVersion())
     },
     body: body,
     json: true,
@@ -65,11 +63,11 @@ const modifyIdentity = function modifyIdentity() {
   const MS = util.getEndpoint("identity");
   const requestOptions = {
     method: "POST",
-    uri: `${MS}/identities/${userUuid}/modify`,
+    uri: "".concat(MS, "/identities/").concat(userUuid, "/modify"),
     headers: {
-      Authorization: `Bearer ${accessToken}`,
+      Authorization: "Bearer ".concat(accessToken),
       "Content-type": "application/json",
-      "x-api-version": `${util.getVersion()}`
+      "x-api-version": "".concat(util.getVersion())
     },
     body: body,
     json: true
@@ -96,11 +94,11 @@ const modifyIdentityProps = function modifyIdentityProps() {
   const MS = util.getEndpoint("identity");
   const requestOptions = {
     method: "POST",
-    uri: `${MS}/identities/${userUuid}/properties/modify`,
+    uri: "".concat(MS, "/identities/").concat(userUuid, "/properties/modify"),
     headers: {
-      Authorization: `Bearer ${accessToken}`,
+      Authorization: "Bearer ".concat(accessToken),
       "Content-type": "application/json",
-      "x-api-version": `${util.getVersion()}`
+      "x-api-version": "".concat(util.getVersion())
     },
     body: body,
     json: true
@@ -125,11 +123,11 @@ const deactivateIdentity = function deactivateIdentity() {
   const MS = util.getEndpoint("identity");
   const requestOptions = {
     method: "POST",
-    uri: `${MS}/identities/${userUuid}/deactivate`,
+    uri: "".concat(MS, "/identities/").concat(userUuid, "/deactivate"),
     headers: {
-      Authorization: `Bearer ${accessToken}`,
+      Authorization: "Bearer ".concat(accessToken),
       "Content-type": "application/json",
-      "x-api-version": `${util.getVersion()}`
+      "x-api-version": "".concat(util.getVersion())
     },
     json: true,
     resolveWithFullResponse: true
@@ -164,11 +162,11 @@ const reactivateIdentity = function reactivateIdentity() {
   const MS = util.getEndpoint("identity");
   const requestOptions = {
     method: "POST",
-    uri: `${MS}/identities/${userUuid}/reactivate`,
+    uri: "".concat(MS, "/identities/").concat(userUuid, "/reactivate"),
     headers: {
-      Authorization: `Bearer ${accessToken}`,
+      Authorization: "Bearer ".concat(accessToken),
       "Content-type": "application/json",
-      "x-api-version": `${util.getVersion()}`
+      "x-api-version": "".concat(util.getVersion())
     },
     json: true,
     resolveWithFullResponse: true
@@ -205,11 +203,11 @@ const createAlias = function createAlias() {
   const MS = util.getEndpoint("identity");
   const requestOptions = {
     method: "POST",
-    uri: `${MS}/identities/${userUuid}/aliases`,
+    uri: "".concat(MS, "/identities/").concat(userUuid, "/aliases"),
     headers: {
-      Authorization: `Bearer ${accessToken}`,
+      Authorization: "Bearer ".concat(accessToken),
       "Content-type": "application/json",
-      "x-api-version": `${util.getVersion()}`
+      "x-api-version": "".concat(util.getVersion())
     },
     body: body,
     json: true,
@@ -248,11 +246,11 @@ const updateAliasWithDID = function updateAliasWithDID() {
   const MS = util.getEndpoint("identity");
   const requestOptions = {
     method: "PUT",
-    uri: `${MS}/identities/${userUuid}/aliases/${did}`,
+    uri: "".concat(MS, "/identities/").concat(userUuid, "/aliases/").concat(did),
     headers: {
-      Authorization: `Bearer ${accessToken}`,
+      Authorization: "Bearer ".concat(accessToken),
       "Content-type": "application/json",
-      "x-api-version": `${util.getVersion()}`
+      "x-api-version": "".concat(util.getVersion())
     },
     json: true,
     resolveWithFullResponse: true
@@ -290,11 +288,11 @@ const deleteIdentity = async function deleteIdentity() {
     const MS = util.getEndpoint("identity");
     const requestOptions = {
       method: "DELETE",
-      uri: `${MS}/identities/${userUuid}`,
+      uri: "".concat(MS, "/identities/").concat(userUuid),
       headers: {
-        Authorization: `Bearer ${accessToken}`,
+        Authorization: "Bearer ".concat(accessToken),
         "Content-type": "application/json",
-        "x-api-version": `${util.getVersion()}`
+        "x-api-version": "".concat(util.getVersion())
       },
       json: true,
       resolveWithFullResponse: true
@@ -334,11 +332,11 @@ const getIdentity = function getIdentity() {
   const MS = util.getEndpoint("identity");
   const requestOptions = {
     method: "GET",
-    uri: `${MS}/identities/${userUuid}`,
+    uri: "".concat(MS, "/identities/").concat(userUuid),
     headers: {
-      Authorization: `Bearer ${accessToken}`,
+      Authorization: "Bearer ".concat(accessToken),
       "Content-type": "application/json",
-      "x-api-version": `${util.getVersion()}`
+      "x-api-version": "".concat(util.getVersion())
     },
     json: true
   };
@@ -365,11 +363,11 @@ const login = function login() {
   const MS = util.getEndpoint("identity");
   const requestOptions = {
     method: "POST",
-    uri: `${MS}/users/login`,
+    uri: "".concat(MS, "/users/login"),
     headers: {
-      Authorization: `Bearer ${accessToken}`,
+      Authorization: "Bearer ".concat(accessToken),
       "Content-type": "application/json",
-      "x-api-version": `${util.getVersion()}`
+      "x-api-version": "".concat(util.getVersion())
     },
     body: {
       email: email,
@@ -396,11 +394,11 @@ const getMyIdentityData = function getMyIdentityData() {
   const MS = util.getEndpoint("identity");
   const requestOptions = {
     method: "GET",
-    uri: `${MS}/users/me`,
+    uri: "".concat(MS, "/users/me"),
     headers: {
-      Authorization: `Bearer ${accessToken}`,
+      Authorization: "Bearer ".concat(accessToken),
       "Content-type": "application/json",
-      "x-api-version": `${util.getVersion()}`
+      "x-api-version": "".concat(util.getVersion())
     },
     json: true
   };
@@ -425,11 +423,11 @@ const getIdentityDetails = function getIdentityDetails() {
   const MS = util.getEndpoint("identity");
   const requestOptions = {
     method: "GET",
-    uri: `${MS}/identities/${user_uuid}?include=alias&include=properties`,
+    uri: "".concat(MS, "/identities/").concat(user_uuid, "?include=alias&include=properties"),
     headers: {
-      Authorization: `Bearer ${accessToken}`,
+      Authorization: "Bearer ".concat(accessToken),
       "Content-type": "application/json",
-      "x-api-version": `${util.getVersion()}`
+      "x-api-version": "".concat(util.getVersion())
     },
     json: true
   };
@@ -459,15 +457,15 @@ const listIdentitiesByAccount = async function listIdentitiesByAccount() {
   const MS = util.getEndpoint("identity");
   const requestOptions = {
     method: "GET",
-    uri: `${MS}/accounts/${accountUUID}/identities`,
+    uri: "".concat(MS, "/accounts/").concat(accountUUID, "/identities"),
     qs: {
       offset: offset,
       limit: limit
     },
     headers: {
-      Authorization: `Bearer ${accessToken}`,
+      Authorization: "Bearer ".concat(accessToken),
       "Content-type": "application/json",
-      "x-api-version": `${util.getVersion()}`
+      "x-api-version": "".concat(util.getVersion())
     },
     json: true
   };
@@ -503,15 +501,15 @@ const lookupIdentity = async function lookupIdentity() {
   const MS = util.getEndpoint("identity");
   const requestOptions = {
     method: "GET",
-    uri: `${MS}/identities`,
+    uri: "".concat(MS, "/identities"),
     qs: {
       offset: offset,
       limit: limit
     },
     headers: {
-      Authorization: `Bearer ${accessToken}`,
+      Authorization: "Bearer ".concat(accessToken),
       "Content-type": "application/json",
-      "x-api-version": `${util.getVersion()}`
+      "x-api-version": "".concat(util.getVersion())
     },
     json: true
   };
@@ -545,12 +543,12 @@ const resetPassword = function resetPassword() {
   const MS = util.getEndpoint("identity");
   const requestOptions = {
     method: "PUT",
-    uri: `${MS}/users/password-tokens/${passwordToken}`,
+    uri: "".concat(MS, "/users/password-tokens/").concat(passwordToken),
     body: body,
     headers: {
-      Authorization: `Bearer ${accessToken}`,
+      Authorization: "Bearer ".concat(accessToken),
       "Content-type": "application/json",
-      "x-api-version": `${util.getVersion()}`
+      "x-api-version": "".concat(util.getVersion())
     },
     resolveWithFullResponse: true,
     json: true
@@ -585,14 +583,14 @@ const generatePasswordToken = function generatePasswordToken() {
   const MS = util.getEndpoint("identity");
   const requestOptions = {
     method: "POST",
-    uri: `${MS}/users/password-tokens`,
+    uri: "".concat(MS, "/users/password-tokens"),
     body: {
       email: emailAddress
     },
     headers: {
-      Authorization: `Bearer ${accessToken}`,
+      Authorization: "Bearer ".concat(accessToken),
       "Content-type": "application/json",
-      "x-api-version": `${util.getVersion()}`
+      "x-api-version": "".concat(util.getVersion())
     },
     resolveWithFullResponse: true,
     json: true
@@ -627,11 +625,11 @@ const validatePasswordToken = function validatePasswordToken() {
   const MS = util.getEndpoint("identity");
   const requestOptions = {
     method: "GET",
-    uri: `${MS}/users/password-tokens/${password_token}`,
+    uri: "".concat(MS, "/users/password-tokens/").concat(password_token),
     headers: {
-      Authorization: `Bearer ${accessToken}`,
+      Authorization: "Bearer ".concat(accessToken),
       "Content-type": "application/json",
-      "x-api-version": `${util.getVersion()}`
+      "x-api-version": "".concat(util.getVersion())
     },
     json: true
   };

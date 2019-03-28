@@ -1,14 +1,6 @@
 /* global require process module*/
 "use strict";
 
-require("core-js/modules/es6.regexp.to-string");
-
-require("core-js/modules/es6.regexp.match");
-
-require("core-js/modules/web.dom.iterable");
-
-require("core-js/modules/es6.regexp.replace");
-
 var _nodeLogger = _interopRequireDefault(require("./node-logger"));
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
@@ -313,7 +305,7 @@ const addRequestTrace = function addRequestTrace(request) {
     request.headers["debug"] = false;
   }
 
-  logger.trace(`Microservice Request ${request.method}: ${request.uri}`, request.headers);
+  logger.trace("Microservice Request ".concat(request.method, ": ").concat(request.uri), request.headers);
   return request;
 };
 
@@ -404,13 +396,13 @@ const pendingResource = async function pendingResource(resourceLoc, requestOptio
             });
 
           case "failure":
-            throw Error(`failure: ${JSON.stringify(response)}`);
+            throw Error("failure: ".concat(JSON.stringify(response)));
 
           default:
-            throw Error(`unrecognized resource_status: ${JSON.stringify(response)}`);
+            throw Error("unrecognized resource_status: ".concat(JSON.stringify(response)));
         }
       } else {
-        throw Error(`resource_status missing from response: ${JSON.stringify(response)}`);
+        throw Error("resource_status missing from response: ".concat(JSON.stringify(response)));
       }
 
       await new Promise(resolve => setTimeout(resolve, config.pollInterval));

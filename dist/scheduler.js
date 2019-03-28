@@ -1,8 +1,6 @@
 /* global require module*/
 "use strict";
 
-require("core-js/modules/web.dom.iterable");
-
 const request = require("request-promise");
 
 const Util = require("./utilities");
@@ -25,11 +23,11 @@ const deleteEvent = async function deleteEvent() {
     const MS = Util.getEndpoint("scheduler");
     const requestOptions = {
       method: "DELETE",
-      uri: `${MS}/events/${eventUUID}`,
+      uri: "".concat(MS, "/events/").concat(eventUUID),
       headers: {
-        Authorization: `Bearer ${accessToken}`,
+        Authorization: "Bearer ".concat(accessToken),
         "Content-type": "application/json",
-        "x-api-version": `${Util.getVersion()}`
+        "x-api-version": "".concat(Util.getVersion())
       },
       resolveWithFullResponse: true,
       json: true
@@ -68,11 +66,11 @@ const getEvent = function getEvent() {
   const MS = Util.getEndpoint("scheduler");
   const requestOptions = {
     method: "GET",
-    uri: `${MS}/events/${eventUUID}`,
+    uri: "".concat(MS, "/events/").concat(eventUUID),
     headers: {
-      Authorization: `Bearer ${accessToken}`,
+      Authorization: "Bearer ".concat(accessToken),
       "Content-type": "application/json",
-      "x-api-version": `${Util.getVersion()}`
+      "x-api-version": "".concat(Util.getVersion())
     },
     json: true
   };
@@ -96,11 +94,11 @@ const getNextEventInfo = function getNextEventInfo() {
   const MS = Util.getEndpoint("scheduler");
   const requestOptions = {
     method: "GET",
-    uri: `${MS}/events/${eventUUID}/next`,
+    uri: "".concat(MS, "/events/").concat(eventUUID, "/next"),
     headers: {
-      Authorization: `Bearer ${accessToken}`,
+      Authorization: "Bearer ".concat(accessToken),
       "Content-type": "application/json",
-      "x-api-version": `${Util.getVersion()}`
+      "x-api-version": "".concat(Util.getVersion())
     },
     json: true
   };
@@ -128,11 +126,11 @@ const listEvents = function listEvents() {
   const MS = Util.getEndpoint("scheduler");
   const requestOptions = {
     method: "GET",
-    uri: `${MS}/events`,
+    uri: "".concat(MS, "/events"),
     headers: {
-      Authorization: `Bearer ${accessToken}`,
+      Authorization: "Bearer ".concat(accessToken),
       "Content-type": "application/json",
-      "x-api-version": `${Util.getVersion()}`
+      "x-api-version": "".concat(Util.getVersion())
     },
     qs: {
       offset: offset,
@@ -171,11 +169,11 @@ const listEventsHistory = function listEventsHistory() {
   const MS = Util.getEndpoint("scheduler");
   const requestOptions = {
     method: "GET",
-    uri: `${MS}/events/history`,
+    uri: "".concat(MS, "/events/history"),
     headers: {
-      Authorization: `Bearer ${accessToken}`,
+      Authorization: "Bearer ".concat(accessToken),
       "Content-type": "application/json",
-      "x-api-version": `${Util.getVersion()}`
+      "x-api-version": "".concat(Util.getVersion())
     },
     qs: {
       offset: offset,
@@ -230,11 +228,11 @@ const scheduleEvent = function scheduleEvent() {
   const MS = Util.getEndpoint("scheduler");
   const requestOptions = {
     method: "POST",
-    uri: `${MS}/events`,
+    uri: "".concat(MS, "/events"),
     headers: {
-      Authorization: `Bearer ${accessToken}`,
+      Authorization: "Bearer ".concat(accessToken),
       "Content-type": "application/json",
-      "x-api-version": `${Util.getVersion()}`
+      "x-api-version": "".concat(Util.getVersion())
     },
     body: {
       "user_uuid": userUUID,
@@ -272,11 +270,11 @@ const updateEvent = function updateEvent() {
   const MS = Util.getEndpoint("scheduler");
   const requestOptions = {
     method: "PUT",
-    uri: `${MS}/events/${eventUUID}`,
+    uri: "".concat(MS, "/events/").concat(eventUUID),
     headers: {
-      Authorization: `Bearer ${accessToken}`,
+      Authorization: "Bearer ".concat(accessToken),
       "Content-type": "application/json",
-      "x-api-version": `${Util.getVersion()}`
+      "x-api-version": "".concat(Util.getVersion())
     },
     body: body,
     json: true

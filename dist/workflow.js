@@ -1,8 +1,6 @@
 /* global require module*/
 "use strict";
 
-require("core-js/modules/web.dom.iterable");
-
 const request = require("request-promise");
 
 const util = require("./utilities");
@@ -23,12 +21,12 @@ const createWorkflowTemplate = function createWorkflowTemplate() {
   const MS = util.getEndpoint("workflow");
   const requestOptions = {
     method: "POST",
-    uri: `${MS}/workflows`,
+    uri: "".concat(MS, "/workflows"),
     body: body,
     headers: {
-      Authorization: `Bearer ${accessToken}`,
+      Authorization: "Bearer ".concat(accessToken),
       "Content-type": "application/json",
-      "x-api-version": `${util.getVersion()}`
+      "x-api-version": "".concat(util.getVersion())
     },
     json: true
   };
@@ -54,11 +52,11 @@ const cancelWorkflow = function cancelWorkflow() {
   const MS = util.getEndpoint("workflow");
   const requestOptions = {
     method: "DELETE",
-    uri: `${MS}/workflows/${wfTemplateUUID}/instances/${wfIntanceUUID}`,
+    uri: "".concat(MS, "/workflows/").concat(wfTemplateUUID, "/instances/").concat(wfIntanceUUID),
     headers: {
-      Authorization: `Bearer ${accessToken}`,
+      Authorization: "Bearer ".concat(accessToken),
       "Content-type": "application/json",
-      "x-api-version": `${util.getVersion()}`
+      "x-api-version": "".concat(util.getVersion())
     },
     resolveWithFullResponse: true,
     json: true
@@ -95,11 +93,11 @@ const deleteWorkflowTemplate = function deleteWorkflowTemplate() {
   const MS = util.getEndpoint("workflow");
   const requestOptions = {
     method: "DELETE",
-    uri: `${MS}/workflows/${wfTemplateUUID}/${version}`,
+    uri: "".concat(MS, "/workflows/").concat(wfTemplateUUID, "/").concat(version),
     headers: {
-      Authorization: `Bearer ${accessToken}`,
+      Authorization: "Bearer ".concat(accessToken),
       "Content-type": "application/json",
-      "x-api-version": `${util.getVersion()}`
+      "x-api-version": "".concat(util.getVersion())
     },
     resolveWithFullResponse: true,
     json: true
@@ -136,11 +134,11 @@ const getRunningWorkflow = function getRunningWorkflow() {
   const MS = util.getEndpoint("workflow");
   const requestOptions = {
     method: "GET",
-    uri: `${MS}/workflows/${wfTemplateUUID}/instances/${wfInstanceUUID}`,
+    uri: "".concat(MS, "/workflows/").concat(wfTemplateUUID, "/instances/").concat(wfInstanceUUID),
     headers: {
-      Authorization: `Bearer ${accessToken}`,
+      Authorization: "Bearer ".concat(accessToken),
       "Content-type": "application/json",
-      "x-api-version": `${util.getVersion()}`
+      "x-api-version": "".concat(util.getVersion())
     },
     json: true
   };
@@ -164,11 +162,11 @@ const getWorkflowGroup = function getWorkflowGroup() {
   const MS = util.getEndpoint("workflow");
   const requestOptions = {
     method: "GET",
-    uri: `${MS}/groups/${wfGroupUUID}`,
+    uri: "".concat(MS, "/groups/").concat(wfGroupUUID),
     headers: {
-      Authorization: `Bearer ${accessToken}`,
+      Authorization: "Bearer ".concat(accessToken),
       "Content-type": "application/json",
-      "x-api-version": `${util.getVersion()}`
+      "x-api-version": "".concat(util.getVersion())
     },
     json: true
   };
@@ -192,11 +190,11 @@ const getWfInstanceHistory = function getWfInstanceHistory() {
   const MS = util.getEndpoint("workflow");
   const requestOptions = {
     method: "GET",
-    uri: `${MS}/history/${wfInstanceUUID}`,
+    uri: "".concat(MS, "/history/").concat(wfInstanceUUID),
     headers: {
-      Authorization: `Bearer ${accessToken}`,
+      Authorization: "Bearer ".concat(accessToken),
       "Content-type": "application/json",
-      "x-api-version": `${util.getVersion()}`
+      "x-api-version": "".concat(util.getVersion())
     },
     json: true
   };
@@ -226,11 +224,11 @@ const getWfTemplateHistory = function getWfTemplateHistory() {
   const MS = util.getEndpoint("workflow");
   const requestOptions = {
     method: "GET",
-    uri: `${MS}/history`,
+    uri: "".concat(MS, "/history"),
     headers: {
-      Authorization: `Bearer ${accessToken}`,
+      Authorization: "Bearer ".concat(accessToken),
       "Content-type": "application/json",
-      "x-api-version": `${util.getVersion()}`
+      "x-api-version": "".concat(util.getVersion())
     },
     qs: {
       template_uuid: wfTemplateUUID,
@@ -268,11 +266,11 @@ const getWorkflowTemplate = function getWorkflowTemplate() {
   const MS = util.getEndpoint("workflow");
   const requestOptions = {
     method: "GET",
-    uri: `${MS}/workflows/${wfTemplateUUID}`,
+    uri: "".concat(MS, "/workflows/").concat(wfTemplateUUID),
     headers: {
-      Authorization: `Bearer ${accessToken}`,
+      Authorization: "Bearer ".concat(accessToken),
       "Content-type": "application/json",
-      "x-api-version": `${util.getVersion()}`
+      "x-api-version": "".concat(util.getVersion())
     },
     json: true
   };
@@ -281,7 +279,7 @@ const getWorkflowTemplate = function getWorkflowTemplate() {
   if (filters) {
     Object.keys(filters).forEach(filter => {
       if (filter === "version") {
-        requestOptions.uri += `/${filters[filter]}`;
+        requestOptions.uri += "/".concat(filters[filter]);
       } else {
         !requestOptions.hasOwnProperty("qs") && (requestOptions.qs = {}); //init if not there
 
@@ -328,11 +326,11 @@ const listRunningWorkflows = function listRunningWorkflows() {
   const MS = util.getEndpoint("workflow");
   const requestOptions = {
     method: "GET",
-    uri: `${MS}/workflows/${wfTemplateUUID}/instances`,
+    uri: "".concat(MS, "/workflows/").concat(wfTemplateUUID, "/instances"),
     headers: {
-      Authorization: `Bearer ${accessToken}`,
+      Authorization: "Bearer ".concat(accessToken),
       "Content-type": "application/json",
-      "x-api-version": `${util.getVersion()}`
+      "x-api-version": "".concat(util.getVersion())
     },
     qs: {
       offset: offset,
@@ -371,11 +369,11 @@ const listWorkflowGroups = function listWorkflowGroups() {
   const MS = util.getEndpoint("workflow");
   const requestOptions = {
     method: "GET",
-    uri: `${MS}/groups`,
+    uri: "".concat(MS, "/groups"),
     headers: {
-      Authorization: `Bearer ${accessToken}`,
+      Authorization: "Bearer ".concat(accessToken),
       "Content-type": "application/json",
-      "x-api-version": `${util.getVersion()}`
+      "x-api-version": "".concat(util.getVersion())
     },
     qs: {
       offset: offset,
@@ -414,11 +412,11 @@ const listWorkflowTemplates = function listWorkflowTemplates() {
   const MS = util.getEndpoint("workflow");
   const requestOptions = {
     method: "GET",
-    uri: `${MS}/workflows`,
+    uri: "".concat(MS, "/workflows"),
     headers: {
-      Authorization: `Bearer ${accessToken}`,
+      Authorization: "Bearer ".concat(accessToken),
       "Content-type": "application/json",
-      "x-api-version": `${util.getVersion()}`
+      "x-api-version": "".concat(util.getVersion())
     },
     qs: {
       offset: offset,
@@ -455,12 +453,12 @@ const modifyWorkflowTemplate = function modifyWorkflowTemplate() {
   const MS = util.getEndpoint("workflow");
   const requestOptions = {
     method: "PUT",
-    uri: `${MS}/workflows/${wfTemplateUUID}`,
+    uri: "".concat(MS, "/workflows/").concat(wfTemplateUUID),
     body: body,
     headers: {
-      Authorization: `Bearer ${accessToken}`,
+      Authorization: "Bearer ".concat(accessToken),
       "Content-type": "application/json",
-      "x-api-version": `${util.getVersion()}`
+      "x-api-version": "".concat(util.getVersion())
     },
     json: true
   };
@@ -485,12 +483,12 @@ const startWorkflow = function startWorkflow(accessToken) {
   const MS = util.getEndpoint("workflow");
   const requestOptions = {
     method: "POST",
-    uri: `${MS}/workflows/${wfTemplateUUID}/instances`,
+    uri: "".concat(MS, "/workflows/").concat(wfTemplateUUID, "/instances"),
     body: body,
     headers: {
-      Authorization: `Bearer ${accessToken}`,
+      Authorization: "Bearer ".concat(accessToken),
       "Content-type": "application/json",
-      "x-api-version": `${util.getVersion()}`
+      "x-api-version": "".concat(util.getVersion())
     },
     json: true
   };
@@ -518,15 +516,15 @@ const updateWorkflowGroup = function updateWorkflowGroup() {
   const MS = util.getEndpoint("workflow");
   const requestOptions = {
     method: "PUT",
-    uri: `${MS}/groups/${groupUUID}`,
+    uri: "".concat(MS, "/groups/").concat(groupUUID),
     body: {
       status: status,
       data: data
     },
     headers: {
-      Authorization: `Bearer ${accessToken}`,
+      Authorization: "Bearer ".concat(accessToken),
       "Content-type": "application/json",
-      "x-api-version": `${util.getVersion()}`
+      "x-api-version": "".concat(util.getVersion())
     },
     json: true
   };

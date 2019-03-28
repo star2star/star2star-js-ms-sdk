@@ -31,7 +31,7 @@ const addSubscription = function addSubscription() {
   const MS = util.getEndpoint("pubsub");
   const requestOptions = {
     method: "POST",
-    uri: `${MS}/subscriptions`,
+    uri: "".concat(MS, "/subscriptions"),
     body: {
       user_uuid: user_uuid,
       account_uuid: account_uuid,
@@ -43,9 +43,9 @@ const addSubscription = function addSubscription() {
       events: subscriptions
     },
     headers: {
-      Authorization: `Bearer ${accessToken}`,
+      Authorization: "Bearer ".concat(accessToken),
       "Content-type": "application/json",
-      "x-api-version": `${util.getVersion()}`
+      "x-api-version": "".concat(util.getVersion())
     },
     json: true
   };
@@ -69,11 +69,11 @@ const deleteSubscription = async function deleteSubscription() {
   const MS = util.getEndpoint("pubsub");
   const requestOptions = {
     method: "DELETE",
-    uri: `${MS}/subscriptions/${subscription_uuid}`,
+    uri: "".concat(MS, "/subscriptions/").concat(subscription_uuid),
     headers: {
-      Authorization: `Bearer ${accessToken}`,
+      Authorization: "Bearer ".concat(accessToken),
       "Content-type": "application/json",
-      "x-api-version": `${util.getVersion()}`
+      "x-api-version": "".concat(util.getVersion())
     },
     resolveWithFullResponse: true,
     json: true
@@ -108,11 +108,11 @@ const getSubscription = function getSubscription() {
   const MS = util.getEndpoint("pubsub");
   const requestOptions = {
     method: "GET",
-    uri: `${MS}/subscriptions/${subscription_uuid}`,
+    uri: "".concat(MS, "/subscriptions/").concat(subscription_uuid),
     headers: {
-      Authorization: `Bearer ${accessToken}`,
+      Authorization: "Bearer ".concat(accessToken),
       "Content-type": "application/json",
-      "x-api-version": `${util.getVersion()}`
+      "x-api-version": "".concat(util.getVersion())
     },
     json: true
   };
@@ -136,11 +136,11 @@ const listUserSubscriptions = function listUserSubscriptions() {
   const MS = util.getEndpoint("pubsub");
   const requestOptions = {
     method: "GET",
-    uri: `${MS}/subscriptions`,
+    uri: "".concat(MS, "/subscriptions"),
     headers: {
-      Authorization: `Bearer ${accessToken}`,
+      Authorization: "Bearer ".concat(accessToken),
       "Content-type": "application/json",
-      "x-api-version": `${util.getVersion()}`
+      "x-api-version": "".concat(util.getVersion())
     },
     qs: {
       user_uuid: user_uuid

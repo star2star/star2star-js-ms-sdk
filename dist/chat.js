@@ -3,8 +3,6 @@
 /*global require module*/
 "use strict";
 
-require("core-js/modules/web.dom.iterable");
-
 const util = require("./utilities");
 
 const Groups = require("./groups");
@@ -51,12 +49,12 @@ const createRoom = function createRoom() {
 
   const requestOptions = {
     method: "POST",
-    uri: `${MS}/rooms`,
+    uri: "".concat(MS, "/rooms"),
     body: b,
     headers: {
       "Content-type": "application/json",
-      Authorization: `Bearer ${access_token}`,
-      "x-api-version": `${util.getVersion()}`
+      Authorization: "Bearer ".concat(access_token),
+      "x-api-version": "".concat(util.getVersion())
     },
     json: true
   };
@@ -80,11 +78,11 @@ const listRooms = function listRooms() {
   const MS = util.getEndpoint("chat");
   const requestOptions = {
     method: "GET",
-    uri: `${MS}/rooms`,
+    uri: "".concat(MS, "/rooms"),
     headers: {
       "Content-type": "application/json",
-      Authorization: `Bearer ${access_token}`,
-      "x-api-version": `${util.getVersion()}`
+      Authorization: "Bearer ".concat(access_token),
+      "x-api-version": "".concat(util.getVersion())
     },
     json: true
   };
@@ -113,11 +111,11 @@ const getRoom = function getRoom() {
   const MS = util.getEndpoint("chat");
   const requestOptions = {
     method: "GET",
-    uri: `${MS}/rooms/${roomUUID}`,
+    uri: "".concat(MS, "/rooms/").concat(roomUUID),
     headers: {
       "Content-type": "application/json",
-      Authorization: `Bearer ${access_token}`,
-      "x-api-version": `${util.getVersion()}`
+      Authorization: "Bearer ".concat(access_token),
+      "x-api-version": "".concat(util.getVersion())
     },
     json: true
   };
@@ -141,11 +139,11 @@ const deleteRoom = function deleteRoom() {
   const MS = util.getEndpoint("chat");
   const requestOptions = {
     method: "DELETE",
-    uri: `${MS}/rooms/${roomUUID}`,
+    uri: "".concat(MS, "/rooms/").concat(roomUUID),
     headers: {
       "Content-type": "application/json",
-      Authorization: `Bearer ${access_token}`,
-      "x-api-version": `${util.getVersion()}`
+      Authorization: "Bearer ".concat(access_token),
+      "x-api-version": "".concat(util.getVersion())
     },
     json: true
   };
@@ -171,12 +169,12 @@ const updateRoomInfo = function updateRoomInfo() {
   const MS = util.getEndpoint("chat");
   const requestOptions = {
     method: "PUT",
-    uri: `${MS}/rooms/${roomUUID}/info`,
+    uri: "".concat(MS, "/rooms/").concat(roomUUID, "/info"),
     body: info,
     headers: {
       "Content-type": "application/json",
-      Authorization: `Bearer ${access_token}`,
-      "x-api-version": `${util.getVersion()}`
+      Authorization: "Bearer ".concat(access_token),
+      "x-api-version": "".concat(util.getVersion())
     },
     json: true
   };
@@ -203,12 +201,12 @@ const updateRoomMeta = function updateRoomMeta() {
 
   const requestOptions = {
     method: "PUT",
-    uri: `${MS}/rooms/${roomUUID}/meta`,
+    uri: "".concat(MS, "/rooms/").concat(roomUUID, "/meta"),
     body: meta,
     headers: {
       "Content-type": "application/json",
-      Authorization: `Bearer ${access_token}`,
-      "x-api-version": `${util.getVersion()}`
+      Authorization: "Bearer ".concat(access_token),
+      "x-api-version": "".concat(util.getVersion())
     },
     json: true
   };
@@ -233,11 +231,11 @@ const getRoomMembers = function getRoomMembers() {
 
   const requestOptions = {
     method: "GET",
-    uri: `${MS}/rooms/${roomUUID}/members`,
+    uri: "".concat(MS, "/rooms/").concat(roomUUID, "/members"),
     headers: {
       "Content-type": "application/json",
-      Authorization: `Bearer ${access_token}`,
-      "x-api-version": `${util.getVersion()}`
+      Authorization: "Bearer ".concat(access_token),
+      "x-api-version": "".concat(util.getVersion())
     },
     json: true
   };
@@ -264,12 +262,12 @@ const addMember = function addMember() {
 
   const requestOptions = {
     method: "POST",
-    uri: `${MS}/rooms/${roomUUID}/members`,
+    uri: "".concat(MS, "/rooms/").concat(roomUUID, "/members"),
     body: memberData,
     headers: {
       "Content-type": "application/json",
-      Authorization: `Bearer ${access_token}`,
-      "x-api-version": `${util.getVersion()}`
+      Authorization: "Bearer ".concat(access_token),
+      "x-api-version": "".concat(util.getVersion())
     },
     json: true
   };
@@ -296,11 +294,11 @@ const deleteMember = function deleteMember() {
 
   const requestOptions = {
     method: "DELETE",
-    uri: `${MS}/rooms/${roomUUID}/members/${memberUUID}`,
+    uri: "".concat(MS, "/rooms/").concat(roomUUID, "/members/").concat(memberUUID),
     headers: {
       "Content-type": "application/json",
-      Authorization: `Bearer ${access_token}`,
-      "x-api-version": `${util.getVersion()}`
+      Authorization: "Bearer ".concat(access_token),
+      "x-api-version": "".concat(util.getVersion())
     },
     json: true
   };
@@ -327,14 +325,14 @@ const getMessages = function getMessages() {
 
   const requestOptions = {
     method: "GET",
-    uri: `${MS}/rooms/${roomUUID}/messages`,
+    uri: "".concat(MS, "/rooms/").concat(roomUUID, "/messages"),
     qs: {
       max: max
     },
     headers: {
       "Content-type": "application/json",
-      Authorization: `Bearer ${access_token}`,
-      "x-api-version": `${util.getVersion()}`
+      Authorization: "Bearer ".concat(access_token),
+      "x-api-version": "".concat(util.getVersion())
     },
     json: true
   };
@@ -369,12 +367,12 @@ const sendMessage = function sendMessage() {
   };
   const requestOptions = {
     method: "POST",
-    uri: `${MS}/rooms/${roomUUID}/messages`,
+    uri: "".concat(MS, "/rooms/").concat(roomUUID, "/messages"),
     body: b,
     headers: {
       "Content-type": "application/json",
-      Authorization: `Bearer ${access_token}`,
-      "x-api-version": `${util.getVersion()}`
+      Authorization: "Bearer ".concat(access_token),
+      "x-api-version": "".concat(util.getVersion())
     },
     json: true
   };

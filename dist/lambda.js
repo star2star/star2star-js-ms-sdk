@@ -23,10 +23,10 @@ const listLambdas = function listLambdas() {
   const MS = util.getEndpoint("lambda");
   const requestOptions = {
     method: "GET",
-    uri: `${MS}/actions`,
+    uri: "".concat(MS, "/actions"),
     headers: {
-      Authorization: `Bearer ${accessToken}`,
-      "x-api-version": `${util.getVersion()}`,
+      Authorization: "Bearer ".concat(accessToken),
+      "x-api-version": "".concat(util.getVersion()),
       "Content-Type": "application/json"
     },
     qs: {
@@ -57,10 +57,10 @@ const invokeLambda = function invokeLambda() {
   const MS = util.getEndpoint("lambda");
   const requestOptions = {
     method: "POST",
-    uri: `${MS}/actions/${lambdaName}/invoke`,
+    uri: "".concat(MS, "/actions/").concat(lambdaName, "/invoke"),
     headers: {
-      Authorization: `Bearer ${accessToken}`,
-      "x-api-version": `${util.getVersion()}`,
+      Authorization: "Bearer ".concat(accessToken),
+      "x-api-version": "".concat(util.getVersion()),
       "Content-Type": "application/json"
     },
     body: params,

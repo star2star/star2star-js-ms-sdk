@@ -1,10 +1,6 @@
 /*global module require */
 "use strict";
 
-require("core-js/modules/web.dom.iterable");
-
-require("core-js/modules/es6.regexp.to-string");
-
 const Util = require("./utilities");
 
 const request = require("request-promise");
@@ -29,7 +25,7 @@ const createClientApp = async function createClientApp() {
   const MS = Util.getAuthHost();
   const requestOptions = {
     method: "POST",
-    uri: `${MS}/oauth/clients`,
+    uri: "".concat(MS, "/oauth/clients"),
     body: {
       name: name,
       description: description,
@@ -39,9 +35,9 @@ const createClientApp = async function createClientApp() {
     },
     json: true,
     headers: {
-      Authorization: `Bearer ${accessToken}`,
+      Authorization: "Bearer ".concat(accessToken),
       "Content-type": "application/json",
-      "x-api-version": `${Util.getVersion()}`
+      "x-api-version": "".concat(Util.getVersion())
     }
   };
   Util.addRequestTrace(requestOptions, trace);
@@ -62,7 +58,7 @@ const generateBasicToken = function generateBasicToken() {
   let publicID = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : "null publicID";
   let secret = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : "null secret";
   let basicToken = undefined;
-  basicToken = Buffer.from(`${publicID}:${secret}`).toString("base64");
+  basicToken = Buffer.from("".concat(publicID, ":").concat(secret)).toString("base64");
 
   if (!basicToken) {
     throw new Error("base64 encoding failed");
@@ -92,10 +88,10 @@ const getAccessToken = async function getAccessToken() {
   const VERSION = Util.getVersion();
   const requestOptions = {
     method: "POST",
-    uri: `${MS}/oauth/token`,
+    uri: "".concat(MS, "/oauth/token"),
     headers: {
-      Authorization: `Basic ${oauthToken}`,
-      "x-api-version": `${VERSION}`,
+      Authorization: "Basic ".concat(oauthToken),
+      "x-api-version": "".concat(VERSION),
       "Content-type": "application/x-www-form-urlencoded"
     },
     form: {
@@ -128,10 +124,10 @@ const getClientToken = async function getClientToken() {
   const VERSION = Util.getVersion();
   const requestOptions = {
     method: "POST",
-    uri: `${MS}/oauth/token`,
+    uri: "".concat(MS, "/oauth/token"),
     headers: {
-      Authorization: `Basic ${oauthToken}`,
-      "x-api-version": `${VERSION}`,
+      Authorization: "Basic ".concat(oauthToken),
+      "x-api-version": "".concat(VERSION),
       "Content-type": "application/x-www-form-urlencoded"
     },
     form: {
@@ -163,16 +159,16 @@ const invalidateToken = async function invalidateToken() {
   const MS = Util.getAuthHost();
   const requestOptions = {
     method: "POST",
-    uri: `${MS}/oauth/invalidate/access`,
+    uri: "".concat(MS, "/oauth/invalidate/access"),
     body: {
       access_token: token
     },
     resolveWithFullResponse: true,
     json: true,
     headers: {
-      "Authorization": `Bearer ${accessToken}`,
+      "Authorization": "Bearer ".concat(accessToken),
       "Content-type": "application/json",
-      "x-api-version": `${Util.getVersion()}`
+      "x-api-version": "".concat(Util.getVersion())
     }
   };
   Util.addRequestTrace(requestOptions, trace);
@@ -204,16 +200,16 @@ const listClientTokens = async function listClientTokens() {
   const MS = Util.getAuthHost();
   const requestOptions = {
     method: "GET",
-    uri: `${MS}/oauth/tokens`,
+    uri: "".concat(MS, "/oauth/tokens"),
     qs: {
       offset: offset,
       limit: limit
     },
     json: true,
     headers: {
-      Authorization: `Bearer ${accessToken}`,
+      Authorization: "Bearer ".concat(accessToken),
       "Content-type": "application/json",
-      "x-api-version": `${Util.getVersion()}`
+      "x-api-version": "".concat(Util.getVersion())
     }
   };
 
@@ -245,10 +241,10 @@ const refreshAccessToken = async function refreshAccessToken() {
   const VERSION = Util.getVersion();
   const requestOptions = {
     method: "POST",
-    uri: `${MS}/oauth/token`,
+    uri: "".concat(MS, "/oauth/token"),
     headers: {
-      Authorization: `Basic ${oauthToken}`,
-      "x-api-version": `${VERSION}`,
+      Authorization: "Basic ".concat(oauthToken),
+      "x-api-version": "".concat(VERSION),
       "Content-type": "application/x-www-form-urlencoded"
     },
     form: {
@@ -280,16 +276,16 @@ const scopeClientApp = async function scopeClientApp() {
   const MS = Util.getAuthHost();
   const requestOptions = {
     method: "POST",
-    uri: `${MS}/oauth/clients/${clientUUID}/scopes`,
+    uri: "".concat(MS, "/oauth/clients/").concat(clientUUID, "/scopes"),
     body: {
       scope: scope
     },
     resolveWithFullResponse: true,
     json: true,
     headers: {
-      Authorization: `Bearer ${accessToken}`,
+      Authorization: "Bearer ".concat(accessToken),
       "Content-type": "application/json",
-      "x-api-version": `${Util.getVersion()}`
+      "x-api-version": "".concat(Util.getVersion())
     }
   };
   Util.addRequestTrace(requestOptions, trace);
@@ -323,16 +319,16 @@ const validateToken = async function validateToken() {
   const MS = Util.getAuthHost();
   const requestOptions = {
     method: "POST",
-    uri: `${MS}/oauth/validate/access`,
+    uri: "".concat(MS, "/oauth/validate/access"),
     body: {
       access_token: token
     },
     resolveWithFullResponse: true,
     json: true,
     headers: {
-      "Authorization": `Bearer ${accessToken}`,
+      "Authorization": "Bearer ".concat(accessToken),
       "Content-type": "application/json",
-      "x-api-version": `${Util.getVersion()}`
+      "x-api-version": "".concat(Util.getVersion())
     }
   };
   Util.addRequestTrace(requestOptions, trace);

@@ -1,8 +1,6 @@
 /* global require module*/
 "use strict";
 
-require("core-js/modules/web.dom.iterable");
-
 const utilities = require("./utilities");
 
 const Objects = require("./objects");

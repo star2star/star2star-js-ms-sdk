@@ -25,12 +25,12 @@ const listShortUrls = function listShortUrls() {
   const MS = util.getEndpoint("shorturls");
   const requestOptions = {
     method: "GET",
-    uri: `${MS}/shorturls?user_uuid=${userUuid}`,
+    uri: "".concat(MS, "/shorturls?user_uuid=").concat(userUuid),
     qs: options,
     headers: {
-      Authorization: `Bearer ${accessToken}`,
+      Authorization: "Bearer ".concat(accessToken),
       "Content-type": "application/json",
-      "x-api-version": `${util.getVersion()}`
+      "x-api-version": "".concat(util.getVersion())
     },
     json: true
   };
@@ -76,12 +76,12 @@ const createShortUrl = function createShortUrl() {
 
   const requestOptions = {
     method: "POST",
-    uri: `${MS}/shorturls`,
+    uri: "".concat(MS, "/shorturls"),
     body: b,
     headers: {
-      Authorization: `Bearer ${accessToken}`,
+      Authorization: "Bearer ".concat(accessToken),
       "Content-type": "application/json",
-      "x-api-version": `${util.getVersion()}`
+      "x-api-version": "".concat(util.getVersion())
     },
     json: true
   };
@@ -108,11 +108,11 @@ const deleteShortCode = function deleteShortCode() {
 
   const requestOptions = {
     method: "DELETE",
-    uri: `${MS}/shorturls/${short_code}`,
+    uri: "".concat(MS, "/shorturls/").concat(short_code),
     headers: {
-      Authorization: `Bearer ${accessToken}`,
+      Authorization: "Bearer ".concat(accessToken),
       "Content-type": "application/json",
-      "x-api-version": `${util.getVersion()}`,
+      "x-api-version": "".concat(util.getVersion()),
       user_uuid: userUuid
     },
     json: true,

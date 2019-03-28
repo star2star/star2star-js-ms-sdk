@@ -1,8 +1,6 @@
 /*global require module*/
 "use strict";
 
-require("core-js/modules/web.dom.iterable");
-
 function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; var ownKeys = Object.keys(source); if (typeof Object.getOwnPropertySymbols === 'function') { ownKeys = ownKeys.concat(Object.getOwnPropertySymbols(source).filter(function (sym) { return Object.getOwnPropertyDescriptor(source, sym).enumerable; })); } ownKeys.forEach(function (key) { _defineProperty(target, key, source[key]); }); } return target; }
 
 function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
@@ -30,11 +28,11 @@ const createUserContact = function createUserContact() {
 
   const requestOptions = {
     method: "POST",
-    uri: `${MS}/users/${userUuid}/contacts`,
+    uri: "".concat(MS, "/users/").concat(userUuid, "/contacts"),
     headers: {
-      Authorization: `Bearer ${accessToken}`,
+      Authorization: "Bearer ".concat(accessToken),
       "Content-type": "application/json",
-      "x-api-version": `${util.getVersion()}`
+      "x-api-version": "".concat(util.getVersion())
     },
     body: contactData,
     json: true
@@ -61,11 +59,11 @@ const deleteContact = async function deleteContact() {
     const MS = util.getEndpoint("contacts");
     const requestOptions = {
       method: "DELETE",
-      uri: `${MS}/contacts/${contactUUID}`,
+      uri: "".concat(MS, "/contacts/").concat(contactUUID),
       headers: {
-        Authorization: `Bearer ${accessToken}`,
+        Authorization: "Bearer ".concat(accessToken),
         "Content-type": "application/json",
-        "x-api-version": `${util.getVersion()}`
+        "x-api-version": "".concat(util.getVersion())
       },
       resolveWithFullResponse: true,
       json: true
@@ -105,15 +103,15 @@ const exportContacts = async function exportContacts() {
   const MS = util.getEndpoint("contacts");
   const requestOptions = {
     method: "GET",
-    uri: `${MS}/users/${user_uuid}/contacts`,
+    uri: "".concat(MS, "/users/").concat(user_uuid, "/contacts"),
     qs: {
       "offset": 0,
       "limit": 999
     },
     headers: {
-      Authorization: `Bearer ${accessToken}`,
+      Authorization: "Bearer ".concat(accessToken),
       "Content-type": "application/json",
-      "x-api-version": `${util.getVersion()}`
+      "x-api-version": "".concat(util.getVersion())
     },
     json: true
   };
@@ -140,12 +138,12 @@ const getContacts = function getContacts() {
   const MS = util.getEndpoint("contacts");
   const requestOptions = {
     method: "GET",
-    uri: `${MS}/users/${user_uuid}/contacts`,
+    uri: "".concat(MS, "/users/").concat(user_uuid, "/contacts"),
     qs: _objectSpread({}, params),
     headers: {
-      Authorization: `Bearer ${accessToken}`,
+      Authorization: "Bearer ".concat(accessToken),
       "Content-type": "application/json",
-      "x-api-version": `${util.getVersion()}`
+      "x-api-version": "".concat(util.getVersion())
     },
     json: true
   };
@@ -175,15 +173,15 @@ const listContacts = function listContacts() {
   const MS = util.getEndpoint("contacts");
   const requestOptions = {
     method: "GET",
-    uri: `${MS}/users/${user_uuid}/contacts`,
+    uri: "".concat(MS, "/users/").concat(user_uuid, "/contacts"),
     qs: {
       offset: offset,
       limit: limit
     },
     headers: {
-      Authorization: `Bearer ${accessToken}`,
+      Authorization: "Bearer ".concat(accessToken),
       "Content-type": "application/json",
-      "x-api-version": `${util.getVersion()}`
+      "x-api-version": "".concat(util.getVersion())
     },
     json: true
   };
@@ -216,12 +214,12 @@ const updateContact = function updateContact() {
   const MS = util.getEndpoint("contacts");
   const requestOptions = {
     method: "PUT",
-    uri: `${MS}/contacts/${contactUUID}`,
+    uri: "".concat(MS, "/contacts/").concat(contactUUID),
     body: body,
     headers: {
-      Authorization: `Bearer ${accessToken}`,
+      Authorization: "Bearer ".concat(accessToken),
       "Content-type": "application/json",
-      "x-api-version": `${util.getVersion()}`
+      "x-api-version": "".concat(util.getVersion())
     },
     json: true
   };

@@ -1,8 +1,6 @@
 /* global require module*/
 "use strict";
 
-require("core-js/modules/web.dom.iterable");
-
 const Util = require("./utilities");
 
 const request = require("request-promise");
@@ -36,11 +34,11 @@ const getByType = function getByType() {
   const MS = Util.getEndpoint("objects");
   const requestOptions = {
     method: "GET",
-    uri: `${MS}/objects?type=${dataObjectType}&load_content=${loadContent}&sort=name&offset=${offset}&limit=${limit}`,
+    uri: "".concat(MS, "/objects?type=").concat(dataObjectType, "&load_content=").concat(loadContent, "&sort=name&offset=").concat(offset, "&limit=").concat(limit),
     headers: {
-      Authorization: `Bearer ${accessToken}`,
+      Authorization: "Bearer ".concat(accessToken),
       "Content-type": "application/json",
-      "x-api-version": `${Util.getVersion()}`
+      "x-api-version": "".concat(Util.getVersion())
     },
     json: true
   };
@@ -72,11 +70,11 @@ const getDataObjects = async function getDataObjects() {
   const MS = Util.getEndpoint("objects");
   const requestOptions = {
     method: "GET",
-    uri: `${MS}/users/${userUUID}/allowed-objects`,
+    uri: "".concat(MS, "/users/").concat(userUUID, "/allowed-objects"),
     headers: {
-      Authorization: `Bearer ${accessToken}`,
+      Authorization: "Bearer ".concat(accessToken),
       "Content-type": "application/json",
-      "x-api-version": `${Util.getVersion()}`
+      "x-api-version": "".concat(Util.getVersion())
     },
     qs: {
       load_content: loadContent
@@ -154,11 +152,11 @@ const getDataObjectByType = function getDataObjectByType() {
   const MS = Util.getEndpoint("objects");
   const requestOptions = {
     method: "GET",
-    uri: `${MS}/users/${userUUID}/allowed-objects?type=${dataObjectType}&load_content=${loadContent}&sort=name&offset=${offset}&limit=${limit}`,
+    uri: "".concat(MS, "/users/").concat(userUUID, "/allowed-objects?type=").concat(dataObjectType, "&load_content=").concat(loadContent, "&sort=name&offset=").concat(offset, "&limit=").concat(limit),
     headers: {
-      Authorization: `Bearer ${accessToken}`,
+      Authorization: "Bearer ".concat(accessToken),
       "Content-type": "application/json",
-      "x-api-version": `${Util.getVersion()}`
+      "x-api-version": "".concat(Util.getVersion())
     },
     json: true
   };
@@ -192,11 +190,11 @@ const getDataObjectByTypeAndName = async function getDataObjectByTypeAndName() {
   const MS = Util.getEndpoint("objects");
   const requestOptions = {
     method: "GET",
-    uri: `${MS}/users/${userUUID}/allowed-objects?type=${dataObjectType}&load_content=${loadContent}&name=${dataObjectName}&offset=${offset}&limit=${limit}`,
+    uri: "".concat(MS, "/users/").concat(userUUID, "/allowed-objects?type=").concat(dataObjectType, "&load_content=").concat(loadContent, "&name=").concat(dataObjectName, "&offset=").concat(offset, "&limit=").concat(limit),
     headers: {
-      Authorization: `Bearer ${accessToken}`,
+      Authorization: "Bearer ".concat(accessToken),
       "Content-type": "application/json",
-      "x-api-version": `${Util.getVersion()}`
+      "x-api-version": "".concat(Util.getVersion())
     },
     json: true
   };
@@ -220,11 +218,11 @@ const getDataObject = function getDataObject() {
   const MS = Util.getEndpoint("objects");
   const requestOptions = {
     method: "GET",
-    uri: `${MS}/objects/${dataObjectUUID}`,
+    uri: "".concat(MS, "/objects/").concat(dataObjectUUID),
     headers: {
-      Authorization: `Bearer ${accessToken}`,
+      Authorization: "Bearer ".concat(accessToken),
       "Content-type": "application/json",
-      "x-api-version": `${Util.getVersion()}`,
+      "x-api-version": "".concat(Util.getVersion()),
       "cache-contro": "no-cache"
     },
     json: true
@@ -268,12 +266,12 @@ const createUserDataObject = async function createUserDataObject() {
   };
   const requestOptions = {
     method: "POST",
-    uri: `${MS}/users/${userUUID}/objects`,
+    uri: "".concat(MS, "/users/").concat(userUUID, "/objects"),
     body: body,
     headers: {
-      Authorization: `Bearer ${accessToken}`,
+      Authorization: "Bearer ".concat(accessToken),
       "Content-type": "application/json",
-      "x-api-version": `${Util.getVersion()}`
+      "x-api-version": "".concat(Util.getVersion())
     },
     resolveWithFullResponse: true,
     json: true
@@ -352,12 +350,12 @@ const createDataObject = async function createDataObject() {
 
   const requestOptions = {
     method: "POST",
-    uri: `${MS}/objects`,
+    uri: "".concat(MS, "/objects"),
     body: b,
     headers: {
-      Authorization: `Bearer ${accessToken}`,
+      Authorization: "Bearer ".concat(accessToken),
       "Content-type": "application/json",
-      "x-api-version": `${Util.getVersion()}`
+      "x-api-version": "".concat(Util.getVersion())
     },
     resolveWithFullResponse: true,
     json: true
@@ -393,11 +391,11 @@ const deleteDataObject = async function deleteDataObject() {
 
   const requestOptions = {
     method: "DELETE",
-    uri: `${MS}/objects/${dataUUID}`,
+    uri: "".concat(MS, "/objects/").concat(dataUUID),
     headers: {
-      Authorization: `Bearer ${accessToken}`,
+      Authorization: "Bearer ".concat(accessToken),
       "Content-type": "application/json",
-      "x-api-version": `${Util.getVersion()}`
+      "x-api-version": "".concat(Util.getVersion())
     },
     json: true,
     resolveWithFullResponse: true
@@ -439,12 +437,12 @@ const updateDataObject = async function updateDataObject() {
   const MS = Util.getEndpoint("objects");
   const requestOptions = {
     method: "PUT",
-    uri: `${MS}/objects/${dataUUID}`,
+    uri: "".concat(MS, "/objects/").concat(dataUUID),
     body: body,
     headers: {
-      Authorization: `Bearer ${accessToken}`,
+      Authorization: "Bearer ".concat(accessToken),
       "Content-type": "application/json",
-      "x-api-version": `${Util.getVersion()}`
+      "x-api-version": "".concat(Util.getVersion())
     },
     resolveWithFullResponse: true,
     json: true

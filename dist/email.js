@@ -1,8 +1,6 @@
 /*global module require */
 "use strict";
 
-require("core-js/modules/web.dom.iterable");
-
 const util = require("./utilities");
 
 const request = require("request-promise");
@@ -16,11 +14,11 @@ const validateEmail = email => {
     email: email
   };
   const vError = [];
-  emailValidator.validate(email.from) ? vError : vError.push(`sender "${email.from}" invalid format`);
+  emailValidator.validate(email.from) ? vError : vError.push("sender \"".concat(email.from, "\" invalid format"));
 
   if (Array.isArray(email.to) && email.to.length > 0) {
     email.to.forEach(emailAddress => {
-      emailValidator.validate(emailAddress) ? vError : vError.push(`recipient in "to" parameter "${emailAddress}" invalid format`);
+      emailValidator.validate(emailAddress) ? vError : vError.push("recipient in \"to\" parameter \"".concat(emailAddress, "\" invalid format"));
     });
   } else {
     vError.push("to is not array or is empty");
@@ -70,11 +68,11 @@ const sendEmail = function sendEmail() {
     const MS = util.getEndpoint("email");
     const requestOptions = {
       method: "POST",
-      uri: `${MS}/messages/send`,
+      uri: "".concat(MS, "/messages/send"),
       headers: {
         "Content-type": "application/json",
-        Authorization: `Bearer ${accessToken}`,
-        "x-api-version": `${util.getVersion()}`
+        Authorization: "Bearer ".concat(accessToken),
+        "x-api-version": "".concat(util.getVersion())
       },
       body: validEmail.email,
       json: true

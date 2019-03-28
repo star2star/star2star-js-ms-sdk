@@ -1,8 +1,6 @@
 /*global require module*/
 "use strict";
 
-require("core-js/modules/web.dom.iterable");
-
 const Util = require("./utilities");
 
 const request = require("request-promise");
@@ -29,11 +27,11 @@ const activateRole = async function activateRole() {
     const MS = Util.getEndpoint("auth");
     const requestOptions = {
       method: "POST",
-      uri: `${MS}/roles/${roleUUID}/activate`,
+      uri: "".concat(MS, "/roles/").concat(roleUUID, "/activate"),
       headers: {
-        Authorization: `Bearer ${accessToken}`,
+        Authorization: "Bearer ".concat(accessToken),
         "Content-type": "application/json",
-        "x-api-version": `${Util.getVersion()}`
+        "x-api-version": "".concat(Util.getVersion())
       },
       resolveWithFullResponse: true,
       json: true
@@ -76,11 +74,11 @@ const assignPermissionsToRole = function assignPermissionsToRole() {
   const MS = Util.getEndpoint("auth");
   const requestOptions = {
     method: "POST",
-    uri: `${MS}/roles/${roleUUID}/permissions`,
+    uri: "".concat(MS, "/roles/").concat(roleUUID, "/permissions"),
     headers: {
-      Authorization: `Bearer ${accessToken}`,
+      Authorization: "Bearer ".concat(accessToken),
       "Content-type": "application/json",
-      "x-api-version": `${Util.getVersion()}`
+      "x-api-version": "".concat(Util.getVersion())
     },
     body: body,
     resolveWithFullResponse: true,
@@ -118,11 +116,11 @@ const assignRolesToUserGroup = async function assignRolesToUserGroup() {
   const MS = Util.getEndpoint("auth");
   const requestOptions = {
     method: "POST",
-    uri: `${MS}/user-groups/${userGroupUUID}/roles`,
+    uri: "".concat(MS, "/user-groups/").concat(userGroupUUID, "/roles"),
     headers: {
-      Authorization: `Bearer ${accessToken}`,
+      Authorization: "Bearer ".concat(accessToken),
       "Content-type": "application/json",
-      "x-api-version": `${Util.getVersion()}`
+      "x-api-version": "".concat(Util.getVersion())
     },
     body: body,
     resolveWithFullResponse: true,
@@ -164,11 +162,11 @@ const assignScopedRoleToUserGroup = async function assignScopedRoleToUserGroup()
   const MS = Util.getEndpoint("auth");
   const requestOptions = {
     method: "POST",
-    uri: `${MS}/user-groups/${userGroupUUID}/role/scopes`,
+    uri: "".concat(MS, "/user-groups/").concat(userGroupUUID, "/role/scopes"),
     headers: {
-      Authorization: `Bearer ${accessToken}`,
+      Authorization: "Bearer ".concat(accessToken),
       "Content-type": "application/json",
-      "x-api-version": `${Util.getVersion()}`
+      "x-api-version": "".concat(Util.getVersion())
     },
     body: {
       role: roleUUID,
@@ -209,11 +207,11 @@ const createPermission = function createPermission() {
   const MS = Util.getEndpoint("auth");
   const requestOptions = {
     method: "POST",
-    uri: `${MS}/permissions`,
+    uri: "".concat(MS, "/permissions"),
     headers: {
-      Authorization: `Bearer ${accessToken}`,
+      Authorization: "Bearer ".concat(accessToken),
       "Content-type": "application/json",
-      "x-api-version": `${Util.getVersion()}`
+      "x-api-version": "".concat(Util.getVersion())
     },
     body: body,
     json: true
@@ -240,11 +238,11 @@ const createUserGroup = async function createUserGroup() {
   const MS = Util.getEndpoint("auth");
   const requestOptions = {
     method: "POST",
-    uri: `${MS}/accounts/${accountUUID}/user-groups`,
+    uri: "".concat(MS, "/accounts/").concat(accountUUID, "/user-groups"),
     headers: {
-      Authorization: `Bearer ${accessToken}`,
+      Authorization: "Bearer ".concat(accessToken),
       "Content-type": "application/json",
-      "x-api-version": `${Util.getVersion()}`
+      "x-api-version": "".concat(Util.getVersion())
     },
     body: body,
     json: true,
@@ -280,11 +278,11 @@ const createRole = async function createRole() {
   const MS = Util.getEndpoint("auth");
   const requestOptions = {
     method: "POST",
-    uri: `${MS}/accounts/${accountUUID}/roles`,
+    uri: "".concat(MS, "/accounts/").concat(accountUUID, "/roles"),
     headers: {
-      Authorization: `Bearer ${accessToken}`,
+      Authorization: "Bearer ".concat(accessToken),
       "Content-type": "application/json",
-      "x-api-version": `${Util.getVersion()}`
+      "x-api-version": "".concat(Util.getVersion())
     },
     body: body,
     json: true,
@@ -320,11 +318,11 @@ const deactivateRole = async function deactivateRole() {
     const MS = Util.getEndpoint("auth");
     const requestOptions = {
       method: "POST",
-      uri: `${MS}/roles/${roleUUID}/deactivate`,
+      uri: "".concat(MS, "/roles/").concat(roleUUID, "/deactivate"),
       headers: {
-        Authorization: `Bearer ${accessToken}`,
+        Authorization: "Bearer ".concat(accessToken),
         "Content-type": "application/json",
-        "x-api-version": `${Util.getVersion()}`
+        "x-api-version": "".concat(Util.getVersion())
       },
       resolveWithFullResponse: true,
       json: true
@@ -367,11 +365,11 @@ const deletePermissionFromRole = function deletePermissionFromRole() {
   const MS = Util.getEndpoint("auth");
   const requestOptions = {
     method: "DELETE",
-    uri: `${MS}/roles/${roleUUID}/permissions/${permissionUUID}`,
+    uri: "".concat(MS, "/roles/").concat(roleUUID, "/permissions/").concat(permissionUUID),
     headers: {
-      Authorization: `Bearer ${accessToken}`,
+      Authorization: "Bearer ".concat(accessToken),
       "Content-type": "application/json",
-      "x-api-version": `${Util.getVersion()}`
+      "x-api-version": "".concat(Util.getVersion())
     },
     resolveWithFullResponse: true,
     json: true
@@ -409,11 +407,11 @@ const deleteRole = async function deleteRole() {
     const MS = Util.getEndpoint("auth");
     const requestOptions = {
       method: "DELETE",
-      uri: `${MS}/roles/${roleUUID}`,
+      uri: "".concat(MS, "/roles/").concat(roleUUID),
       headers: {
-        Authorization: `Bearer ${accessToken}`,
+        Authorization: "Bearer ".concat(accessToken),
         "Content-type": "application/json",
-        "x-api-version": `${Util.getVersion()}`
+        "x-api-version": "".concat(Util.getVersion())
       },
       resolveWithFullResponse: true,
       json: true
@@ -427,7 +425,7 @@ const deleteRole = async function deleteRole() {
         "status": "ok"
       };
     } else {
-      throw `unexpected status code: ${response.statusCode}`;
+      throw "unexpected status code: ".concat(response.statusCode);
     }
   } catch (error) {
     return Promise.reject({
@@ -455,11 +453,11 @@ const deleteRoleFromUserGroup = function deleteRoleFromUserGroup() {
   const MS = Util.getEndpoint("auth");
   const requestOptions = {
     method: "DELETE",
-    uri: `${MS}/user-groups/${userGroupUUID}/roles/${roleUUID}`,
+    uri: "".concat(MS, "/user-groups/").concat(userGroupUUID, "/roles/").concat(roleUUID),
     headers: {
-      Authorization: `Bearer ${accessToken}`,
+      Authorization: "Bearer ".concat(accessToken),
       "Content-type": "application/json",
-      "x-api-version": `${Util.getVersion()}`
+      "x-api-version": "".concat(Util.getVersion())
     },
     resolveWithFullResponse: true,
     json: true
@@ -531,11 +529,11 @@ const getRole = async function getRole() {
     const MS = Util.getEndpoint("auth");
     const requestOptions = {
       method: "GET",
-      uri: `${MS}/roles/${roleUUID}`,
+      uri: "".concat(MS, "/roles/").concat(roleUUID),
       headers: {
-        Authorization: `Bearer ${accessToken}`,
+        Authorization: "Bearer ".concat(accessToken),
         "Content-type": "application/json",
-        "x-api-version": `${Util.getVersion()}`
+        "x-api-version": "".concat(Util.getVersion())
       },
       json: true
     };
@@ -566,11 +564,11 @@ const listAccessByGroups = async function listAccessByGroups() {
   const MS = Util.getEndpoint("auth");
   const requestOptions = {
     method: "GET",
-    uri: `${MS}/resources/${resourceUUID}/user-groups/access`,
+    uri: "".concat(MS, "/resources/").concat(resourceUUID, "/user-groups/access"),
     headers: {
-      Authorization: `Bearer ${accessToken}`,
+      Authorization: "Bearer ".concat(accessToken),
       "Content-type": "application/json",
-      "x-api-version": `${Util.getVersion()}`
+      "x-api-version": "".concat(Util.getVersion())
     },
     json: true
   };
@@ -594,11 +592,11 @@ const listAccessByPermissions = function listAccessByPermissions() {
   const MS = Util.getEndpoint("auth");
   const requestOptions = {
     method: "GET",
-    uri: `${MS}/resources/${resourceUUID}/permissions/access`,
+    uri: "".concat(MS, "/resources/").concat(resourceUUID, "/permissions/access"),
     headers: {
-      Authorization: `Bearer ${accessToken}`,
+      Authorization: "Bearer ".concat(accessToken),
       "Content-type": "application/json",
-      "x-api-version": `${Util.getVersion()}`
+      "x-api-version": "".concat(Util.getVersion())
     },
     json: true
   };
@@ -624,11 +622,11 @@ const listUserGroupRoles = function listUserGroupRoles() {
   const MS = Util.getEndpoint("auth");
   const requestOptions = {
     method: "GET",
-    uri: `${MS}/user-groups/${userGroupUUID}/roles`,
+    uri: "".concat(MS, "/user-groups/").concat(userGroupUUID, "/roles"),
     headers: {
-      Authorization: `Bearer ${accessToken}`,
+      Authorization: "Bearer ".concat(accessToken),
       "Content-type": "application/json",
-      "x-api-version": `${Util.getVersion()}`
+      "x-api-version": "".concat(Util.getVersion())
     },
     json: true
   };
@@ -664,11 +662,11 @@ const listPermissions = async function listPermissions() {
   const MS = Util.getEndpoint("auth");
   const requestOptions = {
     method: "GET",
-    uri: `${MS}/permissions`,
+    uri: "".concat(MS, "/permissions"),
     headers: {
-      Authorization: `Bearer ${accessToken}`,
+      Authorization: "Bearer ".concat(accessToken),
       "Content-type": "application/json",
-      "x-api-version": `${Util.getVersion()}`
+      "x-api-version": "".concat(Util.getVersion())
     },
     qs: {
       offset: offset,
@@ -705,11 +703,11 @@ const listPermissionRoles = async function listPermissionRoles() {
   const MS = Util.getEndpoint("auth");
   const requestOptions = {
     method: "GET",
-    uri: `${MS}/permissions/${permissionUUID}/roles`,
+    uri: "".concat(MS, "/permissions/").concat(permissionUUID, "/roles"),
     headers: {
-      Authorization: `Bearer ${accessToken}`,
+      Authorization: "Bearer ".concat(accessToken),
       "Content-type": "application/json",
-      "x-api-version": `${Util.getVersion()}`
+      "x-api-version": "".concat(Util.getVersion())
     },
     json: true
   };
@@ -745,11 +743,11 @@ const listRoles = function listRoles() {
   const MS = Util.getEndpoint("auth");
   const requestOptions = {
     method: "GET",
-    uri: `${MS}/roles`,
+    uri: "".concat(MS, "/roles"),
     headers: {
-      Authorization: `Bearer ${accessToken}`,
+      Authorization: "Bearer ".concat(accessToken),
       "Content-type": "application/json",
-      "x-api-version": `${Util.getVersion()}`
+      "x-api-version": "".concat(Util.getVersion())
     },
     qs: {
       offset: offset,
@@ -790,11 +788,11 @@ const listRolesForUser = function listRolesForUser() {
   const MS = Util.getEndpoint("auth");
   const requestOptions = {
     method: "GET",
-    uri: `${MS}/users/${user_uuid}/roles`,
+    uri: "".concat(MS, "/users/").concat(user_uuid, "/roles"),
     headers: {
-      Authorization: `Bearer ${accessToken}`,
+      Authorization: "Bearer ".concat(accessToken),
       "Content-type": "application/json",
-      "x-api-version": `${Util.getVersion()}`
+      "x-api-version": "".concat(Util.getVersion())
     },
     qs: {
       offset: offset,
@@ -831,11 +829,11 @@ const listRoleUserGroups = function listRoleUserGroups() {
   const MS = Util.getEndpoint("auth");
   const requestOptions = {
     method: "GET",
-    uri: `${MS}/roles/${roleUUID}/user-groups`,
+    uri: "".concat(MS, "/roles/").concat(roleUUID, "/user-groups"),
     headers: {
-      Authorization: `Bearer ${accessToken}`,
+      Authorization: "Bearer ".concat(accessToken),
       "Content-type": "application/json",
-      "x-api-version": `${Util.getVersion()}`
+      "x-api-version": "".concat(Util.getVersion())
     },
     json: true
   };
@@ -869,11 +867,11 @@ const listRolePermissions = function listRolePermissions() {
   const MS = Util.getEndpoint("auth");
   const requestOptions = {
     method: "GET",
-    uri: `${MS}/roles/${roleUUID}/permissions`,
+    uri: "".concat(MS, "/roles/").concat(roleUUID, "/permissions"),
     headers: {
-      Authorization: `Bearer ${accessToken}`,
+      Authorization: "Bearer ".concat(accessToken),
       "Content-type": "application/json",
-      "x-api-version": `${Util.getVersion()}`
+      "x-api-version": "".concat(Util.getVersion())
     },
     json: true
   };
@@ -909,11 +907,11 @@ const listUserGroups = function listUserGroups() {
   const MS = Util.getEndpoint("auth");
   const requestOptions = {
     method: "GET",
-    uri: `${MS}/user-groups`,
+    uri: "".concat(MS, "/user-groups"),
     headers: {
-      Authorization: `Bearer ${accessToken}`,
+      Authorization: "Bearer ".concat(accessToken),
       "Content-type": "application/json",
-      "x-api-version": `${Util.getVersion()}`
+      "x-api-version": "".concat(Util.getVersion())
     },
     qs: {
       offset: offset,
@@ -950,11 +948,11 @@ const modifyRole = async function modifyRole() {
   const MS = Util.getEndpoint("auth");
   const requestOptions = {
     method: "POST",
-    uri: `${MS}/roles/${roleUUID}/modify`,
+    uri: "".concat(MS, "/roles/").concat(roleUUID, "/modify"),
     headers: {
-      Authorization: `Bearer ${accessToken}`,
+      Authorization: "Bearer ".concat(accessToken),
       "Content-type": "application/json",
-      "x-api-version": `${Util.getVersion()}`
+      "x-api-version": "".concat(Util.getVersion())
     },
     body: body,
     json: true,
@@ -990,11 +988,11 @@ const modifyUserGroup = async function modifyUserGroup() {
   const MS = Util.getEndpoint("auth");
   const requestOptions = {
     method: "POST",
-    uri: `${MS}/user-groups/${groupUUID}/modify`,
+    uri: "".concat(MS, "/user-groups/").concat(groupUUID, "/modify"),
     headers: {
-      Authorization: `Bearer ${accessToken}`,
+      Authorization: "Bearer ".concat(accessToken),
       "Content-type": "application/json",
-      "x-api-version": `${Util.getVersion()}`
+      "x-api-version": "".concat(Util.getVersion())
     },
     body: body,
     resolveWithFullResponse: true,

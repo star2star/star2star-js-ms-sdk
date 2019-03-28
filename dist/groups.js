@@ -1,8 +1,6 @@
 /* global require module*/
 "use strict";
 
-require("core-js/modules/web.dom.iterable");
-
 const request = require("request-promise");
 
 const util = require("./utilities");
@@ -27,11 +25,11 @@ const listGroups = function listGroups() {
   const MS = util.getEndpoint("groups");
   const requestOptions = {
     method: "GET",
-    uri: `${MS}/groups`,
+    uri: "".concat(MS, "/groups"),
     headers: {
       "Content-type": "application/json",
-      Authorization: `Bearer ${accessToken}`,
-      "x-api-version": `${util.getVersion()}`
+      Authorization: "Bearer ".concat(accessToken),
+      "x-api-version": "".concat(util.getVersion())
     },
     qs: {
       offset,
@@ -66,11 +64,11 @@ const createGroup = function createGroup() {
   const MS = util.getEndpoint("groups");
   const requestOptions = {
     method: "POST",
-    uri: `${MS}/groups`,
+    uri: "".concat(MS, "/groups"),
     headers: {
       "Content-type": "application/json",
-      Authorization: `Bearer ${accessToken}`,
-      "x-api-version": `${util.getVersion()}`
+      Authorization: "Bearer ".concat(accessToken),
+      "x-api-version": "".concat(util.getVersion())
     },
     body: body,
     json: true
@@ -97,11 +95,11 @@ const getGroup = function getGroup() {
   const MS = util.getEndpoint("groups");
   const requestOptions = {
     method: "GET",
-    uri: `${MS}/groups/${groupUUID}`,
+    uri: "".concat(MS, "/groups/").concat(groupUUID),
     headers: {
       "Content-type": "application/json",
-      Authorization: `Bearer ${accessToken}`,
-      "x-api-version": `${util.getVersion()}`
+      Authorization: "Bearer ".concat(accessToken),
+      "x-api-version": "".concat(util.getVersion())
     },
     json: true
   };
@@ -136,11 +134,11 @@ const listGroupMembers = function listGroupMembers() {
   const MS = util.getEndpoint("groups");
   const requestOptions = {
     method: "GET",
-    uri: `${MS}/groups/${groupUUID}/members`,
+    uri: "".concat(MS, "/groups/").concat(groupUUID, "/members"),
     headers: {
       "Content-type": "application/json",
-      Authorization: `Bearer ${accessToken}`,
-      "x-api-version": `${util.getVersion()}`
+      Authorization: "Bearer ".concat(accessToken),
+      "x-api-version": "".concat(util.getVersion())
     },
     json: true
   };
@@ -175,11 +173,11 @@ const deleteGroup = async function deleteGroup() {
     const MS = util.getEndpoint("groups");
     const requestOptions = {
       method: "DELETE",
-      uri: `${MS}/groups/${groupUUID}`,
+      uri: "".concat(MS, "/groups/").concat(groupUUID),
       headers: {
         "Content-type": "application/json",
-        Authorization: `Bearer ${accessToken}`,
-        "x-api-version": `${util.getVersion()}`
+        Authorization: "Bearer ".concat(accessToken),
+        "x-api-version": "".concat(util.getVersion())
       },
       resolveWithFullResponse: true,
       json: true
@@ -221,12 +219,12 @@ const addMembersToGroup = async function addMembersToGroup() {
   const MS = util.getEndpoint("groups");
   const requestOptions = {
     method: "POST",
-    uri: `${MS}/groups/${groupUUID}/members`,
+    uri: "".concat(MS, "/groups/").concat(groupUUID, "/members"),
     body: members,
     headers: {
       "Content-type": "application/json",
-      Authorization: `Bearer ${accessToken}`,
-      "x-api-version": `${util.getVersion()}`
+      Authorization: "Bearer ".concat(accessToken),
+      "x-api-version": "".concat(util.getVersion())
     },
     json: true
   };
@@ -253,11 +251,11 @@ const deleteGroupMembers = async function deleteGroupMembers() {
   const MS = util.getEndpoint("groups");
   const requestOptions = {
     method: "DELETE",
-    uri: `${MS}/groups/${groupUuid}/members`,
+    uri: "".concat(MS, "/groups/").concat(groupUuid, "/members"),
     headers: {
       "Content-type": "application/json",
-      Authorization: `Bearer ${accessToken}`,
-      "x-api-version": `${util.getVersion()}`
+      Authorization: "Bearer ".concat(accessToken),
+      "x-api-version": "".concat(util.getVersion())
     },
     body: members,
     resolveWithFullResponse: true,
@@ -293,11 +291,11 @@ const deactivateGroup = function deactivateGroup() {
   const MS = util.getEndpoint("groups");
   const requestOptions = {
     method: "POST",
-    uri: `${MS}/groups/${groupUuid}/deactivate`,
+    uri: "".concat(MS, "/groups/").concat(groupUuid, "/deactivate"),
     headers: {
       "Content-type": "application/json",
-      Authorization: `Bearer ${accessToken}`,
-      "x-api-version": `${util.getVersion()}`
+      Authorization: "Bearer ".concat(accessToken),
+      "x-api-version": "".concat(util.getVersion())
     },
     json: true
   };
@@ -321,11 +319,11 @@ const reactivateGroup = function reactivateGroup() {
   const MS = util.getEndpoint("groups");
   const requestOptions = {
     method: "POST",
-    uri: `${MS}/groups/${groupUuid}/reactivate`,
+    uri: "".concat(MS, "/groups/").concat(groupUuid, "/reactivate"),
     headers: {
       "Content-type": "application/json",
-      Authorization: `Bearer ${accessToken}`,
-      "x-api-version": `${util.getVersion()}`
+      Authorization: "Bearer ".concat(accessToken),
+      "x-api-version": "".concat(util.getVersion())
     },
     json: true
   };
@@ -351,11 +349,11 @@ const modifyGroup = function modifyGroup() {
   const MS = util.getEndpoint("groups");
   const requestOptions = {
     method: "PUT",
-    uri: `${MS}/groups/${groupUuid}`,
+    uri: "".concat(MS, "/groups/").concat(groupUuid),
     headers: {
       "Content-type": "application/json",
-      Authorization: `Bearer ${accessToken}`,
-      "x-api-version": `${util.getVersion()}`
+      Authorization: "Bearer ".concat(accessToken),
+      "x-api-version": "".concat(util.getVersion())
     },
     body: body,
     json: true

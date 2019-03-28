@@ -1,8 +1,6 @@
 /*global module require */
 "use strict";
 
-require("core-js/modules/web.dom.iterable");
-
 const util = require("./utilities");
 
 const request = require("request-promise");
@@ -23,14 +21,14 @@ const createRelationship = function createRelationship() {
   const MS = util.getEndpoint("accounts");
   const requestOptions = {
     method: "POST",
-    uri: `${MS}/relationships`,
+    uri: "".concat(MS, "/relationships"),
     body: body,
     resolveWithFullResponse: true,
     json: true,
     headers: {
-      Authorization: `Bearer ${accessToken}`,
+      Authorization: "Bearer ".concat(accessToken),
       "Content-type": "application/json",
-      "x-api-version": `${util.getVersion()}`
+      "x-api-version": "".concat(util.getVersion())
     }
   };
   util.addRequestTrace(requestOptions, trace);
@@ -57,15 +55,15 @@ const listAccounts = function listAccounts() {
   const MS = util.getEndpoint("accounts");
   const requestOptions = {
     method: "GET",
-    uri: `${MS}/accounts`,
+    uri: "".concat(MS, "/accounts"),
     qs: {
       offset: offset,
       limit: limit
     },
     headers: {
-      Authorization: `Bearer ${accessToken}`,
+      Authorization: "Bearer ".concat(accessToken),
       "Content-type": "application/json",
-      "x-api-version": `${util.getVersion()}`
+      "x-api-version": "".concat(util.getVersion())
     },
     json: true
   };
@@ -97,12 +95,12 @@ const createAccount = async function createAccount() {
   const MS = util.getEndpoint("accounts");
   const requestOptions = {
     method: "POST",
-    uri: `${MS}/accounts`,
+    uri: "".concat(MS, "/accounts"),
     body: body,
     headers: {
-      Authorization: `Bearer ${accessToken}`,
+      Authorization: "Bearer ".concat(accessToken),
       "Content-type": "application/json",
-      "x-api-version": `${util.getVersion()}`
+      "x-api-version": "".concat(util.getVersion())
     },
     json: true,
     resolveWithFullResponse: true
@@ -136,14 +134,14 @@ const getAccount = function getAccount() {
   const MS = util.getEndpoint("accounts");
   const requestOptions = {
     method: "GET",
-    uri: `${MS}/accounts/${accountUUID}`,
+    uri: "".concat(MS, "/accounts/").concat(accountUUID),
     qs: {
       expand: "relationships"
     },
     headers: {
-      Authorization: `Bearer ${accessToken}`,
+      Authorization: "Bearer ".concat(accessToken),
       "Content-type": "application/json",
-      "x-api-version": `${util.getVersion()}`
+      "x-api-version": "".concat(util.getVersion())
     },
     json: true
   };
@@ -170,14 +168,14 @@ const modifyAccount = function modifyAccount() {
   const MS = util.getEndpoint("accounts");
   const requestOptions = {
     method: "PUT",
-    uri: `${MS}/accounts/${accountUUID}`,
+    uri: "".concat(MS, "/accounts/").concat(accountUUID),
     body: body,
     resolveWithFullResponse: true,
     json: true,
     headers: {
-      Authorization: `Bearer ${accessToken}`,
+      Authorization: "Bearer ".concat(accessToken),
       "Content-type": "application/json",
-      "x-api-version": `${util.getVersion()}`
+      "x-api-version": "".concat(util.getVersion())
     }
   };
   util.addRequestTrace(requestOptions, trace);
@@ -216,16 +214,16 @@ const listAccountRelationships = function listAccountRelationships() {
   const MS = util.getEndpoint("accounts");
   const requestOptions = {
     method: "GET",
-    uri: `${MS}/accounts/${accountUUID}/relationships`,
+    uri: "".concat(MS, "/accounts/").concat(accountUUID, "/relationships"),
     qs: {
       expand: "accounts",
       offset: offset,
       limit: limit
     },
     headers: {
-      Authorization: `Bearer ${accessToken}`,
+      Authorization: "Bearer ".concat(accessToken),
       "Content-type": "application/json",
-      "x-api-version": `${util.getVersion()}`
+      "x-api-version": "".concat(util.getVersion())
     },
     json: true
   };
@@ -255,11 +253,11 @@ const reinstateAccount = function reinstateAccount() {
   const MS = util.getEndpoint("accounts");
   const requestOptions = {
     method: "POST",
-    uri: `${MS}/accounts/${accountUUID}/reinstate`,
+    uri: "".concat(MS, "/accounts/").concat(accountUUID, "/reinstate"),
     headers: {
-      Authorization: `Bearer ${accessToken}`,
+      Authorization: "Bearer ".concat(accessToken),
       "Content-type": "application/json",
-      "x-api-version": `${util.getVersion()}`
+      "x-api-version": "".concat(util.getVersion())
     },
     resolveWithFullResponse: true,
     json: true
@@ -294,11 +292,11 @@ const suspendAccount = function suspendAccount() {
   const MS = util.getEndpoint("accounts");
   const requestOptions = {
     method: "POST",
-    uri: `${MS}/accounts/${accountUUID}/suspend`,
+    uri: "".concat(MS, "/accounts/").concat(accountUUID, "/suspend"),
     headers: {
-      Authorization: `Bearer ${accessToken}`,
+      Authorization: "Bearer ".concat(accessToken),
       "Content-type": "application/json",
-      "x-api-version": `${util.getVersion()}`
+      "x-api-version": "".concat(util.getVersion())
     },
     resolveWithFullResponse: true,
     json: true
@@ -335,13 +333,13 @@ const deleteAccount = async function deleteAccount() {
     const MS = util.getEndpoint("accounts");
     const requestOptions = {
       method: "DELETE",
-      uri: `${MS}/accounts/${accountUUID}`,
+      uri: "".concat(MS, "/accounts/").concat(accountUUID),
       resolveWithFullResponse: true,
       json: true,
       headers: {
-        Authorization: `Bearer ${accessToken}`,
+        Authorization: "Bearer ".concat(accessToken),
         "Content-type": "application/json",
-        "x-api-version": `${util.getVersion()}`
+        "x-api-version": "".concat(util.getVersion())
       }
     };
     util.addRequestTrace(requestOptions, trace);
