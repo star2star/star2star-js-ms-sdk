@@ -1,6 +1,6 @@
 /* global require module*/
 "use strict";
-import "@babel/polyfill";
+
 const utilities = require("./utilities");
 const Objects = require("./objects");
 

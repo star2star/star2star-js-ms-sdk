@@ -1,6 +1,6 @@
 /* global require module*/
 "use strict";
-import "@babel/polyfill";
+
 const Util = require("./utilities");
 const request = require("request-promise");
 const objectMerge = require("object-merge");

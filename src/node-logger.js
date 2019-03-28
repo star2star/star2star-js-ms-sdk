@@ -1,4 +1,3 @@
-import "@babel/polyfill";
 const winston = require('winston');
 export default class Logger {
   constructor(){ 

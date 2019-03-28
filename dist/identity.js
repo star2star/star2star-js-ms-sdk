@@ -1,303 +1,11 @@
 /*global module require */
 "use strict";
 
-require("core-js/modules/es6.array.copy-within");
-
-require("core-js/modules/es6.array.every");
-
-require("core-js/modules/es6.array.fill");
-
-require("core-js/modules/es6.array.filter");
-
-require("core-js/modules/es6.array.find");
-
-require("core-js/modules/es6.array.find-index");
-
-require("core-js/modules/es6.array.for-each");
-
-require("core-js/modules/es6.array.from");
-
-require("core-js/modules/es7.array.includes");
-
-require("core-js/modules/es6.array.index-of");
-
-require("core-js/modules/es6.array.is-array");
-
-require("core-js/modules/es6.array.iterator");
-
-require("core-js/modules/es6.array.last-index-of");
-
-require("core-js/modules/es6.array.map");
-
-require("core-js/modules/es6.array.of");
-
-require("core-js/modules/es6.array.reduce");
-
-require("core-js/modules/es6.array.reduce-right");
-
-require("core-js/modules/es6.array.some");
-
-require("core-js/modules/es6.array.sort");
-
-require("core-js/modules/es6.array.species");
-
-require("core-js/modules/es6.date.now");
-
-require("core-js/modules/es6.date.to-iso-string");
-
-require("core-js/modules/es6.date.to-json");
-
-require("core-js/modules/es6.date.to-primitive");
-
-require("core-js/modules/es6.date.to-string");
-
-require("core-js/modules/es6.function.bind");
-
-require("core-js/modules/es6.function.has-instance");
-
-require("core-js/modules/es6.function.name");
-
-require("core-js/modules/es6.map");
-
-require("core-js/modules/es6.math.acosh");
-
-require("core-js/modules/es6.math.asinh");
-
-require("core-js/modules/es6.math.atanh");
-
-require("core-js/modules/es6.math.cbrt");
-
-require("core-js/modules/es6.math.clz32");
-
-require("core-js/modules/es6.math.cosh");
-
-require("core-js/modules/es6.math.expm1");
-
-require("core-js/modules/es6.math.fround");
-
-require("core-js/modules/es6.math.hypot");
-
-require("core-js/modules/es6.math.imul");
-
-require("core-js/modules/es6.math.log1p");
-
-require("core-js/modules/es6.math.log10");
-
-require("core-js/modules/es6.math.log2");
-
-require("core-js/modules/es6.math.sign");
-
-require("core-js/modules/es6.math.sinh");
-
-require("core-js/modules/es6.math.tanh");
-
-require("core-js/modules/es6.math.trunc");
-
-require("core-js/modules/es6.number.constructor");
-
-require("core-js/modules/es6.number.epsilon");
-
-require("core-js/modules/es6.number.is-finite");
-
-require("core-js/modules/es6.number.is-integer");
-
-require("core-js/modules/es6.number.is-nan");
-
-require("core-js/modules/es6.number.is-safe-integer");
-
-require("core-js/modules/es6.number.max-safe-integer");
-
-require("core-js/modules/es6.number.min-safe-integer");
-
-require("core-js/modules/es6.number.parse-float");
-
-require("core-js/modules/es6.number.parse-int");
-
-require("core-js/modules/es6.object.assign");
-
-require("core-js/modules/es6.object.create");
-
-require("core-js/modules/es7.object.define-getter");
-
-require("core-js/modules/es7.object.define-setter");
-
-require("core-js/modules/es6.object.define-property");
-
-require("core-js/modules/es6.object.define-properties");
-
-require("core-js/modules/es7.object.entries");
-
-require("core-js/modules/es6.object.freeze");
-
-require("core-js/modules/es6.object.get-own-property-descriptor");
-
-require("core-js/modules/es7.object.get-own-property-descriptors");
-
-require("core-js/modules/es6.object.get-own-property-names");
-
-require("core-js/modules/es6.object.get-prototype-of");
-
-require("core-js/modules/es7.object.lookup-getter");
-
-require("core-js/modules/es7.object.lookup-setter");
-
-require("core-js/modules/es6.object.prevent-extensions");
-
-require("core-js/modules/es6.object.is");
-
-require("core-js/modules/es6.object.is-frozen");
-
-require("core-js/modules/es6.object.is-sealed");
-
-require("core-js/modules/es6.object.is-extensible");
-
-require("core-js/modules/es6.object.keys");
-
-require("core-js/modules/es6.object.seal");
-
-require("core-js/modules/es6.object.set-prototype-of");
-
-require("core-js/modules/es7.object.values");
-
-require("core-js/modules/es6.promise");
-
-require("core-js/modules/es7.promise.finally");
-
-require("core-js/modules/es6.reflect.apply");
-
-require("core-js/modules/es6.reflect.construct");
-
-require("core-js/modules/es6.reflect.define-property");
-
-require("core-js/modules/es6.reflect.delete-property");
-
-require("core-js/modules/es6.reflect.get");
-
-require("core-js/modules/es6.reflect.get-own-property-descriptor");
-
-require("core-js/modules/es6.reflect.get-prototype-of");
-
-require("core-js/modules/es6.reflect.has");
-
-require("core-js/modules/es6.reflect.is-extensible");
-
-require("core-js/modules/es6.reflect.own-keys");
-
-require("core-js/modules/es6.reflect.prevent-extensions");
-
-require("core-js/modules/es6.reflect.set");
-
-require("core-js/modules/es6.reflect.set-prototype-of");
-
-require("core-js/modules/es6.regexp.constructor");
-
-require("core-js/modules/es6.regexp.flags");
-
-require("core-js/modules/es6.regexp.match");
-
-require("core-js/modules/es6.regexp.replace");
-
-require("core-js/modules/es6.regexp.split");
-
-require("core-js/modules/es6.regexp.search");
-
-require("core-js/modules/es6.regexp.to-string");
-
-require("core-js/modules/es6.set");
-
-require("core-js/modules/es6.symbol");
-
-require("core-js/modules/es7.symbol.async-iterator");
-
-require("core-js/modules/es6.string.anchor");
-
-require("core-js/modules/es6.string.big");
-
-require("core-js/modules/es6.string.blink");
-
-require("core-js/modules/es6.string.bold");
-
-require("core-js/modules/es6.string.code-point-at");
-
-require("core-js/modules/es6.string.ends-with");
-
-require("core-js/modules/es6.string.fixed");
-
-require("core-js/modules/es6.string.fontcolor");
-
-require("core-js/modules/es6.string.fontsize");
-
-require("core-js/modules/es6.string.from-code-point");
-
-require("core-js/modules/es6.string.includes");
-
-require("core-js/modules/es6.string.italics");
-
-require("core-js/modules/es6.string.iterator");
-
-require("core-js/modules/es6.string.link");
-
-require("core-js/modules/es7.string.pad-start");
-
-require("core-js/modules/es7.string.pad-end");
-
-require("core-js/modules/es6.string.raw");
-
-require("core-js/modules/es6.string.repeat");
-
-require("core-js/modules/es6.string.small");
-
-require("core-js/modules/es6.string.starts-with");
-
-require("core-js/modules/es6.string.strike");
-
-require("core-js/modules/es6.string.sub");
-
-require("core-js/modules/es6.string.sup");
-
-require("core-js/modules/es6.string.trim");
-
-require("core-js/modules/es6.typed.array-buffer");
-
-require("core-js/modules/es6.typed.data-view");
-
-require("core-js/modules/es6.typed.int8-array");
-
-require("core-js/modules/es6.typed.uint8-array");
-
-require("core-js/modules/es6.typed.uint8-clamped-array");
-
-require("core-js/modules/es6.typed.int16-array");
-
-require("core-js/modules/es6.typed.uint16-array");
-
-require("core-js/modules/es6.typed.int32-array");
-
-require("core-js/modules/es6.typed.uint32-array");
-
-require("core-js/modules/es6.typed.float32-array");
-
-require("core-js/modules/es6.typed.float64-array");
-
-require("core-js/modules/es6.weak-map");
-
-require("core-js/modules/es6.weak-set");
-
-require("core-js/modules/web.timers");
-
-require("core-js/modules/web.immediate");
-
 require("core-js/modules/web.dom.iterable");
 
-require("regenerator-runtime/runtime");
+const util = require("./utilities");
 
-function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { Promise.resolve(value).then(_next, _throw); } }
-
-function _asyncToGenerator(fn) { return function () { var self = this, args = arguments; return new Promise(function (resolve, reject) { var gen = fn.apply(self, args); function _next(value) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "next", value); } function _throw(err) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "throw", err); } _next(undefined); }); }; }
-
-var util = require("./utilities");
-
-var request = require("request-promise");
+const request = require("request-promise");
 /**
  * @async
  * @description This function will call the identity microservice with the credentials and accessToken you passed in.
@@ -309,74 +17,35 @@ var request = require("request-promise");
  */
 
 
-var createIdentity =
-/*#__PURE__*/
-function () {
-  var _ref = _asyncToGenerator(
-  /*#__PURE__*/
-  regeneratorRuntime.mark(function _callee() {
-    var accessToken,
-        accountUUID,
-        body,
-        trace,
-        MS,
-        requestOptions,
-        response,
-        identity,
-        _args = arguments;
-    return regeneratorRuntime.wrap(function _callee$(_context) {
-      while (1) {
-        switch (_context.prev = _context.next) {
-          case 0:
-            accessToken = _args.length > 0 && _args[0] !== undefined ? _args[0] : "null accessToken";
-            accountUUID = _args.length > 1 && _args[1] !== undefined ? _args[1] : "null accountUUID";
-            body = _args.length > 2 && _args[2] !== undefined ? _args[2] : "null body";
-            trace = _args.length > 3 && _args[3] !== undefined ? _args[3] : {};
-            MS = util.getEndpoint("identity");
-            requestOptions = {
-              method: "POST",
-              uri: "".concat(MS, "/accounts/").concat(accountUUID, "/identities"),
-              headers: {
-                Authorization: "Bearer ".concat(accessToken),
-                "Content-type": "application/json",
-                "x-api-version": "".concat(util.getVersion())
-              },
-              body: body,
-              json: true,
-              resolveWithFullResponse: true
-            };
-            util.addRequestTrace(requestOptions, trace);
-            _context.next = 9;
-            return request(requestOptions);
-
-          case 9:
-            response = _context.sent;
-            identity = response.body; // update returns a 202....suspend return until the new resource is ready
-
-            if (!(response.hasOwnProperty("statusCode") && response.statusCode === 202 && response.headers.hasOwnProperty("location"))) {
-              _context.next = 14;
-              break;
-            }
-
-            _context.next = 14;
-            return util.pendingResource(response.headers.location, requestOptions, //reusing the request options instead of passing in multiple params
-            trace, identity.hasOwnProperty("resource_status") ? identity.resource_status : "complete");
-
-          case 14:
-            return _context.abrupt("return", identity);
-
-          case 15:
-          case "end":
-            return _context.stop();
-        }
-      }
-    }, _callee);
-  }));
-
-  return function createIdentity() {
-    return _ref.apply(this, arguments);
+const createIdentity = async function createIdentity() {
+  let accessToken = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : "null accessToken";
+  let accountUUID = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : "null accountUUID";
+  let body = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : "null body";
+  let trace = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : {};
+  const MS = util.getEndpoint("identity");
+  const requestOptions = {
+    method: "POST",
+    uri: `${MS}/accounts/${accountUUID}/identities`,
+    headers: {
+      Authorization: `Bearer ${accessToken}`,
+      "Content-type": "application/json",
+      "x-api-version": `${util.getVersion()}`
+    },
+    body: body,
+    json: true,
+    resolveWithFullResponse: true
   };
-}();
+  util.addRequestTrace(requestOptions, trace);
+  const response = await request(requestOptions);
+  const identity = response.body; // update returns a 202....suspend return until the new resource is ready
+
+  if (response.hasOwnProperty("statusCode") && response.statusCode === 202 && response.headers.hasOwnProperty("location")) {
+    await util.pendingResource(response.headers.location, requestOptions, //reusing the request options instead of passing in multiple params
+    trace, identity.hasOwnProperty("resource_status") ? identity.resource_status : "complete");
+  }
+
+  return identity;
+};
 /**
  * @async
  * @description This function will allow you to modify all details of identity except account_uuid, username and external_id, password and provider.
@@ -388,19 +57,19 @@ function () {
  */
 
 
-var modifyIdentity = function modifyIdentity() {
-  var accessToken = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : "null accessToken";
-  var userUuid = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : "null userUuid";
-  var body = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : "null body";
-  var trace = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : {};
-  var MS = util.getEndpoint("identity");
-  var requestOptions = {
+const modifyIdentity = function modifyIdentity() {
+  let accessToken = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : "null accessToken";
+  let userUuid = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : "null userUuid";
+  let body = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : "null body";
+  let trace = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : {};
+  const MS = util.getEndpoint("identity");
+  const requestOptions = {
     method: "POST",
-    uri: "".concat(MS, "/identities/").concat(userUuid, "/modify"),
+    uri: `${MS}/identities/${userUuid}/modify`,
     headers: {
-      Authorization: "Bearer ".concat(accessToken),
+      Authorization: `Bearer ${accessToken}`,
       "Content-type": "application/json",
-      "x-api-version": "".concat(util.getVersion())
+      "x-api-version": `${util.getVersion()}`
     },
     body: body,
     json: true
@@ -419,19 +88,19 @@ var modifyIdentity = function modifyIdentity() {
  */
 
 
-var modifyIdentityProps = function modifyIdentityProps() {
-  var accessToken = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : "null accessToken";
-  var userUuid = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : "null userUuid";
-  var body = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : "null body";
-  var trace = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : {};
-  var MS = util.getEndpoint("identity");
-  var requestOptions = {
+const modifyIdentityProps = function modifyIdentityProps() {
+  let accessToken = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : "null accessToken";
+  let userUuid = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : "null userUuid";
+  let body = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : "null body";
+  let trace = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : {};
+  const MS = util.getEndpoint("identity");
+  const requestOptions = {
     method: "POST",
-    uri: "".concat(MS, "/identities/").concat(userUuid, "/properties/modify"),
+    uri: `${MS}/identities/${userUuid}/properties/modify`,
     headers: {
-      Authorization: "Bearer ".concat(accessToken),
+      Authorization: `Bearer ${accessToken}`,
       "Content-type": "application/json",
-      "x-api-version": "".concat(util.getVersion())
+      "x-api-version": `${util.getVersion()}`
     },
     body: body,
     json: true
@@ -449,18 +118,18 @@ var modifyIdentityProps = function modifyIdentityProps() {
  */
 
 
-var deactivateIdentity = function deactivateIdentity() {
-  var accessToken = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : "null accessToken";
-  var userUuid = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : "null userUuid";
-  var trace = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : {};
-  var MS = util.getEndpoint("identity");
-  var requestOptions = {
+const deactivateIdentity = function deactivateIdentity() {
+  let accessToken = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : "null accessToken";
+  let userUuid = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : "null userUuid";
+  let trace = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : {};
+  const MS = util.getEndpoint("identity");
+  const requestOptions = {
     method: "POST",
-    uri: "".concat(MS, "/identities/").concat(userUuid, "/deactivate"),
+    uri: `${MS}/identities/${userUuid}/deactivate`,
     headers: {
-      Authorization: "Bearer ".concat(accessToken),
+      Authorization: `Bearer ${accessToken}`,
       "Content-type": "application/json",
-      "x-api-version": "".concat(util.getVersion())
+      "x-api-version": `${util.getVersion()}`
     },
     json: true,
     resolveWithFullResponse: true
@@ -488,18 +157,18 @@ var deactivateIdentity = function deactivateIdentity() {
  */
 
 
-var reactivateIdentity = function reactivateIdentity() {
-  var accessToken = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : "null accessToken";
-  var userUuid = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : "null userUuid";
-  var trace = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : {};
-  var MS = util.getEndpoint("identity");
-  var requestOptions = {
+const reactivateIdentity = function reactivateIdentity() {
+  let accessToken = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : "null accessToken";
+  let userUuid = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : "null userUuid";
+  let trace = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : {};
+  const MS = util.getEndpoint("identity");
+  const requestOptions = {
     method: "POST",
-    uri: "".concat(MS, "/identities/").concat(userUuid, "/reactivate"),
+    uri: `${MS}/identities/${userUuid}/reactivate`,
     headers: {
-      Authorization: "Bearer ".concat(accessToken),
+      Authorization: `Bearer ${accessToken}`,
       "Content-type": "application/json",
-      "x-api-version": "".concat(util.getVersion())
+      "x-api-version": `${util.getVersion()}`
     },
     json: true,
     resolveWithFullResponse: true
@@ -528,19 +197,19 @@ var reactivateIdentity = function reactivateIdentity() {
  */
 
 
-var createAlias = function createAlias() {
-  var accessToken = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : "null accessToken";
-  var userUuid = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : "null user uuid";
-  var body = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : "null body";
-  var trace = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : {};
-  var MS = util.getEndpoint("identity");
-  var requestOptions = {
+const createAlias = function createAlias() {
+  let accessToken = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : "null accessToken";
+  let userUuid = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : "null user uuid";
+  let body = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : "null body";
+  let trace = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : {};
+  const MS = util.getEndpoint("identity");
+  const requestOptions = {
     method: "POST",
-    uri: "".concat(MS, "/identities/").concat(userUuid, "/aliases"),
+    uri: `${MS}/identities/${userUuid}/aliases`,
     headers: {
-      Authorization: "Bearer ".concat(accessToken),
+      Authorization: `Bearer ${accessToken}`,
       "Content-type": "application/json",
-      "x-api-version": "".concat(util.getVersion())
+      "x-api-version": `${util.getVersion()}`
     },
     body: body,
     json: true,
@@ -548,14 +217,14 @@ var createAlias = function createAlias() {
   };
   util.addRequestTrace(requestOptions, trace); //Returning "ok" here as response object does not contain alias.
 
-  return new Promise(function (resolve, reject) {
-    request(requestOptions).then(function (response) {
+  return new Promise((resolve, reject) => {
+    request(requestOptions).then(response => {
       response.statusCode === 201 ? resolve({
         status: "ok"
       }) : reject({
         status: "failed"
       });
-    }).catch(function (error) {
+    }).catch(error => {
       reject(error);
     });
   });
@@ -571,32 +240,32 @@ var createAlias = function createAlias() {
  */
 
 
-var updateAliasWithDID = function updateAliasWithDID() {
-  var accessToken = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : "null accessToken";
-  var userUuid = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : "null user uuid";
-  var did = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : "null DID";
-  var trace = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : {};
-  var MS = util.getEndpoint("identity");
-  var requestOptions = {
+const updateAliasWithDID = function updateAliasWithDID() {
+  let accessToken = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : "null accessToken";
+  let userUuid = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : "null user uuid";
+  let did = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : "null DID";
+  let trace = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : {};
+  const MS = util.getEndpoint("identity");
+  const requestOptions = {
     method: "PUT",
-    uri: "".concat(MS, "/identities/").concat(userUuid, "/aliases/").concat(did),
+    uri: `${MS}/identities/${userUuid}/aliases/${did}`,
     headers: {
-      Authorization: "Bearer ".concat(accessToken),
+      Authorization: `Bearer ${accessToken}`,
       "Content-type": "application/json",
-      "x-api-version": "".concat(util.getVersion())
+      "x-api-version": `${util.getVersion()}`
     },
     json: true,
     resolveWithFullResponse: true
   };
   util.addRequestTrace(requestOptions, trace);
-  return new Promise(function (resolve, reject) {
-    request(requestOptions).then(function (response) {
+  return new Promise((resolve, reject) => {
+    request(requestOptions).then(response => {
       response.statusCode === 202 ? resolve({
         status: "ok"
       }) : reject({
         status: "failed"
       });
-    }).catch(function (error) {
+    }).catch(error => {
       reject(error);
     });
   });
@@ -612,80 +281,42 @@ var updateAliasWithDID = function updateAliasWithDID() {
  */
 
 
-var deleteIdentity =
-/*#__PURE__*/
-function () {
-  var _ref2 = _asyncToGenerator(
-  /*#__PURE__*/
-  regeneratorRuntime.mark(function _callee2() {
-    var accessToken,
-        userUuid,
-        trace,
-        MS,
-        requestOptions,
-        response,
-        _args2 = arguments;
-    return regeneratorRuntime.wrap(function _callee2$(_context2) {
-      while (1) {
-        switch (_context2.prev = _context2.next) {
-          case 0:
-            accessToken = _args2.length > 0 && _args2[0] !== undefined ? _args2[0] : "null accessToken";
-            userUuid = _args2.length > 1 && _args2[1] !== undefined ? _args2[1] : "null uuid";
-            trace = _args2.length > 2 && _args2[2] !== undefined ? _args2[2] : {};
-            _context2.prev = 3;
-            MS = util.getEndpoint("identity");
-            requestOptions = {
-              method: "DELETE",
-              uri: "".concat(MS, "/identities/").concat(userUuid),
-              headers: {
-                Authorization: "Bearer ".concat(accessToken),
-                "Content-type": "application/json",
-                "x-api-version": "".concat(util.getVersion())
-              },
-              json: true,
-              resolveWithFullResponse: true
-            };
-            util.addRequestTrace(requestOptions, trace);
-            _context2.next = 9;
-            return request(requestOptions);
+const deleteIdentity = async function deleteIdentity() {
+  let accessToken = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : "null accessToken";
+  let userUuid = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : "null uuid";
+  let trace = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : {};
 
-          case 9:
-            response = _context2.sent;
+  try {
+    const MS = util.getEndpoint("identity");
+    const requestOptions = {
+      method: "DELETE",
+      uri: `${MS}/identities/${userUuid}`,
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+        "Content-type": "application/json",
+        "x-api-version": `${util.getVersion()}`
+      },
+      json: true,
+      resolveWithFullResponse: true
+    };
+    util.addRequestTrace(requestOptions, trace);
+    const response = await request(requestOptions); // delete returns a 202....suspend return until the new resource is ready
 
-            if (!(response.hasOwnProperty("statusCode") && response.statusCode === 202 && response.headers.hasOwnProperty("location"))) {
-              _context2.next = 13;
-              break;
-            }
+    if (response.hasOwnProperty("statusCode") && response.statusCode === 202 && response.headers.hasOwnProperty("location")) {
+      await util.pendingResource(response.headers.location, requestOptions, //reusing the request options instead of passing in multiple params
+      trace, "deleting");
+    }
 
-            _context2.next = 13;
-            return util.pendingResource(response.headers.location, requestOptions, //reusing the request options instead of passing in multiple params
-            trace, "deleting");
-
-          case 13:
-            return _context2.abrupt("return", Promise.resolve({
-              "status": "ok"
-            }));
-
-          case 16:
-            _context2.prev = 16;
-            _context2.t0 = _context2["catch"](3);
-            return _context2.abrupt("return", Promise.reject({
-              "status": "failed",
-              "message": _context2.t0.hasOwnProperty("message") ? _context2.t0.message : JSON.stringify(_context2.t0)
-            }));
-
-          case 19:
-          case "end":
-            return _context2.stop();
-        }
-      }
-    }, _callee2, null, [[3, 16]]);
-  }));
-
-  return function deleteIdentity() {
-    return _ref2.apply(this, arguments);
-  };
-}();
+    return Promise.resolve({
+      "status": "ok"
+    });
+  } catch (error) {
+    return Promise.reject({
+      "status": "failed",
+      "message": error.hasOwnProperty("message") ? error.message : JSON.stringify(error)
+    });
+  }
+};
 /**
  * @async
  * @description This function returns a single identity object
@@ -696,18 +327,18 @@ function () {
  */
 
 
-var getIdentity = function getIdentity() {
-  var accessToken = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : "null accessToken";
-  var userUuid = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : "null uuid";
-  var trace = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : {};
-  var MS = util.getEndpoint("identity");
-  var requestOptions = {
+const getIdentity = function getIdentity() {
+  let accessToken = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : "null accessToken";
+  let userUuid = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : "null uuid";
+  let trace = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : {};
+  const MS = util.getEndpoint("identity");
+  const requestOptions = {
     method: "GET",
-    uri: "".concat(MS, "/identities/").concat(userUuid),
+    uri: `${MS}/identities/${userUuid}`,
     headers: {
-      Authorization: "Bearer ".concat(accessToken),
+      Authorization: `Bearer ${accessToken}`,
       "Content-type": "application/json",
-      "x-api-version": "".concat(util.getVersion())
+      "x-api-version": `${util.getVersion()}`
     },
     json: true
   };
@@ -726,19 +357,19 @@ var getIdentity = function getIdentity() {
  */
 
 
-var login = function login() {
-  var accessToken = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : "null access token";
-  var email = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : "null email";
-  var pwd = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : "null pwd";
-  var trace = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : {};
-  var MS = util.getEndpoint("identity");
-  var requestOptions = {
+const login = function login() {
+  let accessToken = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : "null access token";
+  let email = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : "null email";
+  let pwd = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : "null pwd";
+  let trace = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : {};
+  const MS = util.getEndpoint("identity");
+  const requestOptions = {
     method: "POST",
-    uri: "".concat(MS, "/users/login"),
+    uri: `${MS}/users/login`,
     headers: {
-      Authorization: "Bearer ".concat(accessToken),
+      Authorization: `Bearer ${accessToken}`,
       "Content-type": "application/json",
-      "x-api-version": "".concat(util.getVersion())
+      "x-api-version": `${util.getVersion()}`
     },
     body: {
       email: email,
@@ -759,17 +390,17 @@ var login = function login() {
  */
 
 
-var getMyIdentityData = function getMyIdentityData() {
-  var accessToken = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : "null access token";
-  var trace = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
-  var MS = util.getEndpoint("identity");
-  var requestOptions = {
+const getMyIdentityData = function getMyIdentityData() {
+  let accessToken = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : "null access token";
+  let trace = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
+  const MS = util.getEndpoint("identity");
+  const requestOptions = {
     method: "GET",
-    uri: "".concat(MS, "/users/me"),
+    uri: `${MS}/users/me`,
     headers: {
-      Authorization: "Bearer ".concat(accessToken),
+      Authorization: `Bearer ${accessToken}`,
       "Content-type": "application/json",
-      "x-api-version": "".concat(util.getVersion())
+      "x-api-version": `${util.getVersion()}`
     },
     json: true
   };
@@ -787,18 +418,18 @@ var getMyIdentityData = function getMyIdentityData() {
  */
 
 
-var getIdentityDetails = function getIdentityDetails() {
-  var accessToken = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : "null access token";
-  var user_uuid = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : "null user uuid";
-  var trace = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : {};
-  var MS = util.getEndpoint("identity");
-  var requestOptions = {
+const getIdentityDetails = function getIdentityDetails() {
+  let accessToken = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : "null access token";
+  let user_uuid = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : "null user uuid";
+  let trace = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : {};
+  const MS = util.getEndpoint("identity");
+  const requestOptions = {
     method: "GET",
-    uri: "".concat(MS, "/identities/").concat(user_uuid, "?include=alias&include=properties"),
+    uri: `${MS}/identities/${user_uuid}?include=alias&include=properties`,
     headers: {
-      Authorization: "Bearer ".concat(accessToken),
+      Authorization: `Bearer ${accessToken}`,
       "Content-type": "application/json",
-      "x-api-version": "".concat(util.getVersion())
+      "x-api-version": `${util.getVersion()}`
     },
     json: true
   };
@@ -818,73 +449,39 @@ var getIdentityDetails = function getIdentityDetails() {
  */
 
 
-var listIdentitiesByAccount =
-/*#__PURE__*/
-function () {
-  var _ref3 = _asyncToGenerator(
-  /*#__PURE__*/
-  regeneratorRuntime.mark(function _callee3() {
-    var accessToken,
-        accountUUID,
-        offset,
-        limit,
-        filters,
-        trace,
-        MS,
-        requestOptions,
-        _args3 = arguments;
-    return regeneratorRuntime.wrap(function _callee3$(_context3) {
-      while (1) {
-        switch (_context3.prev = _context3.next) {
-          case 0:
-            accessToken = _args3.length > 0 && _args3[0] !== undefined ? _args3[0] : "null accessToken";
-            accountUUID = _args3.length > 1 && _args3[1] !== undefined ? _args3[1] : "null accountUUID";
-            offset = _args3.length > 2 && _args3[2] !== undefined ? _args3[2] : 0;
-            limit = _args3.length > 3 && _args3[3] !== undefined ? _args3[3] : 10;
-            filters = _args3.length > 4 && _args3[4] !== undefined ? _args3[4] : undefined;
-            trace = _args3.length > 5 && _args3[5] !== undefined ? _args3[5] : {};
-            MS = util.getEndpoint("identity");
-            requestOptions = {
-              method: "GET",
-              uri: "".concat(MS, "/accounts/").concat(accountUUID, "/identities"),
-              qs: {
-                offset: offset,
-                limit: limit
-              },
-              headers: {
-                Authorization: "Bearer ".concat(accessToken),
-                "Content-type": "application/json",
-                "x-api-version": "".concat(util.getVersion())
-              },
-              json: true
-            };
-            util.addRequestTrace(requestOptions, trace);
-
-            if (filters) {
-              Object.keys(filters).forEach(function (filter) {
-                requestOptions.qs[filter] = filters[filter];
-              });
-            } //console.log("REQUEST********",requestOptions);
-
-
-            _context3.next = 12;
-            return request(requestOptions);
-
-          case 12:
-            return _context3.abrupt("return", _context3.sent);
-
-          case 13:
-          case "end":
-            return _context3.stop();
-        }
-      }
-    }, _callee3);
-  }));
-
-  return function listIdentitiesByAccount() {
-    return _ref3.apply(this, arguments);
+const listIdentitiesByAccount = async function listIdentitiesByAccount() {
+  let accessToken = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : "null accessToken";
+  let accountUUID = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : "null accountUUID";
+  let offset = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : 0;
+  let limit = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : 10;
+  let filters = arguments.length > 4 && arguments[4] !== undefined ? arguments[4] : undefined;
+  let trace = arguments.length > 5 && arguments[5] !== undefined ? arguments[5] : {};
+  const MS = util.getEndpoint("identity");
+  const requestOptions = {
+    method: "GET",
+    uri: `${MS}/accounts/${accountUUID}/identities`,
+    qs: {
+      offset: offset,
+      limit: limit
+    },
+    headers: {
+      Authorization: `Bearer ${accessToken}`,
+      "Content-type": "application/json",
+      "x-api-version": `${util.getVersion()}`
+    },
+    json: true
   };
-}();
+  util.addRequestTrace(requestOptions, trace);
+
+  if (filters) {
+    Object.keys(filters).forEach(filter => {
+      requestOptions.qs[filter] = filters[filter];
+    });
+  } //console.log("REQUEST********",requestOptions);
+
+
+  return await request(requestOptions);
+};
 /**
  * @async
  * @description This function will look up an identity by username.
@@ -897,71 +494,38 @@ function () {
  */
 
 
-var lookupIdentity =
-/*#__PURE__*/
-function () {
-  var _ref4 = _asyncToGenerator(
-  /*#__PURE__*/
-  regeneratorRuntime.mark(function _callee4() {
-    var accessToken,
-        offset,
-        limit,
-        filters,
-        trace,
-        MS,
-        requestOptions,
-        _args4 = arguments;
-    return regeneratorRuntime.wrap(function _callee4$(_context4) {
-      while (1) {
-        switch (_context4.prev = _context4.next) {
-          case 0:
-            accessToken = _args4.length > 0 && _args4[0] !== undefined ? _args4[0] : "null accessToken";
-            offset = _args4.length > 1 && _args4[1] !== undefined ? _args4[1] : 0;
-            limit = _args4.length > 2 && _args4[2] !== undefined ? _args4[2] : 10;
-            filters = _args4.length > 3 && _args4[3] !== undefined ? _args4[3] : undefined;
-            trace = _args4.length > 4 && _args4[4] !== undefined ? _args4[4] : {};
-            MS = util.getEndpoint("identity");
-            requestOptions = {
-              method: "GET",
-              uri: "".concat(MS, "/identities"),
-              qs: {
-                offset: offset,
-                limit: limit
-              },
-              headers: {
-                Authorization: "Bearer ".concat(accessToken),
-                "Content-type": "application/json",
-                "x-api-version": "".concat(util.getVersion())
-              },
-              json: true
-            };
-            util.addRequestTrace(requestOptions, trace);
-
-            if (filters) {
-              Object.keys(filters).forEach(function (filter) {
-                requestOptions.qs[filter] = filters[filter];
-              });
-            } //console.log("REQUEST********",requestOptions);
-
-
-            _context4.next = 11;
-            return request(requestOptions);
-
-          case 11:
-            return _context4.abrupt("return", _context4.sent);
-
-          case 12:
-          case "end":
-            return _context4.stop();
-        }
-      }
-    }, _callee4);
-  }));
-
-  return function lookupIdentity() {
-    return _ref4.apply(this, arguments);
+const lookupIdentity = async function lookupIdentity() {
+  let accessToken = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : "null accessToken";
+  let offset = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 0;
+  let limit = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : 10;
+  let filters = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : undefined;
+  let trace = arguments.length > 4 && arguments[4] !== undefined ? arguments[4] : {};
+  const MS = util.getEndpoint("identity");
+  const requestOptions = {
+    method: "GET",
+    uri: `${MS}/identities`,
+    qs: {
+      offset: offset,
+      limit: limit
+    },
+    headers: {
+      Authorization: `Bearer ${accessToken}`,
+      "Content-type": "application/json",
+      "x-api-version": `${util.getVersion()}`
+    },
+    json: true
   };
-}();
+  util.addRequestTrace(requestOptions, trace);
+
+  if (filters) {
+    Object.keys(filters).forEach(filter => {
+      requestOptions.qs[filter] = filters[filter];
+    });
+  } //console.log("REQUEST********",requestOptions);
+
+
+  return await request(requestOptions);
+};
 /**
  * @async
  * @description This function will update a user's password.
@@ -973,20 +537,20 @@ function () {
  */
 
 
-var resetPassword = function resetPassword() {
-  var accessToken = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : "null access token";
-  var passwordToken = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : "null passwordToken";
-  var body = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : "null body";
-  var trace = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : {};
-  var MS = util.getEndpoint("identity");
-  var requestOptions = {
+const resetPassword = function resetPassword() {
+  let accessToken = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : "null access token";
+  let passwordToken = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : "null passwordToken";
+  let body = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : "null body";
+  let trace = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : {};
+  const MS = util.getEndpoint("identity");
+  const requestOptions = {
     method: "PUT",
-    uri: "".concat(MS, "/users/password-tokens/").concat(passwordToken),
+    uri: `${MS}/users/password-tokens/${passwordToken}`,
     body: body,
     headers: {
-      Authorization: "Bearer ".concat(accessToken),
+      Authorization: `Bearer ${accessToken}`,
       "Content-type": "application/json",
-      "x-api-version": "".concat(util.getVersion())
+      "x-api-version": `${util.getVersion()}`
     },
     resolveWithFullResponse: true,
     json: true
@@ -1014,21 +578,21 @@ var resetPassword = function resetPassword() {
  */
 
 
-var generatePasswordToken = function generatePasswordToken() {
-  var accessToken = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : "null access token";
-  var emailAddress = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : "null emailAddress";
-  var trace = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : {};
-  var MS = util.getEndpoint("identity");
-  var requestOptions = {
+const generatePasswordToken = function generatePasswordToken() {
+  let accessToken = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : "null access token";
+  let emailAddress = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : "null emailAddress";
+  let trace = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : {};
+  const MS = util.getEndpoint("identity");
+  const requestOptions = {
     method: "POST",
-    uri: "".concat(MS, "/users/password-tokens"),
+    uri: `${MS}/users/password-tokens`,
     body: {
       email: emailAddress
     },
     headers: {
-      Authorization: "Bearer ".concat(accessToken),
+      Authorization: `Bearer ${accessToken}`,
       "Content-type": "application/json",
-      "x-api-version": "".concat(util.getVersion())
+      "x-api-version": `${util.getVersion()}`
     },
     resolveWithFullResponse: true,
     json: true
@@ -1056,18 +620,18 @@ var generatePasswordToken = function generatePasswordToken() {
  */
 
 
-var validatePasswordToken = function validatePasswordToken() {
-  var accessToken = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : "null access token";
-  var password_token = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : "null password token";
-  var trace = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : {};
-  var MS = util.getEndpoint("identity");
-  var requestOptions = {
+const validatePasswordToken = function validatePasswordToken() {
+  let accessToken = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : "null access token";
+  let password_token = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : "null password token";
+  let trace = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : {};
+  const MS = util.getEndpoint("identity");
+  const requestOptions = {
     method: "GET",
-    uri: "".concat(MS, "/users/password-tokens/").concat(password_token),
+    uri: `${MS}/users/password-tokens/${password_token}`,
     headers: {
-      Authorization: "Bearer ".concat(accessToken),
+      Authorization: `Bearer ${accessToken}`,
       "Content-type": "application/json",
-      "x-api-version": "".concat(util.getVersion())
+      "x-api-version": `${util.getVersion()}`
     },
     json: true
   };
@@ -1076,21 +640,21 @@ var validatePasswordToken = function validatePasswordToken() {
 };
 
 module.exports = {
-  createAlias: createAlias,
-  createIdentity: createIdentity,
-  modifyIdentity: modifyIdentity,
-  modifyIdentityProps: modifyIdentityProps,
-  reactivateIdentity: reactivateIdentity,
-  deactivateIdentity: deactivateIdentity,
-  updateAliasWithDID: updateAliasWithDID,
-  deleteIdentity: deleteIdentity,
-  login: login,
-  getMyIdentityData: getMyIdentityData,
-  listIdentitiesByAccount: listIdentitiesByAccount,
-  lookupIdentity: lookupIdentity,
-  getIdentity: getIdentity,
-  getIdentityDetails: getIdentityDetails,
-  generatePasswordToken: generatePasswordToken,
-  resetPassword: resetPassword,
-  validatePasswordToken: validatePasswordToken
+  createAlias,
+  createIdentity,
+  modifyIdentity,
+  modifyIdentityProps,
+  reactivateIdentity,
+  deactivateIdentity,
+  updateAliasWithDID,
+  deleteIdentity,
+  login,
+  getMyIdentityData,
+  listIdentitiesByAccount,
+  lookupIdentity,
+  getIdentity,
+  getIdentityDetails,
+  generatePasswordToken,
+  resetPassword,
+  validatePasswordToken
 };

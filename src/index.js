@@ -1,6 +1,5 @@
 /*global require process module*/
 "use strict";
-import "@babel/polyfill";
 const Accounts = require("./accounts");
 const Lambda = require("./lambda");
 const Identity = require("./identity");

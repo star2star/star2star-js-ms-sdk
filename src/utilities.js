@@ -1,6 +1,6 @@
 /* global require process module*/
 "use strict";
-import "@babel/polyfill";
+
 const config = require("./config.json");
 const uuidv4 = require("uuid/v4");
 const request = require("request-promise");

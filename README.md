@@ -70,6 +70,9 @@ process.env.MS_LOGPRETTY = true // defaults to false
 [Please click here for our documentation pages.](https://star2star.github.io/star2star-js-ms-sdk/ "Star2Star Micro Service SDK Documentation")
 
 ## Changes
+* 3.0.18 - babel changed and removed core-js as dependency
+* 3.0.17 - fix bad build - added core-js to dev dependencies
+* 3.0.16 - bad build 
 * 3.0.15 - Fix bad build
 * 3.0.14 - Test environment configurable 
 * 3.0.13 - Add pagination to list user contacts

@@ -1,6 +1,6 @@
 /*global module require */
 "use strict";
-import "@babel/polyfill";
+
 const Util = require("./utilities");
 const request = require("request-promise");
 
