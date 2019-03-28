@@ -291,6 +291,10 @@ require("core-js/modules/web.dom.iterable");
 
 require("regenerator-runtime/runtime");
 
+function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { Promise.resolve(value).then(_next, _throw); } }
+
+function _asyncToGenerator(fn) { return function () { var self = this, args = arguments; return new Promise(function (resolve, reject) { var gen = fn.apply(self, args); function _next(value) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "next", value); } function _throw(err) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "throw", err); } _next(undefined); }); }; }
+
 var request = require("request-promise");
 
 var util = require("./utilities");
@@ -352,24 +356,71 @@ var addSubscription = function addSubscription() {
  */
 
 
-var deleteSubscription = function deleteSubscription() {
-  var subscription_uuid = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : "no subscription uuid provided";
-  var accessToken = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : "null accessToken";
-  var trace = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : {};
-  var MS = util.getEndpoint("pubsub");
-  var requestOptions = {
-    method: "DELETE",
-    uri: "".concat(MS, "/subscriptions/").concat(subscription_uuid),
-    headers: {
-      Authorization: "Bearer ".concat(accessToken),
-      "Content-type": "application/json",
-      "x-api-version": "".concat(util.getVersion())
-    },
-    json: true
+var deleteSubscription =
+/*#__PURE__*/
+function () {
+  var _ref = _asyncToGenerator(
+  /*#__PURE__*/
+  regeneratorRuntime.mark(function _callee() {
+    var subscription_uuid,
+        accessToken,
+        trace,
+        MS,
+        requestOptions,
+        response,
+        _args = arguments;
+    return regeneratorRuntime.wrap(function _callee$(_context) {
+      while (1) {
+        switch (_context.prev = _context.next) {
+          case 0:
+            subscription_uuid = _args.length > 0 && _args[0] !== undefined ? _args[0] : "no subscription uuid provided";
+            accessToken = _args.length > 1 && _args[1] !== undefined ? _args[1] : "null accessToken";
+            trace = _args.length > 2 && _args[2] !== undefined ? _args[2] : {};
+            MS = util.getEndpoint("pubsub");
+            requestOptions = {
+              method: "DELETE",
+              uri: "".concat(MS, "/subscriptions/").concat(subscription_uuid),
+              headers: {
+                Authorization: "Bearer ".concat(accessToken),
+                "Content-type": "application/json",
+                "x-api-version": "".concat(util.getVersion())
+              },
+              resolveWithFullResponse: true,
+              json: true
+            };
+            util.addRequestTrace(requestOptions, trace);
+            _context.next = 8;
+            return request(requestOptions);
+
+          case 8:
+            response = _context.sent;
+
+            if (!(response.hasOwnProperty("statusCode") && response.statusCode === 204)) {
+              _context.next = 11;
+              break;
+            }
+
+            return _context.abrupt("return", {
+              "status": "ok"
+            });
+
+          case 11:
+            return _context.abrupt("return", Promise.reject({
+              "status": "failed"
+            }));
+
+          case 12:
+          case "end":
+            return _context.stop();
+        }
+      }
+    }, _callee);
+  }));
+
+  return function deleteSubscription() {
+    return _ref.apply(this, arguments);
   };
-  util.addRequestTrace(requestOptions, trace);
-  return request(requestOptions);
-};
+}();
 /**
  * @async
  * @description This function will get a user subscription based on subscription id.

@@ -291,6 +291,10 @@ require("core-js/modules/web.dom.iterable");
 
 require("regenerator-runtime/runtime");
 
+function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { Promise.resolve(value).then(_next, _throw); } }
+
+function _asyncToGenerator(fn) { return function () { var self = this, args = arguments; return new Promise(function (resolve, reject) { var gen = fn.apply(self, args); function _next(value) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "next", value); } function _throw(err) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "throw", err); } _next(undefined); }); }; }
+
 var request = require("request-promise");
 
 var util = require("./utilities");
@@ -404,23 +408,70 @@ var uploadFile = function uploadFile() {
  */
 
 
-var deleteMedia = function deleteMedia() {
-  var file_id = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : "no file_id provided";
-  var accessToken = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : "null accessToken";
-  var trace = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : {};
-  var MS = util.getEndpoint("media");
-  var requestOptions = {
-    method: "DELETE",
-    uri: "".concat(MS, "/media/").concat(file_id),
-    headers: {
-      Authorization: "Bearer ".concat(accessToken),
-      "x-api-version": "".concat(util.getVersion())
-    },
-    json: true
+var deleteMedia =
+/*#__PURE__*/
+function () {
+  var _ref = _asyncToGenerator(
+  /*#__PURE__*/
+  regeneratorRuntime.mark(function _callee() {
+    var file_id,
+        accessToken,
+        trace,
+        MS,
+        requestOptions,
+        response,
+        _args = arguments;
+    return regeneratorRuntime.wrap(function _callee$(_context) {
+      while (1) {
+        switch (_context.prev = _context.next) {
+          case 0:
+            file_id = _args.length > 0 && _args[0] !== undefined ? _args[0] : "no file_id provided";
+            accessToken = _args.length > 1 && _args[1] !== undefined ? _args[1] : "null accessToken";
+            trace = _args.length > 2 && _args[2] !== undefined ? _args[2] : {};
+            MS = util.getEndpoint("media");
+            requestOptions = {
+              method: "DELETE",
+              uri: "".concat(MS, "/media/").concat(file_id),
+              headers: {
+                Authorization: "Bearer ".concat(accessToken),
+                "x-api-version": "".concat(util.getVersion())
+              },
+              json: true,
+              resolveWithFullResponse: true
+            };
+            util.addRequestTrace(requestOptions, trace);
+            _context.next = 8;
+            return request(requestOptions);
+
+          case 8:
+            response = _context.sent;
+
+            if (!(response.statusCode === 204)) {
+              _context.next = 13;
+              break;
+            }
+
+            return _context.abrupt("return", {
+              "status": "ok"
+            });
+
+          case 13:
+            return _context.abrupt("return", {
+              "status": "failed"
+            });
+
+          case 14:
+          case "end":
+            return _context.stop();
+        }
+      }
+    }, _callee);
+  }));
+
+  return function deleteMedia() {
+    return _ref.apply(this, arguments);
   };
-  util.addRequestTrace(requestOptions, trace);
-  return request(requestOptions);
-};
+}();
 
 module.exports = {
   deleteMedia: deleteMedia,

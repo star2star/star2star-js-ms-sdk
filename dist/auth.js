@@ -1619,7 +1619,7 @@ var listRolePermissions = function listRolePermissions() {
  * @param {string} [accessToken="null accessToken"] - cpaas access token
  * @param {string} [offset="0"] - pagination offset
  * @param {string} [limit="10"] - pagination limit
- * @param {array} [filters=undefined] - array of filter query string parameters
+ * @param {array} [filters=undefined] - array of filter query string parameters (user_uuid, name, sort)
  * @param {object} [trace = {}] - optional microservice lifecycle trace headers
  * @returns {Promise<object>} - Promise resolving to a data object containing a list of user groups
  */
