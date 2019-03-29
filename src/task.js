@@ -98,6 +98,7 @@ const createTaskTemplate = (
       {
         tasks: vTasks.tasks
       },
+      undefined,
       undefined, //users for shared objects
       trace
     );
@@ -152,6 +153,7 @@ const createTaskObject = (
       {
         tasks: vTasks.tasks
       },
+      undefined, //account for shared objects
       undefined, //users for shared objects
       trace
     );
@@ -203,17 +205,17 @@ const getTaskObject = (
  * @returns {Promise<object>} - Promise resolving to a task data object
  */
 const updateTaskObject = (
-  userUUID = "null user uuid",
   access_token = "null access_token",
   uuid = "missing_uuid",
   taskObject = {},
   trace = {}
 ) => {
   return Objects.updateDataObject(
-    userUUID,
     access_token,
     uuid,
     taskObject,
+    undefined,
+    undefined,
     trace
   );
 };
@@ -243,6 +245,8 @@ const addTaskToTaskObject = (
           access_token,
           taskObjectUUID,
           rData,
+          undefined,
+          undefined,
           utilities.generateNewMetaData(trace)
         );
       }
@@ -280,6 +284,8 @@ const updateTaskInTaskObject = (
           access_token,
           taskObjectUUID,
           rData,
+          undefined,
+          undefined,
           utilities.generateNewMetaData(trace)
         );
       }

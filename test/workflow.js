@@ -5,7 +5,6 @@ const mocha = require("mocha");
 const describe = mocha.describe;
 const it = mocha.it;
 const before = mocha.before;
-const after = mocha.after;
 
 //test requires
 const fs = require("fs");
@@ -41,10 +40,8 @@ let creds = {
 
 describe("Workflow", function() {
   let accessToken,
-    identityData,
     wfTemplateUUID,
     wfInstanceUUID,
-    wfInstanceUUIDv2False,
     wfInstanceUUIDv2True,
     version,
     groupUUID;
@@ -71,8 +68,6 @@ describe("Workflow", function() {
         creds.password
       );
       accessToken = oauthData.access_token;
-      const idData = await s2sMS.Identity.getMyIdentityData(accessToken);
-      identityData = await s2sMS.Identity.getIdentityDetails(accessToken, idData.user_uuid);
     } catch (error){
       return Promise.reject(error);
     }
@@ -363,13 +358,13 @@ describe("Workflow", function() {
             "uuid": uuidv4()
           },
           {
-            "name": "Run External Process",
+            "name": "Sum Lambda",
             "description": "Execute a process outside of the Workflow, and branches based on results.",
             "type": "normal",
             "uuid": uuidv4()
           },
           {
-            "name": "Compare Values_2",
+            "name": "Compare Values",
             "description": "Analyze data and branch the Workflow accordingly.",
             "type": "decision",
             "uuid": uuidv4(),
@@ -377,26 +372,26 @@ describe("Workflow", function() {
               "rules": {
                 ">=": [
                   {
-                    "var": "1553722724336"
+                    "var": "1553806198481"
                   },
                   "10"
                 ]
               },
               "data": {
-                "1553722724336": "$add"
+                "1553806198481": "$output.sum"
               },
-              "true_transition_name": "T-Compare Values_2-0",
-              "false_transition_name": "T-Compare Values_2-1"
+              "true_transition_name": "T-Compare Values-0",
+              "false_transition_name": "T-Compare Values-1"
             }
           },
           {
-            "name": "Run External Process_2",
+            "name": "True Lamda",
             "description": "Execute a process outside of the Workflow, and branches based on results.",
             "type": "normal",
             "uuid": uuidv4()
           },
           {
-            "name": "Run External Process_3",
+            "name": "False Lambda",
             "description": "Execute a process outside of the Workflow, and branches based on results.",
             "type": "normal",
             "uuid": uuidv4()
@@ -412,9 +407,9 @@ describe("Workflow", function() {
             },
             "description": "Transition for Trigger Manually",
             "name": "T-Trigger Manually-0",
-            "next_error_state": "Run External Process",
-            "next_state": "Run External Process",
-            "next_timeout_state": "Run External Process",
+            "next_error_state": "Sum Lambda",
+            "next_state": "Sum Lambda",
+            "next_timeout_state": "Sum Lambda",
             "start_state": "Trigger Manually",
             "timeout": "0",
             "uuid": uuidv4()
@@ -424,18 +419,19 @@ describe("Workflow", function() {
               "type": "lambda",
               "data": {
                 "lambda_condition": {
-                  "function_name": "james-add-numbers",
+                  "function_name": "sumnumbers",
                   "blocking": true,
-                  "parameters": "$params"
+                  "parameters": "$params",
+                  "result_path": "$output"
                 }
               }
             },
-            "description": "Transition for Run External Process",
-            "name": "T-Run External Process-0",
+            "description": "Transition for Sum Lambda",
+            "name": "T-Sum Lambda-0",
             "next_error_state": "End Workflow",
-            "next_state": "Compare Values_2",
+            "next_state": "Compare Values",
             "next_timeout_state": "End Workflow",
-            "start_state": "Run External Process",
+            "start_state": "Sum Lambda",
             "timeout": "30000",
             "uuid": uuidv4()
           },
@@ -446,12 +442,12 @@ describe("Workflow", function() {
                 "passthrough_condition": {}
               }
             },
-            "description": "Transition for Compare Values_2 true ",
-            "name": "T-Compare Values_2-0",
-            "next_error_state": "Run External Process_2",
-            "next_state": "Run External Process_2",
-            "next_timeout_state": "Run External Process_2",
-            "start_state": "Compare Values_2",
+            "description": "Transition for Compare Values true ",
+            "name": "T-Compare Values-0",
+            "next_error_state": "True Lamda",
+            "next_state": "True Lamda",
+            "next_timeout_state": "True Lamda",
+            "start_state": "Compare Values",
             "uuid": uuidv4(),
             "timeout": 0
           },
@@ -462,12 +458,12 @@ describe("Workflow", function() {
                 "passthrough_condition": {}
               }
             },
-            "description": "Transition for Compare Values_2 false ",
-            "name": "T-Compare Values_2-1",
-            "next_error_state": "Run External Process_3",
-            "next_state": "Run External Process_3",
-            "next_timeout_state": "Run External Process_3",
-            "start_state": "Compare Values_2",
+            "description": "Transition for Compare Values false ",
+            "name": "T-Compare Values-1",
+            "next_error_state": "False Lambda",
+            "next_state": "False Lambda",
+            "next_timeout_state": "False Lambda",
+            "start_state": "Compare Values",
             "uuid": uuidv4(),
             "timeout": 0
           },
@@ -476,22 +472,22 @@ describe("Workflow", function() {
               "type": "lambda",
               "data": {
                 "lambda_condition": {
-                  "function_name": "james-add-numbers",
+                  "function_name": "sumnumbers",
                   "blocking": true,
                   "parameters": {
                     "x": "0",
                     "y": "1"
                   },
-                  "result_path": "$complete"
+                  "result_path": "$decision"
                 }
               }
             },
-            "description": "Transition for Run External Process_2",
-            "name": "T-Run External Process_2-0",
+            "description": "Transition for True Lamda",
+            "name": "T-True Lamda-0",
             "next_error_state": "End Workflow",
             "next_state": "End Workflow",
             "next_timeout_state": "End Workflow",
-            "start_state": "Run External Process_2",
+            "start_state": "True Lamda",
             "timeout": "30000",
             "uuid": uuidv4()
           },
@@ -500,22 +496,22 @@ describe("Workflow", function() {
               "type": "lambda",
               "data": {
                 "lambda_condition": {
-                  "function_name": "james-add-numbers",
+                  "function_name": "sumnumbers",
                   "blocking": true,
                   "parameters": {
                     "x": "0",
                     "y": "0"
                   },
-                  "result_path": "$complete"
+                  "result_path": "$decision"
                 }
               }
             },
-            "description": "Transition for Run External Process_3",
-            "name": "T-Run External Process_3-0",
+            "description": "Transition for False Lambda",
+            "name": "T-False Lambda-0",
             "next_error_state": "End Workflow",
             "next_state": "End Workflow",
             "next_timeout_state": "End Workflow",
-            "start_state": "Run External Process_3",
+            "start_state": "False Lambda",
             "timeout": "30000",
             "uuid": uuidv4()
           }
@@ -736,11 +732,11 @@ describe("Workflow", function() {
         version: "1.0.2",
         start_state: "Trigger Manually",
         group_uuid: groupUUID,
-        input_vars: { params: { x: 5, y: 4 } }
+        input_vars: { params: { x: 5, y: 6 } }
       },
       trace
     );
-    wfInstanceUUIDv2False = response.uuid;
+    wfInstanceUUIDv2True = response.uuid;
     assert.ok(
       response.workflow_vars.params.x === 5,
       JSON.stringify(response, null, "\t")
@@ -754,11 +750,11 @@ describe("Workflow", function() {
     await new Promise(resolve => setTimeout(resolve, 3000));
     const response = await s2sMS.Workflow.getWfInstanceHistory(
       accessToken,
-      wfInstanceUUIDv2False,
+      wfInstanceUUIDv2True,
       trace
     );
     assert.ok(
-      response.workflow_vars.complete.add === 0,
+      response.workflow_vars.decision.sum === 1,
       JSON.stringify(response, null, "\t")
     );
     return response;
@@ -784,129 +780,79 @@ describe("Workflow", function() {
     return response;
   },"Get Workflow Template History"));
   
-  // it("change me", mochaAsync(async () => {
-  //   if (!creds.isValid) throw new Error("Invalid Credentials");
-  //   trace = objectMerge({}, trace, Util.generateNewMetaData(trace));
-  //   const response = await somethingAsync();
-  //   assert.ok(
-  //     1 === 1,
-  //     JSON.stringify(response, null, "\t")
-  //   );
-  //   return response;
-  // },"change me"));
-  it("List Workflow Groups ", function(done) {
-    if (!creds.isValid) return done();
-    s2sMS.Workflow.listWorkflowGroups(
+  it("List Workflow Groups", mochaAsync(async () => {
+    if (!creds.isValid) throw new Error("Invalid Credentials");
+    trace = objectMerge({}, trace, Util.generateNewMetaData(trace));
+    const response = await s2sMS.Workflow.listWorkflowGroups(
       accessToken,
       0, //offset
       10, //limit
       {
         template_uuid: wfTemplateUUID //filters
-      }
-    )
-      .then(response => {
-        //console.log("List Workflow Group RESPONSE", response.items);
-        assert(response.items[0].master.uuid === wfInstanceUUID);
-        done();
-      })
-      .catch(error => {
-        console.log("List Workflow Template History ERROR", error);
-        done(new Error(error));
-      });
-  });
-
-  // it("change me", mochaAsync(async () => {
-  //   if (!creds.isValid) throw new Error("Invalid Credentials");
-  //   trace = objectMerge({}, trace, Util.generateNewMetaData(trace));
-  //   const response = await somethingAsync();
-  //   assert.ok(
-  //     1 === 1,
-  //     JSON.stringify(response, null, "\t")
-  //   );
-  //   return response;
-  // },"change me"));
-  it("Get Workflow Group ", function(done) {
-    if (!creds.isValid) return done();
-    s2sMS.Workflow.getWorkflowGroup(accessToken, groupUUID)
-      .then(response => {
-        //console.log("Get Workflow Group RESPONSE", response);
-        assert(response.uuid === groupUUID);
-        done();
-      })
-      .catch(error => {
-        console.log("Get Workflow Group ERROR", error);
-        done(new Error(error));
-      });
-  });
-
-  // it("change me", mochaAsync(async () => {
-  //   if (!creds.isValid) throw new Error("Invalid Credentials");
-  //   trace = objectMerge({}, trace, Util.generateNewMetaData(trace));
-  //   const response = await somethingAsync();
-  //   assert.ok(
-  //     1 === 1,
-  //     JSON.stringify(response, null, "\t")
-  //   );
-  //   return response;
-  // },"change me"));
-  it("Update Workflow Group ", function(done) {
-    if (!creds.isValid) return done();
-    s2sMS.Workflow.updateWorkflowGroup(
+      },
+      trace
+    );
+    assert.ok(
+      response.items[0].master.uuid === wfInstanceUUID,
+      JSON.stringify(response, null, "\t")
+    );
+    return response;
+  },"List Workflow Groups"));
+  
+  it("Get Workflow Group", mochaAsync(async () => {
+    if (!creds.isValid) throw new Error("Invalid Credentials");
+    trace = objectMerge({}, trace, Util.generateNewMetaData(trace));
+    const response = await s2sMS.Workflow.getWorkflowGroup(
+      accessToken,
+      groupUUID,
+      trace
+    );
+    assert.ok(
+      response.uuid === groupUUID,
+      JSON.stringify(response, null, "\t")
+    );
+    return response;
+  },"Get Workflow Group"));
+  
+  it("Update Workflow Group", mochaAsync(async () => {
+    if (!creds.isValid) throw new Error("Invalid Credentials");
+    trace = objectMerge({}, trace, Util.generateNewMetaData(trace));
+    const response = await s2sMS.Workflow.updateWorkflowGroup(
       accessToken,
       groupUUID,
       "cancelled", //status
-      { important_things: true } //data
-    )
-      .then(response => {
-        //console.log("Update Workflow Group RESPONSE", response);
-        assert(
-          response.status === "cancelled" &&
-            response.data.important_things === true
-        );
-        done();
-      })
-      .catch(error => {
-        console.log("Update Workflow Group ERROR", error);
-        done(new Error(error));
-      });
-  });
-
-  // it("change me", mochaAsync(async () => {
-  //   if (!creds.isValid) throw new Error("Invalid Credentials");
-  //   trace = objectMerge({}, trace, Util.generateNewMetaData(trace));
-  //   const response = await somethingAsync();
-  //   assert.ok(
-  //     1 === 1,
-  //     JSON.stringify(response, null, "\t")
-  //   );
-  //   return response;
-  // },"change me"));
-  it("Delete Workflow Template", function(done) {
-    if (!creds.isValid) return done();
-    s2sMS.Workflow.deleteWorkflowTemplate(accessToken, wfTemplateUUID, version)
-      .then(response => {
-        //console.log("Delete Workflow Template RESPONSE", response);
-        assert(response.status === "ok");
-        s2sMS.Workflow.deleteWorkflowTemplate(
-          accessToken,
-          wfTemplateUUID,
-          "1.0.2"
-        )
-          .then(response => {
-            //console.log("Delete Workflow Template RESPONSE", response);
-            assert(response.status === "ok");
-            done();
-          })
-          .catch(error => {
-            console.log("Delete Workflow Template version 1.0.2 ERROR", error);
-            done(new Error(error));
-          });
-      })
-      .catch(error => {
-        console.log(`Delete Workflow Template ${version} ERROR`, error);
-        done(new Error(error));
-      });
-  });
+      { important_things: true }, //data
+      trace
+    );
+    assert.ok(
+      response.status === "cancelled" &&
+      response.data.important_things === true,
+      JSON.stringify(response, null, "\t")
+    );
+    return response;
+  },"Update Workflow Group"));
+  
+  it("Delete Workflow Template", mochaAsync(async () => {
+    if (!creds.isValid) throw new Error("Invalid Credentials");
+    trace = objectMerge({}, trace, Util.generateNewMetaData(trace));
+    await s2sMS.Workflow.deleteWorkflowTemplate(
+      accessToken,
+      wfTemplateUUID,
+      "1.0.1",
+      trace
+    );
+    const response = await s2sMS.Workflow.deleteWorkflowTemplate(
+      accessToken,
+      wfTemplateUUID,
+      "1.0.2",
+      trace
+    );
+    assert.ok(
+      response.status === "ok",
+      JSON.stringify(response, null, "\t")
+    );
+    return response;
+  },"Delete Workflow Template"));
   
   // template
   // it("change me", mochaAsync(async () => {

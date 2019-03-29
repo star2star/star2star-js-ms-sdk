@@ -87,7 +87,7 @@ const createTaskTemplate = function createTaskTemplate() {
   if (vTasks.status === 200) {
     return Objects.createUserDataObject(userUUID, access_token, title, "task_template", description, {
       tasks: vTasks.tasks
-    }, undefined, //users for shared objects
+    }, undefined, undefined, //users for shared objects
     trace);
   } else {
     return Promise.reject(vTasks);
@@ -134,7 +134,8 @@ const createTaskObject = function createTaskObject() {
   if (vTasks.status === 200) {
     return Objects.createUserDataObject(userUUID, access_token, title, "task_list", description, {
       tasks: vTasks.tasks
-    }, undefined, //users for shared objects
+    }, undefined, //account for shared objects
+    undefined, //users for shared objects
     trace);
   } else {
     return Promise.reject(vTasks);
@@ -185,12 +186,11 @@ const getTaskObject = function getTaskObject() {
 
 
 const updateTaskObject = function updateTaskObject() {
-  let userUUID = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : "null user uuid";
-  let access_token = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : "null access_token";
-  let uuid = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : "missing_uuid";
-  let taskObject = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : {};
-  let trace = arguments.length > 4 && arguments[4] !== undefined ? arguments[4] : {};
-  return Objects.updateDataObject(userUUID, access_token, uuid, taskObject, trace);
+  let access_token = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : "null access_token";
+  let uuid = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : "missing_uuid";
+  let taskObject = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : {};
+  let trace = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : {};
+  return Objects.updateDataObject(access_token, uuid, taskObject, undefined, undefined, trace);
 };
 /**
  * @async
@@ -214,7 +214,7 @@ const addTaskToTaskObject = function addTaskToTaskObject() {
     return Objects.getDataObject(access_token, taskObjectUUID, trace).then(rData => {
       //console.log(rData)
       rData.content.tasks = [].concat(rData.content.tasks, vTasks.tasks);
-      return Objects.updateDataObject(access_token, taskObjectUUID, rData, utilities.generateNewMetaData(trace));
+      return Objects.updateDataObject(access_token, taskObjectUUID, rData, undefined, undefined, utilities.generateNewMetaData(trace));
     });
   } else {
     return Promise.reject(vTasks);
@@ -244,7 +244,7 @@ const updateTaskInTaskObject = function updateTaskInTaskObject() {
         return t.uuid !== vTasks.tasks[0].uuid;
       });
       rData.content.tasks = [].concat(rData.content.tasks, vTasks.tasks);
-      return Objects.updateDataObject(access_token, taskObjectUUID, rData, utilities.generateNewMetaData(trace));
+      return Objects.updateDataObject(access_token, taskObjectUUID, rData, undefined, undefined, utilities.generateNewMetaData(trace));
     });
   } else {
     return Promise.reject(vTasks);
