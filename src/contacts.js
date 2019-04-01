@@ -111,40 +111,6 @@ const exportContacts = async (
   return response;
 };
 
-
-/**
- * @async
- * @description This function will ask the cpaas contacts service to get user contacts based on input criteria
- * @param {string} [user_uuid="null user uuid"]
- * @param {object} [params={}] - object containing query params
- * @param {*} accessToken - access token
- * @param {object} [trace = {}] - optional microservice lifecycle trace headers
- * @returns {Promise<object>} - Promise resolving to a data object containing collection of user contacts
- */
-const getContacts = (
-  user_uuid = "null user uuid",
-  params = {},
-  accessToken,
-  trace = {}
-) => {
-  const MS = util.getEndpoint("contacts");
-  const requestOptions = {
-    method: "GET",
-    uri: `${MS}/users/${user_uuid}/contacts`,
-    qs: {
-      ...params
-    },
-    headers: {
-      Authorization: `Bearer ${accessToken}`,
-      "Content-type": "application/json",
-      "x-api-version": `${util.getVersion()}`
-    },
-    json: true
-  };
-  util.addRequestTrace(requestOptions, trace);
-  return request(requestOptions);
-};
-
 /**
  * @async
  * @description This function will list a user's contacts

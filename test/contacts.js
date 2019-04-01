@@ -5,7 +5,7 @@ const mocha = require("mocha");
 const describe = mocha.describe;
 const it = mocha.it;
 const before = mocha.before;
-//const after = mocha.after;
+const after = mocha.after;
 
 //test requires
 const fs = require("fs");
@@ -27,6 +27,20 @@ const testContact = {
       number: "9419998765",
       preferred: true,
       type: "Home"
+    }
+  ]
+};
+
+const testContact2 = {
+  name: {
+    first: "Other",
+    last: "Name"
+  },
+  phone_numbers: [
+    {
+      number: "5555555555",
+      preferred: true,
+      type: "Fax"
     }
   ]
 };
@@ -56,7 +70,8 @@ let creds = {
 describe("Contacts MS Test Suite", function() {
   let accessToken,
     identityData,
-    contactUUID;
+    contactUUID,
+    contact2UUID;
 
   before(async () => {
     try {
@@ -123,11 +138,50 @@ describe("Contacts MS Test Suite", function() {
       identityData.uuid
     );
     assert.ok(
-      1 === 1,
+      response.hasOwnProperty("items") &&
+      response.items[0].hasOwnProperty("uuid"),
       JSON.stringify(response, null, "\t")
     );
     return response;
   },"Export User Contact"));
+
+  it("List Contacts", mochaAsync(async () => {
+    if (!creds.isValid) throw new Error("Invalid Credentials");
+    trace = objectMerge({}, trace, Util.generateNewMetaData(trace));
+    const newContact = await s2sMS.Contacts.createUserContact(
+      accessToken,
+      identityData.uuid,
+      testContact2
+    );
+    contact2UUID = newContact.uuid;
+    trace = objectMerge({}, trace, Util.generateNewMetaData(trace));
+    trace = objectMerge({}, trace, Util.generateNewMetaData(trace));
+    const response = await s2sMS.Contacts.listContacts(
+      accessToken,
+      identityData.uuid,
+      0, //offset
+      100, //limit
+      {"number": "9"}, //filters...waiting on CSRVS-249 to test these
+      trace
+    );
+
+    const response2 = await s2sMS.Contacts.listContacts(
+      accessToken,
+      identityData.uuid,
+      0, //offset
+      100, //limit
+      {"name": "oth"}, //filters...waiting on CSRVS-249 to test these
+      trace
+    );
+    logger.debug("List Contacts", response2);
+    // may need to array.filter response if test identity has contacts that filter returns in addtion to test contacts
+    assert.ok(
+      response.items[0].uuid === contactUUID &&
+      response2.items[0].uuid === contact2UUID,
+      JSON.stringify(response, null, "\t")
+    );
+    return response;
+  },"List Contacts"));
 
   it("Delete User Contact", mochaAsync(async () => {
     if (!creds.isValid) throw new Error("Invalid Credentials");
@@ -136,6 +190,10 @@ describe("Contacts MS Test Suite", function() {
       accessToken,
       contactUUID
     );
+    await s2sMS.Contacts.deleteContact(
+      accessToken,
+      contact2UUID
+    );
     assert.ok(
       response.hasOwnProperty("status") &&
       response.status === "ok",
@@ -143,24 +201,5 @@ describe("Contacts MS Test Suite", function() {
     );
     return response;
   },"Delete User Contact"));
-
-  it("List Contacts", mochaAsync(async () => {
-    if (!creds.isValid) throw new Error("Invalid Credentials");
-    trace = objectMerge({}, trace, Util.generateNewMetaData(trace));
-    const response = await s2sMS.Contacts.listContacts(
-      accessToken,
-      identityData.uuid,
-      0, //offset
-      10, //limit
-      undefined, //filters...waiting on CSRVS-249 to test these
-      {} //trace headers
-    );
-    assert.ok(
-      response.hasOwnProperty("items") &&
-      Array.isArray(response.items),
-      JSON.stringify(response, null, "\t")
-    );
-    return response;
-  },"List Contacts"));
   
 });

@@ -55,7 +55,6 @@ toc:
       - createUserContact
       - deleteContact
       - exportContacts
-      - getContacts
       - listContacts
       - updateContact
   - name: Email

@@ -167,7 +167,6 @@ describe("Oauth MS Unit Test Suite", function () {
     const response = await s2sMS.Oauth.getClientToken(clientBasicToken, trace);
     clientAccessToken = response.access_token;
     const test = await s2sMS.Lambda.listLambdas(clientAccessToken, trace);
-    console.log("*********test", test);
     assert.ok(
       response.hasOwnProperty("access_token") &&
       response.hasOwnProperty("token_type") &&

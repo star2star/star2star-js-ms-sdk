@@ -1,10 +1,6 @@
 /*global require module*/
 "use strict";
 
-function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; var ownKeys = Object.keys(source); if (typeof Object.getOwnPropertySymbols === 'function') { ownKeys = ownKeys.concat(Object.getOwnPropertySymbols(source).filter(function (sym) { return Object.getOwnPropertyDescriptor(source, sym).enumerable; })); } ownKeys.forEach(function (key) { _defineProperty(target, key, source[key]); }); } return target; }
-
-function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
-
 const request = require("request-promise");
 
 const util = require("./utilities");
@@ -118,37 +114,6 @@ const exportContacts = async function exportContacts() {
   util.addRequestTrace(requestOptions, trace);
   const response = await util.aggregate(request, requestOptions, trace);
   return response;
-};
-/**
- * @async
- * @description This function will ask the cpaas contacts service to get user contacts based on input criteria
- * @param {string} [user_uuid="null user uuid"]
- * @param {object} [params={}] - object containing query params
- * @param {*} accessToken - access token
- * @param {object} [trace = {}] - optional microservice lifecycle trace headers
- * @returns {Promise<object>} - Promise resolving to a data object containing collection of user contacts
- */
-
-
-const getContacts = function getContacts() {
-  let user_uuid = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : "null user uuid";
-  let params = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
-  let accessToken = arguments.length > 2 ? arguments[2] : undefined;
-  let trace = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : {};
-  const MS = util.getEndpoint("contacts");
-  const requestOptions = {
-    method: "GET",
-    uri: "".concat(MS, "/users/").concat(user_uuid, "/contacts"),
-    qs: _objectSpread({}, params),
-    headers: {
-      Authorization: "Bearer ".concat(accessToken),
-      "Content-type": "application/json",
-      "x-api-version": "".concat(util.getVersion())
-    },
-    json: true
-  };
-  util.addRequestTrace(requestOptions, trace);
-  return request(requestOptions);
 };
 /**
  * @async
