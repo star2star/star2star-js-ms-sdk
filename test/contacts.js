@@ -161,7 +161,7 @@ describe("Contacts MS Test Suite", function() {
       identityData.uuid,
       0, //offset
       100, //limit
-      {"number": "9"}, //filters...waiting on CSRVS-249 to test these
+      {"search": "9"},
       trace
     );
 
@@ -170,7 +170,7 @@ describe("Contacts MS Test Suite", function() {
       identityData.uuid,
       0, //offset
       100, //limit
-      {"name": "oth"}, //filters...waiting on CSRVS-249 to test these
+      {"search": "oth"},
       trace
     );
     logger.debug("List Contacts", response2);
