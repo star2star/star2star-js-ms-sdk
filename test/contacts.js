@@ -173,11 +173,22 @@ describe("Contacts MS Test Suite", function() {
       {"search": "oth"},
       trace
     );
+
+    // verify "starts with"
+    const response3 = await s2sMS.Contacts.listContacts(
+      accessToken,
+      identityData.uuid,
+      0, //offset
+      100, //limit
+      {"search": "ther"},
+      trace
+    );
     logger.debug("List Contacts", response2);
     // may need to array.filter response if test identity has contacts that filter returns in addtion to test contacts
     assert.ok(
       response.items[0].uuid === contactUUID &&
-      response2.items[0].uuid === contact2UUID,
+      response2.items[0].uuid === contact2UUID &&
+      response3.items.length === 0,
       JSON.stringify(response, null, "\t")
     );
     return response;
