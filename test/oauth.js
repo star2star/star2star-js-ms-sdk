@@ -23,6 +23,7 @@ const mochaAsync = (func, name) => {
       logger.debug(name, response);
       return response; 
     } catch (error) {
+      logger.error(name, error);
       //mocha will log out the error
       return Promise.reject(error);
     }

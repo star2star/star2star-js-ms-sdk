@@ -39,7 +39,7 @@ let creds = {
 
 describe("Messaging MS Unit Test Suite", function () {
 
-  let accessToken, identityData;
+  let accessToken, identityData, conversationUUID;
 
   before(async () => {
     try {
@@ -77,6 +77,8 @@ describe("Messaging MS Unit Test Suite", function () {
       creds.smsFrom,
       creds.smsTo,
       "a test",
+      "text",
+      {},
       trace
     );
     assert.ok(
@@ -85,6 +87,71 @@ describe("Messaging MS Unit Test Suite", function () {
     );
     return response;
   },"Send Simple SMS"));
+
+  it("Get Conversation", mochaAsync(async () => {
+    if (!creds.isValid) throw new Error("Invalid Credentials");
+    trace = objectMerge({}, trace, Util.generateNewMetaData(trace));
+    const response = await s2sMS.Messaging.getConversation(
+      accessToken,
+      identityData.uuid,
+      creds.smsTo,
+      trace
+    );
+    assert.ok(
+      true,
+      JSON.stringify(response, null, "\t")
+    );
+    conversationUUID = response.uuid;
+    return response;
+  },"Get Conversation"));
+
+  it("Get Conversation UUID", mochaAsync(async () => {
+    if (!creds.isValid) throw new Error("Invalid Credentials");
+    trace = objectMerge({}, trace, Util.generateNewMetaData(trace));
+    const response = await s2sMS.Messaging.getConversationUuid(
+      accessToken,
+      identityData.uuid,
+      creds.smsTo,
+      trace
+    );
+    assert.ok(
+      true,
+      JSON.stringify(response, null, "\t")
+    );
+    return response;
+  },"Get Conversation UUID"));
+
+  it("Retrieve Conversations", mochaAsync(async () => {
+    if (!creds.isValid) throw new Error("Invalid Credentials");
+    trace = objectMerge({}, trace, Util.generateNewMetaData(trace));
+    const response = await s2sMS.Messaging.retrieveConversations(
+      accessToken,
+      identityData.uuid,
+      0, // offset
+      5, // limit
+      trace
+    );
+    assert.ok(
+      true,
+      JSON.stringify(response, null, "\t")
+    );
+    return response;
+  },"Retrieve Conversations"));
+
+  it("Mark All Conversations Read", mochaAsync(async () => {
+    if (!creds.isValid) throw new Error("Invalid Credentials");
+    trace = objectMerge({}, trace, Util.generateNewMetaData(trace));
+    const response = await s2sMS.Messaging.markAllConversationMessagesRead(
+      accessToken,
+      conversationUUID,
+      trace
+    );
+    assert.ok(
+      true,
+      JSON.stringify(response, null, "\t")
+    );
+    return response;
+  },"Mark All Conversations Read"));
   
   it("Valid SMS Number", mochaAsync(async () => {
     if (!creds.isValid) throw new Error("Invalid Credentials");
