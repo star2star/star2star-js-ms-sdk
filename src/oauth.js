@@ -186,7 +186,7 @@ const listClientTokens = async (
   filters = undefined,
   trace = {}
 ) => {
-  const MS = Util.getAuthHost();
+  const MS = Util.getEndpoint("oauth");
   const requestOptions = {
     method: "GET",
     uri: `${MS}/oauth/tokens`,

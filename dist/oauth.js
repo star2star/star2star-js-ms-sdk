@@ -197,7 +197,7 @@ const listClientTokens = async function listClientTokens() {
   let limit = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : 10;
   let filters = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : undefined;
   let trace = arguments.length > 4 && arguments[4] !== undefined ? arguments[4] : {};
-  const MS = Util.getAuthHost();
+  const MS = Util.getEndpoint("oauth");
   const requestOptions = {
     method: "GET",
     uri: "".concat(MS, "/oauth/tokens"),
