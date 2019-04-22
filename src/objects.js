@@ -228,7 +228,7 @@ const getDataObject = (
       Authorization: `Bearer ${accessToken}`,
       "Content-type": "application/json",
       "x-api-version": `${Util.getVersion()}`,
-      "cache-contro":"no-cache"
+      "cache-control":"no-cache"
     },
     json: true
   };

@@ -223,7 +223,7 @@ const getDataObject = function getDataObject() {
       Authorization: "Bearer ".concat(accessToken),
       "Content-type": "application/json",
       "x-api-version": "".concat(Util.getVersion()),
-      "cache-contro": "no-cache"
+      "cache-control": "no-cache"
     },
     json: true
   };
