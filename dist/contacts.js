@@ -116,6 +116,34 @@ const exportContacts = async function exportContacts() {
   return response;
 };
 /**
+ * @description This function return a single contact by uuid
+ * @async
+ * @param {string} [accessToken="null access_token"] - cpaas access token
+ * @param {string} [contactUUID="null contact_uuid"] - contact uuid
+ * @param {object} [trace={}] - optional cpaas lifecycle headers
+ * @returns {Promise<object>} - promise resolving to a contact object
+ */
+
+
+const getContact = function getContact() {
+  let accessToken = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : "null access_token";
+  let contactUUID = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : "null contact_uuid";
+  let trace = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : {};
+  const MS = util.getEndpoint("contacts");
+  const requestOptions = {
+    method: "GET",
+    uri: "".concat(MS, "/contacts/").concat(contactUUID),
+    headers: {
+      Authorization: "Bearer ".concat(accessToken),
+      "Content-type": "application/json",
+      "x-api-version": "".concat(util.getVersion())
+    },
+    json: true
+  };
+  util.addRequestTrace(requestOptions, trace);
+  return request(requestOptions);
+};
+/**
  * @async
  * @description This function will list a user's contacts
  * @param {string} [accessToken="null access_token"] - cpaas access token
@@ -195,6 +223,7 @@ const updateContact = function updateContact() {
 module.exports = {
   createUserContact,
   deleteContact,
+  getContact,
   exportContacts,
   listContacts,
   updateContact

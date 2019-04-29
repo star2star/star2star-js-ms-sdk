@@ -112,6 +112,35 @@ const exportContacts = async (
 };
 
 /**
+ * @description This function return a single contact by uuid
+ * @async
+ * @param {string} [accessToken="null access_token"] - cpaas access token
+ * @param {string} [contactUUID="null contact_uuid"] - contact uuid
+ * @param {object} [trace={}] - optional cpaas lifecycle headers
+ * @returns {Promise<object>} - promise resolving to a contact object
+ */
+const getContact = (
+  accessToken = "null access_token",
+  contactUUID = "null contact_uuid",
+  trace = {}
+) => {
+  const MS = util.getEndpoint("contacts");
+  const requestOptions = {
+    method: "GET",
+    uri: `${MS}/contacts/${contactUUID}`,
+    headers: {
+      Authorization: `Bearer ${accessToken}`,
+      "Content-type": "application/json",
+      "x-api-version": `${util.getVersion()}`
+    },
+    json: true
+  };
+  util.addRequestTrace(requestOptions, trace);
+  return request(requestOptions); 
+};
+
+
+/**
  * @async
  * @description This function will list a user's contacts
  * @param {string} [accessToken="null access_token"] - cpaas access token
@@ -188,6 +217,7 @@ const updateContact = (
 module.exports = {
   createUserContact,
   deleteContact,
+  getContact,
   exportContacts,
   listContacts,
   updateContact

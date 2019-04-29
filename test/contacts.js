@@ -194,6 +194,20 @@ describe("Contacts MS Test Suite", function() {
     return response;
   },"List Contacts"));
 
+  it("Get One Contact", mochaAsync(async () => {
+    if (!creds.isValid) throw new Error("Invalid Credentials");
+    trace = objectMerge({}, trace, Util.generateNewMetaData(trace));
+    const response = await s2sMS.Contacts.getContact(
+      accessToken,
+      contactUUID
+    );
+    assert.ok(
+      response.uuid === contactUUID,
+      JSON.stringify(response, null, "\t")
+    );
+    return response;
+  },"Get One Contact"));
+
   it("Delete User Contact", mochaAsync(async () => {
     if (!creds.isValid) throw new Error("Invalid Credentials");
     trace = objectMerge({}, trace, Util.generateNewMetaData(trace));

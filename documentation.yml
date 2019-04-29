@@ -54,6 +54,7 @@ toc:
     children:
       - createUserContact
       - deleteContact
+      - getContact
       - exportContacts
       - listContacts
       - updateContact
