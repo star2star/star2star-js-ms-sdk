@@ -99,7 +99,7 @@ class Logger {
   }
 
   setPretty(pretty) {
-    if (pretty) {
+    if (pretty === "true") {
       this.logger.transports.console.prettyPrint = true;
     } else {
       this.logger.transports.console.prettyPrint = false;

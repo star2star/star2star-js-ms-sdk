@@ -70,6 +70,7 @@ process.env.MS_LOGPRETTY = true // defaults to false
 [Please click here for our documentation pages.](https://star2star.github.io/star2star-js-ms-sdk/ "Star2Star Micro Service SDK Documentation")
 
 ## Changes
+* 3.0.29 - logger pretty print fix due to env vars being strings
 * 3.0.28 - add get contact by uuid
 * 3.0.27 - fix typo
 * 3.0.26 - point list tokens to cpaas
