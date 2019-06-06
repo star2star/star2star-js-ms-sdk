@@ -185,7 +185,7 @@ const modifyAccount = (
   return new Promise(function(resolve, reject) {
     request(requestOptions)
       .then(function(responseData) {
-        responseData.statusCode === 202
+        responseData.statusCode === 204
           ? resolve({ status: "ok" })
           : reject({ status: "failed" });
       })

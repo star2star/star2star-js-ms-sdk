@@ -181,7 +181,7 @@ const modifyAccount = function modifyAccount() {
   util.addRequestTrace(requestOptions, trace);
   return new Promise(function (resolve, reject) {
     request(requestOptions).then(function (responseData) {
-      responseData.statusCode === 202 ? resolve({
+      responseData.statusCode === 204 ? resolve({
         status: "ok"
       }) : reject({
         status: "failed"
