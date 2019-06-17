@@ -24,6 +24,7 @@ toc:
       - deleteRole
       - deleteRoleFromUserGroup
       - getResourceUsers
+      - getResourceGroupRoles
       - getRole
       - listAccessByGroups
       - listAccessByPermissions
@@ -207,6 +208,7 @@ toc:
       - createUUID
       - filterResponse
       - getEndpoint
+      - getAuthHost
       - getVersion
       - getValueFromObjectTree
       - isBrowser

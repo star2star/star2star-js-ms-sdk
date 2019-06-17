@@ -536,6 +536,52 @@ const getResourceUsers = async (accessToken = "null accessToken", resourceUUID =
 
 /**
  * @async
+ * @description This function returns the uuids for roles required to build resource groups
+ * @param {string} [accessToken="null access token"] - cpaas access token
+ * @param {*} [trace={}] - optional microservices lifecycle object
+ * @returns {Promise} - promise resolving to roles object
+ */
+const getResourceGroupRoles = async (accessToken = "null access token", trace = {}) => { 
+  const retObj = {};
+  const rolePromises = []; 
+  Object.keys(Util.config.resourceRoleDescriptions).forEach(resourceType => {
+    rolePromises.push(
+      listRoles(
+        accessToken,
+        0, // offset
+        100, // limit
+        {"description": Util.config.resourceRoleDescriptions[resourceType]},
+        trace
+      )
+    );
+  });
+  const rawRoles = await Promise.all(rolePromises);
+  /*
+   * The following seems weird, convoluted, and brittle because it is.
+   * Awaiting resolution of JIRA {fill in blank} for final implimentation.
+   * The resource group roles will be present Starpaas->Admin->Roles for all account admins.
+   * Because of this they are written with a human friendly name and description.
+   * As such they are complex strings that need to be parsed into a format that can be used by resource groups utility.
+   */
+  rawRoles.forEach(element =>{
+    element.items.forEach(item => {
+      const permissionType = item.name.split(" ")[1];
+      if(!retObj.hasOwnProperty(permissionType)){
+        retObj[permissionType] = {};
+      }
+      const permissions = item.name.split("-")[1].split(",");
+      let propName = "";
+      permissions.forEach(permission => {
+        propName = `${propName}${permission.charAt(1)}`;
+      });
+      retObj[permissionType][propName] = item.uuid;
+    }); 
+  });
+  return retObj;
+};
+
+/**
+ * @async
  * @description This function returns a single role by uuid.
  * @param {string} [accessToken="null accessToken"] - cpaas access token
  * @param {string} [roleUUID="null roleUUID"] - role uuid
@@ -1046,6 +1092,7 @@ module.exports = {
   deleteRole,
   deleteRoleFromUserGroup,
   getResourceUsers,
+  getResourceGroupRoles,
   getRole,
   listAccessByGroups,
   listAccessByPermissions,

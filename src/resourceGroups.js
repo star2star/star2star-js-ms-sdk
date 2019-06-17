@@ -4,8 +4,6 @@
 const Util = require("./utilities");
 const Auth = require("./auth");
 const Groups = require("./groups");
-const env = Util.config.env;
-const roles = Util.config.roles[env];
 const objectMerge = require("object-merge");
 const logger = Util.getLogger();
 
@@ -40,6 +38,7 @@ const createResourceGroups = async (
     }
     //create the groups
     let nextTrace = objectMerge({}, trace);
+    const roles = await Auth.getResourceGroupRoles(accessToken, nextTrace);
     const groupPromises = [];
     const scopePromises = [];
     const groupTypeRegex = /^[r,u,d]{1,3}/;
