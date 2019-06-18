@@ -558,8 +558,8 @@ const getResourceGroupRoles = async (accessToken = "null access token", trace = 
   const rawRoles = await Promise.all(rolePromises);
   /*
    * The following seems weird, convoluted, and brittle because it is.
-   * Awaiting resolution of JIRA {fill in blank} for final implimentation.
-   * The resource group roles will be present Starpaas->Admin->Roles for all account admins.
+   * Awaiting resolution of JIRA CCORE-586 for final implimentation.
+   * The resource group roles will be present in Starpaas->Admin->Roles for all account admins.
    * Because of this they are written with a human friendly name and description.
    * As such they are complex strings that need to be parsed into a format that can be used by resource groups utility.
    */
