@@ -5,7 +5,7 @@
   "main": "./dist/index.js",
   "scripts": {
     "init": "mkdir dist",
-    "clean": "rm -rf dist && touch package-lock.json && rm package-lock.json && rm -rf node_modules && npm install",
+    "clean": "rm -rf dist && touch package-lock.json && rm package-lock.json && rm -rf node_modules && npm install --no-save",
     "test": "env MS_LOGLEVEL=silent NODE_TLS_REJECT_UNAUTHORIZED=0 mocha --timeout 15000 --require @babel/register",
     "trace": "env MS_LOGLEVEL=trace NODE_TLS_REJECT_UNAUTHORIZED=0 mocha --timeout 15000 --require @babel/register",
     "debug": "env MS_LOGLEVEL=debug NODE_TLS_REJECT_UNAUTHORIZED=0 MS_LOGPRETTY=true mocha --timeout 15000 --require @babel/register",
@@ -24,7 +24,6 @@
   "dependencies": {
     "ajv": "6.10.0",
     "core-js": "3.0.0",
-    "documentation": "9.3.1",
     "email-validator": "2.0.4",
     "object-merge": "2.5.1",
     "request": "2.88.0",
@@ -40,6 +39,7 @@
     "@babel/preset-env": "7.4.2",
     "@babel/register": "7.0.0",
     "assert": "1.4.1",
+    "documentation": "8.0.2",
     "eslint": "5.1.0",
     "eslint-plugin-react": "7.10.0",
     "mocha": "5.2.0"
