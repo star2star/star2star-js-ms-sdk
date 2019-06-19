@@ -246,6 +246,12 @@
                       </a></li>
                     
                       <li><a
+                        href='#listrolesforuser'
+                        class='regular pre-open'>
+                        .listRolesForUser
+                      </a></li>
+                    
+                      <li><a
                         href='#listusergroups'
                         class='regular pre-open'>
                         .listUserGroups
@@ -1464,6 +1470,12 @@
                       </a></li>
                     
                       <li><a
+                        href='#getlogger'
+                        class='regular pre-open'>
+                        .getLogger
+                      </a></li>
+                    
+                      <li><a
                         href='#getversion'
                         class='regular pre-open'>
                         .getVersion
@@ -1511,26 +1523,6 @@
                   
                   
                 </div>
-                
-                </li>
-              
-                
-                <li><a
-                  href='#getlogger'
-                  class="">
-                  getLogger
-                  
-                </a>
-                
-                </li>
-              
-                
-                <li><a
-                  href='#listrolesforuser'
-                  class="">
-                  listRolesForUser
-                  
-                </a>
                 
                 </li>
               
@@ -1621,183 +1613,6 @@
         
           
             <div class='keyline-top-not py2'></div>
-          
-        
-          
-          <section class='p2 mb2 clearfix bg-white minishadow'>
-
-  
-  <div class='clearfix'>
-    
-    <h3 class='fl m0' id='getlogger'>
-      getLogger
-    </h3>
-    
-    
-  </div>
-  
-
-  <p>This function returns a pointer to the logger instance</p>
-
-    <div class='pre p1 fill-light mt0'>getLogger</div>
-  
-  
-
-  
-  
-  
-  
-  
-  
-
-  
-
-  
-
-  
-    
-      <div class='py1 quiet mt1 prose-big'>Returns</div>
-      <code>instance&#x3C;Class></code>:
-        instance of node-logger class
-
-      
-    
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-</section>
-
-          
-        
-          
-          <section class='p2 mb2 clearfix bg-white minishadow'>
-
-  
-  <div class='clearfix'>
-    
-    <h3 class='fl m0' id='listrolesforuser'>
-      listRolesForUser
-    </h3>
-    
-    
-  </div>
-  
-
-  <p>This function lists roles.</p>
-
-    <div class='pre p1 fill-light mt0'>listRolesForUser</div>
-  
-  
-
-  
-  
-  
-  
-  
-  
-
-  
-    <div class='py1 quiet mt1 prose-big'>Parameters</div>
-    <div class='prose'>
-      
-        <div class='space-bottom0'>
-          <div>
-            <span class='code bold'>accessToken</span> <code class='quiet'>(<a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String">string</a>
-            = <code>&quot;null accessToken&quot;</code>)</code>
-	    cpaas access token
-
-          </div>
-          
-        </div>
-      
-        <div class='space-bottom0'>
-          <div>
-            <span class='code bold'>user_uuid</span> <code class='quiet'>(<a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String">string</a>
-            = <code>&quot;null user_uuid&quot;</code>)</code>
-	    user_uuid
-
-          </div>
-          
-        </div>
-      
-        <div class='space-bottom0'>
-          <div>
-            <span class='code bold'>offset</span> <code class='quiet'>(<a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String">string</a>
-            = <code>&quot;0&quot;</code>)</code>
-	    pagination offset
-
-          </div>
-          
-        </div>
-      
-        <div class='space-bottom0'>
-          <div>
-            <span class='code bold'>limit</span> <code class='quiet'>(<a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String">string</a>
-            = <code>&quot;10&quot;</code>)</code>
-	    pagination limit
-
-          </div>
-          
-        </div>
-      
-        <div class='space-bottom0'>
-          <div>
-            <span class='code bold'>filters</span> <code class='quiet'>(<a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Array">array</a>
-            = <code>undefined</code>)</code>
-	    array of filter query parameters
-
-          </div>
-          
-        </div>
-      
-        <div class='space-bottom0'>
-          <div>
-            <span class='code bold'>trace</span> <code class='quiet'>(<a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object">object</a>
-            = <code>{}</code>)</code>
-	    optional microservice lifecycle trace headers
-
-          </div>
-          
-        </div>
-      
-    </div>
-  
-
-  
-
-  
-    
-      <div class='py1 quiet mt1 prose-big'>Returns</div>
-      <code><a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise">Promise</a>&#x3C;<a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object">object</a>></code>:
-        Promise resolving to a data object containing a list of roles
-
-      
-    
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-</section>
-
           
         
       </div>

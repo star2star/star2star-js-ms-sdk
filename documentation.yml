@@ -34,6 +34,7 @@ toc:
       - listRoleUserGroups
       - listRolePermissions
       - listRoles
+      - listRolesForUser
       - listUserGroups
       - modifyRole
       - modifyUserGroup
@@ -209,6 +210,7 @@ toc:
       - filterResponse
       - getEndpoint
       - getAuthHost
+      - getLogger
       - getVersion
       - getValueFromObjectTree
       - isBrowser
