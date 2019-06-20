@@ -11,7 +11,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 
 class Logger {
   constructor() {
-    const prettyPrint = process.env.MS_LOGPRETTY ? process.env.MS_LOGPRETTY : false;
+    const prettyPrint = process.env.MS_LOGPRETTY ? process.env.MS_LOGPRETTY : "false";
 
     const _require = require('winston'),
           createLogger = _require.createLogger,
@@ -74,7 +74,7 @@ class Logger {
         loggedMessageJSON.parent = loggerParent;
       }
 
-      if (prettyPrint) {
+      if (prettyPrint === "true") {
         return JSON.stringify(loggedMessageJSON, null, "\t");
       } else {
         return JSON.stringify(loggedMessageJSON);

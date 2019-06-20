@@ -1,6 +1,6 @@
 export default class Logger {
   constructor(){
-    const prettyPrint = process.env.MS_LOGPRETTY ? process.env.MS_LOGPRETTY : false;
+    const prettyPrint = process.env.MS_LOGPRETTY ? process.env.MS_LOGPRETTY : "false";
     const { createLogger, format, transports } = require('winston');
     const { combine, timestamp, label, printf } = format;
  
@@ -49,7 +49,7 @@ export default class Logger {
         loggedMessageJSON.parent=loggerParent;
       }
     
-      if(prettyPrint){
+      if(prettyPrint === "true"){
         return JSON.stringify(loggedMessageJSON, null, "\t");
       } else {
         return JSON.stringify(loggedMessageJSON);
