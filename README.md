@@ -70,6 +70,7 @@ process.env.MS_LOGPRETTY = true // defaults to false
 [Please click here for our documentation pages.](https://star2star.github.io/star2star-js-ms-sdk/ "Star2Star Micro Service SDK Documentation")
 
 ## Changes
+* 3.1.1 - fix for debug flag
 * 3.1.0 - winston 3.2 for logging
 * 3.0.31 - add dynamic resource group roles lookup
 * 3.0.30 - fix modify account response code

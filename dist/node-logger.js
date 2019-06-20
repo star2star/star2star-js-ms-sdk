@@ -185,7 +185,7 @@ class Logger {
       newLevel = 'debug';
     }
 
-    this.logger.log(aLevel, aMsg, {
+    this.logger.log(newLevel, aMsg, {
       "meta": aMeta
     });
   }

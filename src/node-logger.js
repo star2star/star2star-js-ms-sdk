@@ -172,7 +172,7 @@ export default class Logger {
     if (aMeta && aMeta.hasOwnProperty('debug') && aMeta.debug === true ){
       newLevel = 'debug';
     }
-    this.logger.log(aLevel, aMsg, {"meta":aMeta});
+    this.logger.log(newLevel, aMsg, {"meta":aMeta});
   }
 
 }
