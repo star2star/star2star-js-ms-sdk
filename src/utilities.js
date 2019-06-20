@@ -5,8 +5,8 @@ const config = require("./config.json");
 const uuidv4 = require("uuid/v4");
 const request = require("request-promise");
 const objectMerge = require("object-merge");
-import Logger from "./node-logger";
-const logger = new Logger();
+const Logger = require("./node-logger");
+const logger = new Logger.default();
 /**
  *
  * @description This function will determine microservice endpoint URI.
@@ -265,7 +265,6 @@ const isBrowser = () => {
 };
 
 const addRequestTrace = (request, trace = {}) => {
-  getLogger(); //ensures log levels are read in from process.ENV
   const headerKeys = ["id", "trace", "parent"];
 
   headerKeys.forEach(keyName => {
@@ -284,7 +283,7 @@ const addRequestTrace = (request, trace = {}) => {
   } else {
     request.headers["debug"] = false;
   }
-  logger.trace(`Microservice Request ${request.method}: ${request.uri}`, request.headers);
+  logger.debug(`Microservice Request ${request.method}: ${request.uri}`, request.headers);
 
   return request;
 };
@@ -314,18 +313,6 @@ const generateNewMetaData = (oldMetaData = {}) => {
   return rObject;
 };
 
-
-/**
- *
- * @description This function returns a pointer to the logger instance
- * @returns {instance<Class>} - instance of node-logger class
- */
-const getLogger = () => {
-  logger.setLevel(process.env.MS_LOGLEVEL); // when run in a browser this will be undefined and default to silent
-  logger.setPretty(process.env.MS_LOGPRETTY); // when run in a browser this will be undefined and default to false
-  return logger;
-};
-
 /**
  * @async
  * @description This function takes in a request and polls the microservice until it is ready
@@ -334,7 +321,6 @@ const getLogger = () => {
  * @returns {Promise} - Promise resolved when verify func is successful.
  */
 const pendingResource = async (resourceLoc, requestOptions, trace, startingResourceStatus = "complete") => {
-  getLogger(); //ensures log levels are read in from process.ENV
   logger.debug("Pending Resource Location", resourceLoc, requestOptions);
   try {
     // if the startingResourceStatus is complete, there is nothing to do since the resource is ready
@@ -404,6 +390,5 @@ module.exports = {
   isBrowser, //TODO Unit test 10/05/18 nh
   addRequestTrace, //TODO Unit test 10/10/18 nh
   generateNewMetaData,
-  getLogger,
   pendingResource
 };

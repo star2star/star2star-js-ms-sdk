@@ -1,10 +1,6 @@
 /* global require process module*/
 "use strict";
 
-var _nodeLogger = _interopRequireDefault(require("./node-logger"));
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
 const config = require("./config.json");
 
 const uuidv4 = require("uuid/v4");
@@ -13,7 +9,9 @@ const request = require("request-promise");
 
 const objectMerge = require("object-merge");
 
-const logger = new _nodeLogger.default();
+const Logger = require("./node-logger");
+
+const logger = new Logger.default();
 /**
  *
  * @description This function will determine microservice endpoint URI.
@@ -286,8 +284,6 @@ const isBrowser = () => {
 
 const addRequestTrace = function addRequestTrace(request) {
   let trace = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
-  getLogger(); //ensures log levels are read in from process.ENV
-
   const headerKeys = ["id", "trace", "parent"];
   headerKeys.forEach(keyName => {
     if (typeof trace === "object" && trace.hasOwnProperty(keyName)) {
@@ -305,7 +301,7 @@ const addRequestTrace = function addRequestTrace(request) {
     request.headers["debug"] = false;
   }
 
-  logger.trace("Microservice Request ".concat(request.method, ": ").concat(request.uri), request.headers);
+  logger.debug("Microservice Request ".concat(request.method, ": ").concat(request.uri), request.headers);
   return request;
 };
 
@@ -335,20 +331,6 @@ const generateNewMetaData = function generateNewMetaData() {
   return rObject;
 };
 /**
- *
- * @description This function returns a pointer to the logger instance
- * @returns {instance<Class>} - instance of node-logger class
- */
-
-
-const getLogger = () => {
-  logger.setLevel(process.env.MS_LOGLEVEL); // when run in a browser this will be undefined and default to silent
-
-  logger.setPretty(process.env.MS_LOGPRETTY); // when run in a browser this will be undefined and default to false
-
-  return logger;
-};
-/**
  * @async
  * @description This function takes in a request and polls the microservice until it is ready
  * @param {function} verifyFunc - function that is used to confirm resource is ready.
@@ -359,8 +341,6 @@ const getLogger = () => {
 
 const pendingResource = async function pendingResource(resourceLoc, requestOptions, trace) {
   let startingResourceStatus = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : "complete";
-  getLogger(); //ensures log levels are read in from process.ENV
-
   logger.debug("Pending Resource Location", resourceLoc, requestOptions);
 
   try {
@@ -443,6 +423,5 @@ module.exports = {
   addRequestTrace,
   //TODO Unit test 10/10/18 nh
   generateNewMetaData,
-  getLogger,
   pendingResource
 };

@@ -210,7 +210,6 @@ toc:
       - filterResponse
       - getEndpoint
       - getAuthHost
-      - getLogger
       - getVersion
       - getValueFromObjectTree
       - isBrowser

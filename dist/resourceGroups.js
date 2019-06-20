@@ -9,7 +9,9 @@ const Groups = require("./groups");
 
 const objectMerge = require("object-merge");
 
-const logger = Util.getLogger();
+const Logger = require("./node-logger");
+
+const logger = new Logger.default();
 /**
  * @async
  * @description This function will create the permissions group for a resource uuid.

@@ -5,7 +5,8 @@ const Util = require("./utilities");
 const Auth = require("./auth");
 const Groups = require("./groups");
 const objectMerge = require("object-merge");
-const logger = Util.getLogger();
+const Logger = require("./node-logger");
+const logger = new Logger.default();
 
 /**
  * @async
