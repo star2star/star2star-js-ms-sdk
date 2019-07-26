@@ -44,6 +44,9 @@ describe("Workflow", function() {
     wfTemplateUUID,
     wfInstanceUUID,
     wfInstanceUUIDv2True,
+    wfInstanceResultConst,
+    wfInstanceResultSource,
+    wfInstanceResultWfVars,
     version,
     groupUUID;
 
@@ -832,6 +835,183 @@ describe("Workflow", function() {
     );
     return response;
   },"Update Workflow Group"));
+
+  it("Test Result Constant", mochaAsync(async () => {
+    if (!creds.isValid) throw new Error("Invalid Credentials");
+    //create new version of WF
+    trace = objectMerge({}, trace, Util.generateNewMetaData(trace));
+    await s2sMS.Workflow.createWorkflowTemplate(
+      accessToken,
+      {
+        "name": "Unit Test",
+        "description": "Unit Test",
+        "uuid": wfTemplateUUID,
+        "version": "1.0.3",
+        "status": "active",
+        "states": [
+          {
+            "name": "Trigger Manually",
+            "type": "start",
+            "uuid": "575544fa-7036-4de0-9e10-51de1a60d598",
+            "description": ""
+          },
+          {
+            "name": "End Workflow",
+            "description": "Indicate the end of a Workflow (required).",
+            "type": "finish",
+            "uuid": "80fe075e-872a-405d-bd29-96631852d130"
+          },
+          {
+            "name": "Find keywords",
+            "description": "Will return true or false if the keywords are in a string ",
+            "type": "normal",
+            "uuid": "fec97b32-50a0-4f54-a0c1-d8589a578e25"
+          }
+        ],
+        "transitions": [
+          {
+            "condition": {
+              "type": "passthrough",
+              "data": {
+                "passthrough_condition": {}
+              }
+            },
+            "description": "Transition for Trigger Manually",
+            "name": "T-Trigger Manually-0",
+            "next_error_state": "Find keywords",
+            "next_state": "Find keywords",
+            "next_timeout_state": "Find keywords",
+            "start_state": "Trigger Manually",
+            "timeout": "0",
+            "uuid": "2c9dcfd3-de43-4c7c-8978-27cc38a4504a"
+          },
+          {
+            "condition": {
+              "type": "lambda",
+              "data": {
+                "lambda_condition": {
+                  "function_name": "echo",
+                  "blocking": true,
+                  "parameters": "$input",
+                  "result": [
+                    {
+                      "source": "constant",
+                      "name": "constantA",
+                      "path": "some string" 
+                    },
+                    {
+                      "source": "constant",
+                      "name": "constantB",
+                      "path": ["a","b",{"c":true}] 
+                    },
+                    {
+                      "source": "constant",
+                      "name": "constantC",
+                      "path": {"theObj":["a","b",{"c":true}]} 
+                    },
+                    {
+                      "source": "constant",
+                      "name": "constantD",
+                      "path": true 
+                    },
+                    {
+                      "source": "workflow_vars",
+                      "name": "inputX",
+                      "path": "input.inputX"
+                    },
+                    {
+                      "source": "workflow_vars",
+                      "name": "derivedObj",
+                      "path": "constantC.theObj[2]"
+                    },
+                    {
+                      "source": "result",
+                      "name": "lambdaOutput1",
+                      "path": "$" 
+                    },
+                    {
+                      "source": "result",
+                      "name": "lambdaOutput2",
+                      "path": "inputW.c" 
+                    },
+                    {
+                      "source": "result",
+                      "name": "lambdaOutput3",
+                      "path": "inputW.b[2]" 
+                    },
+                    {
+                      "source": "result",
+                      "name": "lambdaOutput4",
+                      "path": "inputY[1]" 
+                    }
+                  ]
+                }
+              }
+            },
+            "description": "Transition for Find keywords",
+            "name": "T-Find keywords-2",
+            "next_error_state": "End Workflow",
+            "next_state": "End Workflow",
+            "next_timeout_state": 30000,
+            "start_state": "Find keywords",
+            "timeout": 30000,
+            "uuid": "b6dfdb97-9c2b-4ffc-ae81-1572a6dd6b82"
+          }
+        ]
+      },
+      trace
+    );
+    //start the WF
+    trace = objectMerge({}, trace, Util.generateNewMetaData(trace));
+    const response = await s2sMS.Workflow.startWorkflow(
+      accessToken,
+      wfTemplateUUID,
+      {
+        version: "1.0.3",
+        start_state: "Trigger Manually",
+        group_uuid: groupUUID,
+        input_vars: { 
+          "input": {
+            "inputW": {
+              "a": {"1": true},
+              "b": [ "1", "2", "3"],
+              "c": "some string",
+              "d": undefined,
+              "e": null,
+              "f": true
+            },
+            "inputX": 1, 
+            "inputY": ["0", "1", "2"],
+            "inputZ": true
+          }
+        }
+      },
+      trace
+    );
+    //wait for completion
+    await new Promise(resolve => setTimeout(resolve, 4000));
+
+    trace = objectMerge({}, trace, Util.generateNewMetaData(trace));
+    const wfResults = await s2sMS.Workflow.getWfInstanceHistory(
+      accessToken,
+      response.uuid,
+      trace
+    );
+    assert.ok(
+      wfResults.workflow_vars.constantA === "some string" &&
+      wfResults.workflow_vars.constantB[2].c === true &&
+      wfResults.workflow_vars.constantC.theObj[0] === "a" &&
+      wfResults.workflow_vars.constantD === true &&
+      wfResults.workflow_vars.inputX === 1 &&
+      wfResults.workflow_vars.derivedObj.c === true &&
+      wfResults.workflow_vars.lambdaOutput1.inputZ === true &&
+      wfResults.workflow_vars.lambdaOutput2 === "some string" &&
+      wfResults.workflow_vars.lambdaOutput3 === "3" &&
+      wfResults.workflow_vars.lambdaOutput4 === "1",
+      JSON.stringify(wfResults, null, "\t")
+    );
+    return wfResults;
+  },"Test Result Constant"));
   
   it("Delete Workflow Template", mochaAsync(async () => {
     if (!creds.isValid) throw new Error("Invalid Credentials");
@@ -842,10 +1022,18 @@ describe("Workflow", function() {
       "1.0.1",
       trace
     );
-    const response = await s2sMS.Workflow.deleteWorkflowTemplate(
+
+    await s2sMS.Workflow.deleteWorkflowTemplate(
       accessToken,
       wfTemplateUUID,
       "1.0.2",
+      trace
+    );
+
+    const response = await s2sMS.Workflow.deleteWorkflowTemplate(
+      accessToken,
+      wfTemplateUUID,
+      "1.0.3",
       trace
     );
     assert.ok(
