@@ -4,6 +4,10 @@
 const util = require("./utilities");
 
 const request = require("request-promise");
+
+const Logger = require("./node-logger");
+
+const logger = new Logger.default();
 /**
  * @async
  * @description This function creates a new conversation and returns metadata.
@@ -13,7 +17,6 @@ const request = require("request-promise");
  * @param {object} [trace={}] - options microservice lifecycle tracking headers
  * @returns {Promise<object>} A promise resolving to a conversation metadata object
  */
-
 
 const getConversation = async function getConversation() {
   let accessToken = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : "null accessToken";
@@ -207,7 +210,7 @@ const sendSMS = function sendSMS(accessToken, userUuid, msg, fromPhoneNumber, to
  */
 
 
-const retrieveConversations = function retrieveConversations() {
+const retrieveConversations = async function retrieveConversations() {
   let accessToken = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : "null accessToken";
   let userUUID = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : "null userUUID";
   let offset = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : 0;
@@ -232,8 +235,15 @@ const retrieveConversations = function retrieveConversations() {
     },
     json: true
   };
-  util.addRequestTrace(requestOptions, trace);
-  return request(requestOptions);
+
+  if (limit > 100) {
+    const response = await util.aggregate(request, requestOptions, trace);
+    logger.debug("****** AGGREGATE RESPONSE ******", response);
+    return response;
+  } else {
+    util.addRequestTrace(requestOptions, trace);
+    return request(requestOptions);
+  }
 };
 /**
  * @async

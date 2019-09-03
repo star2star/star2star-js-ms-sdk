@@ -108,7 +108,7 @@ const getDataObjects = async (
     if (Object.keys(sdkFilters).length === 0) {
       requestOptions.qs.offset = offset;
       requestOptions.qs.limit = limit;
-      return await request(requestOptions);
+      return request(requestOptions);
     } else {
       const response = await Util.aggregate(request, requestOptions, trace);
       logger.debug("****** AGGREGATE RESPONSE *******",response);

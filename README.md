@@ -70,6 +70,8 @@ process.env.MS_LOGPRETTY = true // defaults to false
 [Please click here for our documentation pages.](https://star2star.github.io/star2star-js-ms-sdk/ "Star2Star Micro Service SDK Documentation")
 
 ## Changes
+* 3.1.5 - microservice hard limit work-around take 2
+* 3.1.4 - microservice hard limit work-around
 * 3.1.3 - unit test for workflow result array
 * 3.1.2 - fix prettyPrint flag
 * 3.1.1 - fix for debug flag

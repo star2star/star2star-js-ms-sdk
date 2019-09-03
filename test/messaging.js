@@ -129,7 +129,7 @@ describe("Messaging MS Unit Test Suite", function () {
       accessToken,
       identityData.uuid,
       0, // offset
-      5, // limit
+      105, // limit
       trace
     );
     assert.ok(

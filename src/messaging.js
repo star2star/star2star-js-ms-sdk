@@ -2,6 +2,8 @@
 "use strict";
 const util = require("./utilities");
 const request = require("request-promise");
+const Logger = require("./node-logger");
+const logger = new Logger.default();
 
 /**
  * @async
@@ -233,7 +235,7 @@ const sendSMS = (
  * @param {object} [trace={}] - optional microservice lifecycle trace headers
 * @returns {Promise<object>} - Promise resolving to user conversations
  */
-const retrieveConversations = (
+const retrieveConversations = async (
   accessToken = "null accessToken",
   userUUID = "null userUUID",
   offset = 0,
@@ -260,8 +262,14 @@ const retrieveConversations = (
     },
     json: true
   };
-  util.addRequestTrace(requestOptions, trace);
-  return request(requestOptions);
+  if (limit > 100) {
+    const response = await util.aggregate(request, requestOptions, trace);
+    logger.debug("****** AGGREGATE RESPONSE ******",response);
+    return response;
+  } else {
+    util.addRequestTrace(requestOptions, trace);
+    return request(requestOptions);
+  }
 };
 
 /**
