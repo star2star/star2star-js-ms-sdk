@@ -20,10 +20,10 @@ const listGroups = (
   filters = undefined,
   trace = {}
 ) => {
-  const MS = util.getEndpoint("groups");
+  const MS = util.getEndpoint("auth");
   const requestOptions = {
     method: "GET",
-    uri: `${MS}/groups`,
+    uri: `${MS}/user-groups`,
     headers: {
       "Content-type": "application/json",
       Authorization: `Bearer ${accessToken}`,
@@ -57,22 +57,30 @@ const createGroup = (
   body = "null body",
   trace = {}
 ) => {
-  const MS = util.getEndpoint("groups");
+  const newBody = {
+    "name": body.name,
+    "description": body.description 
+  };
+  newBody.users = body.members.map(member => {
+    return member.uuid;
+  });
+  const MS = util.getEndpoint("auth");
   const requestOptions = {
     method: "POST",
-    uri: `${MS}/groups`,
+    uri: `${MS}/accounts/${body.account_uuid}/user-groups`,
     headers: {
       "Content-type": "application/json",
       Authorization: `Bearer ${accessToken}`,
       "x-api-version": `${util.getVersion()}`
     },
-    body: body,
+    body: newBody,
     json: true
   };
   util.addRequestTrace(requestOptions, trace);
   return request(requestOptions);
 };
 
+// TODO this call needs to be migrated out of groups to auth. CCORE-662
 /**
  * @async
  * @description This function will ask the cpaas groups service for a specific group.
@@ -110,6 +118,7 @@ const getGroup = (
   return request(requestOptions);
 };
 
+// TODO this call needs to be migrated out of groups to auth. CCORE-662
 /**
  * @async
  * @description This function will return a list of the members of a group.
@@ -147,6 +156,7 @@ const listGroupMembers = (
   return request(requestOptions);
 };
 
+// TODO this call needs to be migrated out of groups to auth. CCORE-662
 /**
  * @async
  * @description This function will delete a specific group.
@@ -199,6 +209,7 @@ const deleteGroup = async (
   
 };
 
+// TODO this call needs to be migrated out of groups to auth. CCORE-662
 /**
  * @async
  * @description This function will add users to a user group.
@@ -232,6 +243,7 @@ const addMembersToGroup = async (
 
 };
 
+// TODO this call needs to be migrated out of groups to auth. CCORE-662
 /**
  * @async
  * @description This function will remove one or more members from a group
@@ -274,6 +286,7 @@ const deleteGroupMembers = async (
   });
 };
 
+// TODO this call needs to be migrated out of groups to auth. CCORE-662
 /**
  * @async
  * @description This method will deactivate a group
@@ -302,6 +315,7 @@ const deactivateGroup = (
   return request(requestOptions);
 };
 
+// TODO this call needs to be migrated out of groups to auth. CCORE-662
 /**
  * @async
  * @description This method will reactivate a group
@@ -345,10 +359,10 @@ const modifyGroup = (
   body = "null body",
   trace = {}
 ) => {
-  const MS = util.getEndpoint("groups");
+  const MS = util.getEndpoint("auth");
   const requestOptions = {
-    method: "PUT",
-    uri: `${MS}/groups/${groupUuid}`,
+    method: "POST",
+    uri: `${MS}/user-groups/${groupUuid}/modify`,
     headers: {
       "Content-type": "application/json",
       Authorization: `Bearer ${accessToken}`,
