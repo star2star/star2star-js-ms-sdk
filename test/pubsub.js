@@ -95,14 +95,17 @@ describe("Pubsub MS Unit Test Suite", function () {
     const criteria = [{
       user_uuid: "0904f8d5-627f-4ff5-b34d-68dc96487b1e"
     }];
+
+    const expiresDate = new Date(Date.now() + 100000).toISOString();
     const response = await s2sMS.Pubsub.addSubscription( 
-      "0904f8d5-627f-4ff5-b34d-68dc96487b1e",
-      "47113ee7-ddbe-4388-aade-717c36ec17c7",
+      creds.testIdentity,
+      creds.testAccount,
       "http://localhost:8001/foo",
       [],
       criteria,
       subscriptions, 
       accessToken,
+      expiresDate,
       trace
     );
     sub_uuid = response.subscription_uuid;
@@ -112,6 +115,23 @@ describe("Pubsub MS Unit Test Suite", function () {
     );
     return response;
   },"add subscription"));
+
+  it("update subscription expiration", mochaAsync(async () => {
+    if (!creds.isValid) throw new Error("Invalid Credentials");
+    trace = objectMerge({}, trace, Util.generateNewMetaData(trace));
+    
+    const response = await s2sMS.Pubsub.updateSubscription(  
+      accessToken,
+      sub_uuid,
+      new Date(Date.now() + 1000000).toISOString(),
+      trace
+    );
+    assert.ok(
+      1===1,
+      JSON.stringify(response, null, "\t")
+    );
+    return response;
+  },"update subscription expiration"));
   
   it("delete subscription", mochaAsync(async () => {
     if (!creds.isValid) throw new Error("Invalid Credentials");

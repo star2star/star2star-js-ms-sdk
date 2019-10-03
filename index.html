@@ -2,7 +2,7 @@
 <html>
 <head>
   <meta charset='utf-8' />
-  <title>star2star-js-ms-sdk 3.1.5 | Documentation</title>
+  <title>star2star-js-ms-sdk 3.1.6 | Documentation</title>
   <meta name='viewport' content='width=device-width,initial-scale=1'>
   <link href='assets/bass.css' type='text/css' rel='stylesheet' />
   <link href='assets/style.css' type='text/css' rel='stylesheet' />
@@ -14,7 +14,7 @@
       <div id='split-left' class='overflow-auto fs0 height-viewport-100'>
         <div class='py1 px2'>
           <h3 class='mb0 no-anchor'>star2star-js-ms-sdk</h3>
-          <div class='mb1'><code>3.1.5</code></div>
+          <div class='mb1'><code>3.1.6</code></div>
           <input
             placeholder='Filter'
             id='filter-input'
@@ -1082,6 +1082,12 @@
                         href='#listusersubscriptions'
                         class='regular pre-open'>
                         .listUserSubscriptions
+                      </a></li>
+                    
+                      <li><a
+                        href='#updatesubscriptionexpiresdate'
+                        class='regular pre-open'>
+                        .updateSubscriptionExpiresDate
                       </a></li>
                     
                     </ul>
@@ -14567,6 +14573,16 @@ type of object with name.</p>
       
         <div class='space-bottom0'>
           <div>
+            <span class='code bold'>expiresDate</span> <code class='quiet'>(<a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String">string</a>
+            = <code>undefined</code>)</code>
+	    optional expires date (RFC3339 format)
+
+          </div>
+          
+        </div>
+      
+        <div class='space-bottom0'>
+          <div>
             <span class='code bold'>trace</span> <code class='quiet'>(<a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object">object</a>
             = <code>{}</code>)</code>
 	    optional microservice lifecycle trace headers
@@ -14584,7 +14600,7 @@ type of object with name.</p>
     
       <div class='py1 quiet mt1 prose-big'>Returns</div>
       <code><a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise">Promise</a>&#x3C;<a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object">object</a>></code>:
-        Promise resolving to a data object containing a list of subscriptions for this user
+        Promise resolving to a data object containing a new subscription
 
       
     
@@ -14858,6 +14874,104 @@ type of object with name.</p>
       <div class='py1 quiet mt1 prose-big'>Returns</div>
       <code><a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise">Promise</a>&#x3C;<a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object">object</a>></code>:
         Promise resolving to a data object containing a list of subscriptions for this user
+
+      
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+</section>
+
+      </div>
+    </div>
+  
+    <div class='border-bottom' id='updatesubscriptionexpiresdate'>
+      <div class="clearfix small pointer toggle-sibling">
+        <div class="py1 contain">
+            <a class='icon pin-right py1 dark-link caret-right'>▸</a>
+            <span class='code strong strong truncate'>updateSubscriptionExpiresDate</span>
+        </div>
+      </div>
+      <div class="clearfix display-none toggle-target">
+        <section class='p2 mb2 clearfix bg-white minishadow'>
+
+  
+
+  <p>This function updates a subscription expiration date</p>
+
+ 
+  
+    <div class='pre p1 fill-light mt0'>updateSubscriptionExpiresDate</div>
+   
+  
+  
+
+  
+  
+  
+  
+  
+  
+
+  
+    <div class='py1 quiet mt1 prose-big'>Parameters</div>
+    <div class='prose'>
+      
+        <div class='space-bottom0'>
+          <div>
+            <span class='code bold'>accessToken</span> <code class='quiet'>(<a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String">string</a>
+            = <code>&quot;null accessToken&quot;</code>)</code>
+	    access token for cpaas systems
+
+          </div>
+          
+        </div>
+      
+        <div class='space-bottom0'>
+          <div>
+            <span class='code bold'>subscriptionUUID</span> <code class='quiet'>(any)</code>
+	    uuid for a star2star user
+
+          </div>
+          
+        </div>
+      
+        <div class='space-bottom0'>
+          <div>
+            <span class='code bold'>expiresDate</span> <code class='quiet'>(any
+            = <code>newDate(Date.now()).toISOString()</code>)</code>
+	    
+          </div>
+          
+        </div>
+      
+        <div class='space-bottom0'>
+          <div>
+            <span class='code bold'>trace</span> <code class='quiet'>(any
+            = <code>{}</code>)</code>
+	    
+          </div>
+          
+        </div>
+      
+    </div>
+  
+
+  
+
+  
+    
+      <div class='py1 quiet mt1 prose-big'>Returns</div>
+      <code><a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise">Promise</a>&#x3C;<a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object">object</a>></code>:
+        Promise resolving to a data object containing updated subscription
 
       
     

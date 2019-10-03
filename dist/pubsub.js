@@ -14,8 +14,9 @@ const util = require("./utilities");
  * @param {array} [criteria=[]] - filter criteria
  * @param {object} [subscriptions={}] - events to subscribe to (voice, fax, conferencing, messagin, sms,  presence)
  * @param {string} [accessToken="null accessToken"] - access token for cpaas systems
+ * @param {string} [expiresDate=undefined] - optional expires date (RFC3339 format)
  * @param {object} [trace = {}] - optional microservice lifecycle trace headers
- * @returns {Promise<object>} - Promise resolving to a data object containing a list of subscriptions for this user
+ * @returns {Promise<object>} - Promise resolving to a data object containing a new subscription
  */
 
 
@@ -27,7 +28,8 @@ const addSubscription = function addSubscription() {
   let criteria = arguments.length > 4 && arguments[4] !== undefined ? arguments[4] : [];
   let subscriptions = arguments.length > 5 && arguments[5] !== undefined ? arguments[5] : {};
   let accessToken = arguments.length > 6 && arguments[6] !== undefined ? arguments[6] : "null accessToken";
-  let trace = arguments.length > 7 && arguments[7] !== undefined ? arguments[7] : {};
+  let expiresDate = arguments.length > 7 && arguments[7] !== undefined ? arguments[7] : undefined;
+  let trace = arguments.length > 8 && arguments[8] !== undefined ? arguments[8] : {};
   const MS = util.getEndpoint("pubsub");
   const requestOptions = {
     method: "POST",
@@ -49,6 +51,11 @@ const addSubscription = function addSubscription() {
     },
     json: true
   };
+
+  if (expiresDate) {
+    requestOptions.body.expiration_date = expiresDate;
+  }
+
   util.addRequestTrace(requestOptions, trace);
   return request(requestOptions);
 };
@@ -150,10 +157,44 @@ const listUserSubscriptions = function listUserSubscriptions() {
   util.addRequestTrace(requestOptions, trace);
   return request(requestOptions);
 };
+/**
+ * @async
+ * @description This function updates a subscription expiration date
+ * @param {string} [accessToken="null accessToken"] - access token for cpaas systems
+ * @param {*} subscriptionUUID - uuid for a star2star user
+ * @param {*} [expiresDate=new Date(Date.now()).toISOString()]
+ * @param {*} [trace={}]
+ * @returns {Promise<object>} - Promise resolving to a data object containing updated subscription
+ */
+
+
+const updateSubscriptionExpiresDate = function updateSubscriptionExpiresDate() {
+  let accessToken = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : "null accessToken";
+  let subscriptionUUID = arguments.length > 1 ? arguments[1] : undefined;
+  let expiresDate = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : new Date(Date.now()).toISOString();
+  let trace = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : {};
+  const MS = util.getEndpoint("pubsub");
+  const requestOptions = {
+    method: "PUT",
+    uri: "".concat(MS, "/subscriptions/").concat(subscriptionUUID),
+    body: {
+      expiration_date: expiresDate
+    },
+    headers: {
+      Authorization: "Bearer ".concat(accessToken),
+      "Content-type": "application/json",
+      "x-api-version": "".concat(util.getVersion())
+    },
+    json: true
+  };
+  util.addRequestTrace(requestOptions, trace);
+  return request(requestOptions);
+};
 
 module.exports = {
   addSubscription,
   deleteSubscription,
   getSubscription,
-  listUserSubscriptions
+  listUserSubscriptions,
+  updateSubscriptionExpiresDate
 };

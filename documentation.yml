@@ -155,6 +155,7 @@ toc:
       - deleteSubscription
       - getSubscription
       - listUserSubscriptions
+      - updateSubscriptionExpiresDate
   - name: Resource Groups
     children:
       - createResourceGroups

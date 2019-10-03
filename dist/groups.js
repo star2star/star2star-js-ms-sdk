@@ -22,10 +22,10 @@ const listGroups = function listGroups() {
   let limit = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : 10;
   let filters = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : undefined;
   let trace = arguments.length > 4 && arguments[4] !== undefined ? arguments[4] : {};
-  const MS = util.getEndpoint("groups");
+  const MS = util.getEndpoint("auth");
   const requestOptions = {
     method: "GET",
-    uri: "".concat(MS, "/groups"),
+    uri: "".concat(MS, "/user-groups"),
     headers: {
       "Content-type": "application/json",
       Authorization: "Bearer ".concat(accessToken),
@@ -61,21 +61,29 @@ const createGroup = function createGroup() {
   let accessToken = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : "null accessToken";
   let body = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : "null body";
   let trace = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : {};
-  const MS = util.getEndpoint("groups");
+  const newBody = {
+    "name": body.name,
+    "description": body.description
+  };
+  newBody.users = body.members.map(member => {
+    return member.uuid;
+  });
+  const MS = util.getEndpoint("auth");
   const requestOptions = {
     method: "POST",
-    uri: "".concat(MS, "/groups"),
+    uri: "".concat(MS, "/accounts/").concat(body.account_uuid, "/user-groups"),
     headers: {
       "Content-type": "application/json",
       Authorization: "Bearer ".concat(accessToken),
       "x-api-version": "".concat(util.getVersion())
     },
-    body: body,
+    body: newBody,
     json: true
   };
   util.addRequestTrace(requestOptions, trace);
   return request(requestOptions);
-};
+}; // TODO this call needs to be migrated out of groups to auth. CCORE-662
+
 /**
  * @async
  * @description This function will ask the cpaas groups service for a specific group.
@@ -114,7 +122,8 @@ const getGroup = function getGroup() {
 
 
   return request(requestOptions);
-};
+}; // TODO this call needs to be migrated out of groups to auth. CCORE-662
+
 /**
  * @async
  * @description This function will return a list of the members of a group.
@@ -153,7 +162,8 @@ const listGroupMembers = function listGroupMembers() {
 
 
   return request(requestOptions);
-};
+}; // TODO this call needs to be migrated out of groups to auth. CCORE-662
+
 /**
  * @async
  * @description This function will delete a specific group.
@@ -199,7 +209,8 @@ const deleteGroup = async function deleteGroup() {
       "message": error.hasOwnProperty("message") ? error.message : JSON.stringify(error)
     });
   }
-};
+}; // TODO this call needs to be migrated out of groups to auth. CCORE-662
+
 /**
  * @async
  * @description This function will add users to a user group.
@@ -231,7 +242,8 @@ const addMembersToGroup = async function addMembersToGroup() {
   util.addRequestTrace(requestOptions, trace); // console.log("request options", JSON.stringify(requestOptions));
 
   return await request(requestOptions);
-};
+}; // TODO this call needs to be migrated out of groups to auth. CCORE-662
+
 /**
  * @async
  * @description This function will remove one or more members from a group
@@ -273,7 +285,8 @@ const deleteGroupMembers = async function deleteGroupMembers() {
       reject(error);
     });
   });
-};
+}; // TODO this call needs to be migrated out of groups to auth. CCORE-662
+
 /**
  * @async
  * @description This method will deactivate a group
@@ -301,7 +314,8 @@ const deactivateGroup = function deactivateGroup() {
   };
   util.addRequestTrace(requestOptions, trace);
   return request(requestOptions);
-};
+}; // TODO this call needs to be migrated out of groups to auth. CCORE-662
+
 /**
  * @async
  * @description This method will reactivate a group
@@ -346,10 +360,10 @@ const modifyGroup = function modifyGroup() {
   let groupUuid = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : "null groupUuid";
   let body = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : "null body";
   let trace = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : {};
-  const MS = util.getEndpoint("groups");
+  const MS = util.getEndpoint("auth");
   const requestOptions = {
-    method: "PUT",
-    uri: "".concat(MS, "/groups/").concat(groupUuid),
+    method: "POST",
+    uri: "".concat(MS, "/user-groups/").concat(groupUuid, "/modify"),
     headers: {
       "Content-type": "application/json",
       Authorization: "Bearer ".concat(accessToken),
