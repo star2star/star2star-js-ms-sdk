@@ -123,7 +123,7 @@ describe("Accounts MS Unit Test Suite", function() {
     const body = {
       name: "Unit Test",
       number: ++time,
-      type: "Reseller",
+      type: "Customer",
       description: "Free form text",
       address: {
         line1: "123 ABC St",
@@ -157,6 +157,25 @@ describe("Accounts MS Unit Test Suite", function() {
     contactUUID = response.contacts[0].uuid;
     return response;
   },"Create Account"));
+
+  it("Get Account Default User Groups", async () => {
+    if (!creds.isValid) throw new Error("Invalid Credentials");
+    
+    trace = objectMerge({}, trace, Util.generateNewMetaData(trace));
+    const response = await s2sMS.Auth.getAccountDefaultGroups(
+      accessToken,
+      accountUUID,
+      trace
+    );
+    assert.ok(
+      response.hasOwnProperty("admin") &&
+      response.hasOwnProperty("user") &&
+      response.admin.length > 0 &&
+      response.user.length > 0,
+      JSON.stringify(response, null, "\t")
+    );
+    logger.debug(this.ctx.test.title, response);
+  });
   
   it("List Accounts", mochaAsync(async () => {
     if (!creds.isValid) throw new Error("Invalid Credentials");

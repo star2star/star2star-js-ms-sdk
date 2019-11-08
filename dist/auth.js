@@ -477,6 +477,51 @@ const deleteRoleFromUserGroup = function deleteRoleFromUserGroup() {
 };
 /**
  * @async
+ * @description This function returns an accounts default user-groups
+ * @param {string} [accessToken="null access token"] - access token for cpaas systems
+ * @param {string} [accountUUID="null account uuid"] - account_uuid for an star2star account (customer)
+ * @param {object} [trace = {}] - optional microservice lifecycle trace headers 
+ * @returns {Promise} - promise resolving to object containing default admin and user group uuids.
+ */
+
+
+const getAccountDefaultGroups = async function getAccountDefaultGroups() {
+  let accessToken = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : "null access token";
+  let accountUUID = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : "null account uuid";
+  let trace = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : {};
+  const MS = Util.getEndpoint("auth");
+  const requestOptions = {
+    method: "GET",
+    uri: "".concat(MS, "/accounts/").concat(accountUUID, "/user-groups"),
+    qs: {
+      default: "true"
+    },
+    headers: {
+      Authorization: "Bearer ".concat(accessToken),
+      "Content-type": "application/json",
+      "x-api-version": "".concat(Util.getVersion())
+    },
+    json: true
+  };
+  Util.addRequestTrace(requestOptions, trace);
+  const retObj = {
+    "admin": "",
+    "user": ""
+  };
+  const response = await request(requestOptions);
+  response.items.forEach(item => {
+    if (item.hasOwnProperty("type") && item.hasOwnProperty("uuid")) {
+      if (item.type === "admin") {
+        retObj.admin = item.uuid;
+      } else if (item.type === "user") {
+        retObj.user = item.uuid;
+      }
+    }
+  });
+  return retObj;
+};
+/**
+ * @async
  * @description This function will return the users that have permissions for a given resource
  * @param {string} [accessToken="null accessToken"] - cpaas access token
  * @param {string} [resourceUUID="null resourceUUID"] - resource uuid
@@ -1070,6 +1115,7 @@ module.exports = {
   deletePermissionFromRole,
   deleteRole,
   deleteRoleFromUserGroup,
+  getAccountDefaultGroups,
   getResourceUsers,
   getResourceGroupRoles,
   getRole,

@@ -70,6 +70,8 @@ process.env.MS_LOGPRETTY = true // defaults to false
 [Please click here for our documentation pages.](https://star2star.github.io/star2star-js-ms-sdk/ "Star2Star Micro Service SDK Documentation")
 
 ## Changes
+* 3.1.8 - move auto-generated user-groups GET to own method in auth
+* 3.1.7 - add auto-generated user-groups to getAccount
 * 3.1.6 - add update expiresTime to pubsub
 * 3.1.5 - microservice hard limit work-around take 2
 * 3.1.4 - microservice hard limit work-around

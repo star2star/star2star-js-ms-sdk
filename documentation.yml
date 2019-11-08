@@ -23,6 +23,7 @@ toc:
       - deletePermissionFromRole
       - deleteRole
       - deleteRoleFromUserGroup
+      - getAccountDefaultGroups
       - getResourceUsers
       - getResourceGroupRoles
       - getRole
