@@ -48,12 +48,7 @@ const activateRole = async (
     }
     return { status: "ok" };
   } catch(error){
-    return Promise.reject(
-      {
-        "status": "failed",
-        "message": error.hasOwnProperty("message") ? error.message : JSON.stringify(error)
-      }
-    );
+    return Promise.reject(Util.formatError(error));
   }
 };
 
@@ -66,37 +61,46 @@ const activateRole = async (
  * @param {object} [trace = {}] - optional microservice lifecycle trace headers
  * @returns {Promise<object>} - Promise resolving to a status data object
  */
-const assignPermissionsToRole = (
+const assignPermissionsToRole = async (
   accessToken = "null accessToken",
   roleUUID = "null roleUUID",
   body = "null body",
   trace = {}
 ) => {
-  const MS = Util.getEndpoint("auth");
-  const requestOptions = {
-    method: "POST",
-    uri: `${MS}/roles/${roleUUID}/permissions`,
-    headers: {
-      Authorization: `Bearer ${accessToken}`,
-      "Content-type": "application/json",
-      "x-api-version": `${Util.getVersion()}`
-    },
-    body: body,
-    resolveWithFullResponse: true,
-    json: true
-  };
-  Util.addRequestTrace(requestOptions, trace);
-  return new Promise(function(resolve, reject) {
-    request(requestOptions)
-      .then(function(responseData) {
-        responseData.statusCode === 204
-          ? resolve({ status: "ok" })
-          : reject({ status: "failed" });
-      })
-      .catch(function(error) {
-        reject(error);
-      });
-  });
+  try {
+    const MS = Util.getEndpoint("auth");
+    const requestOptions = {
+      method: "POST",
+      uri: `${MS}/roles/${roleUUID}/permissions`,
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+        "Content-type": "application/json",
+        "x-api-version": `${Util.getVersion()}`
+      },
+      body: body,
+      resolveWithFullResponse: true,
+      json: true
+    };
+    Util.addRequestTrace(requestOptions, trace);
+    const response = await request(requestOptions);
+    if(response.statusCode === 204) {
+      return { status: "ok" };
+    } else {
+      // this is an edge case, but protects against unexpected 2xx or 3xx response codes.
+      throw {
+        "code": response.statusCode,
+        "message": typeof response.body === "string" ? response.body : "assign permission to role failed",
+        "trace_id": requestOptions.hasOwnProperty("headers") && requestOptions.headers.hasOwnProperty("trace")
+          ? requestOptions.headers.trace 
+          : undefined,
+        "details": typeof response.body === "object" && response.body !== null
+          ? [response.body]
+          : []
+      };
+    }
+  } catch (error) {
+    return Promise.reject(Util.formatError(error));
+  }
 };
 
 /**
@@ -114,31 +118,40 @@ const assignRolesToUserGroup = async (
   body = "null body",
   trace = {}
 ) => {
-  const MS = Util.getEndpoint("auth");
-  const requestOptions = {
-    method: "POST",
-    uri: `${MS}/user-groups/${userGroupUUID}/roles`,
-    headers: {
-      Authorization: `Bearer ${accessToken}`,
-      "Content-type": "application/json",
-      "x-api-version": `${Util.getVersion()}`
-    },
-    body: body,
-    resolveWithFullResponse: true,
-    json: true
-  };
-  Util.addRequestTrace(requestOptions, trace);
-  return await new Promise(function(resolve, reject) {
-    request(requestOptions)
-      .then(function(responseData) {
-        responseData.statusCode === 204
-          ? resolve({ status: "ok" })
-          : reject({ status: "failed" });
-      })
-      .catch(function(error) {
-        reject(error);
-      });
-  });
+  try {
+    const MS = Util.getEndpoint("auth");
+    const requestOptions = {
+      method: "POST",
+      uri: `${MS}/user-groups/${userGroupUUID}/roles`,
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+        "Content-type": "application/json",
+        "x-api-version": `${Util.getVersion()}`
+      },
+      body: body,
+      resolveWithFullResponse: true,
+      json: true
+    };
+    Util.addRequestTrace(requestOptions, trace);
+    const response = await request(requestOptions);
+    if(response.statusCode === 204) {
+      return { status: "ok" };
+    } else {
+      // this is an edge case, but protects against unexpected 2xx or 3xx response codes.
+      throw {
+        "code": response.statusCode,
+        "message": typeof response.body === "string" ? response.body : "assign role to group failed",
+        "trace_id": requestOptions.hasOwnProperty("headers") && requestOptions.headers.hasOwnProperty("trace")
+          ? requestOptions.headers.trace 
+          : undefined,
+        "details": typeof response.body === "object" && response.body !== null
+          ? [response.body]
+          : []
+      };
+    }
+  } catch (error) {
+    return Promise.reject(Util.formatError(error));
+  }
 };
 
 /**
@@ -160,38 +173,47 @@ const assignScopedRoleToUserGroup = async (
   data = "null resourceUUID",
   trace = {}
 ) => {
-  const MS = Util.getEndpoint("auth");
-  const requestOptions = {
-    method: "POST",
-    uri: `${MS}/user-groups/${userGroupUUID}/role/scopes`,
-    headers: {
-      Authorization: `Bearer ${accessToken}`,
-      "Content-type": "application/json",
-      "x-api-version": `${Util.getVersion()}`
-    },
-    body: {
-      role: roleUUID,
-      scope: [
-        {
-          [type]: data
-        }
-      ]
-    },
-    resolveWithFullResponse: true,
-    json: true
-  };
-  Util.addRequestTrace(requestOptions, trace);
-  return await new Promise(function(resolve, reject) {
-    request(requestOptions)
-      .then(function(responseData) {
-        responseData.statusCode === 204
-          ? resolve({ status: "ok" })
-          : reject({ status: "failed" });
-      })
-      .catch(function(error) {
-        reject(error);
-      });
-  });
+  try {
+    const MS = Util.getEndpoint("auth");
+    const requestOptions = {
+      method: "POST",
+      uri: `${MS}/user-groups/${userGroupUUID}/role/scopes`,
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+        "Content-type": "application/json",
+        "x-api-version": `${Util.getVersion()}`
+      },
+      body: {
+        role: roleUUID,
+        scope: [
+          {
+            [type]: data
+          }
+        ]
+      },
+      resolveWithFullResponse: true,
+      json: true
+    };
+    Util.addRequestTrace(requestOptions, trace);
+    const response = await request(requestOptions);
+    if(response.statusCode === 204) {
+      return { status: "ok" };
+    } else {
+      // this is an edge case, but protects against unexpected 2xx or 3xx response codes.
+      throw {
+        "code": response.statusCode,
+        "message": typeof response.body === "string" ? response.body : "assign scoped role to user-group failed",
+        "trace_id": requestOptions.hasOwnProperty("headers") && requestOptions.headers.hasOwnProperty("trace")
+          ? requestOptions.headers.trace 
+          : undefined,
+        "details": typeof response.body === "object" && response.body !== null
+          ? [response.body]
+          : []
+      };
+    }
+  } catch (error) {
+    return Promise.reject(Util.formatError(error));
+  }
 };
 
 /**
@@ -202,25 +224,30 @@ const assignScopedRoleToUserGroup = async (
  * @param {object} [trace = {}] - optional microservice lifecycle trace headers
  * @returns {Promise<object>} - Promise resolving to a permission data object
  */
-const createPermission = (
+const createPermission = async (
   accessToken = "null accessToken",
   body = "null body",
   trace = {}
 ) => {
-  const MS = Util.getEndpoint("auth");
-  const requestOptions = {
-    method: "POST",
-    uri: `${MS}/permissions`,
-    headers: {
-      Authorization: `Bearer ${accessToken}`,
-      "Content-type": "application/json",
-      "x-api-version": `${Util.getVersion()}`
-    },
-    body: body,
-    json: true
-  };
-  Util.addRequestTrace(requestOptions, trace);
-  return request(requestOptions);
+  try {
+    const MS = Util.getEndpoint("auth");
+    const requestOptions = {
+      method: "POST",
+      uri: `${MS}/permissions`,
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+        "Content-type": "application/json",
+        "x-api-version": `${Util.getVersion()}`
+      },
+      body: body,
+      json: true
+    };
+    Util.addRequestTrace(requestOptions, trace);
+    const response = await request(requestOptions);
+    return response;
+  } catch (error) {
+    return Promise.reject(Util.formatError(error));
+  }
 };
 
 /**
@@ -238,36 +265,40 @@ const createUserGroup = async (
   body = "null body",
   trace = {}
 ) => {
-  const MS = Util.getEndpoint("auth");
-  const requestOptions = {
-    method: "POST",
-    uri: `${MS}/accounts/${accountUUID}/user-groups`,
-    headers: {
-      Authorization: `Bearer ${accessToken}`,
-      "Content-type": "application/json",
-      "x-api-version": `${Util.getVersion()}`
-    },
-    body: body,
-    json: true,
-    resolveWithFullResponse: true
-  };
-  Util.addRequestTrace(requestOptions, trace);
-  const response = await request(requestOptions);
-  const newGroup = response.body;
-  // create returns a 202....suspend return until the new resource is ready
-  if (response.hasOwnProperty("statusCode") && 
-        response.statusCode === 202 &&
-        response.headers.hasOwnProperty("location"))
-  {    
-    await Util.pendingResource(
-      response.headers.location,
-      requestOptions, //reusing the request options instead of passing in multiple params
-      trace,
-      newGroup.hasOwnProperty("resource_status") ? newGroup.resource_status : "complete"
-    );
-  }
+  try {
+    const MS = Util.getEndpoint("auth");
+    const requestOptions = {
+      method: "POST",
+      uri: `${MS}/accounts/${accountUUID}/user-groups`,
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+        "Content-type": "application/json",
+        "x-api-version": `${Util.getVersion()}`
+      },
+      body: body,
+      json: true,
+      resolveWithFullResponse: true
+    };
+    Util.addRequestTrace(requestOptions, trace);
+    const response = await request(requestOptions);
+    const newGroup = response.body;
+    // create returns a 202....suspend return until the new resource is ready
+    if (response.hasOwnProperty("statusCode") && 
+          response.statusCode === 202 &&
+          response.headers.hasOwnProperty("location"))
+    {    
+      await Util.pendingResource(
+        response.headers.location,
+        requestOptions, //reusing the request options instead of passing in multiple params
+        trace,
+        newGroup.hasOwnProperty("resource_status") ? newGroup.resource_status : "complete"
+      );
+    }
 
-  return newGroup;
+    return newGroup;
+  } catch (error) {
+    return Promise.reject(Util.formatError(error));
+  }
 };
 
 /**
@@ -285,35 +316,39 @@ const createRole = async (
   body = "null body",
   trace = {}
 ) => {
-  const MS = Util.getEndpoint("auth");
-  const requestOptions = {
-    method: "POST",
-    uri: `${MS}/accounts/${accountUUID}/roles`,
-    headers: {
-      Authorization: `Bearer ${accessToken}`,
-      "Content-type": "application/json",
-      "x-api-version": `${Util.getVersion()}`
-    },
-    body: body,
-    json: true,
-    resolveWithFullResponse: true
-  };
-  Util.addRequestTrace(requestOptions, trace);
-  const response = await request(requestOptions);
-  const newRole = response.body;
-  // create returns a 202....suspend return until the new resource is ready
-  if (response.hasOwnProperty("statusCode") && 
-      response.statusCode === 202 &&
-      response.headers.hasOwnProperty("location"))
-  {    
-    await Util.pendingResource(
-      response.headers.location,
-      requestOptions, //reusing the request options instead of passing in multiple params
-      trace,
-      newRole.hasOwnProperty("resource_status") ? newRole.resource_status : "complete"
-    );
+  try {
+    const MS = Util.getEndpoint("auth");
+    const requestOptions = {
+      method: "POST",
+      uri: `${MS}/accounts/${accountUUID}/roles`,
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+        "Content-type": "application/json",
+        "x-api-version": `${Util.getVersion()}`
+      },
+      body: body,
+      json: true,
+      resolveWithFullResponse: true
+    };
+    Util.addRequestTrace(requestOptions, trace);
+    const response = await request(requestOptions);
+    const newRole = response.body;
+    // create returns a 202....suspend return until the new resource is ready
+    if (response.hasOwnProperty("statusCode") && 
+        response.statusCode === 202 &&
+        response.headers.hasOwnProperty("location"))
+    {    
+      await Util.pendingResource(
+        response.headers.location,
+        requestOptions, //reusing the request options instead of passing in multiple params
+        trace,
+        newRole.hasOwnProperty("resource_status") ? newRole.resource_status : "complete"
+      );
+    }
+    return newRole;
+  } catch (error) {
+    return Promise.reject(Util.formatError(error));
   }
-  return newRole;
 };
 
 /**
@@ -359,14 +394,8 @@ const deactivateRole = async (
     }
     return {"status": "ok"};
   } catch(error){
-    return Promise.reject(
-      {
-        "status": "failed",
-        "message": error.hasOwnProperty("message") ? error.message : JSON.stringify(error)
-      }
-    );
+    return Promise.reject(Util.formatError(error));
   }
-  
 };
 
 /**
@@ -378,36 +407,45 @@ const deactivateRole = async (
  * @param {object} [trace = {}] - optional microservice lifecycle trace headers
  * @returns {Promise<object>} - Promise resolving to a status data object
  */
-const deletePermissionFromRole = (
+const deletePermissionFromRole = async (
   accessToken = "null accessToken",
   roleUUID = "null roleUUID",
   permissionUUID = "null permissionUUID",
   trace = {}
 ) => {
-  const MS = Util.getEndpoint("auth");
-  const requestOptions = {
-    method: "DELETE",
-    uri: `${MS}/roles/${roleUUID}/permissions/${permissionUUID}`,
-    headers: {
-      Authorization: `Bearer ${accessToken}`,
-      "Content-type": "application/json",
-      "x-api-version": `${Util.getVersion()}`
-    },
-    resolveWithFullResponse: true,
-    json: true
-  };
-  Util.addRequestTrace(requestOptions, trace);
-  return new Promise(function(resolve, reject) {
-    request(requestOptions)
-      .then(function(responseData) {
-        responseData.statusCode === 204
-          ? resolve({ status: "ok" })
-          : reject({ status: "failed" });
-      })
-      .catch(function(error) {
-        reject(error);
-      });
-  });
+  try {
+    const MS = Util.getEndpoint("auth");
+    const requestOptions = {
+      method: "DELETE",
+      uri: `${MS}/roles/${roleUUID}/permissions/${permissionUUID}`,
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+        "Content-type": "application/json",
+        "x-api-version": `${Util.getVersion()}`
+      },
+      resolveWithFullResponse: true,
+      json: true
+    };
+    Util.addRequestTrace(requestOptions, trace);
+    const response = await request(requestOptions);
+    if(response.statusCode === 204) {
+      return { status: "ok" };
+    } else {
+      // this is an edge case, but protects against unexpected 2xx or 3xx response codes.
+      throw {
+        "code": response.statusCode,
+        "message": typeof response.body === "string" ? response.body : "delete permission from role failed",
+        "trace_id": requestOptions.hasOwnProperty("headers") && requestOptions.headers.hasOwnProperty("trace")
+          ? requestOptions.headers.trace 
+          : undefined,
+        "details": typeof response.body === "object" && response.body !== null
+          ? [response.body]
+          : []
+      };
+    }
+  } catch(error){
+    return Promise.reject(Util.formatError(error));
+  }
 };
 
 /**
@@ -418,7 +456,6 @@ const deletePermissionFromRole = (
  * @param {object} [trace = {}] - optional microservice lifecycle trace headers
  * @returns {Promise<object>} - Promise resolving to a status data object
  */
-//FIXME 202 location header to be fixed....nh 2/8/19
 const deleteRole = async (
   accessToken = "null accessToken",
   roleUUID = "null roleUUID",
@@ -439,17 +476,22 @@ const deleteRole = async (
     };
     Util.addRequestTrace(requestOptions, trace);
     const response = await request(requestOptions);
-    await new Promise(resolve => setTimeout(resolve, Util.config.msDelay));
-    if (response.statusCode === 202){
-      return {"status": "ok"};
-    } else {
-      throw (`unexpected status code: ${response.statusCode}`);
+    // create returns a 202....suspend return until the new resource is ready
+    if (response.hasOwnProperty("statusCode") && 
+        response.statusCode === 202 &&
+        response.headers.hasOwnProperty("location"))
+    {    
+      await Util.pendingResource(
+        response.headers.location,
+        requestOptions, //reusing the request options instead of passing in multiple params
+        trace,
+        response.hasOwnProperty("body") && response.hasOwnProperty("resource_status") 
+          ? response.body.resource_status : "complete"
+      );
     }
+    return {"status": "ok"};
   } catch (error) {
-    return Promise.reject({
-      "status": "failed",
-      "message": error.hasOwnProperty("message") ? error.message : JSON.stringify(error)
-    });
+    return Promise.reject(Util.formatError(error));
   }
   
 };
@@ -463,36 +505,45 @@ const deleteRole = async (
  * @param {object} [trace = {}] - optional microservice lifecycle trace headers
  * @returns {Promise<object>} - Promise resolving to a status data object
  */
-const deleteRoleFromUserGroup = (
+const deleteRoleFromUserGroup = async (
   accessToken = "null accessToken",
   userGroupUUID = "null userGroupUUID",
   roleUUID = "null roleUUID",
   trace = {}
 ) => {
-  const MS = Util.getEndpoint("auth");
-  const requestOptions = {
-    method: "DELETE",
-    uri: `${MS}/user-groups/${userGroupUUID}/roles/${roleUUID}`,
-    headers: {
-      Authorization: `Bearer ${accessToken}`,
-      "Content-type": "application/json",
-      "x-api-version": `${Util.getVersion()}`
-    },
-    resolveWithFullResponse: true,
-    json: true
-  };
-  Util.addRequestTrace(requestOptions, trace);
-  return new Promise(function(resolve, reject) {
-    request(requestOptions)
-      .then(function(responseData) {
-        responseData.statusCode === 204
-          ? resolve({ status: "ok" })
-          : reject({ status: "failed" });
-      })
-      .catch(function(error) {
-        reject(error);
-      });
-  });
+  try {
+    const MS = Util.getEndpoint("auth");
+    const requestOptions = {
+      method: "DELETE",
+      uri: `${MS}/user-groups/${userGroupUUID}/roles/${roleUUID}`,
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+        "Content-type": "application/json",
+        "x-api-version": `${Util.getVersion()}`
+      },
+      resolveWithFullResponse: true,
+      json: true
+    };
+    Util.addRequestTrace(requestOptions, trace);
+    const response = await request(requestOptions);
+    if(response.statusCode === 204) {
+      return { status: "ok" };
+    } else {
+      // this is an edge case, but protects against unexpected 2xx or 3xx response codes.
+      throw {
+        "code": response.statusCode,
+        "message": typeof response.body === "string" ? response.body : "delete role from user-group failed",
+        "trace_id": requestOptions.hasOwnProperty("headers") && requestOptions.headers.hasOwnProperty("trace")
+          ? requestOptions.headers.trace 
+          : undefined,
+        "details": typeof response.body === "object" && response.body !== null
+          ? [response.body]
+          : []
+      };
+    }
+  } catch (error) {
+    return Promise.reject(Util.formatError(error));
+  }
 };
 
 /**
@@ -508,36 +559,40 @@ const getAccountDefaultGroups = async (
   accountUUID = "null account uuid",
   trace = {}
 ) =>{
-  const MS = Util.getEndpoint("auth");
-  const requestOptions = {
-    method: "GET",
-    uri: `${MS}/accounts/${accountUUID}/user-groups`,
-    qs: {
-      default: "true"
-    },
-    headers: {
-      Authorization: `Bearer ${accessToken}`,
-      "Content-type": "application/json",
-      "x-api-version": `${Util.getVersion()}`
-    },
-    json: true
-  };
-  Util.addRequestTrace(requestOptions, trace);
-  const retObj = {
-    "admin": "",
-    "user": ""
-  }; 
-  const response = await request(requestOptions);
-  response.items.forEach(item =>{
-    if(item.hasOwnProperty("type") && item.hasOwnProperty("uuid")){
-      if(item.type === "admin") {
-        retObj.admin = item.uuid;
-      } else if (item.type === "user") {
-        retObj.user = item.uuid;
+  try {
+    const MS = Util.getEndpoint("auth");
+    const requestOptions = {
+      method: "GET",
+      uri: `${MS}/accounts/${accountUUID}/user-groups`,
+      qs: {
+        default: "true"
+      },
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+        "Content-type": "application/json",
+        "x-api-version": `${Util.getVersion()}`
+      },
+      json: true
+    };
+    Util.addRequestTrace(requestOptions, trace);
+    const retObj = {
+      "admin": "",
+      "user": ""
+    }; 
+    const response = await request(requestOptions);
+    response.items.forEach(item =>{
+      if(item.hasOwnProperty("type") && item.hasOwnProperty("uuid")){
+        if(item.type === "admin") {
+          retObj.admin = item.uuid;
+        } else if (item.type === "user") {
+          retObj.user = item.uuid;
+        }
       }
-    }
-  });
-  return retObj;
+    });
+    return retObj;
+  } catch (error) {
+    return Promise.reject(Util.formatError(error));
+  }
 };
 
 /**
@@ -548,35 +603,43 @@ const getAccountDefaultGroups = async (
  * @param {object} [trace={}] - optional microservice lifecycle headers
  * @returns {Promise<object>} - promise resolving to a users object
  */
-const getResourceUsers = async (accessToken = "null accessToken", resourceUUID = "null resourceUUID", trace = {}) => {
-  const groups = await listAccessByGroups(accessToken, resourceUUID, trace);
-  let nextTrace = objectMerge({}, trace);
-  const users = {};
-  const groupTypeRegex = /^[r,u,d]{1,3}/;
-  for (const group in groups.items) {
-    const groupName = groupTypeRegex.exec(
-      groups.items[group].user_group.group_name
-    );
-    users[groupName] = [];
-    nextTrace = objectMerge(
-      {},
-      nextTrace,
-      Util.generateNewMetaData(nextTrace)
-    );
-    const groupUsers = await Groups.getGroup(
-      accessToken,
-      groups.items[group].user_group.uuid,
-      {
-        "expand":"members",
-        "members_limit":999 //hopefully we don't need pagination here. nh
-      },
-      nextTrace
-    );
-    users[groupName] = groupUsers.members.items.map(item => {
-      return item.uuid;
-    });
+const getResourceUsers = async (
+  accessToken = "null accessToken",
+  resourceUUID = "null resourceUUID",
+  trace = {}
+) => {
+  try {
+    const groups = await listAccessByGroups(accessToken, resourceUUID, trace);
+    let nextTrace = objectMerge({}, trace);
+    const users = {};
+    const groupTypeRegex = /^[r,u,d]{1,3}/;
+    for (const group in groups.items) {
+      const groupName = groupTypeRegex.exec(
+        groups.items[group].user_group.group_name
+      );
+      users[groupName] = [];
+      nextTrace = objectMerge(
+        {},
+        nextTrace,
+        Util.generateNewMetaData(nextTrace)
+      );
+      const groupUsers = await Groups.getGroup(
+        accessToken,
+        groups.items[group].user_group.uuid,
+        {
+          "expand":"members",
+          "members_limit":999 //hopefully we don't need pagination here. nh
+        },
+        nextTrace
+      );
+      users[groupName] = groupUsers.members.items.map(item => {
+        return item.uuid;
+      });
+    }
+    return users;
+  } catch (error) {
+    return Promise.reject(Util.formatError(error));
   }
-  return users;
 };
 
 /**
@@ -586,43 +649,50 @@ const getResourceUsers = async (accessToken = "null accessToken", resourceUUID =
  * @param {*} [trace={}] - optional microservices lifecycle object
  * @returns {Promise} - promise resolving to roles object
  */
-const getResourceGroupRoles = async (accessToken = "null access token", trace = {}) => { 
-  const retObj = {};
-  const rolePromises = []; 
-  Object.keys(Util.config.resourceRoleDescriptions).forEach(resourceType => {
-    rolePromises.push(
-      listRoles(
-        accessToken,
-        0, // offset
-        100, // limit
-        {"description": Util.config.resourceRoleDescriptions[resourceType]},
-        trace
-      )
-    );
-  });
-  const rawRoles = await Promise.all(rolePromises);
-  /*
-   * The following seems weird, convoluted, and brittle because it is.
-   * Awaiting resolution of JIRA CCORE-586 for final implimentation.
-   * The resource group roles will be present in Starpaas->Admin->Roles for all account admins.
-   * Because of this they are written with a human friendly name and description.
-   * As such they are complex strings that need to be parsed into a format that can be used by resource groups utility.
-   */
-  rawRoles.forEach(element =>{
-    element.items.forEach(item => {
-      const permissionType = item.name.split(" ")[1];
-      if(!retObj.hasOwnProperty(permissionType)){
-        retObj[permissionType] = {};
-      }
-      const permissions = item.name.split("-")[1].split(",");
-      let propName = "";
-      permissions.forEach(permission => {
-        propName = `${propName}${permission.charAt(1)}`;
-      });
-      retObj[permissionType][propName] = item.uuid;
-    }); 
-  });
-  return retObj;
+const getResourceGroupRoles = async (
+  accessToken = "null access token",
+  trace = {}
+) => {
+  try { 
+    const retObj = {};
+    const rolePromises = []; 
+    Object.keys(Util.config.resourceRoleDescriptions).forEach(resourceType => {
+      rolePromises.push(
+        listRoles(
+          accessToken,
+          0, // offset
+          100, // limit
+          {"description": Util.config.resourceRoleDescriptions[resourceType]},
+          trace
+        )
+      );
+    });
+    const rawRoles = await Promise.all(rolePromises);
+    /*
+    * The following seems weird, convoluted, and brittle because it is.
+    * Awaiting resolution of JIRA CCORE-586 for final implimentation.
+    * The resource group roles will be present in Starpaas->Admin->Roles for all account admins.
+    * Because of this they are written with a human friendly name and description.
+    * As such they are complex strings that need to be parsed into a format that can be used by resource groups utility.
+    */
+    rawRoles.forEach(element =>{
+      element.items.forEach(item => {
+        const permissionType = item.name.split(" ")[1];
+        if(!retObj.hasOwnProperty(permissionType)){
+          retObj[permissionType] = {};
+        }
+        const permissions = item.name.split("-")[1].split(",");
+        let propName = "";
+        permissions.forEach(permission => {
+          propName = `${propName}${permission.charAt(1)}`;
+        });
+        retObj[permissionType][propName] = item.uuid;
+      }); 
+    });
+    return retObj;
+  } catch (error) {
+    return Promise.reject(Util.formatError(error));
+  }
 };
 
 /**
@@ -654,12 +724,8 @@ const getRole = async (
     const response = await request(requestOptions);
     return response;
   } catch (error) {
-    return Promise.reject({
-      "status": "failed",
-      "message": error.hasOwnProperty("message") ? error.message : JSON.stringify(error)
-    });
+    return Promise.reject(Util.formatError(error));
   }
-  
 };
 
 
@@ -676,19 +742,24 @@ const listAccessByGroups = async (
   resourceUUID = "null groupUUID",
   trace = {}
 ) => {
-  const MS = Util.getEndpoint("auth");
-  const requestOptions = {
-    method: "GET",
-    uri: `${MS}/resources/${resourceUUID}/user-groups/access`,
-    headers: {
-      Authorization: `Bearer ${accessToken}`,
-      "Content-type": "application/json",
-      "x-api-version": `${Util.getVersion()}`
-    },
-    json: true
-  };
-  Util.addRequestTrace(requestOptions, trace);
-  return request(requestOptions);
+  try {
+    const MS = Util.getEndpoint("auth");
+    const requestOptions = {
+      method: "GET",
+      uri: `${MS}/resources/${resourceUUID}/user-groups/access`,
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+        "Content-type": "application/json",
+        "x-api-version": `${Util.getVersion()}`
+      },
+      json: true
+    };
+    Util.addRequestTrace(requestOptions, trace);
+    const response = await request(requestOptions);
+    return response;
+  } catch (error) {
+    return Promise.reject(Util.formatError(error));
+  }
 };
 
 /**
@@ -699,24 +770,29 @@ const listAccessByGroups = async (
  * @param {object} [trace = {}] - optional microservice lifecycle trace headers
  * @returns
  */
-const listAccessByPermissions = (
+const listAccessByPermissions = async (
   accessToken = "null accessToken",
   resourceUUID = "null groupUUID",
   trace = {}
 ) => {
-  const MS = Util.getEndpoint("auth");
-  const requestOptions = {
-    method: "GET",
-    uri: `${MS}/resources/${resourceUUID}/permissions/access`,
-    headers: {
-      Authorization: `Bearer ${accessToken}`,
-      "Content-type": "application/json",
-      "x-api-version": `${Util.getVersion()}`
-    },
-    json: true
-  };
-  Util.addRequestTrace(requestOptions, trace);
-  return request(requestOptions);
+  try {
+    const MS = Util.getEndpoint("auth");
+    const requestOptions = {
+      method: "GET",
+      uri: `${MS}/resources/${resourceUUID}/permissions/access`,
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+        "Content-type": "application/json",
+        "x-api-version": `${Util.getVersion()}`
+      },
+      json: true
+    };
+    Util.addRequestTrace(requestOptions, trace);
+    const response = await request(requestOptions);
+    return response;
+  } catch (error) {
+    return Promise.reject(Util.formatError(error));
+  }
 };
 
 /**
@@ -728,31 +804,36 @@ const listAccessByPermissions = (
  * @param {object} [trace = {}] - optional microservice lifecycle trace headers
  * @returns {Promise<object>} - Promise resolving to a data object containing a list of user groups
  */
-const listUserGroupRoles = (
+const listUserGroupRoles = async (
   accessToken = "null accessToken",
   userGroupUUID = "null userGroupUUID",
   filters = undefined,
   trace = {}
 ) => {
-  const MS = Util.getEndpoint("auth");
-  const requestOptions = {
-    method: "GET",
-    uri: `${MS}/user-groups/${userGroupUUID}/roles`,
-    headers: {
-      Authorization: `Bearer ${accessToken}`,
-      "Content-type": "application/json",
-      "x-api-version": `${Util.getVersion()}`
-    },
-    json: true
-  };
-  Util.addRequestTrace(requestOptions, trace);
-  if (filters) {
-    requestOptions.qs = {};
-    Object.keys(filters).forEach(filter => {
-      requestOptions.qs[filter] = filters[filter];
-    });
+  try {
+    const MS = Util.getEndpoint("auth");
+    const requestOptions = {
+      method: "GET",
+      uri: `${MS}/user-groups/${userGroupUUID}/roles`,
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+        "Content-type": "application/json",
+        "x-api-version": `${Util.getVersion()}`
+      },
+      json: true
+    };
+    Util.addRequestTrace(requestOptions, trace);
+    if (filters) {
+      requestOptions.qs = {};
+      Object.keys(filters).forEach(filter => {
+        requestOptions.qs[filter] = filters[filter];
+      });
+    }
+    const response = await request(requestOptions);
+    return response;
+  } catch (error) {
+    return Promise.reject(Util.formatError(error));
   }
-  return request(requestOptions);
 };
 
 /**
@@ -772,28 +853,33 @@ const listPermissions = async (
   filters = undefined,
   trace = {}
 ) => {
-  const MS = Util.getEndpoint("auth");
-  const requestOptions = {
-    method: "GET",
-    uri: `${MS}/permissions`,
-    headers: {
-      Authorization: `Bearer ${accessToken}`,
-      "Content-type": "application/json",
-      "x-api-version": `${Util.getVersion()}`
-    },
-    qs: {
-      offset: offset,
-      limit: limit
-    },
-    json: true
-  };
-  Util.addRequestTrace(requestOptions, trace);
-  if (filters) {
-    Object.keys(filters).forEach(filter => {
-      requestOptions.qs[filter] = filters[filter];
-    });
+  try {
+    const MS = Util.getEndpoint("auth");
+    const requestOptions = {
+      method: "GET",
+      uri: `${MS}/permissions`,
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+        "Content-type": "application/json",
+        "x-api-version": `${Util.getVersion()}`
+      },
+      qs: {
+        offset: offset,
+        limit: limit
+      },
+      json: true
+    };
+    Util.addRequestTrace(requestOptions, trace);
+    if (filters) {
+      Object.keys(filters).forEach(filter => {
+        requestOptions.qs[filter] = filters[filter];
+      });
+    }
+    const response = await request(requestOptions);
+    return response;
+  } catch (error) {
+    return Promise.reject(Util.formatError(error));
   }
-  return request(requestOptions);
 };
 
 /**
@@ -811,25 +897,30 @@ const listPermissionRoles = async (
   filters = undefined,
   trace = {}
 ) => {
-  const MS = Util.getEndpoint("auth");
-  const requestOptions = {
-    method: "GET",
-    uri: `${MS}/permissions/${permissionUUID}/roles`,
-    headers: {
-      Authorization: `Bearer ${accessToken}`,
-      "Content-type": "application/json",
-      "x-api-version": `${Util.getVersion()}`
-    },
-    json: true
-  };
-  Util.addRequestTrace(requestOptions, trace);
-  if (filters) {
-    requestOptions.qs = {};
-    Object.keys(filters).forEach(filter => {
-      requestOptions.qs[filter] = filters[filter];
-    });
+  try {
+    const MS = Util.getEndpoint("auth");
+    const requestOptions = {
+      method: "GET",
+      uri: `${MS}/permissions/${permissionUUID}/roles`,
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+        "Content-type": "application/json",
+        "x-api-version": `${Util.getVersion()}`
+      },
+      json: true
+    };
+    Util.addRequestTrace(requestOptions, trace);
+    if (filters) {
+      requestOptions.qs = {};
+      Object.keys(filters).forEach(filter => {
+        requestOptions.qs[filter] = filters[filter];
+      });
+    }
+    const response = await request(requestOptions);
+    return response;
+  } catch (error) {
+    return Promise.reject(Util.formatError(error));
   }
-  return request(requestOptions);
 };
 
 /**
@@ -842,36 +933,40 @@ const listPermissionRoles = async (
  * @param {object} [trace = {}] - optional microservice lifecycle trace headers
  * @returns {Promise<object>} - Promise resolving to a data object containing a list of roles
  */
-const listRoles = (
+const listRoles = async (
   accessToken = "null accessToken",
   offset = "0",
   limit = "10",
   filters = undefined,
   trace = {}
 ) => {
-  const MS = Util.getEndpoint("auth");
-  const requestOptions = {
-    method: "GET",
-    uri: `${MS}/roles`,
-    headers: {
-      Authorization: `Bearer ${accessToken}`,
-      "Content-type": "application/json",
-      "x-api-version": `${Util.getVersion()}`
-    },
-    qs: {
-      offset: offset,
-      limit: limit
-    },
-    json: true
-  };
-  Util.addRequestTrace(requestOptions, trace);
-  if (filters) {
-    Object.keys(filters).forEach(filter => {
-      requestOptions.qs[filter] = filters[filter];
-    });
+  try {
+    const MS = Util.getEndpoint("auth");
+    const requestOptions = {
+      method: "GET",
+      uri: `${MS}/roles`,
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+        "Content-type": "application/json",
+        "x-api-version": `${Util.getVersion()}`
+      },
+      qs: {
+        offset: offset,
+        limit: limit
+      },
+      json: true
+    };
+    Util.addRequestTrace(requestOptions, trace);
+    if (filters) {
+      Object.keys(filters).forEach(filter => {
+        requestOptions.qs[filter] = filters[filter];
+      });
+    }
+    const response = await request(requestOptions);
+    return response;
+  } catch (error) {
+    return Promise.reject(Util.formatError(error));
   }
-
-  return request(requestOptions);
 };
 
 /**
@@ -885,7 +980,7 @@ const listRoles = (
  * @param {object} [trace = {}] - optional microservice lifecycle trace headers
  * @returns {Promise<object>} - Promise resolving to a data object containing a list of roles
  */
-const listRolesForUser = (
+const listRolesForUser = async (
   accessToken = "null accessToken",
   user_uuid = "null user_uuid",
   offset = "0",
@@ -893,29 +988,33 @@ const listRolesForUser = (
   filters = undefined,
   trace = {}
 ) => {
-  const MS = Util.getEndpoint("auth");
-  const requestOptions = {
-    method: "GET",
-    uri: `${MS}/users/${user_uuid}/roles`,
-    headers: {
-      Authorization: `Bearer ${accessToken}`,
-      "Content-type": "application/json",
-      "x-api-version": `${Util.getVersion()}`
-    },
-    qs: {
-      offset: offset,
-      limit: limit
-    },
-    json: true
-  };
-  Util.addRequestTrace(requestOptions, trace);
-  if (filters) {
-    Object.keys(filters).forEach(filter => {
-      requestOptions.qs[filter] = filters[filter];
-    });
+  try {
+    const MS = Util.getEndpoint("auth");
+    const requestOptions = {
+      method: "GET",
+      uri: `${MS}/users/${user_uuid}/roles`,
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+        "Content-type": "application/json",
+        "x-api-version": `${Util.getVersion()}`
+      },
+      qs: {
+        offset: offset,
+        limit: limit
+      },
+      json: true
+    };
+    Util.addRequestTrace(requestOptions, trace);
+    if (filters) {
+      Object.keys(filters).forEach(filter => {
+        requestOptions.qs[filter] = filters[filter];
+      });
+    }
+    const response = await request(requestOptions);
+    return response;
+  } catch (error) {
+    return Promise.reject(Util.formatError(error));
   }
-
-  return request(requestOptions);
 };
 
 /**
@@ -927,31 +1026,36 @@ const listRolesForUser = (
  * @param {object} [trace = {}] - optional microservice lifecycle trace headers
  * @returns {Promise<object>} - Promise resolving to a data object containing a list of user groups
  */
-const listRoleUserGroups = (
+const listRoleUserGroups = async (
   accessToken = "null accessToken",
   roleUUID = "null roleUUID",
   filters = undefined,
   trace = {}
 ) => {
-  const MS = Util.getEndpoint("auth");
-  const requestOptions = {
-    method: "GET",
-    uri: `${MS}/roles/${roleUUID}/user-groups`,
-    headers: {
-      Authorization: `Bearer ${accessToken}`,
-      "Content-type": "application/json",
-      "x-api-version": `${Util.getVersion()}`
-    },
-    json: true
-  };
-  Util.addRequestTrace(requestOptions, trace);
-  if (filters) {
-    requestOptions.qs = {};
-    Object.keys(filters).forEach(filter => {
-      requestOptions.qs[filter] = filters[filter];
-    });
+  try {
+    const MS = Util.getEndpoint("auth");
+    const requestOptions = {
+      method: "GET",
+      uri: `${MS}/roles/${roleUUID}/user-groups`,
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+        "Content-type": "application/json",
+        "x-api-version": `${Util.getVersion()}`
+      },
+      json: true
+    };
+    Util.addRequestTrace(requestOptions, trace);
+    if (filters) {
+      requestOptions.qs = {};
+      Object.keys(filters).forEach(filter => {
+        requestOptions.qs[filter] = filters[filter];
+      });
+    }
+    const response = await request(requestOptions);
+    return response;
+  } catch (error) {
+    return Promise.reject(Util.formatError(error));
   }
-  return request(requestOptions);
 };
 
 /**
@@ -963,31 +1067,36 @@ const listRoleUserGroups = (
  * @param {object} [trace = {}] - optional microservice lifecycle trace headers
  * @returns {Promise<object>} - Promise resolving to a data object containing a list of user groups
  */
-const listRolePermissions = (
+const listRolePermissions = async (
   accessToken = "null accessToken",
   roleUUID = "null roleUUID",
   filters = undefined,
   trace = {}
 ) => {
-  const MS = Util.getEndpoint("auth");
-  const requestOptions = {
-    method: "GET",
-    uri: `${MS}/roles/${roleUUID}/permissions`,
-    headers: {
-      Authorization: `Bearer ${accessToken}`,
-      "Content-type": "application/json",
-      "x-api-version": `${Util.getVersion()}`
-    },
-    json: true
-  };
-  Util.addRequestTrace(requestOptions, trace);
-  if (filters) {
-    requestOptions.qs = {};
-    Object.keys(filters).forEach(filter => {
-      requestOptions.qs[filter] = filters[filter];
-    });
+  try {
+    const MS = Util.getEndpoint("auth");
+    const requestOptions = {
+      method: "GET",
+      uri: `${MS}/roles/${roleUUID}/permissions`,
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+        "Content-type": "application/json",
+        "x-api-version": `${Util.getVersion()}`
+      },
+      json: true
+    };
+    Util.addRequestTrace(requestOptions, trace);
+    if (filters) {
+      requestOptions.qs = {};
+      Object.keys(filters).forEach(filter => {
+        requestOptions.qs[filter] = filters[filter];
+      });
+    }
+    const response = await request(requestOptions);
+    return response;
+  } catch (error) {
+    return Promise.reject(Util.formatError(error));
   }
-  return request(requestOptions);
 };
 
 /**
@@ -1000,36 +1109,40 @@ const listRolePermissions = (
  * @param {object} [trace = {}] - optional microservice lifecycle trace headers
  * @returns {Promise<object>} - Promise resolving to a data object containing a list of user groups
  */
-const listUserGroups = (
+const listUserGroups = async (
   accessToken = "null accessToken",
   offset = "0",
   limit = "10",
   filters = undefined,
   trace = {}
 ) => {
-  const MS = Util.getEndpoint("auth");
-  const requestOptions = {
-    method: "GET",
-    uri: `${MS}/user-groups`,
-    headers: {
-      Authorization: `Bearer ${accessToken}`,
-      "Content-type": "application/json",
-      "x-api-version": `${Util.getVersion()}`
-    },
-    qs: {
-      offset: offset,
-      limit: limit
-    },
-    json: true
-  };
-  Util.addRequestTrace(requestOptions, trace);
-  if (filters) {
-    Object.keys(filters).forEach(filter => {
-      requestOptions.qs[filter] = filters[filter];
-    });
+  try{
+    const MS = Util.getEndpoint("auth");
+    const requestOptions = {
+      method: "GET",
+      uri: `${MS}/user-groups`,
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+        "Content-type": "application/json",
+        "x-api-version": `${Util.getVersion()}`
+      },
+      qs: {
+        offset: offset,
+        limit: limit
+      },
+      json: true
+    };
+    Util.addRequestTrace(requestOptions, trace);
+    if (filters) {
+      Object.keys(filters).forEach(filter => {
+        requestOptions.qs[filter] = filters[filter];
+      });
+    }
+    const response = await request(requestOptions);
+    return response;
+  } catch (error) {
+    return Promise.reject(Util.formatError(error));
   }
-
-  return request(requestOptions);
 };
 
 /**
@@ -1047,35 +1160,39 @@ const modifyRole = async (
   body = "null body",
   trace = {}
 ) => {
-  const MS = Util.getEndpoint("auth");
-  const requestOptions = {
-    method: "POST",
-    uri: `${MS}/roles/${roleUUID}/modify`,
-    headers: {
-      Authorization: `Bearer ${accessToken}`,
-      "Content-type": "application/json",
-      "x-api-version": `${Util.getVersion()}`
-    },
-    body: body,
-    json: true,
-    resolveWithFullResponse: true
-  };
-  Util.addRequestTrace(requestOptions, trace);
-  const response = await request(requestOptions);
-  const role = response.body;
-  // create returns a 202....suspend return until the new resource is ready
-  if (response.hasOwnProperty("statusCode") && 
-        response.statusCode === 202 &&
-        response.headers.hasOwnProperty("location"))
-  {    
-    await Util.pendingResource(
-      response.headers.location,
-      requestOptions, //reusing the request options instead of passing in multiple params
-      trace,
-      role.hasOwnProperty("resource_status") ? role.resource_status : "complete"
-    );
+  try {
+    const MS = Util.getEndpoint("auth");
+    const requestOptions = {
+      method: "POST",
+      uri: `${MS}/roles/${roleUUID}/modify`,
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+        "Content-type": "application/json",
+        "x-api-version": `${Util.getVersion()}`
+      },
+      body: body,
+      json: true,
+      resolveWithFullResponse: true
+    };
+    Util.addRequestTrace(requestOptions, trace);
+    const response = await request(requestOptions);
+    const role = response.body;
+    // create returns a 202....suspend return until the new resource is ready
+    if (response.hasOwnProperty("statusCode") && 
+          response.statusCode === 202 &&
+          response.headers.hasOwnProperty("location"))
+    {    
+      await Util.pendingResource(
+        response.headers.location,
+        requestOptions, //reusing the request options instead of passing in multiple params
+        trace,
+        role.hasOwnProperty("resource_status") ? role.resource_status : "complete"
+      );
+    }
+    return role;
+  } catch (error) {
+    return Promise.reject(Util.formatError(error));
   }
-  return role;
 };
 
 /**
@@ -1093,35 +1210,39 @@ const modifyUserGroup = async (
   body = "null body",
   trace = {}
 ) => {
-  const MS = Util.getEndpoint("auth");
-  const requestOptions = {
-    method: "POST",
-    uri: `${MS}/user-groups/${groupUUID}/modify`,
-    headers: {
-      Authorization: `Bearer ${accessToken}`,
-      "Content-type": "application/json",
-      "x-api-version": `${Util.getVersion()}`
-    },
-    body: body,
-    resolveWithFullResponse: true,
-    json: true
-  };
-  Util.addRequestTrace(requestOptions, trace);
-  const response = await request(requestOptions);
-  const userGroup = response.body;
-  // create returns a 202....suspend return until the new resource is ready
-  if (response.hasOwnProperty("statusCode") && 
-        response.statusCode === 202 &&
-        response.headers.hasOwnProperty("location"))
-  {    
-    await Util.pendingResource(
-      response.headers.location,
-      requestOptions, //reusing the request options instead of passing in multiple params
-      trace,
-      userGroup.hasOwnProperty("resource_status") ? userGroup.resource_status : "complete"
-    );
+  try {
+    const MS = Util.getEndpoint("auth");
+    const requestOptions = {
+      method: "POST",
+      uri: `${MS}/user-groups/${groupUUID}/modify`,
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+        "Content-type": "application/json",
+        "x-api-version": `${Util.getVersion()}`
+      },
+      body: body,
+      resolveWithFullResponse: true,
+      json: true
+    };
+    Util.addRequestTrace(requestOptions, trace);
+    const response = await request(requestOptions);
+    const userGroup = response.body;
+    // create returns a 202....suspend return until the new resource is ready
+    if (response.hasOwnProperty("statusCode") && 
+          response.statusCode === 202 &&
+          response.headers.hasOwnProperty("location"))
+    {    
+      await Util.pendingResource(
+        response.headers.location,
+        requestOptions, //reusing the request options instead of passing in multiple params
+        trace,
+        userGroup.hasOwnProperty("resource_status") ? userGroup.resource_status : "complete"
+      );
+    }
+    return userGroup;
+  } catch (error) {
+    return Promise.reject(Util.formatError(error));
   }
-  return userGroup;
 };
 
 module.exports = {

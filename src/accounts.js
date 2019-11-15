@@ -11,26 +11,31 @@ const request = require("request-promise");
  * @param {object} [trace = {}] - optional microservice lifecycle trace headers 
  * @returns {Promise<object>} - Promise resolving to a data object containing new relationship
  */
-const createRelationship = (
+const createRelationship = async (
   accessToken = "null access token",
   body = "null body",
   trace = {}
 ) => {
-  const MS = util.getEndpoint("accounts");
-  const requestOptions = {
-    method: "POST",
-    uri: `${MS}/relationships`,
-    body: body,
-    resolveWithFullResponse: true,
-    json: true,
-    headers: {
-      Authorization: `Bearer ${accessToken}`,
-      "Content-type": "application/json",
-      "x-api-version": `${util.getVersion()}`
-    }
-  };
-  util.addRequestTrace(requestOptions, trace);
-  return request(requestOptions);
+  try{
+    const MS = util.getEndpoint("accounts");
+    const requestOptions = {
+      method: "POST",
+      uri: `${MS}/relationships`,
+      body: body,
+      resolveWithFullResponse: true,
+      json: true,
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+        "Content-type": "application/json",
+        "x-api-version": `${util.getVersion()}`
+      }
+    };
+    util.addRequestTrace(requestOptions, trace);
+    const response = await request(requestOptions);
+    return response;
+  } catch (error){
+    return Promise.reject(util.formatError(error));
+  }
 };
 
 /**
@@ -43,36 +48,41 @@ const createRelationship = (
  * @param {object} [trace = {}] - optional microservice lifecycle trace headers 
  * @returns {Promise<object>} - Promise resolving to a data object containing a list of accounts
  */
-const listAccounts = (
+const listAccounts = async (
   accessToken = "null accessToken",
   offset = 0,
   limit = 10,
   filters = undefined,
   trace = {}
 ) => {
-  const MS = util.getEndpoint("accounts");
-  const requestOptions = {
-    method: "GET",
-    uri: `${MS}/accounts`,
-    qs: {
-      offset: offset,
-      limit: limit,
-    },
-    headers: {
-      Authorization: `Bearer ${accessToken}`,
-      "Content-type": "application/json",
-      "x-api-version": `${util.getVersion()}`
-    },
-    json: true
-  };
-  util.addRequestTrace(requestOptions, trace);
-  if (filters) {
-    Object.keys(filters).forEach(filter => {
-      requestOptions.qs[filter] = filters[filter];
-    });
+  try{
+    const MS = util.getEndpoint("accounts");
+    const requestOptions = {
+      method: "GET",
+      uri: `${MS}/accounts`,
+      qs: {
+        offset: offset,
+        limit: limit,
+      },
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+        "Content-type": "application/json",
+        "x-api-version": `${util.getVersion()}`
+      },
+      json: true
+    };
+    util.addRequestTrace(requestOptions, trace);
+    if (filters) {
+      Object.keys(filters).forEach(filter => {
+        requestOptions.qs[filter] = filters[filter];
+      });
+    }
+    //console.log("REQUEST_OPTIONS",requestOptions);
+    const response = await request(requestOptions);
+    return response;
+  } catch (error) {
+    return Promise.reject(util.formatError(error));
   }
-  //console.log("REQUEST_OPTIONS",requestOptions);
-  return request(requestOptions);
 };
 
 /**
@@ -88,35 +98,39 @@ const createAccount = async (
   body = "null body",
   trace = {}
 ) => {
-  const MS = util.getEndpoint("accounts");
-  const requestOptions = {
-    method: "POST",
-    uri: `${MS}/accounts`,
-    body: body,
-    headers: {
-      Authorization: `Bearer ${accessToken}`,
-      "Content-type": "application/json",
-      "x-api-version": `${util.getVersion()}`
-    },
-    json: true,
-    resolveWithFullResponse: true
-  };
-  util.addRequestTrace(requestOptions, trace);
-  const response = await request(requestOptions);
-  const newAccount = response.body;
-  // create returns a 202....suspend return until the new resource is ready
-  if (response.hasOwnProperty("statusCode") && 
+  try{
+    const MS = util.getEndpoint("accounts");
+    const requestOptions = {
+      method: "POST",
+      uri: `${MS}/accounts`,
+      body: body,
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+        "Content-type": "application/json",
+        "x-api-version": `${util.getVersion()}`
+      },
+      json: true,
+      resolveWithFullResponse: true
+    };
+    util.addRequestTrace(requestOptions, trace);
+    const response = await request(requestOptions);
+    const newAccount = response.body;
+    // create returns a 202....suspend return until the new resource is ready
+    if (response.hasOwnProperty("statusCode") && 
         response.statusCode === 202 &&
         response.headers.hasOwnProperty("location"))
-  {    
-    await util.pendingResource(
-      response.headers.location,
-      requestOptions, //reusing the request options instead of passing in multiple params
-      trace,
-      newAccount.hasOwnProperty("resource_status") ? newAccount.resource_status : "complete"
-    );
-  }
-  return newAccount;  
+    {    
+      await util.pendingResource(
+        response.headers.location,
+        requestOptions, //reusing the request options instead of passing in multiple params
+        trace,
+        newAccount.hasOwnProperty("resource_status") ? newAccount.resource_status : "complete"
+      );
+    }
+    return newAccount;
+  } catch (error){
+    return Promise.reject(util.formatError(error));
+  }  
 };
 
 /**
@@ -128,27 +142,32 @@ const createAccount = async (
  * @param {object} [trace = {}] - optional microservice lifecycle trace headers 
  * @returns {Promise<object>} - Promise resolving to an identity data object
  */
-const getAccount = (
+const getAccount = async (
   accessToken = "null access token",
   accountUUID = "null account uuid",
   trace = {}
 ) => {
-  const MS = util.getEndpoint("accounts");
-  const requestOptions = {
-    method: "GET",
-    uri: `${MS}/accounts/${accountUUID}`,
-    qs: {
-      expand: "relationships"
-    },
-    headers: {
-      Authorization: `Bearer ${accessToken}`,
-      "Content-type": "application/json",
-      "x-api-version": `${util.getVersion()}`
-    },
-    json: true
-  };
-  util.addRequestTrace(requestOptions, trace);
-  return request(requestOptions);
+  try {
+    const MS = util.getEndpoint("accounts");
+    const requestOptions = {
+      method: "GET",
+      uri: `${MS}/accounts/${accountUUID}`,
+      qs: {
+        expand: "relationships"
+      },
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+        "Content-type": "application/json",
+        "x-api-version": `${util.getVersion()}`
+      },
+      json: true
+    };
+    util.addRequestTrace(requestOptions, trace);
+    const response = await request(requestOptions);
+    return response;
+  } catch (error){
+    return Promise.reject(util.formatError(error));
+  }
 };
 
 /**
@@ -166,33 +185,39 @@ const modifyAccount = (
   body = "null body",
   trace = {}
 ) => {
-  //body = JSON.stringify(body);
-  const MS = util.getEndpoint("accounts");
-  const requestOptions = {
-    method: "PUT",
-    uri: `${MS}/accounts/${accountUUID}`,
-    body: body,
-    resolveWithFullResponse: true,
-    json: true,
-    headers: {
-      Authorization: `Bearer ${accessToken}`,
-      "Content-type": "application/json",
-      "x-api-version": `${util.getVersion()}`
-    }
-  };
-  util.addRequestTrace(requestOptions, trace);
-
-  return new Promise(function(resolve, reject) {
-    request(requestOptions)
-      .then(function(responseData) {
-        responseData.statusCode === 204
-          ? resolve({ status: "ok" })
-          : reject({ status: "failed" });
-      })
-      .catch(function(error) {
-        reject(error);
-      });
-  });
+  try {
+    const MS = util.getEndpoint("accounts");
+    const requestOptions = {
+      method: "PUT",
+      uri: `${MS}/accounts/${accountUUID}`,
+      body: body,
+      resolveWithFullResponse: true,
+      json: true,
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+        "Content-type": "application/json",
+        "x-api-version": `${util.getVersion()}`
+      }
+    };
+    util.addRequestTrace(requestOptions, trace);
+    const response = request(requestOptions); 
+    if(response.statusCode === 204) {
+      return { status: "ok" };
+    } else {
+      // this is an edge case, but protects against unexpected 2xx or 3xx response codes.
+      throw {
+        "code": response.statusCode,
+        "message": typeof response.body === "string" ? response.body : "modify account failed",
+        "trace_id": requestOptions.hasOwnProperty("headers") && requestOptions.headers.hasOwnProperty("trace")
+          ? requestOptions.headers.trace 
+          : undefined,
+        "details": typeof response.body === "object" && response.body !== null
+          ? [response.body]
+          : []
+      };
+    }  } catch (error){
+    return Promise.reject(util.formatError(error));
+  }
 };
 
 /**
@@ -206,7 +231,7 @@ const modifyAccount = (
  * @returns {Promise<object>} - Promise resolving to a data object containing a list of accounts
  */
 //TODO add sort order also
-const listAccountRelationships = (
+const listAccountRelationships = async (
   accessToken = "null accessToken",
   accountUUID = "null account uuid",
   offset = 0,
@@ -214,30 +239,32 @@ const listAccountRelationships = (
   accountType = undefined,
   trace = {}
 ) => {
-  const MS = util.getEndpoint("accounts");
-  const requestOptions = {
-    method: "GET",
-    uri: `${MS}/accounts/${accountUUID}/relationships`,
-    qs: {
-      expand: "accounts",
-      offset: offset,
-      limit: limit
-    },
-    headers: {
-      Authorization: `Bearer ${accessToken}`,
-      "Content-type": "application/json",
-      "x-api-version": `${util.getVersion()}`
-    },
-    json: true
-  };
-  util.addRequestTrace(requestOptions, trace);
-
-  if (accountType) {
-    requestOptions.qs.account_type = accountType;
-  }
-
-  //TODO remove this stuff once account_type is supported CSRVS-158
-  return request(requestOptions);
+  try{
+    const MS = util.getEndpoint("accounts");
+    const requestOptions = {
+      method: "GET",
+      uri: `${MS}/accounts/${accountUUID}/relationships`,
+      qs: {
+        expand: "accounts",
+        offset: offset,
+        limit: limit
+      },
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+        "Content-type": "application/json",
+        "x-api-version": `${util.getVersion()}`
+      },
+      json: true
+    };
+    util.addRequestTrace(requestOptions, trace);
+    if (accountType) {
+      requestOptions.qs.account_type = accountType;
+    }
+    const response = await request(requestOptions);
+    return response;
+  } catch (error){
+    return Promise.reject(util.formatError(error));
+  }   
 };
 
 /**
@@ -248,36 +275,43 @@ const listAccountRelationships = (
  * @param {object} [trace = {}] - optional microservice lifecycle trace headers 
  * @returns {Promise<object>} - Promise resolving to a status data object
  */
-const reinstateAccount = (
+const reinstateAccount = async (
   accessToken = "null access token",
   accountUUID = "null account uuid",
   trace = {}
 ) => {
-  const MS = util.getEndpoint("accounts");
-  const requestOptions = {
-    method: "POST",
-    uri: `${MS}/accounts/${accountUUID}/reinstate`,
-    headers: {
-      Authorization: `Bearer ${accessToken}`,
-      "Content-type": "application/json",
-      "x-api-version": `${util.getVersion()}`
-    },
-    resolveWithFullResponse: true,
-    json: true
-  };
-  util.addRequestTrace(requestOptions, trace);
-
-  return new Promise(function(resolve, reject) {
-    request(requestOptions)
-      .then(function(responseData) {
-        responseData.statusCode === 204
-          ? resolve({ status: "ok" })
-          : reject({ status: "failed" });
-      })
-      .catch(function(error) {
-        reject(error);
-      });
-  });
+  try {
+    const MS = util.getEndpoint("accounts");
+    const requestOptions = {
+      method: "POST",
+      uri: `${MS}/accounts/${accountUUID}/reinstate`,
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+        "Content-type": "application/json",
+        "x-api-version": `${util.getVersion()}`
+      },
+      resolveWithFullResponse: true,
+      json: true
+    };
+    util.addRequestTrace(requestOptions, trace);
+    const response = await request(requestOptions);
+    if(response.statusCode === 204) {
+      return { status: "ok" };
+    } else {
+      // this is an edge case, but protects against unexpected 2xx or 3xx response codes.
+      throw {
+        "code": response.statusCode,
+        "message": typeof response.body === "string" ? response.body : "reinstate account failed",
+        "trace_id": requestOptions.hasOwnProperty("headers") && requestOptions.headers.hasOwnProperty("trace")
+          ? requestOptions.headers.trace 
+          : undefined,
+        "details": typeof response.body === "object" && response.body !== null
+          ? [response.body]
+          : []
+      };
+    }  } catch (error) {
+    return Promise.reject(util.formatError(error));
+  }
 };
 
 /**
@@ -288,36 +322,44 @@ const reinstateAccount = (
  * @param {object} [trace = {}] - optional microservice lifecycle trace headers 
  * @returns {Promise<object>} - Promise resolving to a status data object
  */
-const suspendAccount = (
+const suspendAccount = async (
   accessToken = "null access token",
   accountUUID = "null account uuid",
   trace = {}
 ) => {
-  const MS = util.getEndpoint("accounts");
-  const requestOptions = {
-    method: "POST",
-    uri: `${MS}/accounts/${accountUUID}/suspend`,
-    headers: {
-      Authorization: `Bearer ${accessToken}`,
-      "Content-type": "application/json",
-      "x-api-version": `${util.getVersion()}`
-    },
-    resolveWithFullResponse: true,
-    json: true
-  };
-  util.addRequestTrace(requestOptions, trace);
-
-  return new Promise(function(resolve, reject) {
-    request(requestOptions)
-      .then(function(responseData) {
-        responseData.statusCode === 204
-          ? resolve({ status: "ok" })
-          : reject({ status: "failed" });
-      })
-      .catch(function(error) {
-        reject(error);
-      });
-  });
+  try {
+    const MS = util.getEndpoint("accounts");
+    const requestOptions = {
+      method: "POST",
+      uri: `${MS}/accounts/${accountUUID}/suspend`,
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+        "Content-type": "application/json",
+        "x-api-version": `${util.getVersion()}`
+      },
+      resolveWithFullResponse: true,
+      json: true
+    };
+    util.addRequestTrace(requestOptions, trace);
+    const response = await request(requestOptions);
+    if(response.statusCode === 204) {
+      return { status: "ok" };
+    } else {
+      // this is an edge case, but protects against unexpected 2xx or 3xx response codes.
+      throw {
+        "code": response.statusCode,
+        "message": typeof response.body === "string" ? response.body : "suspend account failed",
+        "trace_id": requestOptions.hasOwnProperty("headers") && requestOptions.headers.hasOwnProperty("trace")
+          ? requestOptions.headers.trace 
+          : undefined,
+        "details": typeof response.body === "object" && response.body !== null
+          ? [response.body]
+          : []
+      };
+    }
+  } catch (error) {
+    return Promise.reject(util.formatError(error));
+  }
 };
 
 /**
@@ -362,12 +404,7 @@ const deleteAccount = async (
     }
     return {"status": "ok"};
   } catch(error){
-    return Promise.reject(
-      {
-        "status": "failed",
-        "message": error.hasOwnProperty("message") ? error.message : JSON.stringify(error)
-      }
-    );
+    return Promise.reject(util.formatError(error));
   } 
 };
 

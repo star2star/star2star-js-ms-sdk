@@ -210,6 +210,7 @@ toc:
       - aggregate
       - createUUID
       - filterResponse
+      - formatError
       - getEndpoint
       - getAuthHost
       - getVersion

@@ -13,35 +13,40 @@ const util = require("./utilities");
  * @param {object} [trace = {}] - optional microservice lifecycle trace headers
  * @returns {Promise<object>} - Promise resolving to a list of user groups.
  */
-const listGroups = (
+const listGroups = async (
   accessToken = "null accessToken",
   offset = 0,
   limit = 10,
   filters = undefined,
   trace = {}
 ) => {
-  const MS = util.getEndpoint("auth");
-  const requestOptions = {
-    method: "GET",
-    uri: `${MS}/user-groups`,
-    headers: {
-      "Content-type": "application/json",
-      Authorization: `Bearer ${accessToken}`,
-      "x-api-version": `${util.getVersion()}`
-    },
-    qs: {
-      offset,
-      limit
-    },
-    json: true
-  };
-  util.addRequestTrace(requestOptions, trace);
-  if (filters) {
-    Object.keys(filters).forEach(filter => {
-      requestOptions.qs[filter] = filters[filter];
-    });
+  try {
+    const MS = util.getEndpoint("auth");
+    const requestOptions = {
+      method: "GET",
+      uri: `${MS}/user-groups`,
+      headers: {
+        "Content-type": "application/json",
+        Authorization: `Bearer ${accessToken}`,
+        "x-api-version": `${util.getVersion()}`
+      },
+      qs: {
+        offset,
+        limit
+      },
+      json: true
+    };
+    util.addRequestTrace(requestOptions, trace);
+    if (filters) {
+      Object.keys(filters).forEach(filter => {
+        requestOptions.qs[filter] = filters[filter];
+      });
+    }
+    const response = await request(requestOptions);
+    return response;
+  } catch (error) {
+    return Promise.reject(util.formatError(error));
   }
-  return request(requestOptions);
 };
 
 /**
@@ -52,32 +57,37 @@ const listGroups = (
  * @param {object} [trace = {}] - optional microservice lifecycle trace headers
  * @returns
  */
-const createGroup = (
+const createGroup = async (
   accessToken = "null accessToken",
   body = "null body",
   trace = {}
 ) => {
-  const newBody = {
-    "name": body.name,
-    "description": body.description 
-  };
-  newBody.users = body.members.map(member => {
-    return member.uuid;
-  });
-  const MS = util.getEndpoint("auth");
-  const requestOptions = {
-    method: "POST",
-    uri: `${MS}/accounts/${body.account_uuid}/user-groups`,
-    headers: {
-      "Content-type": "application/json",
-      Authorization: `Bearer ${accessToken}`,
-      "x-api-version": `${util.getVersion()}`
-    },
-    body: newBody,
-    json: true
-  };
-  util.addRequestTrace(requestOptions, trace);
-  return request(requestOptions);
+  try{
+    const newBody = {
+      "name": body.name,
+      "description": body.description 
+    };
+    newBody.users = body.members.map(member => {
+      return member.uuid;
+    });
+    const MS = util.getEndpoint("auth");
+    const requestOptions = {
+      method: "POST",
+      uri: `${MS}/accounts/${body.account_uuid}/user-groups`,
+      headers: {
+        "Content-type": "application/json",
+        Authorization: `Bearer ${accessToken}`,
+        "x-api-version": `${util.getVersion()}`
+      },
+      body: newBody,
+      json: true
+    };
+    util.addRequestTrace(requestOptions, trace);
+    const response = await request(requestOptions);
+    return response;
+  } catch(error){
+    return Promise.reject(util.formatError(error));
+  }
 };
 
 // TODO this call needs to be migrated out of groups to auth. CCORE-662
@@ -90,32 +100,42 @@ const createGroup = (
  * @param {object} [trace = {}] - optional microservice lifecycle trace headers
  * @returns {Promise<object>} - Promise resolving to a data object containing a single group
  */
-const getGroup = (
+const getGroup = async (
   accessToken = "null accessToken",
   groupUUID = "null uuid",
   filters = undefined,
   trace = {}
 ) => {
-  const MS = util.getEndpoint("groups");
-  const requestOptions = {
-    method: "GET",
-    uri: `${MS}/groups/${groupUUID}`,
-    headers: {
-      "Content-type": "application/json",
-      Authorization: `Bearer ${accessToken}`,
-      "x-api-version": `${util.getVersion()}`
-    },
-    json: true
-  };
-  util.addRequestTrace(requestOptions, trace);
-  if (filters) {
-    requestOptions.qs = [];
-    Object.keys(filters).forEach(filter => {
-      requestOptions.qs[filter] = filters[filter];
-    });
+  try{
+    const MS = util.getEndpoint("auth");
+    const requestOptions = {
+      method: "GET",
+      uri: `${MS}/user-groups/${groupUUID}`,
+      headers: {
+        "Content-type": "application/json",
+        Authorization: `Bearer ${accessToken}`,
+        "x-api-version": `${util.getVersion()}`
+      },
+      json: true
+    };
+    util.addRequestTrace(requestOptions, trace);
+    if (filters) {
+      requestOptions.qs = [];
+      Object.keys(filters).forEach(filter => {
+        requestOptions.qs[filter] = filters[filter];
+      });
+    }
+    //console.log("****REQUESTOPTS****",requestOptions);
+    const response = await request(requestOptions);
+    // ensure backward compatibility now that this has been moved out of Groups microservice
+    if(response.hasOwnProperty("users")){
+      response.members = response.users;
+    }
+    return response;
+  } catch (error) {
+    Promise.reject(util.formatError(error));
   }
-  //console.log("****REQUESTOPTS****",requestOptions);
-  return request(requestOptions);
+  
 };
 
 // TODO this call needs to be migrated out of groups to auth. CCORE-662
@@ -128,32 +148,41 @@ const getGroup = (
  * @param {object} [trace = {}] - optional microservice lifecycle trace headers
  * @returns {Promise<object>} - Promise resolving to a data object containing a single group
  */
-const listGroupMembers = (
+const listGroupMembers = async (
   accessToken = "null accessToken",
   groupUUID = "null uuid",
   filters = undefined,
   trace = {}
 ) => {
-  const MS = util.getEndpoint("groups");
-  const requestOptions = {
-    method: "GET",
-    uri: `${MS}/groups/${groupUUID}/members`,
-    headers: {
-      "Content-type": "application/json",
-      Authorization: `Bearer ${accessToken}`,
-      "x-api-version": `${util.getVersion()}`
-    },
-    json: true
-  };
-  util.addRequestTrace(requestOptions, trace);
-  if (filters) {
-    requestOptions.qs = [];
-    Object.keys(filters).forEach(filter => {
-      requestOptions.qs[filter] = filters[filter];
-    });
+  try{
+    const MS = util.getEndpoint("auth");
+    const requestOptions = {
+      method: "GET",
+      uri: `${MS}/user-groups/${groupUUID}/users`,
+      headers: {
+        "Content-type": "application/json",
+        Authorization: `Bearer ${accessToken}`,
+        "x-api-version": `${util.getVersion()}`
+      },
+      json: true
+    };
+    util.addRequestTrace(requestOptions, trace);
+    if (filters) {
+      requestOptions.qs = [];
+      Object.keys(filters).forEach(filter => {
+        requestOptions.qs[filter] = filters[filter];
+      });
+    }
+    //console.log("****REQUESTOPTS****",requestOptions);
+    const response = request(requestOptions);
+    // ensure backward compatibility now that this has been moved out of Groups microservice
+    if(response.hasOwnProperty("users")){
+      response.members = response.users;
+    }
+    return response; 
+  } catch(error){
+    return Promise.reject(util.formatError(error));
   }
-  //console.log("****REQUESTOPTS****",requestOptions);
-  return request(requestOptions);
 };
 
 // TODO this call needs to be migrated out of groups to auth. CCORE-662
@@ -171,10 +200,10 @@ const deleteGroup = async (
   trace = {}
 ) => {
   try {
-    const MS = util.getEndpoint("groups");
+    const MS = util.getEndpoint("auth");
     const requestOptions = {
       method: "DELETE",
-      uri: `${MS}/groups/${groupUUID}`,
+      uri: `${MS}/user-groups/${groupUUID}`,
       headers: {
         "Content-type": "application/json",
         Authorization: `Bearer ${accessToken}`,
@@ -197,14 +226,9 @@ const deleteGroup = async (
         "deleting"
       );
     }
-    return Promise.resolve({"status":"ok"});
+    return {"status":"ok"};
   } catch(error){
-    return Promise.reject(
-      {
-        "status": "failed",
-        "message": error.hasOwnProperty("message") ? error.message : JSON.stringify(error)
-      }
-    );
+    return Promise.reject(util.formatError(error));
   }
   
 };
@@ -225,21 +249,33 @@ const addMembersToGroup = async (
   members = [],
   trace = {}
 ) => {
-  const MS = util.getEndpoint("groups");
-  const requestOptions = {
-    method: "POST",
-    uri: `${MS}/groups/${groupUUID}/members`,
-    body: members,
-    headers: {
-      "Content-type": "application/json",
-      Authorization: `Bearer ${accessToken}`,
-      "x-api-version": `${util.getVersion()}`
-    },
-    json: true
-  };
-  util.addRequestTrace(requestOptions, trace);
-  // console.log("request options", JSON.stringify(requestOptions));
-  return await request(requestOptions);
+  try {
+    // ensure backward compatibility with groups api consumers
+    const newMembers = members.map(member => {
+      return member.hasOwnProperty("uuid") ? member.uuid : undefined;
+    });
+    const MS = util.getEndpoint("auth");
+    const requestOptions = {
+      method: "POST",
+      uri: `${MS}/user-groups/${groupUUID}/users`,
+      body: {
+        "users": newMembers
+      },
+      headers: {
+        "Content-type": "application/json",
+        Authorization: `Bearer ${accessToken}`,
+        "x-api-version": `${util.getVersion()}`
+      },
+      json: true
+    };
+    util.addRequestTrace(requestOptions, trace);
+    // console.log("request options", JSON.stringify(requestOptions));
+    const response = await request(requestOptions);
+    return response;
+  } catch (error) {
+    return Promise.reject(util.formatError(error));
+  }
+  
 
 };
 
@@ -248,42 +284,57 @@ const addMembersToGroup = async (
  * @async
  * @description This function will remove one or more members from a group
  * @param {string} [accessToken="null accessToken"] - cpaas access token
- * @param {string} [groupUuid="null groupUuid"] - group to remove users from
+ * @param {string} [groupUUID="null groupUUID"] - group to remove users from
  * @param {array} [members=[]] - array of objects containing 'uuid' (for known users)
  * @param {object} [trace = {}] - optional microservice lifecycle trace headers
  * @returns {Promise<empty>} - Promise resolving success or failure status object.
  */
 const deleteGroupMembers = async (
   accessToken = "null accessToken",
-  groupUuid = "null groupUuid",
+  groupUUID = "null groupUuid",
   members = [],
   trace = {}
-) => { 
-  const MS = util.getEndpoint("groups");
-  const requestOptions = {
-    method: "DELETE",
-    uri: `${MS}/groups/${groupUuid}/members`,
-    headers: {
-      "Content-type": "application/json",
-      Authorization: `Bearer ${accessToken}`,
-      "x-api-version": `${util.getVersion()}`
-    },
-    body: members,
-    resolveWithFullResponse: true,
-    json: true
-  };
-  util.addRequestTrace(requestOptions, trace);
-  return await new Promise(function(resolve, reject) {
-    request(requestOptions)
-      .then(function(responseData) {
-        responseData.statusCode === 204
-          ? resolve({ status: "ok" })
-          : reject({ status: "failed" });
-      })
-      .catch(function(error) {
-        reject(error);
-      });
-  });
+) => {
+  try{
+    // ensure backward compatibility with groups api consumers
+    const newMembers = members.map(member => {
+      return member.hasOwnProperty("uuid") ? member.uuid : undefined;
+    });
+    const MS = util.getEndpoint("auth");
+    const requestOptions = {
+      method: "POST",
+      uri: `${MS}/user-groups/${groupUUID}/users/remove`,
+      headers: {
+        "Content-type": "application/json",
+        Authorization: `Bearer ${accessToken}`,
+        "x-api-version": `${util.getVersion()}`
+      },
+      body: {
+        "users": newMembers
+      },
+      resolveWithFullResponse: true,
+      json: true
+    };
+    util.addRequestTrace(requestOptions, trace);
+    const response = await request(requestOptions);
+    if(response.statusCode === 204) {
+      return { status: "ok" };
+    } else {
+      // this is an edge case, but protects against unexpected 2xx or 3xx response codes.
+      throw {
+        "code": response.statusCode,
+        "message": typeof response.body === "string" ? response.body : "remove users failed",
+        "trace_id": requestOptions.hasOwnProperty("headers") && requestOptions.headers.hasOwnProperty("trace")
+          ? requestOptions.headers.trace 
+          : undefined,
+        "details": typeof response.body === "object" && response.body !== null
+          ? [response.body]
+          : []
+      };
+    }
+  } catch(error){
+    return Promise.reject(util.formatError(error));
+  }
 };
 
 // TODO this call needs to be migrated out of groups to auth. CCORE-662
@@ -295,24 +346,38 @@ const deleteGroupMembers = async (
  * @param {object} [trace = {}] - optional microservice lifecycle trace headers
  * @returns {Promise<object>} - Promise resolving to a group object.
  */
-const deactivateGroup = (
+const deactivateGroup = async(
   accessToken = "null accessToken",
   groupUuid = "null groupUuid",
   trace = {}
 ) => {
-  const MS = util.getEndpoint("groups");
-  const requestOptions = {
-    method: "POST",
-    uri: `${MS}/groups/${groupUuid}/deactivate`,
-    headers: {
-      "Content-type": "application/json",
-      Authorization: `Bearer ${accessToken}`,
-      "x-api-version": `${util.getVersion()}`
-    },
-    json: true
-  };
-  util.addRequestTrace(requestOptions, trace);
-  return request(requestOptions);
+  try {
+    const MS = util.getEndpoint("auth");
+    const requestOptions = {
+      method: "POST",
+      uri: `${MS}/user-groups/${groupUuid}/deactivate`,
+      headers: {
+        "Content-type": "application/json",
+        Authorization: `Bearer ${accessToken}`,
+        "x-api-version": `${util.getVersion()}`
+      },
+      resolveWithFullResponse: true,
+      json: true
+    };
+    util.addRequestTrace(requestOptions, trace);
+    const response = await request(requestOptions);
+    await util.pendingResource(
+      response.headers.location,
+      requestOptions, //reusing the request options instead of passing in multiple params
+      trace,
+      response.hasOwnProperty("resource_status") ? response.resource_status : "complete"
+    );
+    response.resource_status = "complete";
+    response.status = "Inactive";
+    return response;
+  } catch (error) {
+    Promise.reject(util.formatError(error));
+  }
 };
 
 // TODO this call needs to be migrated out of groups to auth. CCORE-662
@@ -324,24 +389,38 @@ const deactivateGroup = (
  * @param {object} [trace = {}] - optional microservice lifecycle trace headers
  * @returns {Promise<object>} - Promise resolving to a group object.
  */
-const reactivateGroup = (
+const reactivateGroup = async (
   accessToken = "null accessToken",
   groupUuid = "null groupUuid",
   trace = {}
 ) => {
-  const MS = util.getEndpoint("groups");
-  const requestOptions = {
-    method: "POST",
-    uri: `${MS}/groups/${groupUuid}/reactivate`,
-    headers: {
-      "Content-type": "application/json",
-      Authorization: `Bearer ${accessToken}`,
-      "x-api-version": `${util.getVersion()}`
-    },
-    json: true
-  };
-  util.addRequestTrace(requestOptions, trace);
-  return request(requestOptions);
+  try {
+    const MS = util.getEndpoint("auth");
+    const requestOptions = {
+      method: "POST",
+      uri: `${MS}/user-groups/${groupUuid}/reactivate`,
+      headers: {
+        "Content-type": "application/json",
+        Authorization: `Bearer ${accessToken}`,
+        "x-api-version": `${util.getVersion()}`
+      },
+      resolveWithFullResponse: true,
+      json: true
+    };
+    util.addRequestTrace(requestOptions, trace);
+    const response = await request(requestOptions);
+    await util.pendingResource(
+      response.headers.location,
+      requestOptions, //reusing the request options instead of passing in multiple params
+      trace,
+      response.hasOwnProperty("resource_status") ? response.resource_status : "complete"
+    );
+    response.resource_status = "complete";
+    response.status = "Active";
+    return response;
+  } catch (error) {
+    Promise.reject(util.formatError(error));
+  }
 };
 
 /**
@@ -353,26 +432,32 @@ const reactivateGroup = (
  * @param {object} [trace = {}] - optional microservice lifecycle trace headers
  * @returns {Promise<object>} - Promise resolving to a group object.
  */
-const modifyGroup = (
+const modifyGroup = async (
   accessToken = "null accessToken",
   groupUuid = "null groupUuid",
   body = "null body",
   trace = {}
 ) => {
-  const MS = util.getEndpoint("auth");
-  const requestOptions = {
-    method: "POST",
-    uri: `${MS}/user-groups/${groupUuid}/modify`,
-    headers: {
-      "Content-type": "application/json",
-      Authorization: `Bearer ${accessToken}`,
-      "x-api-version": `${util.getVersion()}`
-    },
-    body: body,
-    json: true
-  };
-  util.addRequestTrace(requestOptions, trace);
-  return request(requestOptions);
+  try {
+    const MS = util.getEndpoint("auth");
+    const requestOptions = {
+      method: "POST",
+      uri: `${MS}/user-groups/${groupUuid}/modify`,
+      headers: {
+        "Content-type": "application/json",
+        Authorization: `Bearer ${accessToken}`,
+        "x-api-version": `${util.getVersion()}`
+      },
+      body: body,
+      json: true
+    };
+    util.addRequestTrace(requestOptions, trace);
+    const response = await request(requestOptions);
+    return response;
+  } catch (error){
+    return Promise.reject(util.formatError(error));
+  }
+  
 };
 
 module.exports = {

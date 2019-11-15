@@ -99,7 +99,7 @@ describe("Groups Test Suite", function() {
       description: "A test group",
       members: [
         {
-          uuid: "fake-uuid"
+          uuid: creds.testIdentity
         }
       ],
       name: "Test",
