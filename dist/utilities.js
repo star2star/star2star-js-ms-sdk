@@ -363,7 +363,7 @@ const pendingResource = async function pendingResource(resourceLoc, requestOptio
 
     while (Date.now() < expires) {
       let response = await request(requestOptions);
-      logger.debug("Pending Resource verification HEAD response", response.headers);
+      logger.debug("Pending Resource verification HEAD response", response.headers, response.statusCode);
 
       if (response.headers.hasOwnProperty("x-resource-status")) {
         switch (response.headers["x-resource-status"]) {
@@ -398,10 +398,94 @@ const pendingResource = async function pendingResource(resourceLoc, requestOptio
       });
     }
 
-    return Promise.reject({
-      "statusCode": 500,
-      "message": error.hasOwnProperty("message") ? error.message : error
-    });
+    return Promise.reject(formatError(error));
+  }
+};
+/**
+ * @description This function standardizes error responses to objects containing "code", "message", "trace_id", and "details properties"
+ * @param {object} error - standard javascript error object, or request-promise error object
+ * @returns {Object} - error object formatted to standard
+ */
+
+
+const formatError = error => {
+  //console.log("formatError() THE ERROR!!!!", error);
+  // defaults ensure we always get a compatbile format back
+  let message = "unspecified error";
+  const returnedObject = {
+    "code": undefined,
+    "message": message,
+    "trace_id": uuidv4(),
+    "details": []
+  };
+
+  try {
+    if (error) {
+      //const retObj = {};
+      // request-promise errors, non 2xx or 3xx response
+      if (error.hasOwnProperty("name") && error.name === "StatusCodeError") {
+        // just pass along what we got back from API
+        if (error.hasOwnProperty("response") && error.response.hasOwnProperty("body")) {
+          returnedObject.code = error.response.body.hasOwnProperty("code") && error.response.body.code && error.response.body.code.toString().length === 3 ? error.response.body.code : returnedObject.code;
+          returnedObject.message = error.response.body.hasOwnProperty("message") && error.response.body.message && error.response.body.message.length > 0 ? error.response.body.message : returnedObject.message;
+          returnedObject.trace_id = error.response.body.hasOwnProperty("trace_id") && error.response.body.trace_id && error.response.body.trace_id.length > 0 ? error.response.body.trace_id : returnedObject.trace_id; //make sure details is an array of objects
+
+          if (error.response.body.hasOwnProperty("details") && Array.isArray(error.response.body.details)) {
+            const filteredDetails = error.response.body.details.filter(detail => {
+              return typeof detail === "object" && detail !== null;
+            });
+            returnedObject.details = filteredDetails;
+          }
+        } // in case we didn't get a body, or the body was missing the code, try to get code from the http response code
+
+
+        if (error.hasOwnProperty("statusCode") && error.statusCode.toString().length === 3) {
+          // we did not get a code out of the response body
+          if (!returnedObject.code) {
+            returnedObject.code = error.statusCode;
+          } else if (returnedObject.code.toString() !== error.statusCode.toString()) {
+            // record a mismatch between the http response code and the "code" property returned in the respose body 
+            returnedObject.message = "".concat(returnedObject.code, " - ").concat(returnedObject.message); // make the code property match the actual http response code
+
+            returnedObject.code = error.statusCode;
+          }
+        } // in case we didn't get a trace_id in the body, it should match the one we sent so use that instead
+
+
+        if (error.hasOwnProperty("options") && error.options.hasOwnProperty("headers") && error.options.headers.hasOwnProperty("trace") && error.options.headers.trace.toString().length > 0) {
+          returnedObject.trace_id = error.options.headers.trace;
+        } // some problem making request, general JS errors, or already formatted from nested call
+
+      } else {
+        returnedObject.code = error.hasOwnProperty("code") && error.code && error.code.toString().length === 3 ? error.code : returnedObject.code;
+        returnedObject.message = error.hasOwnProperty("message") && error.message && error.message.toString().length > 0 ? error.message : returnedObject.message;
+        returnedObject.trace_id = error.hasOwnProperty("trace_id") && error.trace_id && error.trace_id.toString().length > 0 ? error.trace_id : returnedObject.trace_id; //make sure details is an array of objects
+
+        if (error.hasOwnProperty("details") && Array.isArray(error.details)) {
+          const filteredDetails = error.details.filter(detail => {
+            return typeof detail === "object" && detail !== null;
+          });
+          returnedObject.details = filteredDetails;
+        }
+      }
+    } // we did not get a code anywhere to use a default internal server error
+
+
+    if (!returnedObject.code) {
+      returnedObject.code = 500;
+    }
+
+    logger.debug("formatted error: ", returnedObject);
+    return returnedObject;
+  } catch (error) {
+    // something blew up formatting or parsing somewhere. try to handle it....
+    logger.error("Error Format Failed", error);
+    returnedObject.code = 500;
+    returnedObject.message = error.hasOwnProperty("message") ? error.message : "error format failed";
+    returnedObject.details = [{
+      "location": "formatError() utilities.js star2star-js-ms-sdk"
+    }];
+    return returnedObject;
   }
 };
 
@@ -423,5 +507,6 @@ module.exports = {
   addRequestTrace,
   //TODO Unit test 10/10/18 nh
   generateNewMetaData,
-  pendingResource
+  pendingResource,
+  formatError
 };

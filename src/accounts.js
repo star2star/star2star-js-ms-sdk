@@ -179,7 +179,7 @@ const getAccount = async (
  * @param {object} [trace = {}] - optional microservice lifecycle trace headers 
  * @returns {Promise<object>} - Promise resolving to a status data object
  */
-const modifyAccount = (
+const modifyAccount = async (
   accessToken = "null access token",
   accountUUID = "null account uuid",
   body = "null body",
@@ -200,9 +200,9 @@ const modifyAccount = (
       }
     };
     util.addRequestTrace(requestOptions, trace);
-    const response = request(requestOptions); 
+    const response = await request(requestOptions); 
     if(response.statusCode === 204) {
-      return { status: "ok" };
+      return { "status": "ok" };
     } else {
       // this is an edge case, but protects against unexpected 2xx or 3xx response codes.
       throw {
@@ -215,7 +215,8 @@ const modifyAccount = (
           ? [response.body]
           : []
       };
-    }  } catch (error){
+    }  
+  } catch (error){
     return Promise.reject(util.formatError(error));
   }
 };

@@ -111,8 +111,8 @@ describe("Accounts MS Unit Test Suite", function() {
       return response;
     } catch (error) {
       assert.ok(
-        error.hasOwnProperty("statusCode") &&
-        error.statusCode === 400,
+        error.hasOwnProperty("code") &&
+        error.code === 400,
         JSON.stringify(error, null, "\t"));
       return error;
     }  
@@ -177,6 +177,7 @@ describe("Accounts MS Unit Test Suite", function() {
     logger.debug(this.ctx.test.title, response);
   });
   
+  //Limit of 1 breaks call CSRVS-330
   it("List Accounts", mochaAsync(async () => {
     if (!creds.isValid) throw new Error("Invalid Credentials");
     trace = objectMerge({}, trace, Util.generateNewMetaData(trace));
@@ -186,7 +187,7 @@ describe("Accounts MS Unit Test Suite", function() {
         1, //offset
         1, //limit
         {
-          "type": "Reseller", 
+          "type": "Customer", 
           "expand": "relationships"
         },
         trace

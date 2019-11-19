@@ -266,12 +266,26 @@ const addMembersToGroup = async (
         Authorization: `Bearer ${accessToken}`,
         "x-api-version": `${util.getVersion()}`
       },
+      resolveWithFullResponse: true,
       json: true
     };
     util.addRequestTrace(requestOptions, trace);
-    // console.log("request options", JSON.stringify(requestOptions));
     const response = await request(requestOptions);
-    return response;
+    const group = response.body;
+    // create returns a 202....suspend return until the new resource is ready
+    if (response.hasOwnProperty("statusCode") && 
+        response.statusCode === 202 &&
+        response.headers.hasOwnProperty("location"))
+    {    
+      await util.pendingResource(
+        response.headers.location,
+        requestOptions, //reusing the request options instead of passing in multiple params
+        trace,
+        group.hasOwnProperty("resource_status") ? group.resource_status : "complete"
+      );
+    }
+    group.total_members = group.hasOwnProperty("total_members") ? (group.total_members + 1) : undefined;
+    return group;
   } catch (error) {
     return Promise.reject(util.formatError(error));
   }
@@ -317,21 +331,20 @@ const deleteGroupMembers = async (
     };
     util.addRequestTrace(requestOptions, trace);
     const response = await request(requestOptions);
-    if(response.statusCode === 204) {
-      return { status: "ok" };
-    } else {
-      // this is an edge case, but protects against unexpected 2xx or 3xx response codes.
-      throw {
-        "code": response.statusCode,
-        "message": typeof response.body === "string" ? response.body : "remove users failed",
-        "trace_id": requestOptions.hasOwnProperty("headers") && requestOptions.headers.hasOwnProperty("trace")
-          ? requestOptions.headers.trace 
-          : undefined,
-        "details": typeof response.body === "object" && response.body !== null
-          ? [response.body]
-          : []
-      };
+    const group = response.body;
+    // create returns a 202....suspend return until the new resource is ready
+    if (response.hasOwnProperty("statusCode") && 
+        response.statusCode === 202 &&
+        response.headers.hasOwnProperty("location"))
+    {    
+      await util.pendingResource(
+        response.headers.location,
+        requestOptions, //reusing the request options instead of passing in multiple params
+        trace,
+        group.hasOwnProperty("resource_status") ? group.resource_status : "complete"
+      );
     }
+    return {"status": "ok"};
   } catch(error){
     return Promise.reject(util.formatError(error));
   }

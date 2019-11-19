@@ -395,18 +395,18 @@ const formatError = (error) => {
       if(error.hasOwnProperty("name") && error.name === "StatusCodeError"){
         // just pass along what we got back from API
         if(error.hasOwnProperty("response") && error.response.hasOwnProperty("body")){
-          returnedObject.code = error.response.body.hasOwnProperty("code") && error.response.body.code.toString().length === 3
+          returnedObject.code = error.response.body.hasOwnProperty("code") && error.response.body.code && error.response.body.code.toString().length === 3
             ? error.response.body.code
             : returnedObject.code;
-          returnedObject.message = error.response.body.hasOwnProperty("message") && error.response.body.message.length > 0
+          returnedObject.message = error.response.body.hasOwnProperty("message") && error.response.body.message && error.response.body.message.length > 0
             ? error.response.body.message
             : returnedObject.message;
-          returnedObject.trace_id = error.response.body.hasOwnProperty("trace_id") && error.response.body.trace_id.length > 0
+          returnedObject.trace_id = error.response.body.hasOwnProperty("trace_id") && error.response.body.trace_id && error.response.body.trace_id.length > 0
             ? error.response.body.trace_id
             : returnedObject.trace_id;
           //make sure details is an array of objects
           if(error.response.body.hasOwnProperty("details") && Array.isArray(error.response.body.details)){
-            const filteredDetails = error.response.details.filter(detail =>{
+            const filteredDetails = error.response.body.details.filter(detail =>{
               return typeof detail === "object" && detail !== null;
             });
             returnedObject.details = filteredDetails;
@@ -436,13 +436,13 @@ const formatError = (error) => {
       
       // some problem making request, general JS errors, or already formatted from nested call
       } else { 
-        returnedObject.code = error.hasOwnProperty("code") && error.code.toString().length === 3
+        returnedObject.code = error.hasOwnProperty("code") && error.code && error.code.toString().length === 3
           ? error.code
           : returnedObject.code;
-        returnedObject.message = error.hasOwnProperty("message") && error.message.toString().length > 0
+        returnedObject.message = error.hasOwnProperty("message") && error.message && error.message.toString().length > 0
           ? error.message
           : returnedObject.message;
-        returnedObject.trace_id = error.hasOwnProperty("trace_id") && error.trace_id.toString().length > 0
+        returnedObject.trace_id = error.hasOwnProperty("trace_id") && error.trace_id && error.trace_id.toString().length > 0
           ? error.trace_id
           : returnedObject.trace_id;
         //make sure details is an array of objects

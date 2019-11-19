@@ -49,10 +49,7 @@ const activateRole = async function activateRole() {
       status: "ok"
     };
   } catch (error) {
-    return Promise.reject({
-      "status": "failed",
-      "message": error.hasOwnProperty("message") ? error.message : JSON.stringify(error)
-    });
+    return Promise.reject(Util.formatError(error));
   }
 };
 /**
@@ -66,36 +63,45 @@ const activateRole = async function activateRole() {
  */
 
 
-const assignPermissionsToRole = function assignPermissionsToRole() {
+const assignPermissionsToRole = async function assignPermissionsToRole() {
   let accessToken = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : "null accessToken";
   let roleUUID = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : "null roleUUID";
   let body = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : "null body";
   let trace = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : {};
-  const MS = Util.getEndpoint("auth");
-  const requestOptions = {
-    method: "POST",
-    uri: "".concat(MS, "/roles/").concat(roleUUID, "/permissions"),
-    headers: {
-      Authorization: "Bearer ".concat(accessToken),
-      "Content-type": "application/json",
-      "x-api-version": "".concat(Util.getVersion())
-    },
-    body: body,
-    resolveWithFullResponse: true,
-    json: true
-  };
-  Util.addRequestTrace(requestOptions, trace);
-  return new Promise(function (resolve, reject) {
-    request(requestOptions).then(function (responseData) {
-      responseData.statusCode === 204 ? resolve({
+
+  try {
+    const MS = Util.getEndpoint("auth");
+    const requestOptions = {
+      method: "POST",
+      uri: "".concat(MS, "/roles/").concat(roleUUID, "/permissions"),
+      headers: {
+        Authorization: "Bearer ".concat(accessToken),
+        "Content-type": "application/json",
+        "x-api-version": "".concat(Util.getVersion())
+      },
+      body: body,
+      resolveWithFullResponse: true,
+      json: true
+    };
+    Util.addRequestTrace(requestOptions, trace);
+    const response = await request(requestOptions);
+
+    if (response.statusCode === 204) {
+      return {
         status: "ok"
-      }) : reject({
-        status: "failed"
-      });
-    }).catch(function (error) {
-      reject(error);
-    });
-  });
+      };
+    } else {
+      // this is an edge case, but protects against unexpected 2xx or 3xx response codes.
+      throw {
+        "code": response.statusCode,
+        "message": typeof response.body === "string" ? response.body : "assign permission to role failed",
+        "trace_id": requestOptions.hasOwnProperty("headers") && requestOptions.headers.hasOwnProperty("trace") ? requestOptions.headers.trace : undefined,
+        "details": typeof response.body === "object" && response.body !== null ? [response.body] : []
+      };
+    }
+  } catch (error) {
+    return Promise.reject(Util.formatError(error));
+  }
 };
 /**
  * @async
@@ -113,31 +119,40 @@ const assignRolesToUserGroup = async function assignRolesToUserGroup() {
   let userGroupUUID = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : "null groupUUID";
   let body = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : "null body";
   let trace = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : {};
-  const MS = Util.getEndpoint("auth");
-  const requestOptions = {
-    method: "POST",
-    uri: "".concat(MS, "/user-groups/").concat(userGroupUUID, "/roles"),
-    headers: {
-      Authorization: "Bearer ".concat(accessToken),
-      "Content-type": "application/json",
-      "x-api-version": "".concat(Util.getVersion())
-    },
-    body: body,
-    resolveWithFullResponse: true,
-    json: true
-  };
-  Util.addRequestTrace(requestOptions, trace);
-  return await new Promise(function (resolve, reject) {
-    request(requestOptions).then(function (responseData) {
-      responseData.statusCode === 204 ? resolve({
+
+  try {
+    const MS = Util.getEndpoint("auth");
+    const requestOptions = {
+      method: "POST",
+      uri: "".concat(MS, "/user-groups/").concat(userGroupUUID, "/roles"),
+      headers: {
+        Authorization: "Bearer ".concat(accessToken),
+        "Content-type": "application/json",
+        "x-api-version": "".concat(Util.getVersion())
+      },
+      body: body,
+      resolveWithFullResponse: true,
+      json: true
+    };
+    Util.addRequestTrace(requestOptions, trace);
+    const response = await request(requestOptions);
+
+    if (response.statusCode === 204) {
+      return {
         status: "ok"
-      }) : reject({
-        status: "failed"
-      });
-    }).catch(function (error) {
-      reject(error);
-    });
-  });
+      };
+    } else {
+      // this is an edge case, but protects against unexpected 2xx or 3xx response codes.
+      throw {
+        "code": response.statusCode,
+        "message": typeof response.body === "string" ? response.body : "assign role to group failed",
+        "trace_id": requestOptions.hasOwnProperty("headers") && requestOptions.headers.hasOwnProperty("trace") ? requestOptions.headers.trace : undefined,
+        "details": typeof response.body === "object" && response.body !== null ? [response.body] : []
+      };
+    }
+  } catch (error) {
+    return Promise.reject(Util.formatError(error));
+  }
 };
 /**
  * @async
@@ -159,36 +174,45 @@ const assignScopedRoleToUserGroup = async function assignScopedRoleToUserGroup()
   let type = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : "account";
   let data = arguments.length > 4 && arguments[4] !== undefined ? arguments[4] : "null resourceUUID";
   let trace = arguments.length > 5 && arguments[5] !== undefined ? arguments[5] : {};
-  const MS = Util.getEndpoint("auth");
-  const requestOptions = {
-    method: "POST",
-    uri: "".concat(MS, "/user-groups/").concat(userGroupUUID, "/role/scopes"),
-    headers: {
-      Authorization: "Bearer ".concat(accessToken),
-      "Content-type": "application/json",
-      "x-api-version": "".concat(Util.getVersion())
-    },
-    body: {
-      role: roleUUID,
-      scope: [{
-        [type]: data
-      }]
-    },
-    resolveWithFullResponse: true,
-    json: true
-  };
-  Util.addRequestTrace(requestOptions, trace);
-  return await new Promise(function (resolve, reject) {
-    request(requestOptions).then(function (responseData) {
-      responseData.statusCode === 204 ? resolve({
+
+  try {
+    const MS = Util.getEndpoint("auth");
+    const requestOptions = {
+      method: "POST",
+      uri: "".concat(MS, "/user-groups/").concat(userGroupUUID, "/role/scopes"),
+      headers: {
+        Authorization: "Bearer ".concat(accessToken),
+        "Content-type": "application/json",
+        "x-api-version": "".concat(Util.getVersion())
+      },
+      body: {
+        role: roleUUID,
+        scope: [{
+          [type]: data
+        }]
+      },
+      resolveWithFullResponse: true,
+      json: true
+    };
+    Util.addRequestTrace(requestOptions, trace);
+    const response = await request(requestOptions);
+
+    if (response.statusCode === 204) {
+      return {
         status: "ok"
-      }) : reject({
-        status: "failed"
-      });
-    }).catch(function (error) {
-      reject(error);
-    });
-  });
+      };
+    } else {
+      // this is an edge case, but protects against unexpected 2xx or 3xx response codes.
+      throw {
+        "code": response.statusCode,
+        "message": typeof response.body === "string" ? response.body : "assign scoped role to user-group failed",
+        "trace_id": requestOptions.hasOwnProperty("headers") && requestOptions.headers.hasOwnProperty("trace") ? requestOptions.headers.trace : undefined,
+        "details": typeof response.body === "object" && response.body !== null ? [response.body] : []
+      };
+    }
+  } catch (error) {
+    return Promise.reject(Util.formatError(error));
+  }
 };
 /**
  * @async
@@ -200,24 +224,30 @@ const assignScopedRoleToUserGroup = async function assignScopedRoleToUserGroup()
  */
 
 
-const createPermission = function createPermission() {
+const createPermission = async function createPermission() {
   let accessToken = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : "null accessToken";
   let body = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : "null body";
   let trace = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : {};
-  const MS = Util.getEndpoint("auth");
-  const requestOptions = {
-    method: "POST",
-    uri: "".concat(MS, "/permissions"),
-    headers: {
-      Authorization: "Bearer ".concat(accessToken),
-      "Content-type": "application/json",
-      "x-api-version": "".concat(Util.getVersion())
-    },
-    body: body,
-    json: true
-  };
-  Util.addRequestTrace(requestOptions, trace);
-  return request(requestOptions);
+
+  try {
+    const MS = Util.getEndpoint("auth");
+    const requestOptions = {
+      method: "POST",
+      uri: "".concat(MS, "/permissions"),
+      headers: {
+        Authorization: "Bearer ".concat(accessToken),
+        "Content-type": "application/json",
+        "x-api-version": "".concat(Util.getVersion())
+      },
+      body: body,
+      json: true
+    };
+    Util.addRequestTrace(requestOptions, trace);
+    const response = await request(requestOptions);
+    return response;
+  } catch (error) {
+    return Promise.reject(Util.formatError(error));
+  }
 };
 /**
  * @async
@@ -235,29 +265,34 @@ const createUserGroup = async function createUserGroup() {
   let accountUUID = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : "null accountUUID";
   let body = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : "null body";
   let trace = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : {};
-  const MS = Util.getEndpoint("auth");
-  const requestOptions = {
-    method: "POST",
-    uri: "".concat(MS, "/accounts/").concat(accountUUID, "/user-groups"),
-    headers: {
-      Authorization: "Bearer ".concat(accessToken),
-      "Content-type": "application/json",
-      "x-api-version": "".concat(Util.getVersion())
-    },
-    body: body,
-    json: true,
-    resolveWithFullResponse: true
-  };
-  Util.addRequestTrace(requestOptions, trace);
-  const response = await request(requestOptions);
-  const newGroup = response.body; // create returns a 202....suspend return until the new resource is ready
 
-  if (response.hasOwnProperty("statusCode") && response.statusCode === 202 && response.headers.hasOwnProperty("location")) {
-    await Util.pendingResource(response.headers.location, requestOptions, //reusing the request options instead of passing in multiple params
-    trace, newGroup.hasOwnProperty("resource_status") ? newGroup.resource_status : "complete");
+  try {
+    const MS = Util.getEndpoint("auth");
+    const requestOptions = {
+      method: "POST",
+      uri: "".concat(MS, "/accounts/").concat(accountUUID, "/user-groups"),
+      headers: {
+        Authorization: "Bearer ".concat(accessToken),
+        "Content-type": "application/json",
+        "x-api-version": "".concat(Util.getVersion())
+      },
+      body: body,
+      json: true,
+      resolveWithFullResponse: true
+    };
+    Util.addRequestTrace(requestOptions, trace);
+    const response = await request(requestOptions);
+    const newGroup = response.body; // create returns a 202....suspend return until the new resource is ready
+
+    if (response.hasOwnProperty("statusCode") && response.statusCode === 202 && response.headers.hasOwnProperty("location")) {
+      await Util.pendingResource(response.headers.location, requestOptions, //reusing the request options instead of passing in multiple params
+      trace, newGroup.hasOwnProperty("resource_status") ? newGroup.resource_status : "complete");
+    }
+
+    return newGroup;
+  } catch (error) {
+    return Promise.reject(Util.formatError(error));
   }
-
-  return newGroup;
 };
 /**
  * @async
@@ -275,29 +310,34 @@ const createRole = async function createRole() {
   let accountUUID = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : "null accountUUID";
   let body = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : "null body";
   let trace = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : {};
-  const MS = Util.getEndpoint("auth");
-  const requestOptions = {
-    method: "POST",
-    uri: "".concat(MS, "/accounts/").concat(accountUUID, "/roles"),
-    headers: {
-      Authorization: "Bearer ".concat(accessToken),
-      "Content-type": "application/json",
-      "x-api-version": "".concat(Util.getVersion())
-    },
-    body: body,
-    json: true,
-    resolveWithFullResponse: true
-  };
-  Util.addRequestTrace(requestOptions, trace);
-  const response = await request(requestOptions);
-  const newRole = response.body; // create returns a 202....suspend return until the new resource is ready
 
-  if (response.hasOwnProperty("statusCode") && response.statusCode === 202 && response.headers.hasOwnProperty("location")) {
-    await Util.pendingResource(response.headers.location, requestOptions, //reusing the request options instead of passing in multiple params
-    trace, newRole.hasOwnProperty("resource_status") ? newRole.resource_status : "complete");
+  try {
+    const MS = Util.getEndpoint("auth");
+    const requestOptions = {
+      method: "POST",
+      uri: "".concat(MS, "/accounts/").concat(accountUUID, "/roles"),
+      headers: {
+        Authorization: "Bearer ".concat(accessToken),
+        "Content-type": "application/json",
+        "x-api-version": "".concat(Util.getVersion())
+      },
+      body: body,
+      json: true,
+      resolveWithFullResponse: true
+    };
+    Util.addRequestTrace(requestOptions, trace);
+    const response = await request(requestOptions);
+    const newRole = response.body; // create returns a 202....suspend return until the new resource is ready
+
+    if (response.hasOwnProperty("statusCode") && response.statusCode === 202 && response.headers.hasOwnProperty("location")) {
+      await Util.pendingResource(response.headers.location, requestOptions, //reusing the request options instead of passing in multiple params
+      trace, newRole.hasOwnProperty("resource_status") ? newRole.resource_status : "complete");
+    }
+
+    return newRole;
+  } catch (error) {
+    return Promise.reject(Util.formatError(error));
   }
-
-  return newRole;
 };
 /**
  * @async
@@ -340,10 +380,7 @@ const deactivateRole = async function deactivateRole() {
       "status": "ok"
     };
   } catch (error) {
-    return Promise.reject({
-      "status": "failed",
-      "message": error.hasOwnProperty("message") ? error.message : JSON.stringify(error)
-    });
+    return Promise.reject(Util.formatError(error));
   }
 };
 /**
@@ -357,35 +394,44 @@ const deactivateRole = async function deactivateRole() {
  */
 
 
-const deletePermissionFromRole = function deletePermissionFromRole() {
+const deletePermissionFromRole = async function deletePermissionFromRole() {
   let accessToken = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : "null accessToken";
   let roleUUID = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : "null roleUUID";
   let permissionUUID = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : "null permissionUUID";
   let trace = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : {};
-  const MS = Util.getEndpoint("auth");
-  const requestOptions = {
-    method: "DELETE",
-    uri: "".concat(MS, "/roles/").concat(roleUUID, "/permissions/").concat(permissionUUID),
-    headers: {
-      Authorization: "Bearer ".concat(accessToken),
-      "Content-type": "application/json",
-      "x-api-version": "".concat(Util.getVersion())
-    },
-    resolveWithFullResponse: true,
-    json: true
-  };
-  Util.addRequestTrace(requestOptions, trace);
-  return new Promise(function (resolve, reject) {
-    request(requestOptions).then(function (responseData) {
-      responseData.statusCode === 204 ? resolve({
+
+  try {
+    const MS = Util.getEndpoint("auth");
+    const requestOptions = {
+      method: "DELETE",
+      uri: "".concat(MS, "/roles/").concat(roleUUID, "/permissions/").concat(permissionUUID),
+      headers: {
+        Authorization: "Bearer ".concat(accessToken),
+        "Content-type": "application/json",
+        "x-api-version": "".concat(Util.getVersion())
+      },
+      resolveWithFullResponse: true,
+      json: true
+    };
+    Util.addRequestTrace(requestOptions, trace);
+    const response = await request(requestOptions);
+
+    if (response.statusCode === 204) {
+      return {
         status: "ok"
-      }) : reject({
-        status: "failed"
-      });
-    }).catch(function (error) {
-      reject(error);
-    });
-  });
+      };
+    } else {
+      // this is an edge case, but protects against unexpected 2xx or 3xx response codes.
+      throw {
+        "code": response.statusCode,
+        "message": typeof response.body === "string" ? response.body : "delete permission from role failed",
+        "trace_id": requestOptions.hasOwnProperty("headers") && requestOptions.headers.hasOwnProperty("trace") ? requestOptions.headers.trace : undefined,
+        "details": typeof response.body === "object" && response.body !== null ? [response.body] : []
+      };
+    }
+  } catch (error) {
+    return Promise.reject(Util.formatError(error));
+  }
 };
 /**
  * @async
@@ -395,7 +441,6 @@ const deletePermissionFromRole = function deletePermissionFromRole() {
  * @param {object} [trace = {}] - optional microservice lifecycle trace headers
  * @returns {Promise<object>} - Promise resolving to a status data object
  */
-//FIXME 202 location header to be fixed....nh 2/8/19
 
 
 const deleteRole = async function deleteRole() {
@@ -417,21 +462,18 @@ const deleteRole = async function deleteRole() {
       json: true
     };
     Util.addRequestTrace(requestOptions, trace);
-    const response = await request(requestOptions);
-    await new Promise(resolve => setTimeout(resolve, Util.config.msDelay));
+    const response = await request(requestOptions); // create returns a 202....suspend return until the new resource is ready
 
-    if (response.statusCode === 202) {
-      return {
-        "status": "ok"
-      };
-    } else {
-      throw "unexpected status code: ".concat(response.statusCode);
+    if (response.hasOwnProperty("statusCode") && response.statusCode === 202 && response.headers.hasOwnProperty("location")) {
+      await Util.pendingResource(response.headers.location, requestOptions, //reusing the request options instead of passing in multiple params
+      trace, response.hasOwnProperty("body") && response.hasOwnProperty("resource_status") ? response.body.resource_status : "complete");
     }
+
+    return {
+      "status": "ok"
+    };
   } catch (error) {
-    return Promise.reject({
-      "status": "failed",
-      "message": error.hasOwnProperty("message") ? error.message : JSON.stringify(error)
-    });
+    return Promise.reject(Util.formatError(error));
   }
 };
 /**
@@ -445,35 +487,44 @@ const deleteRole = async function deleteRole() {
  */
 
 
-const deleteRoleFromUserGroup = function deleteRoleFromUserGroup() {
+const deleteRoleFromUserGroup = async function deleteRoleFromUserGroup() {
   let accessToken = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : "null accessToken";
   let userGroupUUID = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : "null userGroupUUID";
   let roleUUID = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : "null roleUUID";
   let trace = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : {};
-  const MS = Util.getEndpoint("auth");
-  const requestOptions = {
-    method: "DELETE",
-    uri: "".concat(MS, "/user-groups/").concat(userGroupUUID, "/roles/").concat(roleUUID),
-    headers: {
-      Authorization: "Bearer ".concat(accessToken),
-      "Content-type": "application/json",
-      "x-api-version": "".concat(Util.getVersion())
-    },
-    resolveWithFullResponse: true,
-    json: true
-  };
-  Util.addRequestTrace(requestOptions, trace);
-  return new Promise(function (resolve, reject) {
-    request(requestOptions).then(function (responseData) {
-      responseData.statusCode === 204 ? resolve({
+
+  try {
+    const MS = Util.getEndpoint("auth");
+    const requestOptions = {
+      method: "DELETE",
+      uri: "".concat(MS, "/user-groups/").concat(userGroupUUID, "/roles/").concat(roleUUID),
+      headers: {
+        Authorization: "Bearer ".concat(accessToken),
+        "Content-type": "application/json",
+        "x-api-version": "".concat(Util.getVersion())
+      },
+      resolveWithFullResponse: true,
+      json: true
+    };
+    Util.addRequestTrace(requestOptions, trace);
+    const response = await request(requestOptions);
+
+    if (response.statusCode === 204) {
+      return {
         status: "ok"
-      }) : reject({
-        status: "failed"
-      });
-    }).catch(function (error) {
-      reject(error);
-    });
-  });
+      };
+    } else {
+      // this is an edge case, but protects against unexpected 2xx or 3xx response codes.
+      throw {
+        "code": response.statusCode,
+        "message": typeof response.body === "string" ? response.body : "delete role from user-group failed",
+        "trace_id": requestOptions.hasOwnProperty("headers") && requestOptions.headers.hasOwnProperty("trace") ? requestOptions.headers.trace : undefined,
+        "details": typeof response.body === "object" && response.body !== null ? [response.body] : []
+      };
+    }
+  } catch (error) {
+    return Promise.reject(Util.formatError(error));
+  }
 };
 /**
  * @async
@@ -489,36 +540,41 @@ const getAccountDefaultGroups = async function getAccountDefaultGroups() {
   let accessToken = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : "null access token";
   let accountUUID = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : "null account uuid";
   let trace = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : {};
-  const MS = Util.getEndpoint("auth");
-  const requestOptions = {
-    method: "GET",
-    uri: "".concat(MS, "/accounts/").concat(accountUUID, "/user-groups"),
-    qs: {
-      default: "true"
-    },
-    headers: {
-      Authorization: "Bearer ".concat(accessToken),
-      "Content-type": "application/json",
-      "x-api-version": "".concat(Util.getVersion())
-    },
-    json: true
-  };
-  Util.addRequestTrace(requestOptions, trace);
-  const retObj = {
-    "admin": "",
-    "user": ""
-  };
-  const response = await request(requestOptions);
-  response.items.forEach(item => {
-    if (item.hasOwnProperty("type") && item.hasOwnProperty("uuid")) {
-      if (item.type === "admin") {
-        retObj.admin = item.uuid;
-      } else if (item.type === "user") {
-        retObj.user = item.uuid;
+
+  try {
+    const MS = Util.getEndpoint("auth");
+    const requestOptions = {
+      method: "GET",
+      uri: "".concat(MS, "/accounts/").concat(accountUUID, "/user-groups"),
+      qs: {
+        default: "true"
+      },
+      headers: {
+        Authorization: "Bearer ".concat(accessToken),
+        "Content-type": "application/json",
+        "x-api-version": "".concat(Util.getVersion())
+      },
+      json: true
+    };
+    Util.addRequestTrace(requestOptions, trace);
+    const retObj = {
+      "admin": "",
+      "user": ""
+    };
+    const response = await request(requestOptions);
+    response.items.forEach(item => {
+      if (item.hasOwnProperty("type") && item.hasOwnProperty("uuid")) {
+        if (item.type === "admin") {
+          retObj.admin = item.uuid;
+        } else if (item.type === "user") {
+          retObj.user = item.uuid;
+        }
       }
-    }
-  });
-  return retObj;
+    });
+    return retObj;
+  } catch (error) {
+    return Promise.reject(Util.formatError(error));
+  }
 };
 /**
  * @async
@@ -534,26 +590,31 @@ const getResourceUsers = async function getResourceUsers() {
   let accessToken = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : "null accessToken";
   let resourceUUID = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : "null resourceUUID";
   let trace = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : {};
-  const groups = await listAccessByGroups(accessToken, resourceUUID, trace);
-  let nextTrace = objectMerge({}, trace);
-  const users = {};
-  const groupTypeRegex = /^[r,u,d]{1,3}/;
 
-  for (const group in groups.items) {
-    const groupName = groupTypeRegex.exec(groups.items[group].user_group.group_name);
-    users[groupName] = [];
-    nextTrace = objectMerge({}, nextTrace, Util.generateNewMetaData(nextTrace));
-    const groupUsers = await Groups.getGroup(accessToken, groups.items[group].user_group.uuid, {
-      "expand": "members",
-      "members_limit": 999 //hopefully we don't need pagination here. nh
+  try {
+    const groups = await listAccessByGroups(accessToken, resourceUUID, trace);
+    let nextTrace = objectMerge({}, trace);
+    const users = {};
+    const groupTypeRegex = /^[r,u,d]{1,3}/;
 
-    }, nextTrace);
-    users[groupName] = groupUsers.members.items.map(item => {
-      return item.uuid;
-    });
+    for (const group in groups.items) {
+      const groupName = groupTypeRegex.exec(groups.items[group].user_group.group_name);
+      users[groupName] = [];
+      nextTrace = objectMerge({}, nextTrace, Util.generateNewMetaData(nextTrace));
+      const groupUsers = await Groups.getGroup(accessToken, groups.items[group].user_group.uuid, {
+        "expand": "members",
+        "members_limit": 999 //hopefully we don't need pagination here. nh
+
+      }, nextTrace);
+      users[groupName] = groupUsers.members.items.map(item => {
+        return item.uuid;
+      });
+    }
+
+    return users;
+  } catch (error) {
+    return Promise.reject(Util.formatError(error));
   }
-
-  return users;
 };
 /**
  * @async
@@ -567,41 +628,46 @@ const getResourceUsers = async function getResourceUsers() {
 const getResourceGroupRoles = async function getResourceGroupRoles() {
   let accessToken = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : "null access token";
   let trace = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
-  const retObj = {};
-  const rolePromises = [];
-  Object.keys(Util.config.resourceRoleDescriptions).forEach(resourceType => {
-    rolePromises.push(listRoles(accessToken, 0, // offset
-    100, // limit
-    {
-      "description": Util.config.resourceRoleDescriptions[resourceType]
-    }, trace));
-  });
-  const rawRoles = await Promise.all(rolePromises);
-  /*
-   * The following seems weird, convoluted, and brittle because it is.
-   * Awaiting resolution of JIRA CCORE-586 for final implimentation.
-   * The resource group roles will be present in Starpaas->Admin->Roles for all account admins.
-   * Because of this they are written with a human friendly name and description.
-   * As such they are complex strings that need to be parsed into a format that can be used by resource groups utility.
-   */
 
-  rawRoles.forEach(element => {
-    element.items.forEach(item => {
-      const permissionType = item.name.split(" ")[1];
-
-      if (!retObj.hasOwnProperty(permissionType)) {
-        retObj[permissionType] = {};
-      }
-
-      const permissions = item.name.split("-")[1].split(",");
-      let propName = "";
-      permissions.forEach(permission => {
-        propName = "".concat(propName).concat(permission.charAt(1));
-      });
-      retObj[permissionType][propName] = item.uuid;
+  try {
+    const retObj = {};
+    const rolePromises = [];
+    Object.keys(Util.config.resourceRoleDescriptions).forEach(resourceType => {
+      rolePromises.push(listRoles(accessToken, 0, // offset
+      100, // limit
+      {
+        "description": Util.config.resourceRoleDescriptions[resourceType]
+      }, trace));
     });
-  });
-  return retObj;
+    const rawRoles = await Promise.all(rolePromises);
+    /*
+    * The following seems weird, convoluted, and brittle because it is.
+    * Awaiting resolution of JIRA CCORE-586 for final implimentation.
+    * The resource group roles will be present in Starpaas->Admin->Roles for all account admins.
+    * Because of this they are written with a human friendly name and description.
+    * As such they are complex strings that need to be parsed into a format that can be used by resource groups utility.
+    */
+
+    rawRoles.forEach(element => {
+      element.items.forEach(item => {
+        const permissionType = item.name.split(" ")[1];
+
+        if (!retObj.hasOwnProperty(permissionType)) {
+          retObj[permissionType] = {};
+        }
+
+        const permissions = item.name.split("-")[1].split(",");
+        let propName = "";
+        permissions.forEach(permission => {
+          propName = "".concat(propName).concat(permission.charAt(1));
+        });
+        retObj[permissionType][propName] = item.uuid;
+      });
+    });
+    return retObj;
+  } catch (error) {
+    return Promise.reject(Util.formatError(error));
+  }
 };
 /**
  * @async
@@ -634,10 +700,7 @@ const getRole = async function getRole() {
     const response = await request(requestOptions);
     return response;
   } catch (error) {
-    return Promise.reject({
-      "status": "failed",
-      "message": error.hasOwnProperty("message") ? error.message : JSON.stringify(error)
-    });
+    return Promise.reject(Util.formatError(error));
   }
 };
 /**
@@ -654,19 +717,25 @@ const listAccessByGroups = async function listAccessByGroups() {
   let accessToken = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : "null accessToken";
   let resourceUUID = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : "null groupUUID";
   let trace = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : {};
-  const MS = Util.getEndpoint("auth");
-  const requestOptions = {
-    method: "GET",
-    uri: "".concat(MS, "/resources/").concat(resourceUUID, "/user-groups/access"),
-    headers: {
-      Authorization: "Bearer ".concat(accessToken),
-      "Content-type": "application/json",
-      "x-api-version": "".concat(Util.getVersion())
-    },
-    json: true
-  };
-  Util.addRequestTrace(requestOptions, trace);
-  return request(requestOptions);
+
+  try {
+    const MS = Util.getEndpoint("auth");
+    const requestOptions = {
+      method: "GET",
+      uri: "".concat(MS, "/resources/").concat(resourceUUID, "/user-groups/access"),
+      headers: {
+        Authorization: "Bearer ".concat(accessToken),
+        "Content-type": "application/json",
+        "x-api-version": "".concat(Util.getVersion())
+      },
+      json: true
+    };
+    Util.addRequestTrace(requestOptions, trace);
+    const response = await request(requestOptions);
+    return response;
+  } catch (error) {
+    return Promise.reject(Util.formatError(error));
+  }
 };
 /**
  * @async
@@ -678,23 +747,29 @@ const listAccessByGroups = async function listAccessByGroups() {
  */
 
 
-const listAccessByPermissions = function listAccessByPermissions() {
+const listAccessByPermissions = async function listAccessByPermissions() {
   let accessToken = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : "null accessToken";
   let resourceUUID = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : "null groupUUID";
   let trace = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : {};
-  const MS = Util.getEndpoint("auth");
-  const requestOptions = {
-    method: "GET",
-    uri: "".concat(MS, "/resources/").concat(resourceUUID, "/permissions/access"),
-    headers: {
-      Authorization: "Bearer ".concat(accessToken),
-      "Content-type": "application/json",
-      "x-api-version": "".concat(Util.getVersion())
-    },
-    json: true
-  };
-  Util.addRequestTrace(requestOptions, trace);
-  return request(requestOptions);
+
+  try {
+    const MS = Util.getEndpoint("auth");
+    const requestOptions = {
+      method: "GET",
+      uri: "".concat(MS, "/resources/").concat(resourceUUID, "/permissions/access"),
+      headers: {
+        Authorization: "Bearer ".concat(accessToken),
+        "Content-type": "application/json",
+        "x-api-version": "".concat(Util.getVersion())
+      },
+      json: true
+    };
+    Util.addRequestTrace(requestOptions, trace);
+    const response = await request(requestOptions);
+    return response;
+  } catch (error) {
+    return Promise.reject(Util.formatError(error));
+  }
 };
 /**
  * @async
@@ -707,32 +782,38 @@ const listAccessByPermissions = function listAccessByPermissions() {
  */
 
 
-const listUserGroupRoles = function listUserGroupRoles() {
+const listUserGroupRoles = async function listUserGroupRoles() {
   let accessToken = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : "null accessToken";
   let userGroupUUID = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : "null userGroupUUID";
   let filters = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : undefined;
   let trace = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : {};
-  const MS = Util.getEndpoint("auth");
-  const requestOptions = {
-    method: "GET",
-    uri: "".concat(MS, "/user-groups/").concat(userGroupUUID, "/roles"),
-    headers: {
-      Authorization: "Bearer ".concat(accessToken),
-      "Content-type": "application/json",
-      "x-api-version": "".concat(Util.getVersion())
-    },
-    json: true
-  };
-  Util.addRequestTrace(requestOptions, trace);
 
-  if (filters) {
-    requestOptions.qs = {};
-    Object.keys(filters).forEach(filter => {
-      requestOptions.qs[filter] = filters[filter];
-    });
+  try {
+    const MS = Util.getEndpoint("auth");
+    const requestOptions = {
+      method: "GET",
+      uri: "".concat(MS, "/user-groups/").concat(userGroupUUID, "/roles"),
+      headers: {
+        Authorization: "Bearer ".concat(accessToken),
+        "Content-type": "application/json",
+        "x-api-version": "".concat(Util.getVersion())
+      },
+      json: true
+    };
+    Util.addRequestTrace(requestOptions, trace);
+
+    if (filters) {
+      requestOptions.qs = {};
+      Object.keys(filters).forEach(filter => {
+        requestOptions.qs[filter] = filters[filter];
+      });
+    }
+
+    const response = await request(requestOptions);
+    return response;
+  } catch (error) {
+    return Promise.reject(Util.formatError(error));
   }
-
-  return request(requestOptions);
 };
 /**
  * @async
@@ -752,30 +833,36 @@ const listPermissions = async function listPermissions() {
   let limit = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : "10";
   let filters = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : undefined;
   let trace = arguments.length > 4 && arguments[4] !== undefined ? arguments[4] : {};
-  const MS = Util.getEndpoint("auth");
-  const requestOptions = {
-    method: "GET",
-    uri: "".concat(MS, "/permissions"),
-    headers: {
-      Authorization: "Bearer ".concat(accessToken),
-      "Content-type": "application/json",
-      "x-api-version": "".concat(Util.getVersion())
-    },
-    qs: {
-      offset: offset,
-      limit: limit
-    },
-    json: true
-  };
-  Util.addRequestTrace(requestOptions, trace);
 
-  if (filters) {
-    Object.keys(filters).forEach(filter => {
-      requestOptions.qs[filter] = filters[filter];
-    });
+  try {
+    const MS = Util.getEndpoint("auth");
+    const requestOptions = {
+      method: "GET",
+      uri: "".concat(MS, "/permissions"),
+      headers: {
+        Authorization: "Bearer ".concat(accessToken),
+        "Content-type": "application/json",
+        "x-api-version": "".concat(Util.getVersion())
+      },
+      qs: {
+        offset: offset,
+        limit: limit
+      },
+      json: true
+    };
+    Util.addRequestTrace(requestOptions, trace);
+
+    if (filters) {
+      Object.keys(filters).forEach(filter => {
+        requestOptions.qs[filter] = filters[filter];
+      });
+    }
+
+    const response = await request(requestOptions);
+    return response;
+  } catch (error) {
+    return Promise.reject(Util.formatError(error));
   }
-
-  return request(requestOptions);
 };
 /**
  * @async
@@ -793,27 +880,33 @@ const listPermissionRoles = async function listPermissionRoles() {
   let permissionUUID = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : "null permissionUUID";
   let filters = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : undefined;
   let trace = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : {};
-  const MS = Util.getEndpoint("auth");
-  const requestOptions = {
-    method: "GET",
-    uri: "".concat(MS, "/permissions/").concat(permissionUUID, "/roles"),
-    headers: {
-      Authorization: "Bearer ".concat(accessToken),
-      "Content-type": "application/json",
-      "x-api-version": "".concat(Util.getVersion())
-    },
-    json: true
-  };
-  Util.addRequestTrace(requestOptions, trace);
 
-  if (filters) {
-    requestOptions.qs = {};
-    Object.keys(filters).forEach(filter => {
-      requestOptions.qs[filter] = filters[filter];
-    });
+  try {
+    const MS = Util.getEndpoint("auth");
+    const requestOptions = {
+      method: "GET",
+      uri: "".concat(MS, "/permissions/").concat(permissionUUID, "/roles"),
+      headers: {
+        Authorization: "Bearer ".concat(accessToken),
+        "Content-type": "application/json",
+        "x-api-version": "".concat(Util.getVersion())
+      },
+      json: true
+    };
+    Util.addRequestTrace(requestOptions, trace);
+
+    if (filters) {
+      requestOptions.qs = {};
+      Object.keys(filters).forEach(filter => {
+        requestOptions.qs[filter] = filters[filter];
+      });
+    }
+
+    const response = await request(requestOptions);
+    return response;
+  } catch (error) {
+    return Promise.reject(Util.formatError(error));
   }
-
-  return request(requestOptions);
 };
 /**
  * @async
@@ -827,36 +920,42 @@ const listPermissionRoles = async function listPermissionRoles() {
  */
 
 
-const listRoles = function listRoles() {
+const listRoles = async function listRoles() {
   let accessToken = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : "null accessToken";
   let offset = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : "0";
   let limit = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : "10";
   let filters = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : undefined;
   let trace = arguments.length > 4 && arguments[4] !== undefined ? arguments[4] : {};
-  const MS = Util.getEndpoint("auth");
-  const requestOptions = {
-    method: "GET",
-    uri: "".concat(MS, "/roles"),
-    headers: {
-      Authorization: "Bearer ".concat(accessToken),
-      "Content-type": "application/json",
-      "x-api-version": "".concat(Util.getVersion())
-    },
-    qs: {
-      offset: offset,
-      limit: limit
-    },
-    json: true
-  };
-  Util.addRequestTrace(requestOptions, trace);
 
-  if (filters) {
-    Object.keys(filters).forEach(filter => {
-      requestOptions.qs[filter] = filters[filter];
-    });
+  try {
+    const MS = Util.getEndpoint("auth");
+    const requestOptions = {
+      method: "GET",
+      uri: "".concat(MS, "/roles"),
+      headers: {
+        Authorization: "Bearer ".concat(accessToken),
+        "Content-type": "application/json",
+        "x-api-version": "".concat(Util.getVersion())
+      },
+      qs: {
+        offset: offset,
+        limit: limit
+      },
+      json: true
+    };
+    Util.addRequestTrace(requestOptions, trace);
+
+    if (filters) {
+      Object.keys(filters).forEach(filter => {
+        requestOptions.qs[filter] = filters[filter];
+      });
+    }
+
+    const response = await request(requestOptions);
+    return response;
+  } catch (error) {
+    return Promise.reject(Util.formatError(error));
   }
-
-  return request(requestOptions);
 };
 /**
  * @async
@@ -871,37 +970,43 @@ const listRoles = function listRoles() {
  */
 
 
-const listRolesForUser = function listRolesForUser() {
+const listRolesForUser = async function listRolesForUser() {
   let accessToken = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : "null accessToken";
   let user_uuid = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : "null user_uuid";
   let offset = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : "0";
   let limit = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : "10";
   let filters = arguments.length > 4 && arguments[4] !== undefined ? arguments[4] : undefined;
   let trace = arguments.length > 5 && arguments[5] !== undefined ? arguments[5] : {};
-  const MS = Util.getEndpoint("auth");
-  const requestOptions = {
-    method: "GET",
-    uri: "".concat(MS, "/users/").concat(user_uuid, "/roles"),
-    headers: {
-      Authorization: "Bearer ".concat(accessToken),
-      "Content-type": "application/json",
-      "x-api-version": "".concat(Util.getVersion())
-    },
-    qs: {
-      offset: offset,
-      limit: limit
-    },
-    json: true
-  };
-  Util.addRequestTrace(requestOptions, trace);
 
-  if (filters) {
-    Object.keys(filters).forEach(filter => {
-      requestOptions.qs[filter] = filters[filter];
-    });
+  try {
+    const MS = Util.getEndpoint("auth");
+    const requestOptions = {
+      method: "GET",
+      uri: "".concat(MS, "/users/").concat(user_uuid, "/roles"),
+      headers: {
+        Authorization: "Bearer ".concat(accessToken),
+        "Content-type": "application/json",
+        "x-api-version": "".concat(Util.getVersion())
+      },
+      qs: {
+        offset: offset,
+        limit: limit
+      },
+      json: true
+    };
+    Util.addRequestTrace(requestOptions, trace);
+
+    if (filters) {
+      Object.keys(filters).forEach(filter => {
+        requestOptions.qs[filter] = filters[filter];
+      });
+    }
+
+    const response = await request(requestOptions);
+    return response;
+  } catch (error) {
+    return Promise.reject(Util.formatError(error));
   }
-
-  return request(requestOptions);
 };
 /**
  * @async
@@ -914,32 +1019,38 @@ const listRolesForUser = function listRolesForUser() {
  */
 
 
-const listRoleUserGroups = function listRoleUserGroups() {
+const listRoleUserGroups = async function listRoleUserGroups() {
   let accessToken = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : "null accessToken";
   let roleUUID = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : "null roleUUID";
   let filters = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : undefined;
   let trace = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : {};
-  const MS = Util.getEndpoint("auth");
-  const requestOptions = {
-    method: "GET",
-    uri: "".concat(MS, "/roles/").concat(roleUUID, "/user-groups"),
-    headers: {
-      Authorization: "Bearer ".concat(accessToken),
-      "Content-type": "application/json",
-      "x-api-version": "".concat(Util.getVersion())
-    },
-    json: true
-  };
-  Util.addRequestTrace(requestOptions, trace);
 
-  if (filters) {
-    requestOptions.qs = {};
-    Object.keys(filters).forEach(filter => {
-      requestOptions.qs[filter] = filters[filter];
-    });
+  try {
+    const MS = Util.getEndpoint("auth");
+    const requestOptions = {
+      method: "GET",
+      uri: "".concat(MS, "/roles/").concat(roleUUID, "/user-groups"),
+      headers: {
+        Authorization: "Bearer ".concat(accessToken),
+        "Content-type": "application/json",
+        "x-api-version": "".concat(Util.getVersion())
+      },
+      json: true
+    };
+    Util.addRequestTrace(requestOptions, trace);
+
+    if (filters) {
+      requestOptions.qs = {};
+      Object.keys(filters).forEach(filter => {
+        requestOptions.qs[filter] = filters[filter];
+      });
+    }
+
+    const response = await request(requestOptions);
+    return response;
+  } catch (error) {
+    return Promise.reject(Util.formatError(error));
   }
-
-  return request(requestOptions);
 };
 /**
  * @async
@@ -952,32 +1063,38 @@ const listRoleUserGroups = function listRoleUserGroups() {
  */
 
 
-const listRolePermissions = function listRolePermissions() {
+const listRolePermissions = async function listRolePermissions() {
   let accessToken = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : "null accessToken";
   let roleUUID = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : "null roleUUID";
   let filters = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : undefined;
   let trace = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : {};
-  const MS = Util.getEndpoint("auth");
-  const requestOptions = {
-    method: "GET",
-    uri: "".concat(MS, "/roles/").concat(roleUUID, "/permissions"),
-    headers: {
-      Authorization: "Bearer ".concat(accessToken),
-      "Content-type": "application/json",
-      "x-api-version": "".concat(Util.getVersion())
-    },
-    json: true
-  };
-  Util.addRequestTrace(requestOptions, trace);
 
-  if (filters) {
-    requestOptions.qs = {};
-    Object.keys(filters).forEach(filter => {
-      requestOptions.qs[filter] = filters[filter];
-    });
+  try {
+    const MS = Util.getEndpoint("auth");
+    const requestOptions = {
+      method: "GET",
+      uri: "".concat(MS, "/roles/").concat(roleUUID, "/permissions"),
+      headers: {
+        Authorization: "Bearer ".concat(accessToken),
+        "Content-type": "application/json",
+        "x-api-version": "".concat(Util.getVersion())
+      },
+      json: true
+    };
+    Util.addRequestTrace(requestOptions, trace);
+
+    if (filters) {
+      requestOptions.qs = {};
+      Object.keys(filters).forEach(filter => {
+        requestOptions.qs[filter] = filters[filter];
+      });
+    }
+
+    const response = await request(requestOptions);
+    return response;
+  } catch (error) {
+    return Promise.reject(Util.formatError(error));
   }
-
-  return request(requestOptions);
 };
 /**
  * @async
@@ -991,36 +1108,42 @@ const listRolePermissions = function listRolePermissions() {
  */
 
 
-const listUserGroups = function listUserGroups() {
+const listUserGroups = async function listUserGroups() {
   let accessToken = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : "null accessToken";
   let offset = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : "0";
   let limit = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : "10";
   let filters = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : undefined;
   let trace = arguments.length > 4 && arguments[4] !== undefined ? arguments[4] : {};
-  const MS = Util.getEndpoint("auth");
-  const requestOptions = {
-    method: "GET",
-    uri: "".concat(MS, "/user-groups"),
-    headers: {
-      Authorization: "Bearer ".concat(accessToken),
-      "Content-type": "application/json",
-      "x-api-version": "".concat(Util.getVersion())
-    },
-    qs: {
-      offset: offset,
-      limit: limit
-    },
-    json: true
-  };
-  Util.addRequestTrace(requestOptions, trace);
 
-  if (filters) {
-    Object.keys(filters).forEach(filter => {
-      requestOptions.qs[filter] = filters[filter];
-    });
+  try {
+    const MS = Util.getEndpoint("auth");
+    const requestOptions = {
+      method: "GET",
+      uri: "".concat(MS, "/user-groups"),
+      headers: {
+        Authorization: "Bearer ".concat(accessToken),
+        "Content-type": "application/json",
+        "x-api-version": "".concat(Util.getVersion())
+      },
+      qs: {
+        offset: offset,
+        limit: limit
+      },
+      json: true
+    };
+    Util.addRequestTrace(requestOptions, trace);
+
+    if (filters) {
+      Object.keys(filters).forEach(filter => {
+        requestOptions.qs[filter] = filters[filter];
+      });
+    }
+
+    const response = await request(requestOptions);
+    return response;
+  } catch (error) {
+    return Promise.reject(Util.formatError(error));
   }
-
-  return request(requestOptions);
 };
 /**
  * @async
@@ -1038,29 +1161,34 @@ const modifyRole = async function modifyRole() {
   let roleUUID = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : "null roleUUID";
   let body = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : "null body";
   let trace = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : {};
-  const MS = Util.getEndpoint("auth");
-  const requestOptions = {
-    method: "POST",
-    uri: "".concat(MS, "/roles/").concat(roleUUID, "/modify"),
-    headers: {
-      Authorization: "Bearer ".concat(accessToken),
-      "Content-type": "application/json",
-      "x-api-version": "".concat(Util.getVersion())
-    },
-    body: body,
-    json: true,
-    resolveWithFullResponse: true
-  };
-  Util.addRequestTrace(requestOptions, trace);
-  const response = await request(requestOptions);
-  const role = response.body; // create returns a 202....suspend return until the new resource is ready
 
-  if (response.hasOwnProperty("statusCode") && response.statusCode === 202 && response.headers.hasOwnProperty("location")) {
-    await Util.pendingResource(response.headers.location, requestOptions, //reusing the request options instead of passing in multiple params
-    trace, role.hasOwnProperty("resource_status") ? role.resource_status : "complete");
+  try {
+    const MS = Util.getEndpoint("auth");
+    const requestOptions = {
+      method: "POST",
+      uri: "".concat(MS, "/roles/").concat(roleUUID, "/modify"),
+      headers: {
+        Authorization: "Bearer ".concat(accessToken),
+        "Content-type": "application/json",
+        "x-api-version": "".concat(Util.getVersion())
+      },
+      body: body,
+      json: true,
+      resolveWithFullResponse: true
+    };
+    Util.addRequestTrace(requestOptions, trace);
+    const response = await request(requestOptions);
+    const role = response.body; // create returns a 202....suspend return until the new resource is ready
+
+    if (response.hasOwnProperty("statusCode") && response.statusCode === 202 && response.headers.hasOwnProperty("location")) {
+      await Util.pendingResource(response.headers.location, requestOptions, //reusing the request options instead of passing in multiple params
+      trace, role.hasOwnProperty("resource_status") ? role.resource_status : "complete");
+    }
+
+    return role;
+  } catch (error) {
+    return Promise.reject(Util.formatError(error));
   }
-
-  return role;
 };
 /**
  * @async
@@ -1078,29 +1206,34 @@ const modifyUserGroup = async function modifyUserGroup() {
   let groupUUID = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : "null groupUUID";
   let body = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : "null body";
   let trace = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : {};
-  const MS = Util.getEndpoint("auth");
-  const requestOptions = {
-    method: "POST",
-    uri: "".concat(MS, "/user-groups/").concat(groupUUID, "/modify"),
-    headers: {
-      Authorization: "Bearer ".concat(accessToken),
-      "Content-type": "application/json",
-      "x-api-version": "".concat(Util.getVersion())
-    },
-    body: body,
-    resolveWithFullResponse: true,
-    json: true
-  };
-  Util.addRequestTrace(requestOptions, trace);
-  const response = await request(requestOptions);
-  const userGroup = response.body; // create returns a 202....suspend return until the new resource is ready
 
-  if (response.hasOwnProperty("statusCode") && response.statusCode === 202 && response.headers.hasOwnProperty("location")) {
-    await Util.pendingResource(response.headers.location, requestOptions, //reusing the request options instead of passing in multiple params
-    trace, userGroup.hasOwnProperty("resource_status") ? userGroup.resource_status : "complete");
+  try {
+    const MS = Util.getEndpoint("auth");
+    const requestOptions = {
+      method: "POST",
+      uri: "".concat(MS, "/user-groups/").concat(groupUUID, "/modify"),
+      headers: {
+        Authorization: "Bearer ".concat(accessToken),
+        "Content-type": "application/json",
+        "x-api-version": "".concat(Util.getVersion())
+      },
+      body: body,
+      resolveWithFullResponse: true,
+      json: true
+    };
+    Util.addRequestTrace(requestOptions, trace);
+    const response = await request(requestOptions);
+    const userGroup = response.body; // create returns a 202....suspend return until the new resource is ready
+
+    if (response.hasOwnProperty("statusCode") && response.statusCode === 202 && response.headers.hasOwnProperty("location")) {
+      await Util.pendingResource(response.headers.location, requestOptions, //reusing the request options instead of passing in multiple params
+      trace, userGroup.hasOwnProperty("resource_status") ? userGroup.resource_status : "complete");
+    }
+
+    return userGroup;
+  } catch (error) {
+    return Promise.reject(Util.formatError(error));
   }
-
-  return userGroup;
 };
 
 module.exports = {
