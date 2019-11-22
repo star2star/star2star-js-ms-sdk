@@ -174,7 +174,7 @@ describe("Oauth MS Unit Test Suite", function () {
       response.hasOwnProperty("token_type") &&
       response.token_type === "bearer" &&
       test.hasOwnProperty("items") &&
-      test.items.length >0,
+      test.items.length > 0,
       JSON.stringify(response, null, "\t")
     );
     return response;

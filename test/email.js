@@ -120,7 +120,7 @@ describe("Email MS Unit Test Suite", function() {
     } catch(error){
       assert.ok(
         error.hasOwnProperty("message") &&
-        error.message === "sender \"invalid\" invalid format",
+        error.message === "invalid request",
         JSON.stringify(error, null, "\t"));
       return error;
     }
@@ -152,7 +152,7 @@ describe("Email MS Unit Test Suite", function() {
     } catch(error){
       assert.ok(
         error.hasOwnProperty("message") &&
-        error.message === "recipient in \"to\" parameter \"invalid\" invalid format",
+        error.message === "invalid request",
         JSON.stringify(error, null, "\t"));
       return error;
     }

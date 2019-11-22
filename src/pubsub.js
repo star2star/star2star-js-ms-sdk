@@ -18,7 +18,7 @@ const util = require("./utilities");
  * @param {object} [trace = {}] - optional microservice lifecycle trace headers
  * @returns {Promise<object>} - Promise resolving to a data object containing a new subscription
  */
-const addSubscription = (
+const addSubscription = async (
   user_uuid = "no user uuid provided",
   account_uuid = "account uuid not provided ",
   callback_url = "not set callback",
@@ -29,34 +29,38 @@ const addSubscription = (
   expiresDate = undefined,
   trace = {}
 ) => {
-  const MS = util.getEndpoint("pubsub");
-
-  const requestOptions = {
-    method: "POST",
-    uri: `${MS}/subscriptions`,
-    body: {
-      user_uuid: user_uuid,
-      account_uuid: account_uuid,
-      callback: {
-        url: callback_url,
-        headers: callback_headers
+  try {
+    const MS = util.getEndpoint("pubsub");
+    const requestOptions = {
+      method: "POST",
+      uri: `${MS}/subscriptions`,
+      body: {
+        user_uuid: user_uuid,
+        account_uuid: account_uuid,
+        callback: {
+          url: callback_url,
+          headers: callback_headers
+        },
+        criteria: criteria,
+        events: subscriptions
       },
-      criteria: criteria,
-      events: subscriptions
-    },
-    headers: {
-      Authorization: `Bearer ${accessToken}`,
-      "Content-type": "application/json",
-      "x-api-version": `${util.getVersion()}`
-    },
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+        "Content-type": "application/json",
+        "x-api-version": `${util.getVersion()}`
+      },
 
-    json: true
-  };
-  if (expiresDate) {
-    requestOptions.body.expiration_date = expiresDate;
+      json: true
+    };
+    if (expiresDate) {
+      requestOptions.body.expiration_date = expiresDate;
+    }
+    util.addRequestTrace(requestOptions, trace);
+    const response = await request(requestOptions);
+    return response;
+  } catch (error) {
+    return Promise.reject(util.formatError(error));
   }
-  util.addRequestTrace(requestOptions, trace);
-  return request(requestOptions);
 };
 
 /**
@@ -72,25 +76,40 @@ const deleteSubscription = async (
   accessToken = "null accessToken",
   trace = {}
 ) => {
-  const MS = util.getEndpoint("pubsub");
+  try {
+    const MS = util.getEndpoint("pubsub");
 
-  const requestOptions = {
-    method: "DELETE",
-    uri: `${MS}/subscriptions/${subscription_uuid}`,
-    headers: {
-      Authorization: `Bearer ${accessToken}`,
-      "Content-type": "application/json",
-      "x-api-version": `${util.getVersion()}`
-    },
-    resolveWithFullResponse: true,
-    json: true
-  };
-  util.addRequestTrace(requestOptions, trace);
-  const response = await request(requestOptions);
-  if (response.hasOwnProperty("statusCode") && response.statusCode === 204) {
-    return {"status": "ok"};
+    const requestOptions = {
+      method: "DELETE",
+      uri: `${MS}/subscriptions/${subscription_uuid}`,
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+        "Content-type": "application/json",
+        "x-api-version": `${util.getVersion()}`
+      },
+      resolveWithFullResponse: true,
+      json: true
+    };
+    util.addRequestTrace(requestOptions, trace);
+    const response = await request(requestOptions);
+    if (response.hasOwnProperty("statusCode") && response.statusCode === 204) {
+      return {"status": "ok"};
+    } else {
+      // this is an edge case, but protects against unexpected 2xx or 3xx response codes.
+      throw {
+        "code": response.statusCode,
+        "message": typeof response.body === "string" ? response.body : "delete pubsub failed",
+        "trace_id": requestOptions.hasOwnProperty("headers") && requestOptions.headers.hasOwnProperty("trace")
+          ? requestOptions.headers.trace 
+          : undefined,
+        "details": typeof response.body === "object" && response.body !== null
+          ? [response.body]
+          : []
+      };
+    } 
+  } catch (error) {
+    return Promise.reject(util.formatError(error));
   }
-  return Promise.reject({"status": "failed"}); 
 };
 
 /**
@@ -101,26 +120,31 @@ const deleteSubscription = async (
  * @param {object} [trace = {}] - optional microservice lifecycle trace headers
  * @returns {Promise<empty>} - Promise resolving success or failure.
  */
-const getSubscription = (
+const getSubscription = async (
   subscription_uuid = "no subscription uuid provided",
   accessToken = "null accessToken",
   trace = {}
 ) => {
-  const MS = util.getEndpoint("pubsub");
+  try {
+    const MS = util.getEndpoint("pubsub");
 
-  const requestOptions = {
-    method: "GET",
-    uri: `${MS}/subscriptions/${subscription_uuid}`,
-    headers: {
-      Authorization: `Bearer ${accessToken}`,
-      "Content-type": "application/json",
-      "x-api-version": `${util.getVersion()}`
-    },
+    const requestOptions = {
+      method: "GET",
+      uri: `${MS}/subscriptions/${subscription_uuid}`,
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+        "Content-type": "application/json",
+        "x-api-version": `${util.getVersion()}`
+      },
 
-    json: true
-  };
-  util.addRequestTrace(requestOptions, trace);
-  return request(requestOptions);
+      json: true
+    };
+    util.addRequestTrace(requestOptions, trace);
+    const response = await request(requestOptions);
+    return response;
+  } catch (error) {
+    return Promise.reject(util.formatError(error));
+  }
 };
 
 /**
@@ -131,28 +155,32 @@ const getSubscription = (
  * @param {object} [trace = {}] - optional microservice lifecycle trace headers
  * @returns {Promise<object>} - Promise resolving to a data object containing a list of subscriptions for this user
  */
-const listUserSubscriptions = (
+const listUserSubscriptions = async (
   user_uuid = "no user uuid provided",
   accessToken = "null accessToken",
   trace = {}
 ) => {
-  const MS = util.getEndpoint("pubsub");
-
-  const requestOptions = {
-    method: "GET",
-    uri: `${MS}/subscriptions`,
-    headers: {
-      Authorization: `Bearer ${accessToken}`,
-      "Content-type": "application/json",
-      "x-api-version": `${util.getVersion()}`
-    },
-    qs: {
-      user_uuid: user_uuid
-    },
-    json: true
-  };
-  util.addRequestTrace(requestOptions, trace);
-  return request(requestOptions);
+  try {
+    const MS = util.getEndpoint("pubsub");
+    const requestOptions = {
+      method: "GET",
+      uri: `${MS}/subscriptions`,
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+        "Content-type": "application/json",
+        "x-api-version": `${util.getVersion()}`
+      },
+      qs: {
+        user_uuid: user_uuid
+      },
+      json: true
+    };
+    util.addRequestTrace(requestOptions, trace);
+    const response = await request(requestOptions);
+    return response;
+  } catch (error) {
+    return Promise.reject(util.formatError(error));
+  }
 };
 
 /**
@@ -164,30 +192,34 @@ const listUserSubscriptions = (
  * @param {*} [trace={}]
  * @returns {Promise<object>} - Promise resolving to a data object containing updated subscription
  */
-const updateSubscriptionExpiresDate = (
+const updateSubscriptionExpiresDate = async (
   accessToken = "null accessToken",
   subscriptionUUID,
   expiresDate = new Date(Date.now()).toISOString(),
   trace = {}
 ) => {
-  const MS = util.getEndpoint("pubsub");
+  try {
+    const MS = util.getEndpoint("pubsub");
+    const requestOptions = {
+      method: "PUT",
+      uri: `${MS}/subscriptions/${subscriptionUUID}`,
+      body: {
+        expiration_date: expiresDate
+      },
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+        "Content-type": "application/json",
+        "x-api-version": `${util.getVersion()}`
+      },
 
-  const requestOptions = {
-    method: "PUT",
-    uri: `${MS}/subscriptions/${subscriptionUUID}`,
-    body: {
-      expiration_date: expiresDate
-    },
-    headers: {
-      Authorization: `Bearer ${accessToken}`,
-      "Content-type": "application/json",
-      "x-api-version": `${util.getVersion()}`
-    },
-
-    json: true
-  };
-  util.addRequestTrace(requestOptions, trace);
-  return request(requestOptions);
+      json: true
+    };
+    util.addRequestTrace(requestOptions, trace);
+    const response = await request(requestOptions);
+    return response;
+  } catch (error) {
+    return Promise.reject(util.formatError(error));
+  }
 };
 
 module.exports = {

@@ -6,7 +6,6 @@ const Identity = require("./identity");
 const Messaging = require("./messaging");
 const Objects = require("./objects");
 const Util = require("./utilities");
-const Task = require("./task");
 const Groups = require("./groups");
 const ShortUrls = require("./shorturls");
 const Auth = require("./auth");
@@ -106,7 +105,6 @@ module.exports = {
   Messaging,
   Objects,
   Util,
-  Task,
   setMsHost,
   getMsHost,
   setMsAuthHost,

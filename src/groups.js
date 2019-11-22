@@ -40,6 +40,10 @@ const listGroups = async (
     if (filters) {
       Object.keys(filters).forEach(filter => {
         requestOptions.qs[filter] = filters[filter];
+        //groups moved to auth...ensure backward compatibility
+        if(filter === "member_uuid"){
+          requestOptions.qs.user_uuid = filters[filter];
+        }
       });
     }
     const response = await request(requestOptions);

@@ -12,29 +12,34 @@ const request = require("request-promise");
  * @param {object} [trace = {}] - optional microservice lifecycle trace headers
  * @returns {Promise<object>} - Promise resolving to a data object
  */
-const listLambdas = (
+const listLambdas = async (
   accessToken = "null access Token",
   offset = 0,
   limit = 10,
   trace = {}
 ) => {
-  const MS = util.getEndpoint("lambda");
-  const requestOptions = {
-    method: "GET",
-    uri: `${MS}/actions`,
-    headers: {
-      Authorization: `Bearer ${accessToken}`,
-      "x-api-version": `${util.getVersion()}`,
-      "Content-Type": "application/json"
-    },
-    qs: {
-      limit: limit,
-      skip: offset
-    },
-    json: true
-  };
-  util.addRequestTrace(requestOptions, trace);
-  return request(requestOptions);
+  try {
+    const MS = util.getEndpoint("lambda");
+    const requestOptions = {
+      method: "GET",
+      uri: `${MS}/actions`,
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+        "x-api-version": `${util.getVersion()}`,
+        "Content-Type": "application/json"
+      },
+      qs: {
+        limit: limit,
+        skip: offset
+      },
+      json: true
+    };
+    util.addRequestTrace(requestOptions, trace);
+    const response = await request(requestOptions);
+    return response;
+  } catch (error) {
+    return Promise.reject(util.formatError(error));
+  }
 };
 
 /**
@@ -46,26 +51,31 @@ const listLambdas = (
  * @param {object} [trace = {}] - optional microservice lifecycle trace headers
  * @returns {Promise<object>} - Promise resolving to a data object
  */
-const invokeLambda = (
+const invokeLambda = async (
   accessToken = "null access Token",
   lambdaName = "not defined",
   params = {},
   trace = {}
 ) => {
-  const MS = util.getEndpoint("lambda");
-  const requestOptions = {
-    method: "POST",
-    uri: `${MS}/actions/${lambdaName}/invoke`,
-    headers: {
-      Authorization: `Bearer ${accessToken}`,
-      "x-api-version": `${util.getVersion()}`,
-      "Content-Type": "application/json"
-    },
-    body: params,
-    json: true
-  };
-  util.addRequestTrace(requestOptions, trace);
-  return request(requestOptions);
+  try {
+    const MS = util.getEndpoint("lambda");
+    const requestOptions = {
+      method: "POST",
+      uri: `${MS}/actions/${lambdaName}/invoke`,
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+        "x-api-version": `${util.getVersion()}`,
+        "Content-Type": "application/json"
+      },
+      body: params,
+      json: true
+    };
+    util.addRequestTrace(requestOptions, trace);
+    const response = await request(requestOptions);
+    return response;
+  } catch (error) {
+    return Promise.reject(util.formatError(error));
+  }
 };
 
 module.exports = {

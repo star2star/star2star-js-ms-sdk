@@ -12,25 +12,30 @@ const util = require("./utilities");
  * @param {object} [trace = {}] - optional microservice lifecycle trace headers
  * @returns {Promise}
  */
-const createWorkflowTemplate = (
+const createWorkflowTemplate = async (
   accessToken = "null access token",
   body = "null body",
   trace = {}
 ) => {
-  const MS = util.getEndpoint("workflow");
-  const requestOptions = {
-    method: "POST",
-    uri: `${MS}/workflows`,
-    body: body,
-    headers: {
-      Authorization: `Bearer ${accessToken}`,
-      "Content-type": "application/json",
-      "x-api-version": `${util.getVersion()}`
-    },
-    json: true
-  };
-  util.addRequestTrace(requestOptions, trace);
-  return request(requestOptions);
+  try {
+    const MS = util.getEndpoint("workflow");
+    const requestOptions = {
+      method: "POST",
+      uri: `${MS}/workflows`,
+      body: body,
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+        "Content-type": "application/json",
+        "x-api-version": `${util.getVersion()}`
+      },
+      json: true
+    };
+    util.addRequestTrace(requestOptions, trace);
+    const response = await request(requestOptions);
+    return response;
+  } catch (error) {
+    return Promise.reject(util.formatError(error));
+  }
 };
 
 /**
@@ -42,36 +47,45 @@ const createWorkflowTemplate = (
  * @param {object} [trace = {}] - optional microservice lifecycle trace headers
  * @returns {Promise}
  */
-const cancelWorkflow = (
+const cancelWorkflow = async (
   accessToken = "null access token",
   wfTemplateUUID = "null wfTemplateUUID",
   wfIntanceUUID = "null wfInstanceUUID",
   trace = {}
 ) => {
-  const MS = util.getEndpoint("workflow");
-  const requestOptions = {
-    method: "DELETE",
-    uri: `${MS}/workflows/${wfTemplateUUID}/instances/${wfIntanceUUID}`,
-    headers: {
-      Authorization: `Bearer ${accessToken}`,
-      "Content-type": "application/json",
-      "x-api-version": `${util.getVersion()}`
-    },
-    resolveWithFullResponse: true,
-    json: true
-  };
-  util.addRequestTrace(requestOptions, trace);
-  return new Promise(function(resolve, reject) {
-    request(requestOptions)
-      .then(function(responseData) {
-        responseData.statusCode === 204
-          ? resolve({ status: "ok" })
-          : reject({ status: "failed" });
-      })
-      .catch(function(error) {
-        reject(error);
-      });
-  });
+  try {
+    const MS = util.getEndpoint("workflow");
+    const requestOptions = {
+      method: "DELETE",
+      uri: `${MS}/workflows/${wfTemplateUUID}/instances/${wfIntanceUUID}`,
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+        "Content-type": "application/json",
+        "x-api-version": `${util.getVersion()}`
+      },
+      resolveWithFullResponse: true,
+      json: true
+    };
+    util.addRequestTrace(requestOptions, trace);
+    const response = await request(requestOptions);
+    if(response.statusCode === 204) {
+      return { status: "ok" };
+    } else {
+      // this is an edge case, but protects against unexpected 2xx or 3xx response codes.
+      throw {
+        "code": response.statusCode,
+        "message": typeof response.body === "string" ? response.body : "cancel workflow failed",
+        "trace_id": requestOptions.hasOwnProperty("headers") && requestOptions.headers.hasOwnProperty("trace")
+          ? requestOptions.headers.trace 
+          : undefined,
+        "details": typeof response.body === "object" && response.body !== null
+          ? [response.body]
+          : []
+      };
+    }
+  } catch (error) {
+    return Promise.reject(util.formatError(error));
+  }
 };
 
 /**
@@ -83,36 +97,45 @@ const cancelWorkflow = (
  * @param {object} [trace = {}] - optional microservice lifecycle trace headers
  * @returns {Promise}
  */
-const deleteWorkflowTemplate = (
+const deleteWorkflowTemplate = async (
   accessToken = "null access token",
   wfTemplateUUID = "null wfTemplateUUID",
   version = "null version",
   trace = {}
 ) => {
-  const MS = util.getEndpoint("workflow");
-  const requestOptions = {
-    method: "DELETE",
-    uri: `${MS}/workflows/${wfTemplateUUID}/${version}`,
-    headers: {
-      Authorization: `Bearer ${accessToken}`,
-      "Content-type": "application/json",
-      "x-api-version": `${util.getVersion()}`
-    },
-    resolveWithFullResponse: true,
-    json: true
-  };
-  util.addRequestTrace(requestOptions, trace);
-  return new Promise(function(resolve, reject) {
-    request(requestOptions)
-      .then(function(responseData) {
-        responseData.statusCode === 204
-          ? resolve({ status: "ok" })
-          : reject({ status: "failed" });
-      })
-      .catch(function(error) {
-        reject(error);
-      });
-  });
+  try {
+    const MS = util.getEndpoint("workflow");
+    const requestOptions = {
+      method: "DELETE",
+      uri: `${MS}/workflows/${wfTemplateUUID}/${version}`,
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+        "Content-type": "application/json",
+        "x-api-version": `${util.getVersion()}`
+      },
+      resolveWithFullResponse: true,
+      json: true
+    };
+    util.addRequestTrace(requestOptions, trace);
+    const response = await request(requestOptions);
+    if(response.statusCode === 204) {
+      return { status: "ok" };
+    } else {
+      // this is an edge case, but protects against unexpected 2xx or 3xx response codes.
+      throw {
+        "code": response.statusCode,
+        "message": typeof response.body === "string" ? response.body : "delete workflow template failed",
+        "trace_id": requestOptions.hasOwnProperty("headers") && requestOptions.headers.hasOwnProperty("trace")
+          ? requestOptions.headers.trace 
+          : undefined,
+        "details": typeof response.body === "object" && response.body !== null
+          ? [response.body]
+          : []
+      };
+    }
+  } catch (error) {
+    return Promise.reject(util.formatError(error));
+  }
 };
 
 /**
@@ -124,25 +147,30 @@ const deleteWorkflowTemplate = (
  * @param {object} [trace = {}] - optional microservice lifecycle trace headers
  * @returns {Promise}
  */
-const getRunningWorkflow = (
+const getRunningWorkflow = async (
   accessToken = "null access token",
   wfTemplateUUID = "null wfTemplateUUID",
   wfInstanceUUID = "null wfTemplateUUID",
   trace = {}
 ) => {
-  const MS = util.getEndpoint("workflow");
-  const requestOptions = {
-    method: "GET",
-    uri: `${MS}/workflows/${wfTemplateUUID}/instances/${wfInstanceUUID}`,
-    headers: {
-      Authorization: `Bearer ${accessToken}`,
-      "Content-type": "application/json",
-      "x-api-version": `${util.getVersion()}`
-    },
-    json: true
-  };
-  util.addRequestTrace(requestOptions, trace);
-  return request(requestOptions);
+  try {
+    const MS = util.getEndpoint("workflow");
+    const requestOptions = {
+      method: "GET",
+      uri: `${MS}/workflows/${wfTemplateUUID}/instances/${wfInstanceUUID}`,
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+        "Content-type": "application/json",
+        "x-api-version": `${util.getVersion()}`
+      },
+      json: true
+    };
+    util.addRequestTrace(requestOptions, trace);
+    const response = await request(requestOptions);
+    return response;
+  } catch (error) {
+    return Promise.reject(util.formatError(error));
+  }
 };
 
 /**
@@ -153,24 +181,29 @@ const getRunningWorkflow = (
  * @param {object} [trace = {}] - optional microservice lifecycle trace headers
  * @returns {Promise}
  */
-const getWorkflowGroup = (
+const getWorkflowGroup = async (
   accessToken = "null access token",
   wfGroupUUID = "null wfTemplateUUID",
   trace = {}
 ) => {
-  const MS = util.getEndpoint("workflow");
-  const requestOptions = {
-    method: "GET",
-    uri: `${MS}/groups/${wfGroupUUID}`,
-    headers: {
-      Authorization: `Bearer ${accessToken}`,
-      "Content-type": "application/json",
-      "x-api-version": `${util.getVersion()}`
-    },
-    json: true
-  };
-  util.addRequestTrace(requestOptions, trace);
-  return request(requestOptions);
+  try {
+    const MS = util.getEndpoint("workflow");
+    const requestOptions = {
+      method: "GET",
+      uri: `${MS}/groups/${wfGroupUUID}`,
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+        "Content-type": "application/json",
+        "x-api-version": `${util.getVersion()}`
+      },
+      json: true
+    };
+    util.addRequestTrace(requestOptions, trace);
+    const response = await request(requestOptions);
+    return response;
+  } catch (error) {
+    return Promise.reject(util.formatError(error));
+  }
 };
 
 /**
@@ -181,24 +214,29 @@ const getWorkflowGroup = (
  * @param {object} [trace = {}] - optional microservice lifecycle trace headers
  * @returns {Promise}
  */
-const getWfInstanceHistory = (
+const getWfInstanceHistory = async (
   accessToken = "null access token",
   wfInstanceUUID = "null wfTemplateUUID",
   trace = {}
 ) => {
-  const MS = util.getEndpoint("workflow");
-  const requestOptions = {
-    method: "GET",
-    uri: `${MS}/history/${wfInstanceUUID}`,
-    headers: {
-      Authorization: `Bearer ${accessToken}`,
-      "Content-type": "application/json",
-      "x-api-version": `${util.getVersion()}`
-    },
-    json: true
-  };
-  util.addRequestTrace(requestOptions, trace);
-  return request(requestOptions);
+  try {
+    const MS = util.getEndpoint("workflow");
+    const requestOptions = {
+      method: "GET",
+      uri: `${MS}/history/${wfInstanceUUID}`,
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+        "Content-type": "application/json",
+        "x-api-version": `${util.getVersion()}`
+      },
+      json: true
+    };
+    util.addRequestTrace(requestOptions, trace);
+    const response = await request(requestOptions);
+    return response;
+  } catch (error) {
+    return Promise.reject(util.formatError(error));
+  }
 };
 
 /**
@@ -212,7 +250,7 @@ const getWfInstanceHistory = (
  * @param {object} [trace = {}] - optional microservice lifecycle trace headers
  * @returns {Promise}
  */
-const getWfTemplateHistory = (
+const getWfTemplateHistory = async (
   accessToken = "null access token",
   wfTemplateUUID = "null wfTemplateUUID",
   offset = 0,
@@ -220,30 +258,34 @@ const getWfTemplateHistory = (
   filters = undefined,
   trace = {}
 ) => {
-  const MS = util.getEndpoint("workflow");
-  const requestOptions = {
-    method: "GET",
-    uri: `${MS}/history`,
-    headers: {
-      Authorization: `Bearer ${accessToken}`,
-      "Content-type": "application/json",
-      "x-api-version": `${util.getVersion()}`
-    },
-    qs: {
-      template_uuid: wfTemplateUUID,
-      offset: offset,
-      limit: limit
-    },
-    json: true
-  };
-  util.addRequestTrace(requestOptions, trace);
-  if (filters) {
-    Object.keys(filters).forEach(filter => {
-      requestOptions.qs[filter] = filters[filter];
-    });
+  try {
+    const MS = util.getEndpoint("workflow");
+    const requestOptions = {
+      method: "GET",
+      uri: `${MS}/history`,
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+        "Content-type": "application/json",
+        "x-api-version": `${util.getVersion()}`
+      },
+      qs: {
+        template_uuid: wfTemplateUUID,
+        offset: offset,
+        limit: limit
+      },
+      json: true
+    };
+    util.addRequestTrace(requestOptions, trace);
+    if (filters) {
+      Object.keys(filters).forEach(filter => {
+        requestOptions.qs[filter] = filters[filter];
+      });
+    }
+    const response = await request(requestOptions);
+    return response;
+  } catch (error) {
+    return Promise.reject(util.formatError(error));
   }
-
-  return request(requestOptions);
 };
 
 /**
@@ -255,54 +297,51 @@ const getWfTemplateHistory = (
  * @param {object} [trace = {}] - optional microservice lifecycle trace headers
  * @returns {Promise}
  */
-const getWorkflowTemplate = (
+const getWorkflowTemplate = async (
   accessToken = "null access token",
   wfTemplateUUID = "null wfTemplateUUID",
   filters = undefined,
   trace = {}
 ) => {
-  const MS = util.getEndpoint("workflow");
-  const requestOptions = {
-    method: "GET",
-    uri: `${MS}/workflows/${wfTemplateUUID}`,
-    headers: {
-      Authorization: `Bearer ${accessToken}`,
-      "Content-type": "application/json",
-      "x-api-version": `${util.getVersion()}`
-    },
-    json: true
-  };
-  util.addRequestTrace(requestOptions, trace);
-  if (filters) {
-    Object.keys(filters).forEach(filter => {
-      if (filter === "version") {
-        requestOptions.uri += `/${filters[filter]}`;
-      } else {
-        !requestOptions.hasOwnProperty("qs") && (requestOptions.qs = {}); //init if not there
-        requestOptions.qs[filter] = filters[filter];
-      }
-    });
-  }
+  try {
+    const MS = util.getEndpoint("workflow");
+    const requestOptions = {
+      method: "GET",
+      uri: `${MS}/workflows/${wfTemplateUUID}`,
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+        "Content-type": "application/json",
+        "x-api-version": `${util.getVersion()}`
+      },
+      json: true
+    };
+    util.addRequestTrace(requestOptions, trace);
+    if (filters) {
+      Object.keys(filters).forEach(filter => {
+        if (filter === "version") {
+          requestOptions.uri += `/${filters[filter]}`;
+        } else {
+          !requestOptions.hasOwnProperty("qs") && (requestOptions.qs = {}); //init if not there
+          requestOptions.qs[filter] = filters[filter];
+        }
+      });
+    }
 
-  return new Promise(function(resolve, reject) {
     if (
       typeof filters["version"] !== "undefined" &&
       typeof filters["expand"] !== "undefined"
     ) {
-      reject({
-        status: "failed",
-        message: "version and expand cannot be included in the same request"
-      });
+      throw {
+        "code": 400,
+        "message": "version and expand cannot be included in the same request"
+      };
     } else {
-      request(requestOptions)
-        .then(responseData => {
-          resolve(responseData);
-        })
-        .catch(function(error) {
-          reject(error);
-        });
+      const response = await request(requestOptions);
+      return response;
     }
-  });
+  } catch (error) {
+    return Promise.reject(util.formatError(error));
+  }
 };
 
 /**
@@ -316,7 +355,7 @@ const getWorkflowTemplate = (
  * @param {object} [trace = {}] - optional microservice lifecycle trace headers
  * @returns {Promise}
  */
-const listRunningWorkflows = (
+const listRunningWorkflows = async (
   accessToken = "null access token",
   wfTemplateUUID = "null wfTemplateUUID",
   offset = 0,
@@ -324,29 +363,33 @@ const listRunningWorkflows = (
   filters = undefined,
   trace = {}
 ) => {
-  const MS = util.getEndpoint("workflow");
-  const requestOptions = {
-    method: "GET",
-    uri: `${MS}/workflows/${wfTemplateUUID}/instances`,
-    headers: {
-      Authorization: `Bearer ${accessToken}`,
-      "Content-type": "application/json",
-      "x-api-version": `${util.getVersion()}`
-    },
-    qs: {
-      offset: offset,
-      limit: limit
-    },
-    json: true
-  };
-  util.addRequestTrace(requestOptions, trace);
-  if (filters) {
-    Object.keys(filters).forEach(filter => {
-      requestOptions.qs[filter] = filters[filter];
-    });
+  try {
+    const MS = util.getEndpoint("workflow");
+    const requestOptions = {
+      method: "GET",
+      uri: `${MS}/workflows/${wfTemplateUUID}/instances`,
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+        "Content-type": "application/json",
+        "x-api-version": `${util.getVersion()}`
+      },
+      qs: {
+        offset: offset,
+        limit: limit
+      },
+      json: true
+    };
+    util.addRequestTrace(requestOptions, trace);
+    if (filters) {
+      Object.keys(filters).forEach(filter => {
+        requestOptions.qs[filter] = filters[filter];
+      });
+    }
+    const response = await request(requestOptions);
+    return response;
+  } catch (error) {
+    return Promise.reject(util.formatError(error));
   }
-
-  return request(requestOptions);
 };
 
 /**
@@ -359,37 +402,40 @@ const listRunningWorkflows = (
  * @param {object} [trace = {}] - optional microservice lifecycle trace headers
  * @returns
  */
-const listWorkflowGroups = (
+const listWorkflowGroups = async (
   accessToken = "null accesToken",
   offset = 0,
   limit = 10,
   filters = undefined,
   trace = {}
 ) => {
-  const MS = util.getEndpoint("workflow");
-
-  const requestOptions = {
-    method: "GET",
-    uri: `${MS}/groups`,
-    headers: {
-      Authorization: `Bearer ${accessToken}`,
-      "Content-type": "application/json",
-      "x-api-version": `${util.getVersion()}`
-    },
-    qs: {
-      offset: offset,
-      limit: limit
-    },
-    json: true
-  };
-  util.addRequestTrace(requestOptions, trace);
-  if (filters) {
-    Object.keys(filters).forEach(filter => {
-      requestOptions.qs[filter] = filters[filter];
-    });
+  try {
+    const MS = util.getEndpoint("workflow");
+    const requestOptions = {
+      method: "GET",
+      uri: `${MS}/groups`,
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+        "Content-type": "application/json",
+        "x-api-version": `${util.getVersion()}`
+      },
+      qs: {
+        offset: offset,
+        limit: limit
+      },
+      json: true
+    };
+    util.addRequestTrace(requestOptions, trace);
+    if (filters) {
+      Object.keys(filters).forEach(filter => {
+        requestOptions.qs[filter] = filters[filter];
+      });
+    }
+    const response = await request(requestOptions);
+    return response;
+  } catch (error) {
+    return Promise.reject(util.formatError(error));
   }
-
-  return request(requestOptions);
 };
 
 /**
@@ -402,36 +448,40 @@ const listWorkflowGroups = (
  * @param {object} [trace = {}] - optional microservice lifecycle trace headers
  * @returns {Promise}
  */
-const listWorkflowTemplates = (
+const listWorkflowTemplates = async (
   accessToken = "null access token",
   offset = 0,
   limit = 10,
   filters = undefined,
   trace = {}
 ) => {
-  const MS = util.getEndpoint("workflow");
-  const requestOptions = {
-    method: "GET",
-    uri: `${MS}/workflows`,
-    headers: {
-      Authorization: `Bearer ${accessToken}`,
-      "Content-type": "application/json",
-      "x-api-version": `${util.getVersion()}`
-    },
-    qs: {
-      offset: offset,
-      limit: limit
-    },
-    json: true
-  };
-  util.addRequestTrace(requestOptions, trace);
-  if (filters) {
-    Object.keys(filters).forEach(filter => {
-      requestOptions.qs[filter] = filters[filter];
-    });
+  try {
+    const MS = util.getEndpoint("workflow");
+    const requestOptions = {
+      method: "GET",
+      uri: `${MS}/workflows`,
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+        "Content-type": "application/json",
+        "x-api-version": `${util.getVersion()}`
+      },
+      qs: {
+        offset: offset,
+        limit: limit
+      },
+      json: true
+    };
+    util.addRequestTrace(requestOptions, trace);
+    if (filters) {
+      Object.keys(filters).forEach(filter => {
+        requestOptions.qs[filter] = filters[filter];
+      });
+    }
+    const response = await request(requestOptions);
+    return response;
+  } catch (error) {
+    return Promise.reject(util.formatError(error));
   }
-
-  return request(requestOptions);
 };
 
 /**
@@ -443,26 +493,31 @@ const listWorkflowTemplates = (
  * @param {object} [trace = {}] - optional microservice lifecycle trace headers
  * @returns
  */
-const modifyWorkflowTemplate = (
+const modifyWorkflowTemplate = async (
   accessToken = "null access token",
   wfTemplateUUID = "null wfTemplateUUID",
   body = "null body",
   trace = {}
 ) => {
-  const MS = util.getEndpoint("workflow");
-  const requestOptions = {
-    method: "PUT",
-    uri: `${MS}/workflows/${wfTemplateUUID}`,
-    body: body,
-    headers: {
-      Authorization: `Bearer ${accessToken}`,
-      "Content-type": "application/json",
-      "x-api-version": `${util.getVersion()}`
-    },
-    json: true
-  };
-  util.addRequestTrace(requestOptions, trace);
-  return request(requestOptions);
+  try {
+    const MS = util.getEndpoint("workflow");
+    const requestOptions = {
+      method: "PUT",
+      uri: `${MS}/workflows/${wfTemplateUUID}`,
+      body: body,
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+        "Content-type": "application/json",
+        "x-api-version": `${util.getVersion()}`
+      },
+      json: true
+    };
+    util.addRequestTrace(requestOptions, trace);
+    const response = await request(requestOptions);
+    return response;
+  } catch (error) {
+    return Promise.reject(util.formatError(error));
+  }
 };
 
 /**
@@ -474,26 +529,31 @@ const modifyWorkflowTemplate = (
  * @param {object} [trace = {}] - optional microservice lifecycle trace headers
  * @returns {Promise}
  */
-const startWorkflow = (
+const startWorkflow = async (
   accessToken,
   wfTemplateUUID = "null wfTemplateUUID",
   body = "null body",
   trace = {}
 ) => {
-  const MS = util.getEndpoint("workflow");
-  const requestOptions = {
-    method: "POST",
-    uri: `${MS}/workflows/${wfTemplateUUID}/instances`,
-    body: body,
-    headers: {
-      Authorization: `Bearer ${accessToken}`,
-      "Content-type": "application/json",
-      "x-api-version": `${util.getVersion()}`
-    },
-    json: true
-  };
-  util.addRequestTrace(requestOptions, trace);
-  return request(requestOptions);
+  try {
+    const MS = util.getEndpoint("workflow");
+    const requestOptions = {
+      method: "POST",
+      uri: `${MS}/workflows/${wfTemplateUUID}/instances`,
+      body: body,
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+        "Content-type": "application/json",
+        "x-api-version": `${util.getVersion()}`
+      },
+      json: true
+    };
+    util.addRequestTrace(requestOptions, trace);
+    const response = await request(requestOptions);
+    return response;
+  } catch (error) {
+    return Promise.reject(util.formatError(error));
+  }
 };
 
 /**
@@ -506,13 +566,14 @@ const startWorkflow = (
  * @param {object} [trace = {}] - optional microservice lifecycle trace headers
  * @returns {Promise} - promise resolving to updated workflow group
  */
-const updateWorkflowGroup = (
+const updateWorkflowGroup = async (
   accessToken = "null access token",
   groupUUID = "null group uuid",
   status = "null status",
   data = "null data",
   trace = {}
 ) => {
+  try {
   const MS = util.getEndpoint("workflow");
   const requestOptions = {
     method: "PUT",
@@ -529,7 +590,11 @@ const updateWorkflowGroup = (
     json: true
   };
   util.addRequestTrace(requestOptions, trace);
-  return request(requestOptions);
+  const response = await request(requestOptions);
+    return response;
+  } catch (error) {
+    return Promise.reject(util.formatError(error));
+  }
 };
 
 module.exports = {

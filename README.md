@@ -70,6 +70,7 @@ process.env.MS_LOGPRETTY = true // defaults to false
 [Please click here for our documentation pages.](https://star2star.github.io/star2star-js-ms-sdk/ "Star2Star Micro Service SDK Documentation")
 
 ## Changes
+* 3.2.0 - switch all calls over to use error formatter
 * 3.1.9 - move remainder of groups to auth and add error formatter util
 * 3.1.8 - move auto-generated user-groups GET to own method in auth
 * 3.1.7 - add auto-generated user-groups to getAccount

@@ -96,7 +96,12 @@ describe("Chat MS Test Suite", function() {
     };
 
     trace = objectMerge({}, trace, Util.generateNewMetaData(trace));
-    const groupData = await s2sMS.Groups.createGroup(accessToken, body, trace);
+    let groupData;
+    try{
+      groupData = await s2sMS.Groups.createGroup(accessToken, body, trace);
+    } catch(error){
+      console.log("!!!!!!!!!!!",error);
+    }
     //test_groupUUID and test_room saved for other tests
     test_groupUUID = groupData.uuid;
     test_room = await s2sMS.Chat.createRoom(

@@ -268,7 +268,7 @@ describe("Identity MS Unit Test Suite", function () {
       return response;
     } catch (error) {
       assert.ok(
-        error.statusCode === 401,
+        error.code === 401,
         JSON.stringify(error, null, "\t")
       );
       return error;
@@ -383,7 +383,7 @@ describe("Identity MS Unit Test Suite", function () {
       return response;
     } catch(error){
       assert.ok(
-        error.statusCode === 404,
+        error.code === 404,
         JSON.stringify(error, null, "\t")
       );
       return error;

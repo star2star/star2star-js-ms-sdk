@@ -145,7 +145,7 @@ const assignRolesToUserGroup = async function assignRolesToUserGroup() {
       // this is an edge case, but protects against unexpected 2xx or 3xx response codes.
       throw {
         "code": response.statusCode,
-        "message": typeof response.body === "string" ? response.body : "assign role to group failed",
+        "message": typeof response.body === "string" ? response.body : "assign role to user-group failed",
         "trace_id": requestOptions.hasOwnProperty("headers") && requestOptions.headers.hasOwnProperty("trace") ? requestOptions.headers.trace : undefined,
         "details": typeof response.body === "object" && response.body !== null ? [response.body] : []
       };
@@ -197,10 +197,9 @@ const assignScopedRoleToUserGroup = async function assignScopedRoleToUserGroup()
     Util.addRequestTrace(requestOptions, trace);
     const response = await request(requestOptions);
 
-    if (response.statusCode === 204) {
-      return {
-        status: "ok"
-      };
+    if (response.hasOwnProperty("statusCode") && response.statusCode === 202 && response.headers.hasOwnProperty("location")) {
+      await Util.pendingResource(response.headers.location, requestOptions, //reusing the request options instead of passing in multiple params
+      trace, response.hasOwnProperty("resource_status") ? response.resource_status : "complete");
     } else {
       // this is an edge case, but protects against unexpected 2xx or 3xx response codes.
       throw {
@@ -210,6 +209,10 @@ const assignScopedRoleToUserGroup = async function assignScopedRoleToUserGroup()
         "details": typeof response.body === "object" && response.body !== null ? [response.body] : []
       };
     }
+
+    return {
+      status: "ok"
+    };
   } catch (error) {
     return Promise.reject(Util.formatError(error));
   }

@@ -14,24 +14,30 @@ const util = require("./utilities");
  */
 
 
-const createWorkflowTemplate = function createWorkflowTemplate() {
+const createWorkflowTemplate = async function createWorkflowTemplate() {
   let accessToken = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : "null access token";
   let body = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : "null body";
   let trace = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : {};
-  const MS = util.getEndpoint("workflow");
-  const requestOptions = {
-    method: "POST",
-    uri: "".concat(MS, "/workflows"),
-    body: body,
-    headers: {
-      Authorization: "Bearer ".concat(accessToken),
-      "Content-type": "application/json",
-      "x-api-version": "".concat(util.getVersion())
-    },
-    json: true
-  };
-  util.addRequestTrace(requestOptions, trace);
-  return request(requestOptions);
+
+  try {
+    const MS = util.getEndpoint("workflow");
+    const requestOptions = {
+      method: "POST",
+      uri: "".concat(MS, "/workflows"),
+      body: body,
+      headers: {
+        Authorization: "Bearer ".concat(accessToken),
+        "Content-type": "application/json",
+        "x-api-version": "".concat(util.getVersion())
+      },
+      json: true
+    };
+    util.addRequestTrace(requestOptions, trace);
+    const response = await request(requestOptions);
+    return response;
+  } catch (error) {
+    return Promise.reject(util.formatError(error));
+  }
 };
 /**
  * @async
@@ -44,35 +50,44 @@ const createWorkflowTemplate = function createWorkflowTemplate() {
  */
 
 
-const cancelWorkflow = function cancelWorkflow() {
+const cancelWorkflow = async function cancelWorkflow() {
   let accessToken = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : "null access token";
   let wfTemplateUUID = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : "null wfTemplateUUID";
   let wfIntanceUUID = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : "null wfInstanceUUID";
   let trace = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : {};
-  const MS = util.getEndpoint("workflow");
-  const requestOptions = {
-    method: "DELETE",
-    uri: "".concat(MS, "/workflows/").concat(wfTemplateUUID, "/instances/").concat(wfIntanceUUID),
-    headers: {
-      Authorization: "Bearer ".concat(accessToken),
-      "Content-type": "application/json",
-      "x-api-version": "".concat(util.getVersion())
-    },
-    resolveWithFullResponse: true,
-    json: true
-  };
-  util.addRequestTrace(requestOptions, trace);
-  return new Promise(function (resolve, reject) {
-    request(requestOptions).then(function (responseData) {
-      responseData.statusCode === 204 ? resolve({
+
+  try {
+    const MS = util.getEndpoint("workflow");
+    const requestOptions = {
+      method: "DELETE",
+      uri: "".concat(MS, "/workflows/").concat(wfTemplateUUID, "/instances/").concat(wfIntanceUUID),
+      headers: {
+        Authorization: "Bearer ".concat(accessToken),
+        "Content-type": "application/json",
+        "x-api-version": "".concat(util.getVersion())
+      },
+      resolveWithFullResponse: true,
+      json: true
+    };
+    util.addRequestTrace(requestOptions, trace);
+    const response = await request(requestOptions);
+
+    if (response.statusCode === 204) {
+      return {
         status: "ok"
-      }) : reject({
-        status: "failed"
-      });
-    }).catch(function (error) {
-      reject(error);
-    });
-  });
+      };
+    } else {
+      // this is an edge case, but protects against unexpected 2xx or 3xx response codes.
+      throw {
+        "code": response.statusCode,
+        "message": typeof response.body === "string" ? response.body : "cancel workflow failed",
+        "trace_id": requestOptions.hasOwnProperty("headers") && requestOptions.headers.hasOwnProperty("trace") ? requestOptions.headers.trace : undefined,
+        "details": typeof response.body === "object" && response.body !== null ? [response.body] : []
+      };
+    }
+  } catch (error) {
+    return Promise.reject(util.formatError(error));
+  }
 };
 /**
  * @async
@@ -85,35 +100,44 @@ const cancelWorkflow = function cancelWorkflow() {
  */
 
 
-const deleteWorkflowTemplate = function deleteWorkflowTemplate() {
+const deleteWorkflowTemplate = async function deleteWorkflowTemplate() {
   let accessToken = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : "null access token";
   let wfTemplateUUID = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : "null wfTemplateUUID";
   let version = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : "null version";
   let trace = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : {};
-  const MS = util.getEndpoint("workflow");
-  const requestOptions = {
-    method: "DELETE",
-    uri: "".concat(MS, "/workflows/").concat(wfTemplateUUID, "/").concat(version),
-    headers: {
-      Authorization: "Bearer ".concat(accessToken),
-      "Content-type": "application/json",
-      "x-api-version": "".concat(util.getVersion())
-    },
-    resolveWithFullResponse: true,
-    json: true
-  };
-  util.addRequestTrace(requestOptions, trace);
-  return new Promise(function (resolve, reject) {
-    request(requestOptions).then(function (responseData) {
-      responseData.statusCode === 204 ? resolve({
+
+  try {
+    const MS = util.getEndpoint("workflow");
+    const requestOptions = {
+      method: "DELETE",
+      uri: "".concat(MS, "/workflows/").concat(wfTemplateUUID, "/").concat(version),
+      headers: {
+        Authorization: "Bearer ".concat(accessToken),
+        "Content-type": "application/json",
+        "x-api-version": "".concat(util.getVersion())
+      },
+      resolveWithFullResponse: true,
+      json: true
+    };
+    util.addRequestTrace(requestOptions, trace);
+    const response = await request(requestOptions);
+
+    if (response.statusCode === 204) {
+      return {
         status: "ok"
-      }) : reject({
-        status: "failed"
-      });
-    }).catch(function (error) {
-      reject(error);
-    });
-  });
+      };
+    } else {
+      // this is an edge case, but protects against unexpected 2xx or 3xx response codes.
+      throw {
+        "code": response.statusCode,
+        "message": typeof response.body === "string" ? response.body : "delete workflow template failed",
+        "trace_id": requestOptions.hasOwnProperty("headers") && requestOptions.headers.hasOwnProperty("trace") ? requestOptions.headers.trace : undefined,
+        "details": typeof response.body === "object" && response.body !== null ? [response.body] : []
+      };
+    }
+  } catch (error) {
+    return Promise.reject(util.formatError(error));
+  }
 };
 /**
  * @async
@@ -126,24 +150,30 @@ const deleteWorkflowTemplate = function deleteWorkflowTemplate() {
  */
 
 
-const getRunningWorkflow = function getRunningWorkflow() {
+const getRunningWorkflow = async function getRunningWorkflow() {
   let accessToken = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : "null access token";
   let wfTemplateUUID = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : "null wfTemplateUUID";
   let wfInstanceUUID = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : "null wfTemplateUUID";
   let trace = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : {};
-  const MS = util.getEndpoint("workflow");
-  const requestOptions = {
-    method: "GET",
-    uri: "".concat(MS, "/workflows/").concat(wfTemplateUUID, "/instances/").concat(wfInstanceUUID),
-    headers: {
-      Authorization: "Bearer ".concat(accessToken),
-      "Content-type": "application/json",
-      "x-api-version": "".concat(util.getVersion())
-    },
-    json: true
-  };
-  util.addRequestTrace(requestOptions, trace);
-  return request(requestOptions);
+
+  try {
+    const MS = util.getEndpoint("workflow");
+    const requestOptions = {
+      method: "GET",
+      uri: "".concat(MS, "/workflows/").concat(wfTemplateUUID, "/instances/").concat(wfInstanceUUID),
+      headers: {
+        Authorization: "Bearer ".concat(accessToken),
+        "Content-type": "application/json",
+        "x-api-version": "".concat(util.getVersion())
+      },
+      json: true
+    };
+    util.addRequestTrace(requestOptions, trace);
+    const response = await request(requestOptions);
+    return response;
+  } catch (error) {
+    return Promise.reject(util.formatError(error));
+  }
 };
 /**
  * @async
@@ -155,23 +185,29 @@ const getRunningWorkflow = function getRunningWorkflow() {
  */
 
 
-const getWorkflowGroup = function getWorkflowGroup() {
+const getWorkflowGroup = async function getWorkflowGroup() {
   let accessToken = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : "null access token";
   let wfGroupUUID = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : "null wfTemplateUUID";
   let trace = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : {};
-  const MS = util.getEndpoint("workflow");
-  const requestOptions = {
-    method: "GET",
-    uri: "".concat(MS, "/groups/").concat(wfGroupUUID),
-    headers: {
-      Authorization: "Bearer ".concat(accessToken),
-      "Content-type": "application/json",
-      "x-api-version": "".concat(util.getVersion())
-    },
-    json: true
-  };
-  util.addRequestTrace(requestOptions, trace);
-  return request(requestOptions);
+
+  try {
+    const MS = util.getEndpoint("workflow");
+    const requestOptions = {
+      method: "GET",
+      uri: "".concat(MS, "/groups/").concat(wfGroupUUID),
+      headers: {
+        Authorization: "Bearer ".concat(accessToken),
+        "Content-type": "application/json",
+        "x-api-version": "".concat(util.getVersion())
+      },
+      json: true
+    };
+    util.addRequestTrace(requestOptions, trace);
+    const response = await request(requestOptions);
+    return response;
+  } catch (error) {
+    return Promise.reject(util.formatError(error));
+  }
 };
 /**
  * @async
@@ -183,23 +219,29 @@ const getWorkflowGroup = function getWorkflowGroup() {
  */
 
 
-const getWfInstanceHistory = function getWfInstanceHistory() {
+const getWfInstanceHistory = async function getWfInstanceHistory() {
   let accessToken = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : "null access token";
   let wfInstanceUUID = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : "null wfTemplateUUID";
   let trace = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : {};
-  const MS = util.getEndpoint("workflow");
-  const requestOptions = {
-    method: "GET",
-    uri: "".concat(MS, "/history/").concat(wfInstanceUUID),
-    headers: {
-      Authorization: "Bearer ".concat(accessToken),
-      "Content-type": "application/json",
-      "x-api-version": "".concat(util.getVersion())
-    },
-    json: true
-  };
-  util.addRequestTrace(requestOptions, trace);
-  return request(requestOptions);
+
+  try {
+    const MS = util.getEndpoint("workflow");
+    const requestOptions = {
+      method: "GET",
+      uri: "".concat(MS, "/history/").concat(wfInstanceUUID),
+      headers: {
+        Authorization: "Bearer ".concat(accessToken),
+        "Content-type": "application/json",
+        "x-api-version": "".concat(util.getVersion())
+      },
+      json: true
+    };
+    util.addRequestTrace(requestOptions, trace);
+    const response = await request(requestOptions);
+    return response;
+  } catch (error) {
+    return Promise.reject(util.formatError(error));
+  }
 };
 /**
  * @async
@@ -214,38 +256,44 @@ const getWfInstanceHistory = function getWfInstanceHistory() {
  */
 
 
-const getWfTemplateHistory = function getWfTemplateHistory() {
+const getWfTemplateHistory = async function getWfTemplateHistory() {
   let accessToken = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : "null access token";
   let wfTemplateUUID = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : "null wfTemplateUUID";
   let offset = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : 0;
   let limit = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : 10;
   let filters = arguments.length > 4 && arguments[4] !== undefined ? arguments[4] : undefined;
   let trace = arguments.length > 5 && arguments[5] !== undefined ? arguments[5] : {};
-  const MS = util.getEndpoint("workflow");
-  const requestOptions = {
-    method: "GET",
-    uri: "".concat(MS, "/history"),
-    headers: {
-      Authorization: "Bearer ".concat(accessToken),
-      "Content-type": "application/json",
-      "x-api-version": "".concat(util.getVersion())
-    },
-    qs: {
-      template_uuid: wfTemplateUUID,
-      offset: offset,
-      limit: limit
-    },
-    json: true
-  };
-  util.addRequestTrace(requestOptions, trace);
 
-  if (filters) {
-    Object.keys(filters).forEach(filter => {
-      requestOptions.qs[filter] = filters[filter];
-    });
+  try {
+    const MS = util.getEndpoint("workflow");
+    const requestOptions = {
+      method: "GET",
+      uri: "".concat(MS, "/history"),
+      headers: {
+        Authorization: "Bearer ".concat(accessToken),
+        "Content-type": "application/json",
+        "x-api-version": "".concat(util.getVersion())
+      },
+      qs: {
+        template_uuid: wfTemplateUUID,
+        offset: offset,
+        limit: limit
+      },
+      json: true
+    };
+    util.addRequestTrace(requestOptions, trace);
+
+    if (filters) {
+      Object.keys(filters).forEach(filter => {
+        requestOptions.qs[filter] = filters[filter];
+      });
+    }
+
+    const response = await request(requestOptions);
+    return response;
+  } catch (error) {
+    return Promise.reject(util.formatError(error));
   }
-
-  return request(requestOptions);
 };
 /**
  * @async
@@ -258,50 +306,50 @@ const getWfTemplateHistory = function getWfTemplateHistory() {
  */
 
 
-const getWorkflowTemplate = function getWorkflowTemplate() {
+const getWorkflowTemplate = async function getWorkflowTemplate() {
   let accessToken = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : "null access token";
   let wfTemplateUUID = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : "null wfTemplateUUID";
   let filters = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : undefined;
   let trace = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : {};
-  const MS = util.getEndpoint("workflow");
-  const requestOptions = {
-    method: "GET",
-    uri: "".concat(MS, "/workflows/").concat(wfTemplateUUID),
-    headers: {
-      Authorization: "Bearer ".concat(accessToken),
-      "Content-type": "application/json",
-      "x-api-version": "".concat(util.getVersion())
-    },
-    json: true
-  };
-  util.addRequestTrace(requestOptions, trace);
 
-  if (filters) {
-    Object.keys(filters).forEach(filter => {
-      if (filter === "version") {
-        requestOptions.uri += "/".concat(filters[filter]);
-      } else {
-        !requestOptions.hasOwnProperty("qs") && (requestOptions.qs = {}); //init if not there
+  try {
+    const MS = util.getEndpoint("workflow");
+    const requestOptions = {
+      method: "GET",
+      uri: "".concat(MS, "/workflows/").concat(wfTemplateUUID),
+      headers: {
+        Authorization: "Bearer ".concat(accessToken),
+        "Content-type": "application/json",
+        "x-api-version": "".concat(util.getVersion())
+      },
+      json: true
+    };
+    util.addRequestTrace(requestOptions, trace);
 
-        requestOptions.qs[filter] = filters[filter];
-      }
-    });
-  }
+    if (filters) {
+      Object.keys(filters).forEach(filter => {
+        if (filter === "version") {
+          requestOptions.uri += "/".concat(filters[filter]);
+        } else {
+          !requestOptions.hasOwnProperty("qs") && (requestOptions.qs = {}); //init if not there
 
-  return new Promise(function (resolve, reject) {
-    if (typeof filters["version"] !== "undefined" && typeof filters["expand"] !== "undefined") {
-      reject({
-        status: "failed",
-        message: "version and expand cannot be included in the same request"
-      });
-    } else {
-      request(requestOptions).then(responseData => {
-        resolve(responseData);
-      }).catch(function (error) {
-        reject(error);
+          requestOptions.qs[filter] = filters[filter];
+        }
       });
     }
-  });
+
+    if (typeof filters["version"] !== "undefined" && typeof filters["expand"] !== "undefined") {
+      throw {
+        "code": 400,
+        "message": "version and expand cannot be included in the same request"
+      };
+    } else {
+      const response = await request(requestOptions);
+      return response;
+    }
+  } catch (error) {
+    return Promise.reject(util.formatError(error));
+  }
 };
 /**
  * @async
@@ -316,37 +364,43 @@ const getWorkflowTemplate = function getWorkflowTemplate() {
  */
 
 
-const listRunningWorkflows = function listRunningWorkflows() {
+const listRunningWorkflows = async function listRunningWorkflows() {
   let accessToken = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : "null access token";
   let wfTemplateUUID = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : "null wfTemplateUUID";
   let offset = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : 0;
   let limit = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : 10;
   let filters = arguments.length > 4 && arguments[4] !== undefined ? arguments[4] : undefined;
   let trace = arguments.length > 5 && arguments[5] !== undefined ? arguments[5] : {};
-  const MS = util.getEndpoint("workflow");
-  const requestOptions = {
-    method: "GET",
-    uri: "".concat(MS, "/workflows/").concat(wfTemplateUUID, "/instances"),
-    headers: {
-      Authorization: "Bearer ".concat(accessToken),
-      "Content-type": "application/json",
-      "x-api-version": "".concat(util.getVersion())
-    },
-    qs: {
-      offset: offset,
-      limit: limit
-    },
-    json: true
-  };
-  util.addRequestTrace(requestOptions, trace);
 
-  if (filters) {
-    Object.keys(filters).forEach(filter => {
-      requestOptions.qs[filter] = filters[filter];
-    });
+  try {
+    const MS = util.getEndpoint("workflow");
+    const requestOptions = {
+      method: "GET",
+      uri: "".concat(MS, "/workflows/").concat(wfTemplateUUID, "/instances"),
+      headers: {
+        Authorization: "Bearer ".concat(accessToken),
+        "Content-type": "application/json",
+        "x-api-version": "".concat(util.getVersion())
+      },
+      qs: {
+        offset: offset,
+        limit: limit
+      },
+      json: true
+    };
+    util.addRequestTrace(requestOptions, trace);
+
+    if (filters) {
+      Object.keys(filters).forEach(filter => {
+        requestOptions.qs[filter] = filters[filter];
+      });
+    }
+
+    const response = await request(requestOptions);
+    return response;
+  } catch (error) {
+    return Promise.reject(util.formatError(error));
   }
-
-  return request(requestOptions);
 };
 /**
  * @async
@@ -360,36 +414,42 @@ const listRunningWorkflows = function listRunningWorkflows() {
  */
 
 
-const listWorkflowGroups = function listWorkflowGroups() {
+const listWorkflowGroups = async function listWorkflowGroups() {
   let accessToken = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : "null accesToken";
   let offset = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 0;
   let limit = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : 10;
   let filters = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : undefined;
   let trace = arguments.length > 4 && arguments[4] !== undefined ? arguments[4] : {};
-  const MS = util.getEndpoint("workflow");
-  const requestOptions = {
-    method: "GET",
-    uri: "".concat(MS, "/groups"),
-    headers: {
-      Authorization: "Bearer ".concat(accessToken),
-      "Content-type": "application/json",
-      "x-api-version": "".concat(util.getVersion())
-    },
-    qs: {
-      offset: offset,
-      limit: limit
-    },
-    json: true
-  };
-  util.addRequestTrace(requestOptions, trace);
 
-  if (filters) {
-    Object.keys(filters).forEach(filter => {
-      requestOptions.qs[filter] = filters[filter];
-    });
+  try {
+    const MS = util.getEndpoint("workflow");
+    const requestOptions = {
+      method: "GET",
+      uri: "".concat(MS, "/groups"),
+      headers: {
+        Authorization: "Bearer ".concat(accessToken),
+        "Content-type": "application/json",
+        "x-api-version": "".concat(util.getVersion())
+      },
+      qs: {
+        offset: offset,
+        limit: limit
+      },
+      json: true
+    };
+    util.addRequestTrace(requestOptions, trace);
+
+    if (filters) {
+      Object.keys(filters).forEach(filter => {
+        requestOptions.qs[filter] = filters[filter];
+      });
+    }
+
+    const response = await request(requestOptions);
+    return response;
+  } catch (error) {
+    return Promise.reject(util.formatError(error));
   }
-
-  return request(requestOptions);
 };
 /**
  * @async
@@ -403,36 +463,42 @@ const listWorkflowGroups = function listWorkflowGroups() {
  */
 
 
-const listWorkflowTemplates = function listWorkflowTemplates() {
+const listWorkflowTemplates = async function listWorkflowTemplates() {
   let accessToken = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : "null access token";
   let offset = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 0;
   let limit = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : 10;
   let filters = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : undefined;
   let trace = arguments.length > 4 && arguments[4] !== undefined ? arguments[4] : {};
-  const MS = util.getEndpoint("workflow");
-  const requestOptions = {
-    method: "GET",
-    uri: "".concat(MS, "/workflows"),
-    headers: {
-      Authorization: "Bearer ".concat(accessToken),
-      "Content-type": "application/json",
-      "x-api-version": "".concat(util.getVersion())
-    },
-    qs: {
-      offset: offset,
-      limit: limit
-    },
-    json: true
-  };
-  util.addRequestTrace(requestOptions, trace);
 
-  if (filters) {
-    Object.keys(filters).forEach(filter => {
-      requestOptions.qs[filter] = filters[filter];
-    });
+  try {
+    const MS = util.getEndpoint("workflow");
+    const requestOptions = {
+      method: "GET",
+      uri: "".concat(MS, "/workflows"),
+      headers: {
+        Authorization: "Bearer ".concat(accessToken),
+        "Content-type": "application/json",
+        "x-api-version": "".concat(util.getVersion())
+      },
+      qs: {
+        offset: offset,
+        limit: limit
+      },
+      json: true
+    };
+    util.addRequestTrace(requestOptions, trace);
+
+    if (filters) {
+      Object.keys(filters).forEach(filter => {
+        requestOptions.qs[filter] = filters[filter];
+      });
+    }
+
+    const response = await request(requestOptions);
+    return response;
+  } catch (error) {
+    return Promise.reject(util.formatError(error));
   }
-
-  return request(requestOptions);
 };
 /**
  * @async
@@ -445,25 +511,31 @@ const listWorkflowTemplates = function listWorkflowTemplates() {
  */
 
 
-const modifyWorkflowTemplate = function modifyWorkflowTemplate() {
+const modifyWorkflowTemplate = async function modifyWorkflowTemplate() {
   let accessToken = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : "null access token";
   let wfTemplateUUID = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : "null wfTemplateUUID";
   let body = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : "null body";
   let trace = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : {};
-  const MS = util.getEndpoint("workflow");
-  const requestOptions = {
-    method: "PUT",
-    uri: "".concat(MS, "/workflows/").concat(wfTemplateUUID),
-    body: body,
-    headers: {
-      Authorization: "Bearer ".concat(accessToken),
-      "Content-type": "application/json",
-      "x-api-version": "".concat(util.getVersion())
-    },
-    json: true
-  };
-  util.addRequestTrace(requestOptions, trace);
-  return request(requestOptions);
+
+  try {
+    const MS = util.getEndpoint("workflow");
+    const requestOptions = {
+      method: "PUT",
+      uri: "".concat(MS, "/workflows/").concat(wfTemplateUUID),
+      body: body,
+      headers: {
+        Authorization: "Bearer ".concat(accessToken),
+        "Content-type": "application/json",
+        "x-api-version": "".concat(util.getVersion())
+      },
+      json: true
+    };
+    util.addRequestTrace(requestOptions, trace);
+    const response = await request(requestOptions);
+    return response;
+  } catch (error) {
+    return Promise.reject(util.formatError(error));
+  }
 };
 /**
  * @async
@@ -476,24 +548,30 @@ const modifyWorkflowTemplate = function modifyWorkflowTemplate() {
  */
 
 
-const startWorkflow = function startWorkflow(accessToken) {
+const startWorkflow = async function startWorkflow(accessToken) {
   let wfTemplateUUID = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : "null wfTemplateUUID";
   let body = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : "null body";
   let trace = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : {};
-  const MS = util.getEndpoint("workflow");
-  const requestOptions = {
-    method: "POST",
-    uri: "".concat(MS, "/workflows/").concat(wfTemplateUUID, "/instances"),
-    body: body,
-    headers: {
-      Authorization: "Bearer ".concat(accessToken),
-      "Content-type": "application/json",
-      "x-api-version": "".concat(util.getVersion())
-    },
-    json: true
-  };
-  util.addRequestTrace(requestOptions, trace);
-  return request(requestOptions);
+
+  try {
+    const MS = util.getEndpoint("workflow");
+    const requestOptions = {
+      method: "POST",
+      uri: "".concat(MS, "/workflows/").concat(wfTemplateUUID, "/instances"),
+      body: body,
+      headers: {
+        Authorization: "Bearer ".concat(accessToken),
+        "Content-type": "application/json",
+        "x-api-version": "".concat(util.getVersion())
+      },
+      json: true
+    };
+    util.addRequestTrace(requestOptions, trace);
+    const response = await request(requestOptions);
+    return response;
+  } catch (error) {
+    return Promise.reject(util.formatError(error));
+  }
 };
 /**
  * @async
@@ -507,29 +585,35 @@ const startWorkflow = function startWorkflow(accessToken) {
  */
 
 
-const updateWorkflowGroup = function updateWorkflowGroup() {
+const updateWorkflowGroup = async function updateWorkflowGroup() {
   let accessToken = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : "null access token";
   let groupUUID = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : "null group uuid";
   let status = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : "null status";
   let data = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : "null data";
   let trace = arguments.length > 4 && arguments[4] !== undefined ? arguments[4] : {};
-  const MS = util.getEndpoint("workflow");
-  const requestOptions = {
-    method: "PUT",
-    uri: "".concat(MS, "/groups/").concat(groupUUID),
-    body: {
-      status: status,
-      data: data
-    },
-    headers: {
-      Authorization: "Bearer ".concat(accessToken),
-      "Content-type": "application/json",
-      "x-api-version": "".concat(util.getVersion())
-    },
-    json: true
-  };
-  util.addRequestTrace(requestOptions, trace);
-  return request(requestOptions);
+
+  try {
+    const MS = util.getEndpoint("workflow");
+    const requestOptions = {
+      method: "PUT",
+      uri: "".concat(MS, "/groups/").concat(groupUUID),
+      body: {
+        status: status,
+        data: data
+      },
+      headers: {
+        Authorization: "Bearer ".concat(accessToken),
+        "Content-type": "application/json",
+        "x-api-version": "".concat(util.getVersion())
+      },
+      json: true
+    };
+    util.addRequestTrace(requestOptions, trace);
+    const response = await request(requestOptions);
+    return response;
+  } catch (error) {
+    return Promise.reject(util.formatError(error));
+  }
 };
 
 module.exports = {

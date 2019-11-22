@@ -11,28 +11,33 @@ const util = require("./utilities");
  * @param {object} [trace={}] - optional microservice lifecycle trace headers
  * @returns {Promise<object>} - Promise resolving to a data object containing file meta-data
  */
-const getMediaFileUrl = (
+const getMediaFileUrl = async (
   accessToken = "null accessToken",
   fileUUID = "null fileUUID",
   trace = {}
 ) => {
-  const MS = util.getEndpoint("media");
+  try {
+    const MS = util.getEndpoint("media");
 
-  const requestOptions = {
-    method: "GET",
-    uri: `${MS}/media/${fileUUID}`,
-    headers: {
-      "Content-type": "application/json",
-      Authorization: `Bearer ${accessToken}`,
-      "x-api-version": `${util.getVersion()}`
-    },
-    qs: {
-      "content_url": true
-    },
-    json: true
-  };
-  util.addRequestTrace(requestOptions, trace);
-  return request(requestOptions);
+    const requestOptions = {
+      method: "GET",
+      uri: `${MS}/media/${fileUUID}`,
+      headers: {
+        "Content-type": "application/json",
+        Authorization: `Bearer ${accessToken}`,
+        "x-api-version": `${util.getVersion()}`
+      },
+      qs: {
+        "content_url": true
+      },
+      json: true
+    };
+    util.addRequestTrace(requestOptions, trace);
+    const response = await request(requestOptions);
+    return response;
+  } catch (error) {
+    return Promise.reject(util.formatError(error));
+  }
 };
 
 
@@ -44,25 +49,29 @@ const getMediaFileUrl = (
  * @param {object} [trace = {}] - optional microservice lifecycle trace headers
  * @returns {Promise<object>} - Promise resolving to a data object containing a list of groups for this user
  */
-const listUserMedia = (
+const listUserMedia = async (
   user_uuid = "no user uuid provided",
   accessToken = "null accessToken",
   trace = {}
 ) => {
-  const MS = util.getEndpoint("media");
-
-  const requestOptions = {
-    method: "GET",
-    uri: `${MS}/users/${user_uuid}/media`,
-    headers: {
-      "Content-type": "application/json",
-      Authorization: `Bearer ${accessToken}`,
-      "x-api-version": `${util.getVersion()}`
-    },
-    json: true
-  };
-  util.addRequestTrace(requestOptions, trace);
-  return request(requestOptions);
+  try {
+    const MS = util.getEndpoint("media");
+    const requestOptions = {
+      method: "GET",
+      uri: `${MS}/users/${user_uuid}/media`,
+      headers: {
+        "Content-type": "application/json",
+        Authorization: `Bearer ${accessToken}`,
+        "x-api-version": `${util.getVersion()}`
+      },
+      json: true
+    };
+    util.addRequestTrace(requestOptions, trace);
+    const response = await request(requestOptions);
+    return response;
+  } catch (error) {
+    return Promise.reject(util.formatError(error));
+  }
 };
 
 /**
@@ -75,35 +84,40 @@ const listUserMedia = (
  * @param {object} [trace = {}] - optional microservice lifecycle trace headers
  * @returns {Promise<object>} - Promise resolving to a data object containing upload attributes.
  */
-const uploadFile = (
+const uploadFile = async (
   file_name = Date.now(),
   file,
   user_uuid = "not specified user uuid ",
   accessToken = "null accessToken",
   trace = {}
 ) => {
-  const MS = util.getEndpoint("media");
-  //console.log(">>>>>", file )
-  const requestOptions = {
-    method: "POST",
-    uri: `${MS}/users/${user_uuid}/media`,
-    headers: {
-      Authorization: `Bearer ${accessToken}`,
-      "x-api-version": `${util.getVersion()}`
-    },
-    formData: {
-      file: {
-        value: file,
-        options: {
-          filename: "file_name"
-        }
+  try {
+    const MS = util.getEndpoint("media");
+    //console.log(">>>>>", file )
+    const requestOptions = {
+      method: "POST",
+      uri: `${MS}/users/${user_uuid}/media`,
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+        "x-api-version": `${util.getVersion()}`
       },
-      file_name: file_name
-    },
-    json: true
-  };
-  util.addRequestTrace(requestOptions, trace);
-  return request(requestOptions);
+      formData: {
+        file: {
+          value: file,
+          options: {
+            filename: "file_name"
+          }
+        },
+        file_name: file_name
+      },
+      json: true
+    };
+    util.addRequestTrace(requestOptions, trace);
+    const response = await request(requestOptions);
+    return response;
+  } catch (error) {
+    return Promise.reject(util.formatError(error));
+  }
 };
 
 /**
@@ -119,24 +133,38 @@ const deleteMedia = async (
   accessToken = "null accessToken",
   trace = {}
 ) => {
-  const MS = util.getEndpoint("media");
+  try {
+    const MS = util.getEndpoint("media");
 
-  const requestOptions = {
-    method: "DELETE",
-    uri: `${MS}/media/${file_id}`,
-    headers: {
-      Authorization: `Bearer ${accessToken}`,
-      "x-api-version": `${util.getVersion()}`
-    },
-    json: true,
-    resolveWithFullResponse: true
-  };
-  util.addRequestTrace(requestOptions, trace);
-  const response = await request(requestOptions);
-  if(response.statusCode === 204) {
-    return {"status": "ok"};
-  } else {
-    return {"status": "failed"};
+    const requestOptions = {
+      method: "DELETE",
+      uri: `${MS}/media/${file_id}`,
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+        "x-api-version": `${util.getVersion()}`
+      },
+      json: true,
+      resolveWithFullResponse: true
+    };
+    util.addRequestTrace(requestOptions, trace);
+    const response = await request(requestOptions);
+    if(response.statusCode === 204) {
+      return {"status": "ok"};
+    } else {
+      // this is an edge case, but protects against unexpected 2xx or 3xx response codes.
+      throw {
+        "code": response.statusCode,
+        "message": typeof response.body === "string" ? response.body : "delete media failed",
+        "trace_id": requestOptions.hasOwnProperty("headers") && requestOptions.headers.hasOwnProperty("trace")
+          ? requestOptions.headers.trace 
+          : undefined,
+        "details": typeof response.body === "object" && response.body !== null
+          ? [response.body]
+          : []
+      };
+    }
+  } catch (error) {
+    return Promise.reject(util.formatError(error));
   }
 };
 

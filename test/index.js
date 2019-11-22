@@ -23,7 +23,6 @@ describe("MS SDK Index", function () {
       "Messaging",
       "Objects",
       "Util",
-      "Task",
       "setMsHost",
       "getMsHost",
       "setMsAuthHost",

@@ -13,8 +13,6 @@ const Objects = require("./objects");
 
 const Util = require("./utilities");
 
-const Task = require("./task");
-
 const Groups = require("./groups");
 
 const ShortUrls = require("./shorturls");
@@ -138,7 +136,6 @@ module.exports = {
   Messaging,
   Objects,
   Util,
-  Task,
   setMsHost,
   getMsHost,
   setMsAuthHost,

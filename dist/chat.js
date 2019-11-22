@@ -26,7 +26,7 @@ const objectMerge = require("object-merge");
  */
 
 
-const createRoom = function createRoom() {
+const createRoom = async function createRoom() {
   let access_token = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : "null access token";
   let userUUID = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : "null user uuid";
   let name = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : "no name specified for group";
@@ -36,30 +36,36 @@ const createRoom = function createRoom() {
   let accountUUID = arguments.length > 6 && arguments[6] !== undefined ? arguments[6] : undefined;
   let metadata = arguments.length > 7 && arguments[7] !== undefined ? arguments[7] : {};
   let trace = arguments.length > 8 && arguments[8] !== undefined ? arguments[8] : {};
-  const MS = util.getEndpoint("chat");
-  const b = {
-    name: name,
-    topic: topic,
-    description: description,
-    account_uuid: accountUUID,
-    group_uuid: groupUUID,
-    owner_uuid: userUUID,
-    metadata: metadata
-  }; //console.log('bbbbbbbb', b)
 
-  const requestOptions = {
-    method: "POST",
-    uri: "".concat(MS, "/rooms"),
-    body: b,
-    headers: {
-      "Content-type": "application/json",
-      Authorization: "Bearer ".concat(access_token),
-      "x-api-version": "".concat(util.getVersion())
-    },
-    json: true
-  };
-  util.addRequestTrace(requestOptions, trace);
-  return request(requestOptions);
+  try {
+    const MS = util.getEndpoint("chat");
+    const b = {
+      name: name,
+      topic: topic,
+      description: description,
+      account_uuid: accountUUID,
+      group_uuid: groupUUID,
+      owner_uuid: userUUID,
+      metadata: metadata
+    }; //console.log('bbbbbbbb', b)
+
+    const requestOptions = {
+      method: "POST",
+      uri: "".concat(MS, "/rooms"),
+      body: b,
+      headers: {
+        "Content-type": "application/json",
+        Authorization: "Bearer ".concat(access_token),
+        "x-api-version": "".concat(util.getVersion())
+      },
+      json: true
+    };
+    util.addRequestTrace(requestOptions, trace);
+    const response = await request(requestOptions);
+    return response;
+  } catch (error) {
+    Promise.reject(util.formatError(error));
+  }
 };
 /**
  * @async
@@ -71,28 +77,34 @@ const createRoom = function createRoom() {
  */
 
 
-const listRooms = function listRooms() {
+const listRooms = async function listRooms() {
   let access_token = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : "null acess token";
   let filter = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : undefined;
   let trace = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : {};
-  const MS = util.getEndpoint("chat");
-  const requestOptions = {
-    method: "GET",
-    uri: "".concat(MS, "/rooms"),
-    headers: {
-      "Content-type": "application/json",
-      Authorization: "Bearer ".concat(access_token),
-      "x-api-version": "".concat(util.getVersion())
-    },
-    json: true
-  };
 
-  if (filter !== undefined) {
-    requestOptions.qs = filter;
+  try {
+    const MS = util.getEndpoint("chat");
+    const requestOptions = {
+      method: "GET",
+      uri: "".concat(MS, "/rooms"),
+      headers: {
+        "Content-type": "application/json",
+        Authorization: "Bearer ".concat(access_token),
+        "x-api-version": "".concat(util.getVersion())
+      },
+      json: true
+    };
+
+    if (filter !== undefined) {
+      requestOptions.qs = filter;
+    }
+
+    util.addRequestTrace(requestOptions, trace);
+    const response = await request(requestOptions);
+    return response;
+  } catch (error) {
+    Promise.reject(util.formatError(error));
   }
-
-  util.addRequestTrace(requestOptions, trace);
-  return request(requestOptions);
 };
 /**
  * @async
@@ -104,23 +116,29 @@ const listRooms = function listRooms() {
  */
 
 
-const getRoom = function getRoom() {
+const getRoom = async function getRoom() {
   let access_token = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : "null access token";
   let roomUUID = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : "no room uuid specified";
   let trace = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : {};
-  const MS = util.getEndpoint("chat");
-  const requestOptions = {
-    method: "GET",
-    uri: "".concat(MS, "/rooms/").concat(roomUUID),
-    headers: {
-      "Content-type": "application/json",
-      Authorization: "Bearer ".concat(access_token),
-      "x-api-version": "".concat(util.getVersion())
-    },
-    json: true
-  };
-  util.addRequestTrace(requestOptions, trace);
-  return request(requestOptions);
+
+  try {
+    const MS = util.getEndpoint("chat");
+    const requestOptions = {
+      method: "GET",
+      uri: "".concat(MS, "/rooms/").concat(roomUUID),
+      headers: {
+        "Content-type": "application/json",
+        Authorization: "Bearer ".concat(access_token),
+        "x-api-version": "".concat(util.getVersion())
+      },
+      json: true
+    };
+    util.addRequestTrace(requestOptions, trace);
+    const response = await request(requestOptions);
+    return response;
+  } catch (error) {
+    Promise.reject(util.formatError(error));
+  }
 };
 /**
  * @async
@@ -132,23 +150,29 @@ const getRoom = function getRoom() {
  */
 
 
-const deleteRoom = function deleteRoom() {
+const deleteRoom = async function deleteRoom() {
   let access_token = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : "null acess token";
   let roomUUID = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : "no room uuid specified";
   let trace = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : {};
-  const MS = util.getEndpoint("chat");
-  const requestOptions = {
-    method: "DELETE",
-    uri: "".concat(MS, "/rooms/").concat(roomUUID),
-    headers: {
-      "Content-type": "application/json",
-      Authorization: "Bearer ".concat(access_token),
-      "x-api-version": "".concat(util.getVersion())
-    },
-    json: true
-  };
-  util.addRequestTrace(requestOptions, trace);
-  return request(requestOptions);
+
+  try {
+    const MS = util.getEndpoint("chat");
+    const requestOptions = {
+      method: "DELETE",
+      uri: "".concat(MS, "/rooms/").concat(roomUUID),
+      headers: {
+        "Content-type": "application/json",
+        Authorization: "Bearer ".concat(access_token),
+        "x-api-version": "".concat(util.getVersion())
+      },
+      json: true
+    };
+    util.addRequestTrace(requestOptions, trace);
+    const response = await request(requestOptions);
+    return response;
+  } catch (error) {
+    Promise.reject(util.formatError(error));
+  }
 };
 /**
  * @async
@@ -161,25 +185,31 @@ const deleteRoom = function deleteRoom() {
  */
 
 
-const updateRoomInfo = function updateRoomInfo() {
+const updateRoomInfo = async function updateRoomInfo() {
   let access_token = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : "null access_token";
   let roomUUID = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : "no room uuid specified";
   let info = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : {};
   let trace = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : {};
-  const MS = util.getEndpoint("chat");
-  const requestOptions = {
-    method: "PUT",
-    uri: "".concat(MS, "/rooms/").concat(roomUUID, "/info"),
-    body: info,
-    headers: {
-      "Content-type": "application/json",
-      Authorization: "Bearer ".concat(access_token),
-      "x-api-version": "".concat(util.getVersion())
-    },
-    json: true
-  };
-  util.addRequestTrace(requestOptions, trace);
-  return request(requestOptions);
+
+  try {
+    const MS = util.getEndpoint("chat");
+    const requestOptions = {
+      method: "PUT",
+      uri: "".concat(MS, "/rooms/").concat(roomUUID, "/info"),
+      body: info,
+      headers: {
+        "Content-type": "application/json",
+        Authorization: "Bearer ".concat(access_token),
+        "x-api-version": "".concat(util.getVersion())
+      },
+      json: true
+    };
+    util.addRequestTrace(requestOptions, trace);
+    const response = await request(requestOptions);
+    return response;
+  } catch (error) {
+    Promise.reject(util.formatError(error));
+  }
 };
 /**
  * @async
@@ -192,26 +222,32 @@ const updateRoomInfo = function updateRoomInfo() {
  */
 
 
-const updateRoomMeta = function updateRoomMeta() {
+const updateRoomMeta = async function updateRoomMeta() {
   let access_token = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : "null access_token";
   let roomUUID = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : "no room uuid specified";
   let meta = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : {};
   let trace = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : {};
-  const MS = util.getEndpoint("chat"); //console.log('mmmmmmm', meta)
 
-  const requestOptions = {
-    method: "PUT",
-    uri: "".concat(MS, "/rooms/").concat(roomUUID, "/meta"),
-    body: meta,
-    headers: {
-      "Content-type": "application/json",
-      Authorization: "Bearer ".concat(access_token),
-      "x-api-version": "".concat(util.getVersion())
-    },
-    json: true
-  };
-  util.addRequestTrace(requestOptions, trace);
-  return request(requestOptions);
+  try {
+    const MS = util.getEndpoint("chat"); //console.log('mmmmmmm', meta)
+
+    const requestOptions = {
+      method: "PUT",
+      uri: "".concat(MS, "/rooms/").concat(roomUUID, "/meta"),
+      body: meta,
+      headers: {
+        "Content-type": "application/json",
+        Authorization: "Bearer ".concat(access_token),
+        "x-api-version": "".concat(util.getVersion())
+      },
+      json: true
+    };
+    util.addRequestTrace(requestOptions, trace);
+    const response = await request(requestOptions);
+    return response;
+  } catch (error) {
+    Promise.reject(util.formatError(error));
+  }
 };
 /**
  * @async
@@ -223,24 +259,30 @@ const updateRoomMeta = function updateRoomMeta() {
  */
 
 
-const getRoomMembers = function getRoomMembers() {
+const getRoomMembers = async function getRoomMembers() {
   let access_token = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : "null access_token";
   let roomUUID = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : "no room uuid specified";
   let trace = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : {};
-  const MS = util.getEndpoint("chat"); //console.log('mmmmmmm', meta)
 
-  const requestOptions = {
-    method: "GET",
-    uri: "".concat(MS, "/rooms/").concat(roomUUID, "/members"),
-    headers: {
-      "Content-type": "application/json",
-      Authorization: "Bearer ".concat(access_token),
-      "x-api-version": "".concat(util.getVersion())
-    },
-    json: true
-  };
-  util.addRequestTrace(requestOptions, trace);
-  return request(requestOptions);
+  try {
+    const MS = util.getEndpoint("chat"); //console.log('mmmmmmm', meta)
+
+    const requestOptions = {
+      method: "GET",
+      uri: "".concat(MS, "/rooms/").concat(roomUUID, "/members"),
+      headers: {
+        "Content-type": "application/json",
+        Authorization: "Bearer ".concat(access_token),
+        "x-api-version": "".concat(util.getVersion())
+      },
+      json: true
+    };
+    util.addRequestTrace(requestOptions, trace);
+    const response = await request(requestOptions);
+    return response;
+  } catch (error) {
+    Promise.reject(util.formatError(error));
+  }
 };
 /**
  * @async
@@ -253,26 +295,32 @@ const getRoomMembers = function getRoomMembers() {
  */
 
 
-const addMember = function addMember() {
+const addMember = async function addMember() {
   let access_token = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : "null access_token";
   let roomUUID = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : "no room uuid specified";
   let memberData = arguments.length > 2 ? arguments[2] : undefined;
   let trace = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : {};
-  const MS = util.getEndpoint("chat"); //console.log('mmmmmmm', meta)
 
-  const requestOptions = {
-    method: "POST",
-    uri: "".concat(MS, "/rooms/").concat(roomUUID, "/members"),
-    body: memberData,
-    headers: {
-      "Content-type": "application/json",
-      Authorization: "Bearer ".concat(access_token),
-      "x-api-version": "".concat(util.getVersion())
-    },
-    json: true
-  };
-  util.addRequestTrace(requestOptions, trace);
-  return request(requestOptions);
+  try {
+    const MS = util.getEndpoint("chat"); //console.log('mmmmmmm', meta)
+
+    const requestOptions = {
+      method: "POST",
+      uri: "".concat(MS, "/rooms/").concat(roomUUID, "/members"),
+      body: memberData,
+      headers: {
+        "Content-type": "application/json",
+        Authorization: "Bearer ".concat(access_token),
+        "x-api-version": "".concat(util.getVersion())
+      },
+      json: true
+    };
+    util.addRequestTrace(requestOptions, trace);
+    const response = await request(requestOptions);
+    return response;
+  } catch (error) {
+    Promise.reject(util.formatError(error));
+  }
 };
 /**
  * @async
@@ -285,25 +333,31 @@ const addMember = function addMember() {
  */
 
 
-const deleteMember = function deleteMember() {
+const deleteMember = async function deleteMember() {
   let access_token = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : "null access_token";
   let roomUUID = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : "no room uuid specified";
   let memberUUID = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : "empty";
   let trace = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : {};
-  const MS = util.getEndpoint("chat"); //console.log('mmmmmmm', meta)
 
-  const requestOptions = {
-    method: "DELETE",
-    uri: "".concat(MS, "/rooms/").concat(roomUUID, "/members/").concat(memberUUID),
-    headers: {
-      "Content-type": "application/json",
-      Authorization: "Bearer ".concat(access_token),
-      "x-api-version": "".concat(util.getVersion())
-    },
-    json: true
-  };
-  util.addRequestTrace(requestOptions, trace);
-  return request(requestOptions);
+  try {
+    const MS = util.getEndpoint("chat"); //console.log('mmmmmmm', meta)
+
+    const requestOptions = {
+      method: "DELETE",
+      uri: "".concat(MS, "/rooms/").concat(roomUUID, "/members/").concat(memberUUID),
+      headers: {
+        "Content-type": "application/json",
+        Authorization: "Bearer ".concat(access_token),
+        "x-api-version": "".concat(util.getVersion())
+      },
+      json: true
+    };
+    util.addRequestTrace(requestOptions, trace);
+    const response = await request(requestOptions);
+    return response;
+  } catch (error) {
+    Promise.reject(util.formatError(error));
+  }
 };
 /**
  * @async
@@ -316,28 +370,34 @@ const deleteMember = function deleteMember() {
  */
 
 
-const getMessages = function getMessages() {
+const getMessages = async function getMessages() {
   let access_token = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : "null access_token";
   let roomUUID = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : "no room uuid specified";
   let max = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : 100;
   let trace = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : {};
-  const MS = util.getEndpoint("chat"); //console.log('mmmmmmm', meta)
 
-  const requestOptions = {
-    method: "GET",
-    uri: "".concat(MS, "/rooms/").concat(roomUUID, "/messages"),
-    qs: {
-      max: max
-    },
-    headers: {
-      "Content-type": "application/json",
-      Authorization: "Bearer ".concat(access_token),
-      "x-api-version": "".concat(util.getVersion())
-    },
-    json: true
-  };
-  util.addRequestTrace(requestOptions, trace);
-  return request(requestOptions);
+  try {
+    const MS = util.getEndpoint("chat"); //console.log('mmmmmmm', meta)
+
+    const requestOptions = {
+      method: "GET",
+      uri: "".concat(MS, "/rooms/").concat(roomUUID, "/messages"),
+      qs: {
+        max: max
+      },
+      headers: {
+        "Content-type": "application/json",
+        Authorization: "Bearer ".concat(access_token),
+        "x-api-version": "".concat(util.getVersion())
+      },
+      json: true
+    };
+    util.addRequestTrace(requestOptions, trace);
+    const response = await request(requestOptions);
+    return response;
+  } catch (error) {
+    Promise.reject(util.formatError(error));
+  }
 };
 /**
  * @async
@@ -351,33 +411,39 @@ const getMessages = function getMessages() {
  */
 
 
-const sendMessage = function sendMessage() {
+const sendMessage = async function sendMessage() {
   let access_token = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : "null access_token";
   let userUUID = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : "null user uuid";
   let roomUUID = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : "no room uuid specified";
   let message = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : "missing text";
   let trace = arguments.length > 4 && arguments[4] !== undefined ? arguments[4] : {};
-  const MS = util.getEndpoint("chat");
-  const b = {
-    content: {
-      contentType: "string",
-      content: message
-    },
-    user_uuid: userUUID
-  };
-  const requestOptions = {
-    method: "POST",
-    uri: "".concat(MS, "/rooms/").concat(roomUUID, "/messages"),
-    body: b,
-    headers: {
-      "Content-type": "application/json",
-      Authorization: "Bearer ".concat(access_token),
-      "x-api-version": "".concat(util.getVersion())
-    },
-    json: true
-  };
-  util.addRequestTrace(requestOptions, trace);
-  return request(requestOptions);
+
+  try {
+    const MS = util.getEndpoint("chat");
+    const b = {
+      content: {
+        contentType: "string",
+        content: message
+      },
+      user_uuid: userUUID
+    };
+    const requestOptions = {
+      method: "POST",
+      uri: "".concat(MS, "/rooms/").concat(roomUUID, "/messages"),
+      body: b,
+      headers: {
+        "Content-type": "application/json",
+        Authorization: "Bearer ".concat(access_token),
+        "x-api-version": "".concat(util.getVersion())
+      },
+      json: true
+    };
+    util.addRequestTrace(requestOptions, trace);
+    const response = await request(requestOptions);
+    return response;
+  } catch (error) {
+    Promise.reject(util.formatError(error));
+  }
 };
 /**
  * @async
@@ -390,35 +456,28 @@ const sendMessage = function sendMessage() {
  */
 
 
-const getRoomInfo = function getRoomInfo() {
+const getRoomInfo = async function getRoomInfo() {
   let access_token = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : "null access_token";
   let roomUUID = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : "no room uuid specified";
   let message_count = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : 100;
   let trace = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : {};
-  return new Promise((resolve, reject) => {
+
+  try {
     const newMeta = util.generateNewMetaData;
     const pInfo = getRoom(access_token, roomUUID, trace);
     let nextMeta = objectMerge({}, trace, newMeta(trace));
     const pMessages = getMessages(access_token, roomUUID, message_count, nextMeta);
-    Promise.all([pInfo, pMessages]).then(pData => {
-      //console.log('--------', pData)
-      // get group data
-      nextMeta = objectMerge({}, trace, newMeta(trace));
-      Groups.getGroup(access_token, pData[0].group_uuid, nextMeta).then(groupData => {
-        resolve({
-          info: pData[0],
-          members: groupData.members,
-          messages: pData[1].items
-        });
-      }).catch(groupError => {
-        console.log("##### Group Error in getRoomInfo", groupError);
-        reject(groupError);
-      });
-    }).catch(error => {
-      console.log("##### Error getRoomInfo", error);
-      reject(error);
-    });
-  });
+    const pData = await Promise.all([pInfo, pMessages]);
+    nextMeta = objectMerge({}, trace, newMeta(trace));
+    const groupData = await Groups.getGroup(access_token, pData[0].group_uuid, nextMeta);
+    return {
+      info: pData[0],
+      members: groupData.members,
+      messages: pData[1].items
+    };
+  } catch (error) {
+    Promise.reject(util.formatError(error));
+  }
 };
 
 module.exports = {

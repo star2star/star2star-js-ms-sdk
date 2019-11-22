@@ -232,36 +232,47 @@ const filterResponse = (response, filters) => {
 
 const aggregate = async function aggregate(request, requestOptions) {
   let trace = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : {};
+
   //uncomment and set to less than total expected resources to force aggregation for testing.
   //requestOptions.qs.limit = 1;
-  let total,
-      offset = 0;
+  try {
+    let total,
+        offset = 0;
 
-  const makeRequest = async function makeRequest(request, requestOptions) {
-    let trace = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : {};
-    const nextTrace = generateNewMetaData(trace);
-    addRequestTrace(requestOptions, nextTrace);
-    const response = await request(requestOptions);
-    total = response.metadata.total;
-    offset = response.metadata.offset + response.metadata.count;
+    const makeRequest = async function makeRequest(request, requestOptions) {
+      let trace = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : {};
 
-    if (total > offset) {
-      requestOptions.qs.offset = offset;
-      const nextResponse = await makeRequest(request, requestOptions);
-      const items = response.items.concat(nextResponse.items);
-      response.items = items;
-      response.metadata.offset = 0;
-      response.metadata.count = total;
-      response.metadata.limit = total;
-      delete response.links; //the links are invalid now
+      try {
+        const nextTrace = generateNewMetaData(trace);
+        addRequestTrace(requestOptions, nextTrace);
+        const response = await request(requestOptions);
+        total = response.metadata.total;
+        offset = response.metadata.offset + response.metadata.count;
 
-      return response;
-    } else {
-      return response;
-    }
-  };
+        if (total > offset) {
+          requestOptions.qs.offset = offset;
+          const nextResponse = await makeRequest(request, requestOptions);
+          const items = response.items.concat(nextResponse.items);
+          response.items = items;
+          response.metadata.offset = 0;
+          response.metadata.count = total;
+          response.metadata.limit = total;
+          delete response.links; //the links are invalid now
 
-  return await makeRequest(request, requestOptions, trace);
+          return response;
+        } else {
+          return response;
+        }
+      } catch (error) {
+        return Promise.reject(formatError(error));
+      }
+    };
+
+    const response = await makeRequest(request, requestOptions, trace);
+    return response;
+  } catch (error) {
+    return Promise.reject(formatError(error));
+  }
 };
 /**
  * @description Returns true is window is found and sets sdk namespace if needed.

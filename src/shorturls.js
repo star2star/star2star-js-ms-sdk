@@ -14,26 +14,31 @@ const objectMerge = require("object-merge");
  * @param {object} [trace = {}] - optional microservice lifecycle trace headers
  * @returns {Promise<object>} - Promise resolving to a data object containing a list of short urls
  */
-const listShortUrls = (
+const listShortUrls = async (
   userUuid = "null user uuid",
   accessToken = "null accessToken",
   options = {},
   trace = {}
 ) => {
-  const MS = util.getEndpoint("shorturls");
-  const requestOptions = {
-    method: "GET",
-    uri: `${MS}/shorturls?user_uuid=${userUuid}`,
-    qs: options,
-    headers: {
-      Authorization: `Bearer ${accessToken}`,
-      "Content-type": "application/json",
-      "x-api-version": `${util.getVersion()}`
-    },
-    json: true
-  };
-  util.addRequestTrace(requestOptions, trace);
-  return request(requestOptions);
+  try {
+    const MS = util.getEndpoint("shorturls");
+    const requestOptions = {
+      method: "GET",
+      uri: `${MS}/shorturls?user_uuid=${userUuid}`,
+      qs: options,
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+        "Content-type": "application/json",
+        "x-api-version": `${util.getVersion()}`
+      },
+      json: true
+    };
+    util.addRequestTrace(requestOptions, trace);
+    const response = await request(requestOptions);
+    return response;
+  } catch (error) {
+    return Promise.reject(util.formatError(error));
+  }
 };
 
 /**
@@ -59,27 +64,32 @@ const listShortUrls = (
  * @param {object} [trace = {}] - optional microservice lifecycle trace headers
  * @returns {Promise<object>} - Promise resolving to a data object containing a list of short urls
  */
-const createShortUrl = (accessToken = "null accessToken", options = {}, trace ={}) => {
-  const MS = util.getEndpoint("shorturls");
+const createShortUrl = async (accessToken = "null accessToken", options = {}, trace ={}) => {
+  try {
+    const MS = util.getEndpoint("shorturls");
 
-  const b = objectMerge({}, options);
-  if (!b.hasOwnProperty("url")) {
-    return Promise.reject("options object missing url property");
+    const b = objectMerge({}, options);
+    if (!b.hasOwnProperty("url")) {
+      return Promise.reject("options object missing url property");
+    }
+    //console.log('bbbbbbbb', b)
+    const requestOptions = {
+      method: "POST",
+      uri: `${MS}/shorturls`,
+      body: b,
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+        "Content-type": "application/json",
+        "x-api-version": `${util.getVersion()}`
+      },
+      json: true
+    };
+    util.addRequestTrace(requestOptions, trace);
+    const response = await request(requestOptions);
+    return response;
+  } catch (error) {
+    return Promise.reject(util.formatError(error));
   }
-  //console.log('bbbbbbbb', b)
-  const requestOptions = {
-    method: "POST",
-    uri: `${MS}/shorturls`,
-    body: b,
-    headers: {
-      Authorization: `Bearer ${accessToken}`,
-      "Content-type": "application/json",
-      "x-api-version": `${util.getVersion()}`
-    },
-    json: true
-  };
-  util.addRequestTrace(requestOptions, trace);
-  return request(requestOptions);
 };
 
 /**
@@ -91,39 +101,48 @@ const createShortUrl = (accessToken = "null accessToken", options = {}, trace ={
  * @param {object} [trace = {}] - optional microservice lifecycle trace headers
  * @returns {Promise<empty>} - Promise resolving success or failure.
  */
-const deleteShortCode = (
+const deleteShortCode = async (
   userUuid = "null user uuid",
   accessToken = "null accessToken",
   short_code = "notdefined",
   trace = {}
 ) => {
-  const MS = util.getEndpoint("shorturls");
+  try {
+    const MS = util.getEndpoint("shorturls");
 
-  //console.log('bbbbbbbb', b)
-  const requestOptions = {
-    method: "DELETE",
-    uri: `${MS}/shorturls/${short_code}`,
-    headers: {
-      Authorization: `Bearer ${accessToken}`,
-      "Content-type": "application/json",
-      "x-api-version": `${util.getVersion()}`,
-      user_uuid: userUuid
-    },
-    json: true,
-    resolveWithFullResponse: true
-  };
-  util.addRequestTrace(requestOptions, trace);
-  return new Promise(function(resolve, reject) {
-    request(requestOptions)
-      .then(function(responseData) {
-        responseData.statusCode === 204
-          ? resolve({ status: "ok" })
-          : reject({ status: "failed" });
-      })
-      .catch(function(error) {
-        reject(error);
-      });
-  });
+    //console.log('bbbbbbbb', b)
+    const requestOptions = {
+      method: "DELETE",
+      uri: `${MS}/shorturls/${short_code}`,
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+        "Content-type": "application/json",
+        "x-api-version": `${util.getVersion()}`,
+        user_uuid: userUuid
+      },
+      json: true,
+      resolveWithFullResponse: true
+    };
+    util.addRequestTrace(requestOptions, trace);
+    const response = await request(requestOptions);
+    if(response.statusCode === 204) {
+      return { status: "ok" };
+    } else {
+      // this is an edge case, but protects against unexpected 2xx or 3xx response codes.
+      throw {
+        "code": response.statusCode,
+        "message": typeof response.body === "string" ? response.body : "assign permission to role failed",
+        "trace_id": requestOptions.hasOwnProperty("headers") && requestOptions.headers.hasOwnProperty("trace")
+          ? requestOptions.headers.trace 
+          : undefined,
+        "details": typeof response.body === "object" && response.body !== null
+          ? [response.body]
+          : []
+      };
+    }
+  } catch (error) {
+    return Promise.reject(util.formatError(error));
+  }
 };
 
 module.exports = {

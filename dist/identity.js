@@ -20,29 +20,34 @@ const createIdentity = async function createIdentity() {
   let accountUUID = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : "null accountUUID";
   let body = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : "null body";
   let trace = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : {};
-  const MS = util.getEndpoint("identity");
-  const requestOptions = {
-    method: "POST",
-    uri: "".concat(MS, "/accounts/").concat(accountUUID, "/identities"),
-    headers: {
-      Authorization: "Bearer ".concat(accessToken),
-      "Content-type": "application/json",
-      "x-api-version": "".concat(util.getVersion())
-    },
-    body: body,
-    json: true,
-    resolveWithFullResponse: true
-  };
-  util.addRequestTrace(requestOptions, trace);
-  const response = await request(requestOptions);
-  const identity = response.body; // update returns a 202....suspend return until the new resource is ready
 
-  if (response.hasOwnProperty("statusCode") && response.statusCode === 202 && response.headers.hasOwnProperty("location")) {
-    await util.pendingResource(response.headers.location, requestOptions, //reusing the request options instead of passing in multiple params
-    trace, identity.hasOwnProperty("resource_status") ? identity.resource_status : "complete");
+  try {
+    const MS = util.getEndpoint("identity");
+    const requestOptions = {
+      method: "POST",
+      uri: "".concat(MS, "/accounts/").concat(accountUUID, "/identities"),
+      headers: {
+        Authorization: "Bearer ".concat(accessToken),
+        "Content-type": "application/json",
+        "x-api-version": "".concat(util.getVersion())
+      },
+      body: body,
+      json: true,
+      resolveWithFullResponse: true
+    };
+    util.addRequestTrace(requestOptions, trace);
+    const response = await request(requestOptions);
+    const identity = response.body; // update returns a 202....suspend return until the new resource is ready
+
+    if (response.hasOwnProperty("statusCode") && response.statusCode === 202 && response.headers.hasOwnProperty("location")) {
+      await util.pendingResource(response.headers.location, requestOptions, //reusing the request options instead of passing in multiple params
+      trace, identity.hasOwnProperty("resource_status") ? identity.resource_status : "complete");
+    }
+
+    return identity;
+  } catch (error) {
+    return Promise.reject(util.formatError(error));
   }
-
-  return identity;
 };
 /**
  * @async
@@ -55,25 +60,31 @@ const createIdentity = async function createIdentity() {
  */
 
 
-const modifyIdentity = function modifyIdentity() {
+const modifyIdentity = async function modifyIdentity() {
   let accessToken = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : "null accessToken";
   let userUuid = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : "null userUuid";
   let body = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : "null body";
   let trace = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : {};
-  const MS = util.getEndpoint("identity");
-  const requestOptions = {
-    method: "POST",
-    uri: "".concat(MS, "/identities/").concat(userUuid, "/modify"),
-    headers: {
-      Authorization: "Bearer ".concat(accessToken),
-      "Content-type": "application/json",
-      "x-api-version": "".concat(util.getVersion())
-    },
-    body: body,
-    json: true
-  };
-  util.addRequestTrace(requestOptions, trace);
-  return request(requestOptions);
+
+  try {
+    const MS = util.getEndpoint("identity");
+    const requestOptions = {
+      method: "POST",
+      uri: "".concat(MS, "/identities/").concat(userUuid, "/modify"),
+      headers: {
+        Authorization: "Bearer ".concat(accessToken),
+        "Content-type": "application/json",
+        "x-api-version": "".concat(util.getVersion())
+      },
+      body: body,
+      json: true
+    };
+    util.addRequestTrace(requestOptions, trace);
+    const response = await request(requestOptions);
+    return response;
+  } catch (error) {
+    return Promise.reject(util.formatError(error));
+  }
 };
 /**
  * @async
@@ -86,25 +97,31 @@ const modifyIdentity = function modifyIdentity() {
  */
 
 
-const modifyIdentityProps = function modifyIdentityProps() {
+const modifyIdentityProps = async function modifyIdentityProps() {
   let accessToken = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : "null accessToken";
   let userUuid = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : "null userUuid";
   let body = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : "null body";
   let trace = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : {};
-  const MS = util.getEndpoint("identity");
-  const requestOptions = {
-    method: "POST",
-    uri: "".concat(MS, "/identities/").concat(userUuid, "/properties/modify"),
-    headers: {
-      Authorization: "Bearer ".concat(accessToken),
-      "Content-type": "application/json",
-      "x-api-version": "".concat(util.getVersion())
-    },
-    body: body,
-    json: true
-  };
-  util.addRequestTrace(requestOptions, trace);
-  return request(requestOptions);
+
+  try {
+    const MS = util.getEndpoint("identity");
+    const requestOptions = {
+      method: "POST",
+      uri: "".concat(MS, "/identities/").concat(userUuid, "/properties/modify"),
+      headers: {
+        Authorization: "Bearer ".concat(accessToken),
+        "Content-type": "application/json",
+        "x-api-version": "".concat(util.getVersion())
+      },
+      body: body,
+      json: true
+    };
+    util.addRequestTrace(requestOptions, trace);
+    const response = await request(requestOptions);
+    return response;
+  } catch (error) {
+    return Promise.reject(util.formatError(error));
+  }
 };
 /**
  * @async
@@ -116,34 +133,43 @@ const modifyIdentityProps = function modifyIdentityProps() {
  */
 
 
-const deactivateIdentity = function deactivateIdentity() {
+const deactivateIdentity = async function deactivateIdentity() {
   let accessToken = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : "null accessToken";
   let userUuid = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : "null userUuid";
   let trace = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : {};
-  const MS = util.getEndpoint("identity");
-  const requestOptions = {
-    method: "POST",
-    uri: "".concat(MS, "/identities/").concat(userUuid, "/deactivate"),
-    headers: {
-      Authorization: "Bearer ".concat(accessToken),
-      "Content-type": "application/json",
-      "x-api-version": "".concat(util.getVersion())
-    },
-    json: true,
-    resolveWithFullResponse: true
-  };
-  util.addRequestTrace(requestOptions, trace);
-  return new Promise(function (resolve, reject) {
-    request(requestOptions).then(function (responseData) {
-      responseData.statusCode === 204 ? resolve({
+
+  try {
+    const MS = util.getEndpoint("identity");
+    const requestOptions = {
+      method: "POST",
+      uri: "".concat(MS, "/identities/").concat(userUuid, "/deactivate"),
+      headers: {
+        Authorization: "Bearer ".concat(accessToken),
+        "Content-type": "application/json",
+        "x-api-version": "".concat(util.getVersion())
+      },
+      json: true,
+      resolveWithFullResponse: true
+    };
+    util.addRequestTrace(requestOptions, trace);
+    const response = await request(requestOptions);
+
+    if (response.statusCode === 204) {
+      return {
         status: "ok"
-      }) : reject({
-        status: "failed"
-      });
-    }).catch(function (error) {
-      reject(error);
-    });
-  });
+      };
+    } else {
+      // this is an edge case, but protects against unexpected 2xx or 3xx response codes.
+      throw {
+        "code": response.statusCode,
+        "message": typeof response.body === "string" ? response.body : "deactivate identity failed",
+        "trace_id": requestOptions.hasOwnProperty("headers") && requestOptions.headers.hasOwnProperty("trace") ? requestOptions.headers.trace : undefined,
+        "details": typeof response.body === "object" && response.body !== null ? [response.body] : []
+      };
+    }
+  } catch (error) {
+    return Promise.reject(util.formatError(error));
+  }
 };
 /**
  * @async
@@ -155,34 +181,43 @@ const deactivateIdentity = function deactivateIdentity() {
  */
 
 
-const reactivateIdentity = function reactivateIdentity() {
+const reactivateIdentity = async function reactivateIdentity() {
   let accessToken = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : "null accessToken";
   let userUuid = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : "null userUuid";
   let trace = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : {};
-  const MS = util.getEndpoint("identity");
-  const requestOptions = {
-    method: "POST",
-    uri: "".concat(MS, "/identities/").concat(userUuid, "/reactivate"),
-    headers: {
-      Authorization: "Bearer ".concat(accessToken),
-      "Content-type": "application/json",
-      "x-api-version": "".concat(util.getVersion())
-    },
-    json: true,
-    resolveWithFullResponse: true
-  };
-  util.addRequestTrace(requestOptions, trace);
-  return new Promise(function (resolve, reject) {
-    request(requestOptions).then(function (responseData) {
-      responseData.statusCode === 204 ? resolve({
+
+  try {
+    const MS = util.getEndpoint("identity");
+    const requestOptions = {
+      method: "POST",
+      uri: "".concat(MS, "/identities/").concat(userUuid, "/reactivate"),
+      headers: {
+        Authorization: "Bearer ".concat(accessToken),
+        "Content-type": "application/json",
+        "x-api-version": "".concat(util.getVersion())
+      },
+      json: true,
+      resolveWithFullResponse: true
+    };
+    util.addRequestTrace(requestOptions, trace);
+    const response = await request(requestOptions);
+
+    if (response.statusCode === 204) {
+      return {
         status: "ok"
-      }) : reject({
-        status: "failed"
-      });
-    }).catch(function (error) {
-      reject(error);
-    });
-  });
+      };
+    } else {
+      // this is an edge case, but protects against unexpected 2xx or 3xx response codes.
+      throw {
+        "code": response.statusCode,
+        "message": typeof response.body === "string" ? response.body : "reactivate identity failed",
+        "trace_id": requestOptions.hasOwnProperty("headers") && requestOptions.headers.hasOwnProperty("trace") ? requestOptions.headers.trace : undefined,
+        "details": typeof response.body === "object" && response.body !== null ? [response.body] : []
+      };
+    }
+  } catch (error) {
+    return Promise.reject(util.formatError(error));
+  }
 };
 /**
  * @async
@@ -195,37 +230,46 @@ const reactivateIdentity = function reactivateIdentity() {
  */
 
 
-const createAlias = function createAlias() {
+const createAlias = async function createAlias() {
   let accessToken = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : "null accessToken";
   let userUuid = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : "null user uuid";
   let body = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : "null body";
   let trace = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : {};
-  const MS = util.getEndpoint("identity");
-  const requestOptions = {
-    method: "POST",
-    uri: "".concat(MS, "/identities/").concat(userUuid, "/aliases"),
-    headers: {
-      Authorization: "Bearer ".concat(accessToken),
-      "Content-type": "application/json",
-      "x-api-version": "".concat(util.getVersion())
-    },
-    body: body,
-    json: true,
-    resolveWithFullResponse: true
-  };
-  util.addRequestTrace(requestOptions, trace); //Returning "ok" here as response object does not contain alias.
 
-  return new Promise((resolve, reject) => {
-    request(requestOptions).then(response => {
-      response.statusCode === 201 ? resolve({
+  try {
+    const MS = util.getEndpoint("identity");
+    const requestOptions = {
+      method: "POST",
+      uri: "".concat(MS, "/identities/").concat(userUuid, "/aliases"),
+      headers: {
+        Authorization: "Bearer ".concat(accessToken),
+        "Content-type": "application/json",
+        "x-api-version": "".concat(util.getVersion())
+      },
+      body: body,
+      json: true,
+      resolveWithFullResponse: true
+    };
+    util.addRequestTrace(requestOptions, trace); //Returning "ok" here as response object does not contain alias.
+
+    const response = await request(requestOptions);
+
+    if (response.statusCode === 201) {
+      return {
         status: "ok"
-      }) : reject({
-        status: "failed"
-      });
-    }).catch(error => {
-      reject(error);
-    });
-  });
+      };
+    } else {
+      // this is an edge case, but protects against unexpected 2xx or 3xx response codes.
+      throw {
+        "code": response.statusCode,
+        "message": typeof response.body === "string" ? response.body : "create alias failed",
+        "trace_id": requestOptions.hasOwnProperty("headers") && requestOptions.headers.hasOwnProperty("trace") ? requestOptions.headers.trace : undefined,
+        "details": typeof response.body === "object" && response.body !== null ? [response.body] : []
+      };
+    }
+  } catch (error) {
+    return Promise.reject(util.formatError(error));
+  }
 };
 /**
  * @async
@@ -238,35 +282,49 @@ const createAlias = function createAlias() {
  */
 
 
-const updateAliasWithDID = function updateAliasWithDID() {
+const updateAliasWithDID = async function updateAliasWithDID() {
   let accessToken = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : "null accessToken";
   let userUuid = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : "null user uuid";
   let did = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : "null DID";
   let trace = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : {};
-  const MS = util.getEndpoint("identity");
-  const requestOptions = {
-    method: "PUT",
-    uri: "".concat(MS, "/identities/").concat(userUuid, "/aliases/").concat(did),
-    headers: {
-      Authorization: "Bearer ".concat(accessToken),
-      "Content-type": "application/json",
-      "x-api-version": "".concat(util.getVersion())
-    },
-    json: true,
-    resolveWithFullResponse: true
-  };
-  util.addRequestTrace(requestOptions, trace);
-  return new Promise((resolve, reject) => {
-    request(requestOptions).then(response => {
-      response.statusCode === 202 ? resolve({
-        status: "ok"
-      }) : reject({
-        status: "failed"
-      });
-    }).catch(error => {
-      reject(error);
-    });
-  });
+
+  try {
+    const MS = util.getEndpoint("identity");
+    const requestOptions = {
+      method: "PUT",
+      uri: "".concat(MS, "/identities/").concat(userUuid, "/aliases/").concat(did),
+      headers: {
+        Authorization: "Bearer ".concat(accessToken),
+        "Content-type": "application/json",
+        "x-api-version": "".concat(util.getVersion())
+      },
+      json: true,
+      resolveWithFullResponse: true
+    };
+    util.addRequestTrace(requestOptions, trace);
+    const response = await request(requestOptions);
+
+    if (response.hasOwnProperty("statusCode") && response.statusCode === 202) {
+      if (response.headers.hasOwnProperty("location")) {
+        await util.pendingResource(response.headers.location, requestOptions, //reusing the request options instead of passing in multiple params
+        trace, response.hasOwnProperty("resource_status") ? response.resource_status : "complete");
+      }
+
+      return {
+        "status": "ok"
+      };
+    } else {
+      // this is an edge case, but protects against unexpected 2xx or 3xx response codes.
+      throw {
+        "code": response.statusCode,
+        "message": typeof response.body === "string" ? response.body : "update alias with DID failed",
+        "trace_id": requestOptions.hasOwnProperty("headers") && requestOptions.headers.hasOwnProperty("trace") ? requestOptions.headers.trace : undefined,
+        "details": typeof response.body === "object" && response.body !== null ? [response.body] : []
+      };
+    }
+  } catch (error) {
+    return Promise.reject(util.formatError(error));
+  }
 };
 /**
  * @async
@@ -298,21 +356,28 @@ const deleteIdentity = async function deleteIdentity() {
       resolveWithFullResponse: true
     };
     util.addRequestTrace(requestOptions, trace);
-    const response = await request(requestOptions); // delete returns a 202....suspend return until the new resource is ready
+    const response = await request(requestOptions); // delete returns a 202....suspend return until the new resource is ready if possible
 
-    if (response.hasOwnProperty("statusCode") && response.statusCode === 202 && response.headers.hasOwnProperty("location")) {
-      await util.pendingResource(response.headers.location, requestOptions, //reusing the request options instead of passing in multiple params
-      trace, "deleting");
+    if (response.hasOwnProperty("statusCode") && response.statusCode === 202) {
+      if (response.headers.hasOwnProperty("location")) {
+        await util.pendingResource(response.headers.location, requestOptions, //reusing the request options instead of passing in multiple params
+        trace, "deleting");
+      }
+
+      return {
+        "status": "ok"
+      };
+    } else {
+      // this is an edge case, but protects against unexpected 2xx or 3xx response codes.
+      throw {
+        "code": response.statusCode,
+        "message": typeof response.body === "string" ? response.body : "delete identity failed",
+        "trace_id": requestOptions.hasOwnProperty("headers") && requestOptions.headers.hasOwnProperty("trace") ? requestOptions.headers.trace : undefined,
+        "details": typeof response.body === "object" && response.body !== null ? [response.body] : []
+      };
     }
-
-    return Promise.resolve({
-      "status": "ok"
-    });
   } catch (error) {
-    return Promise.reject({
-      "status": "failed",
-      "message": error.hasOwnProperty("message") ? error.message : JSON.stringify(error)
-    });
+    return Promise.reject(util.formatError(error));
   }
 };
 /**
@@ -325,23 +390,29 @@ const deleteIdentity = async function deleteIdentity() {
  */
 
 
-const getIdentity = function getIdentity() {
+const getIdentity = async function getIdentity() {
   let accessToken = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : "null accessToken";
   let userUuid = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : "null uuid";
   let trace = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : {};
-  const MS = util.getEndpoint("identity");
-  const requestOptions = {
-    method: "GET",
-    uri: "".concat(MS, "/identities/").concat(userUuid),
-    headers: {
-      Authorization: "Bearer ".concat(accessToken),
-      "Content-type": "application/json",
-      "x-api-version": "".concat(util.getVersion())
-    },
-    json: true
-  };
-  util.addRequestTrace(requestOptions, trace);
-  return request(requestOptions);
+
+  try {
+    const MS = util.getEndpoint("identity");
+    const requestOptions = {
+      method: "GET",
+      uri: "".concat(MS, "/identities/").concat(userUuid),
+      headers: {
+        Authorization: "Bearer ".concat(accessToken),
+        "Content-type": "application/json",
+        "x-api-version": "".concat(util.getVersion())
+      },
+      json: true
+    };
+    util.addRequestTrace(requestOptions, trace);
+    const response = await request(requestOptions);
+    return response;
+  } catch (error) {
+    return Promise.reject(util.formatError(error));
+  }
 };
 /**
  * @async
@@ -355,28 +426,34 @@ const getIdentity = function getIdentity() {
  */
 
 
-const login = function login() {
+const login = async function login() {
   let accessToken = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : "null access token";
   let email = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : "null email";
   let pwd = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : "null pwd";
   let trace = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : {};
-  const MS = util.getEndpoint("identity");
-  const requestOptions = {
-    method: "POST",
-    uri: "".concat(MS, "/users/login"),
-    headers: {
-      Authorization: "Bearer ".concat(accessToken),
-      "Content-type": "application/json",
-      "x-api-version": "".concat(util.getVersion())
-    },
-    body: {
-      email: email,
-      password: pwd
-    },
-    json: true
-  };
-  util.addRequestTrace(requestOptions, trace);
-  return request(requestOptions);
+
+  try {
+    const MS = util.getEndpoint("identity");
+    const requestOptions = {
+      method: "POST",
+      uri: "".concat(MS, "/users/login"),
+      headers: {
+        Authorization: "Bearer ".concat(accessToken),
+        "Content-type": "application/json",
+        "x-api-version": "".concat(util.getVersion())
+      },
+      body: {
+        email: email,
+        password: pwd
+      },
+      json: true
+    };
+    util.addRequestTrace(requestOptions, trace);
+    const response = await request(requestOptions);
+    return response;
+  } catch (error) {
+    return Promise.reject(util.formatError(error));
+  }
 }; //TODO not seeing this call in Tyk...investigate.
 
 /**
@@ -388,22 +465,28 @@ const login = function login() {
  */
 
 
-const getMyIdentityData = function getMyIdentityData() {
+const getMyIdentityData = async function getMyIdentityData() {
   let accessToken = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : "null access token";
   let trace = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
-  const MS = util.getEndpoint("identity");
-  const requestOptions = {
-    method: "GET",
-    uri: "".concat(MS, "/users/me"),
-    headers: {
-      Authorization: "Bearer ".concat(accessToken),
-      "Content-type": "application/json",
-      "x-api-version": "".concat(util.getVersion())
-    },
-    json: true
-  };
-  util.addRequestTrace(requestOptions, trace);
-  return request(requestOptions);
+
+  try {
+    const MS = util.getEndpoint("identity");
+    const requestOptions = {
+      method: "GET",
+      uri: "".concat(MS, "/users/me"),
+      headers: {
+        Authorization: "Bearer ".concat(accessToken),
+        "Content-type": "application/json",
+        "x-api-version": "".concat(util.getVersion())
+      },
+      json: true
+    };
+    util.addRequestTrace(requestOptions, trace);
+    const response = await request(requestOptions);
+    return response;
+  } catch (error) {
+    return Promise.reject(util.formatError(error));
+  }
 };
 /**
  * @async
@@ -416,23 +499,29 @@ const getMyIdentityData = function getMyIdentityData() {
  */
 
 
-const getIdentityDetails = function getIdentityDetails() {
+const getIdentityDetails = async function getIdentityDetails() {
   let accessToken = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : "null access token";
   let user_uuid = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : "null user uuid";
   let trace = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : {};
-  const MS = util.getEndpoint("identity");
-  const requestOptions = {
-    method: "GET",
-    uri: "".concat(MS, "/identities/").concat(user_uuid, "?include=alias&include=properties"),
-    headers: {
-      Authorization: "Bearer ".concat(accessToken),
-      "Content-type": "application/json",
-      "x-api-version": "".concat(util.getVersion())
-    },
-    json: true
-  };
-  util.addRequestTrace(requestOptions, trace);
-  return request(requestOptions);
+
+  try {
+    const MS = util.getEndpoint("identity");
+    const requestOptions = {
+      method: "GET",
+      uri: "".concat(MS, "/identities/").concat(user_uuid, "?include=alias&include=properties"),
+      headers: {
+        Authorization: "Bearer ".concat(accessToken),
+        "Content-type": "application/json",
+        "x-api-version": "".concat(util.getVersion())
+      },
+      json: true
+    };
+    util.addRequestTrace(requestOptions, trace);
+    const response = await request(requestOptions);
+    return response;
+  } catch (error) {
+    return Promise.reject(util.formatError(error));
+  }
 };
 /**
  * @async
@@ -454,31 +543,37 @@ const listIdentitiesByAccount = async function listIdentitiesByAccount() {
   let limit = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : 10;
   let filters = arguments.length > 4 && arguments[4] !== undefined ? arguments[4] : undefined;
   let trace = arguments.length > 5 && arguments[5] !== undefined ? arguments[5] : {};
-  const MS = util.getEndpoint("identity");
-  const requestOptions = {
-    method: "GET",
-    uri: "".concat(MS, "/accounts/").concat(accountUUID, "/identities"),
-    qs: {
-      offset: offset,
-      limit: limit
-    },
-    headers: {
-      Authorization: "Bearer ".concat(accessToken),
-      "Content-type": "application/json",
-      "x-api-version": "".concat(util.getVersion())
-    },
-    json: true
-  };
-  util.addRequestTrace(requestOptions, trace);
 
-  if (filters) {
-    Object.keys(filters).forEach(filter => {
-      requestOptions.qs[filter] = filters[filter];
-    });
-  } //console.log("REQUEST********",requestOptions);
+  try {
+    const MS = util.getEndpoint("identity");
+    const requestOptions = {
+      method: "GET",
+      uri: "".concat(MS, "/accounts/").concat(accountUUID, "/identities"),
+      qs: {
+        offset: offset,
+        limit: limit
+      },
+      headers: {
+        Authorization: "Bearer ".concat(accessToken),
+        "Content-type": "application/json",
+        "x-api-version": "".concat(util.getVersion())
+      },
+      json: true
+    };
+    util.addRequestTrace(requestOptions, trace);
+
+    if (filters) {
+      Object.keys(filters).forEach(filter => {
+        requestOptions.qs[filter] = filters[filter];
+      });
+    } //console.log("REQUEST********",requestOptions);
 
 
-  return await request(requestOptions);
+    const response = await request(requestOptions);
+    return response;
+  } catch (error) {
+    return Promise.reject(util.formatError(error));
+  }
 };
 /**
  * @async
@@ -498,31 +593,37 @@ const lookupIdentity = async function lookupIdentity() {
   let limit = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : 10;
   let filters = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : undefined;
   let trace = arguments.length > 4 && arguments[4] !== undefined ? arguments[4] : {};
-  const MS = util.getEndpoint("identity");
-  const requestOptions = {
-    method: "GET",
-    uri: "".concat(MS, "/identities"),
-    qs: {
-      offset: offset,
-      limit: limit
-    },
-    headers: {
-      Authorization: "Bearer ".concat(accessToken),
-      "Content-type": "application/json",
-      "x-api-version": "".concat(util.getVersion())
-    },
-    json: true
-  };
-  util.addRequestTrace(requestOptions, trace);
 
-  if (filters) {
-    Object.keys(filters).forEach(filter => {
-      requestOptions.qs[filter] = filters[filter];
-    });
-  } //console.log("REQUEST********",requestOptions);
+  try {
+    const MS = util.getEndpoint("identity");
+    const requestOptions = {
+      method: "GET",
+      uri: "".concat(MS, "/identities"),
+      qs: {
+        offset: offset,
+        limit: limit
+      },
+      headers: {
+        Authorization: "Bearer ".concat(accessToken),
+        "Content-type": "application/json",
+        "x-api-version": "".concat(util.getVersion())
+      },
+      json: true
+    };
+    util.addRequestTrace(requestOptions, trace);
+
+    if (filters) {
+      Object.keys(filters).forEach(filter => {
+        requestOptions.qs[filter] = filters[filter];
+      });
+    } //console.log("REQUEST********",requestOptions);
 
 
-  return await request(requestOptions);
+    const response = await request(requestOptions);
+    return response;
+  } catch (error) {
+    return Promise.reject(util.formatError(error));
+  }
 };
 /**
  * @async
@@ -535,36 +636,50 @@ const lookupIdentity = async function lookupIdentity() {
  */
 
 
-const resetPassword = function resetPassword() {
+const resetPassword = async function resetPassword() {
   let accessToken = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : "null access token";
   let passwordToken = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : "null passwordToken";
   let body = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : "null body";
   let trace = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : {};
-  const MS = util.getEndpoint("identity");
-  const requestOptions = {
-    method: "PUT",
-    uri: "".concat(MS, "/users/password-tokens/").concat(passwordToken),
-    body: body,
-    headers: {
-      Authorization: "Bearer ".concat(accessToken),
-      "Content-type": "application/json",
-      "x-api-version": "".concat(util.getVersion())
-    },
-    resolveWithFullResponse: true,
-    json: true
-  };
-  util.addRequestTrace(requestOptions, trace);
-  return new Promise(function (resolve, reject) {
-    request(requestOptions).then(function (responseData) {
-      responseData.statusCode === 202 ? resolve({
-        status: "ok"
-      }) : reject({
-        status: "failed"
-      });
-    }).catch(function (error) {
-      reject(error);
-    });
-  });
+
+  try {
+    const MS = util.getEndpoint("identity");
+    const requestOptions = {
+      method: "PUT",
+      uri: "".concat(MS, "/users/password-tokens/").concat(passwordToken),
+      body: body,
+      headers: {
+        Authorization: "Bearer ".concat(accessToken),
+        "Content-type": "application/json",
+        "x-api-version": "".concat(util.getVersion())
+      },
+      resolveWithFullResponse: true,
+      json: true
+    };
+    util.addRequestTrace(requestOptions, trace);
+    const response = await request(requestOptions);
+
+    if (response.hasOwnProperty("statusCode") && response.statusCode === 202) {
+      if (response.headers.hasOwnProperty("location")) {
+        await util.pendingResource(response.headers.location, requestOptions, //reusing the request options instead of passing in multiple params
+        trace, response.hasOwnProperty("resource_status") ? response.resource_status : "complete");
+      }
+
+      return {
+        "status": "ok"
+      };
+    } else {
+      // this is an edge case, but protects against unexpected 2xx or 3xx response codes.
+      throw {
+        "code": response.statusCode,
+        "message": typeof response.body === "string" ? response.body : "reset password failed",
+        "trace_id": requestOptions.hasOwnProperty("headers") && requestOptions.headers.hasOwnProperty("trace") ? requestOptions.headers.trace : undefined,
+        "details": typeof response.body === "object" && response.body !== null ? [response.body] : []
+      };
+    }
+  } catch (error) {
+    return Promise.reject(util.formatError(error));
+  }
 };
 /**
  * @async
@@ -576,37 +691,51 @@ const resetPassword = function resetPassword() {
  */
 
 
-const generatePasswordToken = function generatePasswordToken() {
+const generatePasswordToken = async function generatePasswordToken() {
   let accessToken = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : "null access token";
   let emailAddress = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : "null emailAddress";
   let trace = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : {};
-  const MS = util.getEndpoint("identity");
-  const requestOptions = {
-    method: "POST",
-    uri: "".concat(MS, "/users/password-tokens"),
-    body: {
-      email: emailAddress
-    },
-    headers: {
-      Authorization: "Bearer ".concat(accessToken),
-      "Content-type": "application/json",
-      "x-api-version": "".concat(util.getVersion())
-    },
-    resolveWithFullResponse: true,
-    json: true
-  };
-  util.addRequestTrace(requestOptions, trace);
-  return new Promise(function (resolve, reject) {
-    request(requestOptions).then(function (responseData) {
-      responseData.statusCode === 202 ? resolve({
-        status: "ok"
-      }) : reject({
-        status: "failed"
-      });
-    }).catch(function (error) {
-      reject(error);
-    });
-  });
+
+  try {
+    const MS = util.getEndpoint("identity");
+    const requestOptions = {
+      method: "POST",
+      uri: "".concat(MS, "/users/password-tokens"),
+      body: {
+        email: emailAddress
+      },
+      headers: {
+        Authorization: "Bearer ".concat(accessToken),
+        "Content-type": "application/json",
+        "x-api-version": "".concat(util.getVersion())
+      },
+      resolveWithFullResponse: true,
+      json: true
+    };
+    util.addRequestTrace(requestOptions, trace);
+    const response = await request(requestOptions);
+
+    if (response.hasOwnProperty("statusCode") && response.statusCode === 202) {
+      if (response.headers.hasOwnProperty("location")) {
+        await util.pendingResource(response.headers.location, requestOptions, //reusing the request options instead of passing in multiple params
+        trace, response.hasOwnProperty("resource_status") ? response.resource_status : "complete");
+      }
+
+      return {
+        "status": "ok"
+      };
+    } else {
+      // this is an edge case, but protects against unexpected 2xx or 3xx response codes.
+      throw {
+        "code": response.statusCode,
+        "message": typeof response.body === "string" ? response.body : "generate password token failed",
+        "trace_id": requestOptions.hasOwnProperty("headers") && requestOptions.headers.hasOwnProperty("trace") ? requestOptions.headers.trace : undefined,
+        "details": typeof response.body === "object" && response.body !== null ? [response.body] : []
+      };
+    }
+  } catch (error) {
+    return Promise.reject(util.formatError(error));
+  }
 };
 /**
  * @async
@@ -618,23 +747,29 @@ const generatePasswordToken = function generatePasswordToken() {
  */
 
 
-const validatePasswordToken = function validatePasswordToken() {
+const validatePasswordToken = async function validatePasswordToken() {
   let accessToken = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : "null access token";
   let password_token = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : "null password token";
   let trace = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : {};
-  const MS = util.getEndpoint("identity");
-  const requestOptions = {
-    method: "GET",
-    uri: "".concat(MS, "/users/password-tokens/").concat(password_token),
-    headers: {
-      Authorization: "Bearer ".concat(accessToken),
-      "Content-type": "application/json",
-      "x-api-version": "".concat(util.getVersion())
-    },
-    json: true
-  };
-  util.addRequestTrace(requestOptions, trace);
-  return request(requestOptions);
+
+  try {
+    const MS = util.getEndpoint("identity");
+    const requestOptions = {
+      method: "GET",
+      uri: "".concat(MS, "/users/password-tokens/").concat(password_token),
+      headers: {
+        Authorization: "Bearer ".concat(accessToken),
+        "Content-type": "application/json",
+        "x-api-version": "".concat(util.getVersion())
+      },
+      json: true
+    };
+    util.addRequestTrace(requestOptions, trace);
+    const response = await request(requestOptions);
+    return response;
+  } catch (error) {
+    return Promise.reject(util.formatError(error));
+  }
 };
 
 module.exports = {

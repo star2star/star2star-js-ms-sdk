@@ -12,28 +12,33 @@ const util = require("./utilities");
  * @param {object} [trace = {}] - optional microservice lifecycle trace headers
  * @returns {Promise<object>} - Promise resolving to a contact data object
  */
-const createUserContact = (
+const createUserContact = async (
   accessToken = "null accessToken",
   userUuid = "null user uuid",
   contactData = {},
   trace = {}
 ) => {
-  const MS = util.getEndpoint("contacts");
-  //console.log('MMMMSSSSS', MS, contactData);
+  try{
+    const MS = util.getEndpoint("contacts");
+    //console.log('MMMMSSSSS', MS, contactData);
 
-  const requestOptions = {
-    method: "POST",
-    uri: `${MS}/users/${userUuid}/contacts`,
-    headers: {
-      Authorization: `Bearer ${accessToken}`,
-      "Content-type": "application/json",
-      "x-api-version": `${util.getVersion()}`
-    },
-    body: contactData,
-    json: true
-  };
-  util.addRequestTrace(requestOptions, trace);
-  return request(requestOptions);
+    const requestOptions = {
+      method: "POST",
+      uri: `${MS}/users/${userUuid}/contacts`,
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+        "Content-type": "application/json",
+        "x-api-version": `${util.getVersion()}`
+      },
+      body: contactData,
+      json: true
+    };
+    util.addRequestTrace(requestOptions, trace);
+    const response = await request(requestOptions);
+    return response;
+  } catch(error){
+    return Promise.reject(util.formatError(error));
+  }
 };
 
 /**
@@ -65,17 +70,23 @@ const deleteContact = async (
     util.addRequestTrace(requestOptions, trace);
     const response = await request(requestOptions);
     if(response.hasOwnProperty("statusCode") && response.statusCode === 204) {
-      return Promise.resolve({"status": "ok"});
+      return {"status": "ok"};
+    } else {
+    // this is an edge case, but protects against unexpected 2xx or 3xx response codes.
+      throw {
+        "code": response.statusCode,
+        "message": typeof response.body === "string" ? response.body : "delete contact failed",
+        "trace_id": requestOptions.hasOwnProperty("headers") && requestOptions.headers.hasOwnProperty("trace")
+          ? requestOptions.headers.trace 
+          : undefined,
+        "details": typeof response.body === "object" && response.body !== null
+          ? [response.body]
+          : []
+      };
     }
-    throw response;
   } catch (error) {
-   return Promise.reject({
-     "statusCode": error.hasOwnProperty("statusCode") ? error.statusCode : 500,
-     //js errors should have a message. non 204 response codes should have a statusMessage
-     "message": error.hasOwnProperty("message") ? error.message : error.statusMessage
-   })
-  }
-  
+    return Promise.reject(util.formatError(error));
+  } 
 };
 
 /**
@@ -91,24 +102,28 @@ const exportContacts = async (
   user_uuid = "null user uuid",
   trace = {}
 ) => {
-  const MS = util.getEndpoint("contacts");
-  const requestOptions = {
-    method: "GET",
-    uri: `${MS}/users/${user_uuid}/contacts`,
-    qs: {
-      "offset": 0,
-      "limit": 999
-    },
-    headers: {
-      Authorization: `Bearer ${accessToken}`,
-      "Content-type": "application/json",
-      "x-api-version": `${util.getVersion()}`
-    },
-    json: true
-  };
-  util.addRequestTrace(requestOptions, trace);
-  const response = await util.aggregate(request, requestOptions, trace);
-  return response;
+  try {
+    const MS = util.getEndpoint("contacts");
+    const requestOptions = {
+      method: "GET",
+      uri: `${MS}/users/${user_uuid}/contacts`,
+      qs: {
+        "offset": 0,
+        "limit": 999
+      },
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+        "Content-type": "application/json",
+        "x-api-version": `${util.getVersion()}`
+      },
+      json: true
+    };
+    util.addRequestTrace(requestOptions, trace);
+    const response = await util.aggregate(request, requestOptions, trace);
+    return response;
+  } catch (error) {
+    return Promise.reject(util.formatError(error));
+  }
 };
 
 /**
@@ -119,24 +134,29 @@ const exportContacts = async (
  * @param {object} [trace={}] - optional cpaas lifecycle headers
  * @returns {Promise<object>} - promise resolving to a contact object
  */
-const getContact = (
+const getContact = async (
   accessToken = "null access_token",
   contactUUID = "null contact_uuid",
   trace = {}
 ) => {
-  const MS = util.getEndpoint("contacts");
-  const requestOptions = {
-    method: "GET",
-    uri: `${MS}/contacts/${contactUUID}`,
-    headers: {
-      Authorization: `Bearer ${accessToken}`,
-      "Content-type": "application/json",
-      "x-api-version": `${util.getVersion()}`
-    },
-    json: true
-  };
-  util.addRequestTrace(requestOptions, trace);
-  return request(requestOptions); 
+  try {
+    const MS = util.getEndpoint("contacts");
+    const requestOptions = {
+      method: "GET",
+      uri: `${MS}/contacts/${contactUUID}`,
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+        "Content-type": "application/json",
+        "x-api-version": `${util.getVersion()}`
+      },
+      json: true
+    };
+    util.addRequestTrace(requestOptions, trace);
+    const response = await request(requestOptions);
+    return response;
+  } catch(error){
+    return Promise.reject(util.formatError(error));
+  }
 };
 
 
@@ -151,7 +171,7 @@ const getContact = (
  * @param {object} [trace={}] - optional microservice lifecycle headers
  * @returns
  */
-const listContacts = (
+const listContacts = async (
   accessToken = "null access_token",
   user_uuid = "null user_uuid",
   offset = 0,
@@ -159,28 +179,33 @@ const listContacts = (
   filters = undefined,
   trace = {}
 ) => {
-  const MS = util.getEndpoint("contacts");
-  const requestOptions = {
-    method: "GET",
-    uri: `${MS}/users/${user_uuid}/contacts`,
-    qs: {
-      offset: offset,
-      limit: limit
-    },
-    headers: {
-      Authorization: `Bearer ${accessToken}`,
-      "Content-type": "application/json",
-      "x-api-version": `${util.getVersion()}`
-    },
-    json: true
-  };
-  util.addRequestTrace(requestOptions, trace);
-  if (filters) {
-    Object.keys(filters).forEach(filter => {
-      requestOptions.qs[filter] = filters[filter];
-    });
+  try {
+    const MS = util.getEndpoint("contacts");
+    const requestOptions = {
+      method: "GET",
+      uri: `${MS}/users/${user_uuid}/contacts`,
+      qs: {
+        offset: offset,
+        limit: limit
+      },
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+        "Content-type": "application/json",
+        "x-api-version": `${util.getVersion()}`
+      },
+      json: true
+    };
+    util.addRequestTrace(requestOptions, trace);
+    if (filters) {
+      Object.keys(filters).forEach(filter => {
+        requestOptions.qs[filter] = filters[filter];
+      });
+    }
+    const response = await request(requestOptions);
+    return response;
+  } catch(error){
+    return Promise.reject(util.formatError(error));
   }
-  return request(requestOptions); 
 };
 
 /**
@@ -192,26 +217,31 @@ const listContacts = (
  * @param {object} [trace={}] - optional microservice lifecycle trace headers
  * @returns {Promise<object>} - Promise resolving to updated contact data
  */
-const updateContact = (
+const updateContact = async (
   accessToken = "null access_token",
   contactUUID = "null contactUUID",
   body = "null body",
   trace = {}
 ) => {
-  const MS = util.getEndpoint("contacts");
-  const requestOptions = {
-    method: "PUT",
-    uri: `${MS}/contacts/${contactUUID}`,
-    body: body,
-    headers: {
-      Authorization: `Bearer ${accessToken}`,
-      "Content-type": "application/json",
-      "x-api-version": `${util.getVersion()}`
-    },
-    json: true
-  };
-  util.addRequestTrace(requestOptions, trace);
-  return request(requestOptions);
+  try {
+    const MS = util.getEndpoint("contacts");
+    const requestOptions = {
+      method: "PUT",
+      uri: `${MS}/contacts/${contactUUID}`,
+      body: body,
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+        "Content-type": "application/json",
+        "x-api-version": `${util.getVersion()}`
+      },
+      json: true
+    };
+    util.addRequestTrace(requestOptions, trace);
+    const response = await request(requestOptions);
+    return response;
+  } catch(error){
+    return Promise.reject(util.formatError(error));
+  }
 };
 
 module.exports = {

@@ -20,7 +20,7 @@ const util = require("./utilities");
  */
 
 
-const addSubscription = function addSubscription() {
+const addSubscription = async function addSubscription() {
   let user_uuid = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : "no user uuid provided";
   let account_uuid = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : "account uuid not provided ";
   let callback_url = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : "not set callback";
@@ -30,34 +30,40 @@ const addSubscription = function addSubscription() {
   let accessToken = arguments.length > 6 && arguments[6] !== undefined ? arguments[6] : "null accessToken";
   let expiresDate = arguments.length > 7 && arguments[7] !== undefined ? arguments[7] : undefined;
   let trace = arguments.length > 8 && arguments[8] !== undefined ? arguments[8] : {};
-  const MS = util.getEndpoint("pubsub");
-  const requestOptions = {
-    method: "POST",
-    uri: "".concat(MS, "/subscriptions"),
-    body: {
-      user_uuid: user_uuid,
-      account_uuid: account_uuid,
-      callback: {
-        url: callback_url,
-        headers: callback_headers
+
+  try {
+    const MS = util.getEndpoint("pubsub");
+    const requestOptions = {
+      method: "POST",
+      uri: "".concat(MS, "/subscriptions"),
+      body: {
+        user_uuid: user_uuid,
+        account_uuid: account_uuid,
+        callback: {
+          url: callback_url,
+          headers: callback_headers
+        },
+        criteria: criteria,
+        events: subscriptions
       },
-      criteria: criteria,
-      events: subscriptions
-    },
-    headers: {
-      Authorization: "Bearer ".concat(accessToken),
-      "Content-type": "application/json",
-      "x-api-version": "".concat(util.getVersion())
-    },
-    json: true
-  };
+      headers: {
+        Authorization: "Bearer ".concat(accessToken),
+        "Content-type": "application/json",
+        "x-api-version": "".concat(util.getVersion())
+      },
+      json: true
+    };
 
-  if (expiresDate) {
-    requestOptions.body.expiration_date = expiresDate;
+    if (expiresDate) {
+      requestOptions.body.expiration_date = expiresDate;
+    }
+
+    util.addRequestTrace(requestOptions, trace);
+    const response = await request(requestOptions);
+    return response;
+  } catch (error) {
+    return Promise.reject(util.formatError(error));
   }
-
-  util.addRequestTrace(requestOptions, trace);
-  return request(requestOptions);
 };
 /**
  * @async
@@ -73,30 +79,39 @@ const deleteSubscription = async function deleteSubscription() {
   let subscription_uuid = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : "no subscription uuid provided";
   let accessToken = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : "null accessToken";
   let trace = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : {};
-  const MS = util.getEndpoint("pubsub");
-  const requestOptions = {
-    method: "DELETE",
-    uri: "".concat(MS, "/subscriptions/").concat(subscription_uuid),
-    headers: {
-      Authorization: "Bearer ".concat(accessToken),
-      "Content-type": "application/json",
-      "x-api-version": "".concat(util.getVersion())
-    },
-    resolveWithFullResponse: true,
-    json: true
-  };
-  util.addRequestTrace(requestOptions, trace);
-  const response = await request(requestOptions);
 
-  if (response.hasOwnProperty("statusCode") && response.statusCode === 204) {
-    return {
-      "status": "ok"
+  try {
+    const MS = util.getEndpoint("pubsub");
+    const requestOptions = {
+      method: "DELETE",
+      uri: "".concat(MS, "/subscriptions/").concat(subscription_uuid),
+      headers: {
+        Authorization: "Bearer ".concat(accessToken),
+        "Content-type": "application/json",
+        "x-api-version": "".concat(util.getVersion())
+      },
+      resolveWithFullResponse: true,
+      json: true
     };
-  }
+    util.addRequestTrace(requestOptions, trace);
+    const response = await request(requestOptions);
 
-  return Promise.reject({
-    "status": "failed"
-  });
+    if (response.hasOwnProperty("statusCode") && response.statusCode === 204) {
+      return {
+        "status": "ok"
+      };
+    } else {
+      // this is an edge case, but protects against unexpected 2xx or 3xx response codes.
+      throw {
+        "code": response.statusCode,
+        "message": typeof response.body === "string" ? response.body : "delete pubsub failed",
+        "trace_id": requestOptions.hasOwnProperty("headers") && requestOptions.headers.hasOwnProperty("trace") ? requestOptions.headers.trace : undefined,
+        "details": typeof response.body === "object" && response.body !== null ? [response.body] : []
+      };
+    }
+  } catch (error) {
+    return Promise.reject(util.formatError(error));
+  }
 };
 /**
  * @async
@@ -108,23 +123,29 @@ const deleteSubscription = async function deleteSubscription() {
  */
 
 
-const getSubscription = function getSubscription() {
+const getSubscription = async function getSubscription() {
   let subscription_uuid = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : "no subscription uuid provided";
   let accessToken = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : "null accessToken";
   let trace = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : {};
-  const MS = util.getEndpoint("pubsub");
-  const requestOptions = {
-    method: "GET",
-    uri: "".concat(MS, "/subscriptions/").concat(subscription_uuid),
-    headers: {
-      Authorization: "Bearer ".concat(accessToken),
-      "Content-type": "application/json",
-      "x-api-version": "".concat(util.getVersion())
-    },
-    json: true
-  };
-  util.addRequestTrace(requestOptions, trace);
-  return request(requestOptions);
+
+  try {
+    const MS = util.getEndpoint("pubsub");
+    const requestOptions = {
+      method: "GET",
+      uri: "".concat(MS, "/subscriptions/").concat(subscription_uuid),
+      headers: {
+        Authorization: "Bearer ".concat(accessToken),
+        "Content-type": "application/json",
+        "x-api-version": "".concat(util.getVersion())
+      },
+      json: true
+    };
+    util.addRequestTrace(requestOptions, trace);
+    const response = await request(requestOptions);
+    return response;
+  } catch (error) {
+    return Promise.reject(util.formatError(error));
+  }
 };
 /**
  * @async
@@ -136,26 +157,32 @@ const getSubscription = function getSubscription() {
  */
 
 
-const listUserSubscriptions = function listUserSubscriptions() {
+const listUserSubscriptions = async function listUserSubscriptions() {
   let user_uuid = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : "no user uuid provided";
   let accessToken = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : "null accessToken";
   let trace = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : {};
-  const MS = util.getEndpoint("pubsub");
-  const requestOptions = {
-    method: "GET",
-    uri: "".concat(MS, "/subscriptions"),
-    headers: {
-      Authorization: "Bearer ".concat(accessToken),
-      "Content-type": "application/json",
-      "x-api-version": "".concat(util.getVersion())
-    },
-    qs: {
-      user_uuid: user_uuid
-    },
-    json: true
-  };
-  util.addRequestTrace(requestOptions, trace);
-  return request(requestOptions);
+
+  try {
+    const MS = util.getEndpoint("pubsub");
+    const requestOptions = {
+      method: "GET",
+      uri: "".concat(MS, "/subscriptions"),
+      headers: {
+        Authorization: "Bearer ".concat(accessToken),
+        "Content-type": "application/json",
+        "x-api-version": "".concat(util.getVersion())
+      },
+      qs: {
+        user_uuid: user_uuid
+      },
+      json: true
+    };
+    util.addRequestTrace(requestOptions, trace);
+    const response = await request(requestOptions);
+    return response;
+  } catch (error) {
+    return Promise.reject(util.formatError(error));
+  }
 };
 /**
  * @async
@@ -168,27 +195,33 @@ const listUserSubscriptions = function listUserSubscriptions() {
  */
 
 
-const updateSubscriptionExpiresDate = function updateSubscriptionExpiresDate() {
+const updateSubscriptionExpiresDate = async function updateSubscriptionExpiresDate() {
   let accessToken = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : "null accessToken";
   let subscriptionUUID = arguments.length > 1 ? arguments[1] : undefined;
   let expiresDate = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : new Date(Date.now()).toISOString();
   let trace = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : {};
-  const MS = util.getEndpoint("pubsub");
-  const requestOptions = {
-    method: "PUT",
-    uri: "".concat(MS, "/subscriptions/").concat(subscriptionUUID),
-    body: {
-      expiration_date: expiresDate
-    },
-    headers: {
-      Authorization: "Bearer ".concat(accessToken),
-      "Content-type": "application/json",
-      "x-api-version": "".concat(util.getVersion())
-    },
-    json: true
-  };
-  util.addRequestTrace(requestOptions, trace);
-  return request(requestOptions);
+
+  try {
+    const MS = util.getEndpoint("pubsub");
+    const requestOptions = {
+      method: "PUT",
+      uri: "".concat(MS, "/subscriptions/").concat(subscriptionUUID),
+      body: {
+        expiration_date: expiresDate
+      },
+      headers: {
+        Authorization: "Bearer ".concat(accessToken),
+        "Content-type": "application/json",
+        "x-api-version": "".concat(util.getVersion())
+      },
+      json: true
+    };
+    util.addRequestTrace(requestOptions, trace);
+    const response = await request(requestOptions);
+    return response;
+  } catch (error) {
+    return Promise.reject(util.formatError(error));
+  }
 };
 
 module.exports = {

@@ -6,9 +6,9 @@ const emailValidator = require("email-validator");
 
 const validateEmail = email => {
   const rStatus = {
-    status: 200,
+    code: 200,
     message: "valid",
-    email: email
+    details : [ {email: email} ]
   };
 
   const vError = [];
@@ -28,9 +28,9 @@ const validateEmail = email => {
   }
 
   if (vError.length !== 0) {
-    const message = vError.join();
-    rStatus.status = 400;
-    rStatus.message = message;
+    rStatus.code = 400;
+    rStatus.message = "invalid request",
+    rStatus.details.push({"errors": vError});
   }
 
   //console.log("RETURNING RSTATUS",rStatus);
@@ -48,7 +48,7 @@ const validateEmail = email => {
  * @param {object} [trace = {}] - optional microservice lifecycle trace headers
  * @returns
  */
-const sendEmail = (
+const sendEmail = async (
   accessToken = "null accessToken",
   sender = "",
   to = [],
@@ -57,33 +57,39 @@ const sendEmail = (
   type = "text",
   trace = {}
 ) => {
-  const validEmail = validateEmail({
-    content: {
-      body: message,
-      type: type
-    },
-    from: sender,
-    subject: subject,
-    to: to
-  });
-
-  if (validEmail.status === 200) {
-    const MS = util.getEndpoint("email");
-    const requestOptions = {
-      method: "POST",
-      uri: `${MS}/messages/send`,
-      headers: {
-        "Content-type": "application/json",
-        Authorization: `Bearer ${accessToken}`,
-        "x-api-version": `${util.getVersion()}`
+  try {
+    const validatedEmail = validateEmail({
+      content: {
+        body: message,
+        type: type
       },
-      body: validEmail.email,
-      json: true
-    };
-    util.addRequestTrace(requestOptions, trace);
-    return request(requestOptions);
-  } else {
-    return Promise.reject(validEmail);
+      from: sender,
+      subject: subject,
+      to: to
+    });
+
+    if (validatedEmail.code === 200) {
+      const MS = util.getEndpoint("email");
+      const requestOptions = {
+        method: "POST",
+        uri: `${MS}/messages/send`,
+        headers: {
+          "Content-type": "application/json",
+          Authorization: `Bearer ${accessToken}`,
+          "x-api-version": `${util.getVersion()}`
+        },
+        body: validatedEmail.details[0].email,
+        json: true
+      };
+      util.addRequestTrace(requestOptions, trace);
+      const response = await request(requestOptions);
+      return response;
+    } else {
+      validatedEmail.trace_id = trace.hasOwnProperty("trace") ? trace.trace : undefined;  
+      return Promise.reject(validatedEmail);
+    }   
+  } catch(error){
+    return Promise.reject(util.formatError(error));
   }
 };
 

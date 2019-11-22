@@ -15,26 +15,32 @@ const util = require("./utilities");
  */
 
 
-const createUserContact = function createUserContact() {
+const createUserContact = async function createUserContact() {
   let accessToken = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : "null accessToken";
   let userUuid = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : "null user uuid";
   let contactData = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : {};
   let trace = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : {};
-  const MS = util.getEndpoint("contacts"); //console.log('MMMMSSSSS', MS, contactData);
 
-  const requestOptions = {
-    method: "POST",
-    uri: "".concat(MS, "/users/").concat(userUuid, "/contacts"),
-    headers: {
-      Authorization: "Bearer ".concat(accessToken),
-      "Content-type": "application/json",
-      "x-api-version": "".concat(util.getVersion())
-    },
-    body: contactData,
-    json: true
-  };
-  util.addRequestTrace(requestOptions, trace);
-  return request(requestOptions);
+  try {
+    const MS = util.getEndpoint("contacts"); //console.log('MMMMSSSSS', MS, contactData);
+
+    const requestOptions = {
+      method: "POST",
+      uri: "".concat(MS, "/users/").concat(userUuid, "/contacts"),
+      headers: {
+        Authorization: "Bearer ".concat(accessToken),
+        "Content-type": "application/json",
+        "x-api-version": "".concat(util.getVersion())
+      },
+      body: contactData,
+      json: true
+    };
+    util.addRequestTrace(requestOptions, trace);
+    const response = await request(requestOptions);
+    return response;
+  } catch (error) {
+    return Promise.reject(util.formatError(error));
+  }
 };
 /**
  * @async
@@ -68,18 +74,20 @@ const deleteContact = async function deleteContact() {
     const response = await request(requestOptions);
 
     if (response.hasOwnProperty("statusCode") && response.statusCode === 204) {
-      return Promise.resolve({
+      return {
         "status": "ok"
-      });
+      };
+    } else {
+      // this is an edge case, but protects against unexpected 2xx or 3xx response codes.
+      throw {
+        "code": response.statusCode,
+        "message": typeof response.body === "string" ? response.body : "delete contact failed",
+        "trace_id": requestOptions.hasOwnProperty("headers") && requestOptions.headers.hasOwnProperty("trace") ? requestOptions.headers.trace : undefined,
+        "details": typeof response.body === "object" && response.body !== null ? [response.body] : []
+      };
     }
-
-    throw response;
   } catch (error) {
-    return Promise.reject({
-      "statusCode": error.hasOwnProperty("statusCode") ? error.statusCode : 500,
-      //js errors should have a message. non 204 response codes should have a statusMessage
-      "message": error.hasOwnProperty("message") ? error.message : error.statusMessage
-    });
+    return Promise.reject(util.formatError(error));
   }
 };
 /**
@@ -96,24 +104,29 @@ const exportContacts = async function exportContacts() {
   let accessToken = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : "null access token";
   let user_uuid = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : "null user uuid";
   let trace = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : {};
-  const MS = util.getEndpoint("contacts");
-  const requestOptions = {
-    method: "GET",
-    uri: "".concat(MS, "/users/").concat(user_uuid, "/contacts"),
-    qs: {
-      "offset": 0,
-      "limit": 999
-    },
-    headers: {
-      Authorization: "Bearer ".concat(accessToken),
-      "Content-type": "application/json",
-      "x-api-version": "".concat(util.getVersion())
-    },
-    json: true
-  };
-  util.addRequestTrace(requestOptions, trace);
-  const response = await util.aggregate(request, requestOptions, trace);
-  return response;
+
+  try {
+    const MS = util.getEndpoint("contacts");
+    const requestOptions = {
+      method: "GET",
+      uri: "".concat(MS, "/users/").concat(user_uuid, "/contacts"),
+      qs: {
+        "offset": 0,
+        "limit": 999
+      },
+      headers: {
+        Authorization: "Bearer ".concat(accessToken),
+        "Content-type": "application/json",
+        "x-api-version": "".concat(util.getVersion())
+      },
+      json: true
+    };
+    util.addRequestTrace(requestOptions, trace);
+    const response = await util.aggregate(request, requestOptions, trace);
+    return response;
+  } catch (error) {
+    return Promise.reject(util.formatError(error));
+  }
 };
 /**
  * @description This function return a single contact by uuid
@@ -125,23 +138,29 @@ const exportContacts = async function exportContacts() {
  */
 
 
-const getContact = function getContact() {
+const getContact = async function getContact() {
   let accessToken = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : "null access_token";
   let contactUUID = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : "null contact_uuid";
   let trace = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : {};
-  const MS = util.getEndpoint("contacts");
-  const requestOptions = {
-    method: "GET",
-    uri: "".concat(MS, "/contacts/").concat(contactUUID),
-    headers: {
-      Authorization: "Bearer ".concat(accessToken),
-      "Content-type": "application/json",
-      "x-api-version": "".concat(util.getVersion())
-    },
-    json: true
-  };
-  util.addRequestTrace(requestOptions, trace);
-  return request(requestOptions);
+
+  try {
+    const MS = util.getEndpoint("contacts");
+    const requestOptions = {
+      method: "GET",
+      uri: "".concat(MS, "/contacts/").concat(contactUUID),
+      headers: {
+        Authorization: "Bearer ".concat(accessToken),
+        "Content-type": "application/json",
+        "x-api-version": "".concat(util.getVersion())
+      },
+      json: true
+    };
+    util.addRequestTrace(requestOptions, trace);
+    const response = await request(requestOptions);
+    return response;
+  } catch (error) {
+    return Promise.reject(util.formatError(error));
+  }
 };
 /**
  * @async
@@ -156,37 +175,43 @@ const getContact = function getContact() {
  */
 
 
-const listContacts = function listContacts() {
+const listContacts = async function listContacts() {
   let accessToken = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : "null access_token";
   let user_uuid = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : "null user_uuid";
   let offset = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : 0;
   let limit = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : 10;
   let filters = arguments.length > 4 && arguments[4] !== undefined ? arguments[4] : undefined;
   let trace = arguments.length > 5 && arguments[5] !== undefined ? arguments[5] : {};
-  const MS = util.getEndpoint("contacts");
-  const requestOptions = {
-    method: "GET",
-    uri: "".concat(MS, "/users/").concat(user_uuid, "/contacts"),
-    qs: {
-      offset: offset,
-      limit: limit
-    },
-    headers: {
-      Authorization: "Bearer ".concat(accessToken),
-      "Content-type": "application/json",
-      "x-api-version": "".concat(util.getVersion())
-    },
-    json: true
-  };
-  util.addRequestTrace(requestOptions, trace);
 
-  if (filters) {
-    Object.keys(filters).forEach(filter => {
-      requestOptions.qs[filter] = filters[filter];
-    });
+  try {
+    const MS = util.getEndpoint("contacts");
+    const requestOptions = {
+      method: "GET",
+      uri: "".concat(MS, "/users/").concat(user_uuid, "/contacts"),
+      qs: {
+        offset: offset,
+        limit: limit
+      },
+      headers: {
+        Authorization: "Bearer ".concat(accessToken),
+        "Content-type": "application/json",
+        "x-api-version": "".concat(util.getVersion())
+      },
+      json: true
+    };
+    util.addRequestTrace(requestOptions, trace);
+
+    if (filters) {
+      Object.keys(filters).forEach(filter => {
+        requestOptions.qs[filter] = filters[filter];
+      });
+    }
+
+    const response = await request(requestOptions);
+    return response;
+  } catch (error) {
+    return Promise.reject(util.formatError(error));
   }
-
-  return request(requestOptions);
 };
 /**
  * @async
@@ -199,25 +224,31 @@ const listContacts = function listContacts() {
  */
 
 
-const updateContact = function updateContact() {
+const updateContact = async function updateContact() {
   let accessToken = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : "null access_token";
   let contactUUID = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : "null contactUUID";
   let body = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : "null body";
   let trace = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : {};
-  const MS = util.getEndpoint("contacts");
-  const requestOptions = {
-    method: "PUT",
-    uri: "".concat(MS, "/contacts/").concat(contactUUID),
-    body: body,
-    headers: {
-      Authorization: "Bearer ".concat(accessToken),
-      "Content-type": "application/json",
-      "x-api-version": "".concat(util.getVersion())
-    },
-    json: true
-  };
-  util.addRequestTrace(requestOptions, trace);
-  return request(requestOptions);
+
+  try {
+    const MS = util.getEndpoint("contacts");
+    const requestOptions = {
+      method: "PUT",
+      uri: "".concat(MS, "/contacts/").concat(contactUUID),
+      body: body,
+      headers: {
+        Authorization: "Bearer ".concat(accessToken),
+        "Content-type": "application/json",
+        "x-api-version": "".concat(util.getVersion())
+      },
+      json: true
+    };
+    util.addRequestTrace(requestOptions, trace);
+    const response = await request(requestOptions);
+    return response;
+  } catch (error) {
+    return Promise.reject(util.formatError(error));
+  }
 };
 
 module.exports = {

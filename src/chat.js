@@ -20,7 +20,7 @@ const objectMerge = require("object-merge");
  * @param {object} [trace = {}] - optional microservice lifecycle trace headers
  * @returns {Promise<object>} - Promise resolving to a data object
  */
-const createRoom = (
+const createRoom = async (
   access_token = "null access token",
   userUUID = "null user uuid",
   name = "no name specified for group",
@@ -31,31 +31,36 @@ const createRoom = (
   metadata = {},
   trace = {}
 ) => {
-  const MS = util.getEndpoint("chat");
+  try{
+    const MS = util.getEndpoint("chat");
 
-  const b = {
-    name: name,
-    topic: topic,
-    description: description,
-    account_uuid: accountUUID,
-    group_uuid: groupUUID,
-    owner_uuid: userUUID,
-    metadata: metadata
-  };
-  //console.log('bbbbbbbb', b)
-  const requestOptions = {
-    method: "POST",
-    uri: `${MS}/rooms`,
-    body: b,
-    headers: {
-      "Content-type": "application/json",
-      Authorization: `Bearer ${access_token}`,
-      "x-api-version": `${util.getVersion()}`
-    },
-    json: true
-  };
-  util.addRequestTrace(requestOptions, trace);
-  return request(requestOptions);
+    const b = {
+      name: name,
+      topic: topic,
+      description: description,
+      account_uuid: accountUUID,
+      group_uuid: groupUUID,
+      owner_uuid: userUUID,
+      metadata: metadata
+    };
+    //console.log('bbbbbbbb', b)
+    const requestOptions = {
+      method: "POST",
+      uri: `${MS}/rooms`,
+      body: b,
+      headers: {
+        "Content-type": "application/json",
+        Authorization: `Bearer ${access_token}`,
+        "x-api-version": `${util.getVersion()}`
+      },
+      json: true
+    };
+    util.addRequestTrace(requestOptions, trace);
+    const response = await request(requestOptions);
+    return response;
+  } catch (error){
+    Promise.reject(util.formatError(error));
+  }
 };
 
 /**
@@ -66,24 +71,33 @@ const createRoom = (
   * @param {object} [trace = {}] - optional microservice lifecycle trace headers
  * @returns {Promise<object>} - Promise resolving to a data object
  */
-const listRooms = (access_token = "null acess token", filter = undefined, trace = {}) => {
-  const MS = util.getEndpoint("chat");
+const listRooms = async (
+  access_token = "null acess token",
+  filter = undefined,
+  trace = {}
+) => {
+  try {
+    const MS = util.getEndpoint("chat");
 
-  const requestOptions = {
-    method: "GET",
-    uri: `${MS}/rooms`,
-    headers: {
-      "Content-type": "application/json",
-      Authorization: `Bearer ${access_token}`,
-      "x-api-version": `${util.getVersion()}`
-    },
-    json: true
-  };
-  if (filter !== undefined) {
-    requestOptions.qs = filter;
+    const requestOptions = {
+      method: "GET",
+      uri: `${MS}/rooms`,
+      headers: {
+        "Content-type": "application/json",
+        Authorization: `Bearer ${access_token}`,
+        "x-api-version": `${util.getVersion()}`
+      },
+      json: true
+    };
+    if (filter !== undefined) {
+      requestOptions.qs = filter;
+    }
+    util.addRequestTrace(requestOptions, trace);
+    const response = await request(requestOptions);
+    return response;
+  } catch (error){
+    Promise.reject(util.formatError(error));
   }
-  util.addRequestTrace(requestOptions, trace);
-  return request(requestOptions);
 };
 
 /**
@@ -94,25 +108,30 @@ const listRooms = (access_token = "null acess token", filter = undefined, trace 
  * @param {object} [trace = {}] - optional microservice lifecycle trace headers
  * @returns {Promise<object>} - Promise resolving to a data object
  */
-const getRoom = (
+const getRoom = async (
   access_token = "null access token",
   roomUUID = "no room uuid specified",
   trace ={}
 ) => {
-  const MS = util.getEndpoint("chat");
+  try {
+    const MS = util.getEndpoint("chat");
 
-  const requestOptions = {
-    method: "GET",
-    uri: `${MS}/rooms/${roomUUID}`,
-    headers: {
-      "Content-type": "application/json",
-      Authorization: `Bearer ${access_token}`,
-      "x-api-version": `${util.getVersion()}`
-    },
-    json: true
-  };
-  util.addRequestTrace(requestOptions, trace);
-  return request(requestOptions);
+    const requestOptions = {
+      method: "GET",
+      uri: `${MS}/rooms/${roomUUID}`,
+      headers: {
+        "Content-type": "application/json",
+        Authorization: `Bearer ${access_token}`,
+        "x-api-version": `${util.getVersion()}`
+      },
+      json: true
+    };
+    util.addRequestTrace(requestOptions, trace);
+    const response = await request(requestOptions);
+    return response;
+  } catch (error){
+    Promise.reject(util.formatError(error));
+  }
 };
 
 /**
@@ -123,25 +142,30 @@ const getRoom = (
  * @param {object} [trace = {}] - optional microservice lifecycle trace headers
  * @returns {Promise<empty>} - Promise with no payload
  */
-const deleteRoom = (
+const deleteRoom = async (
   access_token = "null acess token",
   roomUUID = "no room uuid specified",
   trace = {}
 ) => {
-  const MS = util.getEndpoint("chat");
+  try {
+    const MS = util.getEndpoint("chat");
 
-  const requestOptions = {
-    method: "DELETE",
-    uri: `${MS}/rooms/${roomUUID}`,
-    headers: {
-      "Content-type": "application/json",
-      Authorization: `Bearer ${access_token}`,
-      "x-api-version": `${util.getVersion()}`
-    },
-    json: true
-  };
-  util.addRequestTrace(requestOptions, trace);
-  return request(requestOptions);
+    const requestOptions = {
+      method: "DELETE",
+      uri: `${MS}/rooms/${roomUUID}`,
+      headers: {
+        "Content-type": "application/json",
+        Authorization: `Bearer ${access_token}`,
+        "x-api-version": `${util.getVersion()}`
+      },
+      json: true
+    };
+    util.addRequestTrace(requestOptions, trace);
+    const response  = await request(requestOptions);
+    return response;
+  } catch (error){
+    Promise.reject(util.formatError(error));
+  }
 };
 
 /**
@@ -153,27 +177,32 @@ const deleteRoom = (
  * @param {object} [trace = {}] - optional microservice lifecycle trace headers
  * @returns {Promise<object>} - Promise resolving to a data object
  */
-const updateRoomInfo = (
+const updateRoomInfo = async (
   access_token = "null access_token",
   roomUUID = "no room uuid specified",
   info = {},
   trace = {}
 ) => {
-  const MS = util.getEndpoint("chat");
+  try {
+    const MS = util.getEndpoint("chat");
 
-  const requestOptions = {
-    method: "PUT",
-    uri: `${MS}/rooms/${roomUUID}/info`,
-    body: info,
-    headers: {
-      "Content-type": "application/json",
-      Authorization: `Bearer ${access_token}`,
-      "x-api-version": `${util.getVersion()}`
-    },
-    json: true
-  };
-  util.addRequestTrace(requestOptions, trace);
-  return request(requestOptions);
+    const requestOptions = {
+      method: "PUT",
+      uri: `${MS}/rooms/${roomUUID}/info`,
+      body: info,
+      headers: {
+        "Content-type": "application/json",
+        Authorization: `Bearer ${access_token}`,
+        "x-api-version": `${util.getVersion()}`
+      },
+      json: true
+    };
+    util.addRequestTrace(requestOptions, trace);
+    const response = await request(requestOptions);
+    return response;
+  } catch (error) {
+    Promise.reject(util.formatError(error));
+  }
 };
 
 /**
@@ -185,28 +214,33 @@ const updateRoomInfo = (
  * @param {object} [trace = {}] - optional microservice lifecycle trace headers
  * @returns {Promise<object>} - Promise resolving to a data object
  */
-const updateRoomMeta = (
+const updateRoomMeta = async (
   access_token = "null access_token",
   roomUUID = "no room uuid specified",
   meta = {},
   trace = {}
 ) => {
-  const MS = util.getEndpoint("chat");
+  try {
+    const MS = util.getEndpoint("chat");
 
-  //console.log('mmmmmmm', meta)
-  const requestOptions = {
-    method: "PUT",
-    uri: `${MS}/rooms/${roomUUID}/meta`,
-    body: meta,
-    headers: {
-      "Content-type": "application/json",
-      Authorization: `Bearer ${access_token}`,
-      "x-api-version": `${util.getVersion()}`
-    },
-    json: true
-  };
-  util.addRequestTrace(requestOptions, trace);
-  return request(requestOptions);
+    //console.log('mmmmmmm', meta)
+    const requestOptions = {
+      method: "PUT",
+      uri: `${MS}/rooms/${roomUUID}/meta`,
+      body: meta,
+      headers: {
+        "Content-type": "application/json",
+        Authorization: `Bearer ${access_token}`,
+        "x-api-version": `${util.getVersion()}`
+      },
+      json: true
+    };
+    util.addRequestTrace(requestOptions, trace);
+    const response = await request(requestOptions);
+    return response;
+  } catch (error) {
+    Promise.reject(util.formatError(error));
+  }
 };
 
 /**
@@ -217,26 +251,31 @@ const updateRoomMeta = (
  * @param {object} [trace = {}] - optional microservice lifecycle trace headers
  * @returns {Promise<object>} - Promise resolving to a data object
  */
-const getRoomMembers = (
+const getRoomMembers = async (
   access_token = "null access_token",
   roomUUID = "no room uuid specified",
   trace = {}
 ) => {
-  const MS = util.getEndpoint("chat");
+  try {
+    const MS = util.getEndpoint("chat");
 
-  //console.log('mmmmmmm', meta)
-  const requestOptions = {
-    method: "GET",
-    uri: `${MS}/rooms/${roomUUID}/members`,
-    headers: {
-      "Content-type": "application/json",
-      Authorization: `Bearer ${access_token}`,
-      "x-api-version": `${util.getVersion()}`
-    },
-    json: true
-  };
-  util.addRequestTrace(requestOptions, trace);
-  return request(requestOptions);
+    //console.log('mmmmmmm', meta)
+    const requestOptions = {
+      method: "GET",
+      uri: `${MS}/rooms/${roomUUID}/members`,
+      headers: {
+        "Content-type": "application/json",
+        Authorization: `Bearer ${access_token}`,
+        "x-api-version": `${util.getVersion()}`
+      },
+      json: true
+    };
+    util.addRequestTrace(requestOptions, trace);
+    const response = await request(requestOptions);
+    return response;
+  } catch (error) {
+    Promise.reject(util.formatError(error));
+  }
 };
 
 /**
@@ -248,28 +287,33 @@ const getRoomMembers = (
  * @param {object} [trace = {}] - optional microservice lifecycle trace headers
  * @returns {Promise<object>} - Promise resolving to a member data object
  */
-const addMember = (
+const addMember = async (
   access_token = "null access_token",
   roomUUID = "no room uuid specified",
   memberData,
   trace = {}
 ) => {
-  const MS = util.getEndpoint("chat");
+  try {
+    const MS = util.getEndpoint("chat");
 
-  //console.log('mmmmmmm', meta)
-  const requestOptions = {
-    method: "POST",
-    uri: `${MS}/rooms/${roomUUID}/members`,
-    body: memberData,
-    headers: {
-      "Content-type": "application/json",
-      Authorization: `Bearer ${access_token}`,
-      "x-api-version": `${util.getVersion()}`
-    },
-    json: true
-  };
-  util.addRequestTrace(requestOptions, trace);
-  return request(requestOptions);
+    //console.log('mmmmmmm', meta)
+    const requestOptions = {
+      method: "POST",
+      uri: `${MS}/rooms/${roomUUID}/members`,
+      body: memberData,
+      headers: {
+        "Content-type": "application/json",
+        Authorization: `Bearer ${access_token}`,
+        "x-api-version": `${util.getVersion()}`
+      },
+      json: true
+    };
+    util.addRequestTrace(requestOptions, trace);
+    const response = await request(requestOptions);
+    return response;
+  } catch (error) {
+    Promise.reject(util.formatError(error));
+  }
 };
 
 /**
@@ -281,27 +325,32 @@ const addMember = (
  * @param {object} [trace = {}] - optional microservice lifecycle trace headers
  * @returns {Promise<object>} - Promise resolving to a member data object
  */
-const deleteMember = (
+const deleteMember = async (
   access_token = "null access_token",
   roomUUID = "no room uuid specified",
   memberUUID = "empty",
   trace = {}
 ) => {
-  const MS = util.getEndpoint("chat");
+  try {
+    const MS = util.getEndpoint("chat");
 
-  //console.log('mmmmmmm', meta)
-  const requestOptions = {
-    method: "DELETE",
-    uri: `${MS}/rooms/${roomUUID}/members/${memberUUID}`,
-    headers: {
-      "Content-type": "application/json",
-      Authorization: `Bearer ${access_token}`,
-      "x-api-version": `${util.getVersion()}`
-    },
-    json: true
-  };
-  util.addRequestTrace(requestOptions, trace);
-  return request(requestOptions);
+    //console.log('mmmmmmm', meta)
+    const requestOptions = {
+      method: "DELETE",
+      uri: `${MS}/rooms/${roomUUID}/members/${memberUUID}`,
+      headers: {
+        "Content-type": "application/json",
+        Authorization: `Bearer ${access_token}`,
+        "x-api-version": `${util.getVersion()}`
+      },
+      json: true
+    };
+    util.addRequestTrace(requestOptions, trace);
+    const response = await request(requestOptions);
+    return response;
+  } catch (error) {
+    Promise.reject(util.formatError(error));
+  }  
 };
 
 /**
@@ -313,30 +362,35 @@ const deleteMember = (
  * @param {object} [trace = {}] - optional microservice lifecycle trace headers
  * @returns {Promise<object>} - Promise resolving to a data object containing a colelction of message objects.
  */
-const getMessages = (
+const getMessages = async (
   access_token = "null access_token",
   roomUUID = "no room uuid specified",
   max = 100,
   trace = {}
 ) => {
-  const MS = util.getEndpoint("chat");
+  try {
+    const MS = util.getEndpoint("chat");
 
-  //console.log('mmmmmmm', meta)
-  const requestOptions = {
-    method: "GET",
-    uri: `${MS}/rooms/${roomUUID}/messages`,
-    qs: {
-      max: max
-    },
-    headers: {
-      "Content-type": "application/json",
-      Authorization: `Bearer ${access_token}`,
-      "x-api-version": `${util.getVersion()}`
-    },
-    json: true
-  };
-  util.addRequestTrace(requestOptions, trace);
-  return request(requestOptions);
+    //console.log('mmmmmmm', meta)
+    const requestOptions = {
+      method: "GET",
+      uri: `${MS}/rooms/${roomUUID}/messages`,
+      qs: {
+        max: max
+      },
+      headers: {
+        "Content-type": "application/json",
+        Authorization: `Bearer ${access_token}`,
+        "x-api-version": `${util.getVersion()}`
+      },
+      json: true
+    };
+    util.addRequestTrace(requestOptions, trace);
+    const response = await request(requestOptions);
+    return response;
+  } catch (error) {
+    Promise.reject(util.formatError(error));
+  }
 };
 
 /**
@@ -350,36 +404,41 @@ const getMessages = (
  * @returns {Promise<object>} - Promise resolving to a data object
  */
 
-const sendMessage = (
+const sendMessage = async (
   access_token = "null access_token",
   userUUID = "null user uuid",
   roomUUID = "no room uuid specified",
   message = "missing text",
   trace = {}
 ) => {
-  const MS = util.getEndpoint("chat");
+  try {
+    const MS = util.getEndpoint("chat");
 
-  const b = {
-    content: {
-      contentType: "string",
-      content: message
-    },
-    user_uuid: userUUID
-  };
+    const b = {
+      content: {
+        contentType: "string",
+        content: message
+      },
+      user_uuid: userUUID
+    };
 
-  const requestOptions = {
-    method: "POST",
-    uri: `${MS}/rooms/${roomUUID}/messages`,
-    body: b,
-    headers: {
-      "Content-type": "application/json",
-      Authorization: `Bearer ${access_token}`,
-      "x-api-version": `${util.getVersion()}`
-    },
-    json: true
-  };
-  util.addRequestTrace(requestOptions, trace);
-  return request(requestOptions);
+    const requestOptions = {
+      method: "POST",
+      uri: `${MS}/rooms/${roomUUID}/messages`,
+      body: b,
+      headers: {
+        "Content-type": "application/json",
+        Authorization: `Bearer ${access_token}`,
+        "x-api-version": `${util.getVersion()}`
+      },
+      json: true
+    };
+    util.addRequestTrace(requestOptions, trace);
+    const response = await request(requestOptions);
+    return response;
+  } catch (error) {
+    Promise.reject(util.formatError(error));
+  }
 };
 
 /**
@@ -391,41 +450,30 @@ const sendMessage = (
  * @param {object} [trace = {}] - optional microservice lifecycle trace headers
  * @returns {Promise<object>} - Promise resolving to a data object
  */
-const getRoomInfo = (
+const getRoomInfo = async (
   access_token = "null access_token",
   roomUUID = "no room uuid specified",
   message_count = 100,
   trace = {}
 ) => {
-  return new Promise((resolve, reject) => {
+  try {
     const newMeta = util.generateNewMetaData;
     const pInfo = getRoom(access_token, roomUUID, trace);
     let nextMeta = objectMerge({}, trace, newMeta(trace));
     const pMessages = getMessages(access_token, roomUUID, message_count, nextMeta);
+    const pData = await Promise.all([pInfo, pMessages]);
+    nextMeta = objectMerge({}, trace, newMeta(trace));
+    const groupData = await Groups.getGroup(access_token, pData[0].group_uuid, nextMeta);
+      
 
-    Promise.all([pInfo, pMessages])
-      .then(pData => {
-        //console.log('--------', pData)
-        // get group data
-        nextMeta = objectMerge({}, trace, newMeta(trace));
-        Groups.getGroup(access_token, pData[0].group_uuid, nextMeta)
-          .then(groupData => {
-            resolve({
-              info: pData[0],
-              members: groupData.members,
-              messages: pData[1].items
-            });
-          })
-          .catch(groupError => {
-            console.log("##### Group Error in getRoomInfo", groupError);
-            reject(groupError);
-          });
-      })
-      .catch(error => {
-        console.log("##### Error getRoomInfo", error);
-        reject(error);
-      });
-  });
+    return {
+      info: pData[0],
+      members: groupData.members,
+      messages: pData[1].items
+    };
+  } catch (error) {
+    Promise.reject(util.formatError(error));
+  }
 };
 
 module.exports = {

@@ -32,13 +32,23 @@ const deleteEvent = async (
     };
     Util.addRequestTrace(requestOptions, trace);
     const response = await request(requestOptions);
-    if(response.statusCode === 204){
-      return Promise.resolve({ status: "ok" });
+    if(response.statusCode === 204) {
+      return { status: "ok" };
     } else {
-      throw new Error(response);
+      // this is an edge case, but protects against unexpected 2xx or 3xx response codes.
+      throw {
+        "code": response.statusCode,
+        "message": typeof response.body === "string" ? response.body : "delete event failed",
+        "trace_id": requestOptions.hasOwnProperty("headers") && requestOptions.headers.hasOwnProperty("trace")
+          ? requestOptions.headers.trace 
+          : undefined,
+        "details": typeof response.body === "object" && response.body !== null
+          ? [response.body]
+          : []
+      };
     }
   } catch (error) {
-    return Promise.reject({ status: "failed", "error": error});
+    return Promise.reject(Util.formatError(error));
   }
 };
 
@@ -50,25 +60,29 @@ const deleteEvent = async (
  * @param {object} [trace={}] - optional debug headers
  * @returns {Promise} - schedule event object
  */
-const getEvent = (
+const getEvent = async (
   accessToken = "null accessToken",
   eventUUID = "null eventUUID",
   trace = {}
 ) => {
-  const MS = Util.getEndpoint("scheduler");
-  const requestOptions = {
-    method: "GET",
-    uri: `${MS}/events/${eventUUID}`,
-    headers: {
-      Authorization: `Bearer ${accessToken}`,
-      "Content-type": "application/json",
-      "x-api-version": `${Util.getVersion()}`
-    },
-    json: true
-  };
-  Util.addRequestTrace(requestOptions, trace);
-
-  return request(requestOptions);
+  try {
+    const MS = Util.getEndpoint("scheduler");
+    const requestOptions = {
+      method: "GET",
+      uri: `${MS}/events/${eventUUID}`,
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+        "Content-type": "application/json",
+        "x-api-version": `${Util.getVersion()}`
+      },
+      json: true
+    };
+    Util.addRequestTrace(requestOptions, trace);
+    const response = await request(requestOptions);
+    return response;
+  } catch (error) {
+    return Promise.reject(Util.formatError(error));
+  }
 };
 /**
  * @async
@@ -78,25 +92,29 @@ const getEvent = (
  * @param {object} [trace={}] - optional debug headers
  * @returns {Promise} - event info object
  */
-const getNextEventInfo = (
+const getNextEventInfo = async (
   accessToken = "null accessToken",
   eventUUID = "null eventUUID",
   trace = {}
 ) => {
-  const MS = Util.getEndpoint("scheduler");
-  const requestOptions = {
-    method: "GET",
-    uri: `${MS}/events/${eventUUID}/next`,
-    headers: {
-      Authorization: `Bearer ${accessToken}`,
-      "Content-type": "application/json",
-      "x-api-version": `${Util.getVersion()}`
-    },
-    json: true
-  };
-  Util.addRequestTrace(requestOptions, trace);
-
-  return request(requestOptions);
+  try {
+    const MS = Util.getEndpoint("scheduler");
+    const requestOptions = {
+      method: "GET",
+      uri: `${MS}/events/${eventUUID}/next`,
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+        "Content-type": "application/json",
+        "x-api-version": `${Util.getVersion()}`
+      },
+      json: true
+    };
+    Util.addRequestTrace(requestOptions, trace);
+    const response = await request(requestOptions);
+    return response;
+  } catch (error) {
+    return Promise.reject(Util.formatError(error));
+  }
 };
 
 /**
@@ -109,36 +127,40 @@ const getNextEventInfo = (
  * @param {object} [trace={}] - optional debug headers
  * @returns {Promise} - array of event items
  */
-const listEvents = (
+const listEvents = async (
   accessToken = "null accessToken",
   offset = 0,
   limit = 10,
   filters = undefined,
   trace = {}
 ) => {
-  const MS = Util.getEndpoint("scheduler");
-  const requestOptions = {
-    method: "GET",
-    uri: `${MS}/events`,
-    headers: {
-      Authorization: `Bearer ${accessToken}`,
-      "Content-type": "application/json",
-      "x-api-version": `${Util.getVersion()}`
-    },
-    qs: {
-      offset: offset,
-      limit: limit
-    },
-    json: true
-  };
-  Util.addRequestTrace(requestOptions, trace);
-  if (filters) {
-    Object.keys(filters).forEach(filter => {
-      requestOptions.qs[filter] = filters[filter];
-    });
+  try { 
+    const MS = Util.getEndpoint("scheduler");
+    const requestOptions = {
+      method: "GET",
+      uri: `${MS}/events`,
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+        "Content-type": "application/json",
+        "x-api-version": `${Util.getVersion()}`
+      },
+      qs: {
+        offset: offset,
+        limit: limit
+      },
+      json: true
+    };
+    Util.addRequestTrace(requestOptions, trace);
+    if (filters) {
+      Object.keys(filters).forEach(filter => {
+        requestOptions.qs[filter] = filters[filter];
+      });
+    }
+    const response = await request(requestOptions);
+    return response;
+  } catch (error) {
+    return Promise.reject(Util.formatError(error));
   }
-
-  return request(requestOptions);
 };
 
 /**
@@ -151,36 +173,41 @@ const listEvents = (
  * @param {object} [trace={}] - optional debug headers
  * @returns {Promise} - array of event history items
  */
-const listEventsHistory = (
+const listEventsHistory = async (
   accessToken = "null accessToken",
   offset = 0,
   limit = 10,
   filters = undefined,
   trace = {}
 ) => {
-  const MS = Util.getEndpoint("scheduler");
-  const requestOptions = {
-    method: "GET",
-    uri: `${MS}/events/history`,
-    headers: {
-      Authorization: `Bearer ${accessToken}`,
-      "Content-type": "application/json",
-      "x-api-version": `${Util.getVersion()}`
-    },
-    qs: {
-      offset: offset,
-      limit: limit
-    },
-    json: true
-  };
-  Util.addRequestTrace(requestOptions, trace);
-  if (filters) {
-    Object.keys(filters).forEach(filter => {
-      requestOptions.qs[filter] = filters[filter];
-    });
-  }
+  try {
+    const MS = Util.getEndpoint("scheduler");
+    const requestOptions = {
+      method: "GET",
+      uri: `${MS}/events/history`,
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+        "Content-type": "application/json",
+        "x-api-version": `${Util.getVersion()}`
+      },
+      qs: {
+        offset: offset,
+        limit: limit
+      },
+      json: true
+    };
+    Util.addRequestTrace(requestOptions, trace);
+    if (filters) {
+      Object.keys(filters).forEach(filter => {
+        requestOptions.qs[filter] = filters[filter];
+      });
+    }
 
-  return request(requestOptions);
+    const response = await request(requestOptions);
+    return response;
+  } catch (error) {
+    return Promise.reject(Util.formatError(error));
+  }
 };
 
 /**
@@ -201,7 +228,7 @@ const listEventsHistory = (
  * @param {object} [trace={}] - optional debug headers
  * @returns {Promise} - scheduled event object
  */
-const scheduleEvent = (
+const scheduleEvent = async (
   accessToken = "null accessToken",
   userUUID = "null userUUID",
   startDateTime = (new Date()).toISOString(),
@@ -216,31 +243,36 @@ const scheduleEvent = (
   metadata = {},
   trace = {}
 ) => {
-  const MS = Util.getEndpoint("scheduler");
-  const requestOptions = {
-    method: "POST",
-    uri: `${MS}/events`,
-    headers: {
-      Authorization: `Bearer ${accessToken}`,
-      "Content-type": "application/json",
-      "x-api-version": `${Util.getVersion()}`
-    },
-    body: {
-      "user_uuid": userUUID,
-      "start_datetime": startDateTime,
-      "timezone": timezone,
-      "title": title,
-      "description": description,
-      "status": "active",
-      "frequency": frequency,
-      "trigger": trigger,
-      "notification": notification,
-      "metadata": metadata
-    },
-    json: true
-  };
-  Util.addRequestTrace(requestOptions, trace);
-  return request(requestOptions);
+  try {
+    const MS = Util.getEndpoint("scheduler");
+    const requestOptions = {
+      method: "POST",
+      uri: `${MS}/events`,
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+        "Content-type": "application/json",
+        "x-api-version": `${Util.getVersion()}`
+      },
+      body: {
+        "user_uuid": userUUID,
+        "start_datetime": startDateTime,
+        "timezone": timezone,
+        "title": title,
+        "description": description,
+        "status": "active",
+        "frequency": frequency,
+        "trigger": trigger,
+        "notification": notification,
+        "metadata": metadata
+      },
+      json: true
+    };
+    Util.addRequestTrace(requestOptions, trace);
+    const response = await request(requestOptions);
+    return response;
+  } catch (error) {
+    return Promise.reject(Util.formatError(error));
+  }
 };
 
 /**
@@ -252,26 +284,30 @@ const scheduleEvent = (
  * @param {object} [trace={}] - option debug headers
  * @returns {Promise} - updated event object
  */
-const updateEvent = (
+const updateEvent = async (
   accessToken = "null accessToken",
   eventUUID = "null eventUUID",
   body = "null body",
   trace = {}
 ) => {
-  const MS = Util.getEndpoint("scheduler");
-  const requestOptions = {
-    method: "PUT",
-    uri: `${MS}/events/${eventUUID}`,
-    headers: {
-      Authorization: `Bearer ${accessToken}`,
-      "Content-type": "application/json",
-      "x-api-version": `${Util.getVersion()}`
-    },
-    body: body,
-    json: true
-  };
-  Util.addRequestTrace(requestOptions, trace);
-  return request(requestOptions);
+  try {
+    const MS = Util.getEndpoint("scheduler");
+    const requestOptions = {
+      method: "PUT",
+      uri: `${MS}/events/${eventUUID}`,
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+        "Content-type": "application/json",
+        "x-api-version": `${Util.getVersion()}`
+      },
+      body: body,
+      json: true
+    };
+    Util.addRequestTrace(requestOptions, trace);
+    return request(requestOptions);
+  } catch (error) {
+    return Promise.reject(Util.formatError(error));
+  }
 };
 
 module.exports = {

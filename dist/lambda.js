@@ -15,28 +15,34 @@ const request = require("request-promise");
  */
 
 
-const listLambdas = function listLambdas() {
+const listLambdas = async function listLambdas() {
   let accessToken = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : "null access Token";
   let offset = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 0;
   let limit = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : 10;
   let trace = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : {};
-  const MS = util.getEndpoint("lambda");
-  const requestOptions = {
-    method: "GET",
-    uri: "".concat(MS, "/actions"),
-    headers: {
-      Authorization: "Bearer ".concat(accessToken),
-      "x-api-version": "".concat(util.getVersion()),
-      "Content-Type": "application/json"
-    },
-    qs: {
-      limit: limit,
-      skip: offset
-    },
-    json: true
-  };
-  util.addRequestTrace(requestOptions, trace);
-  return request(requestOptions);
+
+  try {
+    const MS = util.getEndpoint("lambda");
+    const requestOptions = {
+      method: "GET",
+      uri: "".concat(MS, "/actions"),
+      headers: {
+        Authorization: "Bearer ".concat(accessToken),
+        "x-api-version": "".concat(util.getVersion()),
+        "Content-Type": "application/json"
+      },
+      qs: {
+        limit: limit,
+        skip: offset
+      },
+      json: true
+    };
+    util.addRequestTrace(requestOptions, trace);
+    const response = await request(requestOptions);
+    return response;
+  } catch (error) {
+    return Promise.reject(util.formatError(error));
+  }
 };
 /**
  * @async
@@ -49,25 +55,31 @@ const listLambdas = function listLambdas() {
  */
 
 
-const invokeLambda = function invokeLambda() {
+const invokeLambda = async function invokeLambda() {
   let accessToken = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : "null access Token";
   let lambdaName = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : "not defined";
   let params = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : {};
   let trace = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : {};
-  const MS = util.getEndpoint("lambda");
-  const requestOptions = {
-    method: "POST",
-    uri: "".concat(MS, "/actions/").concat(lambdaName, "/invoke"),
-    headers: {
-      Authorization: "Bearer ".concat(accessToken),
-      "x-api-version": "".concat(util.getVersion()),
-      "Content-Type": "application/json"
-    },
-    body: params,
-    json: true
-  };
-  util.addRequestTrace(requestOptions, trace);
-  return request(requestOptions);
+
+  try {
+    const MS = util.getEndpoint("lambda");
+    const requestOptions = {
+      method: "POST",
+      uri: "".concat(MS, "/actions/").concat(lambdaName, "/invoke"),
+      headers: {
+        Authorization: "Bearer ".concat(accessToken),
+        "x-api-version": "".concat(util.getVersion()),
+        "Content-Type": "application/json"
+      },
+      body: params,
+      json: true
+    };
+    util.addRequestTrace(requestOptions, trace);
+    const response = await request(requestOptions);
+    return response;
+  } catch (error) {
+    return Promise.reject(util.formatError(error));
+  }
 };
 
 module.exports = {

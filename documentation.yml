@@ -176,18 +176,6 @@ toc:
       - createShortUrl
       - deleteShortCode
       - listShortUrls
-  - name: Task
-    children:
-      - addTaskToTaskObject
-      - createTaskObject
-      - createTaskTemplate
-      - deleteTaskObject
-      - deleteTaskTemplate
-      - getTaskObject
-      - getTaskTemplates
-      - updateTaskObject
-      - updateTaskInTaskObject
-      - validateTasks 
   - name: Workflow
     children:
       - createWorkflowTemplate

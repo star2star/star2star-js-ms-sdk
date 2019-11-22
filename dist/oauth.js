@@ -22,28 +22,32 @@ const createClientApp = async function createClientApp() {
   let name = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : "null name";
   let description = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : "null description";
   let trace = arguments.length > 4 && arguments[4] !== undefined ? arguments[4] : {};
-  const MS = Util.getAuthHost();
-  const requestOptions = {
-    method: "POST",
-    uri: "".concat(MS, "/oauth/clients"),
-    body: {
-      name: name,
-      description: description,
-      application_type: "connect",
-      grant_types: ["client_credentials"],
-      app_user: userUUID
-    },
-    json: true,
-    headers: {
-      Authorization: "Bearer ".concat(accessToken),
-      "Content-type": "application/json",
-      "x-api-version": "".concat(Util.getVersion())
-    }
-  };
-  Util.addRequestTrace(requestOptions, trace);
-  const response = request(requestOptions);
-  await new Promise(resolve => setTimeout(resolve, Util.config.msDelay));
-  return response;
+
+  try {
+    const MS = Util.getAuthHost();
+    const requestOptions = {
+      method: "POST",
+      uri: "".concat(MS, "/oauth/clients"),
+      body: {
+        name: name,
+        description: description,
+        application_type: "connect",
+        grant_types: ["client_credentials"],
+        app_user: userUUID
+      },
+      json: true,
+      headers: {
+        Authorization: "Bearer ".concat(accessToken),
+        "Content-type": "application/json",
+        "x-api-version": "".concat(Util.getVersion())
+      }
+    };
+    Util.addRequestTrace(requestOptions, trace);
+    const response = await request(requestOptions);
+    return response;
+  } catch (error) {
+    return Promise.reject(Util.formatError(error));
+  }
 };
 /**
  * @async
@@ -54,16 +58,25 @@ const createClientApp = async function createClientApp() {
  */
 
 
-const generateBasicToken = function generateBasicToken() {
+const generateBasicToken = async function generateBasicToken() {
   let publicID = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : "null publicID";
   let secret = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : "null secret";
-  let basicToken = undefined;
-  basicToken = Buffer.from("".concat(publicID, ":").concat(secret)).toString("base64");
 
-  if (!basicToken) {
-    throw new Error("base64 encoding failed");
-  } else {
-    return Promise.resolve(basicToken);
+  // why is this async?
+  try {
+    let basicToken = undefined;
+    basicToken = Buffer.from("".concat(publicID, ":").concat(secret)).toString("base64");
+
+    if (!basicToken) {
+      throw {
+        "code": 500,
+        "message": "base64 encoding failed"
+      };
+    } else {
+      return basicToken;
+    }
+  } catch (error) {
+    return Promise.reject(Util.formatError(error));
   }
 };
 /**
@@ -84,29 +97,33 @@ const getAccessToken = async function getAccessToken() {
   let pwd = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : "null pwd";
   let scope = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : "default";
   let trace = arguments.length > 4 && arguments[4] !== undefined ? arguments[4] : {};
-  const MS = Util.getAuthHost();
-  const VERSION = Util.getVersion();
-  const requestOptions = {
-    method: "POST",
-    uri: "".concat(MS, "/oauth/token"),
-    headers: {
-      Authorization: "Basic ".concat(oauthToken),
-      "x-api-version": "".concat(VERSION),
-      "Content-type": "application/x-www-form-urlencoded"
-    },
-    form: {
-      grant_type: "password",
-      scope: scope,
-      email: email,
-      password: pwd
-    },
-    json: true // resolveWithFullResponse: true
 
-  };
-  Util.addRequestTrace(requestOptions, trace);
-  const response = await request(requestOptions);
-  await new Promise(resolve => setTimeout(resolve, Util.config.msDelay));
-  return response;
+  try {
+    const MS = Util.getAuthHost();
+    const VERSION = Util.getVersion();
+    const requestOptions = {
+      method: "POST",
+      uri: "".concat(MS, "/oauth/token"),
+      headers: {
+        Authorization: "Basic ".concat(oauthToken),
+        "x-api-version": "".concat(VERSION),
+        "Content-type": "application/x-www-form-urlencoded"
+      },
+      form: {
+        grant_type: "password",
+        scope: scope,
+        email: email,
+        password: pwd
+      },
+      json: true // resolveWithFullResponse: true
+
+    };
+    Util.addRequestTrace(requestOptions, trace);
+    const response = await request(requestOptions);
+    return response;
+  } catch (error) {
+    return Promise.reject(Util.formatError(error));
+  }
 };
 /**
  * @async
@@ -120,27 +137,31 @@ const getAccessToken = async function getAccessToken() {
 const getClientToken = async function getClientToken() {
   let oauthToken = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : "null oauth token";
   let trace = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
-  const MS = Util.getAuthHost();
-  const VERSION = Util.getVersion();
-  const requestOptions = {
-    method: "POST",
-    uri: "".concat(MS, "/oauth/token"),
-    headers: {
-      Authorization: "Basic ".concat(oauthToken),
-      "x-api-version": "".concat(VERSION),
-      "Content-type": "application/x-www-form-urlencoded"
-    },
-    form: {
-      grant_type: "client_credentials",
-      scope: "default"
-    },
-    json: true // resolveWithFullResponse: true
 
-  };
-  Util.addRequestTrace(requestOptions, trace);
-  const response = request(requestOptions);
-  await new Promise(resolve => setTimeout(resolve, Util.config.msDelay));
-  return response;
+  try {
+    const MS = Util.getAuthHost();
+    const VERSION = Util.getVersion();
+    const requestOptions = {
+      method: "POST",
+      uri: "".concat(MS, "/oauth/token"),
+      headers: {
+        Authorization: "Basic ".concat(oauthToken),
+        "x-api-version": "".concat(VERSION),
+        "Content-type": "application/x-www-form-urlencoded"
+      },
+      form: {
+        grant_type: "client_credentials",
+        scope: "default"
+      },
+      json: true // resolveWithFullResponse: true
+
+    };
+    Util.addRequestTrace(requestOptions, trace);
+    const response = request(requestOptions);
+    return response;
+  } catch (error) {
+    return Promise.reject(Util.formatError(error));
+  }
 };
 /**
  * @async
@@ -156,28 +177,42 @@ const invalidateToken = async function invalidateToken() {
   let accessToken = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : "null accessToken";
   let token = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : "null token";
   let trace = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : {};
-  const MS = Util.getAuthHost();
-  const requestOptions = {
-    method: "POST",
-    uri: "".concat(MS, "/oauth/invalidate/access"),
-    body: {
-      access_token: token
-    },
-    resolveWithFullResponse: true,
-    json: true,
-    headers: {
-      "Authorization": "Bearer ".concat(accessToken),
-      "Content-type": "application/json",
-      "x-api-version": "".concat(Util.getVersion())
+
+  try {
+    const MS = Util.getAuthHost();
+    const requestOptions = {
+      method: "POST",
+      uri: "".concat(MS, "/oauth/invalidate/access"),
+      body: {
+        access_token: token
+      },
+      resolveWithFullResponse: true,
+      json: true,
+      headers: {
+        "Authorization": "Bearer ".concat(accessToken),
+        "Content-type": "application/json",
+        "x-api-version": "".concat(Util.getVersion())
+      }
+    };
+    Util.addRequestTrace(requestOptions, trace);
+    const response = await request(requestOptions);
+
+    if (response.statusCode === 204) {
+      return {
+        status: "ok"
+      };
+    } else {
+      // this is an edge case, but protects against unexpected 2xx or 3xx response codes.
+      throw {
+        "code": response.statusCode,
+        "message": typeof response.body === "string" ? response.body : "invalidate token failed",
+        "trace_id": requestOptions.hasOwnProperty("headers") && requestOptions.headers.hasOwnProperty("trace") ? requestOptions.headers.trace : undefined,
+        "details": typeof response.body === "object" && response.body !== null ? [response.body] : []
+      };
     }
-  };
-  Util.addRequestTrace(requestOptions, trace);
-  const response = await request(requestOptions);
-  return response.statusCode === 204 ? Promise.resolve({
-    status: "ok"
-  }) : Promise.reject({
-    status: "failed"
-  });
+  } catch (error) {
+    return Promise.reject(Util.formatError(error));
+  }
 };
 /**
  * @async 
@@ -197,30 +232,36 @@ const listClientTokens = async function listClientTokens() {
   let limit = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : 10;
   let filters = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : undefined;
   let trace = arguments.length > 4 && arguments[4] !== undefined ? arguments[4] : {};
-  const MS = Util.getEndpoint("oauth");
-  const requestOptions = {
-    method: "GET",
-    uri: "".concat(MS, "/oauth/tokens"),
-    qs: {
-      offset: offset,
-      limit: limit
-    },
-    json: true,
-    headers: {
-      Authorization: "Bearer ".concat(accessToken),
-      "Content-type": "application/json",
-      "x-api-version": "".concat(Util.getVersion())
+
+  try {
+    const MS = Util.getEndpoint("oauth");
+    const requestOptions = {
+      method: "GET",
+      uri: "".concat(MS, "/oauth/tokens"),
+      qs: {
+        offset: offset,
+        limit: limit
+      },
+      json: true,
+      headers: {
+        Authorization: "Bearer ".concat(accessToken),
+        "Content-type": "application/json",
+        "x-api-version": "".concat(Util.getVersion())
+      }
+    };
+
+    if (filters && typeof filters == "object") {
+      Object.keys(filters).forEach(filter => {
+        requestOptions.qs[filter] = filters[filter];
+      });
     }
-  };
 
-  if (filters && typeof filters == "object") {
-    Object.keys(filters).forEach(filter => {
-      requestOptions.qs[filter] = filters[filter];
-    });
+    Util.addRequestTrace(requestOptions, trace);
+    const response = request(requestOptions);
+    return response;
+  } catch (error) {
+    return Promise.reject(Util.formatError(error));
   }
-
-  Util.addRequestTrace(requestOptions, trace);
-  return request(requestOptions);
 };
 /**
  * @async
@@ -237,25 +278,30 @@ const refreshAccessToken = async function refreshAccessToken() {
   let oauthToken = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : "null oauth token";
   let refreshToken = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : "null refresh token";
   let trace = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : {};
-  const MS = Util.getAuthHost();
-  const VERSION = Util.getVersion();
-  const requestOptions = {
-    method: "POST",
-    uri: "".concat(MS, "/oauth/token"),
-    headers: {
-      Authorization: "Basic ".concat(oauthToken),
-      "x-api-version": "".concat(VERSION),
-      "Content-type": "application/x-www-form-urlencoded"
-    },
-    form: {
-      grant_type: "refresh_token",
-      refresh_token: refreshToken
-    },
-    json: true // resolveWithFullResponse: true
 
-  };
-  Util.addRequestTrace(requestOptions, trace);
-  return await request(requestOptions);
+  try {
+    const MS = Util.getAuthHost();
+    const VERSION = Util.getVersion();
+    const requestOptions = {
+      method: "POST",
+      uri: "".concat(MS, "/oauth/token"),
+      headers: {
+        Authorization: "Basic ".concat(oauthToken),
+        "x-api-version": "".concat(VERSION),
+        "Content-type": "application/x-www-form-urlencoded"
+      },
+      form: {
+        grant_type: "refresh_token",
+        refresh_token: refreshToken
+      },
+      json: true
+    };
+    Util.addRequestTrace(requestOptions, trace);
+    const response = request(requestOptions);
+    return response;
+  } catch (error) {
+    return Promise.reject(Util.formatError(error));
+  }
 };
 /**
  * @async
@@ -273,33 +319,41 @@ const scopeClientApp = async function scopeClientApp() {
   let clientUUID = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : "null clientUUID";
   let scope = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : ["default"];
   let trace = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : {};
-  const MS = Util.getAuthHost();
-  const requestOptions = {
-    method: "POST",
-    uri: "".concat(MS, "/oauth/clients/").concat(clientUUID, "/scopes"),
-    body: {
-      scope: scope
-    },
-    resolveWithFullResponse: true,
-    json: true,
-    headers: {
-      Authorization: "Bearer ".concat(accessToken),
-      "Content-type": "application/json",
-      "x-api-version": "".concat(Util.getVersion())
-    }
-  };
-  Util.addRequestTrace(requestOptions, trace);
-  const response = await request(requestOptions);
-  await new Promise(resolve => setTimeout(resolve, Util.config.msDelay));
 
-  if (response.statusCode === 204) {
-    return Promise.resolve({
-      "status": "ok"
-    });
-  } else {
-    return Promise.reject({
-      "status": "failed"
-    });
+  try {
+    const MS = Util.getAuthHost();
+    const requestOptions = {
+      method: "POST",
+      uri: "".concat(MS, "/oauth/clients/").concat(clientUUID, "/scopes"),
+      body: {
+        scope: scope
+      },
+      resolveWithFullResponse: true,
+      json: true,
+      headers: {
+        Authorization: "Bearer ".concat(accessToken),
+        "Content-type": "application/json",
+        "x-api-version": "".concat(Util.getVersion())
+      }
+    };
+    Util.addRequestTrace(requestOptions, trace);
+    const response = await request(requestOptions);
+
+    if (response.statusCode === 204) {
+      return {
+        status: "ok"
+      };
+    } else {
+      // this is an edge case, but protects against unexpected 2xx or 3xx response codes.
+      throw {
+        "code": response.statusCode,
+        "message": typeof response.body === "string" ? response.body : "scope client app failed",
+        "trace_id": requestOptions.hasOwnProperty("headers") && requestOptions.headers.hasOwnProperty("trace") ? requestOptions.headers.trace : undefined,
+        "details": typeof response.body === "object" && response.body !== null ? [response.body] : []
+      };
+    }
+  } catch (error) {
+    return Promise.reject(Util.formatError(error));
   }
 };
 /**
@@ -316,28 +370,42 @@ const validateToken = async function validateToken() {
   let accessToken = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : "null accessToken";
   let token = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : "null token";
   let trace = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : {};
-  const MS = Util.getAuthHost();
-  const requestOptions = {
-    method: "POST",
-    uri: "".concat(MS, "/oauth/validate/access"),
-    body: {
-      access_token: token
-    },
-    resolveWithFullResponse: true,
-    json: true,
-    headers: {
-      "Authorization": "Bearer ".concat(accessToken),
-      "Content-type": "application/json",
-      "x-api-version": "".concat(Util.getVersion())
+
+  try {
+    const MS = Util.getAuthHost();
+    const requestOptions = {
+      method: "POST",
+      uri: "".concat(MS, "/oauth/validate/access"),
+      body: {
+        access_token: token
+      },
+      resolveWithFullResponse: true,
+      json: true,
+      headers: {
+        "Authorization": "Bearer ".concat(accessToken),
+        "Content-type": "application/json",
+        "x-api-version": "".concat(Util.getVersion())
+      }
+    };
+    Util.addRequestTrace(requestOptions, trace);
+    const response = await request(requestOptions);
+
+    if (response.statusCode === 204) {
+      return {
+        status: "ok"
+      };
+    } else {
+      // this is an edge case, but protects against unexpected 2xx or 3xx response codes.
+      throw {
+        "code": response.statusCode,
+        "message": typeof response.body === "string" ? response.body : "validate token failed",
+        "trace_id": requestOptions.hasOwnProperty("headers") && requestOptions.headers.hasOwnProperty("trace") ? requestOptions.headers.trace : undefined,
+        "details": typeof response.body === "object" && response.body !== null ? [response.body] : []
+      };
     }
-  };
-  Util.addRequestTrace(requestOptions, trace);
-  const response = await request(requestOptions);
-  return response.statusCode === 204 ? Promise.resolve({
-    status: "ok"
-  }) : Promise.reject({
-    status: "failed"
-  });
+  } catch (error) {
+    return Promise.reject(Util.formatError(error));
+  }
 };
 
 module.exports = {

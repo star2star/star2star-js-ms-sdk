@@ -21,28 +21,31 @@ const createClientApp = async (
   description = "null description",
   trace = {}
 ) => {
-  const MS = Util.getAuthHost();
-  const requestOptions = {
-    method: "POST",
-    uri: `${MS}/oauth/clients`,
-    body: {
-      name: name,
-      description: description,
-      application_type: "connect",
-      grant_types: ["client_credentials"],
-      app_user: userUUID
-    },
-    json: true,
-    headers: {
-      Authorization: `Bearer ${accessToken}`,
-      "Content-type": "application/json",
-      "x-api-version": `${Util.getVersion()}`
-    }
-  };
-  Util.addRequestTrace(requestOptions, trace);
-  const response =  request(requestOptions);
-  await new Promise(resolve => setTimeout(resolve, Util.config.msDelay));
-  return response;  
+  try {
+    const MS = Util.getAuthHost();
+    const requestOptions = {
+      method: "POST",
+      uri: `${MS}/oauth/clients`,
+      body: {
+        name: name,
+        description: description,
+        application_type: "connect",
+        grant_types: ["client_credentials"],
+        app_user: userUUID
+      },
+      json: true,
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+        "Content-type": "application/json",
+        "x-api-version": `${Util.getVersion()}`
+      }
+    };
+    Util.addRequestTrace(requestOptions, trace);
+    const response =  await request(requestOptions);
+    return response;
+  } catch (error) {
+    return Promise.reject(Util.formatError(error));
+  }  
 };
 
 /**
@@ -52,17 +55,25 @@ const createClientApp = async (
  * @param {string} [secret="null secret"]
  * @returns {string} - base64 encoded Basic token
  */
-const generateBasicToken = (
+const generateBasicToken = async (
   publicID = "null publicID",
   secret = "null secret"
 ) => {
-  let basicToken = undefined;
-  basicToken = Buffer.from(`${publicID}:${secret}`).toString("base64");
-  if(!basicToken) {
-    throw new Error("base64 encoding failed");
-  }
-  else { 
-    return Promise.resolve(basicToken);
+  // why is this async?
+  try {
+    let basicToken = undefined;
+    basicToken = Buffer.from(`${publicID}:${secret}`).toString("base64");
+    if(!basicToken) {
+      throw {
+        "code": 500,
+        "message": "base64 encoding failed"
+      };
+    }
+    else { 
+      return basicToken;
+    }
+  } catch (error) {
+    return Promise.reject(Util.formatError(error));
   }
 };
 
@@ -83,29 +94,32 @@ const getAccessToken = async (
   scope = "default",
   trace = {}
 ) => {
-  const MS = Util.getAuthHost();
-  const VERSION = Util.getVersion();
-  const requestOptions = {
-    method: "POST",
-    uri: `${MS}/oauth/token`,
-    headers: {
-      Authorization: `Basic ${oauthToken}`,
-      "x-api-version": `${VERSION}`,
-      "Content-type": "application/x-www-form-urlencoded"
-    },
-    form: {
-      grant_type: "password",
-      scope: scope,
-      email: email,
-      password: pwd
-    },
-    json: true
-    // resolveWithFullResponse: true
-  };
-  Util.addRequestTrace(requestOptions, trace);
-  const response =  await request(requestOptions);
-  await new Promise(resolve => setTimeout(resolve, Util.config.msDelay));
-  return response;
+  try {
+    const MS = Util.getAuthHost();
+    const VERSION = Util.getVersion();
+    const requestOptions = {
+      method: "POST",
+      uri: `${MS}/oauth/token`,
+      headers: {
+        Authorization: `Basic ${oauthToken}`,
+        "x-api-version": `${VERSION}`,
+        "Content-type": "application/x-www-form-urlencoded"
+      },
+      form: {
+        grant_type: "password",
+        scope: scope,
+        email: email,
+        password: pwd
+      },
+      json: true
+      // resolveWithFullResponse: true
+    };
+    Util.addRequestTrace(requestOptions, trace);
+    const response =  await request(requestOptions);
+    return response;
+  } catch (error) {
+    return Promise.reject(Util.formatError(error));
+  }
 };
 
 /**
@@ -116,28 +130,30 @@ const getAccessToken = async (
  * @returns {Promise<object>} - Promise resolving to an oauth token data object
  */
 const getClientToken = async (oauthToken = "null oauth token", trace = {}) => {
-  const MS = Util.getAuthHost();
-  const VERSION = Util.getVersion();
-  const requestOptions = {
-    method: "POST",
-    uri: `${MS}/oauth/token`,
-    headers: {
-      Authorization: `Basic ${oauthToken}`,
-      "x-api-version": `${VERSION}`,
-      "Content-type": "application/x-www-form-urlencoded"
-    },
-    form: {
-      grant_type: "client_credentials",
-      scope: "default"
-    },
-    json: true
-    // resolveWithFullResponse: true
-  };
-  Util.addRequestTrace(requestOptions, trace);
-  const response = request(requestOptions);
-  await new Promise(resolve => setTimeout(resolve, Util.config.msDelay));
-  return response;
-
+  try {
+    const MS = Util.getAuthHost();
+    const VERSION = Util.getVersion();
+    const requestOptions = {
+      method: "POST",
+      uri: `${MS}/oauth/token`,
+      headers: {
+        Authorization: `Basic ${oauthToken}`,
+        "x-api-version": `${VERSION}`,
+        "Content-type": "application/x-www-form-urlencoded"
+      },
+      form: {
+        grant_type: "client_credentials",
+        scope: "default"
+      },
+      json: true
+      // resolveWithFullResponse: true
+    };
+    Util.addRequestTrace(requestOptions, trace);
+    const response = request(requestOptions);
+    return response;
+  } catch (error) {
+    return Promise.reject(Util.formatError(error));
+  }
 };
 
 /**
@@ -149,24 +165,42 @@ const getClientToken = async (oauthToken = "null oauth token", trace = {}) => {
  * @returns {Promise} - promise thatdoes stuff
  */
 const invalidateToken = async (accessToken = "null accessToken", token = "null token", trace = {}) => {
-  const MS = Util.getAuthHost();
-  const requestOptions = {
-    method: "POST",
-    uri: `${MS}/oauth/invalidate/access`,
-    body: {
-      access_token: token
-    },
-    resolveWithFullResponse: true,
-    json: true,
-    headers: {
-      "Authorization": `Bearer ${accessToken}`,
-      "Content-type": "application/json",
-      "x-api-version": `${Util.getVersion()}`
+  try {
+    const MS = Util.getAuthHost();
+    const requestOptions = {
+      method: "POST",
+      uri: `${MS}/oauth/invalidate/access`,
+      body: {
+        access_token: token
+      },
+      resolveWithFullResponse: true,
+      json: true,
+      headers: {
+        "Authorization": `Bearer ${accessToken}`,
+        "Content-type": "application/json",
+        "x-api-version": `${Util.getVersion()}`
+      }
+    };
+    Util.addRequestTrace(requestOptions, trace);
+    const response = await request(requestOptions);
+    if(response.statusCode === 204) {
+      return { status: "ok" };
+    } else {
+      // this is an edge case, but protects against unexpected 2xx or 3xx response codes.
+      throw {
+        "code": response.statusCode,
+        "message": typeof response.body === "string" ? response.body : "invalidate token failed",
+        "trace_id": requestOptions.hasOwnProperty("headers") && requestOptions.headers.hasOwnProperty("trace")
+          ? requestOptions.headers.trace 
+          : undefined,
+        "details": typeof response.body === "object" && response.body !== null
+          ? [response.body]
+          : []
+      };
     }
-  };
-  Util.addRequestTrace(requestOptions, trace);
-  const response = await request(requestOptions);
-  return response.statusCode === 204 ? Promise.resolve({ status: "ok" }) : Promise.reject({ status: "failed" });
+  } catch (error) {
+    return Promise.reject(Util.formatError(error));
+  }
 };
 
 /**
@@ -186,28 +220,33 @@ const listClientTokens = async (
   filters = undefined,
   trace = {}
 ) => {
-  const MS = Util.getEndpoint("oauth");
-  const requestOptions = {
-    method: "GET",
-    uri: `${MS}/oauth/tokens`,
-    qs: {
-      offset: offset,
-      limit: limit
-    },
-    json: true,
-    headers: {
-      Authorization: `Bearer ${accessToken}`,
-      "Content-type": "application/json",
-      "x-api-version": `${Util.getVersion()}`
+  try {
+    const MS = Util.getEndpoint("oauth");
+    const requestOptions = {
+      method: "GET",
+      uri: `${MS}/oauth/tokens`,
+      qs: {
+        offset: offset,
+        limit: limit
+      },
+      json: true,
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+        "Content-type": "application/json",
+        "x-api-version": `${Util.getVersion()}`
+      }
+    };
+    if (filters && typeof filters == "object") {
+      Object.keys(filters).forEach(filter => {
+        requestOptions.qs[filter] = filters[filter];
+      });
     }
-  };
-  if (filters && typeof filters == "object") {
-    Object.keys(filters).forEach(filter => {
-      requestOptions.qs[filter] = filters[filter];
-    });
+    Util.addRequestTrace(requestOptions, trace);
+    const response = request(requestOptions);
+    return response;
+  } catch (error) {
+    return Promise.reject(Util.formatError(error));
   }
-  Util.addRequestTrace(requestOptions, trace);
-  return request(requestOptions);
 };
 
 /**
@@ -224,25 +263,29 @@ const refreshAccessToken = async (
   refreshToken = "null refresh token",
   trace = {}
 ) => {
-  const MS = Util.getAuthHost();
-  const VERSION = Util.getVersion();
-  const requestOptions = {
-    method: "POST",
-    uri: `${MS}/oauth/token`,
-    headers: {
-      Authorization: `Basic ${oauthToken}`,
-      "x-api-version": `${VERSION}`,
-      "Content-type": "application/x-www-form-urlencoded"
-    },
-    form: {
-      grant_type: "refresh_token",
-      refresh_token: refreshToken
-    },
-    json: true
-    // resolveWithFullResponse: true
-  };
-  Util.addRequestTrace(requestOptions, trace);
-  return await request(requestOptions);
+  try {
+    const MS = Util.getAuthHost();
+    const VERSION = Util.getVersion();
+    const requestOptions = {
+      method: "POST",
+      uri: `${MS}/oauth/token`,
+      headers: {
+        Authorization: `Basic ${oauthToken}`,
+        "x-api-version": `${VERSION}`,
+        "Content-type": "application/x-www-form-urlencoded"
+      },
+      form: {
+        grant_type: "refresh_token",
+        refresh_token: refreshToken
+      },
+      json: true
+    };
+    Util.addRequestTrace(requestOptions, trace);
+    const response = request(requestOptions);
+    return response;
+  } catch (error) {
+    return Promise.reject(Util.formatError(error));
+  }
 };
 
 /**
@@ -260,28 +303,41 @@ const scopeClientApp = async (
   scope = ["default"],
   trace = {}
 ) => {
-  const MS = Util.getAuthHost();
-  const requestOptions = {
-    method: "POST",
-    uri: `${MS}/oauth/clients/${clientUUID}/scopes`,
-    body: {
-      scope: scope
-    },
-    resolveWithFullResponse: true,
-    json: true,
-    headers: {
-      Authorization: `Bearer ${accessToken}`,
-      "Content-type": "application/json",
-      "x-api-version": `${Util.getVersion()}`
+  try {
+    const MS = Util.getAuthHost();
+    const requestOptions = {
+      method: "POST",
+      uri: `${MS}/oauth/clients/${clientUUID}/scopes`,
+      body: {
+        scope: scope
+      },
+      resolveWithFullResponse: true,
+      json: true,
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+        "Content-type": "application/json",
+        "x-api-version": `${Util.getVersion()}`
+      }
+    };
+    Util.addRequestTrace(requestOptions, trace);
+    const response = await request(requestOptions);
+    if(response.statusCode === 204) {
+      return { status: "ok" };
+    } else {
+      // this is an edge case, but protects against unexpected 2xx or 3xx response codes.
+      throw {
+        "code": response.statusCode,
+        "message": typeof response.body === "string" ? response.body : "scope client app failed",
+        "trace_id": requestOptions.hasOwnProperty("headers") && requestOptions.headers.hasOwnProperty("trace")
+          ? requestOptions.headers.trace 
+          : undefined,
+        "details": typeof response.body === "object" && response.body !== null
+          ? [response.body]
+          : []
+      };
     }
-  };
-  Util.addRequestTrace(requestOptions, trace);
-  const response = await request(requestOptions);
-  await new Promise(resolve => setTimeout(resolve, Util.config.msDelay));
-  if (response.statusCode === 204) {
-    return Promise.resolve({"status":"ok"}); 
-  } else {
-    return Promise.reject({"status":"failed"});
+  } catch (error) {
+    return Promise.reject(Util.formatError(error));
   }
 };
 
@@ -294,24 +350,43 @@ const scopeClientApp = async (
  * @returns {Promise} - promise thatdoes stuff
  */
 const validateToken = async (accessToken = "null accessToken", token= "null token", trace = {}) => {
-  const MS = Util.getAuthHost();
-  const requestOptions = {
-    method: "POST",
-    uri: `${MS}/oauth/validate/access`,
-    body: {
-      access_token: token
-    },
-    resolveWithFullResponse: true,
-    json: true,
-    headers: {
-      "Authorization": `Bearer ${accessToken}`,
-      "Content-type": "application/json",
-      "x-api-version": `${Util.getVersion()}`
+  try {
+    const MS = Util.getAuthHost();
+    const requestOptions = {
+      method: "POST",
+      uri: `${MS}/oauth/validate/access`,
+      body: {
+        access_token: token
+      },
+      resolveWithFullResponse: true,
+      json: true,
+      headers: {
+        "Authorization": `Bearer ${accessToken}`,
+        "Content-type": "application/json",
+        "x-api-version": `${Util.getVersion()}`
+      }
+    };
+    Util.addRequestTrace(requestOptions, trace);
+    const response = await request(requestOptions);
+    if(response.statusCode === 204) {
+      return { status: "ok" };
+    } else {
+      // this is an edge case, but protects against unexpected 2xx or 3xx response codes.
+      throw {
+        "code": response.statusCode,
+        "message": typeof response.body === "string" ? response.body : "validate token failed",
+        "trace_id": requestOptions.hasOwnProperty("headers") && requestOptions.headers.hasOwnProperty("trace")
+          ? requestOptions.headers.trace 
+          : undefined,
+        "details": typeof response.body === "object" && response.body !== null
+          ? [response.body]
+          : []
+      };
     }
-  };
-  Util.addRequestTrace(requestOptions, trace);
-  const response = await request(requestOptions);
-  return response.statusCode === 204 ? Promise.resolve({ status: "ok" }) : Promise.reject({ status: "failed" });
+  } catch (error) {
+    return Promise.reject(Util.formatError(error));
+  }
+
 };
 
 module.exports = {

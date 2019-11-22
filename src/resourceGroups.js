@@ -30,12 +30,10 @@ const createResourceGroups = async (
   try {
     logger.debug(`Creating Resource Group ${resourceUUID}. Users Object:`,users);
     if (!type) {
-      return Promise.reject(
-        {
-          "statusCode": 400,
-          "message": "Unable to create resource groups. Resource type not defined."
-        }
-      );
+      throw {
+        "code": 400,
+        "message": "Unable to create resource groups. Resource type not defined."
+      };
     }
     //create the groups
     let nextTrace = objectMerge({}, trace);
@@ -85,11 +83,10 @@ const createResourceGroups = async (
   
     }); 
     await Promise.all(scopePromises);
-    logger.debug("Creating Resource Group Success");  
-    return Promise.resolve({ status: "ok" });
+    return { status: "ok" };
   } catch (error) {
     logger.debug("Creating Resource Group Failed", error);
-    return Promise.reject({ status: "failed", createResourceGroups: error });
+    return Promise.reject(Util.formatError(error));
   }
 };
 
@@ -113,7 +110,7 @@ const cleanUpResourceGroups = async (
       resourceUUID,
       trace
     );
-    logger.debug("Cleaning up Resource Groups", resourceGroups);
+    //logger.debug("Cleaning up Resource Groups", resourceGroups);
     if (
       resourceGroups.hasOwnProperty("items") &&
       resourceGroups.items.length > 0
@@ -133,16 +130,11 @@ const cleanUpResourceGroups = async (
       });
       await Promise.all(groupsToDelete);
       logger.debug("Cleaning up Resource Groups Successful");
-      Promise.resolve({"status":"ok"});
+      return {"status":"ok"};
     }
   } catch (error) {
     logger.debug("Cleaning up Resource Groups Failed", error);
-    return Promise.reject(
-      {
-        "status": "failed",
-        "cleanUpResourceGroups": error
-      }
-    );
+    return Promise.reject(Util.formatError(error));
   }
 };
 
@@ -165,12 +157,10 @@ const updateResourceGroups = async (
 ) => {
   try {
     if (!type) {
-      return Promise.reject(
-        {
-          "statusCode": 400,
-          "message": "Unable to update resource groups. Resource type not defined."
-        }
-      );
+      throw {
+        "code": 400,
+        "message": "Unable to update resource groups. Resource type not defined."
+      };
     }
     logger.debug(`Updating Resource Groups For ${resourceUUID}`);
     let nextTrace = objectMerge({}, trace);
@@ -227,10 +217,10 @@ const updateResourceGroups = async (
           }
         } else {
           // Unexpected item format. Bail out....
-          return Promise.reject({
-            statusCode: 400,
+          throw {
+            code: 400,
             message: "resource group lookup returned corrupt data"
-          });
+          };
         }
       });
       const userGroups = await Promise.all(updatePromises);
@@ -316,19 +306,12 @@ const updateResourceGroups = async (
         trace
       );
     }
-    return Promise.resolve({"status":"ok"});
+    return {"status":"ok"};
   } catch (error) {
     logger.debug(`Updating Resource Groups For ${resourceUUID} Failed`, error);
-    return Promise.reject(
-      {
-        "status": "failed",
-        "updateResourceGroups": error
-      }
-    );
+    return Promise.reject(Util.formatError(error));
   }
 };
-
-
 
 module.exports = {
   createResourceGroups,

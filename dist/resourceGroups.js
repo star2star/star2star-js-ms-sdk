@@ -36,10 +36,10 @@ const createResourceGroups = async function createResourceGroups() {
     logger.debug("Creating Resource Group ".concat(resourceUUID, ". Users Object:"), users);
 
     if (!type) {
-      return Promise.reject({
-        "statusCode": 400,
+      throw {
+        "code": 400,
         "message": "Unable to create resource groups. Resource type not defined."
-      });
+      };
     } //create the groups
 
 
@@ -69,16 +69,12 @@ const createResourceGroups = async function createResourceGroups() {
       logger.debug("Creating Resource Group. Scope Params:", "group.uuid: ".concat(group.uuid), "roles[type][groupType]: ".concat(roles[type][groupType]), "[resourceUUID]: [".concat(resourceUUID, "]"));
     });
     await Promise.all(scopePromises);
-    logger.debug("Creating Resource Group Success");
-    return Promise.resolve({
+    return {
       status: "ok"
-    });
+    };
   } catch (error) {
     logger.debug("Creating Resource Group Failed", error);
-    return Promise.reject({
-      status: "failed",
-      createResourceGroups: error
-    });
+    return Promise.reject(Util.formatError(error));
   }
 };
 /**
@@ -98,8 +94,7 @@ const cleanUpResourceGroups = async function cleanUpResourceGroups() {
 
   try {
     logger.debug("Cleaning up Resource Groups For ".concat(resourceUUID));
-    const resourceGroups = await Auth.listAccessByGroups(accessToken, resourceUUID, trace);
-    logger.debug("Cleaning up Resource Groups", resourceGroups);
+    const resourceGroups = await Auth.listAccessByGroups(accessToken, resourceUUID, trace); //logger.debug("Cleaning up Resource Groups", resourceGroups);
 
     if (resourceGroups.hasOwnProperty("items") && resourceGroups.items.length > 0) {
       let nextTrace = objectMerge({}, trace);
@@ -110,16 +105,13 @@ const cleanUpResourceGroups = async function cleanUpResourceGroups() {
       });
       await Promise.all(groupsToDelete);
       logger.debug("Cleaning up Resource Groups Successful");
-      Promise.resolve({
+      return {
         "status": "ok"
-      });
+      };
     }
   } catch (error) {
     logger.debug("Cleaning up Resource Groups Failed", error);
-    return Promise.reject({
-      "status": "failed",
-      "cleanUpResourceGroups": error
-    });
+    return Promise.reject(Util.formatError(error));
   }
 };
 /**
@@ -143,10 +135,10 @@ const updateResourceGroups = async function updateResourceGroups() {
 
   try {
     if (!type) {
-      return Promise.reject({
-        "statusCode": 400,
+      throw {
+        "code": 400,
         "message": "Unable to update resource groups. Resource type not defined."
-      });
+      };
     }
 
     logger.debug("Updating Resource Groups For ".concat(resourceUUID));
@@ -180,10 +172,10 @@ const updateResourceGroups = async function updateResourceGroups() {
           }
         } else {
           // Unexpected item format. Bail out....
-          return Promise.reject({
-            statusCode: 400,
+          throw {
+            code: 400,
             message: "resource group lookup returned corrupt data"
-          });
+          };
         }
       });
       const userGroups = await Promise.all(updatePromises); // update the groups' members
@@ -249,15 +241,12 @@ const updateResourceGroups = async function updateResourceGroups() {
       users, trace);
     }
 
-    return Promise.resolve({
+    return {
       "status": "ok"
-    });
+    };
   } catch (error) {
     logger.debug("Updating Resource Groups For ".concat(resourceUUID, " Failed"), error);
-    return Promise.reject({
-      "status": "failed",
-      "updateResourceGroups": error
-    });
+    return Promise.reject(Util.formatError(error));
   }
 };
 

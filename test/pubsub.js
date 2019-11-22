@@ -120,7 +120,7 @@ describe("Pubsub MS Unit Test Suite", function () {
     if (!creds.isValid) throw new Error("Invalid Credentials");
     trace = objectMerge({}, trace, Util.generateNewMetaData(trace));
     
-    const response = await s2sMS.Pubsub.updateSubscription(  
+    const response = await s2sMS.Pubsub.updateSubscriptionExpiresDate(  
       accessToken,
       sub_uuid,
       new Date(Date.now() + 1000000).toISOString(),

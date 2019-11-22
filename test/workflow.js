@@ -1,5 +1,5 @@
 //mocha requires
-
+//TODO: Add tests for various result types and native JSONata transitions once workflow microservice is updated to include. nh 11/22/19
 const assert = require("assert");
 const mocha = require("mocha");
 const describe = mocha.describe;
@@ -93,7 +93,7 @@ describe("Workflow", function() {
       return response;
     } catch(error) {
       assert.ok(
-        error.statusCode === 400,
+        error.code === 400,
         JSON.stringify(error, null, "\t")
       );
     }
@@ -115,7 +115,7 @@ describe("Workflow", function() {
       return response;
     } catch(error) {
       assert.ok(
-        error.statusCode === 400,
+        error.code === 400,
         JSON.stringify(error, null, "\t")
       );
     }
@@ -144,7 +144,7 @@ describe("Workflow", function() {
       return response;
     } catch(error) {
       assert.ok(
-        error.statusCode === 400,
+        error.code === 400,
         JSON.stringify(error, null, "\t")
       );
     }
@@ -205,7 +205,7 @@ describe("Workflow", function() {
                 "lambda_condition": {
                   "function_name": "james-add-numbers",
                   "blocking": true,
-                  "parameters": "$params"
+                  "parameters": "^params"
                 }
               }
             },
@@ -294,7 +294,7 @@ describe("Workflow", function() {
                 "lambda_condition": {
                   "function_name": "james-add-numbers",
                   "blocking": true,
-                  "parameters": "$params"
+                  "parameters": "^params"
                 }
               }
             },
@@ -425,7 +425,7 @@ describe("Workflow", function() {
                 "lambda_condition": {
                   "function_name": "sumnumbers",
                   "blocking": true,
-                  "parameters": "$params",
+                  "parameters": "^params",
                   "result_path": "$output"
                 }
               }
@@ -698,7 +698,7 @@ describe("Workflow", function() {
       return response;
     } catch(error){
       assert.ok(
-        error.status === "failed",
+        error.code === 400,
         JSON.stringify(error, null, "\t")
       );
     }
@@ -892,7 +892,7 @@ describe("Workflow", function() {
                 "lambda_condition": {
                   "function_name": "echo",
                   "blocking": true,
-                  "parameters": "$input",
+                  "parameters": "^input",
                   "result": [
                     {
                       "source": "constant",

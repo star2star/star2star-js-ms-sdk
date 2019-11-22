@@ -116,7 +116,7 @@ describe("Lamda MS Unit Test Suite", function() {
       return response;
     } catch(error) {
       assert.ok(
-        error.statusCode === 404,
+        error.code === 404,
         JSON.stringify(error, null, "\t")
       );
     }

@@ -221,31 +221,39 @@ const filterResponse = (response, filters) => {
 const aggregate = async (request, requestOptions, trace = {}) => {
   //uncomment and set to less than total expected resources to force aggregation for testing.
   //requestOptions.qs.limit = 1;
-  let total,
-    offset = 0;
+  try {
+    let total,
+      offset = 0;
 
-  const makeRequest = async (request, requestOptions, trace = {}) => {
-    const nextTrace = generateNewMetaData(trace);
-    addRequestTrace(requestOptions, nextTrace);
-    const response = await request(requestOptions);
-    total = response.metadata.total;
-    offset = response.metadata.offset + response.metadata.count;
-    if (total > offset) {
-      requestOptions.qs.offset = offset;
-      const nextResponse = await makeRequest(request, requestOptions);
-      const items = response.items.concat(nextResponse.items);
-      response.items = items;
-      response.metadata.offset = 0;
-      response.metadata.count = total;
-      response.metadata.limit = total;
-      delete response.links; //the links are invalid now
-      return response;
-    } else {
-      return response;
-    }
-  };
-
-  return await makeRequest(request, requestOptions, trace);
+    const makeRequest = async (request, requestOptions, trace = {}) => {
+      try {
+        const nextTrace = generateNewMetaData(trace);
+        addRequestTrace(requestOptions, nextTrace);
+        const response = await request(requestOptions);
+        total = response.metadata.total;
+        offset = response.metadata.offset + response.metadata.count;
+        if (total > offset) {
+          requestOptions.qs.offset = offset;
+          const nextResponse = await makeRequest(request, requestOptions);
+          const items = response.items.concat(nextResponse.items);
+          response.items = items;
+          response.metadata.offset = 0;
+          response.metadata.count = total;
+          response.metadata.limit = total;
+          delete response.links; //the links are invalid now
+          return response;
+        } else {
+          return response;
+        }
+      } catch (error) {
+        return Promise.reject(formatError(error));
+      }
+    };
+    const response = await makeRequest(request, requestOptions, trace);
+    return response;
+  } catch (error) {
+    return Promise.reject(formatError(error));
+  }
 };
 
 /**
