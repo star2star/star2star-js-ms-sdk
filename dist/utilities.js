@@ -478,6 +478,11 @@ const formatError = error => {
           });
           returnedObject.details = filteredDetails;
         }
+      } //if error is just a string, set it as the message
+
+
+      if (typeof error === "string" && error.length > 0) {
+        returnedObject.message = error;
       }
     } // we did not get a code anywhere to use a default internal server error
 

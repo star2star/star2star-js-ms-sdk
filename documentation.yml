@@ -150,6 +150,9 @@ toc:
       - createUserDataObject
       - deleteDataObject
       - updateDataObject
+  - name: Providers
+    children:
+      - getProviderToken
   - name: Pubsub
     children: 
       - addSubscription

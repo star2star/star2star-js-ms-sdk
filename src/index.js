@@ -13,6 +13,7 @@ const Chat = require("./chat");
 const Contacts = require("./contacts");
 const Oauth = require("./oauth");
 const Media = require("./media");
+const Providers = require("./providers");
 const Pubsub = require("./pubsub");
 const Workflow = require("./workflow");
 const Email = require("./email");
@@ -119,6 +120,7 @@ module.exports = {
   Chat,
   Contacts,
   Media,
+  Providers,
   Pubsub,
   setMSVersion,
   Workflow,

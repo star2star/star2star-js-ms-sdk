@@ -37,6 +37,7 @@ describe("MS SDK Index", function () {
       "Chat",
       "Contacts",
       "Media",
+      "Providers",
       "Pubsub",
       "setMSVersion",
       "Workflow",
