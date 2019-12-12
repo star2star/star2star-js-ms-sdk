@@ -70,6 +70,8 @@ process.env.MS_LOGPRETTY = true // defaults to false
 [Please click here for our documentation pages.](https://star2star.github.io/star2star-js-ms-sdk/ "Star2Star Micro Service SDK Documentation")
 
 ## Changes
+* 3.2.3 - fix missing providers reference in config
+* 3.2.2 - add clientID to provider GET token
 * 3.2.1 - add get token using provider microservice
 * 3.2.0 - switch all calls over to use error formatter
 * 3.1.9 - move remainder of groups to auth and add error formatter util

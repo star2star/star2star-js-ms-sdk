@@ -17,7 +17,8 @@
     "PUBSUB": "/pubsub",
     "ACCOUNTS": "/accounts",
     "SCHEDULER": "/scheduler",
-    "WORKFLOW": "/workflow"
+    "WORKFLOW": "/workflow",
+    "PROVIDERS": "/providers"
   },
   "msDelay": 1000,
   "pollInterval": 1000,
