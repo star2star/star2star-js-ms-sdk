@@ -70,6 +70,10 @@ process.env.MS_LOGPRETTY = true // defaults to false
 [Please click here for our documentation pages.](https://star2star.github.io/star2star-js-ms-sdk/ "Star2Star Micro Service SDK Documentation")
 
 ## Changes
+* 3.2.7 - add follow redirects to providers authorize
+* 3.2.6 - fix providers authorize headers
+* 3.2.5 - fix providers authorize client_id param
+* 3.2.4 - add providers authorize
 * 3.2.3 - fix missing providers reference in config
 * 3.2.2 - add clientID to provider GET token
 * 3.2.1 - add get token using provider microservice
