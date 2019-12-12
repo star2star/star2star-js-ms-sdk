@@ -152,6 +152,7 @@ toc:
       - updateDataObject
   - name: Providers
     children:
+      - authorizeProvider
       - getProviderToken
   - name: Pubsub
     children: 

@@ -26,12 +26,13 @@ const authorizeProvider = async (
     const requestOptions = {
       method: "GET",
       uri: `${MS}/providers/${providerUUID}/oauth/authorize`,
+      headers: {}, // empty object allows us to add the trace headers
       qs: {
         client_id: clientID,
         redirect_url: redirectURL,
         user_uuid: userUUID,
       },
-      simple: true
+      followAllRedirects: true
     };
     util.addRequestTrace(requestOptions, trace);
     const response = await request(requestOptions);
