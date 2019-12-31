@@ -39,6 +39,8 @@ const ResourceGroups = require("./resourceGroups");
 
 const Scheduler = require("./scheduler");
 
+const Metadata = require("./metadata");
+
 let cpaasKey;
 /**
  * 
@@ -158,5 +160,6 @@ module.exports = {
   Workflow,
   Email,
   ResourceGroups,
-  Scheduler
+  Scheduler,
+  Metadata
 };

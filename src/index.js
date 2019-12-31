@@ -19,6 +19,8 @@ const Workflow = require("./workflow");
 const Email = require("./email");
 const ResourceGroups = require("./resourceGroups");
 const Scheduler = require("./scheduler");
+const Metadata = require("./metadata");
+
 let cpaasKey;
 
 /**
@@ -92,8 +94,8 @@ const setEnv = (env) => {
 const getEnv = () => {
   let client;
   Util.isBrowser() ? client = window.s2sJsMsSdk : client = process.env;
-  
-  if (!client.hasOwnProperty("MS_ENV")){
+
+  if (!client.hasOwnProperty("MS_ENV")) {
     setEnv(Util.config.env);
   }
   return client.MS_ENV;
@@ -126,5 +128,6 @@ module.exports = {
   Workflow,
   Email,
   ResourceGroups,
-  Scheduler
+  Scheduler,
+  Metadata
 };

@@ -1,5 +1,5 @@
 {
-  "ms_version": "v1", 
+  "ms_version": "v1",
   "microservices": {
     "EMAIL": "/email",
     "CHAT": "/chat",
@@ -18,7 +18,8 @@
     "ACCOUNTS": "/accounts",
     "SCHEDULER": "/scheduler",
     "WORKFLOW": "/workflow",
-    "PROVIDERS": "/providers"
+    "PROVIDERS": "/providers",
+    "METADATA": "/metadata"
   },
   "msDelay": 1000,
   "pollInterval": 1000,
