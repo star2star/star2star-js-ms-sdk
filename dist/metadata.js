@@ -9,6 +9,7 @@ const util = require("./utilities");
  * @description This function will return metadata for all API's or a subset of API's
  * @param {string} [accessToken="null access token"] - cpaas access token
  * @param {string} [subsystems=""] - empty or comma-separated list of requested subsystems
+ * @param {object} [trace={}] - optional cpaas lifecycle headers
  * @returns {Promise}
  */
 
@@ -27,7 +28,8 @@ const getMetadataSubsystems = async function getMetadataSubsystems() {
         Authorization: "Bearer ".concat(accessToken),
         "Content-type": "application/json",
         "x-api-version": "".concat(util.getVersion())
-      }
+      },
+      json: true
     };
 
     if (subsystems !== undefined) {

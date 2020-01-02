@@ -70,6 +70,7 @@ process.env.MS_LOGPRETTY = true // defaults to false
 [Please click here for our documentation pages.](https://star2star.github.io/star2star-js-ms-sdk/ "Star2Star Micro Service SDK Documentation")
 
 ## Changes
+* 3.2.10 - added metadata.js unit tests
 * 3.2.9 - added metadata.js and getMetadataSubsystems method
 * 3.2.8 - fix providers authorize
 * 3.2.7 - add follow redirects to providers authorize
