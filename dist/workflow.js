@@ -338,7 +338,7 @@ const getWorkflowTemplate = async function getWorkflowTemplate() {
       });
     }
 
-    if (typeof filters["version"] !== "undefined" && typeof filters["expand"] !== "undefined") {
+    if (filters && typeof filters["version"] !== "undefined" && typeof filters["expand"] !== "undefined") {
       throw {
         "code": 400,
         "message": "version and expand cannot be included in the same request"

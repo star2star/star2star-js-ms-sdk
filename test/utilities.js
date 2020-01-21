@@ -164,4 +164,16 @@ describe("Util", function () {
     assert.equal(uuid.length, 36);
     done();
   });
+
+  it("test errorParser when body is string", function (done) {
+    const parsedError = Util.formatError({
+      "name": "StatusCodeError",
+      "response": {
+        "body": "some error string"
+      },
+      "statusCode": 400
+    });
+    assert(parsedError.message === "some error string");
+    done();
+  });
 });

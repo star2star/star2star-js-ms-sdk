@@ -437,6 +437,19 @@ const formatError = error => {
       if (error.hasOwnProperty("name") && error.name === "StatusCodeError") {
         // just pass along what we got back from API
         if (error.hasOwnProperty("response") && error.response.hasOwnProperty("body")) {
+          // for external systems that don't follow our standards, try to return something ...
+          if (typeof error.response.body === "string") {
+            try {
+              const parsedBody = JSON.parse(error.response.body);
+              error.response.body = parsedBody;
+            } catch (e) {
+              const body = error.response.body;
+              error.response.body = {
+                "message": body
+              };
+            }
+          }
+
           returnedObject.code = error.response.body.hasOwnProperty("code") && error.response.body.code && error.response.body.code.toString().length === 3 ? error.response.body.code : returnedObject.code;
           returnedObject.message = error.response.body.hasOwnProperty("message") && error.response.body.message && error.response.body.message.length > 0 ? error.response.body.message : returnedObject.message;
           returnedObject.trace_id = error.response.body.hasOwnProperty("trace_id") && error.response.body.trace_id && error.response.body.trace_id.length > 0 ? error.response.body.trace_id : returnedObject.trace_id; //make sure details is an array of objects

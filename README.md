@@ -70,6 +70,10 @@ process.env.MS_LOGPRETTY = true // defaults to false
 [Please click here for our documentation pages.](https://star2star.github.io/star2star-js-ms-sdk/ "Star2Star Micro Service SDK Documentation")
 
 ## Changes
+* 3.2.14 - fix workflowTemplate filter bug
+* 3.2.13 - remove debug console.log
+* 3.2.12 - fixed error parser for external sources that return strings for body
+* 3.2.11 - updated error parser for external sources that return strings for body
 * 3.2.10 - added metadata.js unit tests
 * 3.2.9 - added metadata.js and getMetadataSubsystems method
 * 3.2.8 - fix providers authorize

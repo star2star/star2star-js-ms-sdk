@@ -328,6 +328,7 @@ const getWorkflowTemplate = async (
     }
 
     if (
+      filters &&
       typeof filters["version"] !== "undefined" &&
       typeof filters["expand"] !== "undefined"
     ) {
