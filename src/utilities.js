@@ -424,10 +424,15 @@ const formatError = (error) => {
           returnedObject.trace_id = error.response.body.hasOwnProperty("trace_id") && error.response.body.trace_id && error.response.body.trace_id.length > 0
             ? error.response.body.trace_id
             : returnedObject.trace_id;
-          //make sure details is an array of objects
+          //make sure details is an array of objects or strings
           if(error.response.body.hasOwnProperty("details") && Array.isArray(error.response.body.details)){
             const filteredDetails = error.response.body.details.filter(detail =>{
-              return typeof detail === "object" && detail !== null;
+              return (typeof detail === "object" && detail !== null) || typeof detail === "string";
+            }).map(detail => {
+              if (typeof detail === "object"){
+                return JSON.stringify(detail);
+              }
+              return detail;
             });
             returnedObject.details = filteredDetails;
           }
@@ -467,8 +472,13 @@ const formatError = (error) => {
           : returnedObject.trace_id;
         //make sure details is an array of objects
         if(error.hasOwnProperty("details") && Array.isArray(error.details)){
-          const filteredDetails = error.details.filter(detail => {
-            return typeof detail === "object" && detail !== null;
+          const filteredDetails = error.details.filter(detail =>{
+            return (typeof detail === "object" && detail !== null) || typeof detail === "string";
+          }).map(detail => {
+            if (typeof detail === "object"){
+              return JSON.stringify(detail);
+            }
+            return detail;
           });
           returnedObject.details = filteredDetails;
         }

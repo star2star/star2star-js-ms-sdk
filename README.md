@@ -70,6 +70,7 @@ process.env.MS_LOGPRETTY = true // defaults to false
 [Please click here for our documentation pages.](https://star2star.github.io/star2star-js-ms-sdk/ "Star2Star Micro Service SDK Documentation")
 
 ## Changes
+* 3.2.15 - error detail array set to strings
 * 3.2.14 - fix workflowTemplate filter bug
 * 3.2.13 - remove debug console.log
 * 3.2.12 - fixed error parser for external sources that return strings for body
