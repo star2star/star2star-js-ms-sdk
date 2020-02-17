@@ -2,4 +2,3 @@ node_modules
 .vscode
 **/credentials.json
 creds.sh
-publish.sh
