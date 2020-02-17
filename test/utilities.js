@@ -176,4 +176,17 @@ describe("Util", function () {
     assert(parsedError.message === "some error string");
     done();
   });
+
+  it("test encrypt", function (done) {
+    const encString = Util.encrypt("123456", "This is a sample text");
+    assert.equal(encString, "052485834a702c703a8a6f96ac4b0e313c0b3f91c7bc86a37d452fd4fff8095a");
+    done();
+  });
+
+  it("test decrypt", function (done) {
+    const decString = Util.decrypt("123456", "052485834a702c703a8a6f96ac4b0e313c0b3f91c7bc86a37d452fd4fff8095a");
+    assert.equal(decString, "This is a sample text");
+    done();
+  });
+
 });

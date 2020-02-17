@@ -204,6 +204,8 @@ toc:
       - isBrowser
       - aggregate
       - createUUID
+      - decrypt
+      - encrypt
       - filterResponse
       - formatError
       - getEndpoint

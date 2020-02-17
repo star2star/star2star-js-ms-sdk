@@ -7,6 +7,8 @@ const request = require("request-promise");
 const objectMerge = require("object-merge");
 const Logger = require("./node-logger");
 const logger = new Logger.default();
+const crypto = require("crypto");
+
 /**
  *
  * @description This function will determine microservice endpoint URI.
@@ -506,12 +508,41 @@ const formatError = (error) => {
   }
 };
 
+const encrypt = (cryptoKey, text) => {
+  const algorithm = 'aes-192-cbc';
+  // Use the async `crypto.scrypt()` instead.
+  const key = crypto.scryptSync(cryptoKey, 'salt', 24);
+  // Use `crypto.randomBytes` to generate a random iv instead of the static iv
+  // shown here.
+  const iv = Buffer.alloc(16, 0); // Initialization vector.
+
+  const cipher = crypto.createCipheriv(algorithm, key, iv);
+
+  let encrypted = cipher.update(text, 'utf8', 'hex');
+  encrypted += cipher.final('hex');
+  return encrypted;
+}
+
+const decrypt = (cryptoKey, text) => {
+  const algorithm = 'aes-192-cbc';
+  // Use the async `crypto.scrypt()` instead.
+  const key = crypto.scryptSync(cryptoKey, 'salt', 24);
+  // The IV is usually passed along with the ciphertext.
+  const iv = Buffer.alloc(16, 0); // Initialization vector.
+
+  const decipher = crypto.createDecipheriv(algorithm, key, iv);
+
+  let decrypted = decipher.update(text, 'hex', 'utf8');
+  decrypted += decipher.final('utf8');
+  return decrypted;
+}
+
 module.exports = {
   getEndpoint,
   getAuthHost,
   getVersion,
   config,
-  replaceVariables,
+  replaceVariables, 
   createUUID,
   aggregate, //TODO Unit test 9/27/18 nh
   filterResponse, //TODO Unit test 9/27/18 nh
@@ -520,5 +551,7 @@ module.exports = {
   addRequestTrace, //TODO Unit test 10/10/18 nh
   generateNewMetaData,
   pendingResource,
-  formatError
+  formatError,
+  encrypt,
+  decrypt
 };
