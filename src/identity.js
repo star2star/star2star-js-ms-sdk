@@ -36,10 +36,9 @@ const createIdentity = async (
     const response = await request(requestOptions);
     const identity = response.body;
     // update returns a 202....suspend return until the new resource is ready
-    if (response.hasOwnProperty("statusCode") && 
-        response.statusCode === 202 &&
-        response.headers.hasOwnProperty("location"))
-    {  
+    if (response.hasOwnProperty("statusCode") &&
+      response.statusCode === 202 &&
+      response.headers.hasOwnProperty("location")) {
       await util.pendingResource(
         response.headers.location,
         requestOptions, //reusing the request options instead of passing in multiple params
@@ -153,7 +152,7 @@ const deactivateIdentity = async (
     };
     util.addRequestTrace(requestOptions, trace);
     const response = await request(requestOptions);
-    if(response.statusCode === 204) {
+    if (response.statusCode === 204) {
       return { status: "ok" };
     } else {
       // this is an edge case, but protects against unexpected 2xx or 3xx response codes.
@@ -161,13 +160,13 @@ const deactivateIdentity = async (
         "code": response.statusCode,
         "message": typeof response.body === "string" ? response.body : "deactivate identity failed",
         "trace_id": requestOptions.hasOwnProperty("headers") && requestOptions.headers.hasOwnProperty("trace")
-          ? requestOptions.headers.trace 
+          ? requestOptions.headers.trace
           : undefined,
         "details": typeof response.body === "object" && response.body !== null
           ? [response.body]
           : []
       };
-    }          
+    }
   } catch (error) {
     return Promise.reject(util.formatError(error));
   }
@@ -201,7 +200,7 @@ const reactivateIdentity = async (
     };
     util.addRequestTrace(requestOptions, trace);
     const response = await request(requestOptions);
-    if(response.statusCode === 204) {
+    if (response.statusCode === 204) {
       return { status: "ok" };
     } else {
       // this is an edge case, but protects against unexpected 2xx or 3xx response codes.
@@ -209,13 +208,13 @@ const reactivateIdentity = async (
         "code": response.statusCode,
         "message": typeof response.body === "string" ? response.body : "reactivate identity failed",
         "trace_id": requestOptions.hasOwnProperty("headers") && requestOptions.headers.hasOwnProperty("trace")
-          ? requestOptions.headers.trace 
+          ? requestOptions.headers.trace
           : undefined,
         "details": typeof response.body === "object" && response.body !== null
           ? [response.body]
           : []
       };
-    }          
+    }
   } catch (error) {
     return Promise.reject(util.formatError(error));
   }
@@ -253,7 +252,7 @@ const createAlias = async (
     util.addRequestTrace(requestOptions, trace);
     //Returning "ok" here as response object does not contain alias.
     const response = await request(requestOptions);
-    if(response.statusCode === 201) {
+    if (response.statusCode === 201) {
       return { status: "ok" };
     } else {
       // this is an edge case, but protects against unexpected 2xx or 3xx response codes.
@@ -261,13 +260,13 @@ const createAlias = async (
         "code": response.statusCode,
         "message": typeof response.body === "string" ? response.body : "create alias failed",
         "trace_id": requestOptions.hasOwnProperty("headers") && requestOptions.headers.hasOwnProperty("trace")
-          ? requestOptions.headers.trace 
+          ? requestOptions.headers.trace
           : undefined,
         "details": typeof response.body === "object" && response.body !== null
           ? [response.body]
           : []
       };
-    }          
+    }
   } catch (error) {
     return Promise.reject(util.formatError(error));
   }
@@ -303,8 +302,8 @@ const updateAliasWithDID = async (
     };
     util.addRequestTrace(requestOptions, trace);
     const response = await request(requestOptions);
-    if (response.hasOwnProperty("statusCode") && response.statusCode === 202){
-      if(response.headers.hasOwnProperty("location")){
+    if (response.hasOwnProperty("statusCode") && response.statusCode === 202) {
+      if (response.headers.hasOwnProperty("location")) {
         await util.pendingResource(
           response.headers.location,
           requestOptions, //reusing the request options instead of passing in multiple params
@@ -312,14 +311,14 @@ const updateAliasWithDID = async (
           response.hasOwnProperty("resource_status") ? response.resource_status : "complete"
         );
       }
-      return {"status": "ok"};             
+      return { "status": "ok" };
     } else {
       // this is an edge case, but protects against unexpected 2xx or 3xx response codes.
       throw {
         "code": response.statusCode,
         "message": typeof response.body === "string" ? response.body : "update alias with DID failed",
         "trace_id": requestOptions.hasOwnProperty("headers") && requestOptions.headers.hasOwnProperty("trace")
-          ? requestOptions.headers.trace 
+          ? requestOptions.headers.trace
           : undefined,
         "details": typeof response.body === "object" && response.body !== null
           ? [response.body]
@@ -345,7 +344,7 @@ const deleteIdentity = async (
   userUuid = "null uuid",
   trace = {}
 ) => {
-  try{
+  try {
     const MS = util.getEndpoint("identity");
     const requestOptions = {
       method: "DELETE",
@@ -359,10 +358,10 @@ const deleteIdentity = async (
       resolveWithFullResponse: true
     };
     util.addRequestTrace(requestOptions, trace);
-    const response =  await request(requestOptions);
+    const response = await request(requestOptions);
     // delete returns a 202....suspend return until the new resource is ready if possible
-    if (response.hasOwnProperty("statusCode") && response.statusCode === 202){
-      if (response.headers.hasOwnProperty("location")){
+    if (response.hasOwnProperty("statusCode") && response.statusCode === 202) {
+      if (response.headers.hasOwnProperty("location")) {
         await util.pendingResource(
           response.headers.location,
           requestOptions, //reusing the request options instead of passing in multiple params
@@ -370,21 +369,21 @@ const deleteIdentity = async (
           "deleting"
         );
       }
-      return {"status": "ok"};
+      return { "status": "ok" };
     } else {
       // this is an edge case, but protects against unexpected 2xx or 3xx response codes.
       throw {
         "code": response.statusCode,
         "message": typeof response.body === "string" ? response.body : "delete identity failed",
         "trace_id": requestOptions.hasOwnProperty("headers") && requestOptions.headers.hasOwnProperty("trace")
-          ? requestOptions.headers.trace 
+          ? requestOptions.headers.trace
           : undefined,
         "details": typeof response.body === "object" && response.body !== null
           ? [response.body]
           : []
       };
     }
-  } catch(error) {
+  } catch (error) {
     return Promise.reject(util.formatError(error));
   }
 };
@@ -394,13 +393,15 @@ const deleteIdentity = async (
  * @description This function returns a single identity object
  * @param {string} [accessToken="null accessToken"] - cpaas access token
  * @param {string} [userUuid="null uuid"] - user uuid
- * @param {objet} [trace={}] - optional microservice lifcycle headers
+ * @param {object} [trace={}] - optional microservice lifcycle headers
+ * @param {string} [include=undefined] - optional query param -"properties" and "alias" are valid values
  * @returns {Promise} - promise resolving to identity object
  */
 const getIdentity = async (
   accessToken = "null accessToken",
   userUuid = "null uuid",
-  trace = {}
+  trace = {},
+  include = undefined
 ) => {
   try {
     const MS = util.getEndpoint("identity");
@@ -414,6 +415,10 @@ const getIdentity = async (
       },
       json: true
     };
+    // add include query param if defined
+    if (include !== undefined) {
+      requestOptions.qs = { "include": include };
+    }
     util.addRequestTrace(requestOptions, trace);
     const response = await request(requestOptions);
     return response;
@@ -652,29 +657,29 @@ const resetPassword = async (
     };
     util.addRequestTrace(requestOptions, trace);
     const response = await request(requestOptions);
-    if (response.hasOwnProperty("statusCode") && response.statusCode === 202){
-      if(response.headers.hasOwnProperty("location")){
+    if (response.hasOwnProperty("statusCode") && response.statusCode === 202) {
+      if (response.headers.hasOwnProperty("location")) {
         await util.pendingResource(
           response.headers.location,
           requestOptions, //reusing the request options instead of passing in multiple params
           trace,
           response.hasOwnProperty("resource_status") ? response.resource_status : "complete"
         );
-      } 
-      return {"status": "ok"};  
+      }
+      return { "status": "ok" };
     } else {
       // this is an edge case, but protects against unexpected 2xx or 3xx response codes.
       throw {
         "code": response.statusCode,
         "message": typeof response.body === "string" ? response.body : "reset password failed",
         "trace_id": requestOptions.hasOwnProperty("headers") && requestOptions.headers.hasOwnProperty("trace")
-          ? requestOptions.headers.trace 
+          ? requestOptions.headers.trace
           : undefined,
         "details": typeof response.body === "object" && response.body !== null
           ? [response.body]
           : []
       };
-    }          
+    }
   } catch (error) {
     return Promise.reject(util.formatError(error));
   }
@@ -711,8 +716,8 @@ const generatePasswordToken = async (
     };
     util.addRequestTrace(requestOptions, trace);
     const response = await request(requestOptions);
-    if (response.hasOwnProperty("statusCode") && response.statusCode === 202){
-      if(response.headers.hasOwnProperty("location")){
+    if (response.hasOwnProperty("statusCode") && response.statusCode === 202) {
+      if (response.headers.hasOwnProperty("location")) {
         await util.pendingResource(
           response.headers.location,
           requestOptions, //reusing the request options instead of passing in multiple params
@@ -720,14 +725,14 @@ const generatePasswordToken = async (
           response.hasOwnProperty("resource_status") ? response.resource_status : "complete"
         );
       }
-      return {"status": "ok"};             
+      return { "status": "ok" };
     } else {
       // this is an edge case, but protects against unexpected 2xx or 3xx response codes.
       throw {
         "code": response.statusCode,
         "message": typeof response.body === "string" ? response.body : "generate password token failed",
         "trace_id": requestOptions.hasOwnProperty("headers") && requestOptions.headers.hasOwnProperty("trace")
-          ? requestOptions.headers.trace 
+          ? requestOptions.headers.trace
           : undefined,
         "details": typeof response.body === "object" && response.body !== null
           ? [response.body]

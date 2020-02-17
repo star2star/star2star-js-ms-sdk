@@ -70,7 +70,8 @@ process.env.MS_LOGPRETTY = true // defaults to false
 [Please click here for our documentation pages.](https://star2star.github.io/star2star-js-ms-sdk/ "Star2Star Micro Service SDK Documentation")
 
 ## Changes
-* 3.2.17 - URL parameters encrypt and decrypt methods 
+* 3.2.17 - URL parameters encrypt and decrypt methods
+* 3.2.16 - "include" query param in getIdentity 
 * 3.2.15 - error detail array set to strings
 * 3.2.14 - fix workflowTemplate filter bug
 * 3.2.13 - remove debug console.log
