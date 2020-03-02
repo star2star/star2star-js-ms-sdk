@@ -12,12 +12,15 @@ const objectMerge = require("object-merge");
 const Logger = require("./node-logger");
 
 const logger = new Logger.default();
+
+const crypto = require("crypto");
 /**
  *
  * @description This function will determine microservice endpoint URI.
  * @param {string} [microservice="NOTHING"] - the string that we are matching on
  * @returns {string} - the configured value or undefined
  */
+
 
 const getEndpoint = function getEndpoint() {
   let microservice = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : "NOTHING";
@@ -529,6 +532,47 @@ const formatError = error => {
     return returnedObject;
   }
 };
+/**
+ * @description This function encrypts a string with a key
+ * @param {string} cryptoKey - key used to encrypt
+ * @param {string} text - text to be encrypted
+ * @returns {string} - encrypted string
+ */
+
+
+const encrypt = (cryptoKey, text) => {
+  const algorithm = "aes-192-cbc"; // Use the async `crypto.scrypt()` instead.
+
+  const key = crypto.scryptSync(cryptoKey, "salt", 24); // Use `crypto.randomBytes` to generate a random iv instead of the static iv
+  // shown here.
+
+  const iv = Buffer.alloc(16, 0); // Initialization vector.
+
+  const cipher = crypto.createCipheriv(algorithm, key, iv);
+  let encrypted = cipher.update(text, "utf8", "hex");
+  encrypted += cipher.final("hex");
+  return encrypted;
+};
+/**
+ * @description This function decrypts a string with a key
+ * @param {string} cryptoKey - key used to encrypt
+ * @param {string} text - text to be encrypted
+ * @returns - decrypted string
+ */
+
+
+const decrypt = (cryptoKey, text) => {
+  const algorithm = "aes-192-cbc"; // Use the async `crypto.scrypt()` instead.
+
+  const key = crypto.scryptSync(cryptoKey, "salt", 24); // The IV is usually passed along with the ciphertext.
+
+  const iv = Buffer.alloc(16, 0); // Initialization vector.
+
+  const decipher = crypto.createDecipheriv(algorithm, key, iv);
+  let decrypted = decipher.update(text, "hex", "utf8");
+  decrypted += decipher.final("utf8");
+  return decrypted;
+};
 
 module.exports = {
   getEndpoint,
@@ -549,5 +593,7 @@ module.exports = {
   //TODO Unit test 10/10/18 nh
   generateNewMetaData,
   pendingResource,
-  formatError
+  formatError,
+  encrypt,
+  decrypt
 };

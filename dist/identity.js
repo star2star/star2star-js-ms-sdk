@@ -385,7 +385,8 @@ const deleteIdentity = async function deleteIdentity() {
  * @description This function returns a single identity object
  * @param {string} [accessToken="null accessToken"] - cpaas access token
  * @param {string} [userUuid="null uuid"] - user uuid
- * @param {objet} [trace={}] - optional microservice lifcycle headers
+ * @param {object} [trace={}] - optional microservice lifcycle headers
+ * @param {string} [include=undefined] - optional query param -"properties" and "alias" are valid values
  * @returns {Promise} - promise resolving to identity object
  */
 
@@ -394,6 +395,7 @@ const getIdentity = async function getIdentity() {
   let accessToken = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : "null accessToken";
   let userUuid = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : "null uuid";
   let trace = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : {};
+  let include = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : undefined;
 
   try {
     const MS = util.getEndpoint("identity");
@@ -406,7 +408,14 @@ const getIdentity = async function getIdentity() {
         "x-api-version": "".concat(util.getVersion())
       },
       json: true
-    };
+    }; // add include query param if defined
+
+    if (include !== undefined) {
+      requestOptions.qs = {
+        "include": include
+      };
+    }
+
     util.addRequestTrace(requestOptions, trace);
     const response = await request(requestOptions);
     return response;

@@ -154,6 +154,39 @@ describe("Messaging MS Unit Test Suite", function () {
     return response;
   },"Mark All Conversations Read"));
   
+  it("Delete Conversation", mochaAsync(async () => {
+    if (!creds.isValid) throw new Error("Invalid Credentials");
+    trace = objectMerge({}, trace, Util.generateNewMetaData(trace));
+    const response = await s2sMS.Messaging.deleteConversation(
+      accessToken,
+      conversationUUID,
+      trace
+    );
+    assert.ok(
+      true,
+      JSON.stringify(response, null, "\t")
+    );
+    return response;
+  },"Delete Conversation"));
+
+  it("Delete Multiple Conversations", mochaAsync(async () => {
+    if (!creds.isValid) throw new Error("Invalid Credentials");
+    trace = objectMerge({}, trace, Util.generateNewMetaData(trace));
+    const response = await s2sMS.Messaging.deleteMultipleConversations(
+      accessToken,
+      //[conversationUUID],
+      // ['6eb4196d-aa9d-4725-8e8d-1d7aa63aedc4', '7fd4aaa5-712e-4e15-9b3b-a693d4a25f93', 'f89e0cc6-3f19-4449-878c-25491625ae79'],
+      ['98da72f1-1cdf-4f91-b19f-b247651903fa', '2e878ef2-7975-4b21-b01e-000e3448bafb', '13c9eba5-3cc7-49e0-b957-392716adeb35'],
+      trace
+    );
+    assert.ok(
+      true,
+      JSON.stringify(response, null, "\t")
+    );
+    return response;
+  },"Delete Multiple Conversations"));
+
+
   it("Valid SMS Number", mochaAsync(async () => {
     if (!creds.isValid) throw new Error("Invalid Credentials");
     trace = objectMerge({}, trace, Util.generateNewMetaData(trace));

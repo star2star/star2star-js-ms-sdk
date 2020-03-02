@@ -45,6 +45,83 @@ const getConversation = async (
 
 /**
  * @async
+ * @description This function deletes (archives for 30 days) a specific conversation
+ * @param {string} [accessToken="null accessToken"] - cpaas application token
+ * @param {string} [conversation_uuid="null conversation_uuid"] - conversation uuid
+ * @param {object} [trace={}] - options microservice lifecycle tracking headers
+ * @returns {Promise<empty>} - Promise resolving success or failure.
+ */
+const deleteConversation = async (
+  accessToken = "null accessToken",
+  conversation_uuid = "null conversation_uuid",
+  trace = {}
+) => {
+  try {
+    const MS = util.getEndpoint("Messaging");
+    const requestOptions = {
+      method: "DELETE",
+      uri: `${MS}/conversations/${conversation_uuid}`,
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${accessToken}`,
+        "x-api-version": `${util.getVersion()}`
+      },
+      resolveWithFullResponse: true,
+      json: true
+    };
+
+    util.addRequestTrace(requestOptions, trace);
+    const response = await request(requestOptions);
+    return {"status": "ok"};
+
+  } catch (error) {
+    return Promise.reject(util.formatError(error));
+  }
+}; // end function deleteConversation
+
+
+/**
+ * @async
+ * @description This function deletes (archives for 30 days) multiple conversations
+ * @param {string} [accessToken="null accessToken"] - cpaas application token
+ * @param {array} [conversations=[]] - array of objects containing 'conversation_uuid' 
+ * @param {object} [trace={}] - options microservice lifecycle tracking headers
+ * @returns {Promise<empty>} - Promise resolving success or failure status object.
+ */
+const deleteMultipleConversations = async (
+  accessToken = "null accessToken",
+  conversations = [],
+  trace = {}
+) => {
+  try {
+    const MS = util.getEndpoint("Messaging");
+    const requestOptions = {
+      method: "POST",
+      uri: `${MS}/conversations/remove`,
+      body: {
+        "conversations": conversations
+      },
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${accessToken}`,
+        "x-api-version": `${util.getVersion()}`
+      },
+      resolveWithFullResponse: true,
+      json: true
+    };
+
+    util.addRequestTrace(requestOptions, trace);
+    const response = await request(requestOptions);
+    return {"status": "ok"};
+
+  } catch (error) {
+    return Promise.reject(util.formatError(error));
+  }
+}; // end function deleteMultipleConversations
+
+
+/**
+ * @async
  * @description This function will retrieve the conversation uuid for whom you are sending it to.
  * @param {string} accessToken - Access token for cpaas systems
  * @param {string} userUuid - The user uuid making the request
@@ -471,5 +548,7 @@ module.exports = {
   sendMessage,
   sendSimpleSMS,
   sendSMS,
-  sendSMSMessage
+  sendSMSMessage,
+  deleteConversation,
+  deleteMultipleConversations
 };
