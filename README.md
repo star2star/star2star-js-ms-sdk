@@ -70,6 +70,7 @@ process.env.MS_LOGPRETTY = true // defaults to false
 [Please click here for our documentation pages.](https://star2star.github.io/star2star-js-ms-sdk/ "Star2Star Micro Service SDK Documentation")
 
 ## Changes
+* 3.2.19 - retrieveMessages - sort parameter
 * 3.2.18 - messaging - Added deleteConversation & deleteMultipleConversations methods
 * 3.2.17 - URL parameters encrypt and decrypt methods
 * 3.2.16 - "include" query param in getIdentity 

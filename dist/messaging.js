@@ -339,6 +339,7 @@ const retrieveConversations = async function retrieveConversations() {
  * @param {string} [conversationUUID="null conversationUUID"] - conversation uuid
  * @param {number} [offset=0] - pagination offset
  * @param {number} [limit=100] - pagination limit
+ * @param {string} [sort="-datetime"] - sort by column (default "-datetime")
  * @param {object} [trace={}] - microservice lifecycle headers
  * @returns {Promise<object>} - Promise resolving to to a message history object.
  */
@@ -349,7 +350,8 @@ const retrieveMessages = async function retrieveMessages() {
   let conversationUUID = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : "null conversationUUID";
   let offset = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : 0;
   let limit = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : 100;
-  let trace = arguments.length > 4 && arguments[4] !== undefined ? arguments[4] : {};
+  let sort = arguments.length > 4 && arguments[4] !== undefined ? arguments[4] : "-datetime";
+  let trace = arguments.length > 5 && arguments[5] !== undefined ? arguments[5] : {};
 
   try {
     const MS = util.getEndpoint("messaging");
@@ -364,7 +366,7 @@ const retrieveMessages = async function retrieveMessages() {
       qs: {
         "offset": offset,
         "limit": limit,
-        "sort": "-datetime"
+        "sort": sort
       },
       json: true
     };

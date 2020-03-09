@@ -351,6 +351,7 @@ const retrieveConversations = async (
  * @param {string} [conversationUUID="null conversationUUID"] - conversation uuid
  * @param {number} [offset=0] - pagination offset
  * @param {number} [limit=100] - pagination limit
+ * @param {string} [sort="-datetime"] - sort by column (default "-datetime")
  * @param {object} [trace={}] - microservice lifecycle headers
  * @returns {Promise<object>} - Promise resolving to to a message history object.
  */
@@ -359,6 +360,7 @@ const retrieveMessages = async (
   conversationUUID = "null conversationUUID",
   offset = 0,
   limit = 100,
+  sort = "-datetime",
   trace = {}
 ) => {
   try {
@@ -374,7 +376,7 @@ const retrieveMessages = async (
       qs: {
         "offset": offset,
         "limit": limit,
-        "sort": "-datetime"
+        "sort": sort 
       },
       json: true
     };
