@@ -622,7 +622,70 @@ describe("Workflow", function() {
     );
     return response;
   },"Get Workflow Instance v1 History"));
+
+  it("Get Filtered Workflow Instance History", mochaAsync(async () => {
+    if (!creds.isValid) throw new Error("Invalid Credentials");
+    trace = objectMerge({}, trace, Util.generateNewMetaData(trace));
+    const response = await s2sMS.Workflow.getWfInstanceHistory(
+      accessToken,
+      wfInstanceUUID,
+      false,
+      false,
+      false,
+      trace
+    );
+    assert.ok(
+      response.result_type === "cancelled",
+      JSON.stringify(response, null, "\t")
+    );
+    return response;
+  },"Get Filtered Workflow Instance History"));
   
+  it("Get Workflow Instance History Workflow Vars", mochaAsync(async () => {
+    if (!creds.isValid) throw new Error("Invalid Credentials");
+    trace = objectMerge({}, trace, Util.generateNewMetaData(trace));
+    const response = await s2sMS.Workflow.getWfInstanceWorkflowVars(
+      accessToken,
+      wfInstanceUUID,
+      trace
+    );
+    assert.ok(
+      response.result_type === "cancelled",
+      JSON.stringify(response, null, "\t")
+    );
+    return response;
+  },"Get Workflow Instance History Workflow Vars"));
+
+  it("Get Workflow Instance History Incoming Data", mochaAsync(async () => {
+    if (!creds.isValid) throw new Error("Invalid Credentials");
+    trace = objectMerge({}, trace, Util.generateNewMetaData(trace));
+    const response = await s2sMS.Workflow.getWfInstanceIncomingData(
+      accessToken,
+      wfInstanceUUID,
+      trace
+    );
+    assert.ok(
+      response.result_type === "cancelled",
+      JSON.stringify(response, null, "\t")
+    );
+    return response;
+  },"Get Workflow Instance History Incoming Data"));
+
+  it("Get Workflow Instance History Transition Results", mochaAsync(async () => {
+    if (!creds.isValid) throw new Error("Invalid Credentials");
+    trace = objectMerge({}, trace, Util.generateNewMetaData(trace));
+    const response = await s2sMS.Workflow.getWfInstanceResults(
+      accessToken,
+      wfInstanceUUID,
+      transitionUUID,
+      trace
+    );
+    assert.ok(
+      response.result_type === "cancelled",
+      JSON.stringify(response, null, "\t")
+    );
+    return response;
+  },"Get Workflow Instance History Transition Results"));
 
   it("List Workflow Templates", mochaAsync(async () => {
     if (!creds.isValid) throw new Error("Invalid Credentials");
@@ -774,6 +837,7 @@ describe("Workflow", function() {
       wfTemplateUUID,
       0, //offset
       3, //limit
+      false,
       { version: "1.0.1" },
       trace
     );

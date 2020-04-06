@@ -211,15 +211,59 @@ const getWorkflowGroup = async function getWorkflowGroup() {
 };
 /**
  * @async
- * @description This function will get an execution history for a specific workflow uuid
- * @param {string} [accessToken="null access token"] - cpaas access token
- * @param {string} [wfInstanceUUID="null wfTemplateUUID"] - workflow uuid
+ * @description This function will get a filtered execution history for a specific workflow uuid
+ * @param {string} [accessToken="null access_token"] - cpaas access token
+ * @param {string} [wfInstanceUUID="null wfTemplateUUID"] - workflow instance uuid
+ * @param {boolean} [show_workflow_vars=false] - show workflow_vars (defaults to false)
+ * @param {boolean} [show_incoming_data=false] - show incoming_data (defaults to false)
+ * @param {boolean} [show_transition_results=false] - show transition results (defaults to false)
  * @param {object} [trace = {}] - optional microservice lifecycle trace headers
  * @returns {Promise}
  */
 
 
 const getWfInstanceHistory = async function getWfInstanceHistory() {
+  let accessToken = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : "null access_token";
+  let wfInstanceUUID = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : "null wfTemplateUUID";
+  let trace = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : {};
+
+  try {
+    const MS = util.getEndpoint("workflow");
+    const requestOptions = {
+      method: "GET",
+      uri: "".concat(MS, "/history/").concat(wfInstanceUUID, "/filter"),
+      headers: {
+        Authorization: "Bearer ".concat(accessToken),
+        "Content-type": "application/json",
+        "x-api-version": "".concat(util.getVersion())
+      },
+      json: true
+    };
+    util.addRequestTrace(requestOptions, trace);
+
+    if (filters) {
+      Object.keys(filters).forEach(filter => {
+        requestOptions.qs[filter] = filters[filter];
+      });
+    }
+
+    const response = await request(requestOptions);
+    return response;
+  } catch (error) {
+    return Promise.reject(util.formatError(error));
+  }
+};
+/**
+ * @async
+ * @description This function will get filtered workflow vars execution history for a specific workflow uuid
+ * @param {string} [accessToken="null access_token"] - cpaas access token
+ * @param {string} [wfInstanceUUID="null wfTemplateUUID"] - workflow instance uuid
+ * @param {object} [trace = {}] - optional microservice lifecycle trace headers
+ * @returns {Promise}
+ */
+
+
+const getWfInstanceWorkflowVars = async function getWfInstanceWorkflowVars() {
   let accessToken = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : "null access token";
   let wfInstanceUUID = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : "null wfTemplateUUID";
   let trace = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : {};
@@ -228,7 +272,77 @@ const getWfInstanceHistory = async function getWfInstanceHistory() {
     const MS = util.getEndpoint("workflow");
     const requestOptions = {
       method: "GET",
-      uri: "".concat(MS, "/history/").concat(wfInstanceUUID),
+      uri: "".concat(MS, "/history/").concat(wfInstanceUUID, "/filter/workflow_vars"),
+      headers: {
+        Authorization: "Bearer ".concat(accessToken),
+        "Content-type": "application/json",
+        "x-api-version": "".concat(util.getVersion())
+      },
+      json: true
+    };
+    util.addRequestTrace(requestOptions, trace);
+    const response = await request(requestOptions);
+    return response;
+  } catch (error) {
+    return Promise.reject(util.formatError(error));
+  }
+};
+/**
+ * @async
+ * @description This function will get filtered incoming data execution history for a specific workflow uuid
+ * @param {string} [accessToken="null access_token"] - cpaas access token
+ * @param {string} [wfInstanceUUID="null wfTemplateUUID"] - workflow instance uuid
+ * @param {object} [trace = {}] - optional microservice lifecycle trace headers
+ * @returns {Promise}
+ */
+
+
+const getWfInstanceIncomingData = async function getWfInstanceIncomingData() {
+  let accessToken = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : "null access token";
+  let wfInstanceUUID = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : "null wfTemplateUUID";
+  let trace = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : {};
+
+  try {
+    const MS = util.getEndpoint("workflow");
+    const requestOptions = {
+      method: "GET",
+      uri: "".concat(MS, "/history/").concat(wfInstanceUUID, "/filter/incoming_data"),
+      headers: {
+        Authorization: "Bearer ".concat(accessToken),
+        "Content-type": "application/json",
+        "x-api-version": "".concat(util.getVersion())
+      },
+      json: true
+    };
+    util.addRequestTrace(requestOptions, trace);
+    const response = await request(requestOptions);
+    return response;
+  } catch (error) {
+    return Promise.reject(util.formatError(error));
+  }
+};
+/**
+ * @async
+ * @description This function will get filtered transaction results execution history for a specific workflow uuid
+ * @param {string} [accessToken="null access_token"] - cpaas access token
+ * @param {string} [wfInstanceUUID="null wfTemplateUUID"] - workflow instance uuid
+ * @param {string} [wfTransitionUUID="null instance_uuid"] - workflow instance uuid
+ * @param {object} [trace = {}] - optional microservice lifecycle trace headers
+ * @returns {Promise}
+ */
+
+
+const getWfInstanceResults = async function getWfInstanceResults() {
+  let accessToken = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : "null access token";
+  let wfInstanceUUID = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : "null wfTemplateUUID";
+  let transitionUUID = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : "null wfTransitionUUID";
+  let trace = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : {};
+
+  try {
+    const MS = util.getEndpoint("workflow");
+    const requestOptions = {
+      method: "GET",
+      uri: "".concat(MS, "/history/").concat(wfInstanceUUID, "/filter/").concat(transitionUUID, "/results"),
       headers: {
         Authorization: "Bearer ".concat(accessToken),
         "Content-type": "application/json",
@@ -251,6 +365,7 @@ const getWfInstanceHistory = async function getWfInstanceHistory() {
  * @param {number} [offset=0] - pagination offset
  * @param {number} [limit=10] - pagination limit
  * @param {array} [filters=undefined] - optional filters, incuding start_datetime and end_datetime (RFC3339 format), and version
+ * @param {boolean} [short=false] - short version of workflow history
  * @param {object} [trace = {}] - optional microservice lifecycle trace headers
  * @returns {Promise}
  */
@@ -262,7 +377,8 @@ const getWfTemplateHistory = async function getWfTemplateHistory() {
   let offset = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : 0;
   let limit = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : 10;
   let filters = arguments.length > 4 && arguments[4] !== undefined ? arguments[4] : undefined;
-  let trace = arguments.length > 5 && arguments[5] !== undefined ? arguments[5] : {};
+  let short = arguments.length > 5 && arguments[5] !== undefined ? arguments[5] : false;
+  let trace = arguments.length > 6 && arguments[6] !== undefined ? arguments[6] : {};
 
   try {
     const MS = util.getEndpoint("workflow");
@@ -277,7 +393,8 @@ const getWfTemplateHistory = async function getWfTemplateHistory() {
       qs: {
         template_uuid: wfTemplateUUID,
         offset: offset,
-        limit: limit
+        limit: limit,
+        short: short
       },
       json: true
     };
@@ -630,5 +747,9 @@ module.exports = {
   listWorkflowTemplates,
   modifyWorkflowTemplate,
   startWorkflow,
-  updateWorkflowGroup
+  updateWorkflowGroup,
+  //getFilteredWfInstanceHistory,
+  getWfInstanceWorkflowVars,
+  getWfInstanceIncomingData,
+  getWfInstanceResults
 };
