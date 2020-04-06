@@ -220,6 +220,7 @@ const getWorkflowGroup = async (
 const getWfInstanceHistory = async (
   accessToken = "null access_token",
   wfInstanceUUID = "null wfTemplateUUID",
+  filters = undefined,
   trace = {}
 ) => {
   try {
@@ -366,7 +367,6 @@ const getWfTemplateHistory = async (
   offset = 0,
   limit = 10,
   filters = undefined,
-  short = false,
   trace = {}
 ) => {
   try {
@@ -383,7 +383,7 @@ const getWfTemplateHistory = async (
         template_uuid: wfTemplateUUID,
         offset: offset,
         limit: limit,
-        short: short
+        short: true
       },
       json: true
     };
@@ -687,23 +687,23 @@ const updateWorkflowGroup = async (
   trace = {}
 ) => {
   try {
-  const MS = util.getEndpoint("workflow");
-  const requestOptions = {
-    method: "PUT",
-    uri: `${MS}/groups/${groupUUID}`,
-    body: {
-      status: status,
-      data: data
-    },
-    headers: {
-      Authorization: `Bearer ${accessToken}`,
-      "Content-type": "application/json",
-      "x-api-version": `${util.getVersion()}`
-    },
-    json: true
-  };
-  util.addRequestTrace(requestOptions, trace);
-  const response = await request(requestOptions);
+    const MS = util.getEndpoint("workflow");
+    const requestOptions = {
+      method: "PUT",
+      uri: `${MS}/groups/${groupUUID}`,
+      body: {
+        status: status,
+        data: data
+      },
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+        "Content-type": "application/json",
+        "x-api-version": `${util.getVersion()}`
+      },
+      json: true
+    };
+    util.addRequestTrace(requestOptions, trace);
+    const response = await request(requestOptions);
     return response;
   } catch (error) {
     return Promise.reject(util.formatError(error));
@@ -725,7 +725,6 @@ module.exports = {
   modifyWorkflowTemplate,
   startWorkflow,
   updateWorkflowGroup,
-  //getFilteredWfInstanceHistory,
   getWfInstanceWorkflowVars,
   getWfInstanceIncomingData,
   getWfInstanceResults

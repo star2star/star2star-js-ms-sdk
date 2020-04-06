@@ -192,6 +192,9 @@ toc:
       - deleteWorkflowTemplate
       - getRunningWorkflow
       - getWfInstanceHistory
+      - getWfInstanceWorkflowVars
+      - getWfInstanceIncomingData
+      - getWfInstanceResults
       - getWfTemplateHistory
       - getWorkflowGroup
       - getWorkflowTemplate
@@ -201,6 +204,7 @@ toc:
       - modifyWorkflowTemplate
       - startWorkflow
       - updateWorkflowGroup
+      
   - name: Util
     children:
       - isBrowser

@@ -225,7 +225,8 @@ const getWorkflowGroup = async function getWorkflowGroup() {
 const getWfInstanceHistory = async function getWfInstanceHistory() {
   let accessToken = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : "null access_token";
   let wfInstanceUUID = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : "null wfTemplateUUID";
-  let trace = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : {};
+  let filters = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : undefined;
+  let trace = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : {};
 
   try {
     const MS = util.getEndpoint("workflow");
@@ -377,8 +378,7 @@ const getWfTemplateHistory = async function getWfTemplateHistory() {
   let offset = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : 0;
   let limit = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : 10;
   let filters = arguments.length > 4 && arguments[4] !== undefined ? arguments[4] : undefined;
-  let short = arguments.length > 5 && arguments[5] !== undefined ? arguments[5] : false;
-  let trace = arguments.length > 6 && arguments[6] !== undefined ? arguments[6] : {};
+  let trace = arguments.length > 5 && arguments[5] !== undefined ? arguments[5] : {};
 
   try {
     const MS = util.getEndpoint("workflow");
@@ -394,7 +394,7 @@ const getWfTemplateHistory = async function getWfTemplateHistory() {
         template_uuid: wfTemplateUUID,
         offset: offset,
         limit: limit,
-        short: short
+        short: true
       },
       json: true
     };
@@ -748,7 +748,6 @@ module.exports = {
   modifyWorkflowTemplate,
   startWorkflow,
   updateWorkflowGroup,
-  //getFilteredWfInstanceHistory,
   getWfInstanceWorkflowVars,
   getWfInstanceIncomingData,
   getWfInstanceResults
