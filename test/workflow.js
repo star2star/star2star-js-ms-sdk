@@ -872,16 +872,84 @@ describe("Workflow", function() {
     trace = objectMerge({}, trace, Util.generateNewMetaData(trace));
     const response = await s2sMS.Workflow.getWorkflowGroup(
       accessToken,
-      groupUUID,
+      // groupUUID,
+      "fd85e1ea-46f8-4d3d-93ff-6565996ed014",
+     {"show_master":true, "show_children":true, "show_data":true},
       trace
     );
     assert.ok(
-      response.uuid === groupUUID,
+      response.hasOwnProperty("uuid"),
       JSON.stringify(response, null, "\t")
     );
     return response;
   },"Get Workflow Group"));
-  
+
+  it("Get Workflow Group Master", mochaAsync(async () => {
+    if (!creds.isValid) throw new Error("Invalid Credentials");
+    trace = objectMerge({}, trace, Util.generateNewMetaData(trace));
+    const response = await s2sMS.Workflow.getWorkflowGroupMaster(
+      accessToken, 
+      // groupUUID,
+      "fd85e1ea-46f8-4d3d-93ff-6565996ed014",
+      trace
+    );
+    assert.ok(
+      response.hasOwnProperty("result"),
+      JSON.stringify(response, null, "\t")
+    );
+    return response;
+  },"Get Workflow Group Master"));
+
+  it("Get Workflow Group Data", mochaAsync(async () => {
+    if (!creds.isValid) throw new Error("Invalid Credentials");
+    trace = objectMerge({}, trace, Util.generateNewMetaData(trace));
+    const response = await s2sMS.Workflow.getWorkflowGroupData(
+      accessToken,
+      // groupUUID,
+      "fd85e1ea-46f8-4d3d-93ff-6565996ed014",
+      trace
+    );
+    assert.ok(
+      true, //data: { important_things: true }
+      JSON.stringify(response, null, "\t")
+    );
+    return response;
+  },"Get Workflow Group Data"));
+
+  it("Get Workflow Group Children", mochaAsync(async () => {
+    if (!creds.isValid) throw new Error("Invalid Credentials");
+    trace = objectMerge({}, trace, Util.generateNewMetaData(trace));
+    const response = await s2sMS.Workflow.getWorkflowGroupChildren(
+      accessToken,
+      // groupUUID,
+      "fd85e1ea-46f8-4d3d-93ff-6565996ed014",
+      trace
+    );
+    assert.ok(
+      response.length > 0 && response[0].hasOwnProperty("uuid"),
+      JSON.stringify(response, null, "\t")
+    );
+    return response;
+  },"Get Workflow Group Children"));
+
+  it("Get Workflow Group Child", mochaAsync(async () => {
+    if (!creds.isValid) throw new Error("Invalid Credentials");
+    trace = objectMerge({}, trace, Util.generateNewMetaData(trace));
+    const response = await s2sMS.Workflow.getWorkflowGroupChild(
+      accessToken,
+      // groupUUID,
+      "fd85e1ea-46f8-4d3d-93ff-6565996ed014",
+      // childUUID,
+      "c7219bc7-9174-4df5-bbe6-817ee47ce2c2",
+      trace
+    );
+    assert.ok(
+      response.hasOwnProperty("result"),
+      JSON.stringify(response, null, "\t")
+    );
+    return response;
+  },"Get Workflow Group Child"));
+
   it("Update Workflow Group", mochaAsync(async () => {
     if (!creds.isValid) throw new Error("Invalid Credentials");
     trace = objectMerge({}, trace, Util.generateNewMetaData(trace));

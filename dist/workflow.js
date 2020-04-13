@@ -180,6 +180,9 @@ const getRunningWorkflow = async function getRunningWorkflow() {
  * @description This function will get workflow group by uuid.
  * @param {string} [accessToken="null access token"] - cpaas access token
  * @param {string} [wfGroupUUID="null wfGroupUUID"] - workflow uuid
+ * @param {boolean} [show_master=false] - show master (defaults to false)
+ * @param {boolean} [show_children=false] - show children (defaults to false)
+ * @param {boolean} [show_data=false] - show data (defaults to false)
  * @param {object} [trace = {}] - optional microservice lifecycle trace headers
  * @returns {Promise}
  */
@@ -187,14 +190,161 @@ const getRunningWorkflow = async function getRunningWorkflow() {
 
 const getWorkflowGroup = async function getWorkflowGroup() {
   let accessToken = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : "null access token";
-  let wfGroupUUID = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : "null wfTemplateUUID";
+  let wfGroupUUID = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : "null wfGroupUUID";
+  let filters = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : undefined;
+  let trace = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : {};
+
+  try {
+    const MS = util.getEndpoint("workflow");
+    const requestOptions = {
+      method: "GET",
+      uri: "".concat(MS, "/groups/").concat(wfGroupUUID, "/filter"),
+      headers: {
+        Authorization: "Bearer ".concat(accessToken),
+        "Content-type": "application/json",
+        "x-api-version": "".concat(util.getVersion())
+      },
+      qs: {},
+      json: true
+    };
+    util.addRequestTrace(requestOptions, trace);
+
+    if (filters) {
+      Object.keys(filters).forEach(filter => {
+        requestOptions.qs[filter] = filters[filter];
+      });
+    }
+
+    const response = await request(requestOptions);
+    return response;
+  } catch (error) {
+    return Promise.reject(util.formatError(error));
+  }
+};
+/**
+ * @async
+ * @description This function will get workflow group master by uuid.
+ * @param {string} [accessToken="null access token"] - cpaas access token
+ * @param {string} [wfGroupUUID="null wfGroupUUID"] - workflow uuid
+ * @param {object} [trace = {}] - optional microservice lifecycle trace headers
+ * @returns {Promise}
+ */
+
+
+const getWorkflowGroupMaster = async function getWorkflowGroupMaster() {
+  let accessToken = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : "null access token";
+  let wfGroupUUID = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : "null wfGroupUUID";
   let trace = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : {};
 
   try {
     const MS = util.getEndpoint("workflow");
     const requestOptions = {
       method: "GET",
-      uri: "".concat(MS, "/groups/").concat(wfGroupUUID),
+      uri: "".concat(MS, "/groups/").concat(wfGroupUUID, "/filter/master"),
+      headers: {
+        Authorization: "Bearer ".concat(accessToken),
+        "Content-type": "application/json",
+        "x-api-version": "".concat(util.getVersion())
+      },
+      json: true
+    };
+    util.addRequestTrace(requestOptions, trace);
+    const response = await request(requestOptions);
+    return response;
+  } catch (error) {
+    return Promise.reject(util.formatError(error));
+  }
+};
+/**
+ * @async
+ * @description This function will get workflow group data by uuid.
+ * @param {string} [accessToken="null access token"] - cpaas access token
+ * @param {string} [wfGroupUUID="null wfGroupUUID"] - workflow uuid
+ * @param {object} [trace = {}] - optional microservice lifecycle trace headers
+ * @returns {Promise}
+ */
+
+
+const getWorkflowGroupData = async function getWorkflowGroupData() {
+  let accessToken = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : "null access token";
+  let wfGroupUUID = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : "null wfGroupUUID";
+  let trace = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : {};
+
+  try {
+    const MS = util.getEndpoint("workflow");
+    const requestOptions = {
+      method: "GET",
+      uri: "".concat(MS, "/groups/").concat(wfGroupUUID, "/filter/data"),
+      headers: {
+        Authorization: "Bearer ".concat(accessToken),
+        "Content-type": "application/json",
+        "x-api-version": "".concat(util.getVersion())
+      },
+      json: true
+    };
+    util.addRequestTrace(requestOptions, trace);
+    const response = await request(requestOptions);
+    return response;
+  } catch (error) {
+    return Promise.reject(util.formatError(error));
+  }
+};
+/**
+ * @async
+ * @description This function will get workflow group children by uuid.
+ * @param {string} [accessToken="null access token"] - cpaas access token
+ * @param {string} [wfGroupUUID="null wfGroupUUID"] - workflow uuid
+ * @param {object} [trace = {}] - optional microservice lifecycle trace headers
+ * @returns {Promise}
+ */
+
+
+const getWorkflowGroupChildren = async function getWorkflowGroupChildren() {
+  let accessToken = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : "null access token";
+  let wfGroupUUID = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : "null wfGroupUUID";
+  let trace = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : {};
+
+  try {
+    const MS = util.getEndpoint("workflow");
+    const requestOptions = {
+      method: "GET",
+      uri: "".concat(MS, "/groups/").concat(wfGroupUUID, "/filter/children"),
+      headers: {
+        Authorization: "Bearer ".concat(accessToken),
+        "Content-type": "application/json",
+        "x-api-version": "".concat(util.getVersion())
+      },
+      json: true
+    };
+    util.addRequestTrace(requestOptions, trace);
+    const response = await request(requestOptions);
+    return response;
+  } catch (error) {
+    return Promise.reject(util.formatError(error));
+  }
+};
+/**
+ * @async
+ * @description This function will get workflow group child by child uuid
+ * @param {string} [accessToken="null access token"] - cpaas access token
+ * @param {string} [wfGroupUUID="null wfGroupUUID"] - workflow uuid
+ * @param {string} [wfChildUUID="null wfChildUUID"] - child uuid
+ * @param {object} [trace = {}] - optional microservice lifecycle trace headers
+ * @returns {Promise}
+ */
+
+
+const getWorkflowGroupChild = async function getWorkflowGroupChild() {
+  let accessToken = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : "null access token";
+  let wfGroupUUID = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : "null wfGroupUUID";
+  let wfChildUUID = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : "null wfChildUUID";
+  let trace = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : {};
+
+  try {
+    const MS = util.getEndpoint("workflow");
+    const requestOptions = {
+      method: "GET",
+      uri: "".concat(MS, "/groups/").concat(wfGroupUUID, "/filter/children/").concat(wfChildUUID),
       headers: {
         Authorization: "Bearer ".concat(accessToken),
         "Content-type": "application/json",
@@ -238,6 +388,7 @@ const getWfInstanceHistory = async function getWfInstanceHistory() {
         "Content-type": "application/json",
         "x-api-version": "".concat(util.getVersion())
       },
+      qs: {},
       json: true
     };
     util.addRequestTrace(requestOptions, trace);
@@ -741,6 +892,10 @@ module.exports = {
   getWfInstanceHistory,
   getWfTemplateHistory,
   getWorkflowGroup,
+  getWorkflowGroupMaster,
+  getWorkflowGroupData,
+  getWorkflowGroupChildren,
+  getWorkflowGroupChild,
   getWorkflowTemplate,
   listRunningWorkflows,
   listWorkflowGroups,

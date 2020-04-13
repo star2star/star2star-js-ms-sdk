@@ -86,7 +86,75 @@ const getProviderToken = async (
   }
 };
 
+/**
+ *
+ * @description This function will  list all avaialble providers
+ * @param {string} [accessToken="null accessToken"] - CPaaS access token
+ * @param {object} [trace={}] - optional cpaas lifecycle headers
+ * @returns {Promise<object>} - Promise resolving to oauth2 provider access token
+ */
+const listAvailableProviders = async (
+  accessToken = "null accessToken",
+  trace = {}
+) => {
+  try {
+    const MS = util.getEndpoint("providers");
+
+    const requestOptions = {
+      method: "GET",
+      uri: `${MS}/providers?type=identity&policy.type=oauth`,
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+        "Content-type": "application/json",
+        "x-api-version": `${util.getVersion()}`
+      },
+      json: true
+    };
+    util.addRequestTrace(requestOptions, trace);
+    const response = await request(requestOptions);
+    return response;
+  } catch (error) {
+    return Promise.reject(util.formatError(error));
+  }
+};
+
+/**
+ *
+ * @description This function will list all the providers of a given user
+ * @param {string} [accessToken="null accessToken"] - CPaaS access token
+ * @param {string} [userUUID="null userUUID"] - CPaas user uuid
+ * @param {object} [trace={}] - optional cpaas lifecycle headers
+ * @returns {Promise<object>} - Promise resolving to oauth2 provider access token
+ */
+const listUsersProviders = async (
+  accessToken = "null accessToken",
+  userUUID = "null userUUID",
+  trace = {}
+) => {
+  try {
+    const MS = util.getEndpoint("providers");
+
+    const requestOptions = {
+      method: "GET",
+      uri: `${MS}/users/${userUUID}/providers?policy.type=oauth`,
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+        "Content-type": "application/json",
+        "x-api-version": `${util.getVersion()}`
+      },
+      json: true
+    };
+    util.addRequestTrace(requestOptions, trace);
+    const response = await request(requestOptions);
+    return response;
+  } catch (error) {
+    return Promise.reject(util.formatError(error));
+  }
+};
+
 module.exports = {
   authorizeProvider,
-  getProviderToken
+  getProviderToken,
+  listAvailableProviders,
+  listUsersProviders
 };

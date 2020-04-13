@@ -88,8 +88,76 @@ const getProviderToken = async function getProviderToken() {
     return Promise.reject(util.formatError(error));
   }
 };
+/**
+ *
+ * @description This function will  list all avaialble providers
+ * @param {string} [accessToken="null accessToken"] - CPaaS access token
+ * @param {object} [trace={}] - optional cpaas lifecycle headers
+ * @returns {Promise<object>} - Promise resolving to oauth2 provider access token
+ */
+
+
+const listAvailableProviders = async function listAvailableProviders() {
+  let accessToken = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : "null accessToken";
+  let trace = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
+
+  try {
+    const MS = util.getEndpoint("providers");
+    const requestOptions = {
+      method: "GET",
+      uri: "".concat(MS, "/providers?type=identity&policy.type=oauth"),
+      headers: {
+        Authorization: "Bearer ".concat(accessToken),
+        "Content-type": "application/json",
+        "x-api-version": "".concat(util.getVersion())
+      },
+      json: true
+    };
+    util.addRequestTrace(requestOptions, trace);
+    const response = await request(requestOptions);
+    return response;
+  } catch (error) {
+    return Promise.reject(util.formatError(error));
+  }
+};
+/**
+ *
+ * @description This function will list all the providers of a given user
+ * @param {string} [accessToken="null accessToken"] - CPaaS access token
+ * @param {string} [userUUID="null userUUID"] - CPaas user uuid
+ * @param {object} [trace={}] - optional cpaas lifecycle headers
+ * @returns {Promise<object>} - Promise resolving to oauth2 provider access token
+ */
+
+
+const listUsersProviders = async function listUsersProviders() {
+  let accessToken = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : "null accessToken";
+  let userUUID = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : "null userUUID";
+  let trace = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : {};
+
+  try {
+    const MS = util.getEndpoint("providers");
+    const requestOptions = {
+      method: "GET",
+      uri: "".concat(MS, "/users/").concat(userUUID, "/providers?policy.type=oauth"),
+      headers: {
+        Authorization: "Bearer ".concat(accessToken),
+        "Content-type": "application/json",
+        "x-api-version": "".concat(util.getVersion())
+      },
+      json: true
+    };
+    util.addRequestTrace(requestOptions, trace);
+    const response = await request(requestOptions);
+    return response;
+  } catch (error) {
+    return Promise.reject(util.formatError(error));
+  }
+};
 
 module.exports = {
   authorizeProvider,
-  getProviderToken
+  getProviderToken,
+  listAvailableProviders,
+  listUsersProviders
 };
