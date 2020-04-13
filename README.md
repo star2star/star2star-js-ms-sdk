@@ -70,7 +70,8 @@ process.env.MS_LOGPRETTY = true // defaults to false
 [Please click here for our documentation pages.](https://star2star.github.io/star2star-js-ms-sdk/ "Star2Star Micro Service SDK Documentation")
 
 ## Changes
-* 3.2.21 - added group and provider methods 
+* 3.2.22 - added group and provider methods 
+* 3.2.21 - adjust send email content data structure
 * 3.2.20 - workflow /history new end points for show_workflow_vars, show_incoming_data, show_transition_results
 * 3.2.19 - retrieveMessages - sort parameter
 * 3.2.18 - messaging - Added deleteConversation & deleteMultipleConversations methods

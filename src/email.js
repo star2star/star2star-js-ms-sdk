@@ -59,10 +59,10 @@ const sendEmail = async (
 ) => {
   try {
     const validatedEmail = validateEmail({
-      content: {
+      content: [{
         body: message,
         type: type
-      },
+      }],
       from: sender,
       subject: subject,
       to: to
