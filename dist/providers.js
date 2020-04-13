@@ -71,7 +71,7 @@ const getProviderToken = async function getProviderToken() {
       method: "GET",
       uri: "".concat(MS, "/providers/").concat(providerUUID, "/oauth/token"),
       headers: {
-        Authorization: "Bearer ".concat(accessToken),
+        "Authorization": "Bearer ".concat(accessToken),
         "X-Client-id": clientID,
         "x-api-version": "".concat(util.getVersion())
       },
@@ -107,7 +107,7 @@ const listAvailableProviders = async function listAvailableProviders() {
       method: "GET",
       uri: "".concat(MS, "/providers?type=identity&policy.type=oauth"),
       headers: {
-        Authorization: "Bearer ".concat(accessToken),
+        "Authorization": "Bearer ".concat(accessToken),
         "Content-type": "application/json",
         "x-api-version": "".concat(util.getVersion())
       },
@@ -141,7 +141,7 @@ const listUsersProviders = async function listUsersProviders() {
       method: "GET",
       uri: "".concat(MS, "/users/").concat(userUUID, "/providers?policy.type=oauth"),
       headers: {
-        Authorization: "Bearer ".concat(accessToken),
+        "Authorization": "Bearer ".concat(accessToken),
         "Content-type": "application/json",
         "x-api-version": "".concat(util.getVersion())
       },

@@ -68,7 +68,7 @@ const getProviderToken = async (
       method: "GET",
       uri: `${MS}/providers/${providerUUID}/oauth/token`,
       headers: {
-        Authorization: `Bearer ${accessToken}`,
+        "Authorization": `Bearer ${accessToken}`,
         "X-Client-id": clientID,
         "x-api-version": `${util.getVersion()}`
       },
@@ -104,7 +104,7 @@ const listAvailableProviders = async (
       method: "GET",
       uri: `${MS}/providers?type=identity&policy.type=oauth`,
       headers: {
-        Authorization: `Bearer ${accessToken}`,
+        "Authorization": `Bearer ${accessToken}`,
         "Content-type": "application/json",
         "x-api-version": `${util.getVersion()}`
       },
@@ -138,7 +138,7 @@ const listUsersProviders = async (
       method: "GET",
       uri: `${MS}/users/${userUUID}/providers?policy.type=oauth`,
       headers: {
-        Authorization: `Bearer ${accessToken}`,
+        "Authorization": `Bearer ${accessToken}`,
         "Content-type": "application/json",
         "x-api-version": `${util.getVersion()}`
       },

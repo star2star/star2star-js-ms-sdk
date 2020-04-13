@@ -159,6 +159,8 @@ toc:
     children:
       - authorizeProvider
       - getProviderToken
+      - listAvailableProviders
+      - listUsersProviders
   - name: Pubsub
     children: 
       - addSubscription
