@@ -45,6 +45,14 @@ const createResourceGroups = async function createResourceGroups() {
 
     let nextTrace = objectMerge({}, trace);
     const roles = await Auth.getResourceGroupRoles(accessToken, nextTrace);
+
+    if (Object.keys(roles).length === 0) {
+      throw {
+        "code": "404",
+        "message": "resource group system roles not found"
+      };
+    }
+
     const groupPromises = [];
     const scopePromises = [];
     const groupTypeRegex = /^[r,u,d]{1,3}/;
