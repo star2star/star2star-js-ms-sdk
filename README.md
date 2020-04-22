@@ -69,6 +69,7 @@ process.env.MS_LOGPRETTY = true // defaults to false
 
 [Please click here for our documentation pages.](https://star2star.github.io/star2star-js-ms-sdk/ "Star2Star Micro Service SDK Documentation")
 
+
 ## Changes
 * 3.2.23 - add guard for missing resource groups
 * 3.2.22 - added group and provider methods 
