@@ -180,6 +180,40 @@ const getRunningWorkflow = async function getRunningWorkflow() {
  * @description This function will get workflow group by uuid.
  * @param {string} [accessToken="null access token"] - cpaas access token
  * @param {string} [wfGroupUUID="null wfGroupUUID"] - workflow uuid
+ * @param {object} [trace = {}] - optional microservice lifecycle trace headers
+ * @returns {Promise}
+ */
+
+
+const getWorkflowGroup = async function getWorkflowGroup() {
+  let accessToken = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : "null access token";
+  let wfGroupUUID = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : "null wfTemplateUUID";
+  let trace = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : {};
+
+  try {
+    const MS = util.getEndpoint("workflow");
+    const requestOptions = {
+      method: "GET",
+      uri: "".concat(MS, "/groups/").concat(wfGroupUUID),
+      headers: {
+        Authorization: "Bearer ".concat(accessToken),
+        "Content-type": "application/json",
+        "x-api-version": "".concat(util.getVersion())
+      },
+      json: true
+    };
+    util.addRequestTrace(requestOptions, trace);
+    const response = await request(requestOptions);
+    return response;
+  } catch (error) {
+    return Promise.reject(util.formatError(error));
+  }
+};
+/**
+ * @async
+ * @description This function will get workflow group by uuid.
+ * @param {string} [accessToken="null access token"] - cpaas access token
+ * @param {string} [wfGroupUUID="null wfGroupUUID"] - workflow uuid
  * @param {boolean} [show_master=false] - show master (defaults to false)
  * @param {boolean} [show_children=false] - show children (defaults to false)
  * @param {boolean} [show_data=false] - show data (defaults to false)
@@ -188,7 +222,7 @@ const getRunningWorkflow = async function getRunningWorkflow() {
  */
 
 
-const getWorkflowGroup = async function getWorkflowGroup() {
+const getWorkflowGroupFiltered = async function getWorkflowGroupFiltered() {
   let accessToken = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : "null access token";
   let wfGroupUUID = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : "null wfGroupUUID";
   let filters = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : undefined;
@@ -892,6 +926,7 @@ module.exports = {
   getWfInstanceHistory,
   getWfTemplateHistory,
   getWorkflowGroup,
+  getWorkflowGroupFiltered,
   getWorkflowGroupMaster,
   getWorkflowGroupData,
   getWorkflowGroupChildren,

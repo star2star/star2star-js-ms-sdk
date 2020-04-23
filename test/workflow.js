@@ -866,11 +866,27 @@ describe("Workflow", function() {
     );
     return response;
   },"List Workflow Groups"));
-  
+
   it("Get Workflow Group", mochaAsync(async () => {
     if (!creds.isValid) throw new Error("Invalid Credentials");
     trace = objectMerge({}, trace, Util.generateNewMetaData(trace));
     const response = await s2sMS.Workflow.getWorkflowGroup(
+      accessToken,
+      // groupUUID,
+      "fd85e1ea-46f8-4d3d-93ff-6565996ed014",
+      trace
+    );
+    assert.ok(
+      response.hasOwnProperty("uuid"),
+      JSON.stringify(response, null, "\t")
+    );
+    return response;
+  },"Get Workflow Group"));
+  
+  it("Get Workflow Group Filtered", mochaAsync(async () => {
+    if (!creds.isValid) throw new Error("Invalid Credentials");
+    trace = objectMerge({}, trace, Util.generateNewMetaData(trace));
+    const response = await s2sMS.Workflow.getWorkflowGroupFiltered(
       accessToken,
       // groupUUID,
       "fd85e1ea-46f8-4d3d-93ff-6565996ed014",
@@ -882,7 +898,7 @@ describe("Workflow", function() {
       JSON.stringify(response, null, "\t")
     );
     return response;
-  },"Get Workflow Group"));
+  },"Get Workflow Group Filtered"));
 
   it("Get Workflow Group Master", mochaAsync(async () => {
     if (!creds.isValid) throw new Error("Invalid Credentials");

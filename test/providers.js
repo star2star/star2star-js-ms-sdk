@@ -71,60 +71,50 @@ describe("Providers", function() {
     }
   });
 
-  it("Authorize Provider", mochaAsync(async () => {
-    if (!creds.isValid) throw new Error("Invalid Credentials");
-    trace = objectMerge({}, trace, Util.generateNewMetaData(trace));
-    const response = await s2sMS.Providers.authorizeProvider(
-      //clientID,
-      "689129445930-qqdrkf38fu6e37gd84nt758lur5kagq2.apps.googleusercontent.com",
-      // providerUUID,
-      "57992b0e-ecf3-4105-a291-1ed755719512",
-      // redirectURL,
-      "https://cpaas-appdev.star2starglobal.net/providers/providers/a6db5f71-3a6b-45cc-90fa-4ba5a64c1fbd/oauth/callback",
-      // userUUID,
-      "9e11c9a7-b03f-4cb3-b6aa-66f6f060aef3",
-      trace
-    );
-    console.log("ap=============================================");
-    console.log(response);
-    console.log("=============================================ap");
-    assert.ok(
-      response.hasOwnProperty("items") &&
-      response.items.length > 0,
-      JSON.stringify(response, null, "\t")
-    );
-    return response;
-  },"Authorize Provider"));
+  // it("Authorize Provider", mochaAsync(async () => {
+  //   if (!creds.isValid) throw new Error("Invalid Credentials");
+  //   trace = objectMerge({}, trace, Util.generateNewMetaData(trace));
+  //   const response = await s2sMS.Providers.authorizeProvider(
+  //     //clientID,
+  //     "689129445930-qqdrkf38fu6e37gd84nt758lur5kagq2.apps.googleusercontent.com",
+  //     // providerUUID,
+  //     "57992b0e-ecf3-4105-a291-1ed755719512",
+  //     // redirectURL,
+  //     "https://cpaas-appdev.star2starglobal.net/providers/providers/a6db5f71-3a6b-45cc-90fa-4ba5a64c1fbd/oauth/callback",
+  //     // userUUID,
+  //     "9e11c9a7-b03f-4cb3-b6aa-66f6f060aef3",
+  //     trace
+  //   );
+  //   assert.ok(
+  //     response.hasOwnProperty("items") &&
+  //     response.items.length > 0,
+  //     JSON.stringify(response, null, "\t")
+  //   );
+  //   return response;
+  // },"Authorize Provider"));
 
-  it("Get Provider Token", mochaAsync(async () => {
-    if (!creds.isValid) throw new Error("Invalid Credentials");
-    trace = objectMerge({}, trace, Util.generateNewMetaData(trace));
-    console.log("params a =============================================");
-    console.log("accessToken: ", accessToken);
-    console.log("trace: ", trace);
-    console.log("============================================= params a");
-    const response = await s2sMS.Providers.getProviderToken(
-      accessToken,
-      //clientID,
-      "689129445930-qqdrkf38fu6e37gd84nt758lur5kagq2.apps.googleusercontent.com",
-      // providerUUID,
-      "57992b0e-ecf3-4105-a291-1ed755719512",
-      // redirectURL,
-      "https://cpaas-appdev.star2starglobal.net/providers/providers/a6db5f71-3a6b-45cc-90fa-4ba5a64c1fbd/oauth/callback",
-      // userUUID,
-      "9e11c9a7-b03f-4cb3-b6aa-66f6f060aef3",
-      trace
-    );
-    console.log("gpt=============================================");
-    console.log(response);
-    console.log("=============================================gpt");
-    assert.ok(
-      response.hasOwnProperty("items") &&
-      response.items.length > 0,
-      JSON.stringify(response, null, "\t")
-    );
-    return response;
-  },"Get Provider Token"));
+  // it("Get Provider Token", mochaAsync(async () => {
+  //   if (!creds.isValid) throw new Error("Invalid Credentials");
+  //   trace = objectMerge({}, trace, Util.generateNewMetaData(trace));
+  //   const response = await s2sMS.Providers.getProviderToken(
+  //     accessToken,
+  //     //clientID,
+  //     "689129445930-qqdrkf38fu6e37gd84nt758lur5kagq2.apps.googleusercontent.com",
+  //     // providerUUID,
+  //     "57992b0e-ecf3-4105-a291-1ed755719512",
+  //     // redirectURL,
+  //     "https://cpaas-appdev.star2starglobal.net/providers/providers/a6db5f71-3a6b-45cc-90fa-4ba5a64c1fbd/oauth/callback",
+  //     // userUUID,
+  //     "9e11c9a7-b03f-4cb3-b6aa-66f6f060aef3",
+  //     trace
+  //   );
+  //   assert.ok(
+  //     response.hasOwnProperty("items") &&
+  //     response.items.length > 0,
+  //     JSON.stringify(response, null, "\t")
+  //   );
+  //   return response;
+  // },"Get Provider Token"));
 
 
   it("List all Available Providers", mochaAsync(async () => {

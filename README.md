@@ -70,6 +70,7 @@ process.env.MS_LOGPRETTY = true // defaults to false
 [Please click here for our documentation pages.](https://star2star.github.io/star2star-js-ms-sdk/ "Star2Star Micro Service SDK Documentation")
 
 ## Changes
+* 3.2.24 - added separate method getWorkflowGroupFiltered for filtered list and roll back to getWorkflowGroup to support downward compatibility
 * 3.2.23 - add guard for missing resource groups
 * 3.2.22 - added group and provider methods 
 * 3.2.21 - adjust send email content data structure
