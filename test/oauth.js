@@ -13,6 +13,7 @@ const Util = require("../src/utilities");
 const Logger = require("../src/node-logger");
 const logger = new Logger.default();
 const objectMerge = require("object-merge");
+const uuidv4 = require("uuid/v4");
 const newMeta = Util.generateNewMetaData;
 let trace = newMeta();
 
@@ -68,7 +69,9 @@ describe("Oauth MS Unit Test Suite", function () {
       oauthData = await s2sMS.Oauth.getAccessToken(
         creds.CPAAS_OAUTH_TOKEN,
         creds.email,
-        creds.password
+        creds.password,
+        "default",
+        uuidv4() //x-device-id
       );
       accessToken = oauthData.access_token;
       const idData = await s2sMS.Identity.getMyIdentityData(accessToken);
@@ -77,6 +80,23 @@ describe("Oauth MS Unit Test Suite", function () {
       return Promise.reject(error);
     }
   });
+
+  it("Get 2nd Device Token", mochaAsync(async () => {
+    if (!creds.isValid) throw new Error("Invalid Credentials");
+    trace = objectMerge({}, trace, Util.generateNewMetaData(trace));
+    const oauthData2 = await s2sMS.Oauth.getAccessToken(
+      creds.CPAAS_OAUTH_TOKEN,
+      creds.email,
+      creds.password,
+      "default",
+      uuidv4() //x-device-id
+    );
+    assert.ok(
+      oauthData2.access_token !== oauthData.access_token,
+      JSON.stringify({oauthData, oauthData2}, null, "\t")
+    );
+    return {oauthData, oauthData2};
+  },"Get 2nd Device Token"));
 
   it("Refresh Token", mochaAsync(async () => {
     if (!creds.isValid) throw new Error("Invalid Credentials");

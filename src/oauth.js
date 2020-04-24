@@ -3,6 +3,7 @@
 
 const Util = require("./utilities");
 const request = require("request-promise");
+const uuidv4 = require("uuid/v4");
 
 /**
  * @async 
@@ -84,6 +85,8 @@ const generateBasicToken = async (
  * @param {string} [oauthToken="null oauth token"] - token for authentication to cpaas oauth system
  * @param {string} [email="null email"] - email address for a star2star account
  * @param {string} [pwd="null pwd"] - password for that account
+ * @param {string} [scope="default"] - access token scopes
+ * @param {string} [deviceId = undefined] - unique identifier
  * @param {object} [trace = {}] - optional microservice lifecycle trace headers
  * @returns {Promise<object>} - Promise resolving to an oauth token data object
  */
@@ -92,6 +95,7 @@ const getAccessToken = async (
   email = "null email",
   pwd = "null pwd",
   scope = "default",
+  deviceId = uuidv4(),
   trace = {}
 ) => {
   try {
@@ -103,6 +107,7 @@ const getAccessToken = async (
       headers: {
         Authorization: `Basic ${oauthToken}`,
         "x-api-version": `${VERSION}`,
+        "x-device-id": deviceId,
         "Content-type": "application/x-www-form-urlencoded"
       },
       form: {

@@ -4,6 +4,8 @@
 const Util = require("./utilities");
 
 const request = require("request-promise");
+
+const uuidv4 = require("uuid/v4");
 /**
  * @async 
  * @description This function creates a client for a provided user uuid.
@@ -86,6 +88,8 @@ const generateBasicToken = async function generateBasicToken() {
  * @param {string} [oauthToken="null oauth token"] - token for authentication to cpaas oauth system
  * @param {string} [email="null email"] - email address for a star2star account
  * @param {string} [pwd="null pwd"] - password for that account
+ * @param {string} [scope="default"] - access token scopes
+ * @param {string} [deviceId = undefined] - unique identifier
  * @param {object} [trace = {}] - optional microservice lifecycle trace headers
  * @returns {Promise<object>} - Promise resolving to an oauth token data object
  */
@@ -96,7 +100,8 @@ const getAccessToken = async function getAccessToken() {
   let email = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : "null email";
   let pwd = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : "null pwd";
   let scope = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : "default";
-  let trace = arguments.length > 4 && arguments[4] !== undefined ? arguments[4] : {};
+  let deviceId = arguments.length > 4 && arguments[4] !== undefined ? arguments[4] : uuidv4();
+  let trace = arguments.length > 5 && arguments[5] !== undefined ? arguments[5] : {};
 
   try {
     const MS = Util.getAuthHost();
@@ -107,6 +112,7 @@ const getAccessToken = async function getAccessToken() {
       headers: {
         Authorization: "Basic ".concat(oauthToken),
         "x-api-version": "".concat(VERSION),
+        "x-device-id": deviceId,
         "Content-type": "application/x-www-form-urlencoded"
       },
       form: {
