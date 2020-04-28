@@ -71,7 +71,7 @@ const addSubscription = async (
  * @param {string} [callback_url="not set callback"] - callback URL
  * @param {array} [callback_headers=[]] - callback headers
  * @param {array} [criteria=[]] - filter criteria
- * @param {object} [subscriptions={}] - events to subscribe to (voice, fax, conferencing, messagin, sms,  presence)
+ * @param {object} [events={}] - events to subscribe to (voice, fax, conferencing, messagin, sms,  presence)
  * @param {string} [expiresDate=undefined] - optional expires date (RFC3339 format)
  * @param {object} [trace = {}] - optional microservice lifecycle trace headers
  * @returns {Promise<object>} - Promise resolving to a data object containing a new subscription
@@ -82,7 +82,7 @@ const addCustomEventSubscription = async (
   callback_url = "not set callback",
   callback_headers = [],
   criteria = [],
-  subscriptions = {},
+  events = [],
   expiresDate = undefined,
   trace = {}
 ) => {
@@ -90,24 +90,26 @@ const addCustomEventSubscription = async (
     const MS = util.getEndpoint("pubsub");
     
     const requestOptions = {
-      method: "POST",
-      headers: {
-        Authorization: `Bearer ${accessToken}`,
+      "method": "POST",
+      "headers": {
+        "Authorization": `Bearer ${accessToken}`,
         "Content-type": "application/json",
         "x-api-version": `${util.getVersion()}`
       },
-      uri: `${MS}/customevents`,
-      body: {
-        app_uuid: app_uuid,
-        callback: {
-          url: callback_url,
-          headers: callback_headers
+      "uri": `${MS}/customevents`,
+      "body": {
+        "app_uuid": app_uuid,
+        "callback": {
+          "url": callback_url,
+          "headers": callback_headers
         },
-        criteria: criteria,
-        events: subscriptions
+        "events": events
       },
-      json: true
+      "json": true
     };
+    if(Array.isArray(criteria) && criteria.length > 0){
+      requestOptions.body.criteria = criteria;
+    }
     if (expiresDate) {
       requestOptions.body.expiration_date = expiresDate;
     }
@@ -125,13 +127,15 @@ const addCustomEventSubscription = async (
  * @param {string} [accessToken="null accessToken"] - CPaaS access token
  * @param {string} [app_uuid="account uuid not provided "] - application uuid
  * @param {string} [event="null event"] - even string to broadcast
- * @param {*} [trace={}] - optional CPaaS lifecycle headers
+ * @param {object} [payload={}] - data to include in the broadcast
+ * @param {object} [trace={}] - optional CPaaS lifecycle headers
  * @returns {Promise} - promise resolving to success or failure
  */
 const broadcastCustomApplication = async (
   accessToken = "null accessToken",
   app_uuid = "account uuid not provided ",
   event = "null event",
+  payload = {},
   trace = {}
 ) => {
   try {
@@ -149,7 +153,10 @@ const broadcastCustomApplication = async (
         "event": event
       },
       "json": true
-    };   
+    };
+    Object.keys(payload).forEach(prop =>{
+      requestOptions.body[prop] = payload[prop];
+    });
     util.addRequestTrace(requestOptions, trace);
     const response = await request(requestOptions);
     return response;
@@ -220,11 +227,26 @@ const deleteCustomApplication = async (
         "x-api-version": `${util.getVersion()}`
       },
       "uri": `${MS}/applications/${app_uuid}`,
+      "resolveWithFullResponse": true,
       "json": true
     };   
     util.addRequestTrace(requestOptions, trace);
     const response = await request(requestOptions);
-    return response;
+    if (response.hasOwnProperty("statusCode") && response.statusCode === 204) {
+      return {"status": "ok"};
+    } else {
+      // this is an edge case, but protects against unexpected 2xx or 3xx response codes.
+      throw {
+        "code": response.statusCode,
+        "message": typeof response.body === "string" ? response.body : "delete pubsub failed",
+        "trace_id": requestOptions.hasOwnProperty("headers") && requestOptions.headers.hasOwnProperty("trace")
+          ? requestOptions.headers.trace 
+          : undefined,
+        "details": typeof response.body === "object" && response.body !== null
+          ? [response.body]
+          : []
+      };
+    } 
   } catch (error) {
     return Promise.reject(util.formatError(error));
   }
@@ -247,15 +269,15 @@ const deleteCustomSubscription = async (
     const MS = util.getEndpoint("pubsub");
 
     const requestOptions = {
-      method: "DELETE",
-      uri: `${MS}/customevents/${subscription_uuid}`,
-      headers: {
-        Authorization: `Bearer ${accessToken}`,
+      "method": "DELETE",
+      "uri": `${MS}/customevents/${subscription_uuid}`,
+      "headers": {
+        "Authorization": `Bearer ${accessToken}`,
         "Content-type": "application/json",
         "x-api-version": `${util.getVersion()}`
       },
-      resolveWithFullResponse: true,
-      json: true
+      "resolveWithFullResponse": true,
+      "json": true
     };
     util.addRequestTrace(requestOptions, trace);
     const response = await request(requestOptions);
