@@ -164,7 +164,14 @@ toc:
   - name: Pubsub
     children: 
       - addSubscription
+      - addCustomEventSubscription
+      - broadcastCustomApplication
+      - createCustomApplication
+      - deleteCustomApplication
+      - deleteCustomSubscription
       - deleteSubscription
+      - getCustomApplication
+      - getCustomSubscription
       - getSubscription
       - listUserSubscriptions
       - updateSubscriptionExpiresDate
