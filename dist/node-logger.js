@@ -118,7 +118,7 @@ class Logger {
       //This code will add a new attribute to an empty object. This attribute will have the index of the argument as its' key.
       meta = [].slice.call(a, 1).reduce((p, c, i) => {
         if (typeof c === 'object') {
-          p = _objectSpread({}, p, {}, c);
+          p = _objectSpread(_objectSpread({}, p), c);
         } else {
           p[i] = c;
         }

@@ -133,6 +133,12 @@ toc:
   - name: Metadata
     children:
       - getMetadataSubsystems
+  - name: Mobile
+    children:
+      - getUserRegistrations
+      - registerPushToken
+      - sendPushNotification
+      - unregisterPushToken
   - name: Oauth
     children: 
       - createClientApp
