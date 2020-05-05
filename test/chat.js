@@ -338,4 +338,72 @@ describe("Chat MS Test Suite", function() {
     );
     return {"groupResponse": groupResponse, "roomResponse": roomResponse};
   },"Delete Room"));
+
+  it("Send Simple Message to Channel", mochaAsync(async () => {
+    if (!creds.isValid) throw new Error("Invalid Credentials");
+    trace = objectMerge({}, trace, Util.generateNewMetaData(trace));
+    const response = await s2sMS.Chat.sendMessageToChannel(
+      accessToken,
+      creds.testChatChannel,
+      "a simple unit test message",
+      trace
+    );
+    assert.ok(
+      response.channel_uuid === creds.testChatChannel,
+      JSON.stringify(response, null, "\t")
+    );
+    return response;
+  },"Send Simple Message to Channel"));
+
+  it("Send Multipart Message to Channel", mochaAsync(async () => {
+    if (!creds.isValid) throw new Error("Invalid Credentials");
+    trace = objectMerge({}, trace, Util.generateNewMetaData(trace));
+    const response = await s2sMS.Chat.sendMessageToChannel(
+      accessToken,
+      creds.testChatChannel,
+      [
+        {
+          "contentType": "s2s-kvp",
+          "content":"[{\"label\": \"New label\", \"value\": \"New value\"},{\"label\": \"New label Second\", \"value\": \"New cool value\"}]"
+        },
+        {
+          "contentType":"text/csv",
+          "content": "\"Month\", \"1958\", \"1959\", \"1960\"\n\"JAN\",  340,  360,  417\n\"FEB\",  318,  342,  391\n\"MAR\",  362,  406,  419\n\"APR\",  348,  396,  461\n\"MAY\",  363,  420,  472\n\"JUN\",  435,  472,  535\n\"JUL\",  491,  548,  622\n\"AUG\",  505,  559,  606\n\"SEP\",  404,  463,  508\n\"OCT\",  359,  407,  461\n\"NOV\",  310,  362,  390\n\"DEC\",  337,  405,  432"
+        }
+      ],
+      trace
+    );
+    assert.ok(
+      response.channel_uuid === creds.testChatChannel,
+      JSON.stringify(response, null, "\t")
+    );
+    return response;
+  },"Send Multipart Message to Channel"));
+
+  it("Send Invalid Message to Channel", mochaAsync(async () => {
+    if (!creds.isValid) throw new Error("Invalid Credentials");
+    try{
+      trace = objectMerge({}, trace, Util.generateNewMetaData(trace));
+      const response = await s2sMS.Chat.sendMessageToChannel(
+        accessToken,
+        creds.testChatChannel,
+        {}, //object is invalid
+        trace
+      );
+      //should not get here
+      assert.ok(
+        1 !== 1,
+        JSON.stringify(response, null, "\t")
+      );
+      return response;
+    } catch (error) {
+      assert.ok(
+        error.code === 400,
+        JSON.stringify(error, null, "\t")
+      );
+      return error;
+    }
+    
+    
+  },"Send Invalid Message to Channel"));
 });

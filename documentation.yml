@@ -51,6 +51,7 @@ toc:
       - getRoomMembers
       - listRooms
       - sendMessage
+      - sendMessageToChannel
       - updateRoomInfo
       - updateRoomMeta
   - name: Contacts

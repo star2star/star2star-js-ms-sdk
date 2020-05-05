@@ -479,6 +479,61 @@ const getRoomInfo = async function getRoomInfo() {
     Promise.reject(util.formatError(error));
   }
 };
+/**
+ * @async
+ * @description This function will send a message to a chat channel
+ * @param {string} [accessToken="null accessToken"] - CPaaS access token
+ * @param {string} [channelUUID="null channelUUID"] - channel uuid
+ * @param {string|array} [content=undefined] - message content, string or array
+ * @param {object} [trace={}] - optional CPaaS request lifecycle headers
+ * @returns {Promise<object>} - promise resolving to a message confirmation object
+ */
+
+
+const sendMessageToChannel = async function sendMessageToChannel() {
+  let accessToken = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : "null accessToken";
+  let channelUUID = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : "null channelUUID";
+  let content = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : undefined;
+  let trace = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : {};
+
+  try {
+    const MS = util.getEndpoint("chat");
+    const requestOptions = {
+      method: "POST",
+      uri: "".concat(MS, "/channels/").concat(channelUUID, "/messages"),
+      headers: {
+        "Content-type": "application/json",
+        Authorization: "Bearer ".concat(accessToken),
+        "x-api-version": "".concat(util.getVersion())
+      },
+      body: {},
+      json: true
+    };
+
+    if (typeof content === "string") {
+      requestOptions.body.content = {
+        "contentType": "plain/text",
+        "content": content
+      };
+    } else if (Array.isArray(content)) {
+      requestOptions.body.content = {
+        "contentType": "multipart",
+        "parts": content
+      };
+    } else {
+      throw {
+        "code": 400,
+        "message": "content must be string or array. received ".concat(typeof content)
+      };
+    }
+
+    util.addRequestTrace(requestOptions, trace);
+    const response = await request(requestOptions);
+    return response;
+  } catch (error) {
+    throw util.formatError(error);
+  }
+};
 
 module.exports = {
   createRoom,
@@ -492,5 +547,6 @@ module.exports = {
   deleteMember,
   getMessages,
   sendMessage,
-  getRoomInfo
+  getRoomInfo,
+  sendMessageToChannel
 };

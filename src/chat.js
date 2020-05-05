@@ -476,6 +476,57 @@ const getRoomInfo = async (
   }
 };
 
+/**
+ * @async
+ * @description This function will send a message to a chat channel
+ * @param {string} [accessToken="null accessToken"] - CPaaS access token
+ * @param {string} [channelUUID="null channelUUID"] - channel uuid
+ * @param {string|array} [content=undefined] - message content, string or array
+ * @param {object} [trace={}] - optional CPaaS request lifecycle headers
+ * @returns {Promise<object>} - promise resolving to a message confirmation object
+ */
+const sendMessageToChannel = async (
+  accessToken = "null accessToken",
+  channelUUID = "null channelUUID",
+  content = undefined,
+  trace = {}
+) => {
+
+  try {
+    const MS = util.getEndpoint("chat");
+    const requestOptions = {
+      method: "POST",
+      uri: `${MS}/channels/${channelUUID}/messages`,
+      headers: {
+        "Content-type": "application/json",
+        Authorization: `Bearer ${accessToken}`,
+        "x-api-version": `${util.getVersion()}`
+      },
+      body: {}, 
+          
+      json: true
+    };
+    if(typeof content === "string"){
+      requestOptions.body.content = {
+        "contentType": "plain/text",
+        "content": content
+      };
+    } else if(Array.isArray(content)){
+      requestOptions.body.content = {
+        "contentType": "multipart",
+        "parts": content
+      };
+    } else {
+      throw {"code": 400, "message": `content must be string or array. received ${typeof content}` };
+    }
+    util.addRequestTrace(requestOptions, trace);
+    const response = await request(requestOptions);
+    return response;
+  } catch (error) {
+    throw util.formatError(error);
+  }
+};
+
 module.exports = {
   createRoom,
   deleteRoom,
@@ -488,5 +539,6 @@ module.exports = {
   deleteMember,
   getMessages,
   sendMessage,
-  getRoomInfo
+  getRoomInfo,
+  sendMessageToChannel
 };
