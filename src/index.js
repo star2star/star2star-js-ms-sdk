@@ -20,6 +20,7 @@ const Email = require("./email");
 const ResourceGroups = require("./resourceGroups");
 const Scheduler = require("./scheduler");
 const Metadata = require("./metadata");
+const Mobile = require("./mobile");
 
 let cpaasKey;
 
@@ -129,5 +130,6 @@ module.exports = {
   Email,
   ResourceGroups,
   Scheduler,
-  Metadata
+  Metadata,
+  Mobile
 };

@@ -70,6 +70,7 @@ process.env.MS_LOGPRETTY = true // defaults to false
 [Please click here for our documentation pages.](https://star2star.github.io/star2star-js-ms-sdk/ "Star2Star Micro Service SDK Documentation")
 
 ## Changes
+* 3.2.27 - added push notifications support
 * 3.2.26 - added custom pubsub
 * 3.2.25 - added device id to oauth access token request 
 * 3.2.24 - added separate method getWorkflowGroupFiltered for filtered list and roll back to getWorkflowGroup to support downward compatibility
