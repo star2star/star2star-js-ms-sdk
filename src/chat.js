@@ -499,12 +499,12 @@ const sendMessageToChannel = async (
       uri: `${MS}/channels/${channelUUID}/messages`,
       headers: {
         "Content-type": "application/json",
-        Authorization: `Bearer ${accessToken}`,
+        "Authorization": `Bearer ${accessToken}`,
         "x-api-version": `${util.getVersion()}`
       },
-      body: {}, 
+      "body": {}, 
           
-      json: true
+      "json": true
     };
     if(typeof content === "string"){
       requestOptions.body.content = {
@@ -527,6 +527,53 @@ const sendMessageToChannel = async (
   }
 };
 
+/**
+ * @async
+ * @description This function will send a message to a chat channel
+ * @param {string} [accessToken="null accessToken"] - CPaaS access token
+ * @param {string} [userUUID="null userUUID"] - user uuid
+ * @param {string} [accountUUID="null accountUUID"] - account uuid
+ * @param {string} [offset=0] - pagination offset
+ * @param {string} [limit=10] - pagination limit
+ * @param {object} [trace={}] - optional CPaaS request lifecycle headers
+ * @returns {Promise<object>} - promise resolving to a list of channel objects
+ */
+const listUsersChannels = async (
+  accessToken = "null accessToken",
+  userUUID = "null userUUID", // who knows why we are using a header for this
+  accountUUID = "null accountUUID", // this should be temporary
+  offset = 0,
+  limit = 10,
+  trace = {}
+) => {
+
+  try {
+    const MS = util.getEndpoint("chat");
+    const requestOptions = {
+      method: "GET",
+      uri: `${MS}/channels`,
+      headers: {
+        "Content-type": "application/json",
+        "Authorization": `Bearer ${accessToken}`,
+        "x-api-version": `${util.getVersion()}`,
+        "x-user-uuid": userUUID
+      },
+      "qs": {
+        "account_uuid": accountUUID,
+        "offset": offset,
+        "limit": limit
+      }, 
+          
+      json: true
+    };  
+    util.addRequestTrace(requestOptions, trace);
+    const response = await request(requestOptions);
+    return response;
+  } catch (error) {
+    throw util.formatError(error);
+  }
+};
+
 module.exports = {
   createRoom,
   deleteRoom,
@@ -540,5 +587,6 @@ module.exports = {
   getMessages,
   sendMessage,
   getRoomInfo,
-  sendMessageToChannel
+  sendMessageToChannel,
+  listUsersChannels
 };

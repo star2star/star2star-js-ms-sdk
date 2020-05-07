@@ -70,6 +70,8 @@ process.env.MS_LOGPRETTY = true // defaults to false
 [Please click here for our documentation pages.](https://star2star.github.io/star2star-js-ms-sdk/ "Star2Star Micro Service SDK Documentation")
 
 ## Changes
+* 3.2.30 - added offset and limit to list users channels
+* 3.2.29 - added list users channels
 * 3.2.28 - added send message to chat channel
 * 3.2.27 - added push notifications support
 * 3.2.26 - added custom pubsub

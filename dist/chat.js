@@ -503,11 +503,11 @@ const sendMessageToChannel = async function sendMessageToChannel() {
       uri: "".concat(MS, "/channels/").concat(channelUUID, "/messages"),
       headers: {
         "Content-type": "application/json",
-        Authorization: "Bearer ".concat(accessToken),
+        "Authorization": "Bearer ".concat(accessToken),
         "x-api-version": "".concat(util.getVersion())
       },
-      body: {},
-      json: true
+      "body": {},
+      "json": true
     };
 
     if (typeof content === "string") {
@@ -534,6 +534,52 @@ const sendMessageToChannel = async function sendMessageToChannel() {
     throw util.formatError(error);
   }
 };
+/**
+ * @async
+ * @description This function will send a message to a chat channel
+ * @param {string} [accessToken="null accessToken"] - CPaaS access token
+ * @param {string} [userUUID="null userUUID"] - user uuid
+ * @param {string} [accountUUID="null accountUUID"] - account uuid
+ * @param {string} [offset=0] - pagination offset
+ * @param {string} [limit=10] - pagination limit
+ * @param {object} [trace={}] - optional CPaaS request lifecycle headers
+ * @returns {Promise<object>} - promise resolving to a list of channel objects
+ */
+
+
+const listUsersChannels = async function listUsersChannels() {
+  let accessToken = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : "null accessToken";
+  let userUUID = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : "null userUUID";
+  let accountUUID = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : "null accountUUID";
+  let offset = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : 0;
+  let limit = arguments.length > 4 && arguments[4] !== undefined ? arguments[4] : 10;
+  let trace = arguments.length > 5 && arguments[5] !== undefined ? arguments[5] : {};
+
+  try {
+    const MS = util.getEndpoint("chat");
+    const requestOptions = {
+      method: "GET",
+      uri: "".concat(MS, "/channels"),
+      headers: {
+        "Content-type": "application/json",
+        "Authorization": "Bearer ".concat(accessToken),
+        "x-api-version": "".concat(util.getVersion()),
+        "x-user-uuid": userUUID
+      },
+      "qs": {
+        "account_uuid": accountUUID,
+        "offset": offset,
+        "limit": limit
+      },
+      json: true
+    };
+    util.addRequestTrace(requestOptions, trace);
+    const response = await request(requestOptions);
+    return response;
+  } catch (error) {
+    throw util.formatError(error);
+  }
+};
 
 module.exports = {
   createRoom,
@@ -548,5 +594,6 @@ module.exports = {
   getMessages,
   sendMessage,
   getRoomInfo,
-  sendMessageToChannel
+  sendMessageToChannel,
+  listUsersChannels
 };

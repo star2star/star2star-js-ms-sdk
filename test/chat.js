@@ -403,7 +403,26 @@ describe("Chat MS Test Suite", function() {
       );
       return error;
     }
-    
-    
   },"Send Invalid Message to Channel"));
+
+  it("List User's Channles", mochaAsync(async () => {
+    if (!creds.isValid) throw new Error("Invalid Credentials");
+    trace = objectMerge({}, trace, Util.generateNewMetaData(trace));
+    const response = await s2sMS.Chat.listUsersChannels(
+      accessToken,
+      identityData.uuid,
+      identityData.account_uuid,
+      0,
+      1,
+      trace
+    );
+    assert.ok(
+      response.hasOwnProperty("items") &&
+      Array.isArray(response.items) &&
+      response.items[0].hasOwnProperty("uuid") &&
+      response.items.length === 1,
+      JSON.stringify(response, null, "\t")
+    );
+    return response;
+  },"List User's Channels"));
 });

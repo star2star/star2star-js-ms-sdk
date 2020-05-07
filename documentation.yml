@@ -50,6 +50,7 @@ toc:
       - getRoomInfo
       - getRoomMembers
       - listRooms
+      - listUsersChannels
       - sendMessage
       - sendMessageToChannel
       - updateRoomInfo
