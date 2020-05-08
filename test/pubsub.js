@@ -117,6 +117,37 @@ describe("Pubsub MS Unit Test Suite", function () {
     return response;
   },"add subscription"));
 
+  // it("add subscription - sms workaround", mochaAsync(async () => {
+  //   if (!creds.isValid) throw new Error("Invalid Credentials");
+  //   trace = objectMerge({}, trace, Util.generateNewMetaData(trace));
+  //   const subscriptions = {
+  //     identity: ["identity_property_change"]
+  //   };
+  //   const criteria = [
+  //     {user_uuid: "0904f8d5-627f-4ff5-b34d-68dc96487b1e"},
+  //     {qs: {someobj:true}}
+  //   ];
+
+  //   const expiresDate = new Date(Date.now() + 100000).toISOString();
+  //   const response = await s2sMS.Pubsub.addSubscription( 
+  //     creds.testIdentity,
+  //     creds.testAccount,
+  //     "http://localhost:8001/foo",
+  //     [],
+  //     criteria,
+  //     subscriptions, 
+  //     accessToken,
+  //     expiresDate,
+  //     trace
+  //   );
+  //   sub_uuid = response.subscription_uuid;
+  //   assert.ok(
+  //     response.hasOwnProperty("subscription_uuid"),
+  //     JSON.stringify(response, null, "\t")
+  //   );
+  //   return response;
+  // },"add subscription - sms workaround"));
+
   it("update subscription expiration", mochaAsync(async () => {
     if (!creds.isValid) throw new Error("Invalid Credentials");
     trace = objectMerge({}, trace, Util.generateNewMetaData(trace));

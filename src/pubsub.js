@@ -41,7 +41,7 @@ const addSubscription = async (
           url: callback_url,
           headers: callback_headers
         },
-        criteria: criteria,
+        //criteria: criteria, temporary sms workaround
         events: subscriptions
       },
       headers: {
@@ -52,6 +52,19 @@ const addSubscription = async (
 
       json: true
     };
+    
+    // begin temporary sms workaround
+    let qs;
+    const filteredCriteria = criteria.filter(elem =>{
+      return !(typeof elem === "object" && elem.hasOwnProperty("qs") && (qs = elem.qs));
+    });
+
+    if(qs){
+      requestOptions.qs = qs;
+    }
+    requestOptions.body.criteria = filteredCriteria;
+    // end temporary sms workaround
+    
     if (expiresDate) {
       requestOptions.body.expiration_date = expiresDate;
     }
