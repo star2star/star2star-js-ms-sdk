@@ -186,6 +186,36 @@ describe("Messaging MS Unit Test Suite", function () {
     return response;
   },"Delete Multiple Conversations"));
 
+  it("Delete Message", mochaAsync(async () => {
+    if (!creds.isValid) throw new Error("Invalid Credentials");
+    trace = objectMerge({}, trace, Util.generateNewMetaData(trace));
+    const response = await s2sMS.Messaging.deleteMessage(
+      accessToken,
+      messageUUID,
+      trace
+    );
+    assert.ok(
+      true,
+      JSON.stringify(response, null, "\t")
+    );
+    return response;
+  },"Delete Message"));
+
+  it("Delete Multiple Messages", mochaAsync(async () => {
+    if (!creds.isValid) throw new Error("Invalid Credentials");
+    trace = objectMerge({}, trace, Util.generateNewMetaData(trace));
+    const response = await s2sMS.Messaging.deleteMultipleMessages(
+      accessToken,
+      ['59be1e76-7ac2-4c53-8e74-05a01c3ee521','3069cb41-3881-49ef-ab8b-cae1ff50033a'],
+      trace
+    );
+    assert.ok(
+      true,
+      JSON.stringify(response, null, "\t")
+    );
+    return response;
+  },"Delete Multiple Messages"));
+
 
   it("Valid SMS Number", mochaAsync(async () => {
     if (!creds.isValid) throw new Error("Invalid Credentials");

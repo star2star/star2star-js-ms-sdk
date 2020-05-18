@@ -530,6 +530,85 @@ const markAllConversationMessagesRead = async function markAllConversationMessag
     return Promise.reject(util.formatError(error));
   }
 };
+/**
+ * @async
+ * @description This function deletes a specific message
+ * @param {string} [accessToken="null accessToken"] - cpaas application token
+ * @param {string} [conversation_uuid="null message_uuid"] - message uuid
+ * @param {object} [trace={}] - options microservice lifecycle tracking headers
+ * @returns {Promise<empty>} - Promise resolving success or failure.
+ */
+
+
+const deleteMessage = async function deleteMessage() {
+  let accessToken = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : "null accessToken";
+  let message_uuid = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : "null message_uuid";
+  let trace = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : {};
+
+  try {
+    const MS = util.getEndpoint("Messaging");
+    const requestOptions = {
+      method: "DELETE",
+      uri: "".concat(MS, "/messages/").concat(message_uuid),
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: "Bearer ".concat(accessToken),
+        "x-api-version": "".concat(util.getVersion())
+      },
+      resolveWithFullResponse: true,
+      json: true
+    };
+    util.addRequestTrace(requestOptions, trace);
+    const response = await request(requestOptions);
+    return {
+      "status": "ok"
+    };
+  } catch (error) {
+    return Promise.reject(util.formatError(error));
+  }
+}; // end function deleteMessage
+
+/**
+ * @async
+ * @description This function deletes multiple messages
+ * @param {string} [accessToken="null accessToken"] - cpaas application token
+ * @param {array} [messages=[]] - array of objects containing 'message_uuid' 
+ * @param {object} [trace={}] - options microservice lifecycle tracking headers
+ * @returns {Promise<empty>} - Promise resolving success or failure status object.
+ */
+
+
+const deleteMultipleMessages = async function deleteMultipleMessages() {
+  let accessToken = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : "null accessToken";
+  let messages = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : [];
+  let trace = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : {};
+
+  try {
+    const MS = util.getEndpoint("Messaging");
+    const requestOptions = {
+      method: "POST",
+      uri: "".concat(MS, "/messages/remove"),
+      body: {
+        "messages": messages
+      },
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: "Bearer ".concat(accessToken),
+        "x-api-version": "".concat(util.getVersion())
+      },
+      resolveWithFullResponse: true,
+      json: true
+    };
+    util.addRequestTrace(requestOptions, trace);
+    const response = await request(requestOptions);
+    return {
+      "status": "ok"
+    };
+  } catch (error) {
+    return Promise.reject(util.formatError(error));
+  }
+}; // end function deleteMultipleMessages
+
 
 module.exports = {
   getConversation,
@@ -543,5 +622,7 @@ module.exports = {
   sendSMS,
   sendSMSMessage,
   deleteConversation,
-  deleteMultipleConversations
+  deleteMultipleConversations,
+  deleteMessage,
+  deleteMultipleMessages
 };

@@ -539,6 +539,83 @@ const markAllConversationMessagesRead = async (
   } 
 };
 
+/**
+ * @async
+ * @description This function deletes a specific message
+ * @param {string} [accessToken="null accessToken"] - cpaas application token
+ * @param {string} [conversation_uuid="null message_uuid"] - message uuid
+ * @param {object} [trace={}] - options microservice lifecycle tracking headers
+ * @returns {Promise<empty>} - Promise resolving success or failure.
+ */
+const deleteMessage = async (
+  accessToken = "null accessToken",
+  message_uuid = "null message_uuid",
+  trace = {}
+) => {
+  try {
+    const MS = util.getEndpoint("Messaging");
+    const requestOptions = {
+      method: "DELETE",
+      uri: `${MS}/messages/${message_uuid}`,
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${accessToken}`,
+        "x-api-version": `${util.getVersion()}`
+      },
+      resolveWithFullResponse: true,
+      json: true
+    };
+
+    util.addRequestTrace(requestOptions, trace);
+    const response = await request(requestOptions);
+    return {"status": "ok"};
+
+  } catch (error) {
+    return Promise.reject(util.formatError(error));
+  }
+}; // end function deleteMessage
+
+
+/**
+ * @async
+ * @description This function deletes multiple messages
+ * @param {string} [accessToken="null accessToken"] - cpaas application token
+ * @param {array} [messages=[]] - array of objects containing 'message_uuid' 
+ * @param {object} [trace={}] - options microservice lifecycle tracking headers
+ * @returns {Promise<empty>} - Promise resolving success or failure status object.
+ */
+const deleteMultipleMessages = async (
+  accessToken = "null accessToken",
+  messages = [],
+  trace = {}
+) => {
+  try {
+    const MS = util.getEndpoint("Messaging");
+    const requestOptions = {
+      method: "POST",
+      uri: `${MS}/messages/remove`,
+      body: {
+        "messages": messages
+      },
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${accessToken}`,
+        "x-api-version": `${util.getVersion()}`
+      },
+      resolveWithFullResponse: true,
+      json: true
+    };
+
+    util.addRequestTrace(requestOptions, trace);
+    const response = await request(requestOptions);
+    return {"status": "ok"};
+
+  } catch (error) {
+    return Promise.reject(util.formatError(error));
+  }
+}; // end function deleteMultipleMessages
+
+
 
 module.exports = {
   getConversation,
@@ -552,5 +629,7 @@ module.exports = {
   sendSMS,
   sendSMSMessage,
   deleteConversation,
-  deleteMultipleConversations
+  deleteMultipleConversations,
+  deleteMessage,
+  deleteMultipleMessages
 };
