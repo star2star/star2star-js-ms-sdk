@@ -568,8 +568,19 @@ const deleteMessage = async (
 
     util.addRequestTrace(requestOptions, trace);
     const response = await request(requestOptions);
-    return {"status": "ok"};
 
+    if (response.hasOwnProperty("statusCode") && response.statusCode === 204) { 
+      return {
+        "status": "ok"
+      };
+    } else {
+      throw {
+        "code": response.statusCode,
+        "message": typeof response.body === "string" ? response.body : "delete message failed",
+        "trace_id": requestOptions.hasOwnProperty("headers") && requestOptions.headers.hasOwnProperty("trace") ? requestOptions.headers.trace : undefined,
+        "details": typeof response.body === "object" && response.body !== null ? [response.body] : []
+      };
+    }
   } catch (error) {
     return Promise.reject(util.formatError(error));
   }
@@ -608,7 +619,19 @@ const deleteMultipleMessages = async (
 
     util.addRequestTrace(requestOptions, trace);
     const response = await request(requestOptions);
-    return {"status": "ok"};
+
+    if (response.hasOwnProperty("statusCode") && response.statusCode === 204) { 
+      return {
+        "status": "ok"
+      };
+    } else {
+      throw {
+        "code": response.statusCode,
+        "message": typeof response.body === "string" ? response.body : "delete multiple messages failed",
+        "trace_id": requestOptions.hasOwnProperty("headers") && requestOptions.headers.hasOwnProperty("trace") ? requestOptions.headers.trace : undefined,
+        "details": typeof response.body === "object" && response.body !== null ? [response.body] : []
+      };
+    }
 
   } catch (error) {
     return Promise.reject(util.formatError(error));

@@ -191,7 +191,8 @@ describe("Messaging MS Unit Test Suite", function () {
     trace = objectMerge({}, trace, Util.generateNewMetaData(trace));
     const response = await s2sMS.Messaging.deleteMessage(
       accessToken,
-      messageUUID,
+      //messageUUID,
+      '74314a73-51a6-4dd3-9e40-58c03d76b381',
       trace
     );
     assert.ok(
@@ -206,7 +207,7 @@ describe("Messaging MS Unit Test Suite", function () {
     trace = objectMerge({}, trace, Util.generateNewMetaData(trace));
     const response = await s2sMS.Messaging.deleteMultipleMessages(
       accessToken,
-      ['59be1e76-7ac2-4c53-8e74-05a01c3ee521','3069cb41-3881-49ef-ab8b-cae1ff50033a'],
+      ['4e861d10-d569-4bb5-a43e-5c28912931b0','b633fab3-78f4-434f-bf92-5c9d2ec60e08'],
       trace
     );
     assert.ok(
