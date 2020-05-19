@@ -534,7 +534,7 @@ const markAllConversationMessagesRead = async function markAllConversationMessag
  * @async
  * @description This function deletes a specific message
  * @param {string} [accessToken="null accessToken"] - cpaas application token
- * @param {string} [conversation_uuid="null message_uuid"] - message uuid
+ * @param {string} [message_uuid="null message_uuid"] - message uuid
  * @param {object} [trace={}] - options microservice lifecycle tracking headers
  * @returns {Promise<empty>} - Promise resolving success or failure.
  */
@@ -582,7 +582,7 @@ const deleteMessage = async function deleteMessage() {
  * @async
  * @description This function deletes multiple messages
  * @param {string} [accessToken="null accessToken"] - cpaas application token
- * @param {array} [messages=[]] - array of objects containing 'message_uuid' 
+ * @param {array} [messages=[]] - array of strings containing 'message_uuid' 
  * @param {object} [trace={}] - options microservice lifecycle tracking headers
  * @returns {Promise<empty>} - Promise resolving success or failure status object.
  */
