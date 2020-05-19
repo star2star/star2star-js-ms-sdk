@@ -132,6 +132,8 @@ toc:
       - sendSMSMessage
       - deleteConversation
       - deleteMultipleConversations
+      - deleteMessage
+      - deleteMultipleMessages
   - name: Metadata
     children:
       - getMetadataSubsystems
