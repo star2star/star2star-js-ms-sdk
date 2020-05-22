@@ -170,7 +170,7 @@ export default class Logger {
     newMeta.level = aLevel;
     //If the meta data has the property debug set as true the level of the log will be changed to debug
     if (aMeta && aMeta.hasOwnProperty('debug') && aMeta.debug === true ){
-      newLevel = 'debug';
+      newLevel = 'alert';
     }
     this.logger.log(newLevel, aMsg, {"meta":aMeta});
   }
