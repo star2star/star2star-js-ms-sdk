@@ -86,18 +86,19 @@ class Logger {
       format: combine(label({
         label: 's2sMsSDK'
       }), timestamp(), theFormat),
+      //RFC5424
+      levels: {
+        emerg: 0,
+        alert: 1,
+        crit: 2,
+        error: 3,
+        warning: 4,
+        notice: 5,
+        info: 6,
+        debug: 7
+      },
       transports: [new transports.Console({
-        level: process.env.MS_LOGLEVEL ? process.env.MS_LOGLEVEL : "info",
-        levels: {
-          emerg: 0,
-          alert: 1,
-          crit: 2,
-          error: 3,
-          warning: 4,
-          notice: 5,
-          info: 6,
-          debug: 7
-        }
+        level: process.env.MS_LOGLEVEL ? process.env.MS_LOGLEVEL : "info"
       })]
     });
     return this;

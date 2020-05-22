@@ -70,6 +70,7 @@ process.env.MS_LOGPRETTY = true // defaults to false
 [Please click here for our documentation pages.](https://star2star.github.io/star2star-js-ms-sdk/ "Star2Star Micro Service SDK Documentation")
 
 ## Changes
+* 3.2.34 - fix logger levels
 * 3.2.33 - update logger
 * 3.2.32 - added delete individual messages
 * 3.2.31 - added sms pubsub workaround
