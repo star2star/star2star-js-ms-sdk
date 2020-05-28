@@ -8,7 +8,7 @@ const objectMerge = require("object-merge");
 const Logger = require("./node-logger");
 const logger = new Logger.default();
 const crypto = require("crypto");
-const s2sMsUtil = require("star2star-js-ms-utilities");
+const errorFormatter = require("star2star-error-formatter");
 
 /**
  *
@@ -390,7 +390,7 @@ const pendingResource = async (resourceLoc, requestOptions, trace, startingResou
  */
 
 const formatError = (error) => {
-  return s2sMsUtil.Formatter.formatError(error);
+  return errorFormatter.formatError(error);
 };
 
 /**

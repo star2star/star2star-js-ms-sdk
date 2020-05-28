@@ -27,9 +27,9 @@
     "object-merge": "2.5.1",
     "request": "2.88.0",
     "request-promise": "4.2.4",
-    "star2star-js-ms-utilities": "file:../star2star-js-ms-utilities", 
     "uuid": "3.3.2",
-    "winston": "3.2.1"
+    "winston": "3.2.1",
+    "star2star-error-formatter": "1.0.0"
   },
   "devDependencies": {
     "@babel/cli": "7.2.3",
