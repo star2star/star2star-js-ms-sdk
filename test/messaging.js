@@ -186,6 +186,23 @@ describe("Messaging MS Unit Test Suite", function () {
     return response;
   },"Delete Multiple Conversations"));
 
+  it("Snooze Unsnooze Conversation", mochaAsync(async () => {
+    if (!creds.isValid) throw new Error("Invalid Credentials");
+    trace = objectMerge({}, trace, Util.generateNewMetaData(trace));
+    const response = await s2sMS.Messaging.snoozeUnsnoozeConversation(
+      accessToken,
+      //[conversationUUID],
+      '86725a3d-0f17-4e0a-8767-f6497d859ff9',
+      true,
+      trace
+    );
+    assert.ok(
+      true,
+      JSON.stringify(response, null, "\t")
+    );
+    return response;
+  },"Snooze Unsnooze Conversation"));
+
   it("Delete Message", mochaAsync(async () => {
     if (!creds.isValid) throw new Error("Invalid Credentials");
     trace = objectMerge({}, trace, Util.generateNewMetaData(trace));

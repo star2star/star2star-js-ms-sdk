@@ -134,6 +134,7 @@ toc:
       - deleteMultipleConversations
       - deleteMessage
       - deleteMultipleMessages
+      - snoozeUnsnoozeConversation
   - name: Metadata
     children:
       - getMetadataSubsystems

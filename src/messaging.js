@@ -299,6 +299,7 @@ const sendSMS = async (
  * @param {string} [userUUID="null userUUID"] - user uuid
  * @param {number} [offset=0] - pagination offest
  * @param {number} [limit=10] - pagination limit
+ * @param {boolean} [snooze=false] - snooze:true OR snooze:false to query conversations (default: false)
  * @param {object} [trace={}] - optional microservice lifecycle trace headers
 * @returns {Promise<object>} - Promise resolving to user conversations
  */
@@ -307,6 +308,7 @@ const retrieveConversations = async (
   userUUID = "null userUUID",
   offset = 0,
   limit = 10,
+  snooze = false,
   trace = {}
 ) => {
   try {
@@ -326,7 +328,8 @@ const retrieveConversations = async (
         "sort": "-last_message_datetime",
         "expand": "messages",
         "messages.limit": 1,
-        "messages.sort" : "-datetime"
+        "messages.sort" : "-datetime",
+        "snooze": snooze
       },
       json: true
     };
@@ -638,6 +641,44 @@ const deleteMultipleMessages = async (
   }
 }; // end function deleteMultipleMessages
 
+/**
+ * @async
+ * @deprecated - This function will snooze/un-snooze conversations
+ * @param {string} [accessToken="null accessToken"] - cpaas access token
+ * @param {string} [conversationUUID="null conversationUUID"] - conversation uuid
+ * @param {boolean} [snooze="false snooze"] - snooze:true OR snooze:false to either snooze / un-snooze
+ * @param {object} [trace={}] - microservice lifecyce headers
+ * @returns {Promise} - Promise resolving to a modified conversation object
+ */
+const snoozeUnsnoozeConversation = async (
+  accessToken = "null accessToken",
+  conversationUUID = "null conversationUUID",
+  snooze = false,
+  trace = {}
+) => {
+  try {
+    const MS = util.getEndpoint("messaging");
+    const requestOptions = {
+      method: "POST",
+      uri: `${MS}/conversations/${conversationUUID}/modify`,
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+        "x-api-version": `${util.getVersion()}`,
+        "Content-type": "application/json"
+      },
+      body: {
+        "snooze": snooze
+      },
+      json: true
+    };
+    util.addRequestTrace(requestOptions, trace);
+    const response = await request(requestOptions);
+    return response;
+  } catch (error) {
+    return Promise.reject(util.formatError(error));
+  } 
+};
+
 
 
 module.exports = {
@@ -654,5 +695,6 @@ module.exports = {
   deleteConversation,
   deleteMultipleConversations,
   deleteMessage,
-  deleteMultipleMessages
+  deleteMultipleMessages,
+  snoozeUnsnoozeConversation
 };
