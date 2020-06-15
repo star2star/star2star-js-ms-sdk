@@ -286,7 +286,7 @@ const sendSMS = async function sendSMS(accessToken, userUuid, msg, fromPhoneNumb
  * @param {string} [userUUID="null userUUID"] - user uuid
  * @param {number} [offset=0] - pagination offest
  * @param {number} [limit=10] - pagination limit
- * @param {boolean} [snooze=false] - snooze:true OR snooze:false to query conversations (default: false)
+ * @param {boolean} [isSnoozed=false] - isSnoozed (default:false) isSnoozed=true to query hidden conversations 
  * @param {object} [trace={}] - optional microservice lifecycle trace headers
 * @returns {Promise<object>} - Promise resolving to user conversations
  */
@@ -297,7 +297,7 @@ const retrieveConversations = async function retrieveConversations() {
   let userUUID = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : "null userUUID";
   let offset = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : 0;
   let limit = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : 10;
-  let snooze = arguments.length > 4 && arguments[4] !== undefined ? arguments[4] : false;
+  let isSnoozed = arguments.length > 4 && arguments[4] !== undefined ? arguments[4] : false;
   let trace = arguments.length > 5 && arguments[5] !== undefined ? arguments[5] : {};
 
   try {
@@ -317,7 +317,7 @@ const retrieveConversations = async function retrieveConversations() {
         "expand": "messages",
         "messages.limit": 1,
         "messages.sort": "-datetime",
-        "snooze": snooze
+        "snooze": isSnoozed
       },
       json: true
     };
