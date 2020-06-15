@@ -286,6 +286,7 @@ const sendSMS = async function sendSMS(accessToken, userUuid, msg, fromPhoneNumb
  * @param {string} [userUUID="null userUUID"] - user uuid
  * @param {number} [offset=0] - pagination offest
  * @param {number} [limit=10] - pagination limit
+ * @param {boolean} [isSnoozed=false] - isSnoozed (default:false) isSnoozed=true to query hidden conversations 
  * @param {object} [trace={}] - optional microservice lifecycle trace headers
 * @returns {Promise<object>} - Promise resolving to user conversations
  */
@@ -296,7 +297,8 @@ const retrieveConversations = async function retrieveConversations() {
   let userUUID = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : "null userUUID";
   let offset = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : 0;
   let limit = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : 10;
-  let trace = arguments.length > 4 && arguments[4] !== undefined ? arguments[4] : {};
+  let isSnoozed = arguments.length > 4 && arguments[4] !== undefined ? arguments[4] : false;
+  let trace = arguments.length > 5 && arguments[5] !== undefined ? arguments[5] : {};
 
   try {
     const MS = util.getEndpoint("messaging");
@@ -314,7 +316,8 @@ const retrieveConversations = async function retrieveConversations() {
         "sort": "-last_message_datetime",
         "expand": "messages",
         "messages.limit": 1,
-        "messages.sort": "-datetime"
+        "messages.sort": "-datetime",
+        "snooze": isSnoozed
       },
       json: true
     };
@@ -629,6 +632,45 @@ const deleteMultipleMessages = async function deleteMultipleMessages() {
   }
 }; // end function deleteMultipleMessages
 
+/**
+ * @async
+ * @deprecated - This function will snooze/un-snooze conversations
+ * @param {string} [accessToken="null accessToken"] - cpaas access token
+ * @param {string} [conversationUUID="null conversationUUID"] - conversation uuid
+ * @param {boolean} [snooze="false snooze"] - snooze:true OR snooze:false to either snooze / un-snooze
+ * @param {object} [trace={}] - microservice lifecyce headers
+ * @returns {Promise} - Promise resolving to a modified conversation object
+ */
+
+
+const snoozeUnsnoozeConversation = async function snoozeUnsnoozeConversation() {
+  let accessToken = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : "null accessToken";
+  let conversationUUID = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : "null conversationUUID";
+  let snooze = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : false;
+  let trace = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : {};
+
+  try {
+    const MS = util.getEndpoint("messaging");
+    const requestOptions = {
+      method: "POST",
+      uri: "".concat(MS, "/conversations/").concat(conversationUUID, "/modify"),
+      headers: {
+        Authorization: "Bearer ".concat(accessToken),
+        "x-api-version": "".concat(util.getVersion()),
+        "Content-type": "application/json"
+      },
+      body: {
+        "snooze": snooze
+      },
+      json: true
+    };
+    util.addRequestTrace(requestOptions, trace);
+    const response = await request(requestOptions);
+    return response;
+  } catch (error) {
+    return Promise.reject(util.formatError(error));
+  }
+};
 
 module.exports = {
   getConversation,
@@ -644,5 +686,6 @@ module.exports = {
   deleteConversation,
   deleteMultipleConversations,
   deleteMessage,
-  deleteMultipleMessages
+  deleteMultipleMessages,
+  snoozeUnsnoozeConversation
 };
