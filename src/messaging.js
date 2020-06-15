@@ -299,7 +299,7 @@ const sendSMS = async (
  * @param {string} [userUUID="null userUUID"] - user uuid
  * @param {number} [offset=0] - pagination offest
  * @param {number} [limit=10] - pagination limit
- * @param {boolean} [snooze=false] - snooze:true OR snooze:false to query conversations (default: false)
+ * @param {boolean} [isSnoozed=false] - isSnoozed (default:false) isSnoozed=true to query hidden conversations 
  * @param {object} [trace={}] - optional microservice lifecycle trace headers
 * @returns {Promise<object>} - Promise resolving to user conversations
  */
@@ -308,7 +308,7 @@ const retrieveConversations = async (
   userUUID = "null userUUID",
   offset = 0,
   limit = 10,
-  snooze = false,
+  isSnoozed = false,
   trace = {}
 ) => {
   try {
@@ -329,7 +329,7 @@ const retrieveConversations = async (
         "expand": "messages",
         "messages.limit": 1,
         "messages.sort" : "-datetime",
-        "snooze": snooze
+        "snooze": isSnoozed
       },
       json: true
     };
