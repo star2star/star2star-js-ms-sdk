@@ -23,7 +23,7 @@ const getUserRegistrations = async (
       uri: `${MS}/registration`,
       headers: {
         "Content-type": "application/json",
-        Authorization: `Bearer ${accessToken}`,
+        "Authorization": `Bearer ${accessToken}`,
         "x-api-version": `${util.getVersion()}`
       },
       qs: {
@@ -167,10 +167,10 @@ const unregisterPushToken = async (
     util.addRequestTrace(requestOptions, trace);
     const response = await request(requestOptions);
 
-    if (response.statusCode === 200) {
+    if (response.statusCode === 202) {
       return {status: "ok"};
     } else {
-      throw response;
+      throw util.formatError(response);
     }
   } catch (error) {
     return Promise.reject(util.formatError(error));
