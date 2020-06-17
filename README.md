@@ -70,6 +70,7 @@ process.env.MS_LOGPRETTY = true // defaults to false
 [Please click here for our documentation pages.](https://star2star.github.io/star2star-js-ms-sdk/ "Star2Star Micro Service SDK Documentation")
 
 ## Changes
+* 3.2.37 - Updated createUUID 
 * 3.2.36 - Push notifications fix and unit test stub
 * 3.2.35 - Added snooze/un-snooze conversation 
 * 3.2.34 - fix logger levels
