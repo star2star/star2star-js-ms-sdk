@@ -136,7 +136,7 @@ const sendPushNotification = async function sendPushNotification() {
     }
 
     if (typeof platformData !== "undefined") {
-      requestOptions.body.platformData = platformData;
+      requestOptions.body.platform_specific_data = platformData;
     }
 
     util.addRequestTrace(requestOptions, trace);

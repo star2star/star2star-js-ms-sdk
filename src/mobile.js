@@ -129,7 +129,7 @@ const sendPushNotification = async (
       requestOptions.body.data = data;
     }
     if(typeof platformData !== "undefined"){
-      requestOptions.body.platformData = platformData;
+      requestOptions.body.platform_specific_data = platformData;
     }
     util.addRequestTrace(requestOptions, trace);
     const response = await request(requestOptions);
