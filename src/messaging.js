@@ -299,7 +299,7 @@ const sendSMS = async (
  * @param {string} [userUUID="null userUUID"] - user uuid
  * @param {number} [offset=0] - pagination offest
  * @param {number} [limit=10] - pagination limit
- * @param {boolean} [isSnoozed=false] - isSnoozed (default:false) isSnoozed=true to query hidden conversations 
+ * @param {array} [filters=undefined] - optional filters. currently supports "snooze"
  * @param {object} [trace={}] - optional microservice lifecycle trace headers
 * @returns {Promise<object>} - Promise resolving to user conversations
  */
@@ -308,7 +308,7 @@ const retrieveConversations = async (
   userUUID = "null userUUID",
   offset = 0,
   limit = 10,
-  isSnoozed = false,
+  filters = undefined,
   trace = {}
 ) => {
   try {
@@ -329,10 +329,14 @@ const retrieveConversations = async (
         "expand": "messages",
         "messages.limit": 1,
         "messages.sort" : "-datetime",
-        "snooze": isSnoozed
       },
       json: true
     };
+    if (filters) {
+      Object.keys(filters).forEach(filter => {
+        requestOptions.qs[filter] = filters[filter];
+      });
+    }
     if (limit > 100) {
       logger.debug("****** AGGREGATE RESPONSE ******", requestOptions, trace);
       const response = await util.aggregate(request, requestOptions, trace);
