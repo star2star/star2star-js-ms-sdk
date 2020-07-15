@@ -18,7 +18,7 @@ const activateRole = async (
   roleUUID = "null roleUUID",
   trace = {}
 ) => {
-  try{
+  try {
     const MS = Util.getEndpoint("auth");
     const requestOptions = {
       method: "POST",
@@ -35,10 +35,9 @@ const activateRole = async (
     const response = await request(requestOptions);
     const role = response.body;
     // create returns a 202....suspend return until the new resource is ready
-    if (response.hasOwnProperty("statusCode") && 
-        response.statusCode === 202 &&
-        response.headers.hasOwnProperty("location"))
-    {    
+    if (response.hasOwnProperty("statusCode") &&
+      response.statusCode === 202 &&
+      response.headers.hasOwnProperty("location")) {
       await Util.pendingResource(
         response.headers.location,
         requestOptions, //reusing the request options instead of passing in multiple params
@@ -47,7 +46,7 @@ const activateRole = async (
       );
     }
     return { status: "ok" };
-  } catch(error){
+  } catch (error) {
     return Promise.reject(Util.formatError(error));
   }
 };
@@ -83,7 +82,7 @@ const assignPermissionsToRole = async (
     };
     Util.addRequestTrace(requestOptions, trace);
     const response = await request(requestOptions);
-    if(response.statusCode === 204) {
+    if (response.statusCode === 204) {
       return { status: "ok" };
     } else {
       // this is an edge case, but protects against unexpected 2xx or 3xx response codes.
@@ -91,7 +90,7 @@ const assignPermissionsToRole = async (
         "code": response.statusCode,
         "message": typeof response.body === "string" ? response.body : "assign permission to role failed",
         "trace_id": requestOptions.hasOwnProperty("headers") && requestOptions.headers.hasOwnProperty("trace")
-          ? requestOptions.headers.trace 
+          ? requestOptions.headers.trace
           : undefined,
         "details": typeof response.body === "object" && response.body !== null
           ? [response.body]
@@ -134,7 +133,7 @@ const assignRolesToUserGroup = async (
     };
     Util.addRequestTrace(requestOptions, trace);
     const response = await request(requestOptions);
-    if(response.statusCode === 204) {
+    if (response.statusCode === 204) {
       return { status: "ok" };
     } else {
       // this is an edge case, but protects against unexpected 2xx or 3xx response codes.
@@ -142,7 +141,7 @@ const assignRolesToUserGroup = async (
         "code": response.statusCode,
         "message": typeof response.body === "string" ? response.body : "assign role to user-group failed",
         "trace_id": requestOptions.hasOwnProperty("headers") && requestOptions.headers.hasOwnProperty("trace")
-          ? requestOptions.headers.trace 
+          ? requestOptions.headers.trace
           : undefined,
         "details": typeof response.body === "object" && response.body !== null
           ? [response.body]
@@ -196,10 +195,9 @@ const assignScopedRoleToUserGroup = async (
     };
     Util.addRequestTrace(requestOptions, trace);
     const response = await request(requestOptions);
-    if (response.hasOwnProperty("statusCode") && 
-        response.statusCode === 202 &&
-        response.headers.hasOwnProperty("location"))
-    {    
+    if (response.hasOwnProperty("statusCode") &&
+      response.statusCode === 202 &&
+      response.headers.hasOwnProperty("location")) {
       await Util.pendingResource(
         response.headers.location,
         requestOptions, //reusing the request options instead of passing in multiple params
@@ -212,7 +210,7 @@ const assignScopedRoleToUserGroup = async (
         "code": response.statusCode,
         "message": typeof response.body === "string" ? response.body : "assign scoped role to user-group failed",
         "trace_id": requestOptions.hasOwnProperty("headers") && requestOptions.headers.hasOwnProperty("trace")
-          ? requestOptions.headers.trace 
+          ? requestOptions.headers.trace
           : undefined,
         "details": typeof response.body === "object" && response.body !== null
           ? [response.body]
@@ -292,10 +290,9 @@ const createUserGroup = async (
     const response = await request(requestOptions);
     const newGroup = response.body;
     // create returns a 202....suspend return until the new resource is ready
-    if (response.hasOwnProperty("statusCode") && 
-          response.statusCode === 202 &&
-          response.headers.hasOwnProperty("location"))
-    {    
+    if (response.hasOwnProperty("statusCode") &&
+      response.statusCode === 202 &&
+      response.headers.hasOwnProperty("location")) {
       await Util.pendingResource(
         response.headers.location,
         requestOptions, //reusing the request options instead of passing in multiple params
@@ -343,10 +340,9 @@ const createRole = async (
     const response = await request(requestOptions);
     const newRole = response.body;
     // create returns a 202....suspend return until the new resource is ready
-    if (response.hasOwnProperty("statusCode") && 
-        response.statusCode === 202 &&
-        response.headers.hasOwnProperty("location"))
-    {    
+    if (response.hasOwnProperty("statusCode") &&
+      response.statusCode === 202 &&
+      response.headers.hasOwnProperty("location")) {
       await Util.pendingResource(
         response.headers.location,
         requestOptions, //reusing the request options instead of passing in multiple params
@@ -373,7 +369,7 @@ const deactivateRole = async (
   roleUUID = "null roleUUID",
   trace = {}
 ) => {
-  try{
+  try {
     const MS = Util.getEndpoint("auth");
     const requestOptions = {
       method: "POST",
@@ -390,10 +386,9 @@ const deactivateRole = async (
     const response = await request(requestOptions);
     const role = response.body;
     // create returns a 202....suspend return until the new resource is ready
-    if (response.hasOwnProperty("statusCode") && 
-        response.statusCode === 202 &&
-        response.headers.hasOwnProperty("location"))
-    {    
+    if (response.hasOwnProperty("statusCode") &&
+      response.statusCode === 202 &&
+      response.headers.hasOwnProperty("location")) {
       await Util.pendingResource(
         response.headers.location,
         requestOptions, //reusing the request options instead of passing in multiple params
@@ -401,8 +396,8 @@ const deactivateRole = async (
         role.hasOwnProperty("resource_status") ? role.resource_status : "complete"
       );
     }
-    return {"status": "ok"};
-  } catch(error){
+    return { "status": "ok" };
+  } catch (error) {
     return Promise.reject(Util.formatError(error));
   }
 };
@@ -437,7 +432,7 @@ const deletePermissionFromRole = async (
     };
     Util.addRequestTrace(requestOptions, trace);
     const response = await request(requestOptions);
-    if(response.statusCode === 204) {
+    if (response.statusCode === 204) {
       return { status: "ok" };
     } else {
       // this is an edge case, but protects against unexpected 2xx or 3xx response codes.
@@ -445,14 +440,14 @@ const deletePermissionFromRole = async (
         "code": response.statusCode,
         "message": typeof response.body === "string" ? response.body : "delete permission from role failed",
         "trace_id": requestOptions.hasOwnProperty("headers") && requestOptions.headers.hasOwnProperty("trace")
-          ? requestOptions.headers.trace 
+          ? requestOptions.headers.trace
           : undefined,
         "details": typeof response.body === "object" && response.body !== null
           ? [response.body]
           : []
       };
     }
-  } catch(error){
+  } catch (error) {
     return Promise.reject(Util.formatError(error));
   }
 };
@@ -486,23 +481,22 @@ const deleteRole = async (
     Util.addRequestTrace(requestOptions, trace);
     const response = await request(requestOptions);
     // create returns a 202....suspend return until the new resource is ready
-    if (response.hasOwnProperty("statusCode") && 
-        response.statusCode === 202 &&
-        response.headers.hasOwnProperty("location"))
-    {    
+    if (response.hasOwnProperty("statusCode") &&
+      response.statusCode === 202 &&
+      response.headers.hasOwnProperty("location")) {
       await Util.pendingResource(
         response.headers.location,
         requestOptions, //reusing the request options instead of passing in multiple params
         trace,
-        response.hasOwnProperty("body") && response.hasOwnProperty("resource_status") 
+        response.hasOwnProperty("body") && response.hasOwnProperty("resource_status")
           ? response.body.resource_status : "complete"
       );
     }
-    return {"status": "ok"};
+    return { "status": "ok" };
   } catch (error) {
     return Promise.reject(Util.formatError(error));
   }
-  
+
 };
 
 /**
@@ -535,7 +529,7 @@ const deleteRoleFromUserGroup = async (
     };
     Util.addRequestTrace(requestOptions, trace);
     const response = await request(requestOptions);
-    if(response.statusCode === 204) {
+    if (response.statusCode === 204) {
       return { status: "ok" };
     } else {
       // this is an edge case, but protects against unexpected 2xx or 3xx response codes.
@@ -543,7 +537,7 @@ const deleteRoleFromUserGroup = async (
         "code": response.statusCode,
         "message": typeof response.body === "string" ? response.body : "delete role from user-group failed",
         "trace_id": requestOptions.hasOwnProperty("headers") && requestOptions.headers.hasOwnProperty("trace")
-          ? requestOptions.headers.trace 
+          ? requestOptions.headers.trace
           : undefined,
         "details": typeof response.body === "object" && response.body !== null
           ? [response.body]
@@ -567,7 +561,7 @@ const getAccountDefaultGroups = async (
   accessToken = "null access token",
   accountUUID = "null account uuid",
   trace = {}
-) =>{
+) => {
   try {
     const MS = Util.getEndpoint("auth");
     const requestOptions = {
@@ -587,17 +581,28 @@ const getAccountDefaultGroups = async (
     const retObj = {
       "admin": "",
       "user": ""
-    }; 
+    };
     const response = await request(requestOptions);
-    response.items.forEach(item =>{
-      if(item.hasOwnProperty("type") && item.hasOwnProperty("uuid")){
-        if(item.type === "admin") {
+    response.items.forEach(item => {
+      if (item.hasOwnProperty("type") && item.hasOwnProperty("uuid")) {
+        if (item.type === "admin") {
           retObj.admin = item.uuid;
         } else if (item.type === "user") {
           retObj.user = item.uuid;
         }
       }
     });
+
+    // if we have no admin or user value in retObj, throw an error
+    if (retObj.admin.length === 0 || retObj.user.length === 0) {
+      throw {
+        "code": 500,
+        "message": "missing admin or user UUID in account default group",
+        "trace_id": undefined,
+        "details": []
+      };
+    }
+
     return retObj;
   } catch (error) {
     return Promise.reject(Util.formatError(error));
@@ -636,8 +641,8 @@ const getResourceUsers = async (
         accessToken,
         groups.items[group].user_group.uuid,
         {
-          "expand":"members",
-          "members_limit":999 //hopefully we don't need pagination here. nh
+          "expand": "members",
+          "members_limit": 999 //hopefully we don't need pagination here. nh
         },
         nextTrace
       );
@@ -662,16 +667,16 @@ const getResourceGroupRoles = async (
   accessToken = "null access token",
   trace = {}
 ) => {
-  try { 
+  try {
     const retObj = {};
-    const rolePromises = []; 
+    const rolePromises = [];
     Object.keys(Util.config.resourceRoleDescriptions).forEach(resourceType => {
       rolePromises.push(
         listRoles(
           accessToken,
           0, // offset
           100, // limit
-          {"description": Util.config.resourceRoleDescriptions[resourceType]},
+          { "description": Util.config.resourceRoleDescriptions[resourceType] },
           trace
         )
       );
@@ -684,10 +689,10 @@ const getResourceGroupRoles = async (
     * Because of this they are written with a human friendly name and description.
     * As such they are complex strings that need to be parsed into a format that can be used by resource groups utility.
     */
-    rawRoles.forEach(element =>{
+    rawRoles.forEach(element => {
       element.items.forEach(item => {
         const permissionType = item.name.split(" ")[1];
-        if(!retObj.hasOwnProperty(permissionType)){
+        if (!retObj.hasOwnProperty(permissionType)) {
           retObj[permissionType] = {};
         }
         const permissions = item.name.split("-")[1].split(",");
@@ -696,7 +701,7 @@ const getResourceGroupRoles = async (
           propName = `${propName}${permission.charAt(1)}`;
         });
         retObj[permissionType][propName] = item.uuid;
-      }); 
+      });
     });
     return retObj;
   } catch (error) {
@@ -1125,7 +1130,7 @@ const listUserGroups = async (
   filters = undefined,
   trace = {}
 ) => {
-  try{
+  try {
     const MS = Util.getEndpoint("auth");
     const requestOptions = {
       method: "GET",
@@ -1187,10 +1192,9 @@ const modifyRole = async (
     const response = await request(requestOptions);
     const role = response.body;
     // create returns a 202....suspend return until the new resource is ready
-    if (response.hasOwnProperty("statusCode") && 
-          response.statusCode === 202 &&
-          response.headers.hasOwnProperty("location"))
-    {    
+    if (response.hasOwnProperty("statusCode") &&
+      response.statusCode === 202 &&
+      response.headers.hasOwnProperty("location")) {
       await Util.pendingResource(
         response.headers.location,
         requestOptions, //reusing the request options instead of passing in multiple params
@@ -1237,10 +1241,9 @@ const modifyUserGroup = async (
     const response = await request(requestOptions);
     const userGroup = response.body;
     // create returns a 202....suspend return until the new resource is ready
-    if (response.hasOwnProperty("statusCode") && 
-          response.statusCode === 202 &&
-          response.headers.hasOwnProperty("location"))
-    {    
+    if (response.hasOwnProperty("statusCode") &&
+      response.statusCode === 202 &&
+      response.headers.hasOwnProperty("location")) {
       await Util.pendingResource(
         response.headers.location,
         requestOptions, //reusing the request options instead of passing in multiple params
