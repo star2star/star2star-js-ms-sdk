@@ -132,7 +132,7 @@ const sendPushNotification = async function sendPushNotification() {
       "title": title,
       "message": message,
       "data": data,
-      "platformData": platformData
+      "platform_specific_data": platformData
     };
     Object.keys(optionalParams).forEach(param => {
       if (typeof optionalParams[param] !== "undefined") {

@@ -128,7 +128,7 @@ const sendPushNotification = async (
       "title": title,
       "message": message,
       "data": data,
-      "platformData": platformData,
+      "platform_specific_data": platformData,
     };
 
     Object.keys(optionalParams).forEach(param => {

@@ -573,7 +573,17 @@ const getAccountDefaultGroups = async function getAccountDefaultGroups() {
           retObj.user = item.uuid;
         }
       }
-    });
+    }); // if we have no admin or user value in retObj, throw an error
+
+    if (retObj.admin.length === 0 || retObj.user.length === 0) {
+      throw {
+        "code": 500,
+        "message": "missing admin or user UUID in account default group",
+        "trace_id": requestOptions.hasOwnProperty("headers") && requestOptions.headers.hasOwnProperty("trace") ? requestOptions.headers.trace : undefined,
+        "details": []
+      };
+    }
+
     return retObj;
   } catch (error) {
     return Promise.reject(Util.formatError(error));
