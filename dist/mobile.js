@@ -91,12 +91,12 @@ const registerPushToken = async function registerPushToken() {
  * @async
  * @description This function will send a push notification to a mobile device
  * @param {string} [accessToken="null accessToken"] - CPaaS access token
- * @param {string} [title="no user uuid provided"] - notification title
- * @param {string} [message="no push token provided"] - notification messge
  * @param {string} [application="no application provided"] - target application
  * @param {string} [userUUID="no user uuid provided"] - user uuid
  * @param {object} [data=undefined] - optional additiona data to accompany the message text as payload
  * @param {object} [platformData=undefined] - optional platform (ios/android) specific payload data
+ * @param {string} [title=undefined] - notification title
+ * @param {string} [message=undefined] - notification messge
  * @param {object} [trace={}] - optional CPaaS lifecycle headers
  * @returns {Promise<object>} - promise resolving to a push notification object
  */
@@ -104,10 +104,10 @@ const registerPushToken = async function registerPushToken() {
 
 const sendPushNotification = async function sendPushNotification() {
   let accessToken = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : "null accessToken";
-  let title = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : "no user uuid provided";
-  let message = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : "no push token provided";
-  let application = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : "no application provided";
-  let userUUID = arguments.length > 4 && arguments[4] !== undefined ? arguments[4] : "no user uuid provided";
+  let application = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : "no application provided";
+  let userUUID = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : "no user uuid provided";
+  let title = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : undefined;
+  let message = arguments.length > 4 && arguments[4] !== undefined ? arguments[4] : undefined;
   let data = arguments.length > 5 && arguments[5] !== undefined ? arguments[5] : undefined;
   let platformData = arguments.length > 6 && arguments[6] !== undefined ? arguments[6] : undefined;
   let trace = arguments.length > 7 && arguments[7] !== undefined ? arguments[7] : {};
@@ -123,22 +123,22 @@ const sendPushNotification = async function sendPushNotification() {
         "x-api-version": "".concat(util.getVersion())
       },
       "body": {
-        "title": title,
-        "message": message,
         "application": application,
         "user_uuid": userUUID
       },
       "json": true
     };
-
-    if (typeof data !== "undefined") {
-      requestOptions.body.data = data;
-    }
-
-    if (typeof platformData !== "undefined") {
-      requestOptions.body.platform_specific_data = platformData;
-    }
-
+    const optionalParams = {
+      "title": title,
+      "message": message,
+      "data": data,
+      "platformData": platformData
+    };
+    Object.keys(optionalParams).forEach(param => {
+      if (typeof optionalParams[param] !== "undefined") {
+        requestOptions.body[param] = optionalParams[param];
+      }
+    });
     util.addRequestTrace(requestOptions, trace);
     const response = await request(requestOptions);
     return response;

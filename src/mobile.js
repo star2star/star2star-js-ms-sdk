@@ -88,21 +88,21 @@ const registerPushToken = async (
  * @async
  * @description This function will send a push notification to a mobile device
  * @param {string} [accessToken="null accessToken"] - CPaaS access token
- * @param {string} [title="no user uuid provided"] - notification title
- * @param {string} [message="no push token provided"] - notification messge
  * @param {string} [application="no application provided"] - target application
  * @param {string} [userUUID="no user uuid provided"] - user uuid
  * @param {object} [data=undefined] - optional additiona data to accompany the message text as payload
  * @param {object} [platformData=undefined] - optional platform (ios/android) specific payload data
+ * @param {string} [title=undefined] - notification title
+ * @param {string} [message=undefined] - notification messge
  * @param {object} [trace={}] - optional CPaaS lifecycle headers
  * @returns {Promise<object>} - promise resolving to a push notification object
  */
 const sendPushNotification = async (
   accessToken = "null accessToken",
-  title = "no user uuid provided",
-  message = "no push token provided",
   application = "no application provided",
   userUUID = "no user uuid provided",
+  title = undefined,
+  message = undefined,
   data = undefined,
   platformData = undefined,
   trace = {}
@@ -118,19 +118,25 @@ const sendPushNotification = async (
         "x-api-version": `${util.getVersion()}`
       },
       "body": {
-        "title": title,
-        "message": message,
         "application": application,
         "user_uuid": userUUID,
       },
       "json": true
     };
-    if(typeof data !== "undefined"){
-      requestOptions.body.data = data;
-    }
-    if(typeof platformData !== "undefined"){
-      requestOptions.body.platform_specific_data = platformData;
-    }
+
+    const optionalParams = {
+      "title": title,
+      "message": message,
+      "data": data,
+      "platformData": platformData,
+    };
+
+    Object.keys(optionalParams).forEach(param => {
+      if(typeof optionalParams[param] !== "undefined"){
+        requestOptions.body[param] = optionalParams[param];
+      }
+    });
+    
     util.addRequestTrace(requestOptions, trace);
     const response = await request(requestOptions);
     return response;
