@@ -598,7 +598,9 @@ const getAccountDefaultGroups = async (
       throw {
         "code": 500,
         "message": "missing admin or user UUID in account default group",
-        "trace_id": undefined,
+        "trace_id": requestOptions.hasOwnProperty("headers") && requestOptions.headers.hasOwnProperty("trace")
+          ? requestOptions.headers.trace
+          : undefined,
         "details": []
       };
     }
