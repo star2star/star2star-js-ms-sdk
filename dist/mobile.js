@@ -47,6 +47,7 @@ const getUserRegistrations = async function getUserRegistrations() {
  * @param {string} [accessToken="null accessToken"] - Access token for cpaas systems
  * @param {string} [userUUID="no user uuid provided"] - UUID for user
  * @param {string} [pushToken="no push token provided"]
+ * @param {string} [pushToken="no push token provided"]
  * @param {string} [application="no application provided"]
  * @param {string} [platform="no platform provided"]
  * @param {object} [trace = {}] - optional microservice lifecycle trace headers
@@ -57,10 +58,11 @@ const getUserRegistrations = async function getUserRegistrations() {
 const registerPushToken = async function registerPushToken() {
   let accessToken = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : "null accessToken";
   let userUUID = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : "no user uuid provided";
-  let pushToken = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : "no push token provided";
-  let application = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : "no application provided";
-  let platform = arguments.length > 4 && arguments[4] !== undefined ? arguments[4] : "no platform provided";
-  let trace = arguments.length > 5 && arguments[5] !== undefined ? arguments[5] : {};
+  let deviceID = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : "no device uuid provided";
+  let pushToken = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : "no push token provided";
+  let application = arguments.length > 4 && arguments[4] !== undefined ? arguments[4] : "no application provided";
+  let platform = arguments.length > 5 && arguments[5] !== undefined ? arguments[5] : "no platform provided";
+  let trace = arguments.length > 6 && arguments[6] !== undefined ? arguments[6] : {};
 
   try {
     const MS = util.getEndpoint("mobile");
@@ -74,6 +76,7 @@ const registerPushToken = async function registerPushToken() {
       },
       "body": {
         "user_uuid": userUUID,
+        "device_id": deviceID,
         "push_token": pushToken,
         "application": application,
         "platform": platform
@@ -93,6 +96,7 @@ const registerPushToken = async function registerPushToken() {
  * @param {string} [accessToken="null accessToken"] - CPaaS access token
  * @param {string} [application="no application provided"] - target application
  * @param {string} [userUUID="no user uuid provided"] - user uuid
+ * @param {array} [userUUID="no user uuid provided"] - array of device_ids to send notification to
  * @param {object} [data=undefined] - optional additiona data to accompany the message text as payload
  * @param {object} [platformData=undefined] - optional platform (ios/android) specific payload data
  * @param {string} [title=undefined] - notification title
@@ -106,11 +110,12 @@ const sendPushNotification = async function sendPushNotification() {
   let accessToken = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : "null accessToken";
   let application = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : "no application provided";
   let userUUID = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : "no user uuid provided";
-  let title = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : undefined;
-  let message = arguments.length > 4 && arguments[4] !== undefined ? arguments[4] : undefined;
-  let data = arguments.length > 5 && arguments[5] !== undefined ? arguments[5] : undefined;
-  let platformData = arguments.length > 6 && arguments[6] !== undefined ? arguments[6] : undefined;
-  let trace = arguments.length > 7 && arguments[7] !== undefined ? arguments[7] : {};
+  let deviceIDs = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : "no deviceIDs array provided";
+  let title = arguments.length > 4 && arguments[4] !== undefined ? arguments[4] : undefined;
+  let message = arguments.length > 5 && arguments[5] !== undefined ? arguments[5] : undefined;
+  let data = arguments.length > 6 && arguments[6] !== undefined ? arguments[6] : undefined;
+  let platformData = arguments.length > 7 && arguments[7] !== undefined ? arguments[7] : undefined;
+  let trace = arguments.length > 8 && arguments[8] !== undefined ? arguments[8] : {};
 
   try {
     const MS = util.getEndpoint("mobile");
@@ -124,7 +129,8 @@ const sendPushNotification = async function sendPushNotification() {
       },
       "body": {
         "application": application,
-        "user_uuid": userUUID
+        "user_uuid": userUUID,
+        "device_ids": deviceIDs
       },
       "json": true
     };

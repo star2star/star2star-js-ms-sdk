@@ -2,7 +2,7 @@
 <html>
 <head>
   <meta charset='utf-8' />
-  <title>star2star-js-ms-sdk 3.2.42 | Documentation</title>
+  <title>star2star-js-ms-sdk 3.2.43 | Documentation</title>
   <meta name='viewport' content='width=device-width,initial-scale=1'>
   <link href='assets/bass.css' type='text/css' rel='stylesheet' />
   <link href='assets/style.css' type='text/css' rel='stylesheet' />
@@ -14,7 +14,7 @@
       <div id='split-left' class='overflow-auto fs0 height-viewport-100'>
         <div class='py1 px2'>
           <h3 class='mb0 no-anchor'>star2star-js-ms-sdk</h3>
-          <div class='mb1'><code>3.2.42</code></div>
+          <div class='mb1'><code>3.2.43</code></div>
           <input
             placeholder='Filter'
             id='filter-input'
@@ -13673,6 +13673,15 @@ accessToken you passed in.</p>
       
         <div class='space-bottom0'>
           <div>
+            <span class='code bold'>deviceID</span> <code class='quiet'>(any
+            = <code>&quot;no device uuid provided&quot;</code>)</code>
+	    
+          </div>
+          
+        </div>
+      
+        <div class='space-bottom0'>
+          <div>
             <span class='code bold'>pushToken</span> <code class='quiet'>(<a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String">string</a>
             = <code>&quot;no push token provided&quot;</code>)</code>
 	    
@@ -13791,10 +13800,19 @@ accessToken you passed in.</p>
       
         <div class='space-bottom0'>
           <div>
-            <span class='code bold'>userUUID</span> <code class='quiet'>(<a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String">string</a>
+            <span class='code bold'>userUUID</span> <code class='quiet'>(<a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Array">array</a>
             = <code>&quot;no user uuid provided&quot;</code>)</code>
-	    user uuid
+	    array of device_ids to send notification to
 
+          </div>
+          
+        </div>
+      
+        <div class='space-bottom0'>
+          <div>
+            <span class='code bold'>deviceIDs</span> <code class='quiet'>(any
+            = <code>&quot;no deviceIDs array provided&quot;</code>)</code>
+	    
           </div>
           
         </div>

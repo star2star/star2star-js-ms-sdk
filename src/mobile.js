@@ -45,6 +45,7 @@ const getUserRegistrations = async (
  * @param {string} [accessToken="null accessToken"] - Access token for cpaas systems
  * @param {string} [userUUID="no user uuid provided"] - UUID for user
  * @param {string} [pushToken="no push token provided"]
+ * @param {string} [pushToken="no push token provided"]
  * @param {string} [application="no application provided"]
  * @param {string} [platform="no platform provided"]
  * @param {object} [trace = {}] - optional microservice lifecycle trace headers
@@ -53,6 +54,7 @@ const getUserRegistrations = async (
 const registerPushToken = async (
   accessToken = "null accessToken",
   userUUID = "no user uuid provided",
+  deviceID = "no device uuid provided",
   pushToken = "no push token provided",
   application = "no application provided",
   platform = "no platform provided",
@@ -70,6 +72,7 @@ const registerPushToken = async (
       },
       "body": {
         "user_uuid": userUUID,
+        "device_id": deviceID,
         "push_token": pushToken,
         "application": application,
         "platform": platform
@@ -90,6 +93,7 @@ const registerPushToken = async (
  * @param {string} [accessToken="null accessToken"] - CPaaS access token
  * @param {string} [application="no application provided"] - target application
  * @param {string} [userUUID="no user uuid provided"] - user uuid
+ * @param {array} [userUUID="no user uuid provided"] - array of device_ids to send notification to
  * @param {object} [data=undefined] - optional additiona data to accompany the message text as payload
  * @param {object} [platformData=undefined] - optional platform (ios/android) specific payload data
  * @param {string} [title=undefined] - notification title
@@ -101,6 +105,7 @@ const sendPushNotification = async (
   accessToken = "null accessToken",
   application = "no application provided",
   userUUID = "no user uuid provided",
+  deviceIDs = "no deviceIDs array provided",
   title = undefined,
   message = undefined,
   data = undefined,
@@ -120,6 +125,7 @@ const sendPushNotification = async (
       "body": {
         "application": application,
         "user_uuid": userUUID,
+        "device_ids": deviceIDs
       },
       "json": true
     };
