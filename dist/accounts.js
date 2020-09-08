@@ -123,9 +123,9 @@ const createAccount = async function createAccount() {
     const response = await request(requestOptions);
     const newAccount = response.body; // create returns a 202....suspend return until the new resource is ready
 
-    if (response.hasOwnProperty("statusCode") && response.statusCode === 202 && response.headers.hasOwnProperty("location")) {
+    if (response.hasOwnProperty("statusCode") && response.statusCode === 202 && response.headers.hasOwnProperty("location") && response.headers.hasOwnProperty("x-resource-status")) {
       await util.pendingResource(response.headers.location, requestOptions, //reusing the request options instead of passing in multiple params
-      trace, newAccount.hasOwnProperty("resource_status") ? newAccount.resource_status : "complete");
+      trace, response.headers["x-resource-status"]);
     }
 
     return newAccount;
@@ -399,7 +399,7 @@ const deleteAccount = async function deleteAccount() {
     util.addRequestTrace(requestOptions, trace);
     const response = await request(requestOptions); // delete returns a 202....suspend return until the new resource is ready
 
-    if (response.hasOwnProperty("statusCode") && response.statusCode === 202 && response.headers.hasOwnProperty("location")) {
+    if (response.hasOwnProperty("statusCode") && response.statusCode === 202 && response.headers.hasOwnProperty("location") && response.headers.hasOwnProperty("x-resource-status")) {
       await util.pendingResource(response.headers.location, requestOptions, //reusing the request options instead of passing in multiple params
       trace, "deleting");
     }

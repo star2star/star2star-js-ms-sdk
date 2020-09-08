@@ -350,9 +350,9 @@ const pendingResource = async function pendingResource(resourceLoc, requestOptio
   try {
     // if the startingResourceStatus is complete, there is nothing to do since the resource is ready
     if (startingResourceStatus === "complete") {
-      return Promise.resolve({
+      return {
         "status": "ok"
-      });
+      };
     } //update our requestOptions for the verification URL
 
 
@@ -397,12 +397,12 @@ const pendingResource = async function pendingResource(resourceLoc, requestOptio
     // a fetch on an item we are deleting should return a 404 when complete.
     if (startingResourceStatus === "deleting" && error.hasOwnProperty("statusCode") && error.statusCode === 404) {
       logger.debug("Pending Resource Deleted", error.message);
-      return Promise.resolve({
+      return {
         "status": "ok"
-      });
+      };
     }
 
-    return Promise.reject(formatError(error));
+    throw formatError(error);
   }
 };
 /**

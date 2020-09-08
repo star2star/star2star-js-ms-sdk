@@ -36,14 +36,16 @@ const createIdentity = async (
     const response = await request(requestOptions);
     const identity = response.body;
     // update returns a 202....suspend return until the new resource is ready
-    if (response.hasOwnProperty("statusCode") &&
-      response.statusCode === 202 &&
-      response.headers.hasOwnProperty("location")) {
+    if (response.hasOwnProperty("statusCode") && 
+        response.statusCode === 202 &&
+        response.headers.hasOwnProperty("location") &&
+        response.headers.hasOwnProperty("x-resource-status"))
+    {    
       await util.pendingResource(
         response.headers.location,
         requestOptions, //reusing the request options instead of passing in multiple params
         trace,
-        identity.hasOwnProperty("resource_status") ? identity.resource_status : "complete"
+        response.headers["x-resource-status"]
       );
     }
     return identity;
@@ -302,29 +304,19 @@ const updateAliasWithDID = async (
     };
     util.addRequestTrace(requestOptions, trace);
     const response = await request(requestOptions);
-    if (response.hasOwnProperty("statusCode") && response.statusCode === 202) {
-      if (response.headers.hasOwnProperty("location")) {
-        await util.pendingResource(
-          response.headers.location,
-          requestOptions, //reusing the request options instead of passing in multiple params
-          trace,
-          response.hasOwnProperty("resource_status") ? response.resource_status : "complete"
-        );
-      }
-      return { "status": "ok" };
-    } else {
-      // this is an edge case, but protects against unexpected 2xx or 3xx response codes.
-      throw {
-        "code": response.statusCode,
-        "message": typeof response.body === "string" ? response.body : "update alias with DID failed",
-        "trace_id": requestOptions.hasOwnProperty("headers") && requestOptions.headers.hasOwnProperty("trace")
-          ? requestOptions.headers.trace
-          : undefined,
-        "details": typeof response.body === "object" && response.body !== null
-          ? [response.body]
-          : []
-      };
+    if (response.hasOwnProperty("statusCode") && 
+        response.statusCode === 202 &&
+        response.headers.hasOwnProperty("location") &&
+        response.headers.hasOwnProperty("x-resource-status"))
+    {    
+      await util.pendingResource(
+        response.headers.location,
+        requestOptions, //reusing the request options instead of passing in multiple params
+        trace,
+        response.headers["x-resource-status"]
+      );
     }
+    return { "status": "ok" };
   } catch (error) {
     return Promise.reject(util.formatError(error));
   }
@@ -360,29 +352,19 @@ const deleteIdentity = async (
     util.addRequestTrace(requestOptions, trace);
     const response = await request(requestOptions);
     // delete returns a 202....suspend return until the new resource is ready if possible
-    if (response.hasOwnProperty("statusCode") && response.statusCode === 202) {
-      if (response.headers.hasOwnProperty("location")) {
-        await util.pendingResource(
-          response.headers.location,
-          requestOptions, //reusing the request options instead of passing in multiple params
-          trace,
-          "deleting"
-        );
-      }
-      return { "status": "ok" };
-    } else {
-      // this is an edge case, but protects against unexpected 2xx or 3xx response codes.
-      throw {
-        "code": response.statusCode,
-        "message": typeof response.body === "string" ? response.body : "delete identity failed",
-        "trace_id": requestOptions.hasOwnProperty("headers") && requestOptions.headers.hasOwnProperty("trace")
-          ? requestOptions.headers.trace
-          : undefined,
-        "details": typeof response.body === "object" && response.body !== null
-          ? [response.body]
-          : []
-      };
+    if (response.hasOwnProperty("statusCode") && 
+        response.statusCode === 202 &&
+        response.headers.hasOwnProperty("location") &&
+        response.headers.hasOwnProperty("x-resource-status"))
+    {    
+      await util.pendingResource(
+        response.headers.location,
+        requestOptions, //reusing the request options instead of passing in multiple params
+        trace,
+        response.headers["x-resource-status"]
+      );
     }
+    return { "status": "ok" };
   } catch (error) {
     return Promise.reject(util.formatError(error));
   }
@@ -657,29 +639,19 @@ const resetPassword = async (
     };
     util.addRequestTrace(requestOptions, trace);
     const response = await request(requestOptions);
-    if (response.hasOwnProperty("statusCode") && response.statusCode === 202) {
-      if (response.headers.hasOwnProperty("location")) {
-        await util.pendingResource(
-          response.headers.location,
-          requestOptions, //reusing the request options instead of passing in multiple params
-          trace,
-          response.hasOwnProperty("resource_status") ? response.resource_status : "complete"
-        );
-      }
-      return { "status": "ok" };
-    } else {
-      // this is an edge case, but protects against unexpected 2xx or 3xx response codes.
-      throw {
-        "code": response.statusCode,
-        "message": typeof response.body === "string" ? response.body : "reset password failed",
-        "trace_id": requestOptions.hasOwnProperty("headers") && requestOptions.headers.hasOwnProperty("trace")
-          ? requestOptions.headers.trace
-          : undefined,
-        "details": typeof response.body === "object" && response.body !== null
-          ? [response.body]
-          : []
-      };
+    if (response.hasOwnProperty("statusCode") && 
+        response.statusCode === 202 &&
+        response.headers.hasOwnProperty("location") &&
+        response.headers.hasOwnProperty("x-resource-status"))
+    {    
+      await util.pendingResource(
+        response.headers.location,
+        requestOptions, //reusing the request options instead of passing in multiple params
+        trace,
+        response.headers["x-resource-status"]
+      );
     }
+    return { "status": "ok" };
   } catch (error) {
     return Promise.reject(util.formatError(error));
   }
@@ -716,29 +688,19 @@ const generatePasswordToken = async (
     };
     util.addRequestTrace(requestOptions, trace);
     const response = await request(requestOptions);
-    if (response.hasOwnProperty("statusCode") && response.statusCode === 202) {
-      if (response.headers.hasOwnProperty("location")) {
-        await util.pendingResource(
-          response.headers.location,
-          requestOptions, //reusing the request options instead of passing in multiple params
-          trace,
-          response.hasOwnProperty("resource_status") ? response.resource_status : "complete"
-        );
-      }
-      return { "status": "ok" };
-    } else {
-      // this is an edge case, but protects against unexpected 2xx or 3xx response codes.
-      throw {
-        "code": response.statusCode,
-        "message": typeof response.body === "string" ? response.body : "generate password token failed",
-        "trace_id": requestOptions.hasOwnProperty("headers") && requestOptions.headers.hasOwnProperty("trace")
-          ? requestOptions.headers.trace
-          : undefined,
-        "details": typeof response.body === "object" && response.body !== null
-          ? [response.body]
-          : []
-      };
+    if (response.hasOwnProperty("statusCode") && 
+        response.statusCode === 202 &&
+        response.headers.hasOwnProperty("location") &&
+        response.headers.hasOwnProperty("x-resource-status"))
+    {    
+      await util.pendingResource(
+        response.headers.location,
+        requestOptions, //reusing the request options instead of passing in multiple params
+        trace,
+        response.headers["x-resource-status"]
+      );
     }
+    return { "status": "ok" };
   } catch (error) {
     return Promise.reject(util.formatError(error));
   }

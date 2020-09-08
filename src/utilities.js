@@ -323,7 +323,7 @@ const pendingResource = async (resourceLoc, requestOptions, trace, startingResou
   try {
     // if the startingResourceStatus is complete, there is nothing to do since the resource is ready
     if (startingResourceStatus === "complete") {
-      return Promise.resolve({"status":"ok"});
+      return {"status":"ok"};
     }
     //update our requestOptions for the verification URL
     requestOptions.method = "HEAD";
@@ -364,9 +364,9 @@ const pendingResource = async (resourceLoc, requestOptions, trace, startingResou
       error.statusCode === 404
     ){
       logger.debug("Pending Resource Deleted", error.message);
-      return Promise.resolve({"status":"ok"});
+      return {"status":"ok"};
     }
-    return Promise.reject(formatError(error));
+    throw formatError(error);
   }
 };
 

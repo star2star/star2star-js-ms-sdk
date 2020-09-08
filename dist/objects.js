@@ -322,9 +322,9 @@ const createUserDataObject = async function createUserDataObject() {
       const response = await request(requestOptions);
       newObject = response.body; // create returns a 202....suspend return until the new resource is ready
 
-      if (response.hasOwnProperty("statusCode") && response.statusCode === 202 && response.headers.hasOwnProperty("location")) {
+      if (response.hasOwnProperty("statusCode") && response.statusCode === 202 && response.headers.hasOwnProperty("location") && response.headers.hasOwnProperty("x-resource-status")) {
         await Util.pendingResource(response.headers.location, requestOptions, //reusing the request options instead of passing in multiple params
-        trace, newObject.hasOwnProperty("resource_status") ? newObject.resource_status : "complete");
+        trace, response.headers["x-resource-status"]);
       } //need to create permissions resource groups
 
 
@@ -407,9 +407,9 @@ const createDataObject = async function createDataObject() {
     const response = await request(requestOptions);
     const newObject = response.body; // create returns a 202....suspend return until the new resource is ready
 
-    if (response.hasOwnProperty("statusCode") && response.statusCode === 202 && response.headers.hasOwnProperty("location")) {
+    if (response.hasOwnProperty("statusCode") && response.statusCode === 202 && response.headers.hasOwnProperty("location") && response.headers.hasOwnProperty("x-resource-status")) {
       await Util.pendingResource(response.headers.location, requestOptions, //reusing the request options instead of passing in multiple params
-      trace, newObject.hasOwnProperty("resource_status") ? newObject.resource_status : "complete");
+      trace, response.headers["x-resource-status"]);
     }
 
     return newObject;
@@ -453,7 +453,7 @@ const deleteDataObject = async function deleteDataObject() {
     await ResourceGroups.cleanUpResourceGroups(accessToken, dataUUID, nextTrace);
     const response = await request(requestOptions); // delete returns a 202....suspend return until the new resource is ready
 
-    if (response.hasOwnProperty("statusCode") && response.statusCode === 202 && response.headers.hasOwnProperty("location")) {
+    if (response.hasOwnProperty("statusCode") && response.statusCode === 202 && response.headers.hasOwnProperty("location") && response.headers.hasOwnProperty("x-resource-status")) {
       await Util.pendingResource(response.headers.location, requestOptions, //reusing the request options instead of passing in multiple params
       trace, "deleting");
     }
@@ -513,9 +513,9 @@ const updateDataObject = async function updateDataObject() {
     const response = await request(requestOptions);
     const updatedObj = response.body; // update returns a 202....suspend return until the new resource is ready
 
-    if (response.hasOwnProperty("statusCode") && response.statusCode === 202 && response.headers.hasOwnProperty("location")) {
+    if (response.hasOwnProperty("statusCode") && response.statusCode === 202 && response.headers.hasOwnProperty("location") && response.headers.hasOwnProperty("x-resource-status")) {
       await Util.pendingResource(response.headers.location, requestOptions, //reusing the request options instead of passing in multiple params
-      trace, updatedObj.hasOwnProperty("resource_status") ? updatedObj.resource_status : "complete");
+      trace, response.headers["x-resource-status"]);
     }
 
     return updatedObj;
