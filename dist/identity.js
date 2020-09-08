@@ -39,9 +39,9 @@ const createIdentity = async function createIdentity() {
     const response = await request(requestOptions);
     const identity = response.body; // update returns a 202....suspend return until the new resource is ready
 
-    if (response.hasOwnProperty("statusCode") && response.statusCode === 202 && response.headers.hasOwnProperty("location") && response.headers.hasOwnProperty("x-resource-status")) {
+    if (response.hasOwnProperty("statusCode") && response.statusCode === 202 && response.headers.hasOwnProperty("location")) {
       await util.pendingResource(response.headers.location, requestOptions, //reusing the request options instead of passing in multiple params
-      trace, response.headers["x-resource-status"]);
+      trace);
     }
 
     return identity;
@@ -304,9 +304,9 @@ const updateAliasWithDID = async function updateAliasWithDID() {
     util.addRequestTrace(requestOptions, trace);
     const response = await request(requestOptions);
 
-    if (response.hasOwnProperty("statusCode") && response.statusCode === 202 && response.headers.hasOwnProperty("location") && response.headers.hasOwnProperty("x-resource-status")) {
+    if (response.hasOwnProperty("statusCode") && response.statusCode === 202 && response.headers.hasOwnProperty("location")) {
       await util.pendingResource(response.headers.location, requestOptions, //reusing the request options instead of passing in multiple params
-      trace, response.headers["x-resource-status"]);
+      trace);
     }
 
     return {
@@ -348,9 +348,9 @@ const deleteIdentity = async function deleteIdentity() {
     util.addRequestTrace(requestOptions, trace);
     const response = await request(requestOptions); // delete returns a 202....suspend return until the new resource is ready if possible
 
-    if (response.hasOwnProperty("statusCode") && response.statusCode === 202 && response.headers.hasOwnProperty("location") && response.headers.hasOwnProperty("x-resource-status")) {
+    if (response.hasOwnProperty("statusCode") && response.statusCode === 202 && response.headers.hasOwnProperty("location")) {
       await util.pendingResource(response.headers.location, requestOptions, //reusing the request options instead of passing in multiple params
-      trace, response.headers["x-resource-status"]);
+      trace);
     }
 
     return {
@@ -648,9 +648,9 @@ const resetPassword = async function resetPassword() {
     util.addRequestTrace(requestOptions, trace);
     const response = await request(requestOptions);
 
-    if (response.hasOwnProperty("statusCode") && response.statusCode === 202 && response.headers.hasOwnProperty("location") && response.headers.hasOwnProperty("x-resource-status")) {
+    if (response.hasOwnProperty("statusCode") && response.statusCode === 202 && response.headers.hasOwnProperty("location")) {
       await util.pendingResource(response.headers.location, requestOptions, //reusing the request options instead of passing in multiple params
-      trace, response.headers["x-resource-status"]);
+      trace);
     }
 
     return {
@@ -694,9 +694,9 @@ const generatePasswordToken = async function generatePasswordToken() {
     util.addRequestTrace(requestOptions, trace);
     const response = await request(requestOptions);
 
-    if (response.hasOwnProperty("statusCode") && response.statusCode === 202 && response.headers.hasOwnProperty("location") && response.headers.hasOwnProperty("x-resource-status")) {
+    if (response.hasOwnProperty("statusCode") && response.statusCode === 202 && response.headers.hasOwnProperty("location")) {
       await util.pendingResource(response.headers.location, requestOptions, //reusing the request options instead of passing in multiple params
-      trace, response.headers["x-resource-status"]);
+      trace);
     }
 
     return {

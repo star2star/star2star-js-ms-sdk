@@ -344,7 +344,7 @@ const generateNewMetaData = function generateNewMetaData() {
 
 
 const pendingResource = async function pendingResource(resourceLoc, requestOptions, trace) {
-  let startingResourceStatus = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : "complete";
+  let startingResourceStatus = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : "processing";
   logger.debug("Pending Resource Location", resourceLoc, requestOptions);
 
   try {
@@ -369,8 +369,8 @@ const pendingResource = async function pendingResource(resourceLoc, requestOptio
       let response = await request(requestOptions);
       logger.debug("Pending Resource verification HEAD response", response.headers, response.statusCode);
 
-      if (response.headers.hasOwnProperty("x-resource-status")) {
-        switch (response.headers["x-resource-status"]) {
+      if (response.headers.hasOwnProperty("x-status")) {
+        switch (response.headers["x-status"]) {
           case "processing":
             break;
 
@@ -383,10 +383,10 @@ const pendingResource = async function pendingResource(resourceLoc, requestOptio
             throw Error("failure: ".concat(JSON.stringify(response)));
 
           default:
-            throw Error("unrecognized resource_status: ".concat(JSON.stringify(response)));
+            throw Error("unrecognized resource status: ".concat(JSON.stringify(response)));
         }
       } else {
-        throw Error("resource_status missing from response: ".concat(JSON.stringify(response)));
+        throw Error("x-status missing from response: ".concat(JSON.stringify(response)));
       }
 
       await new Promise(resolve => setTimeout(resolve, config.pollInterval));
