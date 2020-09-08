@@ -38,14 +38,12 @@ const createIdentity = async (
     // update returns a 202....suspend return until the new resource is ready
     if (response.hasOwnProperty("statusCode") && 
         response.statusCode === 202 &&
-        response.headers.hasOwnProperty("location") &&
-        response.headers.hasOwnProperty("x-resource-status"))
+        response.headers.hasOwnProperty("location"))
     {    
       await util.pendingResource(
         response.headers.location,
         requestOptions, //reusing the request options instead of passing in multiple params
-        trace,
-        response.headers["x-resource-status"]
+        trace
       );
     }
     return identity;
@@ -306,14 +304,12 @@ const updateAliasWithDID = async (
     const response = await request(requestOptions);
     if (response.hasOwnProperty("statusCode") && 
         response.statusCode === 202 &&
-        response.headers.hasOwnProperty("location") &&
-        response.headers.hasOwnProperty("x-resource-status"))
+        response.headers.hasOwnProperty("location"))
     {    
       await util.pendingResource(
         response.headers.location,
         requestOptions, //reusing the request options instead of passing in multiple params
-        trace,
-        response.headers["x-resource-status"]
+        trace
       );
     }
     return { "status": "ok" };
@@ -354,14 +350,12 @@ const deleteIdentity = async (
     // delete returns a 202....suspend return until the new resource is ready if possible
     if (response.hasOwnProperty("statusCode") && 
         response.statusCode === 202 &&
-        response.headers.hasOwnProperty("location") &&
-        response.headers.hasOwnProperty("x-resource-status"))
+        response.headers.hasOwnProperty("location"))
     {    
       await util.pendingResource(
         response.headers.location,
         requestOptions, //reusing the request options instead of passing in multiple params
-        trace,
-        response.headers["x-resource-status"]
+        trace
       );
     }
     return { "status": "ok" };
@@ -641,14 +635,12 @@ const resetPassword = async (
     const response = await request(requestOptions);
     if (response.hasOwnProperty("statusCode") && 
         response.statusCode === 202 &&
-        response.headers.hasOwnProperty("location") &&
-        response.headers.hasOwnProperty("x-resource-status"))
+        response.headers.hasOwnProperty("location"))
     {    
       await util.pendingResource(
         response.headers.location,
         requestOptions, //reusing the request options instead of passing in multiple params
-        trace,
-        response.headers["x-resource-status"]
+        trace
       );
     }
     return { "status": "ok" };
@@ -690,14 +682,12 @@ const generatePasswordToken = async (
     const response = await request(requestOptions);
     if (response.hasOwnProperty("statusCode") && 
         response.statusCode === 202 &&
-        response.headers.hasOwnProperty("location") &&
-        response.headers.hasOwnProperty("x-resource-status"))
+        response.headers.hasOwnProperty("location"))
     {    
       await util.pendingResource(
         response.headers.location,
         requestOptions, //reusing the request options instead of passing in multiple params
-        trace,
-        response.headers["x-resource-status"]
+        trace
       );
     }
     return { "status": "ok" };

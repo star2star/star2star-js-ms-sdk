@@ -70,6 +70,7 @@ process.env.MS_LOGPRETTY = true // defaults to false
 [Please click here for our documentation pages.](https://star2star.github.io/star2star-js-ms-sdk/ "Star2Star Micro Service SDK Documentation")
 
 ## Changes
+* 3.2.44 - update pending resource utility x-status header
 * 3.2.44 - update pending resource utility
 * 3.2.43 - add device_id support for mobile notifications
 * 3.2.42 - fix platform data push notifications optional param

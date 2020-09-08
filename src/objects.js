@@ -318,14 +318,12 @@ const createUserDataObject = async (
       // create returns a 202....suspend return until the new resource is ready
       if (response.hasOwnProperty("statusCode") && 
         response.statusCode === 202 &&
-        response.headers.hasOwnProperty("location") &&
-        response.headers.hasOwnProperty("x-resource-status"))
+        response.headers.hasOwnProperty("location"))
       {    
         await Util.pendingResource(
           response.headers.location,
           requestOptions, //reusing the request options instead of passing in multiple params
-          trace,
-          response.headers["x-resource-status"]
+          trace
         );
       }
       
@@ -421,14 +419,12 @@ const createDataObject = async (
     // create returns a 202....suspend return until the new resource is ready
     if (response.hasOwnProperty("statusCode") && 
         response.statusCode === 202 &&
-        response.headers.hasOwnProperty("location") &&
-        response.headers.hasOwnProperty("x-resource-status"))
+        response.headers.hasOwnProperty("location"))
     {    
       await Util.pendingResource(
         response.headers.location,
         requestOptions, //reusing the request options instead of passing in multiple params
-        trace,
-        response.headers["x-resource-status"]
+        trace
       );
     }
     return newObject;
@@ -476,8 +472,7 @@ const deleteDataObject = async (
     // delete returns a 202....suspend return until the new resource is ready
     if (response.hasOwnProperty("statusCode") && 
         response.statusCode === 202 &&
-        response.headers.hasOwnProperty("location") &&
-        response.headers.hasOwnProperty("x-resource-status"))
+        response.headers.hasOwnProperty("location"))
     {    
       await Util.pendingResource(
         response.headers.location,
@@ -545,14 +540,12 @@ const updateDataObject = async (
     // update returns a 202....suspend return until the new resource is ready
     if (response.hasOwnProperty("statusCode") && 
         response.statusCode === 202 &&
-        response.headers.hasOwnProperty("location") &&
-        response.headers.hasOwnProperty("x-resource-status"))
+        response.headers.hasOwnProperty("location"))
     {    
       await Util.pendingResource(
         response.headers.location,
         requestOptions, //reusing the request options instead of passing in multiple params
-        trace,
-        response.headers["x-resource-status"]
+        trace
       );
     }
     return updatedObj;

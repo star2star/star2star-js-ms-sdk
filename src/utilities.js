@@ -318,7 +318,7 @@ const generateNewMetaData = (oldMetaData = {}) => {
  * @param {string} startingResourceStatus - argument to specify expected resolution or skip polling if ready
  * @returns {Promise} - Promise resolved when verify func is successful.
  */
-const pendingResource = async (resourceLoc, requestOptions, trace, startingResourceStatus = "complete") => {
+const pendingResource = async (resourceLoc, requestOptions, trace, startingResourceStatus = "processing") => {
   logger.debug("Pending Resource Location", resourceLoc, requestOptions);
   try {
     // if the startingResourceStatus is complete, there is nothing to do since the resource is ready
@@ -338,8 +338,8 @@ const pendingResource = async (resourceLoc, requestOptions, trace, startingResou
     while (Date.now() < expires) {
       let response = await request(requestOptions);
       logger.debug("Pending Resource verification HEAD response", response.headers, response.statusCode);
-      if(response.headers.hasOwnProperty("x-resource-status")){
-        switch(response.headers["x-resource-status"]) {
+      if(response.headers.hasOwnProperty("x-status")){
+        switch(response.headers["x-status"]) {
         case "processing":
           break;
         case "complete":
@@ -347,10 +347,10 @@ const pendingResource = async (resourceLoc, requestOptions, trace, startingResou
         case "failure":
           throw Error(`failure: ${JSON.stringify(response)}`);
         default:
-          throw Error(`unrecognized resource_status: ${JSON.stringify(response)}`);
+          throw Error(`unrecognized resource status: ${JSON.stringify(response)}`);
         }
       } else {
-        throw Error(`resource_status missing from response: ${JSON.stringify(response)}`);
+        throw Error(`x-status missing from response: ${JSON.stringify(response)}`);
       }
       await new Promise(resolve => setTimeout(resolve, config.pollInterval));
     }

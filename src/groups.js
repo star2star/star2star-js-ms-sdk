@@ -221,8 +221,7 @@ const deleteGroup = async (
     // delete returns a 202....suspend return until the new resource is ready
     if (response.hasOwnProperty("statusCode") && 
         response.statusCode === 202 &&
-        response.headers.hasOwnProperty("location") &&
-        response.headers.hasOwnProperty("x-resource-status"))
+        response.headers.hasOwnProperty("location"))
     {    
       await util.pendingResource(
         response.headers.location,
@@ -279,14 +278,12 @@ const addMembersToGroup = async (
     // create returns a 202....suspend return until the new resource is ready
     if (response.hasOwnProperty("statusCode") && 
         response.statusCode === 202 &&
-        response.headers.hasOwnProperty("location") &&
-        response.headers.hasOwnProperty("x-resource-status"))
+        response.headers.hasOwnProperty("location"))
     {    
       await util.pendingResource(
         response.headers.location,
         requestOptions, //reusing the request options instead of passing in multiple params
-        trace,
-        response.headers["x-resource-status"]
+        trace
       );
     }
     group.total_members = group.hasOwnProperty("total_members") ? (group.total_members + 1) : undefined;
@@ -339,14 +336,12 @@ const deleteGroupMembers = async (
     // create returns a 202....suspend return until the new resource is ready
     if (response.hasOwnProperty("statusCode") && 
         response.statusCode === 202 &&
-        response.headers.hasOwnProperty("location") &&
-        response.headers.hasOwnProperty("x-resource-status"))
+        response.headers.hasOwnProperty("location"))
     {    
       await util.pendingResource(
         response.headers.location,
         requestOptions, //reusing the request options instead of passing in multiple params
-        trace,
-        response.headers["x-resource-status"]
+        trace
       );
     }
     return {"status": "ok"};
@@ -386,14 +381,12 @@ const deactivateGroup = async(
     const response = await request(requestOptions);
     if (response.hasOwnProperty("statusCode") && 
         response.statusCode === 202 &&
-        response.headers.hasOwnProperty("location") &&
-        response.headers.hasOwnProperty("x-resource-status"))
+        response.headers.hasOwnProperty("location"))
     {    
       await util.pendingResource(
         response.headers.location,
         requestOptions, //reusing the request options instead of passing in multiple params
-        trace,
-        response.headers["x-resource-status"]
+        trace
       );
     }
     response.resource_status = "complete";
@@ -435,14 +428,12 @@ const reactivateGroup = async (
     const response = await request(requestOptions);
     if (response.hasOwnProperty("statusCode") && 
         response.statusCode === 202 &&
-        response.headers.hasOwnProperty("location") &&
-        response.headers.hasOwnProperty("x-resource-status"))
+        response.headers.hasOwnProperty("location"))
     {    
       await util.pendingResource(
         response.headers.location,
         requestOptions, //reusing the request options instead of passing in multiple params
-        trace,
-        response.headers["x-resource-status"]
+        trace
       );
     }
     response.resource_status = "complete";

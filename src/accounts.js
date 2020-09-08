@@ -118,14 +118,12 @@ const createAccount = async (
     // create returns a 202....suspend return until the new resource is ready
     if (response.hasOwnProperty("statusCode") && 
         response.statusCode === 202 &&
-        response.headers.hasOwnProperty("location") &&
-        response.headers.hasOwnProperty("x-resource-status"))
+        response.headers.hasOwnProperty("location"))
     {    
       await util.pendingResource(
         response.headers.location,
         requestOptions, //reusing the request options instead of passing in multiple params
-        trace,
-        response.headers["x-resource-status"]
+        trace
       );
     }
     return newAccount;
@@ -395,8 +393,7 @@ const deleteAccount = async (
     // delete returns a 202....suspend return until the new resource is ready
     if (response.hasOwnProperty("statusCode") && 
         response.statusCode === 202 &&
-        response.headers.hasOwnProperty("location") &&
-        response.headers.hasOwnProperty("x-resource-status"))
+        response.headers.hasOwnProperty("location"))
     {    
       await util.pendingResource(
         response.headers.location,

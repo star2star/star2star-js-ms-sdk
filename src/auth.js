@@ -36,14 +36,12 @@ const activateRole = async (
     // create returns a 202....suspend return until the new resource is ready
     if (response.hasOwnProperty("statusCode") && 
         response.statusCode === 202 &&
-        response.headers.hasOwnProperty("location") &&
-        response.headers.hasOwnProperty("x-resource-status"))
+        response.headers.hasOwnProperty("location"))
     {    
       await Util.pendingResource(
         response.headers.location,
         requestOptions, //reusing the request options instead of passing in multiple params
-        trace,
-        response.headers["x-resource-status"]
+        trace
       );
     }
     return { status: "ok" };
@@ -198,14 +196,12 @@ const assignScopedRoleToUserGroup = async (
     const response = await request(requestOptions);
     if (response.hasOwnProperty("statusCode") && 
         response.statusCode === 202 &&
-        response.headers.hasOwnProperty("location") &&
-        response.headers.hasOwnProperty("x-resource-status"))
+        response.headers.hasOwnProperty("location"))
     {    
       await Util.pendingResource(
         response.headers.location,
         requestOptions, //reusing the request options instead of passing in multiple params
-        trace,
-        response.headers["x-resource-status"]
+        trace
       );
     }
     return { "status": "ok" };
@@ -283,14 +279,12 @@ const createUserGroup = async (
     // create returns a 202....suspend return until the new resource is ready
     if (response.hasOwnProperty("statusCode") && 
         response.statusCode === 202 &&
-        response.headers.hasOwnProperty("location") &&
-        response.headers.hasOwnProperty("x-resource-status"))
+        response.headers.hasOwnProperty("location"))
     {    
       await Util.pendingResource(
         response.headers.location,
         requestOptions, //reusing the request options instead of passing in multiple params
-        trace,
-        response.headers["x-resource-status"]
+        trace
       );
     }
     return newGroup;
@@ -334,14 +328,12 @@ const createRole = async (
     // create returns a 202....suspend return until the new resource is ready
     if (response.hasOwnProperty("statusCode") && 
         response.statusCode === 202 &&
-        response.headers.hasOwnProperty("location") &&
-        response.headers.hasOwnProperty("x-resource-status"))
+        response.headers.hasOwnProperty("location"))
     {    
       await Util.pendingResource(
         response.headers.location,
         requestOptions, //reusing the request options instead of passing in multiple params
-        trace,
-        response.headers["x-resource-status"]
+        trace
       );
     }
     return newRole;
@@ -381,14 +373,12 @@ const deactivateRole = async (
     // create returns a 202....suspend return until the new resource is ready
     if (response.hasOwnProperty("statusCode") && 
         response.statusCode === 202 &&
-        response.headers.hasOwnProperty("location") &&
-        response.headers.hasOwnProperty("x-resource-status"))
+        response.headers.hasOwnProperty("location"))
     {    
       await Util.pendingResource(
         response.headers.location,
         requestOptions, //reusing the request options instead of passing in multiple params
-        trace,
-        response.headers["x-resource-status"]
+        trace
       );
     }
     return { "status": "ok" };
@@ -478,14 +468,12 @@ const deleteRole = async (
     // create returns a 202....suspend return until the new resource is ready
     if (response.hasOwnProperty("statusCode") && 
         response.statusCode === 202 &&
-        response.headers.hasOwnProperty("location") &&
-        response.headers.hasOwnProperty("x-resource-status"))
+        response.headers.hasOwnProperty("location"))
     {    
       await Util.pendingResource(
         response.headers.location,
         requestOptions, //reusing the request options instead of passing in multiple params
-        trace,
-        response.headers["x-resource-status"]
+        trace
       );
     }
     return { "status": "ok" };
@@ -1192,14 +1180,12 @@ const modifyRole = async (
     // create returns a 202....suspend return until the new resource is ready
     if (response.hasOwnProperty("statusCode") && 
         response.statusCode === 202 &&
-        response.headers.hasOwnProperty("location") &&
-        response.headers.hasOwnProperty("x-resource-status"))
+        response.headers.hasOwnProperty("location"))
     {    
       await Util.pendingResource(
         response.headers.location,
         requestOptions, //reusing the request options instead of passing in multiple params
-        trace,
-        response.headers["x-resource-status"]
+        trace
       );
     }
     return role;
@@ -1243,14 +1229,12 @@ const modifyUserGroup = async (
     // create returns a 202....suspend return until the new resource is ready
     if (response.hasOwnProperty("statusCode") && 
         response.statusCode === 202 &&
-        response.headers.hasOwnProperty("location") &&
-        response.headers.hasOwnProperty("x-resource-status"))
+        response.headers.hasOwnProperty("location"))
     {    
       await Util.pendingResource(
         response.headers.location,
         requestOptions, //reusing the request options instead of passing in multiple params
-        trace,
-        response.headers["x-resource-status"]
+        trace
       );
     }
     return userGroup;
