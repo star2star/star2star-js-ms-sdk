@@ -551,7 +551,6 @@ const getWfInstanceResults = async function getWfInstanceResults() {
  * @param {number} [offset=0] - pagination offset
  * @param {number} [limit=10] - pagination limit
  * @param {array} [filters=undefined] - optional filters, incuding start_datetime and end_datetime (RFC3339 format), and version
- * @param {boolean} [short=false] - short version of workflow history
  * @param {object} [trace = {}] - optional microservice lifecycle trace headers
  * @returns {Promise}
  */
@@ -584,14 +583,30 @@ const getWfTemplateHistory = async function getWfTemplateHistory() {
       json: true
     };
     util.addRequestTrace(requestOptions, trace);
+    let aggregate = false;
 
     if (filters) {
+      if (filters.hasOwnProperty("aggregate")) {
+        if (typeof filters.aggregate === "boolean") {
+          aggregate = filters.aggregate;
+        }
+
+        delete filters.aggregate;
+      }
+
       Object.keys(filters).forEach(filter => {
         requestOptions.qs[filter] = filters[filter];
       });
     }
 
-    const response = await request(requestOptions);
+    let response;
+
+    if (aggregate) {
+      response = await util.aggregate(request, requestOptions, trace);
+    } else {
+      response = await request(requestOptions);
+    }
+
     return response;
   } catch (error) {
     return Promise.reject(util.formatError(error));

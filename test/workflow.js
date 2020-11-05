@@ -836,9 +836,11 @@ describe("Workflow", function() {
       accessToken,
       wfTemplateUUID,
       0, //offset
-      3, //limit
-      false,
-      { version: "1.0.1" },
+      100000, //limit
+      {
+        version: "1.0.1",
+        aggregate: true
+      },
       trace
     );
     assert.ok(
