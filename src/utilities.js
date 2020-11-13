@@ -343,18 +343,22 @@ const pendingResource = async (resourceLoc, requestOptions, trace, startingResou
         case "processing":
           break;
         case "complete":
-          return Promise.resolve({"status":"ok"});
+          return {"status":"ok"};
         case "failure":
-          throw Error(`failure: ${JSON.stringify(response)}`);
+          throw response;
         default:
-          throw Error(`unrecognized resource status: ${JSON.stringify(response)}`);
+          throw response;
         }
       } else {
-        throw Error(`x-status missing from response: ${JSON.stringify(response)}`);
+        throw `x-status missing from response: ${JSON.stringify(response)}`;
       }
       await new Promise(resolve => setTimeout(resolve, config.pollInterval));
     }
-    throw Error("request timeout");
+    throw {
+      "code": 408,
+      "message": "request timeout",
+      "details": [{"requestOptions": requestOptions}]
+    };
     
   } catch (error) {
     // a fetch on an item we are deleting should return a 404 when complete.

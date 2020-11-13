@@ -70,6 +70,7 @@ process.env.MS_LOGPRETTY = true // defaults to false
 [Please click here for our documentation pages.](https://star2star.github.io/star2star-js-ms-sdk/ "Star2Star Micro Service SDK Documentation")
 
 ## Changes
+* 3.2.47 - improved pending resource utility error logging
 * 3.2.46 - add aggregate to workflow
 * 3.2.45 - update pending resource utility x-status header
 * 3.2.44 - update pending resource utility
