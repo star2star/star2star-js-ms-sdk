@@ -240,7 +240,7 @@ const aggregate = async function aggregate(request, requestOptions) {
         addRequestTrace(requestOptions, nextTrace);
         const response = await request(requestOptions);
         total = response.metadata.total;
-        offset = response.metadata.offset + response.metadata.count;
+        offset = (response.metadata.hasOwnProperty("offset") ? response.metadata.offset : 0) + response.metadata.count;
 
         if (total > offset) {
           requestOptions.qs.offset = offset;
