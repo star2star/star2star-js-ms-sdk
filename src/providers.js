@@ -120,6 +120,58 @@ const listAvailableProviders = async (
 
 /**
  *
+ * @description This function will list 3rd party oauth2 connections/authorizations. 
+ * @param {string} [accessToken="null accessToken"] - CPaaS access token
+ * @param {string} [user_uuid="null userUUID"] - CPaas user uuid
+ * @param {string} [policy_uuid=undefined] - option policy uuid
+ * @param {string} [provider_uuid=undefined] - option provider uuid
+ * @param {string} [userName=undefined] - optional user name
+ * @param {object} [trace={}] - optional cpaas lifecycle headers
+ * @returns {Promise<object>} - Promise resolving to a list of user's providers API connections
+ */
+const listUserProviderConnections = async (
+  accessToken = "no accessToken",
+  user_uuid = "no user uuid",
+  policy_uuid = undefined,
+  provider_uuid = undefined,
+  user_name = undefined,
+  trace = {}
+) => {
+  try {
+    const MS = util.getEndpoint("providers");
+
+    const requestOptions = {
+      method: "GET",
+      uri: `${MS}/users/${user_uuid}/connections`,
+      headers: {
+        "Authorization": `Bearer ${accessToken}`,
+        "Content-type": "application/json",
+        "x-api-version": `${util.getVersion()}`
+      },
+      json: true
+    };
+
+    // add query string filters if we have any
+    const optionalParams = { policy_uuid, provider_uuid, user_name};
+    Object.keys(optionalParams).forEach(option => {
+      if (typeof optionalParams[option] !== "undefined"){
+        if(!requestOptions.hasOwnProperty("qs") || typeof requestOptions.qs !== "object"){
+          requestOptions.qs = {};
+        }
+        requestOptions.qs[option] = optionalParams[option];
+      }
+    });
+
+    util.addRequestTrace(requestOptions, trace);
+    const response = await request(requestOptions);
+    return response;
+  } catch (error) {
+    return Promise.reject(util.formatError(error));
+  }
+};
+
+/**
+ *
  * @description This function will list all the providers of a given user
  * @param {string} [accessToken="null accessToken"] - CPaaS access token
  * @param {string} [userUUID="null userUUID"] - CPaas user uuid
@@ -156,5 +208,6 @@ module.exports = {
   authorizeProvider,
   getProviderToken,
   listAvailableProviders,
+  listUserProviderConnections,
   listUsersProviders
 };

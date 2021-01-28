@@ -172,6 +172,7 @@ toc:
       - getProviderToken
       - listAvailableProviders
       - listUsersProviders
+      - listUserProviderConnections
   - name: Pubsub
     children: 
       - addSubscription

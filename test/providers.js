@@ -66,6 +66,8 @@ describe("Providers", function() {
         creds.password
       );
       accessToken = oauthData.access_token;
+      const idData = await s2sMS.Identity.getMyIdentityData(accessToken);
+      userUUID = idData.user_uuid;
     } catch (error){
       return Promise.reject(error);
     }
@@ -147,15 +149,35 @@ describe("Providers", function() {
     );
     return response;
   },"List all User Providers"));
+
+  it("List A User's Connections", mochaAsync(async () => {
+    if (!creds.isValid) throw new Error("Invalid Credentials");
+    trace = objectMerge({}, trace, Util.generateNewMetaData(trace));
+    const response = await s2sMS.Providers.listUserProviderConnections(
+      accessToken,
+      userUUID,
+      undefined, //policy_uuid filter
+      undefined, // provider uuid filter,
+      undefined, // username filter,
+      trace  
+    );
+    assert.ok(
+      1 === 1,
+      JSON.stringify(response, null, "\t")
+    );
+    return response;
+  },"List A User's Connections"));
+
+  // template
+  // it("change me", mochaAsync(async () => {
+  //   if (!creds.isValid) throw new Error("Invalid Credentials");
+  //   trace = objectMerge({}, trace, Util.generateNewMetaData(trace));
+  //   const response = await somethingAsync();
+  //   assert.ok(
+  //     1 === 1,
+  //     JSON.stringify(response, null, "\t")
+  //   );
+  //   return response;
+  // },"change me"));
 });
 
-// Providers list
-//     { uuid: 'a6db5f71-3a6b-45cc-90fa-4ba5a64c1fbd',
-//       name: 'Zoho',
-//       type: 'identity',
-//     { uuid: '4113039d-61d6-46ab-bc1c-7d66035fc3bf',
-//       name: 'Google Drive',
-//       type: 'identity',
-//     { uuid: '57992b0e-ecf3-4105-a291-1ed755719512',
-//       name: 'Google',
-//       type: 'identity',
