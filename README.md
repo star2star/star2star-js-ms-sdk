@@ -69,7 +69,8 @@ process.env.MS_LOGPRETTY = true // defaults to false
 
 [Please click here for our documentation pages.](https://star2star.github.io/star2star-js-ms-sdk/ "Star2Star Micro Service SDK Documentation")
 
-## Changes
+## Changes\
+* 3.2.50 - fix undefined criteria
 * 3.2.49 - add list provider connections
 * 3.2.48 - fix offset in aggregate utility
 * 3.2.47 - improved pending resource utility error logging
