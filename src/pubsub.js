@@ -10,8 +10,8 @@ const util = require("./utilities");
  * @param {string} [user_uuid="no user uuid provided"] - uuid for a star2star user
  * @param {string} [account_uuid="account uuid not provided "] - account to subscribe to
  * @param {string} [callback_url="not set callback"] - callback URL
- * @param {array} [callback_headers=[]] - callback headers
- * @param {array} [criteria=[]] - filter criteria
+ * @param {array}  [callback_headers=[]] - callback headers
+ * @param {array}  criteria - optional filter criteria
  * @param {object} [subscriptions={}] - events to subscribe to (voice, fax, conferencing, messagin, sms,  presence)
  * @param {string} [accessToken="null accessToken"] - access token for cpaas systems
  * @param {string} [expiresDate=undefined] - optional expires date (RFC3339 format)
@@ -23,7 +23,7 @@ const addSubscription = async (
   account_uuid = "account uuid not provided ",
   callback_url = "not set callback",
   callback_headers = [],
-  criteria = [],
+  criteria,
   subscriptions = {},
   accessToken = "null accessToken",
   expiresDate = undefined,
@@ -84,8 +84,8 @@ const addSubscription = async (
  * @param {string} [accessToken="null accessToken"] - access token for cpaas systems
  * @param {string} [app_uuid="app_uuid uuid not provided "] - account to subscribe to
  * @param {string} [callback_url="not set callback"] - callback URL
- * @param {array} [callback_headers=[]] - callback headers
- * @param {array} [criteria=[]] - filter criteria
+ * @param {array}  [callback_headers=[]] - callback headers
+ * @param {array}  criteria - optional filter criteria
  * @param {object} [events={}] - events to subscribe to (voice, fax, conferencing, messagin, sms,  presence)
  * @param {string} [expiresDate=undefined] - optional expires date (RFC3339 format)
  * @param {object} [trace = {}] - optional microservice lifecycle trace headers
@@ -96,7 +96,7 @@ const addCustomEventSubscription = async (
   app_uuid = "account uuid not provided ",
   callback_url = "not set callback",
   callback_headers = [],
-  criteria = [],
+  criteria,
   events = [],
   expiresDate = undefined,
   trace = {}

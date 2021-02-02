@@ -10,8 +10,8 @@ const util = require("./utilities");
  * @param {string} [user_uuid="no user uuid provided"] - uuid for a star2star user
  * @param {string} [account_uuid="account uuid not provided "] - account to subscribe to
  * @param {string} [callback_url="not set callback"] - callback URL
- * @param {array} [callback_headers=[]] - callback headers
- * @param {array} [criteria=[]] - filter criteria
+ * @param {array}  [callback_headers=[]] - callback headers
+ * @param {array}  criteria - optional filter criteria
  * @param {object} [subscriptions={}] - events to subscribe to (voice, fax, conferencing, messagin, sms,  presence)
  * @param {string} [accessToken="null accessToken"] - access token for cpaas systems
  * @param {string} [expiresDate=undefined] - optional expires date (RFC3339 format)
@@ -25,7 +25,7 @@ const addSubscription = async function addSubscription() {
   let account_uuid = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : "account uuid not provided ";
   let callback_url = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : "not set callback";
   let callback_headers = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : [];
-  let criteria = arguments.length > 4 && arguments[4] !== undefined ? arguments[4] : [];
+  let criteria = arguments.length > 4 ? arguments[4] : undefined;
   let subscriptions = arguments.length > 5 && arguments[5] !== undefined ? arguments[5] : {};
   let accessToken = arguments.length > 6 && arguments[6] !== undefined ? arguments[6] : "null accessToken";
   let expiresDate = arguments.length > 7 && arguments[7] !== undefined ? arguments[7] : undefined;
@@ -85,8 +85,8 @@ const addSubscription = async function addSubscription() {
  * @param {string} [accessToken="null accessToken"] - access token for cpaas systems
  * @param {string} [app_uuid="app_uuid uuid not provided "] - account to subscribe to
  * @param {string} [callback_url="not set callback"] - callback URL
- * @param {array} [callback_headers=[]] - callback headers
- * @param {array} [criteria=[]] - filter criteria
+ * @param {array}  [callback_headers=[]] - callback headers
+ * @param {array}  criteria - optional filter criteria
  * @param {object} [events={}] - events to subscribe to (voice, fax, conferencing, messagin, sms,  presence)
  * @param {string} [expiresDate=undefined] - optional expires date (RFC3339 format)
  * @param {object} [trace = {}] - optional microservice lifecycle trace headers
@@ -99,7 +99,7 @@ const addCustomEventSubscription = async function addCustomEventSubscription() {
   let app_uuid = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : "account uuid not provided ";
   let callback_url = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : "not set callback";
   let callback_headers = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : [];
-  let criteria = arguments.length > 4 && arguments[4] !== undefined ? arguments[4] : [];
+  let criteria = arguments.length > 4 ? arguments[4] : undefined;
   let events = arguments.length > 5 && arguments[5] !== undefined ? arguments[5] : [];
   let expiresDate = arguments.length > 6 && arguments[6] !== undefined ? arguments[6] : undefined;
   let trace = arguments.length > 7 && arguments[7] !== undefined ? arguments[7] : {};
