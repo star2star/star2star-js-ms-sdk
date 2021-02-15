@@ -59,7 +59,7 @@ const authorizeProvider = async function authorizeProvider() {
 
 const getProviderToken = async function getProviderToken() {
   let accessToken = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : "null accessToken";
-  let policyID = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : "null policyID";
+  let policyUUID = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : "null policyUUID";
   let providerUUID = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : "null providerUUID";
   let redirectURL = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : "null redirectURL";
   let userUUID = arguments.length > 4 && arguments[4] !== undefined ? arguments[4] : "null userUUID";
@@ -75,7 +75,7 @@ const getProviderToken = async function getProviderToken() {
         "x-api-version": "".concat(util.getVersion())
       },
       qs: {
-        policy_uuid: policyID,
+        policy_uuid: policyUUID,
         redirect_url: redirectURL,
         user_uuid: userUUID
       },

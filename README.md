@@ -70,6 +70,7 @@ process.env.MS_LOGPRETTY = true // defaults to false
 [Please click here for our documentation pages.](https://star2star.github.io/star2star-js-ms-sdk/ "Star2Star Micro Service SDK Documentation")
 
 ## Changes\
+* 3.2.53 - fix get provider token param nomenclature
 * 3.2.52 - update get provider token to use policy instead of client id
 * 3.2.51 - fix undefined criteria take 2
 * 3.2.50 - fix undefined criteria

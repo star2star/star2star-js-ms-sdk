@@ -55,7 +55,7 @@ const authorizeProvider = async (
  */
 const getProviderToken = async (
   accessToken = "null accessToken",
-  policyID = "null policyID",
+  policyUUID = "null policyUUID",
   providerUUID = "null providerUUID",
   redirectURL = "null redirectURL",
   userUUID = "null userUUID",
@@ -72,7 +72,7 @@ const getProviderToken = async (
         "x-api-version": `${util.getVersion()}`
       },
       qs: {
-        policy_uuid: policyID,
+        policy_uuid: policyUUID,
         redirect_url: redirectURL,
         user_uuid: userUUID
       },
