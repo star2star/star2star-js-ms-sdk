@@ -46,7 +46,7 @@ const authorizeProvider = async (
  *
  * @description This function will redirect the caller to complete oauth2 authorization and redirect the response with access_token to specified URL
  * @param {string} [accessToken="null accessToken"] - CPaaS access token
- * @param {string} [clientID = "null clientID"] - cpaas client id used to generate access token
+ * @param {string} [policyID = "null policyID"] - cpaas provider API policy id used to generate access token
  * @param {string} [providerUUID="null providerUUID"] - Oauth2 provider identifier
  * @param {string} [redirectURL="null redirectURL"] - completed request redirect URL
  * @param {string} [userUUID="null userUUID"] - CPaas user uuid
@@ -55,7 +55,7 @@ const authorizeProvider = async (
  */
 const getProviderToken = async (
   accessToken = "null accessToken",
-  clientID = "null clientID",
+  policyID = "null policyID",
   providerUUID = "null providerUUID",
   redirectURL = "null redirectURL",
   userUUID = "null userUUID",
@@ -69,10 +69,10 @@ const getProviderToken = async (
       uri: `${MS}/providers/${providerUUID}/oauth/token`,
       headers: {
         "Authorization": `Bearer ${accessToken}`,
-        "X-Client-id": clientID,
         "x-api-version": `${util.getVersion()}`
       },
       qs: {
+        policy_uuid: policyID,
         redirect_url: redirectURL,
         user_uuid: userUUID
       },
@@ -211,3 +211,4 @@ module.exports = {
   listUserProviderConnections,
   listUsersProviders
 };
+ 
