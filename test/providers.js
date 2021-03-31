@@ -13,8 +13,6 @@ const Util = require("../src/utilities");
 const Logger = require("../src/node-logger");
 const logger = new Logger.default();
 const objectMerge = require("object-merge");
-const { cursorTo } = require("readline");
-const { type } = require("os");
 const newMeta = Util.generateNewMetaData;
 let trace = newMeta();
 
@@ -42,8 +40,8 @@ let creds = {
 
 describe("Providers", function() {
   let accessToken,
-      connection,
-      userUUID;
+    connection,
+    userUUID;
   
   before(async () => {
     try {
@@ -169,7 +167,6 @@ describe("Providers", function() {
       }
       return acc;
     }, undefined);
-    console.log("CONNECTION!!!", connection);
     assert.ok(
       response.hasOwnProperty("items"),
       JSON.stringify(response, null, "\t")

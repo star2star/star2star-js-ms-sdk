@@ -120,6 +120,9 @@ const getProviderTokenByConnection = async function getProviderTokenByConnection
         "Authorization": "Bearer ".concat(accessToken),
         "x-api-version": "".concat(util.getVersion())
       },
+      qs: {
+        "authorize": true
+      },
       json: true
     };
     util.addRequestTrace(requestOptions, trace);

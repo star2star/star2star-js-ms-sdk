@@ -118,6 +118,9 @@ const getProviderTokenByConnection = async (
         "Authorization": `Bearer ${accessToken}`,
         "x-api-version": `${util.getVersion()}`
       },
+      qs: {
+        "authorize": true
+      },
       json: true
     };
     
