@@ -46,19 +46,20 @@ const authorizeProvider = async (
  *
  * @description This function will redirect the caller to complete oauth2 authorization and redirect the response with access_token to specified URL
  * @param {string} [accessToken="null accessToken"] - CPaaS access token
- * @param {string} [policyID = "null policyID"] - cpaas provider API policy id used to generate access token
- * @param {string} [providerUUID="null providerUUID"] - Oauth2 provider identifier
- * @param {string} [redirectURL="null redirectURL"] - completed request redirect URL
- * @param {string} [userUUID="null userUUID"] - CPaas user uuid
+* @param {string} [providerUUID="null providerUUID"] - Oauth2 provider identifier
+ * @param {string} [policyUUID = "null policyUUID"] - cpaas provider API policy id used to generate access token
+ * @param {string} redirectURL - optional completed request redirect URL
+ * @param {string} providerUser - optional 3rd party user name for CPaaS identities with multiple connections for the same provider
  * @param {object} [trace={}] - optional cpaas lifecycle headers
  * @returns {Promise<object>} - Promise resolving to oauth2 provider access token
  */
+
 const getProviderToken = async (
   accessToken = "null accessToken",
-  policyUUID = "null policyUUID",
   providerUUID = "null providerUUID",
-  redirectURL = "null redirectURL",
-  userUUID = "null userUUID",
+  policyUUID = "null policyUUID",
+  redirectURL,
+  providerUser,
   trace = {}
 ) => {
   try {
@@ -73,11 +74,53 @@ const getProviderToken = async (
       },
       qs: {
         policy_uuid: policyUUID,
-        redirect_url: redirectURL,
-        user_uuid: userUUID
+        authorize: true
       },
       json: true
     };
+
+    if(typeof redirectURL === "string" && redirectURL.length > 0){
+      requestOptions.qs.redirect_url = redirectURL;
+    }
+
+    if(typeof providerUser === "string" && providerUser.length > 0){
+      requestOptions.headers["x-login-hint"] = providerUser;
+    }
+
+    util.addRequestTrace(requestOptions, trace);
+    const response = await request(requestOptions);
+    return response;
+  } catch (error) {
+    return Promise.reject(util.formatError(error));
+  }
+};
+
+/**
+ *
+ * @description This function will return a refreshed access token for the associated provider
+ * @param {string} [accessToken="null accessToken"] - CPaaS access token
+ * @param {string} [connectionUUID = "null connectionUUID"] - provider API connection uuid
+ * @param {object} [trace={}] - optional cpaas lifecycle headers
+ * @returns {Promise<object>} - Promise resolving to oauth2 provider access token
+ */
+const getProviderTokenByConnection = async (
+  accessToken = "null accessToken",
+  connectionUUID = "null connectionUUID",
+  trace = {}
+) => {
+  try {
+    const MS = util.getEndpoint("providers");
+
+    const requestOptions = {
+      method: "GET",
+      uri: `${MS}/users/connections/${connectionUUID}/oauth/token`,
+      headers: {
+        "Authorization": `Bearer ${accessToken}`,
+        "x-api-version": `${util.getVersion()}`
+      },
+      json: true
+    };
+    
     util.addRequestTrace(requestOptions, trace);
     const response = await request(requestOptions);
     return response;
@@ -207,6 +250,7 @@ const listUsersProviders = async (
 module.exports = {
   authorizeProvider,
   getProviderToken,
+  getProviderTokenByConnection,
   listAvailableProviders,
   listUserProviderConnections,
   listUsersProviders

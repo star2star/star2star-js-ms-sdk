@@ -48,10 +48,10 @@ const authorizeProvider = async function authorizeProvider() {
  *
  * @description This function will redirect the caller to complete oauth2 authorization and redirect the response with access_token to specified URL
  * @param {string} [accessToken="null accessToken"] - CPaaS access token
- * @param {string} [policyID = "null policyID"] - cpaas provider API policy id used to generate access token
- * @param {string} [providerUUID="null providerUUID"] - Oauth2 provider identifier
- * @param {string} [redirectURL="null redirectURL"] - completed request redirect URL
- * @param {string} [userUUID="null userUUID"] - CPaas user uuid
+* @param {string} [providerUUID="null providerUUID"] - Oauth2 provider identifier
+ * @param {string} [policyUUID = "null policyUUID"] - cpaas provider API policy id used to generate access token
+ * @param {string} redirectURL - optional completed request redirect URL
+ * @param {string} providerUser - optional 3rd party user name for CPaaS identities with multiple connections for the same provider
  * @param {object} [trace={}] - optional cpaas lifecycle headers
  * @returns {Promise<object>} - Promise resolving to oauth2 provider access token
  */
@@ -59,10 +59,10 @@ const authorizeProvider = async function authorizeProvider() {
 
 const getProviderToken = async function getProviderToken() {
   let accessToken = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : "null accessToken";
-  let policyUUID = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : "null policyUUID";
-  let providerUUID = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : "null providerUUID";
-  let redirectURL = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : "null redirectURL";
-  let userUUID = arguments.length > 4 && arguments[4] !== undefined ? arguments[4] : "null userUUID";
+  let providerUUID = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : "null providerUUID";
+  let policyUUID = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : "null policyUUID";
+  let redirectURL = arguments.length > 3 ? arguments[3] : undefined;
+  let providerUser = arguments.length > 4 ? arguments[4] : undefined;
   let trace = arguments.length > 5 && arguments[5] !== undefined ? arguments[5] : {};
 
   try {
@@ -76,8 +76,49 @@ const getProviderToken = async function getProviderToken() {
       },
       qs: {
         policy_uuid: policyUUID,
-        redirect_url: redirectURL,
-        user_uuid: userUUID
+        authorize: true
+      },
+      json: true
+    };
+
+    if (typeof redirectURL === "string" && redirectURL.length > 0) {
+      requestOptions.qs.redirect_url = redirectURL;
+    }
+
+    if (typeof providerUser === "string" && providerUser.length > 0) {
+      requestOptions.headers["x-login-hint"] = providerUser;
+    }
+
+    util.addRequestTrace(requestOptions, trace);
+    const response = await request(requestOptions);
+    return response;
+  } catch (error) {
+    return Promise.reject(util.formatError(error));
+  }
+};
+/**
+ *
+ * @description This function will return a refreshed access token for the associated provider
+ * @param {string} [accessToken="null accessToken"] - CPaaS access token
+ * @param {string} [connectionUUID = "null connectionUUID"] - provider API connection uuid
+ * @param {object} [trace={}] - optional cpaas lifecycle headers
+ * @returns {Promise<object>} - Promise resolving to oauth2 provider access token
+ */
+
+
+const getProviderTokenByConnection = async function getProviderTokenByConnection() {
+  let accessToken = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : "null accessToken";
+  let connectionUUID = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : "null connectionUUID";
+  let trace = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : {};
+
+  try {
+    const MS = util.getEndpoint("providers");
+    const requestOptions = {
+      method: "GET",
+      uri: "".concat(MS, "/users/connections/").concat(connectionUUID, "/oauth/token"),
+      headers: {
+        "Authorization": "Bearer ".concat(accessToken),
+        "x-api-version": "".concat(util.getVersion())
       },
       json: true
     };
@@ -213,6 +254,7 @@ const listUsersProviders = async function listUsersProviders() {
 module.exports = {
   authorizeProvider,
   getProviderToken,
+  getProviderTokenByConnection,
   listAvailableProviders,
   listUserProviderConnections,
   listUsersProviders

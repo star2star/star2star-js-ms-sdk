@@ -12,8 +12,9 @@ const s2sMS = require("../src/index");
 const Util = require("../src/utilities");
 const Logger = require("../src/node-logger");
 const logger = new Logger.default();
-const uuidv4 = require("uuid/v4");
 const objectMerge = require("object-merge");
+const { cursorTo } = require("readline");
+const { type } = require("os");
 const newMeta = Util.generateNewMetaData;
 let trace = newMeta();
 
@@ -41,9 +42,7 @@ let creds = {
 
 describe("Providers", function() {
   let accessToken,
-      clientID,
-      providerUUID,
-      redirectURL,
+      connection,
       userUUID;
   
   before(async () => {
@@ -139,8 +138,7 @@ describe("Providers", function() {
     trace = objectMerge({}, trace, Util.generateNewMetaData(trace));
     const response = await s2sMS.Providers.listUsersProviders(
       accessToken,
-      // userUUID,
-      "9e11c9a7-b03f-4cb3-b6aa-66f6f060aef3",
+      userUUID,
       trace
     );
     assert.ok(
@@ -161,12 +159,60 @@ describe("Providers", function() {
       undefined, // username filter,
       trace  
     );
+    
+    // get a gonnection with a username to use for following tests
+    connection = response.items.reduce((cur, acc) => {
+      if(!acc) {
+        if(cur.hasOwnProperty("user_name") && cur.user_name.length > 0){
+          return cur;
+        }
+      }
+      return acc;
+    }, undefined);
+    console.log("CONNECTION!!!", connection);
     assert.ok(
-      1 === 1,
+      response.hasOwnProperty("items"),
       JSON.stringify(response, null, "\t")
     );
     return response;
   },"List A User's Connections"));
+  
+  it("Get Token by Connection", mochaAsync(async () => {
+    if (!creds.isValid) throw new Error("Invalid Credentials");
+    trace = objectMerge({}, trace, Util.generateNewMetaData(trace));
+    const response = await s2sMS.Providers.getProviderTokenByConnection(
+      accessToken,
+      connection.uuid,
+      trace  
+    );
+    assert.ok(
+      response.hasOwnProperty("access_token") &&
+      typeof response.access_token === "string" &&
+      response.access_token.length > 0,
+      JSON.stringify(response, null, "\t")
+    );
+    return response;
+  },"Get Token by Connection"));
+
+  it("Get Token by Policy", mochaAsync(async () => {
+    if (!creds.isValid) throw new Error("Invalid Credentials");
+    trace = objectMerge({}, trace, Util.generateNewMetaData(trace));
+    const response = await s2sMS.Providers.getProviderToken(
+      accessToken,
+      connection.provider_uuid,
+      connection.policy_uuid,
+      undefined, //redirectURI
+      connection.user_name,
+      trace  
+    );
+    assert.ok(
+      response.hasOwnProperty("access_token") &&
+      typeof response.access_token === "string" &&
+      response.access_token.length > 0,
+      JSON.stringify(response, null, "\t")
+    );
+    return response;
+  },"Get Token by Policy"));
 
   // template
   // it("change me", mochaAsync(async () => {

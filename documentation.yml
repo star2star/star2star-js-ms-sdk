@@ -170,6 +170,7 @@ toc:
     children:
       - authorizeProvider
       - getProviderToken
+      - getProviderTokenByConnection
       - listAvailableProviders
       - listUsersProviders
       - listUserProviderConnections
