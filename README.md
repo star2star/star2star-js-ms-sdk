@@ -70,6 +70,7 @@ process.env.MS_LOGPRETTY = true // defaults to false
 [Please click here for our documentation pages.](https://star2star.github.io/star2star-js-ms-sdk/ "Star2Star Micro Service SDK Documentation")
 
 ## Changes\
+* 3.3.2 - add optional user uuid param to get token from provider
 * 3.3.1 - add query param to refresh token when requested
 * 3.3.0 - add token support for provider connection uuids
 * 3.2.53 - fix get provider token param nomenclature

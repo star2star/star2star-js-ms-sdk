@@ -48,8 +48,9 @@ const authorizeProvider = async function authorizeProvider() {
  *
  * @description This function will redirect the caller to complete oauth2 authorization and redirect the response with access_token to specified URL
  * @param {string} [accessToken="null accessToken"] - CPaaS access token
-* @param {string} [providerUUID="null providerUUID"] - Oauth2 provider identifier
+ * @param {string} [providerUUID="null providerUUID"] - Oauth2 provider identifier
  * @param {string} [policyUUID = "null policyUUID"] - cpaas provider API policy id used to generate access token
+ * @param {string} userUUID - optional cpaas user uuid. only required if the access_token does not belong to the cpaas user
  * @param {string} redirectURL - optional completed request redirect URL
  * @param {string} providerUser - optional 3rd party user name for CPaaS identities with multiple connections for the same provider
  * @param {object} [trace={}] - optional cpaas lifecycle headers
@@ -61,9 +62,10 @@ const getProviderToken = async function getProviderToken() {
   let accessToken = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : "null accessToken";
   let providerUUID = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : "null providerUUID";
   let policyUUID = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : "null policyUUID";
-  let redirectURL = arguments.length > 3 ? arguments[3] : undefined;
-  let providerUser = arguments.length > 4 ? arguments[4] : undefined;
-  let trace = arguments.length > 5 && arguments[5] !== undefined ? arguments[5] : {};
+  let userUUID = arguments.length > 3 ? arguments[3] : undefined;
+  let redirectURL = arguments.length > 4 ? arguments[4] : undefined;
+  let providerUser = arguments.length > 5 ? arguments[5] : undefined;
+  let trace = arguments.length > 6 && arguments[6] !== undefined ? arguments[6] : {};
 
   try {
     const MS = util.getEndpoint("providers");
@@ -80,6 +82,10 @@ const getProviderToken = async function getProviderToken() {
       },
       json: true
     };
+
+    if (typeof userUUID === "string" && userUUID.length > 0) {
+      requestOptions.headers["x-login-hint"] = userUUID;
+    }
 
     if (typeof redirectURL === "string" && redirectURL.length > 0) {
       requestOptions.qs.redirect_url = redirectURL;

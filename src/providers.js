@@ -46,8 +46,9 @@ const authorizeProvider = async (
  *
  * @description This function will redirect the caller to complete oauth2 authorization and redirect the response with access_token to specified URL
  * @param {string} [accessToken="null accessToken"] - CPaaS access token
-* @param {string} [providerUUID="null providerUUID"] - Oauth2 provider identifier
+ * @param {string} [providerUUID="null providerUUID"] - Oauth2 provider identifier
  * @param {string} [policyUUID = "null policyUUID"] - cpaas provider API policy id used to generate access token
+ * @param {string} userUUID - optional cpaas user uuid. only required if the access_token does not belong to the cpaas user
  * @param {string} redirectURL - optional completed request redirect URL
  * @param {string} providerUser - optional 3rd party user name for CPaaS identities with multiple connections for the same provider
  * @param {object} [trace={}] - optional cpaas lifecycle headers
@@ -58,6 +59,7 @@ const getProviderToken = async (
   accessToken = "null accessToken",
   providerUUID = "null providerUUID",
   policyUUID = "null policyUUID",
+  userUUID,
   redirectURL,
   providerUser,
   trace = {}
@@ -78,6 +80,10 @@ const getProviderToken = async (
       },
       json: true
     };
+
+    if(typeof userUUID === "string" && userUUID.length > 0){
+      requestOptions.headers["x-login-hint"] = userUUID;
+    }
 
     if(typeof redirectURL === "string" && redirectURL.length > 0){
       requestOptions.qs.redirect_url = redirectURL;

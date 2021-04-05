@@ -167,6 +167,7 @@ describe("Providers", function() {
       }
       return acc;
     }, undefined);
+    console.log("connection!!!", connection);
     assert.ok(
       response.hasOwnProperty("items"),
       JSON.stringify(response, null, "\t")
