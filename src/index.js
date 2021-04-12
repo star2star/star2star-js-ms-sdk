@@ -21,6 +21,7 @@ const ResourceGroups = require("./resourceGroups");
 const Scheduler = require("./scheduler");
 const Metadata = require("./metadata");
 const Mobile = require("./mobile");
+const Form = require("./form");
 
 let cpaasKey;
 
@@ -131,5 +132,6 @@ module.exports = {
   ResourceGroups,
   Scheduler,
   Metadata,
-  Mobile
+  Mobile,
+  Form
 };

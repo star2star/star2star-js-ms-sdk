@@ -20,7 +20,8 @@
     "WORKFLOW": "/workflow",
     "PROVIDERS": "/providers",
     "METADATA": "/metadata",
-    "MOBILE": "/mobilenotification"
+    "MOBILE": "/mobilenotification",
+    "FORM": "/forms"
   },
   "msDelay": 1000,
   "pollInterval": 1000,
