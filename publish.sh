@@ -51,8 +51,8 @@ npm set //${REGISTRY}/:_authToken $TOKEN
 #return log level to normal for the build and publish
 npm config set loglevel=${LOGLEVEL}
 
-npm run clean && npm run build && npm run doc && npm publish
-
+# npm run clean && npm run build && npm run doc && npm publish
+npm publish
 
 
 
