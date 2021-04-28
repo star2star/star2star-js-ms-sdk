@@ -1,6 +1,6 @@
 {
   "name": "star2star-js-ms-sdk",
-  "version": "3.3.3",
+  "version": "3.3.4",
   "description": "Star2Star JavaScript Micro Service SDK",
   "main": "./dist/index.js",
   "scripts": {
@@ -38,10 +38,10 @@
     "@babel/preset-env": "7.4.2",
     "@babel/register": "7.0.0",
     "assert": "1.4.1",
-    "documentation": "8.0.2",
+    "documentation": "13.2.1",
     "eslint": "5.1.0",
     "eslint-plugin-react": "7.10.0",
-    "mocha": "5.2.0"
+    "mocha": "8.3.2"
   },
   "publishConfig": {
     "registry": "https://registry.npmjs.org"
