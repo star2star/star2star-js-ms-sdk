@@ -13,6 +13,8 @@ toc:
   - name: Auth
     children:
       - activateRole
+      - addUsersToGroup
+      - addResourceToGroup
       - assignPermissionsToRole
       - assignRolesToUserGroup
       - assignScopedRoleToUserGroup
@@ -24,6 +26,8 @@ toc:
       - deleteRole
       - deleteRoleFromUserGroup
       - getAccountDefaultGroups
+      - getApplicationDefaultResourceGroups
+      - getApplicationDefaultUserGroups
       - getResourceUsers
       - getResourceGroupRoles
       - getRole
@@ -39,6 +43,8 @@ toc:
       - listUserGroups
       - modifyRole
       - modifyUserGroup
+      - removeResourceFromGroup
+      - removeUsersFromGroup
   - name: Chat
     children:
       - addMember
@@ -66,6 +72,9 @@ toc:
   - name: Email
     children:
       - sendEmail
+  - name: Forms
+    children:
+      - listUserForms
   - name: Groups
     children:
       - addMembersToGroup

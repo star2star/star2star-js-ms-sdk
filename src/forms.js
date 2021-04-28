@@ -2,7 +2,6 @@
 "use strict";
 
 const request = require("request-promise");
-const { Console } = require("winston/lib/winston/transports");
 const util = require("./utilities");
 
 
@@ -52,8 +51,7 @@ const listUserForms = async (
     const response = await request(requestOptions);
     return response;
   } catch (error) {
-      console.log('jjjj', error)
-    return Promise.reject(util.formatError(error));
+    throw util.formatError(error);
   }
 };
 

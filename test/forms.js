@@ -12,7 +12,6 @@ const s2sMS = require("../src/index");
 const Util = require("../src/utilities");
 const Logger = require("../src/node-logger");
 const logger = new Logger.default();
-const uuidv4 = require("uuid/v4");
 const objectMerge = require("object-merge");
 const newMeta = Util.generateNewMetaData;
 let trace = newMeta();
@@ -41,10 +40,7 @@ let creds = {
 
 describe("Form", function() {
   let accessToken,
-  identityData,
-    version;
-
-  const groupName = "UNIT-TEST-GROUP";
+    identityData;
 
   before(async () => {
     try {
@@ -73,7 +69,6 @@ describe("Form", function() {
       identityData = await s2sMS.Identity.getIdentityDetails(accessToken, idData.user_uuid);
       creds.isValid = true;
     } catch (error){
-        console.log('eeee', JSON.stringify(error))
       return Promise.reject(error);
     }
   });
@@ -82,7 +77,7 @@ describe("Form", function() {
     try{
       if (!creds.isValid) throw new Error("Invalid Credentials");
       trace = objectMerge({}, trace, Util.generateNewMetaData(trace));
-      const response = await s2sMS.Form.listUserForms(
+      const response = await s2sMS.Forms.listUserForms(
         accessToken,
         identityData.account_uuid,
         undefined,
