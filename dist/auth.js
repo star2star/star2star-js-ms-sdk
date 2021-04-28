@@ -52,6 +52,100 @@ const activateRole = async function activateRole() {
   }
 };
 /**
+ * @description This function adds users to a user group
+ * @param {string} [accessToken="null accessToken"] - CPaaS access token
+ * @param {string} [userGroupUUID="null userGroupUUID"] - user group uuid
+ * @param {array} [users="null members"] - array of user uuids
+ * @param {object} [trace={}] - optional CPaaS lifecycle headers
+ * @returns {Promise<object>} - Promise resolving to the updated user group
+ */
+
+
+const addUsersToGroup = async function addUsersToGroup() {
+  let accessToken = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : "null accessToken";
+  let userGroupUUID = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : "null userGroupUUID";
+  let users = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : "null members";
+  let trace = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : {};
+
+  try {
+    const MS = Util.getEndpoint("auth");
+    const requestOptions = {
+      method: "POST",
+      uri: "".concat(MS, "/user-groups/").concat(userGroupUUID, "/users"),
+      body: {
+        "users": users
+      },
+      headers: {
+        "Content-type": "application/json",
+        Authorization: "Bearer ".concat(accessToken),
+        "x-api-version": "".concat(Util.getVersion())
+      },
+      resolveWithFullResponse: true,
+      json: true
+    };
+    Util.addRequestTrace(requestOptions, trace);
+    const response = await request(requestOptions);
+    const group = response.body; // create returns a 202....suspend return until the new resource is ready
+
+    if (response.hasOwnProperty("statusCode") && response.statusCode === 202 && response.headers.hasOwnProperty("location")) {
+      await Util.pendingResource(response.headers.location, requestOptions, //reusing the request options instead of passing in multiple params
+      trace);
+    }
+
+    return group;
+  } catch (error) {
+    throw Util.formatError(error);
+  }
+};
+/**
+ *
+ * @description This function adds resources to a resource group
+ * @param {string} [accessToken="null accessToken"] - CPaaS access token
+ * @param {string} [resourceGroup="null resourceGroup"] - uuide of resource group to modify
+ * @param {array} [resources="null resources"] - array of resource uuids to add to group
+ * @param {object} [trace = {}] - optional microservice lifecycle trace headers
+ * @returns {Promise<object>} - Promise resolving to a status data object
+ */
+
+
+const addResourceToGroup = async function addResourceToGroup() {
+  let accessToken = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : "null accessToken";
+  let resourceGroup = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : "null resourceGroup";
+  let resources = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : "null resources";
+  let trace = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : {};
+
+  try {
+    const MS = Util.getEndpoint("auth");
+    const requestOptions = {
+      method: "POST",
+      uri: "".concat(MS, "/resource-groups/").concat(resourceGroup, "/resources"),
+      headers: {
+        Authorization: "Bearer ".concat(accessToken),
+        "Content-type": "application/json",
+        "x-api-version": "".concat(Util.getVersion())
+      },
+      body: {
+        "resources": resources
+      },
+      resolveWithFullResponse: true,
+      json: true
+    };
+    Util.addRequestTrace(requestOptions, trace);
+    const response = await request(requestOptions); // create returns a 202....suspend return until the new resource is ready
+
+    if (response.hasOwnProperty("statusCode") && response.statusCode === 202 && response.headers.hasOwnProperty("location")) {
+      await Util.pendingResource(response.headers.location, requestOptions, //reusing the request options instead of passing in multiple params
+      trace);
+    }
+
+    return {
+      status: "ok"
+    };
+  } catch (error) {
+    return Promise.reject(Util.formatError(error));
+  }
+};
+/**
  * @async
  * @description This function will assign a permission to a role.
  * @param {string} [accessToken="null accessToken"] - cpaas access token
@@ -577,6 +671,81 @@ const getAccountDefaultGroups = async function getAccountDefaultGroups() {
     return retObj;
   } catch (error) {
     return Promise.reject(Util.formatError(error));
+  }
+};
+/**
+ * @description This function returns an oAuth client application default resource groups
+ * @param {string} [accessToken="null accessToken"] - CPaaS access token
+ * @param {string} [applicationUUID="null applicationUUID"] - oauth2 client application uuid
+ * @param {object} [trace = {}] - optional microservice lifecycle trace headers 
+ * @returns {Promise<object>} - promise resolving to object containing default resource groups.
+ */
+
+
+const getApplicationDefaultResourceGroups = async function getApplicationDefaultResourceGroups() {
+  let accessToken = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : "null accessToken";
+  let applicationUUID = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : "null applicationUUID";
+  let trace = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : {};
+
+  try {
+    const MS = Util.getEndpoint("auth");
+    const requestOptions = {
+      method: "GET",
+      uri: "".concat(MS, "/applications/").concat(applicationUUID, "/resource-groups"),
+      headers: {
+        Authorization: "Bearer ".concat(accessToken),
+        "Content-type": "application/json",
+        "x-api-version": "".concat(Util.getVersion())
+      },
+      qs: {
+        "default": true
+      },
+      json: true
+    };
+    Util.addRequestTrace(requestOptions, trace);
+    const response = await request(requestOptions);
+    return response;
+  } catch (error) {
+    throw Util.formatError(error);
+  }
+};
+/**
+ * @description This function returns an oAuth client application default user groups
+ * @param {string} [accessToken="null accessToken"] - CPaaS access token
+ * @param {string} [applicationUUID="null applicationUUID"] - oauth2 client application uuid
+  * @param {string} [type="user"] - optional type ["user", "admin", "forbidden"]
+ * @param {object} [trace = {}] - optional microservice lifecycle trace headers 
+ * @returns {Promise<object>} - promise resolving to object containing default resource groups.
+ */
+
+
+const getApplicationDefaultUserGroups = async function getApplicationDefaultUserGroups() {
+  let accessToken = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : "null accessToken";
+  let applicationUUID = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : "null applicationUUID";
+  let type = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : "user";
+  let trace = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : {};
+
+  try {
+    const MS = Util.getEndpoint("auth");
+    const requestOptions = {
+      method: "GET",
+      uri: "".concat(MS, "/applications/").concat(applicationUUID, "/user-groups"),
+      headers: {
+        Authorization: "Bearer ".concat(accessToken),
+        "Content-type": "application/json",
+        "x-api-version": "".concat(Util.getVersion())
+      },
+      qs: {
+        "default": true,
+        "type": type
+      },
+      json: true
+    };
+    Util.addRequestTrace(requestOptions, trace);
+    const response = await request(requestOptions);
+    return response;
+  } catch (error) {
+    throw Util.formatError(error);
   }
 };
 /**
@@ -1238,9 +1407,105 @@ const modifyUserGroup = async function modifyUserGroup() {
     return Promise.reject(Util.formatError(error));
   }
 };
+/**
+ *
+ * @description This function removes resources from a resource group
+ * @param {string} [accessToken="null accessToken"] - CPaaS access token
+ * @param {string} [resourceGroup="null resourceGroup"] - uuide of resource group to modify
+ * @param {array} [resources="null resources"] - array of resource uuids to add to group
+ * @param {object} [trace = {}] - optional microservice lifecycle trace headers
+ * @returns {Promise<object>} - Promise resolving to a status data object
+ */
+
+
+const removeResourceFromGroup = async function removeResourceFromGroup() {
+  let accessToken = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : "null accessToken";
+  let resourceGroup = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : "null resourceGroup";
+  let resources = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : "null resources";
+  let trace = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : {};
+
+  try {
+    const MS = Util.getEndpoint("auth");
+    const requestOptions = {
+      method: "POST",
+      uri: "".concat(MS, "/resource-groups/").concat(resourceGroup, "/resources/remove"),
+      headers: {
+        Authorization: "Bearer ".concat(accessToken),
+        "Content-type": "application/json",
+        "x-api-version": "".concat(Util.getVersion())
+      },
+      body: {
+        "resources": resources
+      },
+      resolveWithFullResponse: true,
+      json: true
+    };
+    Util.addRequestTrace(requestOptions, trace);
+    const response = await request(requestOptions); // create returns a 202....suspend return until the new resource is ready
+
+    if (response.hasOwnProperty("statusCode") && response.statusCode === 202 && response.headers.hasOwnProperty("location")) {
+      await Util.pendingResource(response.headers.location, requestOptions, //reusing the request options instead of passing in multiple params
+      trace);
+    }
+
+    return {
+      status: "ok"
+    };
+  } catch (error) {
+    return Promise.reject(Util.formatError(error));
+  }
+};
+/**
+ * @description This function removes users from a user group
+ * @param {string} [accessToken="null accessToken"] - CPaaS access token
+ * @param {string} [userGroupUUID="null userGroupUUID"] - user group uuid
+ * @param {array} [users="null members"] - array of user uuids
+ * @param {object} [trace={}] - optional CPaaS lifecycle headers
+ * @returns {Promise<object>} - Promise resolving to the updated user group
+ */
+
+
+const removeUsersFromGroup = async function removeUsersFromGroup() {
+  let accessToken = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : "null accessToken";
+  let userGroupUUID = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : "null userGroupUUID";
+  let users = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : "null users";
+  let trace = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : {};
+
+  try {
+    const MS = Util.getEndpoint("auth");
+    const requestOptions = {
+      method: "POST",
+      uri: "".concat(MS, "/user-groups/").concat(userGroupUUID, "/users/remove"),
+      body: {
+        "users": users
+      },
+      headers: {
+        "Content-type": "application/json",
+        Authorization: "Bearer ".concat(accessToken),
+        "x-api-version": "".concat(Util.getVersion())
+      },
+      resolveWithFullResponse: true,
+      json: true
+    };
+    Util.addRequestTrace(requestOptions, trace);
+    const response = await request(requestOptions);
+    const group = response.body; // create returns a 202....suspend return until the new resource is ready
+
+    if (response.hasOwnProperty("statusCode") && response.statusCode === 202 && response.headers.hasOwnProperty("location")) {
+      await Util.pendingResource(response.headers.location, requestOptions, //reusing the request options instead of passing in multiple params
+      trace);
+    }
+
+    return group;
+  } catch (error) {
+    throw Util.formatError(error);
+  }
+};
 
 module.exports = {
   activateRole,
+  addUsersToGroup,
+  addResourceToGroup,
   assignPermissionsToRole,
   assignRolesToUserGroup,
   assignScopedRoleToUserGroup,
@@ -1252,6 +1517,8 @@ module.exports = {
   deleteRole,
   deleteRoleFromUserGroup,
   getAccountDefaultGroups,
+  getApplicationDefaultResourceGroups,
+  getApplicationDefaultUserGroups,
   getResourceUsers,
   getResourceGroupRoles,
   getRole,
@@ -1266,5 +1533,7 @@ module.exports = {
   listRolesForUser,
   listUserGroups,
   modifyRole,
-  modifyUserGroup
+  modifyUserGroup,
+  removeResourceFromGroup,
+  removeUsersFromGroup
 };

@@ -3,9 +3,6 @@
 
 const request = require("request-promise");
 
-const _require = require("winston/lib/winston/transports"),
-      Console = _require.Console;
-
 const util = require("./utilities");
 /**
  * @async
@@ -57,8 +54,7 @@ const listUserForms = async function listUserForms() {
     const response = await request(requestOptions);
     return response;
   } catch (error) {
-    console.log('jjjj', error);
-    return Promise.reject(util.formatError(error));
+    throw util.formatError(error);
   }
 };
 
