@@ -52,6 +52,54 @@ const activateRole = async function activateRole() {
   }
 };
 /**
+ *
+ * @description This function adds resources to a resource group
+ * @param {string} [accessToken="null accessToken"] - CPaaS access token
+ * @param {string} [resourceGroup="null resourceGroup"] - uuide of resource group to modify
+ * @param {array} [resources="null resources"] - array of resource uuids to add to group
+ * @param {object} [trace = {}] - optional microservice lifecycle trace headers
+ * @returns {Promise<object>} - Promise resolving to a status data object
+ */
+
+
+const addResourcesToGroup = async function addResourcesToGroup() {
+  let accessToken = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : "null accessToken";
+  let resourceGroup = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : "null resourceGroup";
+  let resources = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : "null resources";
+  let trace = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : {};
+
+  try {
+    const MS = Util.getEndpoint("auth");
+    const requestOptions = {
+      method: "POST",
+      uri: "".concat(MS, "/resource-groups/").concat(resourceGroup, "/resources"),
+      headers: {
+        Authorization: "Bearer ".concat(accessToken),
+        "Content-type": "application/json",
+        "x-api-version": "".concat(Util.getVersion())
+      },
+      body: {
+        resources: resources
+      },
+      resolveWithFullResponse: true,
+      json: true
+    };
+    Util.addRequestTrace(requestOptions, trace);
+    const response = await request(requestOptions); // create returns a 202....suspend return until the new resource is ready
+
+    if (response.hasOwnProperty("statusCode") && response.statusCode === 202 && response.headers.hasOwnProperty("location")) {
+      await Util.pendingResource(response.headers.location, requestOptions, //reusing the request options instead of passing in multiple params
+      trace);
+    }
+
+    return {
+      status: "ok"
+    };
+  } catch (error) {
+    return Promise.reject(Util.formatError(error));
+  }
+};
+/**
  * @description This function adds users to a user group
  * @param {string} [accessToken="null accessToken"] - CPaaS access token
  * @param {string} [userGroupUUID="null userGroupUUID"] - user group uuid
@@ -95,54 +143,6 @@ const addUsersToGroup = async function addUsersToGroup() {
     return group;
   } catch (error) {
     throw Util.formatError(error);
-  }
-};
-/**
- *
- * @description This function adds resources to a resource group
- * @param {string} [accessToken="null accessToken"] - CPaaS access token
- * @param {string} [resourceGroup="null resourceGroup"] - uuide of resource group to modify
- * @param {array} [resources="null resources"] - array of resource uuids to add to group
- * @param {object} [trace = {}] - optional microservice lifecycle trace headers
- * @returns {Promise<object>} - Promise resolving to a status data object
- */
-
-
-const addResourceToGroup = async function addResourceToGroup() {
-  let accessToken = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : "null accessToken";
-  let resourceGroup = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : "null resourceGroup";
-  let resources = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : "null resources";
-  let trace = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : {};
-
-  try {
-    const MS = Util.getEndpoint("auth");
-    const requestOptions = {
-      method: "POST",
-      uri: "".concat(MS, "/resource-groups/").concat(resourceGroup, "/resources"),
-      headers: {
-        Authorization: "Bearer ".concat(accessToken),
-        "Content-type": "application/json",
-        "x-api-version": "".concat(Util.getVersion())
-      },
-      body: {
-        "resources": resources
-      },
-      resolveWithFullResponse: true,
-      json: true
-    };
-    Util.addRequestTrace(requestOptions, trace);
-    const response = await request(requestOptions); // create returns a 202....suspend return until the new resource is ready
-
-    if (response.hasOwnProperty("statusCode") && response.statusCode === 202 && response.headers.hasOwnProperty("location")) {
-      await Util.pendingResource(response.headers.location, requestOptions, //reusing the request options instead of passing in multiple params
-      trace);
-    }
-
-    return {
-      status: "ok"
-    };
-  } catch (error) {
-    return Promise.reject(Util.formatError(error));
   }
 };
 /**
@@ -698,7 +698,7 @@ const getApplicationDefaultResourceGroups = async function getApplicationDefault
         "x-api-version": "".concat(Util.getVersion())
       },
       qs: {
-        "default": true
+        "default": "true"
       },
       json: true
     };
@@ -736,7 +736,7 @@ const getApplicationDefaultUserGroups = async function getApplicationDefaultUser
         "x-api-version": "".concat(Util.getVersion())
       },
       qs: {
-        "default": true,
+        "default": "true",
         "type": type
       },
       json: true
@@ -1504,8 +1504,8 @@ const removeUsersFromGroup = async function removeUsersFromGroup() {
 
 module.exports = {
   activateRole,
+  addResourcesToGroup,
   addUsersToGroup,
-  addResourceToGroup,
   assignPermissionsToRole,
   assignRolesToUserGroup,
   assignScopedRoleToUserGroup,

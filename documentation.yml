@@ -13,8 +13,8 @@ toc:
   - name: Auth
     children:
       - activateRole
+      - addResourcesToGroup
       - addUsersToGroup
-      - addResourceToGroup
       - assignPermissionsToRole
       - assignRolesToUserGroup
       - assignScopedRoleToUserGroup
