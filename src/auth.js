@@ -51,6 +51,54 @@ const activateRole = async (
 };
 
 /**
+ *
+ * @description This function adds resources to a resource group
+ * @param {string} [accessToken="null accessToken"] - CPaaS access token
+ * @param {string} [resourceGroup="null resourceGroup"] - uuide of resource group to modify
+ * @param {array} [resources="null resources"] - array of resource uuids to add to group
+ * @param {object} [trace = {}] - optional microservice lifecycle trace headers
+ * @returns {Promise<object>} - Promise resolving to a status data object
+ */
+const addResourcesToGroup = async (
+  accessToken = "null accessToken",
+  resourceGroup = "null resourceGroup" ,
+  resources = "null resources",
+  trace = {}
+) => {
+  try {
+    const MS = Util.getEndpoint("auth");
+    const requestOptions = {
+      method: "POST",
+      uri: `${MS}/resource-groups/${resourceGroup}/resources`,
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+        "Content-type": "application/json",
+        "x-api-version": `${Util.getVersion()}`
+      },
+      body: {resources: resources},
+      resolveWithFullResponse: true,
+      json: true
+    };
+    Util.addRequestTrace(requestOptions, trace);
+    const response = await request(requestOptions);
+    // create returns a 202....suspend return until the new resource is ready
+    if (response.hasOwnProperty("statusCode") && 
+        response.statusCode === 202 &&
+        response.headers.hasOwnProperty("location"))
+    {    
+      await Util.pendingResource(
+        response.headers.location,
+        requestOptions, //reusing the request options instead of passing in multiple params
+        trace
+      );
+    }
+    return { status: "ok" };
+  } catch (error) {
+    return Promise.reject(Util.formatError(error));
+  }
+};
+
+/**
  * @description This function adds users to a user group
  * @param {string} [accessToken="null accessToken"] - CPaaS access token
  * @param {string} [userGroupUUID="null userGroupUUID"] - user group uuid
@@ -97,54 +145,6 @@ const addUsersToGroup = async (
     return group;
   } catch (error) {
     throw Util.formatError(error);
-  }
-};
-
-/**
- *
- * @description This function adds resources to a resource group
- * @param {string} [accessToken="null accessToken"] - CPaaS access token
- * @param {string} [resourceGroup="null resourceGroup"] - uuide of resource group to modify
- * @param {array} [resources="null resources"] - array of resource uuids to add to group
- * @param {object} [trace = {}] - optional microservice lifecycle trace headers
- * @returns {Promise<object>} - Promise resolving to a status data object
- */
-const addResourceToGroup = async (
-  accessToken = "null accessToken",
-  resourceGroup = "null resourceGroup" ,
-  resources = "null resources",
-  trace = {}
-) => {
-  try {
-    const MS = Util.getEndpoint("auth");
-    const requestOptions = {
-      method: "POST",
-      uri: `${MS}/resource-groups/${resourceGroup}/resources`,
-      headers: {
-        Authorization: `Bearer ${accessToken}`,
-        "Content-type": "application/json",
-        "x-api-version": `${Util.getVersion()}`
-      },
-      body: {"resources": resources},
-      resolveWithFullResponse: true,
-      json: true
-    };
-    Util.addRequestTrace(requestOptions, trace);
-    const response = await request(requestOptions);
-    // create returns a 202....suspend return until the new resource is ready
-    if (response.hasOwnProperty("statusCode") && 
-        response.statusCode === 202 &&
-        response.headers.hasOwnProperty("location"))
-    {    
-      await Util.pendingResource(
-        response.headers.location,
-        requestOptions, //reusing the request options instead of passing in multiple params
-        trace
-      );
-    }
-    return { status: "ok" };
-  } catch (error) {
-    return Promise.reject(Util.formatError(error));
   }
 };
 
@@ -715,7 +715,7 @@ const getApplicationDefaultResourceGroups = async (
         "Content-type": "application/json",
         "x-api-version": `${Util.getVersion()}`
       },
-      qs: {"default": true},
+      qs: {"default": "true"},
       json: true
     };
     Util.addRequestTrace(requestOptions, trace);
@@ -751,7 +751,7 @@ const getApplicationDefaultUserGroups = async (
         "x-api-version": `${Util.getVersion()}`
       },
       qs: {
-        "default": true,
+        "default": "true",
         "type": type
       },
       json: true
@@ -1512,8 +1512,8 @@ const removeUsersFromGroup = async (
 
 module.exports = {
   activateRole,
+  addResourcesToGroup,
   addUsersToGroup,
-  addResourceToGroup,
   assignPermissionsToRole,
   assignRolesToUserGroup,
   assignScopedRoleToUserGroup,
