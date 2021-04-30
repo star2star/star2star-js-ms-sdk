@@ -53,8 +53,8 @@ const addSubscription = async (
       json: true
     };
     
+    // begin temporary sms workaround
     if(Array.isArray(criteria)){
-      // begin temporary sms workaround
       let qs;
       const filteredCriteria = criteria.filter(elem =>{
         return !(typeof elem === "object" && elem.hasOwnProperty("qs") && (qs = elem.qs));
@@ -63,9 +63,11 @@ const addSubscription = async (
       if(typeof qs !== "undefined"){
         requestOptions.qs = qs;
       }
-      requestOptions.body.criteria = filteredCriteria;
-      // end temporary sms workaround
+      if(filteredCriteria.length > 0){
+        requestOptions.body.criteria = filteredCriteria;
+      }
     }
+    // end temporary sms workaround
     
     if (expiresDate) {
       requestOptions.body.expiration_date = expiresDate;
