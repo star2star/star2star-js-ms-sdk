@@ -27,6 +27,11 @@ const createClientApp = async (
     const requestOptions = {
       method: "POST",
       uri: `${MS}/oauth/clients`,
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+        "Content-type": "application/json",
+        "x-api-version": `${Util.getVersion()}`
+      },
       body: {
         name: name,
         description: description,
@@ -34,18 +39,25 @@ const createClientApp = async (
         grant_types: ["client_credentials"],
         app_user: userUUID
       },
-      json: true,
-      headers: {
-        Authorization: `Bearer ${accessToken}`,
-        "Content-type": "application/json",
-        "x-api-version": `${Util.getVersion()}`
-      }
+      resolveWithFullResponse: true,
+      json: true
     };
     Util.addRequestTrace(requestOptions, trace);
-    const response =  await request(requestOptions);
-    return response;
+    const response = await request(requestOptions);
+    // create returns a 202....suspend return until the new resource is ready
+    if (response.hasOwnProperty("statusCode") && 
+        response.statusCode === 202 &&
+        response.headers.hasOwnProperty("location"))
+    {    
+      await Util.pendingResource(
+        response.headers.location,
+        requestOptions, //reusing the request options instead of passing in multiple params
+        trace
+      );
+    }
+    return response.body;
   } catch (error) {
-    return Promise.reject(Util.formatError(error));
+    throw Util.formatError(error);
   }  
 };
 
