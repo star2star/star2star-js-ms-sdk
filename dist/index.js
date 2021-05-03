@@ -45,6 +45,8 @@ const Mobile = require("./mobile");
 
 const Forms = require("./forms");
 
+const Entitlements = require("./entitlements");
+
 let cpaasKey;
 /**
  * 
@@ -167,5 +169,6 @@ module.exports = {
   Scheduler,
   Metadata,
   Mobile,
-  Forms
+  Forms,
+  Entitlements
 };

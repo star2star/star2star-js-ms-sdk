@@ -44,7 +44,9 @@ describe("MS SDK Index", function () {
       "Email",
       "ResourceGroups",
       "Scheduler",
-      "Metadata"
+      "Metadata",
+      "Forms",
+      "Entitlements"
     ];
     assert.deepEqual(Object.keys(s2sMS), msKeys);
     done();

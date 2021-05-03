@@ -72,6 +72,10 @@ toc:
   - name: Email
     children:
       - sendEmail
+  - name: Entitlements
+    children:
+      - getProduct
+      - getProducts
   - name: Forms
     children:
       - listUserForms

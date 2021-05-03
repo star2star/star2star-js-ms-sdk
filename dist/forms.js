@@ -26,7 +26,7 @@ const listUserForms = async function listUserForms() {
   let trace = arguments.length > 5 && arguments[5] !== undefined ? arguments[5] : {};
 
   try {
-    const MS = util.getEndpoint("form");
+    const MS = util.getEndpoint("forms");
     const requestOptions = {
       method: "GET",
       uri: "".concat(MS, "/forms"),

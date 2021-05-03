@@ -25,7 +25,7 @@ const listUserForms = async (
   trace = {}
 ) => {
   try {
-    const MS = util.getEndpoint("form");
+    const MS = util.getEndpoint("forms");
     const requestOptions = {
       method: "GET",
       uri: `${MS}/forms`,

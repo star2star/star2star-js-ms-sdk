@@ -70,6 +70,7 @@ process.env.MS_LOGPRETTY = true // defaults to false
 [Please click here for our documentation pages.](https://star2star.github.io/star2star-js-ms-sdk/ "Star2Star Micro Service SDK Documentation")
 
 ## Changes\
+* 3.5.0 - list entitlements products
 * 3.4.3 - fix empty criteria
 * 3.4.2 - wait for oauth2 client setup
 * 3.4.1 - fix endpoint name
