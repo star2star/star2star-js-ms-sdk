@@ -79,6 +79,7 @@ toc:
   - name: Forms
     children:
       - listUserForms
+      - listUserFormSubmissions
   - name: Groups
     children:
       - addMembersToGroup
