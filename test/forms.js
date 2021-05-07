@@ -98,4 +98,32 @@ describe("Form", function() {
       );
     }
   },"List user Forms"));
+
+  it("listUserFormSubmissions", mochaAsync(async () => {
+    try{
+      if (!creds.isValid) throw new Error("Invalid Credentials");
+      trace = objectMerge({}, trace, Util.generateNewMetaData(trace));
+      const response = await s2sMS.Forms.listUserFormSubmissions(
+        accessToken,
+        identityData.account_uuid,
+        "4662e6e6-07dd-4d90-ae84-5925c6732249",
+        undefined,
+        undefined,
+        undefined,
+        trace
+      );
+      console.log('>>>>', response)
+
+      assert.ok(
+        true,
+        response.hasOwnProperty("items")
+      );
+      return response;
+    } catch(error) {
+      assert.ok(
+        error.code === 400,
+        JSON.stringify(error, null, "\t")
+      );
+    }
+  },"List user Form Submissions"));
 });
