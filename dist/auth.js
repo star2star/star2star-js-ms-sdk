@@ -677,6 +677,7 @@ const getAccountDefaultGroups = async function getAccountDefaultGroups() {
  * @description This function returns an oAuth client application default resource groups
  * @param {string} [accessToken="null accessToken"] - CPaaS access token
  * @param {string} [applicationUUID="null applicationUUID"] - oauth2 client application uuid
+ * @param {string} [type="user"] - optional type ["user", "admin", "forbidden"]
  * @param {object} [trace = {}] - optional microservice lifecycle trace headers 
  * @returns {Promise<object>} - promise resolving to object containing default resource groups.
  */
@@ -685,7 +686,8 @@ const getAccountDefaultGroups = async function getAccountDefaultGroups() {
 const getApplicationDefaultResourceGroups = async function getApplicationDefaultResourceGroups() {
   let accessToken = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : "null accessToken";
   let applicationUUID = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : "null applicationUUID";
-  let trace = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : {};
+  let type = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : "user";
+  let trace = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : {};
 
   try {
     const MS = Util.getEndpoint("auth");
@@ -702,6 +704,11 @@ const getApplicationDefaultResourceGroups = async function getApplicationDefault
       },
       json: true
     };
+
+    if (typeof type === "string") {
+      requestOptions.qs.type = type;
+    }
+
     Util.addRequestTrace(requestOptions, trace);
     const response = await request(requestOptions);
     return response;
@@ -713,7 +720,7 @@ const getApplicationDefaultResourceGroups = async function getApplicationDefault
  * @description This function returns an oAuth client application default user groups
  * @param {string} [accessToken="null accessToken"] - CPaaS access token
  * @param {string} [applicationUUID="null applicationUUID"] - oauth2 client application uuid
-  * @param {string} [type="user"] - optional type ["user", "admin", "forbidden"]
+ * @param {string} [type="user"] - optional type ["user", "admin", "forbidden"]
  * @param {object} [trace = {}] - optional microservice lifecycle trace headers 
  * @returns {Promise<object>} - promise resolving to object containing default resource groups.
  */
@@ -736,11 +743,15 @@ const getApplicationDefaultUserGroups = async function getApplicationDefaultUser
         "x-api-version": "".concat(Util.getVersion())
       },
       qs: {
-        "default": "true",
-        "type": type
+        "default": "true"
       },
       json: true
     };
+
+    if (typeof type === "string") {
+      requestOptions.qs.type = type;
+    }
+
     Util.addRequestTrace(requestOptions, trace);
     const response = await request(requestOptions);
     return response;

@@ -697,12 +697,14 @@ const getAccountDefaultGroups = async (
  * @description This function returns an oAuth client application default resource groups
  * @param {string} [accessToken="null accessToken"] - CPaaS access token
  * @param {string} [applicationUUID="null applicationUUID"] - oauth2 client application uuid
+ * @param {string} [type="user"] - optional type ["user", "admin", "forbidden"]
  * @param {object} [trace = {}] - optional microservice lifecycle trace headers 
  * @returns {Promise<object>} - promise resolving to object containing default resource groups.
  */
 const getApplicationDefaultResourceGroups = async (
   accessToken = "null accessToken",
   applicationUUID = "null applicationUUID",
+  type = "user",
   trace = {}
 ) => {
   try {
@@ -718,6 +720,9 @@ const getApplicationDefaultResourceGroups = async (
       qs: {"default": "true"},
       json: true
     };
+    if(typeof type === "string"){
+      requestOptions.qs.type = type;
+    }
     Util.addRequestTrace(requestOptions, trace);
     const response = await request(requestOptions);
     return response;
@@ -730,7 +735,7 @@ const getApplicationDefaultResourceGroups = async (
  * @description This function returns an oAuth client application default user groups
  * @param {string} [accessToken="null accessToken"] - CPaaS access token
  * @param {string} [applicationUUID="null applicationUUID"] - oauth2 client application uuid
-  * @param {string} [type="user"] - optional type ["user", "admin", "forbidden"]
+ * @param {string} [type="user"] - optional type ["user", "admin", "forbidden"]
  * @param {object} [trace = {}] - optional microservice lifecycle trace headers 
  * @returns {Promise<object>} - promise resolving to object containing default resource groups.
  */
@@ -751,11 +756,13 @@ const getApplicationDefaultUserGroups = async (
         "x-api-version": `${Util.getVersion()}`
       },
       qs: {
-        "default": "true",
-        "type": type
+        "default": "true"
       },
       json: true
     };
+    if(typeof type === "string"){
+      requestOptions.qs.type = type;
+    }
     Util.addRequestTrace(requestOptions, trace);
     const response = await request(requestOptions);
     return response;
