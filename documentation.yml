@@ -18,6 +18,7 @@ toc:
       - assignPermissionsToRole
       - assignRolesToUserGroup
       - assignScopedRoleToUserGroup
+      - createApplicationResourceGroup
       - createPermission
       - createUserGroup
       - createRole

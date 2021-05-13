@@ -338,6 +338,59 @@ const createPermission = async function createPermission() {
   }
 };
 /**
+ * @description This function will create a resource group for an oauth2 application
+ * @async
+ * @param {string} [accessToken="null accessToken"] - cpaas access token
+ * @param {string} [applicationUUID="null applicationUUID"]
+ * @param {string} [name=""] - name of resource group
+ * @param {string} [description=""] - description of resource group
+ * @param {array} [resources=[]] - array of resource uuids
+ * @param {object} [trace = {}] - optional microservice lifecycle trace headers
+ * @returns {Promise<object>} - Promise resolving to a resource group object
+ */
+
+
+const createApplicationResourceGroup = async function createApplicationResourceGroup() {
+  let accessToken = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : "null accessToken";
+  let applicationUUID = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : "null applicationUUID";
+  let name = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : "";
+  let description = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : "";
+  let resources = arguments.length > 4 && arguments[4] !== undefined ? arguments[4] : [];
+  let trace = arguments.length > 5 && arguments[5] !== undefined ? arguments[5] : {};
+
+  try {
+    const MS = Util.getEndpoint("auth");
+    const requestOptions = {
+      method: "POST",
+      uri: "".concat(MS, "/applications/").concat(applicationUUID, "/resource-groups"),
+      headers: {
+        Authorization: "Bearer ".concat(accessToken),
+        "Content-type": "application/json",
+        "x-api-version": "".concat(Util.getVersion())
+      },
+      body: {
+        "name": name,
+        "description": description,
+        "resources": resources
+      },
+      json: true,
+      resolveWithFullResponse: true
+    };
+    Util.addRequestTrace(requestOptions, trace);
+    const response = await request(requestOptions);
+    const newGroup = response.body; // create returns a 202....suspend return until the new resource is ready
+
+    if (response.hasOwnProperty("statusCode") && response.statusCode === 202 && response.headers.hasOwnProperty("location")) {
+      await Util.pendingResource(response.headers.location, requestOptions, //reusing the request options instead of passing in multiple params
+      trace);
+    }
+
+    return newGroup;
+  } catch (error) {
+    return Promise.reject(Util.formatError(error));
+  }
+};
+/**
  * @async
  * @description This function creates a user-group.
  * @param {string} [accessToken="null accessToken"] - cpaas access token
@@ -1520,6 +1573,7 @@ module.exports = {
   assignPermissionsToRole,
   assignRolesToUserGroup,
   assignScopedRoleToUserGroup,
+  createApplicationResourceGroup,
   createPermission,
   createUserGroup,
   createRole,

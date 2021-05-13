@@ -342,6 +342,64 @@ const createPermission = async (
   }
 };
 
+
+/**
+ * @description This function will create a resource group for an oauth2 application
+ * @async
+ * @param {string} [accessToken="null accessToken"] - cpaas access token
+ * @param {string} [applicationUUID="null applicationUUID"]
+ * @param {string} [name=""] - name of resource group
+ * @param {string} [description=""] - description of resource group
+ * @param {array} [resources=[]] - array of resource uuids
+ * @param {object} [trace = {}] - optional microservice lifecycle trace headers
+ * @returns {Promise<object>} - Promise resolving to a resource group object
+ */
+const createApplicationResourceGroup = async (
+  accessToken = "null accessToken",
+  applicationUUID = "null applicationUUID",
+  name = "",
+  description = "",
+  resources = [],
+  trace = {}
+) => {
+  try {
+    const MS = Util.getEndpoint("auth");
+    const requestOptions = {
+      method: "POST",
+      uri: `${MS}/applications/${applicationUUID}/resource-groups`,
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+        "Content-type": "application/json",
+        "x-api-version": `${Util.getVersion()}`
+      },
+      body: {
+        "name": name,
+        "description": description,
+        "resources": resources
+      },
+      json: true,
+      resolveWithFullResponse: true
+    };
+    Util.addRequestTrace(requestOptions, trace);
+    const response = await request(requestOptions);
+    const newGroup = response.body;
+    // create returns a 202....suspend return until the new resource is ready
+    if (response.hasOwnProperty("statusCode") && 
+        response.statusCode === 202 &&
+        response.headers.hasOwnProperty("location"))
+    {    
+      await Util.pendingResource(
+        response.headers.location,
+        requestOptions, //reusing the request options instead of passing in multiple params
+        trace
+      );
+    }
+    return newGroup;
+  } catch (error) {
+    return Promise.reject(Util.formatError(error));
+  }
+};
+
 /**
  * @async
  * @description This function creates a user-group.
@@ -1524,6 +1582,7 @@ module.exports = {
   assignPermissionsToRole,
   assignRolesToUserGroup,
   assignScopedRoleToUserGroup,
+  createApplicationResourceGroup,
   createPermission,
   createUserGroup,
   createRole,
