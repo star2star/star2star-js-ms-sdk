@@ -12,7 +12,7 @@ const util = require("./utilities");
  * @param {string} [status="active"] - active or inactive
  * @param {string} [name="no name"] - instance name
  * @param {date} [dueDate=undefined] - optional due date
- * @param {string} [applicationUUID="null application uuid"] - application uuid
+ * @param {string} [applicationUUID] - optional application uuid
  * @param {boolean} [allowAnonymousSubmission=true] - allow unauthenticated submission
  * @param {boolean} [allowSubmissionUpdate=true] - allow submission to be updated
  * @param {string} [template_uuid="null template uuid"] - form template uuid
@@ -28,7 +28,7 @@ const createFormInstance = async function createFormInstance() {
   let status = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : "active";
   let name = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : "no name";
   let dueDate = arguments.length > 4 && arguments[4] !== undefined ? arguments[4] : undefined;
-  let applicationUUID = arguments.length > 5 && arguments[5] !== undefined ? arguments[5] : "null application uuid";
+  let applicationUUID = arguments.length > 5 && arguments[5] !== undefined ? arguments[5] : undefined;
   let allowAnonymousSubmission = arguments.length > 6 && arguments[6] !== undefined ? arguments[6] : true;
   let allowSubmissionUpdate = arguments.length > 7 && arguments[7] !== undefined ? arguments[7] : true;
   let template_uuid = arguments.length > 8 && arguments[8] !== undefined ? arguments[8] : "null template uuid";
@@ -49,7 +49,6 @@ const createFormInstance = async function createFormInstance() {
         "account_uuid": accountUUID,
         "status": status,
         "name": name,
-        "application_uuid": applicationUUID,
         "allow_anonymous_submission": allowAnonymousSubmission,
         "allow_submission_update": allowSubmissionUpdate,
         "template_uuid": template_uuid
@@ -57,7 +56,11 @@ const createFormInstance = async function createFormInstance() {
       json: true
     };
 
-    if (typeof due_date === "undefined") {
+    if (typeof applicationUUID === "string") {
+      requestOptions.body.application_uuid = applicationUUID;
+    }
+
+    if (typeof due_date !== "undefined") {
       requestOptions.body.due_date = dueDate;
     }
 

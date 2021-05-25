@@ -12,7 +12,7 @@ const util = require("./utilities");
  * @param {string} [status="active"] - active or inactive
  * @param {string} [name="no name"] - instance name
  * @param {date} [dueDate=undefined] - optional due date
- * @param {string} [applicationUUID="null application uuid"] - application uuid
+ * @param {string} [applicationUUID] - optional application uuid
  * @param {boolean} [allowAnonymousSubmission=true] - allow unauthenticated submission
  * @param {boolean} [allowSubmissionUpdate=true] - allow submission to be updated
  * @param {string} [template_uuid="null template uuid"] - form template uuid
@@ -26,7 +26,7 @@ const createFormInstance = async (
   status = "active",
   name = "no name",
   dueDate = undefined,
-  applicationUUID = "null application uuid",
+  applicationUUID = undefined,
   allowAnonymousSubmission = true,
   allowSubmissionUpdate =  true,
   template_uuid =  "null template uuid",
@@ -47,7 +47,6 @@ const createFormInstance = async (
         "account_uuid": accountUUID,
         "status": status,
         "name": name,
-        "application_uuid": applicationUUID,
         "allow_anonymous_submission": allowAnonymousSubmission,
         "allow_submission_update": allowSubmissionUpdate,
         "template_uuid": template_uuid
@@ -55,7 +54,10 @@ const createFormInstance = async (
       json: true
     };
 
-    if(typeof due_date === "undefined"){
+    if(typeof applicationUUID === "string"){
+      requestOptions.body.application_uuid = applicationUUID;
+    }
+    if(typeof due_date !== "undefined"){
       requestOptions.body.due_date = dueDate;
     }
     if(typeof metadata === "object" && metadata !== null){
