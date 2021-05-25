@@ -70,6 +70,7 @@ process.env.MS_LOGPRETTY = true // defaults to false
 [Please click here for our documentation pages.](https://star2star.github.io/star2star-js-ms-sdk/ "Star2Star Micro Service SDK Documentation")
 
 ## Changes\
+* 3.5.4 - get form instance and create form instance
 * 3.5.3 - add create oauth2 application custom resource group
 * 3.5.2 - add type to default resource groups
 * 3.5.1 - list user form submissions

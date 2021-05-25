@@ -79,6 +79,8 @@ toc:
       - getProducts
   - name: Forms
     children:
+      - createFormInstance
+      - getFormInstance
       - listUserForms
       - listUserFormSubmissions
   - name: Groups
