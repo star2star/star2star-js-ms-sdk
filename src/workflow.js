@@ -93,21 +93,21 @@ const cancelWorkflow = async (
  * @description This function will delete a workflow template.
  * @param {string} [accessToken="null access token"] - cpaas access token
  * @param {string} [wfTemplateUUID="null wfTemplateUUID"] - workflow template uuid
- * @param {string} [version="null version"] - workflow version
+ * @param {string} [version] - optional workflow version
  * @param {object} [trace = {}] - optional microservice lifecycle trace headers
  * @returns {Promise}
  */
 const deleteWorkflowTemplate = async (
   accessToken = "null access token",
   wfTemplateUUID = "null wfTemplateUUID",
-  version = "null version",
+  version,
   trace = {}
 ) => {
   try {
     const MS = util.getEndpoint("workflow");
     const requestOptions = {
       method: "DELETE",
-      uri: `${MS}/workflows/${wfTemplateUUID}/${version}`,
+      uri: `${MS}/workflows/${wfTemplateUUID}`,
       headers: {
         Authorization: `Bearer ${accessToken}`,
         "Content-type": "application/json",
@@ -116,6 +116,9 @@ const deleteWorkflowTemplate = async (
       resolveWithFullResponse: true,
       json: true
     };
+    if(typeof version === "string"){
+      requestOptions.uri = requestOptions.uri.concat(`/${version}`);
+    }
     util.addRequestTrace(requestOptions, trace);
     const response = await request(requestOptions);
     if(response.statusCode === 204) {
