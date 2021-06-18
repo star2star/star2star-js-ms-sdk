@@ -94,7 +94,7 @@ const cancelWorkflow = async function cancelWorkflow() {
  * @description This function will delete a workflow template.
  * @param {string} [accessToken="null access token"] - cpaas access token
  * @param {string} [wfTemplateUUID="null wfTemplateUUID"] - workflow template uuid
- * @param {string} [version] - optional workflow version
+ * @param {string} [version="null version"] - workflow version
  * @param {object} [trace = {}] - optional microservice lifecycle trace headers
  * @returns {Promise}
  */
@@ -103,14 +103,14 @@ const cancelWorkflow = async function cancelWorkflow() {
 const deleteWorkflowTemplate = async function deleteWorkflowTemplate() {
   let accessToken = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : "null access token";
   let wfTemplateUUID = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : "null wfTemplateUUID";
-  let version = arguments.length > 2 ? arguments[2] : undefined;
+  let version = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : "null version";
   let trace = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : {};
 
   try {
     const MS = util.getEndpoint("workflow");
     const requestOptions = {
       method: "DELETE",
-      uri: "".concat(MS, "/workflows/").concat(wfTemplateUUID),
+      uri: "".concat(MS, "/workflows/").concat(wfTemplateUUID, "/").concat(version),
       headers: {
         Authorization: "Bearer ".concat(accessToken),
         "Content-type": "application/json",
@@ -119,11 +119,6 @@ const deleteWorkflowTemplate = async function deleteWorkflowTemplate() {
       resolveWithFullResponse: true,
       json: true
     };
-
-    if (typeof version === "string") {
-      requestOptions.uri = requestOptions.uri.concat("/".concat(version));
-    }
-
     util.addRequestTrace(requestOptions, trace);
     const response = await request(requestOptions);
 
