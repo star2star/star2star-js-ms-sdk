@@ -1,6 +1,6 @@
 {
   "name": "star2star-js-ms-sdk",
-  "version": "3.5.7",
+  "version": "3.5.8",
   "description": "Star2Star JavaScript Micro Service SDK",
   "main": "./dist/index.js",
   "scripts": {
@@ -10,7 +10,7 @@
     "debug": "env MS_LOGLEVEL=debug MS_LOGPRETTY=true mocha --timeout 15000 --require @babel/register",
     "build": "./node_modules/.bin/babel --config-file ./babel.config.js src -d dist",
     "postbuild": "cp src/config.json dist/config.json",
-    "doc": "documentation build src/index.js -f html -o . --config documentation.yml"
+    "doc": "documentation build src/index.js -f md -o README.md --config documentation.yml"
   },
   "keywords": [
     "micro service",

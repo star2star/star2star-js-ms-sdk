@@ -287,7 +287,6 @@ const refreshAccessToken = async (
       method: "POST",
       uri: `${MS}/oauth/token`,
       headers: {
-        Authorization: `Basic ${oauthToken}`,
         "x-api-version": `${VERSION}`,
         "Content-type": "application/x-www-form-urlencoded"
       },
@@ -297,11 +296,22 @@ const refreshAccessToken = async (
       },
       json: true
     };
+    // backwards compatibility
+    if(typeof oauthToken === "string"){
+      requestOptions.headers.Authorization = `Basic ${oauthToken}`;
+    } else if (typeof oauthToken === "object" && typeof oauthToken.clientId === "string"){
+      requestOptions.form.client_id = oauthToken.clientId;
+    } else {
+      throw {
+        "code": 400,
+        "message": "oauth token param missing basic token or client id"
+      };
+    }
     Util.addRequestTrace(requestOptions, trace);
     const response = request(requestOptions);
     return response;
   } catch (error) {
-    return Promise.reject(Util.formatError(error));
+    throw Util.formatError(error);
   }
 };
 

@@ -299,7 +299,6 @@ const refreshAccessToken = async function refreshAccessToken() {
       method: "POST",
       uri: "".concat(MS, "/oauth/token"),
       headers: {
-        Authorization: "Basic ".concat(oauthToken),
         "x-api-version": "".concat(VERSION),
         "Content-type": "application/x-www-form-urlencoded"
       },
@@ -308,12 +307,24 @@ const refreshAccessToken = async function refreshAccessToken() {
         refresh_token: refreshToken
       },
       json: true
-    };
+    }; // backwards compatibility
+
+    if (typeof oauthToken === "string") {
+      requestOptions.headers.Authorization = "Basic ".concat(oauthToken);
+    } else if (typeof oauthToken === "object" && typeof oauthToken.clientId === "string") {
+      requestOptions.form.client_id = oauthToken.clientId;
+    } else {
+      throw {
+        "code": 400,
+        "message": "oauth token param missing basic token or client id"
+      };
+    }
+
     Util.addRequestTrace(requestOptions, trace);
     const response = request(requestOptions);
     return response;
   } catch (error) {
-    return Promise.reject(Util.formatError(error));
+    throw Util.formatError(error);
   }
 };
 /**
