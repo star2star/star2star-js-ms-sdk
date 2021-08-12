@@ -81,6 +81,7 @@ toc:
     children:
       - createFormInstance
       - getFormInstance
+      - getFormTemplate
       - listUserForms
       - listUserFormSubmissions
   - name: Groups

@@ -1,6 +1,8 @@
 /* global require module*/
 "use strict";
 
+var _this = void 0;
+
 const request = require("request-promise");
 
 const util = require("./utilities");
@@ -108,6 +110,128 @@ const getFormInstance = async function getFormInstance() {
 
     if (typeof include === "string") {
       requestOptions.qs.include = include;
+    }
+
+    const response = await request(requestOptions);
+    return response;
+  } catch (error) {
+    throw util.formatError(error);
+  }
+};
+/**
+ * @description This function will GET a form template
+ * @async
+ * @param {string} [accessToken="null access token"] - CPaaS access token
+ * @param {string} [templateUUID="null template uuid"] - form template uuid to look up
+ * @param {string} [accountUUID=undefined] - optional account uuid
+ * @param {object} [trace={}] - optional CPaaS lifecycle headers
+ * @returns {Promise}
+ */
+
+
+const getFormTemplate = async function getFormTemplate() {
+  let accessToken = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : "null access token";
+  let templateUUID = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : "null template uuid";
+  let accountUUID = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : undefined;
+  let trace = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : {};
+
+  try {
+    // This will be swapped for a single endpoint instead of a list
+    const MS = util.getEndpoint("forms");
+    const requestOptions = {
+      method: "GET",
+      uri: "".concat(MS, "/forms/template"),
+      headers: {
+        Authorization: "Bearer ".concat(accessToken),
+        "Content-type": "application/json",
+        "x-api-version": "".concat(util.getVersion())
+      },
+      qs: {
+        limit: 1000
+      },
+      json: true
+    };
+    util.addRequestTrace(requestOptions, trace);
+
+    if (typeof accountUUID === "string") {
+      requestOptions.qs.account_uuid = accountUUID;
+    } else {
+      try {
+        requestOptions.qs.account_uuid = JSON.parse(Buffer.from(accessToken.split(".")[1], "base64").toString()).tid;
+      } catch (error) {
+        throw _this.formatError(error);
+      }
+    }
+
+    const response = await request(requestOptions); // TODO swap this out with a direct get when CSRVS*** is done.
+
+    const template = response.items.reduce((acc, curr) => {
+      if (typeof acc === "undefined") {
+        if (curr.template_uuid === templateUUID) {
+          return curr;
+        }
+      }
+
+      return acc;
+    }, undefined);
+
+    if (typeof template === "undefined") {
+      throw {
+        "code": 404,
+        "message": "template ".concat(templateUUID, " not found")
+      };
+    }
+
+    return template;
+  } catch (error) {
+    throw util.formatError(error);
+  }
+};
+/**
+ * @description This function will GET a form template
+ * @async
+ * @param {string} [accessToken="null access token"] - CPaaS access token
+ * @param {string} [templateUUID="null template uuid"] - form template uuid to look up
+ * @param {string} [accountUUID=undefined] - optional account uuid
+ * @param {object} [trace={}] - optional CPaaS lifecycle headers
+ * @returns {Promise}
+ */
+
+
+const listFormTemplates = async function listFormTemplates() {
+  let accessToken = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : "null access token";
+  let accountUUID = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : undefined;
+  let offset = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : 0;
+  let limit = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : 10;
+  let trace = arguments.length > 4 && arguments[4] !== undefined ? arguments[4] : {};
+
+  try {
+    // This will be swapped for a single endpoint instead of a list
+    const MS = util.getEndpoint("forms");
+    const requestOptions = {
+      method: "GET",
+      uri: "".concat(MS, "/forms/template"),
+      headers: {
+        Authorization: "Bearer ".concat(accessToken),
+        "Content-type": "application/json",
+        "x-api-version": "".concat(util.getVersion())
+      },
+      qs: {
+        limit: limit,
+        offset: offset
+      },
+      json: true
+    };
+    util.addRequestTrace(requestOptions, trace);
+
+    if (typeof accountUUID === "string") {
+      requestOptions.qs.account_uuid = accountUUID;
+    } else {
+      try {
+        requestOptions.qs.account_uuid = JSON.parse(Buffer.from(accessToken.split(".")[1], "base64").toString()).tid;
+      } catch (error) {
+        throw _this.formatError(error);
+      }
     }
 
     const response = await request(requestOptions);
@@ -228,6 +352,8 @@ const listUserFormSubmissions = async function listUserFormSubmissions() {
 module.exports = {
   createFormInstance,
   getFormInstance,
+  getFormTemplate,
+  listFormTemplates,
   listUserForms,
   listUserFormSubmissions
 };

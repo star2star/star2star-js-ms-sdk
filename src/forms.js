@@ -109,6 +109,120 @@ const getFormInstance = async (
   }
 };
 
+/**
+ * @description This function will GET a form template
+ * @async
+ * @param {string} [accessToken="null access token"] - CPaaS access token
+ * @param {string} [templateUUID="null template uuid"] - form template uuid to look up
+ * @param {string} [accountUUID=undefined] - optional account uuid
+ * @param {object} [trace={}] - optional CPaaS lifecycle headers
+ * @returns {Promise}
+ */
+const getFormTemplate = async (
+  accessToken = "null access token",
+  templateUUID = "null template uuid",
+  accountUUID = undefined,
+  trace = {}
+) => {
+  try {
+    // This will be swapped for a single endpoint instead of a list
+    const MS = util.getEndpoint("forms");
+    const requestOptions = {
+      method: "GET",
+      uri: `${MS}/forms/template`,
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+        "Content-type": "application/json",
+        "x-api-version": `${util.getVersion()}`
+      },
+      qs: {
+        limit: 1000
+      },
+      json: true
+    };
+    util.addRequestTrace(requestOptions, trace);
+    
+    if (typeof accountUUID === "string") {
+      requestOptions.qs.account_uuid = accountUUID;
+    } else {
+      try{
+        requestOptions.qs.account_uuid = JSON.parse(Buffer.from(accessToken.split(".")[1], "base64").toString()).tid;
+      } catch(error){
+        throw this.formatError(error);
+      }
+    }
+    const response = await request(requestOptions);
+    // TODO swap this out with a direct get when CSRVS*** is done.
+    const template = response.items.reduce((acc, curr)=>{
+      if(typeof acc === "undefined"){
+        if(curr.template_uuid === templateUUID){
+          return curr;
+        }
+      }
+      return acc;
+    }, undefined);
+    if(typeof template === "undefined"){
+      throw {
+        "code": 404,
+        "message": `template ${templateUUID} not found`
+      };
+    }
+    return template;
+  } catch (error) {
+    throw util.formatError(error);
+  }
+};
+
+/**
+ * @description This function will GET a form template
+ * @async
+ * @param {string} [accessToken="null access token"] - CPaaS access token
+ * @param {string} [templateUUID="null template uuid"] - form template uuid to look up
+ * @param {string} [accountUUID=undefined] - optional account uuid
+ * @param {object} [trace={}] - optional CPaaS lifecycle headers
+ * @returns {Promise}
+ */
+const listFormTemplates = async (
+  accessToken = "null access token",
+  accountUUID = undefined,
+  offset = 0,
+  limit = 10,
+  trace = {}
+) => {
+  try {
+    // This will be swapped for a single endpoint instead of a list
+    const MS = util.getEndpoint("forms");
+    const requestOptions = {
+      method: "GET",
+      uri: `${MS}/forms/template`,
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+        "Content-type": "application/json",
+        "x-api-version": `${util.getVersion()}`
+      },
+      qs: {
+        limit: limit,
+        offset: offset
+      },
+      json: true
+    };
+    util.addRequestTrace(requestOptions, trace);
+    
+    if (typeof accountUUID === "string") {
+      requestOptions.qs.account_uuid = accountUUID;
+    } else {
+      try{
+        requestOptions.qs.account_uuid = JSON.parse(Buffer.from(accessToken.split(".")[1], "base64").toString()).tid;
+      } catch(error){
+        throw this.formatError(error);
+      }
+    }
+    const response = await request(requestOptions);
+    return response;
+  } catch (error) {
+    throw util.formatError(error);
+  }
+};
 
 /**
  * @async
@@ -216,6 +330,8 @@ const listUserFormSubmissions = async (
 module.exports = {
   createFormInstance,
   getFormInstance,
+  getFormTemplate,
+  listFormTemplates,
   listUserForms, 
   listUserFormSubmissions,
 };
