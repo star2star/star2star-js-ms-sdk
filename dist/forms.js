@@ -140,7 +140,7 @@ const getFormTemplate = async function getFormTemplate() {
     const MS = util.getEndpoint("forms");
     const requestOptions = {
       method: "GET",
-      uri: "".concat(MS, "/forms/template"),
+      uri: "".concat(MS, "/template"),
       headers: {
         Authorization: "Bearer ".concat(accessToken),
         "Content-type": "application/json",
@@ -167,7 +167,7 @@ const getFormTemplate = async function getFormTemplate() {
 
     const template = response.items.reduce((acc, curr) => {
       if (typeof acc === "undefined") {
-        if (curr.template_uuid === templateUUID) {
+        if (curr.uuid === templateUUID) {
           return curr;
         }
       }
@@ -210,7 +210,7 @@ const listFormTemplates = async function listFormTemplates() {
     const MS = util.getEndpoint("forms");
     const requestOptions = {
       method: "GET",
-      uri: "".concat(MS, "/forms/template"),
+      uri: "".concat(MS, "/template"),
       headers: {
         Authorization: "Bearer ".concat(accessToken),
         "Content-type": "application/json",

@@ -129,7 +129,7 @@ const getFormTemplate = async (
     const MS = util.getEndpoint("forms");
     const requestOptions = {
       method: "GET",
-      uri: `${MS}/forms/template`,
+      uri: `${MS}/template`,
       headers: {
         Authorization: `Bearer ${accessToken}`,
         "Content-type": "application/json",
@@ -155,7 +155,7 @@ const getFormTemplate = async (
     // TODO swap this out with a direct get when CSRVS*** is done.
     const template = response.items.reduce((acc, curr)=>{
       if(typeof acc === "undefined"){
-        if(curr.template_uuid === templateUUID){
+        if(curr.uuid === templateUUID){
           return curr;
         }
       }
@@ -194,7 +194,7 @@ const listFormTemplates = async (
     const MS = util.getEndpoint("forms");
     const requestOptions = {
       method: "GET",
-      uri: `${MS}/forms/template`,
+      uri: `${MS}/template`,
       headers: {
         Authorization: `Bearer ${accessToken}`,
         "Content-type": "application/json",
