@@ -475,6 +475,49 @@ const getSubscription = async function getSubscription() {
 };
 /**
  * @async
+ * @description - This function will return a custom subscription
+ * @param {string} [accessToken="null accessToken"] - CPaaS access token
+ * @param {string} [appUUID="no app uuid provided"] - custom application uuid
+ * @param {number} [offset=0] - pagination offset
+ * @param {number} [limit=10] - pagination limit
+ * @param {object} [trace={}] - optional CPaaS lifecycle headers
+ * @returns {Promise} - promise resolving to object containing items array of subscriptions
+ */
+
+
+const listCustomSubscriptions = async function listCustomSubscriptions() {
+  let accessToken = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : "null accessToken";
+  let appUUID = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : "no app uuid provided";
+  let offset = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : 0;
+  let limit = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : 10;
+  let trace = arguments.length > 4 && arguments[4] !== undefined ? arguments[4] : {};
+
+  try {
+    const MS = util.getEndpoint("pubsub");
+    const requestOptions = {
+      method: "GET",
+      uri: "".concat(MS, "/customevents"),
+      headers: {
+        Authorization: "Bearer ".concat(accessToken),
+        "Content-type": "application/json",
+        "x-api-version": "".concat(util.getVersion())
+      },
+      qs: {
+        app_uuid: appUUID,
+        offset: offset,
+        limit: limit
+      },
+      json: true
+    };
+    util.addRequestTrace(requestOptions, trace);
+    const response = await request(requestOptions);
+    return response;
+  } catch (error) {
+    throw util.formatError(error);
+  }
+};
+/**
+ * @async
  * @description This function will ask the cpaas pubsub service for the list of user's subscriptions.
  * @param {string} [user_uuid="no user uuid provided"] - uuid for a star2star user
  * @param {string} [accessToken="null accessToken"] - access token for cpaas systems
@@ -561,6 +604,7 @@ module.exports = {
   getCustomApplication,
   getCustomSubscription,
   getSubscription,
+  listCustomSubscriptions,
   listUserSubscriptions,
   updateSubscriptionExpiresDate
 };

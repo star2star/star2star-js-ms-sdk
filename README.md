@@ -350,114 +350,116 @@
         -   [Parameters][346]
     -   [getSubscription][347]
         -   [Parameters][348]
-    -   [listUserSubscriptions][349]
+    -   [listCustomSubscriptions][349]
         -   [Parameters][350]
-    -   [updateSubscriptionExpiresDate][351]
+    -   [listUserSubscriptions][351]
         -   [Parameters][352]
--   [Resource Groups][353]
-    -   [createResourceGroups][354]
-        -   [Parameters][355]
-    -   [cleanUpResourceGroups][356]
+    -   [updateSubscriptionExpiresDate][353]
+        -   [Parameters][354]
+-   [Resource Groups][355]
+    -   [createResourceGroups][356]
         -   [Parameters][357]
-    -   [updateResourceGroups][358]
+    -   [cleanUpResourceGroups][358]
         -   [Parameters][359]
--   [Scheduler][360]
-    -   [deleteEvent][361]
-        -   [Parameters][362]
-    -   [getEvent][363]
+    -   [updateResourceGroups][360]
+        -   [Parameters][361]
+-   [Scheduler][362]
+    -   [deleteEvent][363]
         -   [Parameters][364]
-    -   [getNextEventInfo][365]
+    -   [getEvent][365]
         -   [Parameters][366]
-    -   [listEvents][367]
+    -   [getNextEventInfo][367]
         -   [Parameters][368]
-    -   [listEventsHistory][369]
+    -   [listEvents][369]
         -   [Parameters][370]
-    -   [scheduleEvent][371]
+    -   [listEventsHistory][371]
         -   [Parameters][372]
-    -   [updateEvent][373]
+    -   [scheduleEvent][373]
         -   [Parameters][374]
--   [ShortUrls][375]
-    -   [createShortUrl][376]
-        -   [Parameters][377]
-    -   [deleteShortCode][378]
+    -   [updateEvent][375]
+        -   [Parameters][376]
+-   [ShortUrls][377]
+    -   [createShortUrl][378]
         -   [Parameters][379]
-    -   [listShortUrls][380]
+    -   [deleteShortCode][380]
         -   [Parameters][381]
--   [Workflow][382]
-    -   [createWorkflowTemplate][383]
-        -   [Parameters][384]
-    -   [cancelWorkflow][385]
+    -   [listShortUrls][382]
+        -   [Parameters][383]
+-   [Workflow][384]
+    -   [createWorkflowTemplate][385]
         -   [Parameters][386]
-    -   [deleteWorkflowTemplate][387]
+    -   [cancelWorkflow][387]
         -   [Parameters][388]
-    -   [getRunningWorkflow][389]
+    -   [deleteWorkflowTemplate][389]
         -   [Parameters][390]
-    -   [getWfInstanceHistory][391]
+    -   [getRunningWorkflow][391]
         -   [Parameters][392]
-    -   [getWfInstanceWorkflowVars][393]
+    -   [getWfInstanceHistory][393]
         -   [Parameters][394]
-    -   [getWfInstanceIncomingData][395]
+    -   [getWfInstanceWorkflowVars][395]
         -   [Parameters][396]
-    -   [getWfInstanceResults][397]
+    -   [getWfInstanceIncomingData][397]
         -   [Parameters][398]
-    -   [getWfTemplateHistory][399]
+    -   [getWfInstanceResults][399]
         -   [Parameters][400]
-    -   [getWorkflowGroup][401]
+    -   [getWfTemplateHistory][401]
         -   [Parameters][402]
-    -   [getWorkflowGroupFiltered][403]
+    -   [getWorkflowGroup][403]
         -   [Parameters][404]
-    -   [getWorkflowGroupMaster][405]
+    -   [getWorkflowGroupFiltered][405]
         -   [Parameters][406]
-    -   [getWorkflowGroupData][407]
+    -   [getWorkflowGroupMaster][407]
         -   [Parameters][408]
-    -   [getWorkflowGroupChildren][409]
+    -   [getWorkflowGroupData][409]
         -   [Parameters][410]
-    -   [getWorkflowGroupChild][411]
+    -   [getWorkflowGroupChildren][411]
         -   [Parameters][412]
-    -   [getWorkflowTemplate][413]
+    -   [getWorkflowGroupChild][413]
         -   [Parameters][414]
-    -   [listRunningWorkflows][415]
+    -   [getWorkflowTemplate][415]
         -   [Parameters][416]
-    -   [listWorkflowGroups][417]
+    -   [listRunningWorkflows][417]
         -   [Parameters][418]
-    -   [listWorkflowTemplates][419]
+    -   [listWorkflowGroups][419]
         -   [Parameters][420]
-    -   [modifyWorkflowTemplate][421]
+    -   [listWorkflowTemplates][421]
         -   [Parameters][422]
-    -   [startWorkflow][423]
+    -   [modifyWorkflowTemplate][423]
         -   [Parameters][424]
-    -   [updateWorkflowGroup][425]
+    -   [startWorkflow][425]
         -   [Parameters][426]
--   [Util][427]
-    -   [aggregate][428]
-        -   [Parameters][429]
-    -   [createUUID][430]
-    -   [decrypt][431]
-        -   [Parameters][432]
-    -   [encrypt][433]
+    -   [updateWorkflowGroup][427]
+        -   [Parameters][428]
+-   [Util][429]
+    -   [aggregate][430]
+        -   [Parameters][431]
+    -   [createUUID][432]
+    -   [decrypt][433]
         -   [Parameters][434]
-    -   [filterResponse][435]
+    -   [encrypt][435]
         -   [Parameters][436]
-    -   [formatError][437]
+    -   [filterResponse][437]
         -   [Parameters][438]
-    -   [getEndpoint][439]
+    -   [formatError][439]
         -   [Parameters][440]
-    -   [getAuthHost][441]
+    -   [getEndpoint][441]
         -   [Parameters][442]
-    -   [getVersion][443]
-    -   [getValueFromObjectTree][444]
-        -   [Parameters][445]
-    -   [isBrowser][446]
-    -   [paginate][447]
-        -   [Parameters][448]
-    -   [pendingResource][449]
+    -   [getAuthHost][443]
+        -   [Parameters][444]
+    -   [getVersion][445]
+    -   [getValueFromObjectTree][446]
+        -   [Parameters][447]
+    -   [isBrowser][448]
+    -   [paginate][449]
         -   [Parameters][450]
-    -   [replaceStaticValues][451]
+    -   [pendingResource][451]
         -   [Parameters][452]
-    -   [replaceVariables][453]
+    -   [replaceStaticValues][453]
         -   [Parameters][454]
--   [listFormTemplates][455]
-    -   [Parameters][456]
+    -   [replaceVariables][455]
+        -   [Parameters][456]
+-   [listFormTemplates][457]
+    -   [Parameters][458]
 
 ## Accounts
 
@@ -470,11 +472,11 @@ This function creates a new account.
 
 #### Parameters
 
--   `accessToken` **[string][457]** access token for cpaas systems (optional, default `"null accessToken"`)
--   `body` **[string][457]** object containing account details (optional, default `"null body"`)
--   `trace` **[object][458]** optional microservice lifecycle trace headers (optional, default `{}`)
+-   `accessToken` **[string][459]** access token for cpaas systems (optional, default `"null accessToken"`)
+-   `body` **[string][459]** object containing account details (optional, default `"null body"`)
+-   `trace` **[object][460]** optional microservice lifecycle trace headers (optional, default `{}`)
 
-Returns **[Promise][459]&lt;[object][458]>** Promise resolving to an account data object
+Returns **[Promise][461]&lt;[object][460]>** Promise resolving to an account data object
 
 ### createRelationship
 
@@ -482,11 +484,11 @@ This function will create a relationship between two accounts.
 
 #### Parameters
 
--   `accessToken` **[string][457]**  (optional, default `"null access token"`)
--   `body` **[string][457]**  (optional, default `"null body"`)
--   `trace` **[object][458]** optional microservice lifecycle trace headers (optional, default `{}`)
+-   `accessToken` **[string][459]**  (optional, default `"null access token"`)
+-   `body` **[string][459]**  (optional, default `"null body"`)
+-   `trace` **[object][460]** optional microservice lifecycle trace headers (optional, default `{}`)
 
-Returns **[Promise][459]&lt;[object][458]>** Promise resolving to a data object containing new relationship
+Returns **[Promise][461]&lt;[object][460]>** Promise resolving to a data object containing new relationship
 
 ### deleteAccount
 
@@ -494,11 +496,11 @@ This function will delete an account.
 
 #### Parameters
 
--   `accessToken` **[string][457]** access token for cpaas systems (optional, default `"null access token"`)
--   `accountUUID` **[string][457]** uuid of account to delete (optional, default `"null account uuid"`)
--   `trace` **[object][458]** optional microservice lifecycle trace headers (optional, default `{}`)
+-   `accessToken` **[string][459]** access token for cpaas systems (optional, default `"null access token"`)
+-   `accountUUID` **[string][459]** uuid of account to delete (optional, default `"null account uuid"`)
+-   `trace` **[object][460]** optional microservice lifecycle trace headers (optional, default `{}`)
 
-Returns **[Promise][459]&lt;[object][458]>** Promise resolving to a status data object
+Returns **[Promise][461]&lt;[object][460]>** Promise resolving to a status data object
 
 ### listAccounts
 
@@ -506,13 +508,13 @@ This function returns all available accounts.
 
 #### Parameters
 
--   `accessToken` **[string][457]** access token for cpaas system (optional, default `"null accessToken"`)
--   `offset` **[number][460]** optional; return the list starting at a specified index (optional, default `0`)
--   `limit` **[number][460]** optional; return a specified number of accounts (optional, default `10`)
--   `filters` **[array][461]** optional array of key-value pairs to filter response. (optional, default `undefined`)
--   `trace` **[object][458]** optional microservice lifecycle trace headers (optional, default `{}`)
+-   `accessToken` **[string][459]** access token for cpaas system (optional, default `"null accessToken"`)
+-   `offset` **[number][462]** optional; return the list starting at a specified index (optional, default `0`)
+-   `limit` **[number][462]** optional; return a specified number of accounts (optional, default `10`)
+-   `filters` **[array][463]** optional array of key-value pairs to filter response. (optional, default `undefined`)
+-   `trace` **[object][460]** optional microservice lifecycle trace headers (optional, default `{}`)
 
-Returns **[Promise][459]&lt;[object][458]>** Promise resolving to a data object containing a list of accounts
+Returns **[Promise][461]&lt;[object][460]>** Promise resolving to a data object containing a list of accounts
 
 ### listAccountRelationships
 
@@ -520,14 +522,14 @@ This function returns all available accounts.
 
 #### Parameters
 
--   `accessToken` **[string][457]** access token for cpaas system (optional, default `"null accessToken"`)
--   `accountUUID` **[string][457]** account uuid of the parent (optional, default `"null account uuid"`)
--   `offset` **[number][460]** what page number you want (optional, default `0`)
--   `limit` **[number][460]** size of the page or number of records to return (optional, default `10`)
+-   `accessToken` **[string][459]** access token for cpaas system (optional, default `"null accessToken"`)
+-   `accountUUID` **[string][459]** account uuid of the parent (optional, default `"null account uuid"`)
+-   `offset` **[number][462]** what page number you want (optional, default `0`)
+-   `limit` **[number][462]** size of the page or number of records to return (optional, default `10`)
 -   `accountType`   (optional, default `undefined`)
--   `trace` **[object][458]** optional microservice lifecycle trace headers (optional, default `{}`)
+-   `trace` **[object][460]** optional microservice lifecycle trace headers (optional, default `{}`)
 
-Returns **[Promise][459]&lt;[object][458]>** Promise resolving to a data object containing a list of accounts
+Returns **[Promise][461]&lt;[object][460]>** Promise resolving to a data object containing a list of accounts
 
 ### getAccount
 
@@ -535,12 +537,12 @@ This function will return an account by UUID.
 
 #### Parameters
 
--   `accessToken` **[string][457]** access token for cpaas systems (optional, default `"null access token"`)
--   `accountUUID` **[string][457]** account_uuid for an star2star account (customer) (optional, default `"null account uuid"`)
--   `trace` **[object][458]** optional microservice lifecycle trace headers (optional, default `{}`)
--   `expand` **[string][457]** expand data in response; currently "identities" or "relationship" (optional, default `"identities"`)
+-   `accessToken` **[string][459]** access token for cpaas systems (optional, default `"null access token"`)
+-   `accountUUID` **[string][459]** account_uuid for an star2star account (customer) (optional, default `"null account uuid"`)
+-   `trace` **[object][460]** optional microservice lifecycle trace headers (optional, default `{}`)
+-   `expand` **[string][459]** expand data in response; currently "identities" or "relationship" (optional, default `"identities"`)
 
-Returns **[Promise][459]&lt;[object][458]>** Promise resolving to an identity data object
+Returns **[Promise][461]&lt;[object][460]>** Promise resolving to an identity data object
 
 ### modifyAccount
 
@@ -548,12 +550,12 @@ This function will modify an account.
 
 #### Parameters
 
--   `accessToken` **[string][457]** access token for cpaas systems (optional, default `"null access token"`)
--   `accountUUID` **[string][457]**  (optional, default `"null account uuid"`)
--   `body` **[string][457]**  (optional, default `"null body"`)
--   `trace` **[object][458]** optional microservice lifecycle trace headers (optional, default `{}`)
+-   `accessToken` **[string][459]** access token for cpaas systems (optional, default `"null access token"`)
+-   `accountUUID` **[string][459]**  (optional, default `"null account uuid"`)
+-   `body` **[string][459]**  (optional, default `"null body"`)
+-   `trace` **[object][460]** optional microservice lifecycle trace headers (optional, default `{}`)
 
-Returns **[Promise][459]&lt;[object][458]>** Promise resolving to a status data object
+Returns **[Promise][461]&lt;[object][460]>** Promise resolving to a status data object
 
 ### reinstateAccount
 
@@ -561,11 +563,11 @@ This function will set an account status to "Active"
 
 #### Parameters
 
--   `accessToken` **[string][457]** cpaas access token (optional, default `"null access token"`)
--   `accountUUID` **[string][457]** account uuid (optional, default `"null account uuid"`)
--   `trace` **[object][458]** optional microservice lifecycle trace headers (optional, default `{}`)
+-   `accessToken` **[string][459]** cpaas access token (optional, default `"null access token"`)
+-   `accountUUID` **[string][459]** account uuid (optional, default `"null account uuid"`)
+-   `trace` **[object][460]** optional microservice lifecycle trace headers (optional, default `{}`)
 
-Returns **[Promise][459]&lt;[object][458]>** Promise resolving to a status data object
+Returns **[Promise][461]&lt;[object][460]>** Promise resolving to a status data object
 
 ### suspendAccount
 
@@ -573,11 +575,11 @@ This function will set an account status to "Inactive"
 
 #### Parameters
 
--   `accessToken` **[string][457]** cpaas access token (optional, default `"null access token"`)
--   `accountUUID` **[string][457]** account uuid (optional, default `"null account uuid"`)
--   `trace` **[object][458]** optional microservice lifecycle trace headers (optional, default `{}`)
+-   `accessToken` **[string][459]** cpaas access token (optional, default `"null access token"`)
+-   `accountUUID` **[string][459]** account uuid (optional, default `"null account uuid"`)
+-   `trace` **[object][460]** optional microservice lifecycle trace headers (optional, default `{}`)
 
-Returns **[Promise][459]&lt;[object][458]>** Promise resolving to a status data object
+Returns **[Promise][461]&lt;[object][460]>** Promise resolving to a status data object
 
 ## Auth
 
@@ -590,11 +592,11 @@ This function deactivates a role.
 
 #### Parameters
 
--   `accessToken` **[string][457]** cpaas access token (optional, default `"null accessToken"`)
--   `roleUUID` **[string][457]** role uuid (optional, default `"null roleUUID"`)
--   `trace` **[object][458]** optional microservice lifecycle trace headers (optional, default `{}`)
+-   `accessToken` **[string][459]** cpaas access token (optional, default `"null accessToken"`)
+-   `roleUUID` **[string][459]** role uuid (optional, default `"null roleUUID"`)
+-   `trace` **[object][460]** optional microservice lifecycle trace headers (optional, default `{}`)
 
-Returns **[Promise][459]&lt;[object][458]>** Promise resolving to a status data object
+Returns **[Promise][461]&lt;[object][460]>** Promise resolving to a status data object
 
 ### addResourcesToGroup
 
@@ -602,12 +604,12 @@ This function adds resources to a resource group
 
 #### Parameters
 
--   `accessToken` **[string][457]** CPaaS access token (optional, default `"null accessToken"`)
--   `resourceGroup` **[string][457]** uuide of resource group to modify (optional, default `"null resourceGroup"`)
--   `resources` **[array][461]** array of resource uuids to add to group (optional, default `"null resources"`)
--   `trace` **[object][458]** optional microservice lifecycle trace headers (optional, default `{}`)
+-   `accessToken` **[string][459]** CPaaS access token (optional, default `"null accessToken"`)
+-   `resourceGroup` **[string][459]** uuide of resource group to modify (optional, default `"null resourceGroup"`)
+-   `resources` **[array][463]** array of resource uuids to add to group (optional, default `"null resources"`)
+-   `trace` **[object][460]** optional microservice lifecycle trace headers (optional, default `{}`)
 
-Returns **[Promise][459]&lt;[object][458]>** Promise resolving to a status data object
+Returns **[Promise][461]&lt;[object][460]>** Promise resolving to a status data object
 
 ### addUsersToGroup
 
@@ -615,12 +617,12 @@ This function adds users to a user group
 
 #### Parameters
 
--   `accessToken` **[string][457]** CPaaS access token (optional, default `"null accessToken"`)
--   `userGroupUUID` **[string][457]** user group uuid (optional, default `"null userGroupUUID"`)
--   `users` **[array][461]** array of user uuids (optional, default `"null members"`)
--   `trace` **[object][458]** optional CPaaS lifecycle headers (optional, default `{}`)
+-   `accessToken` **[string][459]** CPaaS access token (optional, default `"null accessToken"`)
+-   `userGroupUUID` **[string][459]** user group uuid (optional, default `"null userGroupUUID"`)
+-   `users` **[array][463]** array of user uuids (optional, default `"null members"`)
+-   `trace` **[object][460]** optional CPaaS lifecycle headers (optional, default `{}`)
 
-Returns **[Promise][459]&lt;[object][458]>** Promise resolving to the updated user group
+Returns **[Promise][461]&lt;[object][460]>** Promise resolving to the updated user group
 
 ### assignPermissionsToRole
 
@@ -628,12 +630,12 @@ This function will assign a permission to a role.
 
 #### Parameters
 
--   `accessToken` **[string][457]** cpaas access token (optional, default `"null accessToken"`)
--   `roleUUID` **[string][457]** role uuid (optional, default `"null roleUUID"`)
--   `body` **[object][458]** object containing array of permissions (optional, default `"null body"`)
--   `trace` **[object][458]** optional microservice lifecycle trace headers (optional, default `{}`)
+-   `accessToken` **[string][459]** cpaas access token (optional, default `"null accessToken"`)
+-   `roleUUID` **[string][459]** role uuid (optional, default `"null roleUUID"`)
+-   `body` **[object][460]** object containing array of permissions (optional, default `"null body"`)
+-   `trace` **[object][460]** optional microservice lifecycle trace headers (optional, default `{}`)
 
-Returns **[Promise][459]&lt;[object][458]>** Promise resolving to a status data object
+Returns **[Promise][461]&lt;[object][460]>** Promise resolving to a status data object
 
 ### assignRolesToUserGroup
 
@@ -641,12 +643,12 @@ This function assigns roles to a user-group
 
 #### Parameters
 
--   `accessToken` **[string][457]** cpaas access token (optional, default `"null accessToken"`)
--   `userGroupUUID` **[string][457]** user-group uuid (optional, default `"null groupUUID"`)
--   `body` **[object][458]** object containing an array of roles (optional, default `"null body"`)
--   `trace` **[object][458]** optional microservice lifecycle trace headers (optional, default `{}`)
+-   `accessToken` **[string][459]** cpaas access token (optional, default `"null accessToken"`)
+-   `userGroupUUID` **[string][459]** user-group uuid (optional, default `"null groupUUID"`)
+-   `body` **[object][460]** object containing an array of roles (optional, default `"null body"`)
+-   `trace` **[object][460]** optional microservice lifecycle trace headers (optional, default `{}`)
 
-Returns **[Promise][459]&lt;[object][458]>** Promise resolving to a status data object
+Returns **[Promise][461]&lt;[object][460]>** Promise resolving to a status data object
 
 ### assignScopedRoleToUserGroup
 
@@ -654,14 +656,14 @@ This function will assign specified access to a resouce for the members of the p
 
 #### Parameters
 
--   `accessToken` **[string][457]** cpaas access token (optional, default `"null access token"`)
--   `userGroupUUID` **[string][457]** user-group uuid (optional, default `"null userGroupUUID"`)
--   `roleUUID` **[string][457]** role uuid (optional, default `"null roleUUID"`)
--   `type` **[string][457]** resource or account (optional, default `"account"`)
--   `data` **[array][461]** array of resource or account uuids to bind to group (optional, default `"null data"`)
--   `trace` **[object][458]** optional microservice lifecycle trace headers (optional, default `{}`)
+-   `accessToken` **[string][459]** cpaas access token (optional, default `"null access token"`)
+-   `userGroupUUID` **[string][459]** user-group uuid (optional, default `"null userGroupUUID"`)
+-   `roleUUID` **[string][459]** role uuid (optional, default `"null roleUUID"`)
+-   `type` **[string][459]** resource or account (optional, default `"account"`)
+-   `data` **[array][463]** array of resource or account uuids to bind to group (optional, default `"null data"`)
+-   `trace` **[object][460]** optional microservice lifecycle trace headers (optional, default `{}`)
 
-Returns **[Promise][459]&lt;[object][458]>** Promise resolving to a status data object
+Returns **[Promise][461]&lt;[object][460]>** Promise resolving to a status data object
 
 ### createApplicationResourceGroup
 
@@ -669,14 +671,14 @@ This function will create a resource group for an oauth2 application
 
 #### Parameters
 
--   `accessToken` **[string][457]** cpaas access token (optional, default `"null accessToken"`)
--   `applicationUUID` **[string][457]**  (optional, default `"null applicationUUID"`)
--   `name` **[string][457]** name of resource group (optional, default `""`)
--   `description` **[string][457]** description of resource group (optional, default `""`)
--   `resources` **[array][461]** array of resource uuids (optional, default `[]`)
--   `trace` **[object][458]** optional microservice lifecycle trace headers (optional, default `{}`)
+-   `accessToken` **[string][459]** cpaas access token (optional, default `"null accessToken"`)
+-   `applicationUUID` **[string][459]**  (optional, default `"null applicationUUID"`)
+-   `name` **[string][459]** name of resource group (optional, default `""`)
+-   `description` **[string][459]** description of resource group (optional, default `""`)
+-   `resources` **[array][463]** array of resource uuids (optional, default `[]`)
+-   `trace` **[object][460]** optional microservice lifecycle trace headers (optional, default `{}`)
 
-Returns **[Promise][459]&lt;[object][458]>** Promise resolving to a resource group object
+Returns **[Promise][461]&lt;[object][460]>** Promise resolving to a resource group object
 
 ### createPermission
 
@@ -684,11 +686,11 @@ This function creates a permission
 
 #### Parameters
 
--   `accessToken` **[string][457]** cpaas access token (optional, default `"null accessToken"`)
--   `body` **[object][458]** object (optional, default `"null body"`)
--   `trace` **[object][458]** optional microservice lifecycle trace headers (optional, default `{}`)
+-   `accessToken` **[string][459]** cpaas access token (optional, default `"null accessToken"`)
+-   `body` **[object][460]** object (optional, default `"null body"`)
+-   `trace` **[object][460]** optional microservice lifecycle trace headers (optional, default `{}`)
 
-Returns **[Promise][459]&lt;[object][458]>** Promise resolving to a permission data object
+Returns **[Promise][461]&lt;[object][460]>** Promise resolving to a permission data object
 
 ### createUserGroup
 
@@ -696,13 +698,13 @@ This function creates a user-group.
 
 #### Parameters
 
--   `accessToken` **[string][457]** cpaas access token (optional, default `"null accessToken"`)
+-   `accessToken` **[string][459]** cpaas access token (optional, default `"null accessToken"`)
 -   `accountUUID`   (optional, default `"null accountUUID"`)
--   `body` **[object][458]** user-group object (optional, default `"null body"`)
--   `trace` **[object][458]** optional microservice lifecycle trace headers (optional, default `{}`)
--   `account_uuid` **[string][457]** account uuid (optional, default `"null account uuid"`)
+-   `body` **[object][460]** user-group object (optional, default `"null body"`)
+-   `trace` **[object][460]** optional microservice lifecycle trace headers (optional, default `{}`)
+-   `account_uuid` **[string][459]** account uuid (optional, default `"null account uuid"`)
 
-Returns **[Promise][459]&lt;[object][458]>** Promise resolving to a user-group data object
+Returns **[Promise][461]&lt;[object][460]>** Promise resolving to a user-group data object
 
 ### createRole
 
@@ -710,12 +712,12 @@ This function creates a role.
 
 #### Parameters
 
--   `accessToken` **[string][457]** cpaas access token (optional, default `"null accessToken"`)
--   `accountUUID` **[string][457]** account uuid (optional, default `"null accountUUID"`)
--   `body` **[object][458]** role definition object (optional, default `"null body"`)
--   `trace` **[object][458]** optional microservice lifecycle trace headers (optional, default `{}`)
+-   `accessToken` **[string][459]** cpaas access token (optional, default `"null accessToken"`)
+-   `accountUUID` **[string][459]** account uuid (optional, default `"null accountUUID"`)
+-   `body` **[object][460]** role definition object (optional, default `"null body"`)
+-   `trace` **[object][460]** optional microservice lifecycle trace headers (optional, default `{}`)
 
-Returns **[Promise][459]&lt;[object][458]>** Promise resolving to a role data object
+Returns **[Promise][461]&lt;[object][460]>** Promise resolving to a role data object
 
 ### deactivateRole
 
@@ -723,11 +725,11 @@ This function deactivates a role.
 
 #### Parameters
 
--   `accessToken` **[string][457]** cpaas access token (optional, default `"null accessToken"`)
--   `roleUUID` **[string][457]** role uuid (optional, default `"null roleUUID"`)
--   `trace` **[object][458]** optional microservice lifecycle trace headers (optional, default `{}`)
+-   `accessToken` **[string][459]** cpaas access token (optional, default `"null accessToken"`)
+-   `roleUUID` **[string][459]** role uuid (optional, default `"null roleUUID"`)
+-   `trace` **[object][460]** optional microservice lifecycle trace headers (optional, default `{}`)
 
-Returns **[Promise][459]&lt;[object][458]>** Promise resolving to a status data object
+Returns **[Promise][461]&lt;[object][460]>** Promise resolving to a status data object
 
 ### deletePermissionFromRole
 
@@ -735,12 +737,12 @@ This function deletes a permission from a role.
 
 #### Parameters
 
--   `accessToken` **[string][457]** cpaas access token (optional, default `"null accessToken"`)
--   `roleUUID` **[string][457]** role uuid (optional, default `"null roleUUID"`)
--   `permissionUUID` **[string][457]** permission uuid (optional, default `"null permissionUUID"`)
--   `trace` **[object][458]** optional microservice lifecycle trace headers (optional, default `{}`)
+-   `accessToken` **[string][459]** cpaas access token (optional, default `"null accessToken"`)
+-   `roleUUID` **[string][459]** role uuid (optional, default `"null roleUUID"`)
+-   `permissionUUID` **[string][459]** permission uuid (optional, default `"null permissionUUID"`)
+-   `trace` **[object][460]** optional microservice lifecycle trace headers (optional, default `{}`)
 
-Returns **[Promise][459]&lt;[object][458]>** Promise resolving to a status data object
+Returns **[Promise][461]&lt;[object][460]>** Promise resolving to a status data object
 
 ### deleteRole
 
@@ -748,11 +750,11 @@ This function deletes a role.
 
 #### Parameters
 
--   `accessToken` **[string][457]** cpaas access token (optional, default `"null accessToken"`)
--   `roleUUID` **[string][457]** role uuid (optional, default `"null roleUUID"`)
--   `trace` **[object][458]** optional microservice lifecycle trace headers (optional, default `{}`)
+-   `accessToken` **[string][459]** cpaas access token (optional, default `"null accessToken"`)
+-   `roleUUID` **[string][459]** role uuid (optional, default `"null roleUUID"`)
+-   `trace` **[object][460]** optional microservice lifecycle trace headers (optional, default `{}`)
 
-Returns **[Promise][459]&lt;[object][458]>** Promise resolving to a status data object
+Returns **[Promise][461]&lt;[object][460]>** Promise resolving to a status data object
 
 ### deleteRoleFromUserGroup
 
@@ -760,12 +762,12 @@ This function deletes a role from a user-group.
 
 #### Parameters
 
--   `accessToken` **[string][457]** cpaas access token (optional, default `"null accessToken"`)
--   `userGroupUUID` **[string][457]** user group uuid (optional, default `"null userGroupUUID"`)
--   `roleUUID` **[string][457]** role uuid (optional, default `"null roleUUID"`)
--   `trace` **[object][458]** optional microservice lifecycle trace headers (optional, default `{}`)
+-   `accessToken` **[string][459]** cpaas access token (optional, default `"null accessToken"`)
+-   `userGroupUUID` **[string][459]** user group uuid (optional, default `"null userGroupUUID"`)
+-   `roleUUID` **[string][459]** role uuid (optional, default `"null roleUUID"`)
+-   `trace` **[object][460]** optional microservice lifecycle trace headers (optional, default `{}`)
 
-Returns **[Promise][459]&lt;[object][458]>** Promise resolving to a status data object
+Returns **[Promise][461]&lt;[object][460]>** Promise resolving to a status data object
 
 ### getAccountDefaultGroups
 
@@ -773,11 +775,11 @@ This function returns an accounts default user-groups
 
 #### Parameters
 
--   `accessToken` **[string][457]** access token for cpaas systems (optional, default `"null access token"`)
--   `accountUUID` **[string][457]** account_uuid for an star2star account (customer) (optional, default `"null account uuid"`)
--   `trace` **[object][458]** optional microservice lifecycle trace headers (optional, default `{}`)
+-   `accessToken` **[string][459]** access token for cpaas systems (optional, default `"null access token"`)
+-   `accountUUID` **[string][459]** account_uuid for an star2star account (customer) (optional, default `"null account uuid"`)
+-   `trace` **[object][460]** optional microservice lifecycle trace headers (optional, default `{}`)
 
-Returns **[Promise][459]** promise resolving to object containing default admin and user group uuids.
+Returns **[Promise][461]** promise resolving to object containing default admin and user group uuids.
 
 ### getApplicationDefaultResourceGroups
 
@@ -785,12 +787,12 @@ This function returns an oAuth client application default resource groups
 
 #### Parameters
 
--   `accessToken` **[string][457]** CPaaS access token (optional, default `"null accessToken"`)
--   `applicationUUID` **[string][457]** oauth2 client application uuid (optional, default `"null applicationUUID"`)
--   `type` **[string][457]** optional type ["user", "admin", "forbidden"] (optional, default `"user"`)
--   `trace` **[object][458]** optional microservice lifecycle trace headers (optional, default `{}`)
+-   `accessToken` **[string][459]** CPaaS access token (optional, default `"null accessToken"`)
+-   `applicationUUID` **[string][459]** oauth2 client application uuid (optional, default `"null applicationUUID"`)
+-   `type` **[string][459]** optional type ["user", "admin", "forbidden"] (optional, default `"user"`)
+-   `trace` **[object][460]** optional microservice lifecycle trace headers (optional, default `{}`)
 
-Returns **[Promise][459]&lt;[object][458]>** promise resolving to object containing default resource groups.
+Returns **[Promise][461]&lt;[object][460]>** promise resolving to object containing default resource groups.
 
 ### getApplicationDefaultUserGroups
 
@@ -798,12 +800,12 @@ This function returns an oAuth client application default user groups
 
 #### Parameters
 
--   `accessToken` **[string][457]** CPaaS access token (optional, default `"null accessToken"`)
--   `applicationUUID` **[string][457]** oauth2 client application uuid (optional, default `"null applicationUUID"`)
--   `type` **[string][457]** optional type ["user", "admin", "forbidden"] (optional, default `"user"`)
--   `trace` **[object][458]** optional microservice lifecycle trace headers (optional, default `{}`)
+-   `accessToken` **[string][459]** CPaaS access token (optional, default `"null accessToken"`)
+-   `applicationUUID` **[string][459]** oauth2 client application uuid (optional, default `"null applicationUUID"`)
+-   `type` **[string][459]** optional type ["user", "admin", "forbidden"] (optional, default `"user"`)
+-   `trace` **[object][460]** optional microservice lifecycle trace headers (optional, default `{}`)
 
-Returns **[Promise][459]&lt;[object][458]>** promise resolving to object containing default resource groups.
+Returns **[Promise][461]&lt;[object][460]>** promise resolving to object containing default resource groups.
 
 ### getResourceUsers
 
@@ -811,11 +813,11 @@ This function will return the users that have permissions for a given resource
 
 #### Parameters
 
--   `accessToken` **[string][457]** cpaas access token (optional, default `"null accessToken"`)
--   `resourceUUID` **[string][457]** resource uuid (optional, default `"null resourceUUID"`)
--   `trace` **[object][458]** optional microservice lifecycle headers (optional, default `{}`)
+-   `accessToken` **[string][459]** cpaas access token (optional, default `"null accessToken"`)
+-   `resourceUUID` **[string][459]** resource uuid (optional, default `"null resourceUUID"`)
+-   `trace` **[object][460]** optional microservice lifecycle headers (optional, default `{}`)
 
-Returns **[Promise][459]&lt;[object][458]>** promise resolving to a users object
+Returns **[Promise][461]&lt;[object][460]>** promise resolving to a users object
 
 ### getResourceGroupRoles
 
@@ -823,10 +825,10 @@ This function returns the uuids for roles required to build resource groups
 
 #### Parameters
 
--   `accessToken` **[string][457]** cpaas access token (optional, default `"null access token"`)
+-   `accessToken` **[string][459]** cpaas access token (optional, default `"null access token"`)
 -   `trace` **any** optional microservices lifecycle object (optional, default `{}`)
 
-Returns **[Promise][459]** promise resolving to roles object
+Returns **[Promise][461]** promise resolving to roles object
 
 ### getRole
 
@@ -834,11 +836,11 @@ This function returns a single role by uuid.
 
 #### Parameters
 
--   `accessToken` **[string][457]** cpaas access token (optional, default `"null accessToken"`)
--   `roleUUID` **[string][457]** role uuid (optional, default `"null roleUUID"`)
--   `trace` **[object][458]** optional microservice lifecycle trace headers (optional, default `{}`)
+-   `accessToken` **[string][459]** cpaas access token (optional, default `"null accessToken"`)
+-   `roleUUID` **[string][459]** role uuid (optional, default `"null roleUUID"`)
+-   `trace` **[object][460]** optional microservice lifecycle trace headers (optional, default `{}`)
 
-Returns **[Promise][459]&lt;[object][458]>** Promise resolving to a role object
+Returns **[Promise][461]&lt;[object][460]>** Promise resolving to a role object
 
 ### listAccessByGroups
 
@@ -846,9 +848,9 @@ This function lists the user groups associated with a resource
 
 #### Parameters
 
--   `accessToken` **[string][457]** cpaas access token (optional, default `"null accessToken"`)
--   `resourceUUID` **[string][457]** resource uuid (optional, default `"null resourceUUID"`)
--   `trace` **[object][458]** optional microservice lifecycle trace headers (optional, default `{}`)
+-   `accessToken` **[string][459]** cpaas access token (optional, default `"null accessToken"`)
+-   `resourceUUID` **[string][459]** resource uuid (optional, default `"null resourceUUID"`)
+-   `trace` **[object][460]** optional microservice lifecycle trace headers (optional, default `{}`)
 
 ### listAccessByPermissions
 
@@ -856,9 +858,9 @@ This function lists the permissions associated with a resource
 
 #### Parameters
 
--   `accessToken` **[string][457]** cpaas access token (optional, default `"null accessToken"`)
--   `resourceUUID` **[string][457]** resource uuid (optional, default `"null resourceUUID"`)
--   `trace` **[object][458]** optional microservice lifecycle trace headers (optional, default `{}`)
+-   `accessToken` **[string][459]** cpaas access token (optional, default `"null accessToken"`)
+-   `resourceUUID` **[string][459]** resource uuid (optional, default `"null resourceUUID"`)
+-   `trace` **[object][460]** optional microservice lifecycle trace headers (optional, default `{}`)
 
 ### listUserGroupRoles
 
@@ -866,12 +868,12 @@ This function lists user groups a role is assigned to.
 
 #### Parameters
 
--   `accessToken` **[string][457]** cpaas access token (optional, default `"null accessToken"`)
--   `userGroupUUID` **[string][457]** user group uuid (optional, default `"null userGroupUUID"`)
--   `filters` **[array][461]** optional filters. currently supports "name" (optional, default `undefined`)
--   `trace` **[object][458]** optional microservice lifecycle trace headers (optional, default `{}`)
+-   `accessToken` **[string][459]** cpaas access token (optional, default `"null accessToken"`)
+-   `userGroupUUID` **[string][459]** user group uuid (optional, default `"null userGroupUUID"`)
+-   `filters` **[array][463]** optional filters. currently supports "name" (optional, default `undefined`)
+-   `trace` **[object][460]** optional microservice lifecycle trace headers (optional, default `{}`)
 
-Returns **[Promise][459]&lt;[object][458]>** Promise resolving to a data object containing a list of user groups
+Returns **[Promise][461]&lt;[object][460]>** Promise resolving to a data object containing a list of user groups
 
 ### listPermissions
 
@@ -879,13 +881,13 @@ This function lists permissions.
 
 #### Parameters
 
--   `accessToken` **[string][457]**  (optional, default `"null accessToken"`)
--   `offset` **[string][457]**  (optional, default `"0"`)
--   `limit` **[string][457]**  (optional, default `"10"`)
--   `filters` **[array][461]** array of filter query parameters (optional, default `undefined`)
--   `trace` **[object][458]** optional microservice lifecycle trace headers (optional, default `{}`)
+-   `accessToken` **[string][459]**  (optional, default `"null accessToken"`)
+-   `offset` **[string][459]**  (optional, default `"0"`)
+-   `limit` **[string][459]**  (optional, default `"10"`)
+-   `filters` **[array][463]** array of filter query parameters (optional, default `undefined`)
+-   `trace` **[object][460]** optional microservice lifecycle trace headers (optional, default `{}`)
 
-Returns **[Promise][459]&lt;[object][458]>** Promise resolving to a data object containing a list of permissions
+Returns **[Promise][461]&lt;[object][460]>** Promise resolving to a data object containing a list of permissions
 
 ### listPermissionRoles
 
@@ -893,12 +895,12 @@ This function lists roles a permission is assigned to.
 
 #### Parameters
 
--   `accessToken` **[string][457]** cpaas access token (optional, default `"null accessToken"`)
--   `permissionUUID` **[string][457]** permission uuid (optional, default `"null permissionUUID"`)
--   `filters` **[array][461]** optional filters. currently supports "name" (optional, default `undefined`)
--   `trace` **[object][458]** optional microservice lifecycle trace headers (optional, default `{}`)
+-   `accessToken` **[string][459]** cpaas access token (optional, default `"null accessToken"`)
+-   `permissionUUID` **[string][459]** permission uuid (optional, default `"null permissionUUID"`)
+-   `filters` **[array][463]** optional filters. currently supports "name" (optional, default `undefined`)
+-   `trace` **[object][460]** optional microservice lifecycle trace headers (optional, default `{}`)
 
-Returns **[Promise][459]&lt;[object][458]>** Promise resolving to a data object containing a list of user groups
+Returns **[Promise][461]&lt;[object][460]>** Promise resolving to a data object containing a list of user groups
 
 ### listRoleUserGroups
 
@@ -906,12 +908,12 @@ This function lists user groups a role is assigned to.
 
 #### Parameters
 
--   `accessToken` **[string][457]** cpaas access token (optional, default `"null accessToken"`)
--   `roleUUID` **[string][457]** role uuid (optional, default `"null roleUUID"`)
--   `filters` **[array][461]** array of filter query parameters (optional, default `undefined`)
--   `trace` **[object][458]** optional microservice lifecycle trace headers (optional, default `{}`)
+-   `accessToken` **[string][459]** cpaas access token (optional, default `"null accessToken"`)
+-   `roleUUID` **[string][459]** role uuid (optional, default `"null roleUUID"`)
+-   `filters` **[array][463]** array of filter query parameters (optional, default `undefined`)
+-   `trace` **[object][460]** optional microservice lifecycle trace headers (optional, default `{}`)
 
-Returns **[Promise][459]&lt;[object][458]>** Promise resolving to a data object containing a list of user groups
+Returns **[Promise][461]&lt;[object][460]>** Promise resolving to a data object containing a list of user groups
 
 ### listRolePermissions
 
@@ -919,12 +921,12 @@ This function lists permissions assigned to a role.
 
 #### Parameters
 
--   `accessToken` **[string][457]** cpaas access token (optional, default `"null accessToken"`)
--   `roleUUID` **[string][457]** role uuid (optional, default `"null roleUUID"`)
--   `filters` **[array][461]** array of filter query parameters (optional, default `undefined`)
--   `trace` **[object][458]** optional microservice lifecycle trace headers (optional, default `{}`)
+-   `accessToken` **[string][459]** cpaas access token (optional, default `"null accessToken"`)
+-   `roleUUID` **[string][459]** role uuid (optional, default `"null roleUUID"`)
+-   `filters` **[array][463]** array of filter query parameters (optional, default `undefined`)
+-   `trace` **[object][460]** optional microservice lifecycle trace headers (optional, default `{}`)
 
-Returns **[Promise][459]&lt;[object][458]>** Promise resolving to a data object containing a list of user groups
+Returns **[Promise][461]&lt;[object][460]>** Promise resolving to a data object containing a list of user groups
 
 ### listRoles
 
@@ -932,13 +934,13 @@ This function lists roles.
 
 #### Parameters
 
--   `accessToken` **[string][457]** cpaas access token (optional, default `"null accessToken"`)
--   `offset` **[string][457]** pagination offset (optional, default `"0"`)
--   `limit` **[string][457]** pagination limit (optional, default `"10"`)
--   `filters` **[array][461]** array of filter query parameters (optional, default `undefined`)
--   `trace` **[object][458]** optional microservice lifecycle trace headers (optional, default `{}`)
+-   `accessToken` **[string][459]** cpaas access token (optional, default `"null accessToken"`)
+-   `offset` **[string][459]** pagination offset (optional, default `"0"`)
+-   `limit` **[string][459]** pagination limit (optional, default `"10"`)
+-   `filters` **[array][463]** array of filter query parameters (optional, default `undefined`)
+-   `trace` **[object][460]** optional microservice lifecycle trace headers (optional, default `{}`)
 
-Returns **[Promise][459]&lt;[object][458]>** Promise resolving to a data object containing a list of roles
+Returns **[Promise][461]&lt;[object][460]>** Promise resolving to a data object containing a list of roles
 
 ### listRolesForUser
 
@@ -946,14 +948,14 @@ This function lists roles.
 
 #### Parameters
 
--   `accessToken` **[string][457]** cpaas access token (optional, default `"null accessToken"`)
--   `user_uuid` **[string][457]** user_uuid (optional, default `"null user_uuid"`)
--   `offset` **[string][457]** pagination offset (optional, default `"0"`)
--   `limit` **[string][457]** pagination limit (optional, default `"10"`)
--   `filters` **[array][461]** array of filter query parameters (optional, default `undefined`)
--   `trace` **[object][458]** optional microservice lifecycle trace headers (optional, default `{}`)
+-   `accessToken` **[string][459]** cpaas access token (optional, default `"null accessToken"`)
+-   `user_uuid` **[string][459]** user_uuid (optional, default `"null user_uuid"`)
+-   `offset` **[string][459]** pagination offset (optional, default `"0"`)
+-   `limit` **[string][459]** pagination limit (optional, default `"10"`)
+-   `filters` **[array][463]** array of filter query parameters (optional, default `undefined`)
+-   `trace` **[object][460]** optional microservice lifecycle trace headers (optional, default `{}`)
 
-Returns **[Promise][459]&lt;[object][458]>** Promise resolving to a data object containing a list of roles
+Returns **[Promise][461]&lt;[object][460]>** Promise resolving to a data object containing a list of roles
 
 ### listUserGroups
 
@@ -961,13 +963,13 @@ This function lists user groups.
 
 #### Parameters
 
--   `accessToken` **[string][457]** cpaas access token (optional, default `"null accessToken"`)
--   `offset` **[string][457]** pagination offset (optional, default `"0"`)
--   `limit` **[string][457]** pagination limit (optional, default `"10"`)
--   `filters` **[array][461]** array of filter query string parameters (user_uuid, name, sort) (optional, default `undefined`)
--   `trace` **[object][458]** optional microservice lifecycle trace headers (optional, default `{}`)
+-   `accessToken` **[string][459]** cpaas access token (optional, default `"null accessToken"`)
+-   `offset` **[string][459]** pagination offset (optional, default `"0"`)
+-   `limit` **[string][459]** pagination limit (optional, default `"10"`)
+-   `filters` **[array][463]** array of filter query string parameters (user_uuid, name, sort) (optional, default `undefined`)
+-   `trace` **[object][460]** optional microservice lifecycle trace headers (optional, default `{}`)
 
-Returns **[Promise][459]&lt;[object][458]>** Promise resolving to a data object containing a list of user groups
+Returns **[Promise][461]&lt;[object][460]>** Promise resolving to a data object containing a list of user groups
 
 ### modifyRole
 
@@ -975,12 +977,12 @@ This function modifies a role
 
 #### Parameters
 
--   `accessToken` **[string][457]** cpaas access token (optional, default `"null accessToken"`)
--   `roleUUID` **[string][457]** uuid of role being modified (optional, default `"null roleUUID"`)
--   `body` **[object][458]** object (optional, default `"null body"`)
--   `trace` **[object][458]** optional microservice lifecycle trace headers (optional, default `{}`)
+-   `accessToken` **[string][459]** cpaas access token (optional, default `"null accessToken"`)
+-   `roleUUID` **[string][459]** uuid of role being modified (optional, default `"null roleUUID"`)
+-   `body` **[object][460]** object (optional, default `"null body"`)
+-   `trace` **[object][460]** optional microservice lifecycle trace headers (optional, default `{}`)
 
-Returns **[Promise][459]&lt;[object][458]>** Promise resolving to a permission data object
+Returns **[Promise][461]&lt;[object][460]>** Promise resolving to a permission data object
 
 ### modifyUserGroup
 
@@ -988,12 +990,12 @@ This method will change the user-group name and/or description
 
 #### Parameters
 
--   `accessToken` **[string][457]** cpaas access token (optional, default `"null accessToken"`)
--   `groupUUID` **[string][457]** group to modify (optional, default `"null groupUuid"`)
--   `body` **[string][457]** object containing new name and/or description (optional, default `"null body`)
--   `trace` **[object][458]** optional microservice lifecycle trace headers (optional, default `{}`)
+-   `accessToken` **[string][459]** cpaas access token (optional, default `"null accessToken"`)
+-   `groupUUID` **[string][459]** group to modify (optional, default `"null groupUuid"`)
+-   `body` **[string][459]** object containing new name and/or description (optional, default `"null body`)
+-   `trace` **[object][460]** optional microservice lifecycle trace headers (optional, default `{}`)
 
-Returns **[Promise][459]&lt;[object][458]>** Promise resolving to a group object.
+Returns **[Promise][461]&lt;[object][460]>** Promise resolving to a group object.
 
 ### removeResourceFromGroup
 
@@ -1001,12 +1003,12 @@ This function removes resources from a resource group
 
 #### Parameters
 
--   `accessToken` **[string][457]** CPaaS access token (optional, default `"null accessToken"`)
--   `resourceGroup` **[string][457]** uuide of resource group to modify (optional, default `"null resourceGroup"`)
--   `resources` **[array][461]** array of resource uuids to add to group (optional, default `"null resources"`)
--   `trace` **[object][458]** optional microservice lifecycle trace headers (optional, default `{}`)
+-   `accessToken` **[string][459]** CPaaS access token (optional, default `"null accessToken"`)
+-   `resourceGroup` **[string][459]** uuide of resource group to modify (optional, default `"null resourceGroup"`)
+-   `resources` **[array][463]** array of resource uuids to add to group (optional, default `"null resources"`)
+-   `trace` **[object][460]** optional microservice lifecycle trace headers (optional, default `{}`)
 
-Returns **[Promise][459]&lt;[object][458]>** Promise resolving to a status data object
+Returns **[Promise][461]&lt;[object][460]>** Promise resolving to a status data object
 
 ### removeUsersFromGroup
 
@@ -1014,12 +1016,12 @@ This function removes users from a user group
 
 #### Parameters
 
--   `accessToken` **[string][457]** CPaaS access token (optional, default `"null accessToken"`)
--   `userGroupUUID` **[string][457]** user group uuid (optional, default `"null userGroupUUID"`)
--   `users` **[array][461]** array of user uuids (optional, default `"null members"`)
--   `trace` **[object][458]** optional CPaaS lifecycle headers (optional, default `{}`)
+-   `accessToken` **[string][459]** CPaaS access token (optional, default `"null accessToken"`)
+-   `userGroupUUID` **[string][459]** user group uuid (optional, default `"null userGroupUUID"`)
+-   `users` **[array][463]** array of user uuids (optional, default `"null members"`)
+-   `trace` **[object][460]** optional CPaaS lifecycle headers (optional, default `{}`)
 
-Returns **[Promise][459]&lt;[object][458]>** Promise resolving to the updated user group
+Returns **[Promise][461]&lt;[object][460]>** Promise resolving to the updated user group
 
 ## Chat
 
@@ -1032,12 +1034,12 @@ This function will add a member to a room.
 
 #### Parameters
 
--   `access_token` **[string][457]** access_token for cpaas system (optional, default `"null access_token"`)
--   `roomUUID` **[string][457]** room uuid (optional, default `"no room uuid specified"`)
--   `memberData` **[object][458]** object {"uuid": "string","type": "string"}
--   `trace` **[object][458]** optional microservice lifecycle trace headers (optional, default `{}`)
+-   `access_token` **[string][459]** access_token for cpaas system (optional, default `"null access_token"`)
+-   `roomUUID` **[string][459]** room uuid (optional, default `"no room uuid specified"`)
+-   `memberData` **[object][460]** object {"uuid": "string","type": "string"}
+-   `trace` **[object][460]** optional microservice lifecycle trace headers (optional, default `{}`)
 
-Returns **[Promise][459]&lt;[object][458]>** Promise resolving to a member data object
+Returns **[Promise][461]&lt;[object][460]>** Promise resolving to a member data object
 
 ### createRoom
 
@@ -1045,17 +1047,17 @@ This function will create a new room.
 
 #### Parameters
 
--   `access_token` **[string][457]** access_token for cpaas systems (optional, default `"null access token"`)
--   `userUUID` **[string][457]** user UUID to be used (optional, default `"null user uuid"`)
--   `name` **[string][457]** name (optional, default `"no name specified for group"`)
--   `topic` **[string][457]** topic (optional, default `"no topic specified"`)
--   `description` **[string][457]** description (optional, default `undefined`)
--   `groupUUID` **[string][457]** group UUID for members (optional, default `undefined`)
--   `accountUUID` **[string][457]** account uuid (optional, default `undefined`)
--   `metadata` **[object][458]** object for meta data (optional, default `{}`)
--   `trace` **[object][458]** optional microservice lifecycle trace headers (optional, default `{}`)
+-   `access_token` **[string][459]** access_token for cpaas systems (optional, default `"null access token"`)
+-   `userUUID` **[string][459]** user UUID to be used (optional, default `"null user uuid"`)
+-   `name` **[string][459]** name (optional, default `"no name specified for group"`)
+-   `topic` **[string][459]** topic (optional, default `"no topic specified"`)
+-   `description` **[string][459]** description (optional, default `undefined`)
+-   `groupUUID` **[string][459]** group UUID for members (optional, default `undefined`)
+-   `accountUUID` **[string][459]** account uuid (optional, default `undefined`)
+-   `metadata` **[object][460]** object for meta data (optional, default `{}`)
+-   `trace` **[object][460]** optional microservice lifecycle trace headers (optional, default `{}`)
 
-Returns **[Promise][459]&lt;[object][458]>** Promise resolving to a data object
+Returns **[Promise][461]&lt;[object][460]>** Promise resolving to a data object
 
 ### deleteMember
 
@@ -1063,12 +1065,12 @@ This function will delete a member from room.
 
 #### Parameters
 
--   `access_token` **[string][457]** access_token for cpaas systems (optional, default `"null access_token"`)
--   `roomUUID` **[string][457]** member to remove (optional, default `"no room uuid specified"`)
--   `memberUUID` **[string][457]** member to remove (optional, default `"empty"`)
--   `trace` **[object][458]** optional microservice lifecycle trace headers (optional, default `{}`)
+-   `access_token` **[string][459]** access_token for cpaas systems (optional, default `"null access_token"`)
+-   `roomUUID` **[string][459]** member to remove (optional, default `"no room uuid specified"`)
+-   `memberUUID` **[string][459]** member to remove (optional, default `"empty"`)
+-   `trace` **[object][460]** optional microservice lifecycle trace headers (optional, default `{}`)
 
-Returns **[Promise][459]&lt;[object][458]>** Promise resolving to a member data object
+Returns **[Promise][461]&lt;[object][460]>** Promise resolving to a member data object
 
 ### deleteRoom
 
@@ -1076,11 +1078,11 @@ This function will delete a room.
 
 #### Parameters
 
--   `access_token` **[string][457]**  (optional, default `"null acess token"`)
--   `roomUUID` **[string][457]**  (optional, default `"no room uuid specified"`)
--   `trace` **[object][458]** optional microservice lifecycle trace headers (optional, default `{}`)
+-   `access_token` **[string][459]**  (optional, default `"null acess token"`)
+-   `roomUUID` **[string][459]**  (optional, default `"no room uuid specified"`)
+-   `trace` **[object][460]** optional microservice lifecycle trace headers (optional, default `{}`)
 
-Returns **[Promise][459]&lt;empty>** Promise with no payload
+Returns **[Promise][461]&lt;empty>** Promise with no payload
 
 ### getMessages
 
@@ -1088,12 +1090,12 @@ This function will get room messages.
 
 #### Parameters
 
--   `access_token` **[string][457]** access_token for cpaas systems (optional, default `"null access_token"`)
--   `roomUUID` **[string][457]** room uuid (optional, default `"no room uuid specified"`)
--   `max` **[number][460]** number of messages (optional, default `100`)
--   `trace` **[object][458]** optional microservice lifecycle trace headers (optional, default `{}`)
+-   `access_token` **[string][459]** access_token for cpaas systems (optional, default `"null access_token"`)
+-   `roomUUID` **[string][459]** room uuid (optional, default `"no room uuid specified"`)
+-   `max` **[number][462]** number of messages (optional, default `100`)
+-   `trace` **[object][460]** optional microservice lifecycle trace headers (optional, default `{}`)
 
-Returns **[Promise][459]&lt;[object][458]>** Promise resolving to a data object containing a colelction of message objects.
+Returns **[Promise][461]&lt;[object][460]>** Promise resolving to a data object containing a colelction of message objects.
 
 ### getRoom
 
@@ -1101,11 +1103,11 @@ This function will get a specific room.
 
 #### Parameters
 
--   `access_token` **[string][457]** access token for cpaas systems (optional, default `"null access token"`)
--   `roomUUID` **[string][457]** room UUID (optional, default `"no room uuid specified"`)
--   `trace` **[object][458]** optional microservice lifecycle trace headers (optional, default `{}`)
+-   `access_token` **[string][459]** access token for cpaas systems (optional, default `"null access token"`)
+-   `roomUUID` **[string][459]** room UUID (optional, default `"no room uuid specified"`)
+-   `trace` **[object][460]** optional microservice lifecycle trace headers (optional, default `{}`)
 
-Returns **[Promise][459]&lt;[object][458]>** Promise resolving to a data object
+Returns **[Promise][461]&lt;[object][460]>** Promise resolving to a data object
 
 ### getRoomInfo
 
@@ -1113,12 +1115,12 @@ This function will get room info, messages, and members.
 
 #### Parameters
 
--   `access_token` **[string][457]** access_token for cpaas systems (optional, default `"null access_token"`)
--   `roomUUID` **[string][457]** string message (optional, default `"no room uuid specified"`)
--   `message_count` **[number][460]**  (optional, default `100`)
--   `trace` **[object][458]** optional microservice lifecycle trace headers (optional, default `{}`)
+-   `access_token` **[string][459]** access_token for cpaas systems (optional, default `"null access_token"`)
+-   `roomUUID` **[string][459]** string message (optional, default `"no room uuid specified"`)
+-   `message_count` **[number][462]**  (optional, default `100`)
+-   `trace` **[object][460]** optional microservice lifecycle trace headers (optional, default `{}`)
 
-Returns **[Promise][459]&lt;[object][458]>** Promise resolving to a data object
+Returns **[Promise][461]&lt;[object][460]>** Promise resolving to a data object
 
 ### getRoomMembers
 
@@ -1126,11 +1128,11 @@ This function will return a list of room members.
 
 #### Parameters
 
--   `access_token` **[string][457]**  (optional, default `"null access_token"`)
--   `roomUUID` **[string][457]**  (optional, default `"no room uuid specified"`)
--   `trace` **[object][458]** optional microservice lifecycle trace headers (optional, default `{}`)
+-   `access_token` **[string][459]**  (optional, default `"null access_token"`)
+-   `roomUUID` **[string][459]**  (optional, default `"no room uuid specified"`)
+-   `trace` **[object][460]** optional microservice lifecycle trace headers (optional, default `{}`)
 
-Returns **[Promise][459]&lt;[object][458]>** Promise resolving to a data object
+Returns **[Promise][461]&lt;[object][460]>** Promise resolving to a data object
 
 ### listRooms
 
@@ -1138,11 +1140,11 @@ This function will list rooms.
 
 #### Parameters
 
--   `access_token` **[string][457]** access token for cpaas systems (optional, default `"null acess token"`)
--   `filter` **[object][458]** optional object, (optional, default `undefined`)
--   `trace` **[object][458]** optional microservice lifecycle trace headers (optional, default `{}`)
+-   `access_token` **[string][459]** access token for cpaas systems (optional, default `"null acess token"`)
+-   `filter` **[object][460]** optional object, (optional, default `undefined`)
+-   `trace` **[object][460]** optional microservice lifecycle trace headers (optional, default `{}`)
 
-Returns **[Promise][459]&lt;[object][458]>** Promise resolving to a data object
+Returns **[Promise][461]&lt;[object][460]>** Promise resolving to a data object
 
 ### listUsersChannels
 
@@ -1150,14 +1152,14 @@ This function will send a message to a chat channel
 
 #### Parameters
 
--   `accessToken` **[string][457]** CPaaS access token (optional, default `"null accessToken"`)
--   `userUUID` **[string][457]** user uuid (optional, default `"null userUUID"`)
--   `accountUUID` **[string][457]** account uuid (optional, default `"null accountUUID"`)
--   `offset` **[string][457]** pagination offset (optional, default `0`)
--   `limit` **[string][457]** pagination limit (optional, default `10`)
--   `trace` **[object][458]** optional CPaaS request lifecycle headers (optional, default `{}`)
+-   `accessToken` **[string][459]** CPaaS access token (optional, default `"null accessToken"`)
+-   `userUUID` **[string][459]** user uuid (optional, default `"null userUUID"`)
+-   `accountUUID` **[string][459]** account uuid (optional, default `"null accountUUID"`)
+-   `offset` **[string][459]** pagination offset (optional, default `0`)
+-   `limit` **[string][459]** pagination limit (optional, default `10`)
+-   `trace` **[object][460]** optional CPaaS request lifecycle headers (optional, default `{}`)
 
-Returns **[Promise][459]&lt;[object][458]>** promise resolving to a list of channel objects
+Returns **[Promise][461]&lt;[object][460]>** promise resolving to a list of channel objects
 
 ### sendMessageToChannel
 
@@ -1165,12 +1167,12 @@ This function will send a message to a chat channel
 
 #### Parameters
 
--   `accessToken` **[string][457]** CPaaS access token (optional, default `"null accessToken"`)
--   `channelUUID` **[string][457]** channel uuid (optional, default `"null channelUUID"`)
--   `content` **([string][457] \| [array][461])** message content, string or array (optional, default `undefined`)
--   `trace` **[object][458]** optional CPaaS request lifecycle headers (optional, default `{}`)
+-   `accessToken` **[string][459]** CPaaS access token (optional, default `"null accessToken"`)
+-   `channelUUID` **[string][459]** channel uuid (optional, default `"null channelUUID"`)
+-   `content` **([string][459] \| [array][463])** message content, string or array (optional, default `undefined`)
+-   `trace` **[object][460]** optional CPaaS request lifecycle headers (optional, default `{}`)
 
-Returns **[Promise][459]&lt;[object][458]>** promise resolving to a message confirmation object
+Returns **[Promise][461]&lt;[object][460]>** promise resolving to a message confirmation object
 
 ### updateRoomInfo
 
@@ -1178,12 +1180,12 @@ This function will update room info
 
 #### Parameters
 
--   `access_token` **[string][457]**  (optional, default `"null access_token"`)
--   `roomUUID` **[string][457]**  (optional, default `"no room uuid specified"`)
--   `info` **[object][458]** object containing attributes to update (optional, default `{}`)
--   `trace` **[object][458]** optional microservice lifecycle trace headers (optional, default `{}`)
+-   `access_token` **[string][459]**  (optional, default `"null access_token"`)
+-   `roomUUID` **[string][459]**  (optional, default `"no room uuid specified"`)
+-   `info` **[object][460]** object containing attributes to update (optional, default `{}`)
+-   `trace` **[object][460]** optional microservice lifecycle trace headers (optional, default `{}`)
 
-Returns **[Promise][459]&lt;[object][458]>** Promise resolving to a data object
+Returns **[Promise][461]&lt;[object][460]>** Promise resolving to a data object
 
 ### updateRoomMeta
 
@@ -1191,12 +1193,12 @@ This function will udpate room meta
 
 #### Parameters
 
--   `access_token` **[string][457]** access_token for cpaas systems (optional, default `"null access_token"`)
--   `roomUUID` **[string][457]** room uuid (optional, default `"no room uuid specified"`)
--   `meta` **[object][458]** metedata object (optional, default `{}`)
--   `trace` **[object][458]** optional microservice lifecycle trace headers (optional, default `{}`)
+-   `access_token` **[string][459]** access_token for cpaas systems (optional, default `"null access_token"`)
+-   `roomUUID` **[string][459]** room uuid (optional, default `"no room uuid specified"`)
+-   `meta` **[object][460]** metedata object (optional, default `{}`)
+-   `trace` **[object][460]** optional microservice lifecycle trace headers (optional, default `{}`)
 
-Returns **[Promise][459]&lt;[object][458]>** Promise resolving to a data object
+Returns **[Promise][461]&lt;[object][460]>** Promise resolving to a data object
 
 ## Contacts
 
@@ -1209,12 +1211,12 @@ This function will ask the cpaas contacts service to create a contact.
 
 #### Parameters
 
--   `accessToken` **[string][457]** access token (optional, default `"null accessToken"`)
--   `userUuid` **[string][457]** user UUID to be used (optional, default `"null user uuid"`)
+-   `accessToken` **[string][459]** access token (optional, default `"null accessToken"`)
+-   `userUuid` **[string][459]** user UUID to be used (optional, default `"null user uuid"`)
 -   `contactData` **any** contact data object (optional, default `{}`)
--   `trace` **[object][458]** optional microservice lifecycle trace headers (optional, default `{}`)
+-   `trace` **[object][460]** optional microservice lifecycle trace headers (optional, default `{}`)
 
-Returns **[Promise][459]&lt;[object][458]>** Promise resolving to a contact data object
+Returns **[Promise][461]&lt;[object][460]>** Promise resolving to a contact data object
 
 ### deleteContact
 
@@ -1222,11 +1224,11 @@ This function will ask the cpaas contacts service to delete a contact
 
 #### Parameters
 
--   `accessToken` **[string][457]** access token (optional, default `"null accessToken"`)
--   `contactUUID` **[string][457]** contact UUID to be used (optional, default `"null contact uuid"`)
--   `trace` **[object][458]** optional microservice lifecycle trace headers (optional, default `{}`)
+-   `accessToken` **[string][459]** access token (optional, default `"null accessToken"`)
+-   `contactUUID` **[string][459]** contact UUID to be used (optional, default `"null contact uuid"`)
+-   `trace` **[object][460]** optional microservice lifecycle trace headers (optional, default `{}`)
 
-Returns **[Promise][459]** Promise resolving to a data object
+Returns **[Promise][461]** Promise resolving to a data object
 
 ### getContact
 
@@ -1234,11 +1236,11 @@ This function return a single contact by uuid
 
 #### Parameters
 
--   `accessToken` **[string][457]** cpaas access token (optional, default `"null access_token"`)
--   `contactUUID` **[string][457]** contact uuid (optional, default `"null contact_uuid"`)
--   `trace` **[object][458]** optional cpaas lifecycle headers (optional, default `{}`)
+-   `accessToken` **[string][459]** cpaas access token (optional, default `"null access_token"`)
+-   `contactUUID` **[string][459]** contact uuid (optional, default `"null contact_uuid"`)
+-   `trace` **[object][460]** optional cpaas lifecycle headers (optional, default `{}`)
 
-Returns **[Promise][459]&lt;[object][458]>** promise resolving to a contact object
+Returns **[Promise][461]&lt;[object][460]>** promise resolving to a contact object
 
 ### exportContacts
 
@@ -1246,8 +1248,8 @@ This function will return
 
 #### Parameters
 
--   `accessToken` **[string][457]**  (optional, default `"null access token"`)
--   `user_uuid` **[string][457]**  (optional, default `"null user uuid"`)
+-   `accessToken` **[string][459]**  (optional, default `"null access token"`)
+-   `user_uuid` **[string][459]**  (optional, default `"null user uuid"`)
 -   `trace` **any**  (optional, default `{}`)
 
 ### listContacts
@@ -1256,12 +1258,12 @@ This function will list a user's contacts
 
 #### Parameters
 
--   `accessToken` **[string][457]** cpaas access token (optional, default `"null access_token"`)
--   `user_uuid` **[string][457]** user uuid (optional, default `"null user_uuid"`)
--   `offset` **[number][460]** pagination offset (optional, default `0`)
--   `limit` **[number][460]** pagination limit (optional, default `10`)
--   `filters` **[object][458]** optional filters or search params (optional, default `{}`)
--   `trace` **[object][458]** optional microservice lifecycle headers (optional, default `{}`)
+-   `accessToken` **[string][459]** cpaas access token (optional, default `"null access_token"`)
+-   `user_uuid` **[string][459]** user uuid (optional, default `"null user_uuid"`)
+-   `offset` **[number][462]** pagination offset (optional, default `0`)
+-   `limit` **[number][462]** pagination limit (optional, default `10`)
+-   `filters` **[object][460]** optional filters or search params (optional, default `{}`)
+-   `trace` **[object][460]** optional microservice lifecycle headers (optional, default `{}`)
 
 ### updateContact
 
@@ -1269,12 +1271,12 @@ This function will update a contact
 
 #### Parameters
 
--   `accessToken` **[string][457]** cpaas access token (optional, default `"null access_token"`)
--   `contactUUID` **[string][457]** contact uuid (optional, default `"null contactUUID"`)
--   `body` **[string][457]** contact data (PUT) (optional, default `"null body"`)
--   `trace` **[object][458]** optional microservice lifecycle trace headers (optional, default `{}`)
+-   `accessToken` **[string][459]** cpaas access token (optional, default `"null access_token"`)
+-   `contactUUID` **[string][459]** contact uuid (optional, default `"null contactUUID"`)
+-   `body` **[string][459]** contact data (PUT) (optional, default `"null body"`)
+-   `trace` **[object][460]** optional microservice lifecycle trace headers (optional, default `{}`)
 
-Returns **[Promise][459]&lt;[object][458]>** Promise resolving to updated contact data
+Returns **[Promise][461]&lt;[object][460]>** Promise resolving to updated contact data
 
 ## Email
 
@@ -1288,12 +1290,12 @@ This function will send an email to the provided recipients
 #### Parameters
 
 -   `accessToken`   (optional, default `"null accessToken"`)
--   `sender` **[string][457]** email address of sender (optional, default `""`)
--   `to` **[array][461]** array of email addresses for recipients (optional, default `""`)
--   `subject` **[string][457]** message subject (optional, default `""`)
--   `message` **[string][457]** mesaage (optional, default `""`)
--   `type` **[string][457]** //TODO add validation for types (optional, default `"text"`)
--   `trace` **[object][458]** optional microservice lifecycle trace headers (optional, default `{}`)
+-   `sender` **[string][459]** email address of sender (optional, default `""`)
+-   `to` **[array][463]** array of email addresses for recipients (optional, default `""`)
+-   `subject` **[string][459]** message subject (optional, default `""`)
+-   `message` **[string][459]** mesaage (optional, default `""`)
+-   `type` **[string][459]** //TODO add validation for types (optional, default `"text"`)
+-   `trace` **[object][460]** optional microservice lifecycle trace headers (optional, default `{}`)
 
 ## Entitlements
 
@@ -1306,11 +1308,11 @@ This function returns a single entitlement product
 
 #### Parameters
 
--   `accessToken` **[string][457]** CPaaS access token (optional, default `"null accessToken"`)
--   `productUUID` **[string][457]** product UUID (optional, default `"null productUUID"`)
--   `trace` **[object][458]** option CPaaS lifecycle headers (optional, default `{}`)
+-   `accessToken` **[string][459]** CPaaS access token (optional, default `"null accessToken"`)
+-   `productUUID` **[string][459]** product UUID (optional, default `"null productUUID"`)
+-   `trace` **[object][460]** option CPaaS lifecycle headers (optional, default `{}`)
 
-Returns **[Promise][459]&lt;[object][458]>** Promise resolving to a product object
+Returns **[Promise][461]&lt;[object][460]>** Promise resolving to a product object
 
 ### getProducts
 
@@ -1318,13 +1320,13 @@ This fuction returns a list of products
 
 #### Parameters
 
--   `accessToken` **[string][457]** CPaaS access token (optional, default `"null accessToken"`)
--   `offset` **[number][460]** pagination offset (optional, default `0`)
--   `limit` **[number][460]** pagination limit (optional, default `10`)
--   `filters` **[object][458]** optional filters object {"key": "value"} (optional, default `undefined`)
--   `trace` **[object][458]** optional CPaaS lifecycle headers (optional, default `{}`)
+-   `accessToken` **[string][459]** CPaaS access token (optional, default `"null accessToken"`)
+-   `offset` **[number][462]** pagination offset (optional, default `0`)
+-   `limit` **[number][462]** pagination limit (optional, default `10`)
+-   `filters` **[object][460]** optional filters object {"key": "value"} (optional, default `undefined`)
+-   `trace` **[object][460]** optional CPaaS lifecycle headers (optional, default `{}`)
 
-Returns **[Promise][459]&lt;[object][458]>** Promise resolving to a list of products
+Returns **[Promise][461]&lt;[object][460]>** Promise resolving to a list of products
 
 ## Forms
 
@@ -1337,19 +1339,19 @@ This function will create a form instance from a form template uuid
 
 #### Parameters
 
--   `accessToken` **[string][457]** CPaaS access toke (optional, default `"null access token"`)
--   `accountUUID` **[string][457]** account uuid (optional, default `"null account uuid"`)
--   `status` **[string][457]** active or inactive (optional, default `"active"`)
--   `name` **[string][457]** instance name (optional, default `"no name"`)
--   `dueDate` **[date][462]** optional due date (optional, default `undefined`)
--   `applicationUUID` **[string][457]?** optional application uuid (optional, default `undefined`)
--   `allowAnonymousSubmission` **[boolean][463]** allow unauthenticated submission (optional, default `true`)
--   `allowSubmissionUpdate` **[boolean][463]** allow submission to be updated (optional, default `true`)
--   `template_uuid` **[string][457]** form template uuid (optional, default `"null template uuid"`)
--   `metadata` **[object][458]** option metadata in JSON (optional, default `undefined`)
--   `trace` **[object][458]** optional CPaaS lifecycle headers (optional, default `{}`)
+-   `accessToken` **[string][459]** CPaaS access toke (optional, default `"null access token"`)
+-   `accountUUID` **[string][459]** account uuid (optional, default `"null account uuid"`)
+-   `status` **[string][459]** active or inactive (optional, default `"active"`)
+-   `name` **[string][459]** instance name (optional, default `"no name"`)
+-   `dueDate` **[date][464]** optional due date (optional, default `undefined`)
+-   `applicationUUID` **[string][459]?** optional application uuid (optional, default `undefined`)
+-   `allowAnonymousSubmission` **[boolean][465]** allow unauthenticated submission (optional, default `true`)
+-   `allowSubmissionUpdate` **[boolean][465]** allow submission to be updated (optional, default `true`)
+-   `template_uuid` **[string][459]** form template uuid (optional, default `"null template uuid"`)
+-   `metadata` **[object][460]** option metadata in JSON (optional, default `undefined`)
+-   `trace` **[object][460]** optional CPaaS lifecycle headers (optional, default `{}`)
 
-Returns **[Promise][459]** 
+Returns **[Promise][461]** 
 
 ### getFormInstance
 
@@ -1357,12 +1359,12 @@ This function will GET a form instance
 
 #### Parameters
 
--   `accessToken` **[string][457]** CPaaS access token (optional, default `"null access token"`)
--   `formInstanceUUID` **[string][457]** form instance uuid (optional, default `"null form instance uuid"`)
--   `include` **[string][457]** option include ["metadata", "form_definition"] (optional, default `undefined`)
--   `trace` **[object][458]** optional CPaaS lifecycle headers (optional, default `{}`)
+-   `accessToken` **[string][459]** CPaaS access token (optional, default `"null access token"`)
+-   `formInstanceUUID` **[string][459]** form instance uuid (optional, default `"null form instance uuid"`)
+-   `include` **[string][459]** option include ["metadata", "form_definition"] (optional, default `undefined`)
+-   `trace` **[object][460]** optional CPaaS lifecycle headers (optional, default `{}`)
 
-Returns **[Promise][459]** 
+Returns **[Promise][461]** 
 
 ### getFormTemplate
 
@@ -1370,12 +1372,12 @@ This function will GET a form template
 
 #### Parameters
 
--   `accessToken` **[string][457]** CPaaS access token (optional, default `"null access token"`)
--   `templateUUID` **[string][457]** form template uuid to look up (optional, default `"null template uuid"`)
--   `accountUUID` **[string][457]** optional account uuid (optional, default `undefined`)
--   `trace` **[object][458]** optional CPaaS lifecycle headers (optional, default `{}`)
+-   `accessToken` **[string][459]** CPaaS access token (optional, default `"null access token"`)
+-   `templateUUID` **[string][459]** form template uuid to look up (optional, default `"null template uuid"`)
+-   `accountUUID` **[string][459]** optional account uuid (optional, default `undefined`)
+-   `trace` **[object][460]** optional CPaaS lifecycle headers (optional, default `{}`)
 
-Returns **[Promise][459]** 
+Returns **[Promise][461]** 
 
 ### listUserForms
 
@@ -1383,15 +1385,15 @@ This function list user forms.
 
 #### Parameters
 
--   `accessToken` **[string][457]** cpaas access token (optional, default `"null access token"`)
--   `accountUUID` **[string][457]** account_uuid for an star2star account (customer) (optional, default `"null account uuid"`)
--   `offset` **[number][460]** pagination offset (optional, default `0`)
--   `limit` **[number][460]** pagination limit (optional, default `100`)
+-   `accessToken` **[string][459]** cpaas access token (optional, default `"null access token"`)
+-   `accountUUID` **[string][459]** account_uuid for an star2star account (customer) (optional, default `"null account uuid"`)
+-   `offset` **[number][462]** pagination offset (optional, default `0`)
+-   `limit` **[number][462]** pagination limit (optional, default `100`)
 -   `filters`   (optional, default `undefined`)
--   `trace` **[object][458]** optional microservice lifecycle trace headers (optional, default `{}`)
--   `filter` **[object][458]** optional filter options (optional, default `undefined`)
+-   `trace` **[object][460]** optional microservice lifecycle trace headers (optional, default `{}`)
+-   `filter` **[object][460]** optional filter options (optional, default `undefined`)
 
-Returns **[Promise][459]** 
+Returns **[Promise][461]** 
 
 ### listUserFormSubmissions
 
@@ -1399,16 +1401,16 @@ This function list user form submissions.
 
 #### Parameters
 
--   `accessToken` **[string][457]** cpaas access token (optional, default `"null access token"`)
--   `accountUUID` **[string][457]** account_uuid for an star2star account (customer) (optional, default `"null account uuid"`)
--   `formUUID` **[string][457]** form uuid (optional, default `"null"`)
--   `offset` **[number][460]** pagination offset (optional, default `0`)
--   `limit` **[number][460]** pagination limit (optional, default `100`)
+-   `accessToken` **[string][459]** cpaas access token (optional, default `"null access token"`)
+-   `accountUUID` **[string][459]** account_uuid for an star2star account (customer) (optional, default `"null account uuid"`)
+-   `formUUID` **[string][459]** form uuid (optional, default `"null"`)
+-   `offset` **[number][462]** pagination offset (optional, default `0`)
+-   `limit` **[number][462]** pagination limit (optional, default `100`)
 -   `filters`   (optional, default `undefined`)
--   `trace` **[object][458]** optional microservice lifecycle trace headers (optional, default `{}`)
--   `filter` **[object][458]** optional filter options (optional, default `undefined`)
+-   `trace` **[object][460]** optional microservice lifecycle trace headers (optional, default `{}`)
+-   `filter` **[object][460]** optional filter options (optional, default `undefined`)
 
-Returns **[Promise][459]** 
+Returns **[Promise][461]** 
 
 ## Groups
 
@@ -1421,12 +1423,12 @@ This function will add users to a user group.
 
 #### Parameters
 
--   `accessToken` **[string][457]** access Token (optional, default `"null accessToken"`)
--   `groupUUID` **[string][457]** data object UUID (optional, default `"group uuid not specified"`)
--   `members` **[array][461]** array of objects containing 'uuid' (for known users) (optional, default `[]`)
--   `trace` **[object][458]** optional microservice lifecycle trace headers (optional, default `{}`)
+-   `accessToken` **[string][459]** access Token (optional, default `"null accessToken"`)
+-   `groupUUID` **[string][459]** data object UUID (optional, default `"group uuid not specified"`)
+-   `members` **[array][463]** array of objects containing 'uuid' (for known users) (optional, default `[]`)
+-   `trace` **[object][460]** optional microservice lifecycle trace headers (optional, default `{}`)
 
-Returns **[Promise][459]&lt;[array][461]>** Promise resolving to an array of added users
+Returns **[Promise][461]&lt;[array][463]>** Promise resolving to an array of added users
 
 ### createGroup
 
@@ -1434,9 +1436,9 @@ This function will create a new group associated with a user
 
 #### Parameters
 
--   `accessToken` **[string][457]** cpaas access token (optional, default `"null accessToken"`)
--   `body` **[string][457]** object conatining group data (optional, default `"null body"`)
--   `trace` **[object][458]** optional microservice lifecycle trace headers (optional, default `{}`)
+-   `accessToken` **[string][459]** cpaas access token (optional, default `"null accessToken"`)
+-   `body` **[string][459]** object conatining group data (optional, default `"null body"`)
+-   `trace` **[object][460]** optional microservice lifecycle trace headers (optional, default `{}`)
 
 ### deactivateGroup
 
@@ -1444,11 +1446,11 @@ This method will deactivate a group
 
 #### Parameters
 
--   `accessToken` **[string][457]** cpaas access token (optional, default `"null accessToken"`)
--   `groupUuid` **[string][457]** group to modify (optional, default `"null groupUuid"`)
--   `trace` **[object][458]** optional microservice lifecycle trace headers (optional, default `{}`)
+-   `accessToken` **[string][459]** cpaas access token (optional, default `"null accessToken"`)
+-   `groupUuid` **[string][459]** group to modify (optional, default `"null groupUuid"`)
+-   `trace` **[object][460]** optional microservice lifecycle trace headers (optional, default `{}`)
 
-Returns **[Promise][459]&lt;[object][458]>** Promise resolving to a group object.
+Returns **[Promise][461]&lt;[object][460]>** Promise resolving to a group object.
 
 ### deleteGroup
 
@@ -1456,11 +1458,11 @@ This function will delete a specific group.
 
 #### Parameters
 
--   `accessToken` **[string][457]** access Token (optional, default `"null accessToken"`)
--   `groupUUID` **[string][457]** group UUID (optional, default `"not specified"`)
--   `trace` **[object][458]** optional microservice lifecycle trace headers (optional, default `{}`)
+-   `accessToken` **[string][459]** access Token (optional, default `"null accessToken"`)
+-   `groupUUID` **[string][459]** group UUID (optional, default `"not specified"`)
+-   `trace` **[object][460]** optional microservice lifecycle trace headers (optional, default `{}`)
 
-Returns **[Promise][459]&lt;empty>** Promise resolving success or failure.
+Returns **[Promise][461]&lt;empty>** Promise resolving success or failure.
 
 ### deleteGroupMembers
 
@@ -1468,12 +1470,12 @@ This function will remove one or more members from a group
 
 #### Parameters
 
--   `accessToken` **[string][457]** cpaas access token (optional, default `"null accessToken"`)
--   `groupUUID` **[string][457]** group to remove users from (optional, default `"null groupUUID"`)
--   `members` **[array][461]** array of objects containing 'uuid' (for known users) (optional, default `[]`)
--   `trace` **[object][458]** optional microservice lifecycle trace headers (optional, default `{}`)
+-   `accessToken` **[string][459]** cpaas access token (optional, default `"null accessToken"`)
+-   `groupUUID` **[string][459]** group to remove users from (optional, default `"null groupUUID"`)
+-   `members` **[array][463]** array of objects containing 'uuid' (for known users) (optional, default `[]`)
+-   `trace` **[object][460]** optional microservice lifecycle trace headers (optional, default `{}`)
 
-Returns **[Promise][459]&lt;empty>** Promise resolving success or failure status object.
+Returns **[Promise][461]&lt;empty>** Promise resolving success or failure status object.
 
 ### getGroup
 
@@ -1481,12 +1483,12 @@ This function will ask the cpaas groups service for a specific group.
 
 #### Parameters
 
--   `accessToken` **[string][457]** access Token (optional, default `"null accessToken"`)
--   `groupUUID` **[string][457]** group UUID (optional, default `"null uuid"`)
--   `filters` **[array][461]** optional array of filters, e.g. [expand] = "members.type" (optional, default `undefined`)
--   `trace` **[object][458]** optional microservice lifecycle trace headers (optional, default `{}`)
+-   `accessToken` **[string][459]** access Token (optional, default `"null accessToken"`)
+-   `groupUUID` **[string][459]** group UUID (optional, default `"null uuid"`)
+-   `filters` **[array][463]** optional array of filters, e.g. [expand] = "members.type" (optional, default `undefined`)
+-   `trace` **[object][460]** optional microservice lifecycle trace headers (optional, default `{}`)
 
-Returns **[Promise][459]&lt;[object][458]>** Promise resolving to a data object containing a single group
+Returns **[Promise][461]&lt;[object][460]>** Promise resolving to a data object containing a single group
 
 ### listGroups
 
@@ -1494,13 +1496,13 @@ This function will return the groups associated with a user
 
 #### Parameters
 
--   `accessToken` **[string][457]** cpaas access otken (optional, default `"null accessToken"`)
--   `offset` **[number][460]** page number (optional, default `0`)
--   `limit` **[number][460]** page size (optional, default `10`)
--   `filters` **[array][461]** optional array of key-value pairs to filter response. (optional, default `undefined`)
--   `trace` **[object][458]** optional microservice lifecycle trace headers (optional, default `{}`)
+-   `accessToken` **[string][459]** cpaas access otken (optional, default `"null accessToken"`)
+-   `offset` **[number][462]** page number (optional, default `0`)
+-   `limit` **[number][462]** page size (optional, default `10`)
+-   `filters` **[array][463]** optional array of key-value pairs to filter response. (optional, default `undefined`)
+-   `trace` **[object][460]** optional microservice lifecycle trace headers (optional, default `{}`)
 
-Returns **[Promise][459]&lt;[object][458]>** Promise resolving to a list of user groups.
+Returns **[Promise][461]&lt;[object][460]>** Promise resolving to a list of user groups.
 
 ### listGroupMembers
 
@@ -1508,12 +1510,12 @@ This function will return a list of the members of a group.
 
 #### Parameters
 
--   `accessToken` **[string][457]** access Token (optional, default `"null accessToken"`)
--   `groupUUID` **[string][457]** group UUID (optional, default `"null uuid"`)
--   `filters` **[array][461]** optional array of filters, e.g. [expand] = "members.type", [offset] and [limit] for pagination (optional, default `undefined`)
--   `trace` **[object][458]** optional microservice lifecycle trace headers (optional, default `{}`)
+-   `accessToken` **[string][459]** access Token (optional, default `"null accessToken"`)
+-   `groupUUID` **[string][459]** group UUID (optional, default `"null uuid"`)
+-   `filters` **[array][463]** optional array of filters, e.g. [expand] = "members.type", [offset] and [limit] for pagination (optional, default `undefined`)
+-   `trace` **[object][460]** optional microservice lifecycle trace headers (optional, default `{}`)
 
-Returns **[Promise][459]&lt;[object][458]>** Promise resolving to a data object containing a single group
+Returns **[Promise][461]&lt;[object][460]>** Promise resolving to a data object containing a single group
 
 ### modifyGroup
 
@@ -1521,12 +1523,12 @@ This method will change the group name and description
 
 #### Parameters
 
--   `accessToken` **[string][457]** cpaas access token (optional, default `"null accessToken"`)
--   `groupUuid` **[string][457]** group to modify (optional, default `"null groupUuid"`)
--   `body` **[string][457]** object containing new name and/or description (optional, default `"null body`)
--   `trace` **[object][458]** optional microservice lifecycle trace headers (optional, default `{}`)
+-   `accessToken` **[string][459]** cpaas access token (optional, default `"null accessToken"`)
+-   `groupUuid` **[string][459]** group to modify (optional, default `"null groupUuid"`)
+-   `body` **[string][459]** object containing new name and/or description (optional, default `"null body`)
+-   `trace` **[object][460]** optional microservice lifecycle trace headers (optional, default `{}`)
 
-Returns **[Promise][459]&lt;[object][458]>** Promise resolving to a group object.
+Returns **[Promise][461]&lt;[object][460]>** Promise resolving to a group object.
 
 ### reactivateGroup
 
@@ -1534,11 +1536,11 @@ This method will reactivate a group
 
 #### Parameters
 
--   `accessToken` **[string][457]** cpaas access token (optional, default `"null accessToken"`)
--   `groupUuid` **[string][457]** group to modify (optional, default `"null groupUuid"`)
--   `trace` **[object][458]** optional microservice lifecycle trace headers (optional, default `{}`)
+-   `accessToken` **[string][459]** cpaas access token (optional, default `"null accessToken"`)
+-   `groupUuid` **[string][459]** group to modify (optional, default `"null groupUuid"`)
+-   `trace` **[object][460]** optional microservice lifecycle trace headers (optional, default `{}`)
 
-Returns **[Promise][459]&lt;[object][458]>** Promise resolving to a group object.
+Returns **[Promise][461]&lt;[object][460]>** Promise resolving to a group object.
 
 ## Identity
 
@@ -1551,12 +1553,12 @@ This function will add aliases to an identity
 
 #### Parameters
 
--   `accessToken` **[string][457]** access token (optional, default `"null accessToken"`)
--   `userUuid` **[string][457]** user_uuid for alias being created (optional, default `"null user uuid"`)
--   `body` **[object][458]** object containing any combination of email, nickname, or sms alias assignments. (optional, default `"null body"`)
--   `trace` **[object][458]** optional microservice lifecycle trace headers (optional, default `{}`)
+-   `accessToken` **[string][459]** access token (optional, default `"null accessToken"`)
+-   `userUuid` **[string][459]** user_uuid for alias being created (optional, default `"null user uuid"`)
+-   `body` **[object][460]** object containing any combination of email, nickname, or sms alias assignments. (optional, default `"null body"`)
+-   `trace` **[object][460]** optional microservice lifecycle trace headers (optional, default `{}`)
 
-Returns **[Promise][459]&lt;[object][458]>** Promise resolving to an identity data object with alias
+Returns **[Promise][461]&lt;[object][460]>** Promise resolving to an identity data object with alias
 
 ### createIdentity
 
@@ -1564,12 +1566,12 @@ This function will call the identity microservice with the credentials and acces
 
 #### Parameters
 
--   `accessToken` **[string][457]** access token (optional, default `"null accessToken"`)
--   `accountUUID` **[string][457]** account uuid (optional, default `"null accountUUID"`)
--   `body` **[object][458]** JSON object containing new user info (optional, default `"null body"`)
--   `trace` **[object][458]** optional microservice lifecycle trace headers (optional, default `{}`)
+-   `accessToken` **[string][459]** access token (optional, default `"null accessToken"`)
+-   `accountUUID` **[string][459]** account uuid (optional, default `"null accountUUID"`)
+-   `body` **[object][460]** JSON object containing new user info (optional, default `"null body"`)
+-   `trace` **[object][460]** optional microservice lifecycle trace headers (optional, default `{}`)
 
-Returns **[Promise][459]&lt;[object][458]>** Promise resolving to an identity data object
+Returns **[Promise][461]&lt;[object][460]>** Promise resolving to an identity data object
 
 ### deactivateIdentity
 
@@ -1577,11 +1579,11 @@ This function will deactivate a user/identity.
 
 #### Parameters
 
--   `accessToken` **[string][457]**  (optional, default `"null accessToken"`)
--   `userUuid` **[string][457]**  (optional, default `"null userUuid"`)
--   `trace` **[object][458]** optional microservice lifecycle trace headers (optional, default `{}`)
+-   `accessToken` **[string][459]**  (optional, default `"null accessToken"`)
+-   `userUuid` **[string][459]**  (optional, default `"null userUuid"`)
+-   `trace` **[object][460]** optional microservice lifecycle trace headers (optional, default `{}`)
 
-Returns **[Promise][459]&lt;[object][458]>** Promise resolving to an status data object
+Returns **[Promise][461]&lt;[object][460]>** Promise resolving to an status data object
 
 ### deleteIdentity
 
@@ -1590,11 +1592,11 @@ accessToken you passed in and delete the user object matching the user_uuid subm
 
 #### Parameters
 
--   `accessToken` **[string][457]** access token for cpaas systems (optional, default `"null accessToken"`)
--   `userUuid` **[string][457]** uuid for a star2star user (optional, default `"null uuid"`)
--   `trace` **[object][458]** optional microservice lifecycle trace headers (optional, default `{}`)
+-   `accessToken` **[string][459]** access token for cpaas systems (optional, default `"null accessToken"`)
+-   `userUuid` **[string][459]** uuid for a star2star user (optional, default `"null uuid"`)
+-   `trace` **[object][460]** optional microservice lifecycle trace headers (optional, default `{}`)
 
-Returns **[Promise][459]&lt;empty>** Promise resolving success or failure.
+Returns **[Promise][461]&lt;empty>** Promise resolving success or failure.
 
 ### generatePasswordToken
 
@@ -1602,11 +1604,11 @@ This function will initiate a request for a password reset token via the user em
 
 #### Parameters
 
--   `accessToken` **[string][457]** access token for cpaas systems (optional, default `"null access token"`)
--   `emailAddress` **[string][457]** target email address (optional, default `"null emailAddress"`)
--   `trace` **[object][458]** optional microservice lifecycle trace headers (optional, default `{}`)
+-   `accessToken` **[string][459]** access token for cpaas systems (optional, default `"null access token"`)
+-   `emailAddress` **[string][459]** target email address (optional, default `"null emailAddress"`)
+-   `trace` **[object][460]** optional microservice lifecycle trace headers (optional, default `{}`)
 
-Returns **[Promise][459]&lt;[object][458]>** Promise resolving to a as status message; "ok" or "failed"
+Returns **[Promise][461]&lt;[object][460]>** Promise resolving to a as status message; "ok" or "failed"
 
 ### getMyIdentityData
 
@@ -1614,10 +1616,10 @@ This function will return the identity data for the authenticated user.
 
 #### Parameters
 
--   `accessToken` **[string][457]** access token for cpaas systems (optional, default `"null access token"`)
--   `trace` **[object][458]** optional microservice lifecycle trace headers (optional, default `{}`)
+-   `accessToken` **[string][459]** access token for cpaas systems (optional, default `"null access token"`)
+-   `trace` **[object][460]** optional microservice lifecycle trace headers (optional, default `{}`)
 
-Returns **[Promise][459]&lt;[object][458]>** Promise resolving to an identity data object
+Returns **[Promise][461]&lt;[object][460]>** Promise resolving to an identity data object
 
 ### getIdentity
 
@@ -1625,12 +1627,12 @@ This function returns a single identity object
 
 #### Parameters
 
--   `accessToken` **[string][457]** cpaas access token (optional, default `"null accessToken"`)
--   `userUuid` **[string][457]** user uuid (optional, default `"null uuid"`)
--   `trace` **[object][458]** optional microservice lifcycle headers (optional, default `{}`)
--   `include` **[string][457]** optional query param -"properties" and "alias" are valid values (optional, default `undefined`)
+-   `accessToken` **[string][459]** cpaas access token (optional, default `"null accessToken"`)
+-   `userUuid` **[string][459]** user uuid (optional, default `"null uuid"`)
+-   `trace` **[object][460]** optional microservice lifcycle headers (optional, default `{}`)
+-   `include` **[string][459]** optional query param -"properties" and "alias" are valid values (optional, default `undefined`)
 
-Returns **[Promise][459]** promise resolving to identity object
+Returns **[Promise][461]** promise resolving to identity object
 
 ### getIdentityDetails
 
@@ -1639,11 +1641,11 @@ accessToken you passed in.
 
 #### Parameters
 
--   `accessToken` **[string][457]** access token for cpaas systems (optional, default `"null access token"`)
--   `user_uuid` **[string][457]** user uuid to lookup (optional, default `"null user uuid"`)
--   `trace` **[object][458]** optional microservice lifecycle trace headers (optional, default `{}`)
+-   `accessToken` **[string][459]** access token for cpaas systems (optional, default `"null access token"`)
+-   `user_uuid` **[string][459]** user uuid to lookup (optional, default `"null user uuid"`)
+-   `trace` **[object][460]** optional microservice lifecycle trace headers (optional, default `{}`)
 
-Returns **[Promise][459]&lt;[object][458]>** Promise resolving to an identity data object
+Returns **[Promise][461]&lt;[object][460]>** Promise resolving to an identity data object
 
 ### listIdentitiesByAccount
 
@@ -1651,14 +1653,14 @@ This function will list the identities associated with a given account.
 
 #### Parameters
 
--   `accessToken` **[string][457]** cpaas access token (optional, default `"null accessToken"`)
--   `accountUUID` **[string][457]** account uuid (optional, default `"null accountUUID"`)
--   `offset` **[number][460]** list offset (optional, default `0`)
--   `limit` **[number][460]** number of items to return (optional, default `10`)
--   `filters` **[array][461]** optional array of key-value pairs to filter response. (optional, default `undefined`)
--   `trace` **[object][458]** optional microservice lifecycle trace headers (optional, default `{}`)
+-   `accessToken` **[string][459]** cpaas access token (optional, default `"null accessToken"`)
+-   `accountUUID` **[string][459]** account uuid (optional, default `"null accountUUID"`)
+-   `offset` **[number][462]** list offset (optional, default `0`)
+-   `limit` **[number][462]** number of items to return (optional, default `10`)
+-   `filters` **[array][463]** optional array of key-value pairs to filter response. (optional, default `undefined`)
+-   `trace` **[object][460]** optional microservice lifecycle trace headers (optional, default `{}`)
 
-Returns **[Promise][459]&lt;[object][458]>** Promise resolving to an identity data object
+Returns **[Promise][461]&lt;[object][460]>** Promise resolving to an identity data object
 
 ### login
 
@@ -1667,12 +1669,12 @@ accessToken you passed in.
 
 #### Parameters
 
--   `accessToken` **[string][457]** access token for cpaas systems (optional, default `"null access token"`)
--   `email` **[string][457]** email address for an star2star account (optional, default `"null email"`)
--   `pwd` **[string][457]** passowrd for that account (optional, default `"null pwd"`)
--   `trace` **[object][458]** optional microservice lifecycle trace headers (optional, default `{}`)
+-   `accessToken` **[string][459]** access token for cpaas systems (optional, default `"null access token"`)
+-   `email` **[string][459]** email address for an star2star account (optional, default `"null email"`)
+-   `pwd` **[string][459]** passowrd for that account (optional, default `"null pwd"`)
+-   `trace` **[object][460]** optional microservice lifecycle trace headers (optional, default `{}`)
 
-Returns **[Promise][459]&lt;[object][458]>** Promise resolving to an identity data object
+Returns **[Promise][461]&lt;[object][460]>** Promise resolving to an identity data object
 
 ### lookupIdentity
 
@@ -1680,13 +1682,13 @@ This function will look up an identity by username.
 
 #### Parameters
 
--   `accessToken` **[string][457]**  (optional, default `"null accessToken"`)
--   `offset` **[number][460]** list offset (optional, default `0`)
--   `limit` **[number][460]** number of items to return (optional, default `10`)
--   `filters` **[array][461]** optional array of key-value pairs to filter response. (optional, default `undefined`)
--   `trace` **[object][458]** optional microservice lifecycle trace headers (optional, default `{}`)
+-   `accessToken` **[string][459]**  (optional, default `"null accessToken"`)
+-   `offset` **[number][462]** list offset (optional, default `0`)
+-   `limit` **[number][462]** number of items to return (optional, default `10`)
+-   `filters` **[array][463]** optional array of key-value pairs to filter response. (optional, default `undefined`)
+-   `trace` **[object][460]** optional microservice lifecycle trace headers (optional, default `{}`)
 
-Returns **[Promise][459]&lt;[object][458]>** Promise resolving to an identity data object
+Returns **[Promise][461]&lt;[object][460]>** Promise resolving to an identity data object
 
 ### modifyIdentity
 
@@ -1694,12 +1696,12 @@ This function will allow you to modify all details of identity except account_uu
 
 #### Parameters
 
--   `accessToken` **[string][457]**  (optional, default `"null accessToken"`)
--   `userUuid` **[string][457]**  (optional, default `"null userUuid"`)
--   `body` **[object][458]**  (optional, default `"null body"`)
--   `trace` **[object][458]** optional microservice lifecycle trace headers (optional, default `{}`)
+-   `accessToken` **[string][459]**  (optional, default `"null accessToken"`)
+-   `userUuid` **[string][459]**  (optional, default `"null userUuid"`)
+-   `body` **[object][460]**  (optional, default `"null body"`)
+-   `trace` **[object][460]** optional microservice lifecycle trace headers (optional, default `{}`)
 
-Returns **[Promise][459]&lt;[object][458]>** Promise resolving to an identity data object
+Returns **[Promise][461]&lt;[object][460]>** Promise resolving to an identity data object
 
 ### modifyIdentityProps
 
@@ -1707,12 +1709,12 @@ This function updates properties of an identity
 
 #### Parameters
 
--   `accessToken` **[string][457]** cpaas access token (optional, default `"null accessToken"`)
--   `userUuid` **[string][457]** user uuid (optional, default `"null userUuid"`)
--   `body` **[object][458]** property body (optional, default `"null body"`)
--   `trace` **[object][458]** optional microservice lifecycle headers (optional, default `{}`)
+-   `accessToken` **[string][459]** cpaas access token (optional, default `"null accessToken"`)
+-   `userUuid` **[string][459]** user uuid (optional, default `"null userUuid"`)
+-   `body` **[object][460]** property body (optional, default `"null body"`)
+-   `trace` **[object][460]** optional microservice lifecycle headers (optional, default `{}`)
 
-Returns **[Promise][459]** return a promise containing the updataded idenity
+Returns **[Promise][461]** return a promise containing the updataded idenity
 
 ### reactivateIdentity
 
@@ -1720,11 +1722,11 @@ This function will reactivate a user/identity.
 
 #### Parameters
 
--   `accessToken` **[string][457]**  (optional, default `"null accessToken"`)
--   `userUuid` **[string][457]**  (optional, default `"null userUuid"`)
--   `trace` **[object][458]** optional microservice lifecycle trace headers (optional, default `{}`)
+-   `accessToken` **[string][459]**  (optional, default `"null accessToken"`)
+-   `userUuid` **[string][459]**  (optional, default `"null userUuid"`)
+-   `trace` **[object][460]** optional microservice lifecycle trace headers (optional, default `{}`)
 
-Returns **[Promise][459]&lt;[object][458]>** Promise resolving to an status data object
+Returns **[Promise][461]&lt;[object][460]>** Promise resolving to an status data object
 
 ### resetPassword
 
@@ -1732,13 +1734,13 @@ This function will update a user's password.
 
 #### Parameters
 
--   `accessToken` **[string][457]** access token for cpaas systems (optional, default `"null access token"`)
+-   `accessToken` **[string][459]** access token for cpaas systems (optional, default `"null access token"`)
 -   `passwordToken`   (optional, default `"null passwordToken"`)
--   `body` **[object][458]** object containing email address and new password (optional, default `"null body"`)
--   `trace` **[object][458]** optional microservice lifecycle trace headers (optional, default `{}`)
--   `password_token` **[string][457]** Reset token received via email (optional, default `"null passwordToken"`)
+-   `body` **[object][460]** object containing email address and new password (optional, default `"null body"`)
+-   `trace` **[object][460]** optional microservice lifecycle trace headers (optional, default `{}`)
+-   `password_token` **[string][459]** Reset token received via email (optional, default `"null passwordToken"`)
 
-Returns **[Promise][459]&lt;[object][458]>** Promise resolving to a as status message; "ok" or "failed"
+Returns **[Promise][461]&lt;[object][460]>** Promise resolving to a as status message; "ok" or "failed"
 
 ### updateAliasWithDID
 
@@ -1746,12 +1748,12 @@ This function will call the identity microservice with the credentials and acces
 
 #### Parameters
 
--   `accessToken` **[string][457]** access token (optional, default `"null accessToken"`)
--   `userUuid` **[string][457]** user_uuid for alias being created (optional, default `"null user uuid"`)
--   `did` **[string][457]** sms number to associate with the user (optional, default `"null DID"`)
--   `trace` **[object][458]** optional microservice lifecycle trace headers (optional, default `{}`)
+-   `accessToken` **[string][459]** access token (optional, default `"null accessToken"`)
+-   `userUuid` **[string][459]** user_uuid for alias being created (optional, default `"null user uuid"`)
+-   `did` **[string][459]** sms number to associate with the user (optional, default `"null DID"`)
+-   `trace` **[object][460]** optional microservice lifecycle trace headers (optional, default `{}`)
 
-Returns **[Promise][459]&lt;[object][458]>** Promise resolving to an identity data object with alias
+Returns **[Promise][461]&lt;[object][460]>** Promise resolving to an identity data object with alias
 
 ### validatePasswordToken
 
@@ -1759,11 +1761,11 @@ This function will validate a password reset token received from email.
 
 #### Parameters
 
--   `accessToken` **[string][457]** access token for cpaas systems (optional, default `"null access token"`)
--   `password_token` **[string][457]** password reset token received via email (optional, default `"null password token"`)
--   `trace` **[object][458]** optional microservice lifecycle trace headers (optional, default `{}`)
+-   `accessToken` **[string][459]** access token for cpaas systems (optional, default `"null access token"`)
+-   `password_token` **[string][459]** password reset token received via email (optional, default `"null password token"`)
+-   `trace` **[object][460]** optional microservice lifecycle trace headers (optional, default `{}`)
 
-Returns **[Promise][459]&lt;[object][458]>** Promise resolving to an object confirming the token and target email
+Returns **[Promise][461]&lt;[object][460]>** Promise resolving to an object confirming the token and target email
 
 ## Index
 
@@ -1774,19 +1776,19 @@ Returns **[Promise][459]&lt;[object][458]>** Promise resolving to an object conf
 
 This function returns the previously set app key.
 
-Returns **[string][457]** app key
+Returns **[string][459]** app key
 
 ### getEnv
 
 This function retreives the currently configured environment; development, production, etc...
 
-Returns **[string][457]** environment.
+Returns **[string][459]** environment.
 
 ### getMsHost
 
 This function gets the configured microservice host variable.
 
-Returns **[string][457]** configured host URL
+Returns **[string][459]** configured host URL
 
 ### setApplicationKey
 
@@ -1794,7 +1796,7 @@ This function sets the application key.
 
 #### Parameters
 
--   `key` **[string][457]** valid cpaas application key (optional, default `"missing"`)
+-   `key` **[string][459]** valid cpaas application key (optional, default `"missing"`)
 
 ### setEnv
 
@@ -1802,7 +1804,7 @@ This function sets the environment; development, production, etc...
 
 #### Parameters
 
--   `env` **[string][457]** 
+-   `env` **[string][459]** 
 
 ### setMsHost
 
@@ -1810,7 +1812,7 @@ This function sets the microservice target host (MS_HOST) variable.
 
 #### Parameters
 
--   `msHost` **[string][457]** valid url for microservice host server (optional, default `"https://cpaas.star2star.com/api"`)
+-   `msHost` **[string][459]** valid url for microservice host server (optional, default `"https://cpaas.star2star.com/api"`)
 
 ### setMsAuthHost
 
@@ -1819,7 +1821,7 @@ This function sets the microservice target authentication host (AUTH_HOST) varia
 #### Parameters
 
 -   `authHost`   (optional, default `"https://auth.star2starglobal.net"`)
--   `msHost` **[string][457]** valid url for microservice host server (optional, default `"https://auth.star2starglobal.net"`)
+-   `msHost` **[string][459]** valid url for microservice host server (optional, default `"https://auth.star2starglobal.net"`)
 
 ### setMSVersion
 
@@ -1827,7 +1829,7 @@ This function sets the microservice version that will be used.
 
 #### Parameters
 
--   `version` **[string][457]** configured microservice version (optional, default `"v1"`)
+-   `version` **[string][459]** configured microservice version (optional, default `"v1"`)
 
 ## Lambda
 
@@ -1840,12 +1842,12 @@ This function lists lambdas
 
 #### Parameters
 
--   `accessToken` **[string][457]** cpaas access token (optional, default `'null access Token'`)
--   `offset` **[number][460]** pagination offset (optional, default `0`)
--   `limit` **[number][460]** pagination limit (optional, default `10`)
--   `trace` **[object][458]** optional microservice lifecycle trace headers (optional, default `{}`)
+-   `accessToken` **[string][459]** cpaas access token (optional, default `'null access Token'`)
+-   `offset` **[number][462]** pagination offset (optional, default `0`)
+-   `limit` **[number][462]** pagination limit (optional, default `10`)
+-   `trace` **[object][460]** optional microservice lifecycle trace headers (optional, default `{}`)
 
-Returns **[Promise][459]&lt;[object][458]>** Promise resolving to a data object
+Returns **[Promise][461]&lt;[object][460]>** Promise resolving to a data object
 
 ### invokeLambda
 
@@ -1853,12 +1855,12 @@ This function will ask the cpaas data object service for a specific object.
 
 #### Parameters
 
--   `accessToken` **[string][457]** access Token for cpaas systems (optional, default `'null access Token'`)
--   `lambdaName` **[string][457]** string representing the lambda name (optional, default `'not defined'`)
--   `params` **[object][458]** json object of parameters to be passed to the lambda function (optional, default `{}`)
--   `trace` **[object][458]** optional microservice lifecycle trace headers (optional, default `{}`)
+-   `accessToken` **[string][459]** access Token for cpaas systems (optional, default `'null access Token'`)
+-   `lambdaName` **[string][459]** string representing the lambda name (optional, default `'not defined'`)
+-   `params` **[object][460]** json object of parameters to be passed to the lambda function (optional, default `{}`)
+-   `trace` **[object][460]** optional microservice lifecycle trace headers (optional, default `{}`)
 
-Returns **[Promise][459]&lt;[object][458]>** Promise resolving to a data object
+Returns **[Promise][461]&lt;[object][460]>** Promise resolving to a data object
 
 ## Media
 
@@ -1871,11 +1873,11 @@ This function will return media file metadata including a URL
 
 #### Parameters
 
--   `accessToken` **[string][457]** cpaas access token (optional, default `"null accessToken"`)
--   `fileUUID` **[string][457]** file UUID (optional, default `"null fileUUID"`)
--   `trace` **[object][458]** optional microservice lifecycle trace headers (optional, default `{}`)
+-   `accessToken` **[string][459]** cpaas access token (optional, default `"null accessToken"`)
+-   `fileUUID` **[string][459]** file UUID (optional, default `"null fileUUID"`)
+-   `trace` **[object][460]** optional microservice lifecycle trace headers (optional, default `{}`)
 
-Returns **[Promise][459]&lt;[object][458]>** Promise resolving to a data object containing file meta-data
+Returns **[Promise][461]&lt;[object][460]>** Promise resolving to a data object containing file meta-data
 
 ### deleteMedia
 
@@ -1883,11 +1885,11 @@ This function will ask the cpaas media service to delete a specific user file.
 
 #### Parameters
 
--   `file_id` **[string][457]** File ID (optional, default `"no file_id provided"`)
--   `accessToken` **[string][457]** Access token for cpaas systems (optional, default `"null accessToken"`)
--   `trace` **[object][458]** optional microservice lifecycle trace headers (optional, default `{}`)
+-   `file_id` **[string][459]** File ID (optional, default `"no file_id provided"`)
+-   `accessToken` **[string][459]** Access token for cpaas systems (optional, default `"null accessToken"`)
+-   `trace` **[object][460]** optional microservice lifecycle trace headers (optional, default `{}`)
 
-Returns **[Promise][459]&lt;empty>** Promise resolving success or failure.
+Returns **[Promise][461]&lt;empty>** Promise resolving success or failure.
 
 ### listUserMedia
 
@@ -1895,11 +1897,11 @@ This function will ask the cpaas media service for the list of user's files they
 
 #### Parameters
 
--   `user_uuid` **[string][457]** UUID for user (optional, default `"no user uuid provided"`)
--   `accessToken` **[string][457]** Access token for cpaas systems (optional, default `"null accessToken"`)
--   `trace` **[object][458]** optional microservice lifecycle trace headers (optional, default `{}`)
+-   `user_uuid` **[string][459]** UUID for user (optional, default `"no user uuid provided"`)
+-   `accessToken` **[string][459]** Access token for cpaas systems (optional, default `"null accessToken"`)
+-   `trace` **[object][460]** optional microservice lifecycle trace headers (optional, default `{}`)
 
-Returns **[Promise][459]&lt;[object][458]>** Promise resolving to a data object containing a list of groups for this user
+Returns **[Promise][461]&lt;[object][460]>** Promise resolving to a data object containing a list of groups for this user
 
 ### uploadFile
 
@@ -1907,13 +1909,13 @@ This function will upload a file to the cpaas media service for the user.
 
 #### Parameters
 
--   `file_name` **[string][457]** File name. (optional, default `Date.now()`)
--   `file` **[formData][464]** File to be uploaded
--   `user_uuid` **[string][457]**  (optional, default `"not specified user uuid "`)
--   `accessToken` **[string][457]** Access token for cpaas systems (optional, default `"null accessToken"`)
--   `trace` **[object][458]** optional microservice lifecycle trace headers (optional, default `{}`)
+-   `file_name` **[string][459]** File name. (optional, default `Date.now()`)
+-   `file` **[formData][466]** File to be uploaded
+-   `user_uuid` **[string][459]**  (optional, default `"not specified user uuid "`)
+-   `accessToken` **[string][459]** Access token for cpaas systems (optional, default `"null accessToken"`)
+-   `trace` **[object][460]** optional microservice lifecycle trace headers (optional, default `{}`)
 
-Returns **[Promise][459]&lt;[object][458]>** Promise resolving to a data object containing upload attributes.
+Returns **[Promise][461]&lt;[object][460]>** Promise resolving to a data object containing upload attributes.
 
 ## Messaging
 
@@ -1926,12 +1928,12 @@ This function creates a new conversation and returns metadata.
 
 #### Parameters
 
--   `accessToken` **[string][457]** cpaas application token (optional, default `"null accessToken"`)
--   `userUuid` **[string][457]** user uuid (optional, default `"null userUuid"`)
--   `toPhoneNumber` **[string][457]** Destination phone number for the conversation (optional, default `"null toPhoneNumber"`)
--   `trace` **[object][458]** options microservice lifecycle tracking headers (optional, default `{}`)
+-   `accessToken` **[string][459]** cpaas application token (optional, default `"null accessToken"`)
+-   `userUuid` **[string][459]** user uuid (optional, default `"null userUuid"`)
+-   `toPhoneNumber` **[string][459]** Destination phone number for the conversation (optional, default `"null toPhoneNumber"`)
+-   `trace` **[object][460]** options microservice lifecycle tracking headers (optional, default `{}`)
 
-Returns **[Promise][459]&lt;[object][458]>** A promise resolving to a conversation metadata object
+Returns **[Promise][461]&lt;[object][460]>** A promise resolving to a conversation metadata object
 
 ### getConversationUuid
 
@@ -1939,12 +1941,12 @@ This function will retrieve the conversation uuid for whom you are sending it to
 
 #### Parameters
 
--   `accessToken` **[string][457]** Access token for cpaas systems
--   `userUuid` **[string][457]** The user uuid making the request
--   `toPhoneNumber` **[string][457]** A full phone number you will be sending the sms too
--   `trace` **[object][458]** optional microservice lifecycle trace headers (optional, default `{}`)
+-   `accessToken` **[string][459]** Access token for cpaas systems
+-   `userUuid` **[string][459]** The user uuid making the request
+-   `toPhoneNumber` **[string][459]** A full phone number you will be sending the sms too
+-   `trace` **[object][460]** optional microservice lifecycle trace headers (optional, default `{}`)
 
-Returns **[Promise][459]&lt;[object][458]>** Promise resolving to a conversation uuid data object
+Returns **[Promise][461]&lt;[object][460]>** Promise resolving to a conversation uuid data object
 
 ### getSMSNumber
 
@@ -1952,21 +1954,21 @@ This function will get user sms number.
 
 #### Parameters
 
--   `accessToken` **[string][457]** cpaas access Token
--   `userUuid` **[string][457]** the user uuid making the request
--   `trace` **[object][458]** optional microservice lifecycle trace headers (optional, default `{}`)
+-   `accessToken` **[string][459]** cpaas access Token
+-   `userUuid` **[string][459]** the user uuid making the request
+-   `trace` **[object][460]** optional microservice lifecycle trace headers (optional, default `{}`)
 
-Returns **[Promise][459]&lt;[object][458]>** Promise resolving to a data object containing the sms number
+Returns **[Promise][461]&lt;[object][460]>** Promise resolving to a data object containing the sms number
 
 ### markAllConversationMessagesRead
 
 #### Parameters
 
--   `accessToken` **[string][457]** cpaas access token (optional, default `"null accessToken"`)
--   `conversationUUID` **[string][457]** conversation uuid (optional, default `"null conversationUUID"`)
--   `trace` **[object][458]** microservice lifecyce headers (optional, default `{}`)
+-   `accessToken` **[string][459]** cpaas access token (optional, default `"null accessToken"`)
+-   `conversationUUID` **[string][459]** conversation uuid (optional, default `"null conversationUUID"`)
+-   `trace` **[object][460]** microservice lifecyce headers (optional, default `{}`)
 
-Returns **[Promise][459]** Promise resolving to a modified conversation object
+Returns **[Promise][461]** Promise resolving to a modified conversation object
 
 **Meta**
 
@@ -1977,14 +1979,14 @@ Returns **[Promise][459]** Promise resolving to a modified conversation object
 
 #### Parameters
 
--   `accessToken` **[string][457]** cpaas access token (optional, default `"null accessToken"`)
--   `userUUID` **[string][457]** user uuid (optional, default `"null userUUID"`)
--   `offset` **[number][460]** pagination offest (optional, default `0`)
--   `limit` **[number][460]** pagination limit (optional, default `10`)
--   `filters` **[array][461]** optional filters. currently supports "snooze" (optional, default `undefined`)
--   `trace` **[object][458]** optional microservice lifecycle trace headers (optional, default `{}`)
+-   `accessToken` **[string][459]** cpaas access token (optional, default `"null accessToken"`)
+-   `userUUID` **[string][459]** user uuid (optional, default `"null userUUID"`)
+-   `offset` **[number][462]** pagination offest (optional, default `0`)
+-   `limit` **[number][462]** pagination limit (optional, default `10`)
+-   `filters` **[array][463]** optional filters. currently supports "snooze" (optional, default `undefined`)
+-   `trace` **[object][460]** optional microservice lifecycle trace headers (optional, default `{}`)
 
-Returns **[Promise][459]&lt;[object][458]>** Promise resolving to user conversations
+Returns **[Promise][461]&lt;[object][460]>** Promise resolving to user conversations
 
 ### retrieveMessages
 
@@ -1992,30 +1994,14 @@ This function returns message history
 
 #### Parameters
 
--   `accessToken` **[string][457]** cpaas access token (optional, default `"null accessToken"`)
--   `conversationUUID` **[string][457]** conversation uuid (optional, default `"null conversationUUID"`)
--   `offset` **[number][460]** pagination offset (optional, default `0`)
--   `limit` **[number][460]** pagination limit (optional, default `100`)
--   `sort` **[string][457]** sort by column (default "-datetime") (optional, default `"-datetime"`)
--   `trace` **[object][458]** microservice lifecycle headers (optional, default `{}`)
+-   `accessToken` **[string][459]** cpaas access token (optional, default `"null accessToken"`)
+-   `conversationUUID` **[string][459]** conversation uuid (optional, default `"null conversationUUID"`)
+-   `offset` **[number][462]** pagination offset (optional, default `0`)
+-   `limit` **[number][462]** pagination limit (optional, default `100`)
+-   `sort` **[string][459]** sort by column (default "-datetime") (optional, default `"-datetime"`)
+-   `trace` **[object][460]** microservice lifecycle headers (optional, default `{}`)
 
-Returns **[Promise][459]&lt;[object][458]>** Promise resolving to to a message history object.
-
-### sendMessage
-
-This function will send messages in multiple formats
-
-#### Parameters
-
--   `accessToken` **[string][457]** cpaas access token (optional, default `"null accessToken"`)
--   `userUUID` **[string][457]** user uuid (optional, default `"null userUUID"`)
--   `conversationUUID` **[string][457]** conversation uuid (optional, default `"null conversationUUID"`)
--   `fromPhoneNumber` **[string][457]** sender phone number (optional, default `"null fromPhoneNumber"`)
--   `channel` **[string][457]** channel (sms or mms) (optional, default `"sms"`)
--   `content` **[array][461]** array of content objects (optional, default `[]`)
--   `trace` **[object][458]** optional microservice lifecycle headers (optional, default `{}`)
-
-Returns **[Promise][459]&lt;[object][458]>** promise resolving to a message confirmation object
+Returns **[Promise][461]&lt;[object][460]>** Promise resolving to to a message history object.
 
 ### sendMessage
 
@@ -2023,13 +2009,29 @@ This function will post a message to a room.
 
 #### Parameters
 
--   `access_token` **[string][457]** access_token for cpaas systems (optional, default `"null access_token"`)
--   `userUUID` **[string][457]** user UUID to be used (optional, default `"null user uuid"`)
--   `roomUUID` **[string][457]** room uuid (optional, default `"no room uuid specified"`)
--   `message` **[string][457]** message (optional, default `"missing text"`)
--   `trace` **[object][458]** optional microservice lifecycle trace headers (optional, default `{}`)
+-   `access_token` **[string][459]** access_token for cpaas systems (optional, default `"null access_token"`)
+-   `userUUID` **[string][459]** user UUID to be used (optional, default `"null user uuid"`)
+-   `roomUUID` **[string][459]** room uuid (optional, default `"no room uuid specified"`)
+-   `message` **[string][459]** message (optional, default `"missing text"`)
+-   `trace` **[object][460]** optional microservice lifecycle trace headers (optional, default `{}`)
 
-Returns **[Promise][459]&lt;[object][458]>** Promise resolving to a data object
+Returns **[Promise][461]&lt;[object][460]>** Promise resolving to a data object
+
+### sendMessage
+
+This function will send messages in multiple formats
+
+#### Parameters
+
+-   `accessToken` **[string][459]** cpaas access token (optional, default `"null accessToken"`)
+-   `userUUID` **[string][459]** user uuid (optional, default `"null userUUID"`)
+-   `conversationUUID` **[string][459]** conversation uuid (optional, default `"null conversationUUID"`)
+-   `fromPhoneNumber` **[string][459]** sender phone number (optional, default `"null fromPhoneNumber"`)
+-   `channel` **[string][459]** channel (sms or mms) (optional, default `"sms"`)
+-   `content` **[array][463]** array of content objects (optional, default `[]`)
+-   `trace` **[object][460]** optional microservice lifecycle headers (optional, default `{}`)
+
+Returns **[Promise][461]&lt;[object][460]>** promise resolving to a message confirmation object
 
 ### sendSimpleSMS
 
@@ -2038,12 +2040,12 @@ This function sends a basic SMS message
 #### Parameters
 
 -   `accessToken`   (optional, default `"null access token"`)
--   `sender` **[string][457]** sender number (+15555555555) (optional, default `"null sender"`)
--   `receiver` **[string][457]** recipient number (+15555555555) (optional, default `"null receiver"`)
--   `message` **[string][457]** message (optional, default `"null message"`)
+-   `sender` **[string][459]** sender number (+15555555555) (optional, default `"null sender"`)
+-   `receiver` **[string][459]** recipient number (+15555555555) (optional, default `"null receiver"`)
+-   `message` **[string][459]** message (optional, default `"null message"`)
 -   `type` **type** message type (optional, default `"text"`)
--   `metadata` **[object][458]** optional metadata object (optional, default `{}`)
--   `trace` **[object][458]** optional microservice lifecycle trace headers (optional, default `{}`)
+-   `metadata` **[object][460]** optional metadata object (optional, default `{}`)
+-   `trace` **[object][460]** optional microservice lifecycle trace headers (optional, default `{}`)
 -   `string`  
 
 Returns **any** Promise resolving to sms send confirmation with uuid
@@ -2054,14 +2056,14 @@ This function will send an sms message.
 
 #### Parameters
 
--   `accessToken` **[string][457]** cpaas access Token
--   `userUuid` **[string][457]** the user uuid making the request
--   `msg` **[string][457]** the message to send
--   `fromPhoneNumber` **[string][457]** full phone number to use as the sender/reply too
--   `toPhoneNumber` **[string][457]** full phone number you will be sending the sms too
--   `trace` **[object][458]** optional microservice lifecycle trace headers (optional, default `{}`)
+-   `accessToken` **[string][459]** cpaas access Token
+-   `userUuid` **[string][459]** the user uuid making the request
+-   `msg` **[string][459]** the message to send
+-   `fromPhoneNumber` **[string][459]** full phone number to use as the sender/reply too
+-   `toPhoneNumber` **[string][459]** full phone number you will be sending the sms too
+-   `trace` **[object][460]** optional microservice lifecycle trace headers (optional, default `{}`)
 
-Returns **[Promise][459]&lt;[object][458]>** Promise resolving to a response confirmation data object
+Returns **[Promise][461]&lt;[object][460]>** Promise resolving to a response confirmation data object
 
 ### sendSMSMessage
 
@@ -2069,14 +2071,14 @@ This function will send an sms message.
 
 #### Parameters
 
--   `accessToken` **[string][457]** cpaas access Token
--   `convesationUUID` **[string][457]** uuid of conversation; see getConvesationUUID
--   `userUuid` **[string][457]** the user uuid making the request
--   `fromPhoneNumber` **[string][457]** full phone number to use as the sender/reply too
--   `msg` **[string][457]** the message to send
--   `trace` **[object][458]** optional microservice lifecycle trace headers (optional, default `{}`)
+-   `accessToken` **[string][459]** cpaas access Token
+-   `convesationUUID` **[string][459]** uuid of conversation; see getConvesationUUID
+-   `userUuid` **[string][459]** the user uuid making the request
+-   `fromPhoneNumber` **[string][459]** full phone number to use as the sender/reply too
+-   `msg` **[string][459]** the message to send
+-   `trace` **[object][460]** optional microservice lifecycle trace headers (optional, default `{}`)
 
-Returns **[Promise][459]&lt;[object][458]>** Promise resolving to a response confirmation data object
+Returns **[Promise][461]&lt;[object][460]>** Promise resolving to a response confirmation data object
 
 ### deleteConversation
 
@@ -2084,11 +2086,11 @@ This function deletes (archives for 30 days) a specific conversation
 
 #### Parameters
 
--   `accessToken` **[string][457]** cpaas application token (optional, default `"null accessToken"`)
--   `conversation_uuid` **[string][457]** conversation uuid (optional, default `"null conversation_uuid"`)
--   `trace` **[object][458]** options microservice lifecycle tracking headers (optional, default `{}`)
+-   `accessToken` **[string][459]** cpaas application token (optional, default `"null accessToken"`)
+-   `conversation_uuid` **[string][459]** conversation uuid (optional, default `"null conversation_uuid"`)
+-   `trace` **[object][460]** options microservice lifecycle tracking headers (optional, default `{}`)
 
-Returns **[Promise][459]&lt;empty>** Promise resolving success or failure.
+Returns **[Promise][461]&lt;empty>** Promise resolving success or failure.
 
 ### deleteMultipleConversations
 
@@ -2096,11 +2098,11 @@ This function deletes (archives for 30 days) multiple conversations
 
 #### Parameters
 
--   `accessToken` **[string][457]** cpaas application token (optional, default `"null accessToken"`)
--   `conversations` **[array][461]** array of objects containing 'conversation_uuid' (optional, default `[]`)
--   `trace` **[object][458]** options microservice lifecycle tracking headers (optional, default `{}`)
+-   `accessToken` **[string][459]** cpaas application token (optional, default `"null accessToken"`)
+-   `conversations` **[array][463]** array of objects containing 'conversation_uuid' (optional, default `[]`)
+-   `trace` **[object][460]** options microservice lifecycle tracking headers (optional, default `{}`)
 
-Returns **[Promise][459]&lt;empty>** Promise resolving success or failure status object.
+Returns **[Promise][461]&lt;empty>** Promise resolving success or failure status object.
 
 ### deleteMessage
 
@@ -2108,11 +2110,11 @@ This function deletes a specific message
 
 #### Parameters
 
--   `accessToken` **[string][457]** cpaas application token (optional, default `"null accessToken"`)
--   `message_uuid` **[string][457]** message uuid (optional, default `"null message_uuid"`)
--   `trace` **[object][458]** options microservice lifecycle tracking headers (optional, default `{}`)
+-   `accessToken` **[string][459]** cpaas application token (optional, default `"null accessToken"`)
+-   `message_uuid` **[string][459]** message uuid (optional, default `"null message_uuid"`)
+-   `trace` **[object][460]** options microservice lifecycle tracking headers (optional, default `{}`)
 
-Returns **[Promise][459]&lt;empty>** Promise resolving success or failure.
+Returns **[Promise][461]&lt;empty>** Promise resolving success or failure.
 
 ### deleteMultipleMessages
 
@@ -2120,22 +2122,22 @@ This function deletes multiple messages
 
 #### Parameters
 
--   `accessToken` **[string][457]** cpaas application token (optional, default `"null accessToken"`)
--   `messages` **[array][461]** array of strings containing 'message_uuid' (optional, default `[]`)
--   `trace` **[object][458]** options microservice lifecycle tracking headers (optional, default `{}`)
+-   `accessToken` **[string][459]** cpaas application token (optional, default `"null accessToken"`)
+-   `messages` **[array][463]** array of strings containing 'message_uuid' (optional, default `[]`)
+-   `trace` **[object][460]** options microservice lifecycle tracking headers (optional, default `{}`)
 
-Returns **[Promise][459]&lt;empty>** Promise resolving success or failure status object.
+Returns **[Promise][461]&lt;empty>** Promise resolving success or failure status object.
 
 ### snoozeUnsnoozeConversation
 
 #### Parameters
 
--   `accessToken` **[string][457]** cpaas access token (optional, default `"null accessToken"`)
--   `conversationUUID` **[string][457]** conversation uuid (optional, default `"null conversationUUID"`)
--   `snooze` **[boolean][463]** snooze:true OR snooze:false to either snooze / un-snooze (optional, default `"false snooze"`)
--   `trace` **[object][458]** microservice lifecyce headers (optional, default `{}`)
+-   `accessToken` **[string][459]** cpaas access token (optional, default `"null accessToken"`)
+-   `conversationUUID` **[string][459]** conversation uuid (optional, default `"null conversationUUID"`)
+-   `snooze` **[boolean][465]** snooze:true OR snooze:false to either snooze / un-snooze (optional, default `"false snooze"`)
+-   `trace` **[object][460]** microservice lifecyce headers (optional, default `{}`)
 
-Returns **[Promise][459]** Promise resolving to a modified conversation object
+Returns **[Promise][461]** Promise resolving to a modified conversation object
 
 **Meta**
 
@@ -2153,11 +2155,11 @@ This function will return metadata for all API's or a subset of API's
 
 #### Parameters
 
--   `accessToken` **[string][457]** cpaas access token (optional, default `"null access token"`)
--   `subsystems` **[string][457]** empty or comma-separated list of requested subsystems (optional, default `""`)
--   `trace` **[object][458]** optional cpaas lifecycle headers (optional, default `{}`)
+-   `accessToken` **[string][459]** cpaas access token (optional, default `"null access token"`)
+-   `subsystems` **[string][459]** empty or comma-separated list of requested subsystems (optional, default `""`)
+-   `trace` **[object][460]** optional cpaas lifecycle headers (optional, default `{}`)
 
-Returns **[Promise][459]** 
+Returns **[Promise][461]** 
 
 ## Mobile
 
@@ -2170,11 +2172,11 @@ This function will return a list of push notification registrations by user uuid
 
 #### Parameters
 
--   `accessToken` **[string][457]** cpaas access token (optional, default `"null accessToken"`)
--   `userUUID` **[string][457]** user UUID (optional, default `"null fileUUID"`)
--   `trace` **[object][458]** optional microservice lifecycle trace headers (optional, default `{}`)
+-   `accessToken` **[string][459]** cpaas access token (optional, default `"null accessToken"`)
+-   `userUUID` **[string][459]** user UUID (optional, default `"null fileUUID"`)
+-   `trace` **[object][460]** optional microservice lifecycle trace headers (optional, default `{}`)
 
-Returns **[Promise][459]&lt;[object][458]>** Promise resolving to an object containing user push notification registrations
+Returns **[Promise][461]&lt;[object][460]>** Promise resolving to an object containing user push notification registrations
 
 ### registerPushToken
 
@@ -2182,15 +2184,15 @@ This function will ask the cpaas media service for the list of user's files they
 
 #### Parameters
 
--   `accessToken` **[string][457]** Access token for cpaas systems (optional, default `"null accessToken"`)
--   `userUUID` **[string][457]** UUID for user (optional, default `"no user uuid provided"`)
+-   `accessToken` **[string][459]** Access token for cpaas systems (optional, default `"null accessToken"`)
+-   `userUUID` **[string][459]** UUID for user (optional, default `"no user uuid provided"`)
 -   `deviceID`   (optional, default `"no device uuid provided"`)
--   `pushToken` **[string][457]**  (optional, default `"no push token provided"`)
--   `application` **[string][457]**  (optional, default `"no application provided"`)
--   `platform` **[string][457]**  (optional, default `"no platform provided"`)
--   `trace` **[object][458]** optional microservice lifecycle trace headers (optional, default `{}`)
+-   `pushToken` **[string][459]**  (optional, default `"no push token provided"`)
+-   `application` **[string][459]**  (optional, default `"no application provided"`)
+-   `platform` **[string][459]**  (optional, default `"no platform provided"`)
+-   `trace` **[object][460]** optional microservice lifecycle trace headers (optional, default `{}`)
 
-Returns **[Promise][459]&lt;[object][458]>** promise resolving to registration object
+Returns **[Promise][461]&lt;[object][460]>** promise resolving to registration object
 
 ### sendPushNotification
 
@@ -2198,17 +2200,17 @@ This function will send a push notification to a mobile device
 
 #### Parameters
 
--   `accessToken` **[string][457]** CPaaS access token (optional, default `"null accessToken"`)
--   `application` **[string][457]** target application (optional, default `"no application provided"`)
--   `userUUID` **[array][461]** array of device_ids to send notification to (optional, default `"no user uuid provided"`)
+-   `accessToken` **[string][459]** CPaaS access token (optional, default `"null accessToken"`)
+-   `application` **[string][459]** target application (optional, default `"no application provided"`)
+-   `userUUID` **[array][463]** array of device_ids to send notification to (optional, default `"no user uuid provided"`)
 -   `deviceIDs`   (optional, default `"no deviceIDs array provided"`)
--   `title` **[string][457]** notification title (optional, default `undefined`)
--   `message` **[string][457]** notification messge (optional, default `undefined`)
--   `data` **[object][458]** optional additiona data to accompany the message text as payload (optional, default `undefined`)
--   `platformData` **[object][458]** optional platform (ios/android) specific payload data (optional, default `undefined`)
--   `trace` **[object][458]** optional CPaaS lifecycle headers (optional, default `{}`)
+-   `title` **[string][459]** notification title (optional, default `undefined`)
+-   `message` **[string][459]** notification messge (optional, default `undefined`)
+-   `data` **[object][460]** optional additiona data to accompany the message text as payload (optional, default `undefined`)
+-   `platformData` **[object][460]** optional platform (ios/android) specific payload data (optional, default `undefined`)
+-   `trace` **[object][460]** optional CPaaS lifecycle headers (optional, default `{}`)
 
-Returns **[Promise][459]&lt;[object][458]>** promise resolving to a push notification object
+Returns **[Promise][461]&lt;[object][460]>** promise resolving to a push notification object
 
 ### unregisterPushToken
 
@@ -2216,11 +2218,11 @@ This function will ask the cpaas media service for the list of user's files they
 
 #### Parameters
 
--   `accessToken` **[string][457]** Access token for cpaas systems (optional, default `"null accessToken"`)
--   `pushToken` **[string][457]**  (optional, default `"no push token provided"`)
+-   `accessToken` **[string][459]** Access token for cpaas systems (optional, default `"null accessToken"`)
+-   `pushToken` **[string][459]**  (optional, default `"no push token provided"`)
 -   `trace`   (optional, default `{}`)
 
-Returns **[Promise][459]&lt;[object][458]>** promise resolving to success or failure
+Returns **[Promise][461]&lt;[object][460]>** promise resolving to success or failure
 
 ## Oauth
 
@@ -2233,13 +2235,13 @@ This function creates a client for a provided user uuid.
 
 #### Parameters
 
--   `accessToken` **[string][457]** cpaas access token (optional, default `"null access token"`)
--   `userUUID` **[string][457]** user uuid (optional, default `"null userUUID"`)
--   `name` **[string][457]** client name (optional, default `"null name"`)
--   `description` **[string][457]** client description (optional, default `"null description"`)
--   `trace` **[object][458]** optional trace headers for debugging (optional, default `{}`)
+-   `accessToken` **[string][459]** cpaas access token (optional, default `"null access token"`)
+-   `userUUID` **[string][459]** user uuid (optional, default `"null userUUID"`)
+-   `name` **[string][459]** client name (optional, default `"null name"`)
+-   `description` **[string][459]** client description (optional, default `"null description"`)
+-   `trace` **[object][460]** optional trace headers for debugging (optional, default `{}`)
 
-Returns **[Promise][459]** promise resolving to a client object
+Returns **[Promise][461]** promise resolving to a client object
 
 ### generateBasicToken
 
@@ -2247,10 +2249,10 @@ This function returns a Basic token from a client public ID and secret
 
 #### Parameters
 
--   `publicID` **[string][457]**  (optional, default `"null publicID"`)
--   `secret` **[string][457]**  (optional, default `"null secret"`)
+-   `publicID` **[string][459]**  (optional, default `"null publicID"`)
+-   `secret` **[string][459]**  (optional, default `"null secret"`)
 
-Returns **[string][457]** base64 encoded Basic token
+Returns **[string][459]** base64 encoded Basic token
 
 ### getAccessToken
 
@@ -2259,14 +2261,14 @@ outh key and basic token you passed in.
 
 #### Parameters
 
--   `oauthToken` **[string][457]** token for authentication to cpaas oauth system (optional, default `"null oauth token"`)
--   `email` **[string][457]** email address for a star2star account (optional, default `"null email"`)
--   `pwd` **[string][457]** password for that account (optional, default `"null pwd"`)
--   `scope` **[string][457]** access token scopes (optional, default `"default"`)
--   `deviceId` **[string][457]** unique identifier (optional, default `undefined`)
--   `trace` **[object][458]** optional microservice lifecycle trace headers (optional, default `{}`)
+-   `oauthToken` **[string][459]** token for authentication to cpaas oauth system (optional, default `"null oauth token"`)
+-   `email` **[string][459]** email address for a star2star account (optional, default `"null email"`)
+-   `pwd` **[string][459]** password for that account (optional, default `"null pwd"`)
+-   `scope` **[string][459]** access token scopes (optional, default `"default"`)
+-   `deviceId` **[string][459]** unique identifier (optional, default `undefined`)
+-   `trace` **[object][460]** optional microservice lifecycle trace headers (optional, default `{}`)
 
-Returns **[Promise][459]&lt;[object][458]>** Promise resolving to an oauth token data object
+Returns **[Promise][461]&lt;[object][460]>** Promise resolving to an oauth token data object
 
 ### getClientToken
 
@@ -2274,10 +2276,10 @@ This function will call the oauth microservice with the basic token you passed i
 
 #### Parameters
 
--   `oauthToken` **[string][457]** token for authentication to cpaas oauth system (optional, default `"null oauth token"`)
--   `trace` **[object][458]** optional microservice lifecycle trace headers (optional, default `{}`)
+-   `oauthToken` **[string][459]** token for authentication to cpaas oauth system (optional, default `"null oauth token"`)
+-   `trace` **[object][460]** optional microservice lifecycle trace headers (optional, default `{}`)
 
-Returns **[Promise][459]&lt;[object][458]>** Promise resolving to an oauth token data object
+Returns **[Promise][461]&lt;[object][460]>** Promise resolving to an oauth token data object
 
 ### invalidateToken
 
@@ -2285,11 +2287,11 @@ This function will invalidate an access token
 
 #### Parameters
 
--   `accessToken` **[string][457]** cpaas access token (optional, default `"null accessToken"`)
--   `token` **[string][457]** access token needing validation (optional, default `"null token"`)
--   `trace` **[object][458]** optional trace headers for debugging (optional, default `{}`)
+-   `accessToken` **[string][459]** cpaas access token (optional, default `"null accessToken"`)
+-   `token` **[string][459]** access token needing validation (optional, default `"null token"`)
+-   `trace` **[object][460]** optional trace headers for debugging (optional, default `{}`)
 
-Returns **[Promise][459]** promise thatdoes stuff
+Returns **[Promise][461]** promise thatdoes stuff
 
 ### listClientTokens
 
@@ -2297,13 +2299,13 @@ This function will return active access tokens based on the filters provided
 
 #### Parameters
 
--   `accessToken` **[string][457]** cpaas access token (optional, default `"null accessToken"`)
--   `offset` **[number][460]** pagination offset (optional, default `0`)
--   `limit` **[number][460]** pagination limit (optional, default `10`)
--   `filters` **[object][458]** token_type and username or client_id depending on token type (optional, default `undefined`)
--   `trace` **[object][458]** optional trace headers for debugging (optional, default `{}`)
+-   `accessToken` **[string][459]** cpaas access token (optional, default `"null accessToken"`)
+-   `offset` **[number][462]** pagination offset (optional, default `0`)
+-   `limit` **[number][462]** pagination limit (optional, default `10`)
+-   `filters` **[object][460]** token_type and username or client_id depending on token type (optional, default `undefined`)
+-   `trace` **[object][460]** optional trace headers for debugging (optional, default `{}`)
 
-Returns **[Promise][459]** promise resolving to a list of access tokens.
+Returns **[Promise][461]** promise resolving to a list of access tokens.
 
 ### refreshAccessToken
 
@@ -2311,12 +2313,12 @@ This function will call the identity microservice to refresh user based on token
 
 #### Parameters
 
--   `oauthToken` **[string][457]** token for authentication to cpaas oauth system (optional, default `"null oauth token"`)
--   `refreshToken` **[string][457]** refresh token for oauth token. (optional, default `"null refresh token"`)
--   `trace` **[object][458]** optional microservice lifecycle trace headers (optional, default `{}`)
--   `oauthKey` **[string][457]** key for oauth cpaas system (optional, default `"null oauth key"`)
+-   `oauthToken` **[string][459]** token for authentication to cpaas oauth system (optional, default `"null oauth token"`)
+-   `refreshToken` **[string][459]** refresh token for oauth token. (optional, default `"null refresh token"`)
+-   `trace` **[object][460]** optional microservice lifecycle trace headers (optional, default `{}`)
+-   `oauthKey` **[string][459]** key for oauth cpaas system (optional, default `"null oauth key"`)
 
-Returns **[Promise][459]&lt;[object][458]>** Promise resolving to an identity data object
+Returns **[Promise][461]&lt;[object][460]>** Promise resolving to an identity data object
 
 ### scopeClientApp
 
@@ -2324,12 +2326,12 @@ This function will restrict the client token to specific microservices
 
 #### Parameters
 
--   `accessToken` **[string][457]** cpaas access token (optional, default `"null accessToken"`)
--   `clientUUID` **[string][457]** client uuid (obtained when creating using createClientApp() (optional, default `"null clientUUID"`)
--   `scope` **[string][457]** array of microservices the token should be able to access (optional, default `["default"]`)
--   `trace` **[object][458]** optional trace headers for debugging. (optional, default `{}`)
+-   `accessToken` **[string][459]** cpaas access token (optional, default `"null accessToken"`)
+-   `clientUUID` **[string][459]** client uuid (obtained when creating using createClientApp() (optional, default `"null clientUUID"`)
+-   `scope` **[string][459]** array of microservices the token should be able to access (optional, default `["default"]`)
+-   `trace` **[object][460]** optional trace headers for debugging. (optional, default `{}`)
 
-Returns **[Promise][459]** promise resolving to a request status message.
+Returns **[Promise][461]** promise resolving to a request status message.
 
 ### validateToken
 
@@ -2337,11 +2339,11 @@ This function checks if an access token is valid
 
 #### Parameters
 
--   `accessToken` **[string][457]** cpaas access token (optional, default `"null accessToken"`)
--   `token` **[string][457]** access token needing validation (optional, default `"null token"`)
--   `trace` **[object][458]** optional trace headers for debugging (optional, default `{}`)
+-   `accessToken` **[string][459]** cpaas access token (optional, default `"null accessToken"`)
+-   `token` **[string][459]** access token needing validation (optional, default `"null token"`)
+-   `trace` **[object][460]** optional trace headers for debugging (optional, default `{}`)
 
-Returns **[Promise][459]** promise thatdoes stuff
+Returns **[Promise][461]** promise thatdoes stuff
 
 ## Objects
 
@@ -2355,14 +2357,14 @@ type of object.
 
 #### Parameters
 
--   `accessToken` **[string][457]** Access Token (optional, default `"null accessToken"`)
--   `dataObjectType` **[string][457]** Data object type to be retrieved; default: dataObjectType (optional, default `"data_object"`)
--   `offset` **[number][460]** pagination offset (optional, default `0`)
--   `limit` **[number][460]** pagination limit (optional, default `10`)
--   `loadContent` **[boolean][463]?** String boolean if the call should also return content of object; default false (optional, default `"false"`)
--   `trace` **[object][458]** microservice lifecycle trace headers (optional, default `{}`)
+-   `accessToken` **[string][459]** Access Token (optional, default `"null accessToken"`)
+-   `dataObjectType` **[string][459]** Data object type to be retrieved; default: dataObjectType (optional, default `"data_object"`)
+-   `offset` **[number][462]** pagination offset (optional, default `0`)
+-   `limit` **[number][462]** pagination limit (optional, default `10`)
+-   `loadContent` **[boolean][465]?** String boolean if the call should also return content of object; default false (optional, default `"false"`)
+-   `trace` **[object][460]** microservice lifecycle trace headers (optional, default `{}`)
 
-Returns **[Promise][459]&lt;[array][461]>** Promise resolving to an array of data objects
+Returns **[Promise][461]&lt;[array][463]>** Promise resolving to an array of data objects
 
 ### getDataObject
 
@@ -2370,11 +2372,11 @@ This function will ask the cpaas data object service for a specific object.
 
 #### Parameters
 
--   `accessToken` **[string][457]** Access Token (optional, default `"null accessToken"`)
--   `dataObjectUUID` **[string][457]** data object UUID (optional, default `"null uuid"`)
--   `trace` **[object][458]** microservice lifecycle trace headers (optional, default `{}`)
+-   `accessToken` **[string][459]** Access Token (optional, default `"null accessToken"`)
+-   `dataObjectUUID` **[string][459]** data object UUID (optional, default `"null uuid"`)
+-   `trace` **[object][460]** microservice lifecycle trace headers (optional, default `{}`)
 
-Returns **[Promise][459]&lt;[object][458]>** Promise resolving to a data object
+Returns **[Promise][461]&lt;[object][460]>** Promise resolving to a data object
 
 ### getDataObjects
 
@@ -2382,16 +2384,16 @@ This function returns objects permitted to user with flexible filtering.
 
 #### Parameters
 
--   `accessToken` **[string][457]**  (optional, default `"null accessToken"`)
--   `userUUID` **[string][457]**  (optional, default `"null userUUID"`)
--   `offset` **[number][460]** pagination limit (optional, default `0`)
--   `limit` **[number][460]** pagination offset (optional, default `10`)
+-   `accessToken` **[string][459]**  (optional, default `"null accessToken"`)
+-   `userUUID` **[string][459]**  (optional, default `"null userUUID"`)
+-   `offset` **[number][462]** pagination limit (optional, default `0`)
+-   `limit` **[number][462]** pagination offset (optional, default `10`)
 -   `loadContent`   (optional, default `false`)
--   `filters` **[array][461]** array of filter options [name, description, status, etc] (optional, default `undefined`)
--   `trace` **[object][458]** microservice lifecycle trace headers (optional, default `{}`)
--   `load_content` **[boolean][463]** return object content or just descriptors (optional, default `false`)
+-   `filters` **[array][463]** array of filter options [name, description, status, etc] (optional, default `undefined`)
+-   `trace` **[object][460]** microservice lifecycle trace headers (optional, default `{}`)
+-   `load_content` **[boolean][465]** return object content or just descriptors (optional, default `false`)
 
-Returns **[Promise][459]** Promise resolving to a list of objects
+Returns **[Promise][461]** Promise resolving to a list of objects
 
 ### getDataObjectByType
 
@@ -2400,15 +2402,15 @@ type of object.
 
 #### Parameters
 
--   `userUUID` **[string][457]** user UUID to be used (optional, default `"null user uuid"`)
--   `accessToken` **[string][457]** Access Token (optional, default `"null accessToken"`)
--   `dataObjectType` **[string][457]** Data object type to be retrieved; default: dataObjectType (optional, default `"data_object"`)
--   `offset` **[number][460]** pagination offset (optional, default `0`)
--   `limit` **[number][460]** pagination limit (optional, default `10`)
--   `loadContent` **[boolean][463]?** String boolean if the call should also return content of object; default false (optional, default `"false"`)
--   `trace` **[object][458]** microservice lifecycle trace headers (optional, default `{}`)
+-   `userUUID` **[string][459]** user UUID to be used (optional, default `"null user uuid"`)
+-   `accessToken` **[string][459]** Access Token (optional, default `"null accessToken"`)
+-   `dataObjectType` **[string][459]** Data object type to be retrieved; default: dataObjectType (optional, default `"data_object"`)
+-   `offset` **[number][462]** pagination offset (optional, default `0`)
+-   `limit` **[number][462]** pagination limit (optional, default `10`)
+-   `loadContent` **[boolean][465]?** String boolean if the call should also return content of object; default false (optional, default `"false"`)
+-   `trace` **[object][460]** microservice lifecycle trace headers (optional, default `{}`)
 
-Returns **[Promise][459]&lt;[array][461]>** Promise resolving to an array of data objects
+Returns **[Promise][461]&lt;[array][463]>** Promise resolving to an array of data objects
 
 ### getDataObjectByTypeAndName
 
@@ -2417,16 +2419,16 @@ type of object with name.
 
 #### Parameters
 
--   `userUUID` **[string][457]** user UUID to be used (optional, default `"null user uuid"`)
--   `accessToken` **[string][457]** Access Token (optional, default `"null accessToken"`)
--   `dataObjectType` **[string][457]** Data object type to be retrieved; default: dataObjectType (optional, default `"data_object"`)
+-   `userUUID` **[string][459]** user UUID to be used (optional, default `"null user uuid"`)
+-   `accessToken` **[string][459]** Access Token (optional, default `"null accessToken"`)
+-   `dataObjectType` **[string][459]** Data object type to be retrieved; default: dataObjectType (optional, default `"data_object"`)
 -   `dataObjectName`   (optional, default `"noName"`)
--   `offset` **[number][460]** pagination offset (optional, default `0`)
--   `limit` **[number][460]** pagination limit (optional, default `10`)
--   `loadContent` **[boolean][463]?** String boolean if the call should also return content of object; default false (optional, default `"false"`)
--   `trace` **[object][458]** microservice lifecycle trace headers (optional, default `{}`)
+-   `offset` **[number][462]** pagination offset (optional, default `0`)
+-   `limit` **[number][462]** pagination limit (optional, default `10`)
+-   `loadContent` **[boolean][465]?** String boolean if the call should also return content of object; default false (optional, default `"false"`)
+-   `trace` **[object][460]** microservice lifecycle trace headers (optional, default `{}`)
 
-Returns **[Promise][459]&lt;[array][461]>** Promise resolving to an array of data objects
+Returns **[Promise][461]&lt;[array][463]>** Promise resolving to an array of data objects
 
 ### createDataObject
 
@@ -2434,14 +2436,14 @@ This function will create a new data object.
 
 #### Parameters
 
--   `accessToken` **[string][457]** Access Token (optional, default `"null accessToken"`)
--   `objectName` **[string][457]** string object name
--   `objectType` **[string][457]** string object type (use '\_' between words)
--   `objectDescription` **[string][457]** string object description
--   `content` **[object][458]** object with contents (optional, default `{}`)
--   `trace` **[object][458]** microservice lifecycle trace headers (optional, default `{}`)
+-   `accessToken` **[string][459]** Access Token (optional, default `"null accessToken"`)
+-   `objectName` **[string][459]** string object name
+-   `objectType` **[string][459]** string object type (use '\_' between words)
+-   `objectDescription` **[string][459]** string object description
+-   `content` **[object][460]** object with contents (optional, default `{}`)
+-   `trace` **[object][460]** microservice lifecycle trace headers (optional, default `{}`)
 
-Returns **[Promise][459]&lt;[object][458]>** Promise resolving to a data object
+Returns **[Promise][461]&lt;[object][460]>** Promise resolving to a data object
 
 ### createUserDataObject
 
@@ -2449,17 +2451,17 @@ This function will create a new user data object.
 
 #### Parameters
 
--   `userUUID` **[string][457]** user UUID to be used (optional, default `"null user uuid"`)
--   `accessToken` **[string][457]** Access Token (optional, default `"null accessToken"`)
--   `objectName` **[string][457]** object name
--   `objectType` **[string][457]** object type (use '\_' between words)
--   `objectDescription` **[string][457]** object description
--   `content` **[object][458]** object to be created (optional, default `{}`)
--   `accountUUID` **[string][457]** optional account uuid to scope user permissions (optional, default `"null accountUUID"`)
--   `users` **[object][458]** optional object containing users for creating permissions groups (optional, default `undefined`)
--   `trace` **[object][458]** microservice lifecycle trace headers (optional, default `{}`)
+-   `userUUID` **[string][459]** user UUID to be used (optional, default `"null user uuid"`)
+-   `accessToken` **[string][459]** Access Token (optional, default `"null accessToken"`)
+-   `objectName` **[string][459]** object name
+-   `objectType` **[string][459]** object type (use '\_' between words)
+-   `objectDescription` **[string][459]** object description
+-   `content` **[object][460]** object to be created (optional, default `{}`)
+-   `accountUUID` **[string][459]** optional account uuid to scope user permissions (optional, default `"null accountUUID"`)
+-   `users` **[object][460]** optional object containing users for creating permissions groups (optional, default `undefined`)
+-   `trace` **[object][460]** microservice lifecycle trace headers (optional, default `{}`)
 
-Returns **[Promise][459]&lt;[object][458]>** Promise resolving to a data object
+Returns **[Promise][461]&lt;[object][460]>** Promise resolving to a data object
 
 ### deleteDataObject
 
@@ -2467,11 +2469,11 @@ This function will delete a data object and any resource groups associated with 
 
 #### Parameters
 
--   `accessToken` **[string][457]** accessToken (optional, default `"null accessToken"`)
--   `dataUUID` **[string][457]** data object UUID (optional, default `"not specified"`)
--   `trace` **[object][458]** microservice lifecycle trace headers (optional, default `{}`)
+-   `accessToken` **[string][459]** accessToken (optional, default `"null accessToken"`)
+-   `dataUUID` **[string][459]** data object UUID (optional, default `"not specified"`)
+-   `trace` **[object][460]** microservice lifecycle trace headers (optional, default `{}`)
 
-Returns **[Promise][459]&lt;[object][458]>** Promise resolving to a data object
+Returns **[Promise][461]&lt;[object][460]>** Promise resolving to a data object
 
 ### updateDataObject
 
@@ -2479,14 +2481,14 @@ This function will update an existing data object.
 
 #### Parameters
 
--   `accessToken` **[string][457]** Access Token (optional, default `"null accessToken"`)
--   `dataUUID` **[string][457]** data object UUID (optional, default `"uuid not specified"`)
--   `body` **[object][458]** data object replacement (optional, default `{}`)
--   `accountUUID` **[string][457]** optional account to scope users object permissions to (optional, default `undefined`)
--   `users` **[object][458]** optional users permissions object (optional, default `undefined`)
--   `trace` **[object][458]** microservice lifecycle trace headers (optional, default `{}`)
+-   `accessToken` **[string][459]** Access Token (optional, default `"null accessToken"`)
+-   `dataUUID` **[string][459]** data object UUID (optional, default `"uuid not specified"`)
+-   `body` **[object][460]** data object replacement (optional, default `{}`)
+-   `accountUUID` **[string][459]** optional account to scope users object permissions to (optional, default `undefined`)
+-   `users` **[object][460]** optional users permissions object (optional, default `undefined`)
+-   `trace` **[object][460]** microservice lifecycle trace headers (optional, default `{}`)
 
-Returns **[Promise][459]&lt;[object][458]>** Promise resolving to a data object
+Returns **[Promise][461]&lt;[object][460]>** Promise resolving to a data object
 
 ## Providers
 
@@ -2499,11 +2501,11 @@ This function will create a token provider for the given user and service
 
 #### Parameters
 
--   `clientID` **[string][457]** Star2Star's clientID assigned by third party (optional, default `"null clientID"`)
--   `providerUUID` **[string][457]** provider API policy uuid (optional, default `"null providerUUID"`)
--   `redirectURL` **[string][457]** auth code redirect URL (optional, default `"null redirectURL"`)
--   `userUUID` **[string][457]** CPaaS user uuid (optional, default `"null userUUID"`)
--   `trace` **[object][458]** optional CPaaS lifecycle headers (optional, default `{}`)
+-   `clientID` **[string][459]** Star2Star's clientID assigned by third party (optional, default `"null clientID"`)
+-   `providerUUID` **[string][459]** provider API policy uuid (optional, default `"null providerUUID"`)
+-   `redirectURL` **[string][459]** auth code redirect URL (optional, default `"null redirectURL"`)
+-   `userUUID` **[string][459]** CPaaS user uuid (optional, default `"null userUUID"`)
+-   `trace` **[object][460]** optional CPaaS lifecycle headers (optional, default `{}`)
 
 ### getProviderToken
 
@@ -2511,15 +2513,15 @@ This function will redirect the caller to complete oauth2 authorization and redi
 
 #### Parameters
 
--   `accessToken` **[string][457]** CPaaS access token (optional, default `"null accessToken"`)
--   `providerUUID` **[string][457]** Oauth2 provider identifier (optional, default `"null providerUUID"`)
--   `policyUUID` **[string][457]** cpaas provider API policy id used to generate access token (optional, default `"null policyUUID"`)
--   `userUUID` **[string][457]** optional cpaas user uuid. only required if the access_token does not belong to the cpaas user
--   `redirectURL` **[string][457]** optional completed request redirect URL
--   `providerUser` **[string][457]** optional 3rd party user name for CPaaS identities with multiple connections for the same provider
--   `trace` **[object][458]** optional cpaas lifecycle headers (optional, default `{}`)
+-   `accessToken` **[string][459]** CPaaS access token (optional, default `"null accessToken"`)
+-   `providerUUID` **[string][459]** Oauth2 provider identifier (optional, default `"null providerUUID"`)
+-   `policyUUID` **[string][459]** cpaas provider API policy id used to generate access token (optional, default `"null policyUUID"`)
+-   `userUUID` **[string][459]** optional cpaas user uuid. only required if the access_token does not belong to the cpaas user
+-   `redirectURL` **[string][459]** optional completed request redirect URL
+-   `providerUser` **[string][459]** optional 3rd party user name for CPaaS identities with multiple connections for the same provider
+-   `trace` **[object][460]** optional cpaas lifecycle headers (optional, default `{}`)
 
-Returns **[Promise][459]&lt;[object][458]>** Promise resolving to oauth2 provider access token
+Returns **[Promise][461]&lt;[object][460]>** Promise resolving to oauth2 provider access token
 
 ### getProviderTokenByConnection
 
@@ -2527,11 +2529,11 @@ This function will return a refreshed access token for the associated provider
 
 #### Parameters
 
--   `accessToken` **[string][457]** CPaaS access token (optional, default `"null accessToken"`)
--   `connectionUUID` **[string][457]** provider API connection uuid (optional, default `"null connectionUUID"`)
--   `trace` **[object][458]** optional cpaas lifecycle headers (optional, default `{}`)
+-   `accessToken` **[string][459]** CPaaS access token (optional, default `"null accessToken"`)
+-   `connectionUUID` **[string][459]** provider API connection uuid (optional, default `"null connectionUUID"`)
+-   `trace` **[object][460]** optional cpaas lifecycle headers (optional, default `{}`)
 
-Returns **[Promise][459]&lt;[object][458]>** Promise resolving to oauth2 provider access token
+Returns **[Promise][461]&lt;[object][460]>** Promise resolving to oauth2 provider access token
 
 ### listAvailableProviders
 
@@ -2539,10 +2541,10 @@ This function will  list all avaialble providers
 
 #### Parameters
 
--   `accessToken` **[string][457]** CPaaS access token (optional, default `"null accessToken"`)
--   `trace` **[object][458]** optional cpaas lifecycle headers (optional, default `{}`)
+-   `accessToken` **[string][459]** CPaaS access token (optional, default `"null accessToken"`)
+-   `trace` **[object][460]** optional cpaas lifecycle headers (optional, default `{}`)
 
-Returns **[Promise][459]&lt;[object][458]>** Promise resolving to oauth2 provider access token
+Returns **[Promise][461]&lt;[object][460]>** Promise resolving to oauth2 provider access token
 
 ### listUsersProviders
 
@@ -2550,11 +2552,11 @@ This function will list all the providers of a given user
 
 #### Parameters
 
--   `accessToken` **[string][457]** CPaaS access token (optional, default `"null accessToken"`)
--   `userUUID` **[string][457]** CPaas user uuid (optional, default `"null userUUID"`)
--   `trace` **[object][458]** optional cpaas lifecycle headers (optional, default `{}`)
+-   `accessToken` **[string][459]** CPaaS access token (optional, default `"null accessToken"`)
+-   `userUUID` **[string][459]** CPaas user uuid (optional, default `"null userUUID"`)
+-   `trace` **[object][460]** optional cpaas lifecycle headers (optional, default `{}`)
 
-Returns **[Promise][459]&lt;[object][458]>** Promise resolving to oauth2 provider access token
+Returns **[Promise][461]&lt;[object][460]>** Promise resolving to oauth2 provider access token
 
 ### listUserProviderConnections
 
@@ -2562,15 +2564,15 @@ This function will list 3rd party oauth2 connections/authorizations.
 
 #### Parameters
 
--   `accessToken` **[string][457]** CPaaS access token (optional, default `"null accessToken"`)
--   `user_uuid` **[string][457]** CPaas user uuid (optional, default `"null userUUID"`)
--   `policy_uuid` **[string][457]** option policy uuid (optional, default `undefined`)
--   `provider_uuid` **[string][457]** option provider uuid (optional, default `undefined`)
+-   `accessToken` **[string][459]** CPaaS access token (optional, default `"null accessToken"`)
+-   `user_uuid` **[string][459]** CPaas user uuid (optional, default `"null userUUID"`)
+-   `policy_uuid` **[string][459]** option policy uuid (optional, default `undefined`)
+-   `provider_uuid` **[string][459]** option provider uuid (optional, default `undefined`)
 -   `user_name`   (optional, default `undefined`)
--   `trace` **[object][458]** optional cpaas lifecycle headers (optional, default `{}`)
--   `userName` **[string][457]** optional user name (optional, default `undefined`)
+-   `trace` **[object][460]** optional cpaas lifecycle headers (optional, default `{}`)
+-   `userName` **[string][459]** optional user name (optional, default `undefined`)
 
-Returns **[Promise][459]&lt;[object][458]>** Promise resolving to a list of user's providers API connections
+Returns **[Promise][461]&lt;[object][460]>** Promise resolving to a list of user's providers API connections
 
 ## Pubsub
 
@@ -2583,17 +2585,17 @@ This function will add a subscription.
 
 #### Parameters
 
--   `user_uuid` **[string][457]** uuid for a star2star user (optional, default `"no user uuid provided"`)
--   `account_uuid` **[string][457]** account to subscribe to (optional, default `"account uuid not provided "`)
--   `callback_url` **[string][457]** callback URL (optional, default `"not set callback"`)
--   `callback_headers` **[array][461]** callback headers (optional, default `[]`)
--   `criteria` **[array][461]** optional filter criteria
--   `subscriptions` **[object][458]** events to subscribe to (voice, fax, conferencing, messagin, sms,  presence) (optional, default `{}`)
--   `accessToken` **[string][457]** access token for cpaas systems (optional, default `"null accessToken"`)
--   `expiresDate` **[string][457]** optional expires date (RFC3339 format) (optional, default `undefined`)
--   `trace` **[object][458]** optional microservice lifecycle trace headers (optional, default `{}`)
+-   `user_uuid` **[string][459]** uuid for a star2star user (optional, default `"no user uuid provided"`)
+-   `account_uuid` **[string][459]** account to subscribe to (optional, default `"account uuid not provided "`)
+-   `callback_url` **[string][459]** callback URL (optional, default `"not set callback"`)
+-   `callback_headers` **[array][463]** callback headers (optional, default `[]`)
+-   `criteria` **[array][463]** optional filter criteria
+-   `subscriptions` **[object][460]** events to subscribe to (voice, fax, conferencing, messagin, sms,  presence) (optional, default `{}`)
+-   `accessToken` **[string][459]** access token for cpaas systems (optional, default `"null accessToken"`)
+-   `expiresDate` **[string][459]** optional expires date (RFC3339 format) (optional, default `undefined`)
+-   `trace` **[object][460]** optional microservice lifecycle trace headers (optional, default `{}`)
 
-Returns **[Promise][459]&lt;[object][458]>** Promise resolving to a data object containing a new subscription
+Returns **[Promise][461]&lt;[object][460]>** Promise resolving to a data object containing a new subscription
 
 ### addCustomEventSubscription
 
@@ -2601,16 +2603,16 @@ This function will add a subscription for a custom application and event.
 
 #### Parameters
 
--   `accessToken` **[string][457]** access token for cpaas systems (optional, default `"null accessToken"`)
--   `app_uuid` **[string][457]** account to subscribe to (optional, default `"app_uuid uuid not provided "`)
--   `callback_url` **[string][457]** callback URL (optional, default `"not set callback"`)
--   `callback_headers` **[array][461]** callback headers (optional, default `[]`)
--   `criteria` **[array][461]** optional filter criteria
--   `events` **[object][458]** events to subscribe to (voice, fax, conferencing, messagin, sms,  presence) (optional, default `{}`)
--   `expiresDate` **[string][457]** optional expires date (RFC3339 format) (optional, default `undefined`)
--   `trace` **[object][458]** optional microservice lifecycle trace headers (optional, default `{}`)
+-   `accessToken` **[string][459]** access token for cpaas systems (optional, default `"null accessToken"`)
+-   `app_uuid` **[string][459]** account to subscribe to (optional, default `"app_uuid uuid not provided "`)
+-   `callback_url` **[string][459]** callback URL (optional, default `"not set callback"`)
+-   `callback_headers` **[array][463]** callback headers (optional, default `[]`)
+-   `criteria` **[array][463]** optional filter criteria
+-   `events` **[object][460]** events to subscribe to (voice, fax, conferencing, messagin, sms,  presence) (optional, default `{}`)
+-   `expiresDate` **[string][459]** optional expires date (RFC3339 format) (optional, default `undefined`)
+-   `trace` **[object][460]** optional microservice lifecycle trace headers (optional, default `{}`)
 
-Returns **[Promise][459]&lt;[object][458]>** Promise resolving to a data object containing a new subscription
+Returns **[Promise][461]&lt;[object][460]>** Promise resolving to a data object containing a new subscription
 
 ### broadcastCustomApplication
 
@@ -2618,13 +2620,13 @@ This function will send a message to subscribers of a custom application
 
 #### Parameters
 
--   `accessToken` **[string][457]** CPaaS access token (optional, default `"null accessToken"`)
--   `app_uuid` **[string][457]** application uuid (optional, default `"account uuid not provided "`)
--   `event` **[string][457]** even string to broadcast (optional, default `"null event"`)
--   `payload` **[object][458]** data to include in the broadcast (optional, default `{}`)
--   `trace` **[object][458]** optional CPaaS lifecycle headers (optional, default `{}`)
+-   `accessToken` **[string][459]** CPaaS access token (optional, default `"null accessToken"`)
+-   `app_uuid` **[string][459]** application uuid (optional, default `"account uuid not provided "`)
+-   `event` **[string][459]** even string to broadcast (optional, default `"null event"`)
+-   `payload` **[object][460]** data to include in the broadcast (optional, default `{}`)
+-   `trace` **[object][460]** optional CPaaS lifecycle headers (optional, default `{}`)
 
-Returns **[Promise][459]** promise resolving to success or failure
+Returns **[Promise][461]** promise resolving to success or failure
 
 ### createCustomApplication
 
@@ -2632,12 +2634,12 @@ This function will create a custom pubsub application
 
 #### Parameters
 
--   `accessToken` **[string][457]** CPaaS access token (optional, default `"null accessToken"`)
--   `app_uuid` **[string][457]** application_uuid (optional, default `"account uuid not provided "`)
--   `events` **[array][461]** events as array of objects (optional, default `[]`)
--   `trace` **[object][458]** optional CPaaS lifecycle headers (optional, default `{}`)
+-   `accessToken` **[string][459]** CPaaS access token (optional, default `"null accessToken"`)
+-   `app_uuid` **[string][459]** application_uuid (optional, default `"account uuid not provided "`)
+-   `events` **[array][463]** events as array of objects (optional, default `[]`)
+-   `trace` **[object][460]** optional CPaaS lifecycle headers (optional, default `{}`)
 
-Returns **[Promise][459]** promise resolving to success or failure
+Returns **[Promise][461]** promise resolving to success or failure
 
 ### deleteCustomApplication
 
@@ -2645,11 +2647,11 @@ This function will delete a custom pubsub application
 
 #### Parameters
 
--   `accessToken` **[string][457]** CPaaS access token (optional, default `"null accessToken"`)
--   `app_uuid` **[string][457]** application uuid (optional, default `"account uuid not provided "`)
+-   `accessToken` **[string][459]** CPaaS access token (optional, default `"null accessToken"`)
+-   `app_uuid` **[string][459]** application uuid (optional, default `"account uuid not provided "`)
 -   `trace` **any** optional CPaaS lifecycle headers (optional, default `{}`)
 
-Returns **[Promise][459]** promise resolving to success or failure
+Returns **[Promise][461]** promise resolving to success or failure
 
 ### deleteCustomSubscription
 
@@ -2657,11 +2659,11 @@ This function will delete a custom subscription
 
 #### Parameters
 
--   `accessToken` **[string][457]**  (optional, default `"null accessToken"`)
--   `subscription_uuid` **[string][457]**  (optional, default `"no subscription uuid provided"`)
+-   `accessToken` **[string][459]**  (optional, default `"null accessToken"`)
+-   `subscription_uuid` **[string][459]**  (optional, default `"no subscription uuid provided"`)
 -   `trace` **any**  (optional, default `{}`)
 
-Returns **[Promise][459]** promise resolving to success or failure
+Returns **[Promise][461]** promise resolving to success or failure
 
 ### deleteSubscription
 
@@ -2669,11 +2671,11 @@ This function will delete a user subscriptions based on subscription id.
 
 #### Parameters
 
--   `subscription_uuid` **[string][457]** uuid for a star2star user (optional, default `"no subscription uuid provided"`)
--   `accessToken` **[string][457]** access token for cpaas systems (optional, default `"null accessToken"`)
--   `trace` **[object][458]** optional microservice lifecycle trace headers (optional, default `{}`)
+-   `subscription_uuid` **[string][459]** uuid for a star2star user (optional, default `"no subscription uuid provided"`)
+-   `accessToken` **[string][459]** access token for cpaas systems (optional, default `"null accessToken"`)
+-   `trace` **[object][460]** optional microservice lifecycle trace headers (optional, default `{}`)
 
-Returns **[Promise][459]&lt;empty>** Promise resolving success or failure.
+Returns **[Promise][461]&lt;empty>** Promise resolving success or failure.
 
 ### getCustomApplication
 
@@ -2681,11 +2683,11 @@ This function will return a custom pubsub application
 
 #### Parameters
 
--   `accessToken` **[string][457]** CPaaS access token (optional, default `"null accessToken"`)
--   `app_uuid` **[string][457]** application uuid (optional, default `"account uuid not provided "`)
+-   `accessToken` **[string][459]** CPaaS access token (optional, default `"null accessToken"`)
+-   `app_uuid` **[string][459]** application uuid (optional, default `"account uuid not provided "`)
 -   `trace` **any** optional CPaaS lifecycle headers (optional, default `{}`)
 
-Returns **[Promise][459]** promise resolving to custom application object
+Returns **[Promise][461]** promise resolving to custom application object
 
 ### getCustomSubscription
 
@@ -2693,11 +2695,11 @@ This function will return a custom subscription
 
 #### Parameters
 
--   `accessToken` **[string][457]**  (optional, default `"null accessToken"`)
--   `subscription_uuid` **[string][457]**  (optional, default `"no subscription uuid provided"`)
+-   `accessToken` **[string][459]**  (optional, default `"null accessToken"`)
+-   `subscription_uuid` **[string][459]**  (optional, default `"no subscription uuid provided"`)
 -   `trace` **any**  (optional, default `{}`)
 
-Returns **[Promise][459]** promise resolving to subscription object
+Returns **[Promise][461]** promise resolving to subscription object
 
 ### getSubscription
 
@@ -2705,11 +2707,25 @@ This function will get a user subscription based on subscription id.
 
 #### Parameters
 
--   `subscription_uuid` **[string][457]** uuid for a star2star user (optional, default `"no subscription uuid provided"`)
--   `accessToken` **[string][457]** access token for cpaas systems (optional, default `"null accessToken"`)
--   `trace` **[object][458]** optional microservice lifecycle trace headers (optional, default `{}`)
+-   `subscription_uuid` **[string][459]** uuid for a star2star user (optional, default `"no subscription uuid provided"`)
+-   `accessToken` **[string][459]** access token for cpaas systems (optional, default `"null accessToken"`)
+-   `trace` **[object][460]** optional microservice lifecycle trace headers (optional, default `{}`)
 
-Returns **[Promise][459]&lt;empty>** Promise resolving success or failure.
+Returns **[Promise][461]&lt;empty>** Promise resolving success or failure.
+
+### listCustomSubscriptions
+
+This function will return a custom subscription
+
+#### Parameters
+
+-   `accessToken` **[string][459]** CPaaS access token (optional, default `"null accessToken"`)
+-   `appUUID` **[string][459]** custom application uuid (optional, default `"no app uuid provided"`)
+-   `offset` **[number][462]** pagination offset (optional, default `0`)
+-   `limit` **[number][462]** pagination limit (optional, default `10`)
+-   `trace` **[object][460]** optional CPaaS lifecycle headers (optional, default `{}`)
+
+Returns **[Promise][461]** promise resolving to object containing items array of subscriptions
 
 ### listUserSubscriptions
 
@@ -2717,11 +2733,11 @@ This function will ask the cpaas pubsub service for the list of user's subscript
 
 #### Parameters
 
--   `user_uuid` **[string][457]** uuid for a star2star user (optional, default `"no user uuid provided"`)
--   `accessToken` **[string][457]** access token for cpaas systems (optional, default `"null accessToken"`)
--   `trace` **[object][458]** optional microservice lifecycle trace headers (optional, default `{}`)
+-   `user_uuid` **[string][459]** uuid for a star2star user (optional, default `"no user uuid provided"`)
+-   `accessToken` **[string][459]** access token for cpaas systems (optional, default `"null accessToken"`)
+-   `trace` **[object][460]** optional microservice lifecycle trace headers (optional, default `{}`)
 
-Returns **[Promise][459]&lt;[object][458]>** Promise resolving to a data object containing a list of subscriptions for this user
+Returns **[Promise][461]&lt;[object][460]>** Promise resolving to a data object containing a list of subscriptions for this user
 
 ### updateSubscriptionExpiresDate
 
@@ -2729,12 +2745,12 @@ This function updates a subscription expiration date
 
 #### Parameters
 
--   `accessToken` **[string][457]** access token for cpaas systems (optional, default `"null accessToken"`)
+-   `accessToken` **[string][459]** access token for cpaas systems (optional, default `"null accessToken"`)
 -   `subscriptionUUID` **any** uuid for a star2star user
 -   `expiresDate` **any**  (optional, default `newDate(Date.now()).toISOString()`)
 -   `trace` **any**  (optional, default `{}`)
 
-Returns **[Promise][459]&lt;[object][458]>** Promise resolving to a data object containing updated subscription
+Returns **[Promise][461]&lt;[object][460]>** Promise resolving to a data object containing updated subscription
 
 ## Resource Groups
 
@@ -2747,14 +2763,14 @@ This function will create the permissions group for a resource uuid.
 
 #### Parameters
 
--   `accessToken` **[string][457]** cpaas access token (optional, default `"null access token"`)
--   `accountUUID` **[string][457]** account to associate resource group to (optional, default `"null accountUUID"`)
--   `resourceUUID` **[string][457]** resource requiring permissions groups (optional, default `"null resourceUUID"`)
--   `type` **[string][457]** resource type, object, etc. (optional, default `undefined`)
--   `users` **[object][458]** Read, Update, Delete users object (optional, default `{}`)
--   `trace` **[object][458]** optional microservice lifecycle trace headers (optional, default `{}`)
+-   `accessToken` **[string][459]** cpaas access token (optional, default `"null access token"`)
+-   `accountUUID` **[string][459]** account to associate resource group to (optional, default `"null accountUUID"`)
+-   `resourceUUID` **[string][459]** resource requiring permissions groups (optional, default `"null resourceUUID"`)
+-   `type` **[string][459]** resource type, object, etc. (optional, default `undefined`)
+-   `users` **[object][460]** Read, Update, Delete users object (optional, default `{}`)
+-   `trace` **[object][460]** optional microservice lifecycle trace headers (optional, default `{}`)
 
-Returns **[Promise][459]** promise resolving to an object containing a status message
+Returns **[Promise][461]** promise resolving to an object containing a status message
 
 ### cleanUpResourceGroups
 
@@ -2762,11 +2778,11 @@ This function will remove any permissions groups associated with a resource.
 
 #### Parameters
 
--   `accessToken` **[string][457]** cpaas access token (optional, default `"null accessToken"`)
--   `resourceUUID` **[string][457]** uuid of resource (optional, default `"null resourceUUID"`)
--   `trace` **[object][458]** optional microservice lifecycle trace headers (optional, default `{}`)
+-   `accessToken` **[string][459]** cpaas access token (optional, default `"null accessToken"`)
+-   `resourceUUID` **[string][459]** uuid of resource (optional, default `"null resourceUUID"`)
+-   `trace` **[object][460]** optional microservice lifecycle trace headers (optional, default `{}`)
 
-Returns **[Promise][459]** promise resolving to a status message.
+Returns **[Promise][461]** promise resolving to a status message.
 
 ### updateResourceGroups
 
@@ -2774,15 +2790,15 @@ This function will update a resources permissions groups.
 
 #### Parameters
 
--   `accessToken` **[string][457]** Access Token (optional, default `"null accessToken"`)
+-   `accessToken` **[string][459]** Access Token (optional, default `"null accessToken"`)
 -   `resourceUUID`   (optional, default `"uuid not specified"`)
 -   `accountUUID`   (optional, default `"null accountUUID"`)
 -   `type`   (optional, default `undefined`)
--   `users` **[object][458]** users object treated as PUT (optional, default `{}}`)
--   `trace` **[object][458]** microservice lifecycle trace headers (optional, default `{}`)
--   `data_uuid` **[string][457]** data object UUID (optional, default `"uuid not specified"`)
+-   `users` **[object][460]** users object treated as PUT (optional, default `{}}`)
+-   `trace` **[object][460]** microservice lifecycle trace headers (optional, default `{}`)
+-   `data_uuid` **[string][459]** data object UUID (optional, default `"uuid not specified"`)
 
-Returns **[Promise][459]&lt;[object][458]>** Promise resolving to confirmation of updated groups
+Returns **[Promise][461]&lt;[object][460]>** Promise resolving to confirmation of updated groups
 
 ## Scheduler
 
@@ -2795,11 +2811,11 @@ Returns **[Promise][459]&lt;[object][458]>** Promise resolving to confirmation o
 
 #### Parameters
 
--   `accessToken` **[string][457]** cpaas access token (optional, default `"null accessToken"`)
--   `eventUUID` **[string][457]** schedule uuid (optional, default `"null eventUUID"`)
--   `trace` **[object][458]** optional debug headers (optional, default `{}`)
+-   `accessToken` **[string][459]** cpaas access token (optional, default `"null accessToken"`)
+-   `eventUUID` **[string][459]** schedule uuid (optional, default `"null eventUUID"`)
+-   `trace` **[object][460]** optional debug headers (optional, default `{}`)
 
-Returns **[Promise][459]** status object
+Returns **[Promise][461]** status object
 
 ### getEvent
 
@@ -2807,11 +2823,11 @@ Returns **[Promise][459]** status object
 
 #### Parameters
 
--   `accessToken` **[string][457]** cpaas access token (optional, default `"null accessToken"`)
--   `eventUUID` **[string][457]** schedule event uuid (optional, default `"null eventUUID"`)
--   `trace` **[object][458]** optional debug headers (optional, default `{}`)
+-   `accessToken` **[string][459]** cpaas access token (optional, default `"null accessToken"`)
+-   `eventUUID` **[string][459]** schedule event uuid (optional, default `"null eventUUID"`)
+-   `trace` **[object][460]** optional debug headers (optional, default `{}`)
 
-Returns **[Promise][459]** schedule event object
+Returns **[Promise][461]** schedule event object
 
 ### getNextEventInfo
 
@@ -2819,11 +2835,11 @@ This function returns infor on the upcoming schedule event
 
 #### Parameters
 
--   `accessToken` **[string][457]** cpaas access token (optional, default `"null accessToken"`)
--   `eventUUID` **[string][457]** schedule event uuid (optional, default `"null eventUUID"`)
--   `trace` **[object][458]** optional debug headers (optional, default `{}`)
+-   `accessToken` **[string][459]** cpaas access token (optional, default `"null accessToken"`)
+-   `eventUUID` **[string][459]** schedule event uuid (optional, default `"null eventUUID"`)
+-   `trace` **[object][460]** optional debug headers (optional, default `{}`)
 
-Returns **[Promise][459]** event info object
+Returns **[Promise][461]** event info object
 
 ### listEvents
 
@@ -2831,13 +2847,13 @@ This function lists sheduled events
 
 #### Parameters
 
--   `accessToken` **[string][457]** cpaas access token (optional, default `"null accessToken"`)
--   `offset` **[number][460]** pagination offset (optional, default `0`)
--   `limit` **[number][460]** pagination limit (optional, default `10`)
--   `filters` **[object][458]** optional filters (optional, default `undefined`)
--   `trace` **[object][458]** optional debug headers (optional, default `{}`)
+-   `accessToken` **[string][459]** cpaas access token (optional, default `"null accessToken"`)
+-   `offset` **[number][462]** pagination offset (optional, default `0`)
+-   `limit` **[number][462]** pagination limit (optional, default `10`)
+-   `filters` **[object][460]** optional filters (optional, default `undefined`)
+-   `trace` **[object][460]** optional debug headers (optional, default `{}`)
 
-Returns **[Promise][459]** array of event items
+Returns **[Promise][461]** array of event items
 
 ### listEventsHistory
 
@@ -2845,13 +2861,13 @@ This function returns the run history of previously scheduled events
 
 #### Parameters
 
--   `accessToken` **[string][457]** cpaas access token (optional, default `"null accessToken"`)
--   `offset` **[number][460]** pagination offset (optional, default `0`)
--   `limit` **[number][460]** pagination limit (optional, default `10`)
--   `filters` **[object][458]** optional filters (optional, default `undefined`)
--   `trace` **[object][458]** optional debug headers (optional, default `{}`)
+-   `accessToken` **[string][459]** cpaas access token (optional, default `"null accessToken"`)
+-   `offset` **[number][462]** pagination offset (optional, default `0`)
+-   `limit` **[number][462]** pagination limit (optional, default `10`)
+-   `filters` **[object][460]** optional filters (optional, default `undefined`)
+-   `trace` **[object][460]** optional debug headers (optional, default `{}`)
 
-Returns **[Promise][459]** array of event history items
+Returns **[Promise][461]** array of event history items
 
 ### scheduleEvent
 
@@ -2859,21 +2875,21 @@ This function will schedule an event
 
 #### Parameters
 
--   `accessToken` **[string][457]** cpaas access token (optional, default `"null accessToken"`)
--   `userUUID` **[string][457]** user uuid (optional, default `"null userUUID"`)
--   `startDateTime` **[date][462]** future RFC3339 timestamp (optional, default `(newDate()).toISOString()`)
--   `timezone` **[string][457]** IANA timezone (optional, default `"America/New_York"`)
--   `title` **[string][457]** optional schedule title (optional, default `"null title"`)
--   `description` **[string][457]** optional schedule description (optional, default `"null description"`)
--   `frequency` **[object][458]** frequency object (optional, default `{
+-   `accessToken` **[string][459]** cpaas access token (optional, default `"null accessToken"`)
+-   `userUUID` **[string][459]** user uuid (optional, default `"null userUUID"`)
+-   `startDateTime` **[date][464]** future RFC3339 timestamp (optional, default `(newDate()).toISOString()`)
+-   `timezone` **[string][459]** IANA timezone (optional, default `"America/New_York"`)
+-   `title` **[string][459]** optional schedule title (optional, default `"null title"`)
+-   `description` **[string][459]** optional schedule description (optional, default `"null description"`)
+-   `frequency` **[object][460]** frequency object (optional, default `{
     "type":"once"
     }`)
--   `trigger` **[object][458]** action to perform at the specified schedule (optional, default `{}`)
--   `notification` **[object][458]** optional notification (optional, default `{}`)
--   `metadata` **[object][458]** optional custom data to include with the event. (optional, default `{}`)
--   `trace` **[object][458]** optional debug headers (optional, default `{}`)
+-   `trigger` **[object][460]** action to perform at the specified schedule (optional, default `{}`)
+-   `notification` **[object][460]** optional notification (optional, default `{}`)
+-   `metadata` **[object][460]** optional custom data to include with the event. (optional, default `{}`)
+-   `trace` **[object][460]** optional debug headers (optional, default `{}`)
 
-Returns **[Promise][459]** scheduled event object
+Returns **[Promise][461]** scheduled event object
 
 ### updateEvent
 
@@ -2881,12 +2897,12 @@ This function will update an event schedule
 
 #### Parameters
 
--   `accessToken` **[string][457]** cpaas access token (optional, default `"null accessToken"`)
--   `eventUUID` **[string][457]** event uuid (optional, default `"null eventUUID"`)
--   `body` **[object][458]** full event object (optional, default `"null body"`)
--   `trace` **[object][458]** option debug headers (optional, default `{}`)
+-   `accessToken` **[string][459]** cpaas access token (optional, default `"null accessToken"`)
+-   `eventUUID` **[string][459]** event uuid (optional, default `"null eventUUID"`)
+-   `body` **[object][460]** full event object (optional, default `"null body"`)
+-   `trace` **[object][460]** option debug headers (optional, default `{}`)
 
-Returns **[Promise][459]** updated event object
+Returns **[Promise][461]** updated event object
 
 ## ShortUrls
 
@@ -2899,8 +2915,8 @@ This function will create a new short url.
 
 #### Parameters
 
--   `accessToken` **[string][457]** access token for cpaas systems (optional, default `'null accessToken'`)
--   `options` **[object][458]** {
+-   `accessToken` **[string][459]** access token for cpaas systems (optional, default `'null accessToken'`)
+-   `options` **[object][460]** {
     "account_uuid": "string",
     "analyze_content": false,
     "expires_after": 0,
@@ -2916,9 +2932,9 @@ This function will create a new short url.
     "url": "string",
     "user_uuid": "string"
     } (optional, default `{}`)
--   `trace` **[object][458]** optional microservice lifecycle trace headers (optional, default `{}`)
+-   `trace` **[object][460]** optional microservice lifecycle trace headers (optional, default `{}`)
 
-Returns **[Promise][459]&lt;[object][458]>** Promise resolving to a data object containing a list of short urls
+Returns **[Promise][461]&lt;[object][460]>** Promise resolving to a data object containing a list of short urls
 
 ### deleteShortCode
 
@@ -2926,12 +2942,12 @@ This function will delete a short url.
 
 #### Parameters
 
--   `userUuid` **[string][457]** account_uuid (optional, default `'null user uuid'`)
--   `accessToken` **[string][457]** access token for cpaas systems (optional, default `'null accessToken'`)
--   `short_code` **[string][457]** short code for url to delete (optional, default `'notdefined'`)
--   `trace` **[object][458]** optional microservice lifecycle trace headers (optional, default `{}`)
+-   `userUuid` **[string][459]** account_uuid (optional, default `'null user uuid'`)
+-   `accessToken` **[string][459]** access token for cpaas systems (optional, default `'null accessToken'`)
+-   `short_code` **[string][459]** short code for url to delete (optional, default `'notdefined'`)
+-   `trace` **[object][460]** optional microservice lifecycle trace headers (optional, default `{}`)
 
-Returns **[Promise][459]&lt;empty>** Promise resolving success or failure.
+Returns **[Promise][461]&lt;empty>** Promise resolving success or failure.
 
 ### listShortUrls
 
@@ -2939,12 +2955,12 @@ This function will get a list of all short urls.
 
 #### Parameters
 
--   `userUuid` **[string][457]** account_uuid (optional, default `'null user uuid'`)
--   `accessToken` **[string][457]** access token for cpaas systems (optional, default `'null accessToken'`)
--   `options` **[object][458]** object of options (optional, default `{}`)
--   `trace` **[object][458]** optional microservice lifecycle trace headers (optional, default `{}`)
+-   `userUuid` **[string][459]** account_uuid (optional, default `'null user uuid'`)
+-   `accessToken` **[string][459]** access token for cpaas systems (optional, default `'null accessToken'`)
+-   `options` **[object][460]** object of options (optional, default `{}`)
+-   `trace` **[object][460]** optional microservice lifecycle trace headers (optional, default `{}`)
 
-Returns **[Promise][459]&lt;[object][458]>** Promise resolving to a data object containing a list of short urls
+Returns **[Promise][461]&lt;[object][460]>** Promise resolving to a data object containing a list of short urls
 
 ## Workflow
 
@@ -2957,11 +2973,11 @@ This function will create a new workflow template
 
 #### Parameters
 
--   `accessToken` **[string][457]** cpaas access token (optional, default `"null access token"`)
--   `body` **[object][458]** workflow template body (optional, default `"null body"`)
--   `trace` **[object][458]** optional microservice lifecycle trace headers (optional, default `{}`)
+-   `accessToken` **[string][459]** cpaas access token (optional, default `"null access token"`)
+-   `body` **[object][460]** workflow template body (optional, default `"null body"`)
+-   `trace` **[object][460]** optional microservice lifecycle trace headers (optional, default `{}`)
 
-Returns **[Promise][459]** 
+Returns **[Promise][461]** 
 
 ### cancelWorkflow
 
@@ -2969,12 +2985,12 @@ This function will cancel a specific running workflow instance
 
 #### Parameters
 
--   `accessToken` **[string][457]**  (optional, default `"null access token"`)
--   `wfTemplateUUID` **[string][457]**  (optional, default `"null wfTemplateUUID"`)
--   `wfIntanceUUID` **[string][457]**  (optional, default `"null wfInstanceUUID"`)
--   `trace` **[object][458]** optional microservice lifecycle trace headers (optional, default `{}`)
+-   `accessToken` **[string][459]**  (optional, default `"null access token"`)
+-   `wfTemplateUUID` **[string][459]**  (optional, default `"null wfTemplateUUID"`)
+-   `wfIntanceUUID` **[string][459]**  (optional, default `"null wfInstanceUUID"`)
+-   `trace` **[object][460]** optional microservice lifecycle trace headers (optional, default `{}`)
 
-Returns **[Promise][459]** 
+Returns **[Promise][461]** 
 
 ### deleteWorkflowTemplate
 
@@ -2982,12 +2998,12 @@ This function will delete a workflow template.
 
 #### Parameters
 
--   `accessToken` **[string][457]** cpaas access token (optional, default `"null access token"`)
--   `wfTemplateUUID` **[string][457]** workflow template uuid (optional, default `"null wfTemplateUUID"`)
--   `version` **[string][457]** workflow version (optional, default `"null version"`)
--   `trace` **[object][458]** optional microservice lifecycle trace headers (optional, default `{}`)
+-   `accessToken` **[string][459]** cpaas access token (optional, default `"null access token"`)
+-   `wfTemplateUUID` **[string][459]** workflow template uuid (optional, default `"null wfTemplateUUID"`)
+-   `version` **[string][459]** workflow version (optional, default `"null version"`)
+-   `trace` **[object][460]** optional microservice lifecycle trace headers (optional, default `{}`)
 
-Returns **[Promise][459]** 
+Returns **[Promise][461]** 
 
 ### getRunningWorkflow
 
@@ -2995,12 +3011,12 @@ This function will get a specific workflow instance
 
 #### Parameters
 
--   `accessToken` **[string][457]** cpaas access token (optional, default `"null access token"`)
--   `wfTemplateUUID` **[string][457]** workflow template uuid (optional, default `"null wfTemplateUUID"`)
--   `wfInstanceUUID` **[string][457]** workflow uuid (optional, default `"null wfInstanceUUID"`)
--   `trace` **[object][458]** optional microservice lifecycle trace headers (optional, default `{}`)
+-   `accessToken` **[string][459]** cpaas access token (optional, default `"null access token"`)
+-   `wfTemplateUUID` **[string][459]** workflow template uuid (optional, default `"null wfTemplateUUID"`)
+-   `wfInstanceUUID` **[string][459]** workflow uuid (optional, default `"null wfInstanceUUID"`)
+-   `trace` **[object][460]** optional microservice lifecycle trace headers (optional, default `{}`)
 
-Returns **[Promise][459]** 
+Returns **[Promise][461]** 
 
 ### getWfInstanceHistory
 
@@ -3008,15 +3024,15 @@ This function will get a filtered execution history for a specific workflow uuid
 
 #### Parameters
 
--   `accessToken` **[string][457]** cpaas access token (optional, default `"null access_token"`)
--   `wfInstanceUUID` **[string][457]** workflow instance uuid (optional, default `"null wfTemplateUUID"`)
+-   `accessToken` **[string][459]** cpaas access token (optional, default `"null access_token"`)
+-   `wfInstanceUUID` **[string][459]** workflow instance uuid (optional, default `"null wfTemplateUUID"`)
 -   `filters`   (optional, default `undefined`)
--   `trace` **[object][458]** optional microservice lifecycle trace headers (optional, default `{}`)
--   `show_workflow_vars` **[boolean][463]** show workflow_vars (defaults to false) (optional, default `false`)
--   `show_incoming_data` **[boolean][463]** show incoming_data (defaults to false) (optional, default `false`)
--   `show_transition_results` **[boolean][463]** show transition results (defaults to false) (optional, default `false`)
+-   `trace` **[object][460]** optional microservice lifecycle trace headers (optional, default `{}`)
+-   `show_workflow_vars` **[boolean][465]** show workflow_vars (defaults to false) (optional, default `false`)
+-   `show_incoming_data` **[boolean][465]** show incoming_data (defaults to false) (optional, default `false`)
+-   `show_transition_results` **[boolean][465]** show transition results (defaults to false) (optional, default `false`)
 
-Returns **[Promise][459]** 
+Returns **[Promise][461]** 
 
 ### getWfInstanceWorkflowVars
 
@@ -3024,11 +3040,11 @@ This function will get filtered workflow vars execution history for a specific w
 
 #### Parameters
 
--   `accessToken` **[string][457]** cpaas access token (optional, default `"null access_token"`)
--   `wfInstanceUUID` **[string][457]** workflow instance uuid (optional, default `"null wfTemplateUUID"`)
--   `trace` **[object][458]** optional microservice lifecycle trace headers (optional, default `{}`)
+-   `accessToken` **[string][459]** cpaas access token (optional, default `"null access_token"`)
+-   `wfInstanceUUID` **[string][459]** workflow instance uuid (optional, default `"null wfTemplateUUID"`)
+-   `trace` **[object][460]** optional microservice lifecycle trace headers (optional, default `{}`)
 
-Returns **[Promise][459]** 
+Returns **[Promise][461]** 
 
 ### getWfInstanceIncomingData
 
@@ -3036,11 +3052,11 @@ This function will get filtered incoming data execution history for a specific w
 
 #### Parameters
 
--   `accessToken` **[string][457]** cpaas access token (optional, default `"null access_token"`)
--   `wfInstanceUUID` **[string][457]** workflow instance uuid (optional, default `"null wfTemplateUUID"`)
--   `trace` **[object][458]** optional microservice lifecycle trace headers (optional, default `{}`)
+-   `accessToken` **[string][459]** cpaas access token (optional, default `"null access_token"`)
+-   `wfInstanceUUID` **[string][459]** workflow instance uuid (optional, default `"null wfTemplateUUID"`)
+-   `trace` **[object][460]** optional microservice lifecycle trace headers (optional, default `{}`)
 
-Returns **[Promise][459]** 
+Returns **[Promise][461]** 
 
 ### getWfInstanceResults
 
@@ -3048,13 +3064,13 @@ This function will get filtered transaction results execution history for a spec
 
 #### Parameters
 
--   `accessToken` **[string][457]** cpaas access token (optional, default `"null access_token"`)
--   `wfInstanceUUID` **[string][457]** workflow instance uuid (optional, default `"null wfTemplateUUID"`)
+-   `accessToken` **[string][459]** cpaas access token (optional, default `"null access_token"`)
+-   `wfInstanceUUID` **[string][459]** workflow instance uuid (optional, default `"null wfTemplateUUID"`)
 -   `transitionUUID`   (optional, default `"null wfTransitionUUID"`)
--   `trace` **[object][458]** optional microservice lifecycle trace headers (optional, default `{}`)
--   `wfTransitionUUID` **[string][457]** workflow instance uuid (optional, default `"null instance_uuid"`)
+-   `trace` **[object][460]** optional microservice lifecycle trace headers (optional, default `{}`)
+-   `wfTransitionUUID` **[string][459]** workflow instance uuid (optional, default `"null instance_uuid"`)
 
-Returns **[Promise][459]** 
+Returns **[Promise][461]** 
 
 ### getWfTemplateHistory
 
@@ -3062,14 +3078,14 @@ This function returns a history of a template execution.
 
 #### Parameters
 
--   `accessToken` **[string][457]** cpaas access token (optional, default `"null access token"`)
--   `wfTemplateUUID` **[string][457]** workflow template uuid (optional, default `"null wfTemplateUUID"`)
--   `offset` **[number][460]** pagination offset (optional, default `0`)
--   `limit` **[number][460]** pagination limit (optional, default `10`)
--   `filters` **[array][461]** optional filters, incuding start_datetime and end_datetime (RFC3339 format), and version (optional, default `undefined`)
--   `trace` **[object][458]** optional microservice lifecycle trace headers (optional, default `{}`)
+-   `accessToken` **[string][459]** cpaas access token (optional, default `"null access token"`)
+-   `wfTemplateUUID` **[string][459]** workflow template uuid (optional, default `"null wfTemplateUUID"`)
+-   `offset` **[number][462]** pagination offset (optional, default `0`)
+-   `limit` **[number][462]** pagination limit (optional, default `10`)
+-   `filters` **[array][463]** optional filters, incuding start_datetime and end_datetime (RFC3339 format), and version (optional, default `undefined`)
+-   `trace` **[object][460]** optional microservice lifecycle trace headers (optional, default `{}`)
 
-Returns **[Promise][459]** 
+Returns **[Promise][461]** 
 
 ### getWorkflowGroup
 
@@ -3077,11 +3093,11 @@ This function will get workflow group by uuid.
 
 #### Parameters
 
--   `accessToken` **[string][457]** cpaas access token (optional, default `"null access token"`)
--   `wfGroupUUID` **[string][457]** workflow uuid (optional, default `"null wfGroupUUID"`)
--   `trace` **[object][458]** optional microservice lifecycle trace headers (optional, default `{}`)
+-   `accessToken` **[string][459]** cpaas access token (optional, default `"null access token"`)
+-   `wfGroupUUID` **[string][459]** workflow uuid (optional, default `"null wfGroupUUID"`)
+-   `trace` **[object][460]** optional microservice lifecycle trace headers (optional, default `{}`)
 
-Returns **[Promise][459]** 
+Returns **[Promise][461]** 
 
 ### getWorkflowGroupFiltered
 
@@ -3089,15 +3105,15 @@ This function will get workflow group by uuid.
 
 #### Parameters
 
--   `accessToken` **[string][457]** cpaas access token (optional, default `"null access token"`)
--   `wfGroupUUID` **[string][457]** workflow uuid (optional, default `"null wfGroupUUID"`)
+-   `accessToken` **[string][459]** cpaas access token (optional, default `"null access token"`)
+-   `wfGroupUUID` **[string][459]** workflow uuid (optional, default `"null wfGroupUUID"`)
 -   `filters`   (optional, default `undefined`)
--   `trace` **[object][458]** optional microservice lifecycle trace headers (optional, default `{}`)
--   `show_master` **[boolean][463]** show master (defaults to false) (optional, default `false`)
--   `show_children` **[boolean][463]** show children (defaults to false) (optional, default `false`)
--   `show_data` **[boolean][463]** show data (defaults to false) (optional, default `false`)
+-   `trace` **[object][460]** optional microservice lifecycle trace headers (optional, default `{}`)
+-   `show_master` **[boolean][465]** show master (defaults to false) (optional, default `false`)
+-   `show_children` **[boolean][465]** show children (defaults to false) (optional, default `false`)
+-   `show_data` **[boolean][465]** show data (defaults to false) (optional, default `false`)
 
-Returns **[Promise][459]** 
+Returns **[Promise][461]** 
 
 ### getWorkflowGroupMaster
 
@@ -3105,11 +3121,11 @@ This function will get workflow group master by uuid.
 
 #### Parameters
 
--   `accessToken` **[string][457]** cpaas access token (optional, default `"null access token"`)
--   `wfGroupUUID` **[string][457]** workflow uuid (optional, default `"null wfGroupUUID"`)
--   `trace` **[object][458]** optional microservice lifecycle trace headers (optional, default `{}`)
+-   `accessToken` **[string][459]** cpaas access token (optional, default `"null access token"`)
+-   `wfGroupUUID` **[string][459]** workflow uuid (optional, default `"null wfGroupUUID"`)
+-   `trace` **[object][460]** optional microservice lifecycle trace headers (optional, default `{}`)
 
-Returns **[Promise][459]** 
+Returns **[Promise][461]** 
 
 ### getWorkflowGroupData
 
@@ -3117,11 +3133,11 @@ This function will get workflow group data by uuid.
 
 #### Parameters
 
--   `accessToken` **[string][457]** cpaas access token (optional, default `"null access token"`)
--   `wfGroupUUID` **[string][457]** workflow uuid (optional, default `"null wfGroupUUID"`)
--   `trace` **[object][458]** optional microservice lifecycle trace headers (optional, default `{}`)
+-   `accessToken` **[string][459]** cpaas access token (optional, default `"null access token"`)
+-   `wfGroupUUID` **[string][459]** workflow uuid (optional, default `"null wfGroupUUID"`)
+-   `trace` **[object][460]** optional microservice lifecycle trace headers (optional, default `{}`)
 
-Returns **[Promise][459]** 
+Returns **[Promise][461]** 
 
 ### getWorkflowGroupChildren
 
@@ -3129,11 +3145,11 @@ This function will get workflow group children by uuid.
 
 #### Parameters
 
--   `accessToken` **[string][457]** cpaas access token (optional, default `"null access token"`)
--   `wfGroupUUID` **[string][457]** workflow uuid (optional, default `"null wfGroupUUID"`)
--   `trace` **[object][458]** optional microservice lifecycle trace headers (optional, default `{}`)
+-   `accessToken` **[string][459]** cpaas access token (optional, default `"null access token"`)
+-   `wfGroupUUID` **[string][459]** workflow uuid (optional, default `"null wfGroupUUID"`)
+-   `trace` **[object][460]** optional microservice lifecycle trace headers (optional, default `{}`)
 
-Returns **[Promise][459]** 
+Returns **[Promise][461]** 
 
 ### getWorkflowGroupChild
 
@@ -3141,12 +3157,12 @@ This function will get workflow group child by child uuid
 
 #### Parameters
 
--   `accessToken` **[string][457]** cpaas access token (optional, default `"null access token"`)
--   `wfGroupUUID` **[string][457]** workflow uuid (optional, default `"null wfGroupUUID"`)
--   `wfChildUUID` **[string][457]** child uuid (optional, default `"null wfChildUUID"`)
--   `trace` **[object][458]** optional microservice lifecycle trace headers (optional, default `{}`)
+-   `accessToken` **[string][459]** cpaas access token (optional, default `"null access token"`)
+-   `wfGroupUUID` **[string][459]** workflow uuid (optional, default `"null wfGroupUUID"`)
+-   `wfChildUUID` **[string][459]** child uuid (optional, default `"null wfChildUUID"`)
+-   `trace` **[object][460]** optional microservice lifecycle trace headers (optional, default `{}`)
 
-Returns **[Promise][459]** 
+Returns **[Promise][461]** 
 
 ### getWorkflowTemplate
 
@@ -3154,12 +3170,12 @@ This function will get a specific workflow template.
 
 #### Parameters
 
--   `accessToken` **[string][457]** cpaas access token (optional, default `"null access token"`)
--   `wfTemplateUUID` **[string][457]** workflow template uuid (optional, default `"null wfTemplateUUID"`)
--   `filters` **[array][461]** optional filters (optional, default `undefined`)
--   `trace` **[object][458]** optional microservice lifecycle trace headers (optional, default `{}`)
+-   `accessToken` **[string][459]** cpaas access token (optional, default `"null access token"`)
+-   `wfTemplateUUID` **[string][459]** workflow template uuid (optional, default `"null wfTemplateUUID"`)
+-   `filters` **[array][463]** optional filters (optional, default `undefined`)
+-   `trace` **[object][460]** optional microservice lifecycle trace headers (optional, default `{}`)
 
-Returns **[Promise][459]** 
+Returns **[Promise][461]** 
 
 ### listRunningWorkflows
 
@@ -3167,15 +3183,15 @@ This function lists running workflow instances by template uuid.
 
 #### Parameters
 
--   `accessToken` **[string][457]** cpaas access token (optional, default `"null access token"`)
--   `wfTemplateUUID` **[string][457]** workflow template uuid (optional, default `"null wfTemplateUUID"`)
--   `offset` **[number][460]** pagination offset (optional, default `0`)
--   `limit` **[number][460]** pagination limit (optional, default `10`)
+-   `accessToken` **[string][459]** cpaas access token (optional, default `"null access token"`)
+-   `wfTemplateUUID` **[string][459]** workflow template uuid (optional, default `"null wfTemplateUUID"`)
+-   `offset` **[number][462]** pagination offset (optional, default `0`)
+-   `limit` **[number][462]** pagination limit (optional, default `10`)
 -   `filters`   (optional, default `undefined`)
--   `trace` **[object][458]** optional microservice lifecycle trace headers (optional, default `{}`)
--   `version` **[string][457]** optional filter by version (optional, default `undefined`)
+-   `trace` **[object][460]** optional microservice lifecycle trace headers (optional, default `{}`)
+-   `version` **[string][459]** optional filter by version (optional, default `undefined`)
 
-Returns **[Promise][459]** 
+Returns **[Promise][461]** 
 
 ### listWorkflowGroups
 
@@ -3183,11 +3199,11 @@ This function will return a list of group objects
 
 #### Parameters
 
--   `accessToken` **[string][457]** cpaas access token (optional, default `"null accesToken"`)
--   `offset` **[number][460]** pagination offset (optional, default `0`)
--   `limit` **[number][460]** pagination limit (optional, default `10`)
--   `filters` **[object][458]** object containing optional filters (start_datetime,end_datetime,template_uuid) (optional, default `undefined`)
--   `trace` **[object][458]** optional microservice lifecycle trace headers (optional, default `{}`)
+-   `accessToken` **[string][459]** cpaas access token (optional, default `"null accesToken"`)
+-   `offset` **[number][462]** pagination offset (optional, default `0`)
+-   `limit` **[number][462]** pagination limit (optional, default `10`)
+-   `filters` **[object][460]** object containing optional filters (start_datetime,end_datetime,template_uuid) (optional, default `undefined`)
+-   `trace` **[object][460]** optional microservice lifecycle trace headers (optional, default `{}`)
 
 ### listWorkflowTemplates
 
@@ -3195,14 +3211,14 @@ This function lists configured workflow templates
 
 #### Parameters
 
--   `accessToken` **[string][457]** cpaas access token (optional, default `"null access token"`)
--   `offset` **[number][460]** pagination offset (optional, default `0`)
--   `limit` **[number][460]** pagination limit (optional, default `10`)
+-   `accessToken` **[string][459]** cpaas access token (optional, default `"null access token"`)
+-   `offset` **[number][462]** pagination offset (optional, default `0`)
+-   `limit` **[number][462]** pagination limit (optional, default `10`)
 -   `filters`   (optional, default `undefined`)
--   `trace` **[object][458]** optional microservice lifecycle trace headers (optional, default `{}`)
--   `status` **[string][457]** option status filter (optional, default `undefined`)
+-   `trace` **[object][460]** optional microservice lifecycle trace headers (optional, default `{}`)
+-   `status` **[string][459]** option status filter (optional, default `undefined`)
 
-Returns **[Promise][459]** 
+Returns **[Promise][461]** 
 
 ### modifyWorkflowTemplate
 
@@ -3210,10 +3226,10 @@ This function updates a workflow template definition.
 
 #### Parameters
 
--   `accessToken` **[string][457]**  (optional, default `"null access token"`)
--   `wfTemplateUUID` **[string][457]**  (optional, default `"null wfTemplateUUID"`)
--   `body` **[string][457]**  (optional, default `"null body"`)
--   `trace` **[object][458]** optional microservice lifecycle trace headers (optional, default `{}`)
+-   `accessToken` **[string][459]**  (optional, default `"null access token"`)
+-   `wfTemplateUUID` **[string][459]**  (optional, default `"null wfTemplateUUID"`)
+-   `body` **[string][459]**  (optional, default `"null body"`)
+-   `trace` **[object][460]** optional microservice lifecycle trace headers (optional, default `{}`)
 
 ### startWorkflow
 
@@ -3221,12 +3237,12 @@ This function will start a new workflow baed on the selected template.
 
 #### Parameters
 
--   `accessToken` **[string][457]** cpaas access token (optional, default `"null accessToken"`)
--   `wfTemplateUUID` **[string][457]** workflow template UUID (optional, default `"null wfTemplateUUID"`)
--   `body` **[object][458]** workflow template body (optional, default `"null body"`)
--   `trace` **[object][458]** optional microservice lifecycle trace headers (optional, default `{}`)
+-   `accessToken` **[string][459]** cpaas access token (optional, default `"null accessToken"`)
+-   `wfTemplateUUID` **[string][459]** workflow template UUID (optional, default `"null wfTemplateUUID"`)
+-   `body` **[object][460]** workflow template body (optional, default `"null body"`)
+-   `trace` **[object][460]** optional microservice lifecycle trace headers (optional, default `{}`)
 
-Returns **[Promise][459]** 
+Returns **[Promise][461]** 
 
 ### updateWorkflowGroup
 
@@ -3234,13 +3250,13 @@ This function updates the status and data for a workflow group
 
 #### Parameters
 
--   `accessToken` **[string][457]** cpaas access token (optional, default `"null access token"`)
--   `groupUUID` **[string][457]** workflow group uuid (optional, default `"null group uuid"`)
--   `status` **[string][457]** workflow instance status [ active, complete, cancelled ] (optional, default `"null status"`)
--   `data` **[object][458]** workflow instance data object (optional, default `"null data"`)
--   `trace` **[object][458]** optional microservice lifecycle trace headers (optional, default `{}`)
+-   `accessToken` **[string][459]** cpaas access token (optional, default `"null access token"`)
+-   `groupUUID` **[string][459]** workflow group uuid (optional, default `"null group uuid"`)
+-   `status` **[string][459]** workflow instance status [ active, complete, cancelled ] (optional, default `"null status"`)
+-   `data` **[object][460]** workflow instance data object (optional, default `"null data"`)
+-   `trace` **[object][460]** optional microservice lifecycle trace headers (optional, default `{}`)
 
-Returns **[Promise][459]** promise resolving to updated workflow group
+Returns **[Promise][461]** promise resolving to updated workflow group
 
 ## Util
 
@@ -3253,15 +3269,15 @@ This utility will fetch all items for a GET call and return them as a single res
 
 #### Parameters
 
--   `request` **[Promise][459]** 
--   `requestOptions` **[object][458]** 
+-   `request` **[Promise][461]** 
+-   `requestOptions` **[object][460]** 
 -   `trace`   (optional, default `{}`)
 
 ### createUUID
 
 This function will create a new UUID
 
-Returns **[string][457]** new UUID
+Returns **[string][459]** new UUID
 
 ### decrypt
 
@@ -3269,8 +3285,8 @@ This function decrypts a string with a key
 
 #### Parameters
 
--   `cryptoKey` **[string][457]** key used to encrypt
--   `text` **[string][457]** text to be encrypted
+-   `cryptoKey` **[string][459]** key used to encrypt
+-   `text` **[string][459]** text to be encrypted
 
 Returns **any** decrypted string
 
@@ -3280,10 +3296,10 @@ This function encrypts a string with a key
 
 #### Parameters
 
--   `cryptoKey` **[string][457]** key used to encrypt
--   `text` **[string][457]** text to be encrypted
+-   `cryptoKey` **[string][459]** key used to encrypt
+-   `text` **[string][459]** text to be encrypted
 
-Returns **[string][457]** encrypted string
+Returns **[string][459]** encrypted string
 
 ### filterResponse
 
@@ -3291,11 +3307,11 @@ This function filters an API response in an "AND" format. Returned items must ma
 
 #### Parameters
 
--   `response` **[object][458]** API list response object with format {"items":\[]} (optional, default `{}`)
+-   `response` **[object][460]** API list response object with format {"items":\[]} (optional, default `{}`)
 -   `filters`  
--   `filter` **[array][461]** Array of filters to apply to API response object (optional, default `[]`)
+-   `filter` **[array][463]** Array of filters to apply to API response object (optional, default `[]`)
 
-Returns **[object][458]** Response object with format {"items":\[]}
+Returns **[object][460]** Response object with format {"items":\[]}
 
 ### formatError
 
@@ -3303,9 +3319,9 @@ This function standardizes error responses to objects containing "code", "messag
 
 #### Parameters
 
--   `error` **[object][458]** standard javascript error object, or request-promise error object
+-   `error` **[object][460]** standard javascript error object, or request-promise error object
 
-Returns **[Object][458]** error object formatted to standard
+Returns **[Object][460]** error object formatted to standard
 
 ### getEndpoint
 
@@ -3313,9 +3329,9 @@ This function will determine microservice endpoint URI.
 
 #### Parameters
 
--   `microservice` **[string][457]** the string that we are matching on (optional, default `"NOTHING"`)
+-   `microservice` **[string][459]** the string that we are matching on (optional, default `"NOTHING"`)
 
-Returns **[string][457]** the configured value or undefined
+Returns **[string][459]** the configured value or undefined
 
 ### getAuthHost
 
@@ -3323,15 +3339,15 @@ This function will determine microservice authentication endpoint URI.
 
 #### Parameters
 
--   `microservice` **[string][457]** the string that we are matching on (optional, default `"NOTHING"`)
+-   `microservice` **[string][459]** the string that we are matching on (optional, default `"NOTHING"`)
 
-Returns **[string][457]** the configured value or undefined
+Returns **[string][459]** the configured value or undefined
 
 ### getVersion
 
 This function will determine microservice version.
 
-Returns **[string][457]** the configured string value or undefined
+Returns **[string][459]** the configured string value or undefined
 
 ### getValueFromObjectTree
 
@@ -3339,10 +3355,10 @@ This function will get the value from the object tree, recursively.
 
 #### Parameters
 
--   `matchString` **[string][457]** the string that we are matching on (optional, default `""`)
--   `objectTree` **[object][458]** the json object to search (optional, default `{}`)
+-   `matchString` **[string][459]** the string that we are matching on (optional, default `""`)
+-   `objectTree` **[object][460]** the json object to search (optional, default `{}`)
 
-Returns **[string][457]** the string value or undefined
+Returns **[string][459]** the string value or undefined
 
 ### isBrowser
 
@@ -3354,11 +3370,11 @@ This function returns a portion of a response in a paginated format.
 
 #### Parameters
 
--   `response` **[object][458]** API list response object with format {"items":\[]} (optional, default `{}`)
--   `offset` **[number][460]** response offset (optional, default `0`)
--   `limit` **[number][460]** reponse items limit (optional, default `10`)
+-   `response` **[object][460]** API list response object with format {"items":\[]} (optional, default `{}`)
+-   `offset` **[number][462]** response offset (optional, default `0`)
+-   `limit` **[number][462]** reponse items limit (optional, default `10`)
 
-Returns **[object][458]** response object with format {"items":\[],"meatadata":{}}
+Returns **[object][460]** response object with format {"items":\[],"meatadata":{}}
 
 ### pendingResource
 
@@ -3369,10 +3385,10 @@ This function takes in a request and polls the microservice until it is ready
 -   `resourceLoc`  
 -   `requestOptions`  
 -   `trace`  
--   `startingResourceStatus` **[string][457]** argument to specify expected resolution or skip polling if ready (optional, default `"processing"`)
--   `verifyFunc` **[function][465]** function that is used to confirm resource is ready.
+-   `startingResourceStatus` **[string][459]** argument to specify expected resolution or skip polling if ready (optional, default `"processing"`)
+-   `verifyFunc` **[function][467]** function that is used to confirm resource is ready.
 
-Returns **[Promise][459]** Promise resolved when verify func is successful.
+Returns **[Promise][461]** Promise resolved when verify func is successful.
 
 ### replaceStaticValues
 
@@ -3380,9 +3396,9 @@ This function will lookup static items to be replaced.
 
 #### Parameters
 
--   `matchString` **[string][457]** the string that we are matching on.
+-   `matchString` **[string][459]** the string that we are matching on.
 
-Returns **[string][457]** the string value or undefined
+Returns **[string][459]** the string value or undefined
 
 ### replaceVariables
 
@@ -3390,10 +3406,10 @@ This function will take in an inputValue String and replace variables from objec
 
 #### Parameters
 
--   `inputValue` **[string][457]** what to look for (optional, default `""`)
+-   `inputValue` **[string][459]** what to look for (optional, default `""`)
 -   `objectTree` **any** json Object to search (optional, default `{}`)
 
-Returns **[string][457]** replaced inputValue
+Returns **[string][459]** replaced inputValue
 
 ## listFormTemplates
 
@@ -3401,14 +3417,14 @@ This function will GET a form template
 
 ### Parameters
 
--   `accessToken` **[string][457]** CPaaS access token (optional, default `"null access token"`)
--   `accountUUID` **[string][457]** optional account uuid (optional, default `undefined`)
+-   `accessToken` **[string][459]** CPaaS access token (optional, default `"null access token"`)
+-   `accountUUID` **[string][459]** optional account uuid (optional, default `undefined`)
 -   `offset`   (optional, default `0`)
 -   `limit`   (optional, default `10`)
--   `trace` **[object][458]** optional CPaaS lifecycle headers (optional, default `{}`)
--   `templateUUID` **[string][457]** form template uuid to look up (optional, default `"null template uuid"`)
+-   `trace` **[object][460]** optional CPaaS lifecycle headers (optional, default `{}`)
+-   `templateUUID` **[string][459]** form template uuid to look up (optional, default `"null template uuid"`)
 
-Returns **[Promise][459]** 
+Returns **[Promise][461]** 
 
 [1]: #accounts
 
@@ -4106,236 +4122,240 @@ Returns **[Promise][459]**
 
 [348]: #parameters-162
 
-[349]: #listusersubscriptions
+[349]: #listcustomsubscriptions
 
 [350]: #parameters-163
 
-[351]: #updatesubscriptionexpiresdate
+[351]: #listusersubscriptions
 
 [352]: #parameters-164
 
-[353]: #resource-groups
+[353]: #updatesubscriptionexpiresdate
 
-[354]: #createresourcegroups
+[354]: #parameters-165
 
-[355]: #parameters-165
+[355]: #resource-groups
 
-[356]: #cleanupresourcegroups
+[356]: #createresourcegroups
 
 [357]: #parameters-166
 
-[358]: #updateresourcegroups
+[358]: #cleanupresourcegroups
 
 [359]: #parameters-167
 
-[360]: #scheduler
+[360]: #updateresourcegroups
 
-[361]: #deleteevent
+[361]: #parameters-168
 
-[362]: #parameters-168
+[362]: #scheduler
 
-[363]: #getevent
+[363]: #deleteevent
 
 [364]: #parameters-169
 
-[365]: #getnexteventinfo
+[365]: #getevent
 
 [366]: #parameters-170
 
-[367]: #listevents
+[367]: #getnexteventinfo
 
 [368]: #parameters-171
 
-[369]: #listeventshistory
+[369]: #listevents
 
 [370]: #parameters-172
 
-[371]: #scheduleevent
+[371]: #listeventshistory
 
 [372]: #parameters-173
 
-[373]: #updateevent
+[373]: #scheduleevent
 
 [374]: #parameters-174
 
-[375]: #shorturls
+[375]: #updateevent
 
-[376]: #createshorturl
+[376]: #parameters-175
 
-[377]: #parameters-175
+[377]: #shorturls
 
-[378]: #deleteshortcode
+[378]: #createshorturl
 
 [379]: #parameters-176
 
-[380]: #listshorturls
+[380]: #deleteshortcode
 
 [381]: #parameters-177
 
-[382]: #workflow
+[382]: #listshorturls
 
-[383]: #createworkflowtemplate
+[383]: #parameters-178
 
-[384]: #parameters-178
+[384]: #workflow
 
-[385]: #cancelworkflow
+[385]: #createworkflowtemplate
 
 [386]: #parameters-179
 
-[387]: #deleteworkflowtemplate
+[387]: #cancelworkflow
 
 [388]: #parameters-180
 
-[389]: #getrunningworkflow
+[389]: #deleteworkflowtemplate
 
 [390]: #parameters-181
 
-[391]: #getwfinstancehistory
+[391]: #getrunningworkflow
 
 [392]: #parameters-182
 
-[393]: #getwfinstanceworkflowvars
+[393]: #getwfinstancehistory
 
 [394]: #parameters-183
 
-[395]: #getwfinstanceincomingdata
+[395]: #getwfinstanceworkflowvars
 
 [396]: #parameters-184
 
-[397]: #getwfinstanceresults
+[397]: #getwfinstanceincomingdata
 
 [398]: #parameters-185
 
-[399]: #getwftemplatehistory
+[399]: #getwfinstanceresults
 
 [400]: #parameters-186
 
-[401]: #getworkflowgroup
+[401]: #getwftemplatehistory
 
 [402]: #parameters-187
 
-[403]: #getworkflowgroupfiltered
+[403]: #getworkflowgroup
 
 [404]: #parameters-188
 
-[405]: #getworkflowgroupmaster
+[405]: #getworkflowgroupfiltered
 
 [406]: #parameters-189
 
-[407]: #getworkflowgroupdata
+[407]: #getworkflowgroupmaster
 
 [408]: #parameters-190
 
-[409]: #getworkflowgroupchildren
+[409]: #getworkflowgroupdata
 
 [410]: #parameters-191
 
-[411]: #getworkflowgroupchild
+[411]: #getworkflowgroupchildren
 
 [412]: #parameters-192
 
-[413]: #getworkflowtemplate
+[413]: #getworkflowgroupchild
 
 [414]: #parameters-193
 
-[415]: #listrunningworkflows
+[415]: #getworkflowtemplate
 
 [416]: #parameters-194
 
-[417]: #listworkflowgroups
+[417]: #listrunningworkflows
 
 [418]: #parameters-195
 
-[419]: #listworkflowtemplates
+[419]: #listworkflowgroups
 
 [420]: #parameters-196
 
-[421]: #modifyworkflowtemplate
+[421]: #listworkflowtemplates
 
 [422]: #parameters-197
 
-[423]: #startworkflow
+[423]: #modifyworkflowtemplate
 
 [424]: #parameters-198
 
-[425]: #updateworkflowgroup
+[425]: #startworkflow
 
 [426]: #parameters-199
 
-[427]: #util
+[427]: #updateworkflowgroup
 
-[428]: #aggregate
+[428]: #parameters-200
 
-[429]: #parameters-200
+[429]: #util
 
-[430]: #createuuid
+[430]: #aggregate
 
-[431]: #decrypt
+[431]: #parameters-201
 
-[432]: #parameters-201
+[432]: #createuuid
 
-[433]: #encrypt
+[433]: #decrypt
 
 [434]: #parameters-202
 
-[435]: #filterresponse
+[435]: #encrypt
 
 [436]: #parameters-203
 
-[437]: #formaterror
+[437]: #filterresponse
 
 [438]: #parameters-204
 
-[439]: #getendpoint
+[439]: #formaterror
 
 [440]: #parameters-205
 
-[441]: #getauthhost
+[441]: #getendpoint
 
 [442]: #parameters-206
 
-[443]: #getversion
+[443]: #getauthhost
 
-[444]: #getvaluefromobjecttree
+[444]: #parameters-207
 
-[445]: #parameters-207
+[445]: #getversion
 
-[446]: #isbrowser
+[446]: #getvaluefromobjecttree
 
-[447]: #paginate
+[447]: #parameters-208
 
-[448]: #parameters-208
+[448]: #isbrowser
 
-[449]: #pendingresource
+[449]: #paginate
 
 [450]: #parameters-209
 
-[451]: #replacestaticvalues
+[451]: #pendingresource
 
 [452]: #parameters-210
 
-[453]: #replacevariables
+[453]: #replacestaticvalues
 
 [454]: #parameters-211
 
-[455]: #listformtemplates
+[455]: #replacevariables
 
 [456]: #parameters-212
 
-[457]: https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String
+[457]: #listformtemplates
 
-[458]: https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object
+[458]: #parameters-213
 
-[459]: https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise
+[459]: https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String
 
-[460]: https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number
+[460]: https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object
 
-[461]: https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Array
+[461]: https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise
 
-[462]: https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Date
+[462]: https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number
 
-[463]: https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Boolean
+[463]: https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Array
 
-[464]: https://developer.mozilla.org/docs/Web/API/FormData
+[464]: https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Date
 
-[465]: https://developer.mozilla.org/docs/Web/JavaScript/Reference/Statements/function
+[465]: https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Boolean
+
+[466]: https://developer.mozilla.org/docs/Web/API/FormData
+
+[467]: https://developer.mozilla.org/docs/Web/JavaScript/Reference/Statements/function
