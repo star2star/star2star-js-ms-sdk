@@ -595,7 +595,7 @@ Returns **[Promise][468]&lt;[object][467]>** Promise resolving to a status data 
 
 ### getReport
 
-This function will create a relationship between two accounts.
+This function will get an already created report.
 
 #### Parameters
 
@@ -608,7 +608,7 @@ Returns **[Promise][468]&lt;[object][467]>** Promise resolving to a data object 
 
 ### listReportTemplates
 
-This function will create a relationship between two accounts.
+This function will list available report templates.
 
 #### Parameters
 
@@ -621,7 +621,7 @@ Returns **[Promise][468]&lt;[object][467]>** Promise resolving to a data object 
 
 ### runReport
 
-This function will run a report.
+This function will create a report based on a template.
 
 #### Parameters
 

@@ -5,7 +5,7 @@ const request = require("request-promise");
 
 /**
  * @async
- * @description This function will create a relationship between two accounts.
+ * @description This function will get an already created report.
  * @param {string} [accessToken="null access token"]
  * @param {string} reportUUID
  * @param {string} templateUUID
@@ -49,7 +49,7 @@ const getReport = async (
 
 /**
  * @async
- * @description This function will create a relationship between two accounts.
+ * @description This function will list available report templates.
  * @param {string} [accessToken="null access token"]
  * @param {number} [offset = 0] - pagination offset
  * @param {number} [limit = 10] = pagination limit
@@ -90,7 +90,7 @@ const listReportTemplates = async (
 
 /**
  * @async
- * @description This function will run a report.
+ * @description This function will create a report based on a template.
  * @param {string} [accessToken="null access token"] - access token for cpaas systems
  * @param {string} [templateUuid="null account uuid"] - report template uuid
  * @param {string} [ownerUuid=undefined] - owner uuid (CPaaS user_uuid) - required if account uuid not specified
