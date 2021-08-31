@@ -199,24 +199,24 @@ const modifyAccount = async (
       }
     };
     util.addRequestTrace(requestOptions, trace);
-    const response = await request(requestOptions); 
-    if(response.statusCode === 204) {
-      return { "status": "ok" };
-    } else {
-      // this is an edge case, but protects against unexpected 2xx or 3xx response codes.
-      throw {
-        "code": response.statusCode,
-        "message": typeof response.body === "string" ? response.body : "modify account failed",
-        "trace_id": requestOptions.hasOwnProperty("headers") && requestOptions.headers.hasOwnProperty("trace")
-          ? requestOptions.headers.trace 
-          : undefined,
-        "details": typeof response.body === "object" && response.body !== null
-          ? [response.body]
-          : []
-      };
-    }  
+    const response = await request(requestOptions);
+    const modifiedAccount = response.body;
+    
+    // create returns a 202....suspend return until the new resource is ready
+    if (
+      response.hasOwnProperty("statusCode") && 
+      response.statusCode === 202 &&
+      response.headers.hasOwnProperty("location"))
+    {    
+      await util.pendingResource(
+        response.headers.location,
+        requestOptions, //reusing the request options instead of passing in multiple params
+        trace
+      );
+    }
+    return modifiedAccount;
   } catch (error){
-    return Promise.reject(util.formatError(error));
+    throw util.formatError(error);
   }
 };
 
