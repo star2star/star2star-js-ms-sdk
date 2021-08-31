@@ -10,6 +10,11 @@ toc:
       - modifyAccount
       - reinstateAccount
       - suspendAccount
+  - name : Activity
+    children:
+      - getReport
+      - listReportTemplates
+      - runReport
   - name: Auth
     children:
       - activateRole
