@@ -22,7 +22,8 @@
     "METADATA": "/metadata",
     "MOBILE": "/mobilenotification",
     "FORMS": "/forms",
-    "ENTITLEMENTS": "/entitlements"
+    "ENTITLEMENTS": "/entitlements",
+    "ACTIVITY": "/activity"
   },
   "msDelay": 1000,
   "pollInterval": 1000,
