@@ -82,8 +82,13 @@ const getProducts = async function getProducts() {
             "filters": filters
           }]
         };
-      }
+      } // API limited to 100 per page
 
+
+      requestOptions.qs = {
+        offset: 0,
+        limit: 100
+      };
       response = await Util.aggregate(request, requestOptions, trace);
 
       if (response.hasOwnProperty("items") && response.items.length > 0) {

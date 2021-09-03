@@ -79,7 +79,13 @@ const getProducts = async (
           "details": [{"filters": filters}]
         };
       }
-   
+      
+      // API limited to 100 per page
+      requestOptions.qs = {
+        offset: 0,
+        limit: 100
+      };
+
       response = await Util.aggregate(request, requestOptions, trace);
       if (response.hasOwnProperty("items") && response.items.length > 0) {
         const filteredResponse = Util.filterResponse(response, filters);
