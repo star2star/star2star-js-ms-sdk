@@ -1345,9 +1345,7 @@ This function will send an email to the provided recipients
 
 -   `accessToken`   (optional, default `"null accessToken"`)
 -   `sender` **[string][466]** email address of sender (optional, default `""`)
--   `to` **[array][470]** array of email addresses for recipients (optional, default `[]`)
--   `bcc` **[array][470]** array of email addresses for blind copy recipients (optional, default `[]`)
--   `cc` **[array][470]** array of email addresses for copy recipients (optional, default `[]`)
+-   `to` **[object][467]** array of email addresses for recipients; also can be object with arrays "to", "bcc", "cc" (optional, default `[]`)
 -   `subject` **[string][466]** message subject (optional, default `""`)
 -   `message` **[string][466]** mesaage (optional, default `""`)
 -   `type` **[string][466]** //TODO add validation for types (optional, default `"text"`)

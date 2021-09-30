@@ -15,19 +15,31 @@ const validateEmail = email => {
   emailValidator.validate(email.from)
     ? vError
     : vError.push(`sender "${email.from}" invalid format`);
-  [email.to, email.bcc, email.cc].forEach(group => {
-    if (Array.isArray(group)) {
-      group.forEach(emailAddress => {
-        emailValidator.validate(emailAddress)
-          ? vError
-          : vError.push(
-            `recipient "${emailAddress}" invalid format`
-          );
-      });
-    } else {
-      vError.push("to is not array or is empty");
-    }
-  });  
+  if(Array.isArray(email.to) && email.to.length > 0){
+    email.to.forEach(emailAddress => {
+      emailValidator.validate(emailAddress)
+        ? vError
+        : vError.push(
+          `recipient "${emailAddress}" invalid format`
+        );
+    });
+  } else if (typeof email.to === "object" && email.to !== null){
+    Object.keys(email.to).forEach(group => {
+      if(Array.isArray(email.to[group])){
+        email.to[group].forEach(emailAddress => {
+          emailValidator.validate(emailAddress)
+            ? vError
+            : vError.push(
+              `recipient "${emailAddress}" invalid format`
+            );
+        });
+      } else {
+        vError.push(`to parameter ${group} is not array`);
+      } 
+    });
+  } else {
+    vError.push("to is not array, not an object, or is empty");
+  }  
   
   if (vError.length !== 0) {
     rStatus.code = 400;
@@ -43,9 +55,7 @@ const validateEmail = email => {
  * @async
  * @description This function will send an email to the provided recipients
  * @param {string} [sender=""] - email address of sender
- * @param {array} [to=[]] - array of email addresses for recipients
- * @param {array} [bcc=[]] - array of email addresses for blind copy recipients
- * @param {array} [cc=[]] - array of email addresses for copy recipients
+ * @param {object} [to=[]] - array of email addresses for recipients; also can be object with arrays "to", "bcc", "cc"
  * @param {string} [subject=""] - message subject
  * @param {string} [message=""] - mesaage
  * @param {string} [type="text"] //TODO add validation for types
@@ -56,8 +66,6 @@ const sendEmail = async (
   accessToken = "null accessToken",
   sender = "",
   to = [],
-  bcc = [],
-  cc = [],
   subject = "",
   message = "",
   type = "text",
@@ -71,9 +79,7 @@ const sendEmail = async (
       }],
       from: sender,
       subject: subject,
-      to: to,
-      bcc: bcc,
-      cc: cc
+      to: to
     });
 
     if (validatedEmail.code === 200) {
@@ -86,18 +92,25 @@ const sendEmail = async (
           Authorization: `Bearer ${accessToken}`,
           "x-api-version": `${util.getVersion()}`
         },
-        body: validatedEmail.details[0].email,
         json: true
       };
+
+      // check for polymorphic to with bcc and cc
+      const body = validatedEmail.details[0].email;
+      body.bcc = typeof body.to.bcc !== "undefined" ? body.to.bcc : [];
+      body.cc = typeof body.to.cc !== "undefined" ? body.to.cc : [];
+      body.to = typeof body.to.to !== "undefined" ? body.to.to : (Array.isArray(body.to) ? body.to : []);
+      
+      requestOptions.body = body;
       util.addRequestTrace(requestOptions, trace);
       const response = await request(requestOptions);
       return response;
     } else {
       validatedEmail.trace_id = trace.hasOwnProperty("trace") ? trace.trace : undefined;  
-      return Promise.reject(validatedEmail);
+      throw validatedEmail;
     }   
   } catch(error){
-    return Promise.reject(util.formatError(error));
+    throw util.formatError(error);
   }
 };
 
