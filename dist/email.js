@@ -17,14 +17,15 @@ const validateEmail = email => {
   };
   const vError = [];
   emailValidator.validate(email.from) ? vError : vError.push("sender \"".concat(email.from, "\" invalid format"));
-
-  if (Array.isArray(email.to) && email.to.length > 0) {
-    email.to.forEach(emailAddress => {
-      emailValidator.validate(emailAddress) ? vError : vError.push("recipient in \"to\" parameter \"".concat(emailAddress, "\" invalid format"));
-    });
-  } else {
-    vError.push("to is not array or is empty");
-  }
+  [email.to, email.bcc, email.cc].forEach(group => {
+    if (Array.isArray(group)) {
+      group.forEach(emailAddress => {
+        emailValidator.validate(emailAddress) ? vError : vError.push("recipient \"".concat(emailAddress, "\" invalid format"));
+      });
+    } else {
+      vError.push("to is not array or is empty");
+    }
+  });
 
   if (vError.length !== 0) {
     rStatus.code = 400;
@@ -40,7 +41,9 @@ const validateEmail = email => {
  * @async
  * @description This function will send an email to the provided recipients
  * @param {string} [sender=""] - email address of sender
- * @param {array} [to=""] - array of email addresses for recipients
+ * @param {array} [to=[]] - array of email addresses for recipients
+ * @param {array} [bcc=[]] - array of email addresses for blind copy recipients
+ * @param {array} [cc=[]] - array of email addresses for copy recipients
  * @param {string} [subject=""] - message subject
  * @param {string} [message=""] - mesaage
  * @param {string} [type="text"] //TODO add validation for types
@@ -53,10 +56,12 @@ const sendEmail = async function sendEmail() {
   let accessToken = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : "null accessToken";
   let sender = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : "";
   let to = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : [];
-  let subject = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : "";
-  let message = arguments.length > 4 && arguments[4] !== undefined ? arguments[4] : "";
-  let type = arguments.length > 5 && arguments[5] !== undefined ? arguments[5] : "text";
-  let trace = arguments.length > 6 && arguments[6] !== undefined ? arguments[6] : {};
+  let bcc = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : [];
+  let cc = arguments.length > 4 && arguments[4] !== undefined ? arguments[4] : [];
+  let subject = arguments.length > 5 && arguments[5] !== undefined ? arguments[5] : "";
+  let message = arguments.length > 6 && arguments[6] !== undefined ? arguments[6] : "";
+  let type = arguments.length > 7 && arguments[7] !== undefined ? arguments[7] : "text";
+  let trace = arguments.length > 8 && arguments[8] !== undefined ? arguments[8] : {};
 
   try {
     const validatedEmail = validateEmail({
@@ -66,7 +71,9 @@ const sendEmail = async function sendEmail() {
       }],
       from: sender,
       subject: subject,
-      to: to
+      to: to,
+      bcc: bcc,
+      cc: cc
     });
 
     if (validatedEmail.code === 200) {

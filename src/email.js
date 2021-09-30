@@ -15,18 +15,20 @@ const validateEmail = email => {
   emailValidator.validate(email.from)
     ? vError
     : vError.push(`sender "${email.from}" invalid format`);
-  if (Array.isArray(email.to) && email.to.length > 0) {
-    email.to.forEach(emailAddress => {
-      emailValidator.validate(emailAddress)
-        ? vError
-        : vError.push(
-          `recipient in "to" parameter "${emailAddress}" invalid format`
-        );
-    });
-  } else {
-    vError.push("to is not array or is empty");
-  }
-
+  [email.to, email.bcc, email.cc].forEach(group => {
+    if (Array.isArray(group)) {
+      group.forEach(emailAddress => {
+        emailValidator.validate(emailAddress)
+          ? vError
+          : vError.push(
+            `recipient "${emailAddress}" invalid format`
+          );
+      });
+    } else {
+      vError.push("to is not array or is empty");
+    }
+  });  
+  
   if (vError.length !== 0) {
     rStatus.code = 400;
     rStatus.message = "invalid request",
@@ -41,7 +43,9 @@ const validateEmail = email => {
  * @async
  * @description This function will send an email to the provided recipients
  * @param {string} [sender=""] - email address of sender
- * @param {array} [to=""] - array of email addresses for recipients
+ * @param {array} [to=[]] - array of email addresses for recipients
+ * @param {array} [bcc=[]] - array of email addresses for blind copy recipients
+ * @param {array} [cc=[]] - array of email addresses for copy recipients
  * @param {string} [subject=""] - message subject
  * @param {string} [message=""] - mesaage
  * @param {string} [type="text"] //TODO add validation for types
@@ -52,6 +56,8 @@ const sendEmail = async (
   accessToken = "null accessToken",
   sender = "",
   to = [],
+  bcc = [],
+  cc = [],
   subject = "",
   message = "",
   type = "text",
@@ -65,7 +71,9 @@ const sendEmail = async (
       }],
       from: sender,
       subject: subject,
-      to: to
+      to: to,
+      bcc: bcc,
+      cc: cc
     });
 
     if (validatedEmail.code === 200) {

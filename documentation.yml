@@ -87,6 +87,7 @@ toc:
       - createFormInstance
       - getFormInstance
       - getFormTemplate
+      - listFormTemplates
       - listUserForms
       - listUserFormSubmissions
   - name: Groups

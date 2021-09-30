@@ -75,6 +75,8 @@ describe("Email MS Unit Test Suite", function() {
     trace = objectMerge({}, trace, Util.generateNewMetaData(trace));
     const sender = identityData.username;
     const to = [identityData.username];
+    const bcc = [identityData.username];
+    const cc = [identityData.username];
     const subject = "a test";
     const message = "a test";
     const type = "text";
@@ -82,6 +84,8 @@ describe("Email MS Unit Test Suite", function() {
       accessToken,
       sender,
       to,
+      bcc,
+      cc,
       subject,
       message,
       type,
@@ -101,6 +105,8 @@ describe("Email MS Unit Test Suite", function() {
       trace = objectMerge({}, trace, Util.generateNewMetaData(trace));
       const sender = "invalid";
       const to = [identityData.username];
+      const bcc = [identityData.username];
+      const cc = [identityData.username];
       const subject = "a test";
       const message = "a test";
       const type = "text";
@@ -108,6 +114,8 @@ describe("Email MS Unit Test Suite", function() {
         accessToken,
         sender,
         to,
+        bcc,
+        cc,
         subject,
         message,
         type
@@ -132,6 +140,8 @@ describe("Email MS Unit Test Suite", function() {
       trace = objectMerge({}, trace, Util.generateNewMetaData(trace));
       const sender = identityData.username;
       const to = ["invalid"];
+      const bcc = ["invalid"];
+      const cc = ["invalid"];
       const subject = "a test";
       const message = "a test";
       const type = "text";
@@ -139,6 +149,8 @@ describe("Email MS Unit Test Suite", function() {
         accessToken,
         sender,
         to,
+        bcc,
+        cc,
         subject,
         message,
         type,
