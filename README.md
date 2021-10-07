@@ -2074,20 +2074,6 @@ Returns **[Promise][468]&lt;[object][467]>** Promise resolving to to a message h
 
 ### sendMessage
 
-This function will post a message to a room.
-
-#### Parameters
-
--   `access_token` **[string][466]** access_token for cpaas systems (optional, default `"null access_token"`)
--   `userUUID` **[string][466]** user UUID to be used (optional, default `"null user uuid"`)
--   `roomUUID` **[string][466]** room uuid (optional, default `"no room uuid specified"`)
--   `message` **[string][466]** message (optional, default `"missing text"`)
--   `trace` **[object][467]** optional microservice lifecycle trace headers (optional, default `{}`)
-
-Returns **[Promise][468]&lt;[object][467]>** Promise resolving to a data object
-
-### sendMessage
-
 This function will send messages in multiple formats
 
 #### Parameters
@@ -2101,6 +2087,20 @@ This function will send messages in multiple formats
 -   `trace` **[object][467]** optional microservice lifecycle headers (optional, default `{}`)
 
 Returns **[Promise][468]&lt;[object][467]>** promise resolving to a message confirmation object
+
+### sendMessage
+
+This function will post a message to a room.
+
+#### Parameters
+
+-   `access_token` **[string][466]** access_token for cpaas systems (optional, default `"null access_token"`)
+-   `userUUID` **[string][466]** user UUID to be used (optional, default `"null user uuid"`)
+-   `roomUUID` **[string][466]** room uuid (optional, default `"no room uuid specified"`)
+-   `message` **[string][466]** message (optional, default `"missing text"`)
+-   `trace` **[object][467]** optional microservice lifecycle trace headers (optional, default `{}`)
+
+Returns **[Promise][468]&lt;[object][467]>** Promise resolving to a data object
 
 ### sendSimpleSMS
 

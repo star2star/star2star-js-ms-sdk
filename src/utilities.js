@@ -382,10 +382,9 @@ const pendingResource = async (resourceLoc, requestOptions, trace, startingResou
 const formatError = (error) => {
   //console.log("formatError() THE ERROR!!!!", error);
   // defaults ensure we always get a compatbile format back
-  let message = "unspecified error";
   const returnedObject = {
     "code": undefined,
-    "message": message,
+    "message": "unspecified error",
     "trace_id": uuidv4(),
     "details": []
   };
@@ -418,16 +417,26 @@ const formatError = (error) => {
           returnedObject.trace_id = error.response.body.hasOwnProperty("trace_id") && error.response.body.trace_id && error.response.body.trace_id.length > 0
             ? error.response.body.trace_id
             : returnedObject.trace_id;
+
+          // if we have no message add the body to details since this is a non-standard error message
+          if (returnedObject.message === "unspecified error"){
+            returnedObject.details.push(error.response.body);
+          }
           //make sure details is an array of objects or strings
           if(error.response.body.hasOwnProperty("details") && Array.isArray(error.response.body.details)){
-            const filteredDetails = error.response.body.details.filter(detail =>{
-              return (typeof detail === "object" && detail !== null) || typeof detail === "string";
-            }).map(detail => {
-              if (typeof detail === "object"){
-                return JSON.stringify(detail);
-              }
-              return detail;
-            });
+            const filteredDetails = returnedObject.details.concat(error.response.body.details)
+              .filter(detail =>{
+                return (typeof detail === "object" && detail !== null) || typeof detail === "string";
+              }).map(detail => {
+                if (typeof detail === "object"){
+                  try {
+                    return JSON.stringify(detail);
+                  } catch(e){
+                    logger.debug("formatError unable to parse error detail", formatError(e));
+                  }
+                }
+                return detail;
+              });
             returnedObject.details = filteredDetails;
           }
         }
@@ -437,7 +446,8 @@ const formatError = (error) => {
           if(!returnedObject.code){
             returnedObject.code = error.statusCode;
           } else if (returnedObject.code.toString() !== error.statusCode.toString()) {
-            // record a mismatch between the http response code and the "code" property returned in the respose body 
+            // record a mismatch between the http response code and the "code" property returned in the respose body
+            // this seems strage but CPaaS will sometimes bubble back nested responses that are different than the http response code 
             returnedObject.message = `${returnedObject.code} - ${returnedObject.message}`;
             // make the code property match the actual http response code
             returnedObject.code = error.statusCode;
