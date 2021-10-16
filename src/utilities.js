@@ -2,12 +2,28 @@
 "use strict";
 
 const config = require("./config.json");
-const uuidv4 = require("uuid/v4");
 const request = require("request-promise");
 const objectMerge = require("object-merge");
-const Logger = require("./node-logger");
-const logger = new Logger.default();
 const crypto = require("crypto");
+const { v4 } = require("uuid");
+//const Logger = require("./node-logger");
+//Logger.getInstance().debug("message", object);
+/**
+ *
+ * @description Returns a platform specitic reference to global runtime
+ * @returns {object} process.env in node, and window.s2sJsMsSdk in browser
+ */
+const getGlobalThis = () => {
+  // initialize config if in broswer.
+  if (typeof window === "object" && window !== null) {
+    if (typeof window.s2sJsMsSdk !== "object" || window.s2sJsMsSdk === null) {
+      window.s2sJsMsSdk = {};
+    }
+    return window.s2sJsMsSdk;
+  } else {
+    return process.env;
+  }
+};
 
 /**
  *
@@ -17,9 +33,8 @@ const crypto = require("crypto");
  */
 const getEndpoint = (microservice = "NOTHING") => {
   const upperMS = microservice.toUpperCase();
-  const env = isBrowser() ? window.s2sJsMsSdk : process.env;
   return config.microservices[upperMS]
-    ? env.MS_HOST + config.microservices[upperMS]
+    ? getGlobalThis().MS_HOST + config.microservices[upperMS]
     : undefined;
 };
 
@@ -30,7 +45,7 @@ const getEndpoint = (microservice = "NOTHING") => {
  * @returns {string} - the configured value or undefined
  */
 const getAuthHost = () => {
-  return isBrowser() ? window.s2sJsMsSdk.AUTH_HOST : process.env.AUTH_HOST;
+  return getGlobalThis().AUTH_HOST;
 };
 
 /**
@@ -39,8 +54,7 @@ const getAuthHost = () => {
  * @returns {string} - the configured string value or undefined
  */
 const getVersion = () => {
-  const env = isBrowser() ? window.s2sJsMsSdk : process.env;
-  return env.MS_VERSION ? env.MS_VERSION : config.ms_version;
+  return getGlobalThis().MS_VERSION;
 };
 
 /**
@@ -49,7 +63,7 @@ const getVersion = () => {
  * @param {string} matchString - the string that we are matching on.
  * @returns {string} - the string value or undefined
  */
-const replaceStaticValues = matchString => {
+const replaceStaticValues = (matchString) => {
   const TDATE = new Date();
   const MONTH = "" + (TDATE.getMonth() + 1);
   const MYDAY = "" + TDATE.getDate();
@@ -57,7 +71,7 @@ const replaceStaticValues = matchString => {
     datetime: TDATE,
     YYYY: TDATE.getFullYear(),
     MM: ("0" + MONTH).substring(MONTH.length + 1 - 2),
-    DD: ("0" + MYDAY).substring(MYDAY.length + 1 - 2)
+    DD: ("0" + MYDAY).substring(MYDAY.length + 1 - 2),
   };
   //console.log('matchstring:',("0"+DAY).substring((DAY.length+1 - 2)), matchString, DAY, aValues)
   return aValues[matchString];
@@ -111,7 +125,7 @@ const replaceVariables = (inputValue = "", objectTree = {}) => {
   const arrayOfMatches = inputValue.match(myRegex);
 
   arrayOfMatches !== null &&
-    arrayOfMatches.forEach(theMatch => {
+    arrayOfMatches.forEach((theMatch) => {
       const retrievedValue = getValueFromObjectTree(theMatch, objectTree);
       //console.log('^^^^^^^^', theMatch, retrievedValue)
       returnString = returnString.replace(
@@ -129,7 +143,7 @@ const replaceVariables = (inputValue = "", objectTree = {}) => {
  * @returns {string} - new UUID
  */
 const createUUID = () => {
-  return uuidv4();
+  return v4();
 };
 
 /**
@@ -143,14 +157,14 @@ const createUUID = () => {
 const paginate = (response, offset = 0, limit = 10) => {
   const total = response.items.length;
   const paginatedResponse = {
-    items: response.items.slice(offset, offset + limit)
+    items: response.items.slice(offset, offset + limit),
   };
   const count = paginatedResponse.items.length;
   paginatedResponse.metadata = {
     total: total,
     offset: offset,
     count: count,
-    limit: limit
+    limit: limit,
   };
   return paginatedResponse;
 };
@@ -164,11 +178,11 @@ const paginate = (response, offset = 0, limit = 10) => {
  */
 const filterResponse = (response, filters) => {
   //console.log("*****FILTERS*****", filters);
-  Object.keys(filters).forEach(filter => {
-    const filteredResponse = response.items.filter(filterItem => {
+  Object.keys(filters).forEach((filter) => {
+    const filteredResponse = response.items.filter((filterItem) => {
       let found = false;
       const doFilter = (obj, filter) => {
-        Object.keys(obj).forEach(prop => {
+        Object.keys(obj).forEach((prop) => {
           if (found) return;
           //not seaching through arrays
           if (!Array.isArray(obj[prop])) {
@@ -181,7 +195,7 @@ const filterResponse = (response, filters) => {
               // console.log("OBJ[PROP]", obj[prop]);
               // console.log("FILTER", filter);
               // console.log("FILTERS[FILTER}",filters[filter]);
-              found = (prop === filter) && obj[prop] === filters[filter];
+              found = prop === filter && obj[prop] === filters[filter];
               return;
             } else if (typeof obj[prop] === "object" && obj[prop] !== null) {
               //console.log("************ Filter recursing **************",obj[prop]);
@@ -221,7 +235,10 @@ const aggregate = async (request, requestOptions, trace = {}) => {
         addRequestTrace(requestOptions, nextTrace);
         const response = await request(requestOptions);
         total = response.metadata.total;
-        offset = (response.metadata.hasOwnProperty("offset") ?  response.metadata.offset : 0)  + response.metadata.count;
+        offset =
+          (response.metadata.hasOwnProperty("offset")
+            ? response.metadata.offset
+            : 0) + response.metadata.count;
         if (total > offset) {
           requestOptions.qs.offset = offset;
           const nextResponse = await makeRequest(request, requestOptions);
@@ -246,32 +263,14 @@ const aggregate = async (request, requestOptions, trace = {}) => {
   }
 };
 
-/**
- * @description Returns true is window is found and sets sdk namespace if needed.
- *
- * @returns
- */
-const isBrowser = () => {
-  if (typeof window === "undefined") {
-    return false;
-  } else {
-    if (!window.hasOwnProperty("s2sJsMsSdk")) {
-      window.s2sJsMsSdk = {};
-    }
-    return true;
-  }
-};
-
 const addRequestTrace = (request, trace = {}) => {
   const headerKeys = ["id", "trace", "parent"];
 
-  headerKeys.forEach(keyName => {
+  headerKeys.forEach((keyName) => {
     if (typeof trace === "object" && trace.hasOwnProperty(keyName)) {
       request.headers[keyName] = trace[keyName];
-      //logger.debug(`Found Trace ${keyName}: ${request.headers[keyName]}`);
     } else {
-      request.headers[keyName] = uuidv4();
-      //logger.debug(`Assigning Trace ${keyName}: ${request.headers[keyName]}`);
+      request.headers[keyName] = v4();
     }
   });
   if (typeof trace === "object" && trace.hasOwnProperty("debug")) {
@@ -281,8 +280,7 @@ const addRequestTrace = (request, trace = {}) => {
   } else {
     request.headers["debug"] = false;
   }
-  logger.debug(`Microservice Request ${request.method}: ${request.uri}`, request.headers);
-
+ 
   return request;
 };
 
@@ -295,7 +293,7 @@ const generateNewMetaData = (oldMetaData = {}) => {
   if (oldMetaData.hasOwnProperty("trace")) {
     rObject.trace = oldMetaData.trace;
   } else {
-    rObject.trace = uuidv4();
+    rObject.trace = v4();
   }
 
   if (config.msDebug) {
@@ -306,7 +304,7 @@ const generateNewMetaData = (oldMetaData = {}) => {
     rObject.debug = false;
   }
 
-  rObject.id = uuidv4();
+  rObject.id = v4();
 
   return rObject;
 };
@@ -318,18 +316,22 @@ const generateNewMetaData = (oldMetaData = {}) => {
  * @param {string} startingResourceStatus - argument to specify expected resolution or skip polling if ready
  * @returns {Promise} - Promise resolved when verify func is successful.
  */
-const pendingResource = async (resourceLoc, requestOptions, trace, startingResourceStatus = "processing") => {
-  logger.debug("Pending Resource Location", resourceLoc, requestOptions);
+const pendingResource = async (
+  resourceLoc,
+  requestOptions,
+  trace,
+  startingResourceStatus = "processing"
+) => {
   try {
     // if the startingResourceStatus is complete, there is nothing to do since the resource is ready
     if (startingResourceStatus === "complete") {
-      return {"status":"ok"};
+      return { status: "ok" };
     }
     //update our requestOptions for the verification URL
     requestOptions.method = "HEAD";
     requestOptions.uri = resourceLoc;
     delete requestOptions.body;
-    
+
     //add trace headers
     const nextTrace = objectMerge({}, generateNewMetaData(trace));
     addRequestTrace(requestOptions, nextTrace);
@@ -337,38 +339,36 @@ const pendingResource = async (resourceLoc, requestOptions, trace, startingResou
     const expires = Date.now() + config.pollTimeout;
     while (Date.now() < expires) {
       let response = await request(requestOptions);
-      logger.debug("Pending Resource verification HEAD response", response.headers, response.statusCode);
-      if(response.headers.hasOwnProperty("x-status")){
-        switch(response.headers["x-status"]) {
-        case "processing":
-          break;
-        case "complete":
-          return {"status":"ok"};
-        case "failure":
-          throw response;
-        default:
-          throw response;
+      
+      if (response.headers.hasOwnProperty("x-status")) {
+        switch (response.headers["x-status"]) {
+          case "processing":
+            break;
+          case "complete":
+            return { status: "ok" };
+          case "failure":
+            throw response;
+          default:
+            throw response;
         }
       } else {
         throw `x-status missing from response: ${JSON.stringify(response)}`;
       }
-      await new Promise(resolve => setTimeout(resolve, config.pollInterval));
+      await new Promise((resolve) => setTimeout(resolve, config.pollInterval));
     }
     throw {
-      "code": 408,
-      "message": "request timeout",
-      "details": [{"requestOptions": requestOptions}]
+      code: 408,
+      message: "request timeout",
+      details: [{ requestOptions: requestOptions }],
     };
-    
   } catch (error) {
     // a fetch on an item we are deleting should return a 404 when complete.
-    if(
+    if (
       startingResourceStatus === "deleting" &&
       error.hasOwnProperty("statusCode") &&
       error.statusCode === 404
-    ){
-      logger.debug("Pending Resource Deleted", error.message);
-      return {"status":"ok"};
+    ) {
+      return { status: "ok" };
     }
     throw formatError(error);
   }
@@ -383,56 +383,76 @@ const formatError = (error) => {
   //console.log("formatError() THE ERROR!!!!", error);
   // defaults ensure we always get a compatbile format back
   const returnedObject = {
-    "code": undefined,
-    "message": "unspecified error",
-    "trace_id": uuidv4(),
-    "details": []
+    code: undefined,
+    message: "unspecified error",
+    trace_id: v4(),
+    details: [],
   };
 
   try {
-    if(error){
+    if (error) {
       //const retObj = {};
       // request-promise errors, non 2xx or 3xx response
-      if(error.hasOwnProperty("name") && error.name === "StatusCodeError"){
+      if (error.hasOwnProperty("name") && error.name === "StatusCodeError") {
         // just pass along what we got back from API
-        if(error.hasOwnProperty("response") && error.response.hasOwnProperty("body")){
+        if (
+          error.hasOwnProperty("response") &&
+          error.response.hasOwnProperty("body")
+        ) {
           // for external systems that don't follow our standards, try to return something ...
-          if(typeof error.response.body === "string"){
+          if (typeof error.response.body === "string") {
             try {
               const parsedBody = JSON.parse(error.response.body);
               error.response.body = parsedBody;
             } catch (e) {
               const body = error.response.body;
               error.response.body = {
-                "message": body
+                message: body,
               };
             }
           }
-          returnedObject.code = error.response.body.hasOwnProperty("code") && error.response.body.code && error.response.body.code.toString().length === 3
-            ? error.response.body.code
-            : returnedObject.code;
-          returnedObject.message = error.response.body.hasOwnProperty("message") && error.response.body.message && error.response.body.message.length > 0
-            ? error.response.body.message
-            : returnedObject.message;
-          returnedObject.trace_id = error.response.body.hasOwnProperty("trace_id") && error.response.body.trace_id && error.response.body.trace_id.length > 0
-            ? error.response.body.trace_id
-            : returnedObject.trace_id;
+          returnedObject.code =
+            error.response.body.hasOwnProperty("code") &&
+            error.response.body.code &&
+            error.response.body.code.toString().length === 3
+              ? error.response.body.code
+              : returnedObject.code;
+          returnedObject.message =
+            error.response.body.hasOwnProperty("message") &&
+            error.response.body.message &&
+            error.response.body.message.length > 0
+              ? error.response.body.message
+              : returnedObject.message;
+          returnedObject.trace_id =
+            error.response.body.hasOwnProperty("trace_id") &&
+            error.response.body.trace_id &&
+            error.response.body.trace_id.length > 0
+              ? error.response.body.trace_id
+              : returnedObject.trace_id;
 
           // if we have no message add the body to details since this is a non-standard error message
-          if (returnedObject.message === "unspecified error"){
+          if (returnedObject.message === "unspecified error") {
             returnedObject.details.push(error.response.body);
           }
           //make sure details is an array of objects or strings
-          if(error.response.body.hasOwnProperty("details") && Array.isArray(error.response.body.details)){
-            const filteredDetails = returnedObject.details.concat(error.response.body.details)
-              .filter(detail =>{
-                return (typeof detail === "object" && detail !== null) || typeof detail === "string";
-              }).map(detail => {
-                if (typeof detail === "object"){
+          if (
+            error.response.body.hasOwnProperty("details") &&
+            Array.isArray(error.response.body.details)
+          ) {
+            const filteredDetails = returnedObject.details
+              .concat(error.response.body.details)
+              .filter((detail) => {
+                return (
+                  (typeof detail === "object" && detail !== null) ||
+                  typeof detail === "string"
+                );
+              })
+              .map((detail) => {
+                if (typeof detail === "object") {
                   try {
                     return JSON.stringify(detail);
-                  } catch(e){
-                    logger.debug("formatError unable to parse error detail", formatError(e));
+                  } catch (e) {
+                    
                   }
                 }
                 return detail;
@@ -441,70 +461,89 @@ const formatError = (error) => {
           }
         }
         // in case we didn't get a body, or the body was missing the code, try to get code from the http response code
-        if(error.hasOwnProperty("statusCode") && error.statusCode.toString().length === 3){
+        if (
+          error.hasOwnProperty("statusCode") &&
+          error.statusCode.toString().length === 3
+        ) {
           // we did not get a code out of the response body
-          if(!returnedObject.code){
+          if (!returnedObject.code) {
             returnedObject.code = error.statusCode;
-          } else if (returnedObject.code.toString() !== error.statusCode.toString()) {
+          } else if (
+            returnedObject.code.toString() !== error.statusCode.toString()
+          ) {
             // record a mismatch between the http response code and the "code" property returned in the respose body
-            // this seems strage but CPaaS will sometimes bubble back nested responses that are different than the http response code 
+            // this seems strage but CPaaS will sometimes bubble back nested responses that are different than the http response code
             returnedObject.message = `${returnedObject.code} - ${returnedObject.message}`;
             // make the code property match the actual http response code
             returnedObject.code = error.statusCode;
           }
         }
         // in case we didn't get a trace_id in the body, it should match the one we sent so use that instead
-        if(
+        if (
           error.hasOwnProperty("options") &&
           error.options.hasOwnProperty("headers") &&
           error.options.headers.hasOwnProperty("trace") &&
-          error.options.headers.trace.toString().length > 0  
-        ){
+          error.options.headers.trace.toString().length > 0
+        ) {
           returnedObject.trace_id = error.options.headers.trace;
         }
-      
-      // some problem making request, general JS errors, or already formatted from nested call
-      } else { 
-        returnedObject.code = error.hasOwnProperty("code") && error.code && error.code.toString().length === 3
-          ? error.code
-          : returnedObject.code;
-        returnedObject.message = error.hasOwnProperty("message") && error.message && error.message.toString().length > 0
-          ? error.message
-          : returnedObject.message;
-        returnedObject.trace_id = error.hasOwnProperty("trace_id") && error.trace_id && error.trace_id.toString().length > 0
-          ? error.trace_id
-          : returnedObject.trace_id;
+
+        // some problem making request, general JS errors, or already formatted from nested call
+      } else {
+        returnedObject.code =
+          error.hasOwnProperty("code") &&
+          error.code &&
+          error.code.toString().length === 3
+            ? error.code
+            : returnedObject.code;
+        returnedObject.message =
+          error.hasOwnProperty("message") &&
+          error.message &&
+          error.message.toString().length > 0
+            ? error.message
+            : returnedObject.message;
+        returnedObject.trace_id =
+          error.hasOwnProperty("trace_id") &&
+          error.trace_id &&
+          error.trace_id.toString().length > 0
+            ? error.trace_id
+            : returnedObject.trace_id;
         //make sure details is an array of objects
-        if(error.hasOwnProperty("details") && Array.isArray(error.details)){
-          const filteredDetails = error.details.filter(detail =>{
-            return (typeof detail === "object" && detail !== null) || typeof detail === "string";
-          }).map(detail => {
-            if (typeof detail === "object"){
-              return JSON.stringify(detail);
-            }
-            return detail;
-          });
+        if (error.hasOwnProperty("details") && Array.isArray(error.details)) {
+          const filteredDetails = error.details
+            .filter((detail) => {
+              return (
+                (typeof detail === "object" && detail !== null) ||
+                typeof detail === "string"
+              );
+            })
+            .map((detail) => {
+              if (typeof detail === "object") {
+                return JSON.stringify(detail);
+              }
+              return detail;
+            });
           returnedObject.details = filteredDetails;
         }
       }
       //if error is just a string, set it as the message
-      if(typeof error === "string" && error.length > 0) {
+      if (typeof error === "string" && error.length > 0) {
         returnedObject.message = error;
       }
     }
     // we did not get a code anywhere to use a default internal server error
-    if(!returnedObject.code){
+    if (!returnedObject.code) {
       returnedObject.code = 500;
     }
-    logger.debug("formatted error: ", returnedObject);
     return returnedObject;
-  } catch(error){
+  } catch (error) {
     // something blew up formatting or parsing somewhere. try to handle it....
-    logger.error("Error Format Failed", error);
     returnedObject.code = 500;
-    returnedObject.message = error.hasOwnProperty("message") ? error.message : "error format failed";
+    returnedObject.message = error.hasOwnProperty("message")
+      ? error.message
+      : "error format failed";
     returnedObject.details = [
-      {"location": "formatError() utilities.js star2star-js-ms-sdk"}
+      { location: "formatError() utilities.js star2star-js-ms-sdk" },
     ];
     return returnedObject;
   }
@@ -552,17 +591,17 @@ const decrypt = (cryptoKey, text) => {
 };
 
 module.exports = {
+  getGlobalThis,
   getEndpoint,
   getAuthHost,
   getVersion,
   config,
-  replaceVariables, 
+  replaceVariables,
   createUUID,
-  aggregate, //TODO Unit test 9/27/18 nh
-  filterResponse, //TODO Unit test 9/27/18 nh
-  paginate, //TODO Unit test 9/27/18 nh
-  isBrowser, //TODO Unit test 10/05/18 nh
-  addRequestTrace, //TODO Unit test 10/10/18 nh
+  aggregate,
+  filterResponse,
+  paginate,
+  addRequestTrace,
   generateNewMetaData,
   pendingResource,
   formatError,

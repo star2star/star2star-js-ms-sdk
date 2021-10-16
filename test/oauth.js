@@ -10,10 +10,9 @@ const before = mocha.before;
 const fs = require("fs");
 const s2sMS = require("../src/index");
 const Util = require("../src/utilities");
-const Logger = require("../src/node-logger");
-const logger = new Logger.default();
+const logger = require("./node-logger").getInstance();
 const objectMerge = require("object-merge");
-const uuidv4 = require("uuid/v4");
+const { v4 } = require("uuid");
 const newMeta = Util.generateNewMetaData;
 let trace = newMeta();
 
@@ -71,7 +70,7 @@ describe("Oauth MS Unit Test Suite", function () {
         creds.email,
         creds.password,
         "default",
-        uuidv4() //x-device-id
+        v4() //x-device-id
       );
       accessToken = oauthData.access_token;
       const idData = await s2sMS.Identity.getMyIdentityData(accessToken);
@@ -89,7 +88,7 @@ describe("Oauth MS Unit Test Suite", function () {
       creds.email,
       creds.password,
       "default",
-      uuidv4() //x-device-id
+      v4() //x-device-id
     );
     assert.ok(
       oauthData2.access_token !== oauthData.access_token,

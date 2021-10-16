@@ -5,8 +5,8 @@ const Util = require("./utilities");
 const request = require("request-promise");
 const objectMerge = require("object-merge");
 const ResourceGroups = require("./resourceGroups");
-const Logger = require("./node-logger");
-const logger = new Logger.default();
+const logger = require("./node-logger").getInstance();
+
 
 /**
  * @async

@@ -1,9 +1,12 @@
-export default class Logger {
+// instance
+let _Logger;
+
+module.exports = class Logger {
   constructor(){
-    const prettyPrint = process.env.MS_LOGPRETTY ? process.env.MS_LOGPRETTY : "false";
     const { createLogger, format, transports } = require('winston');
     const { combine, timestamp, label, printf } = format;
- 
+    const Util = require("./utilities");
+    const prettyPrint = typeof Util.getGlobalThis().MS_LOGPRETTY === "undefined" ? Util.getGlobalThis().MS_LOGPRETTY : false;
     const theFormat = printf(({level, message, meta, label, timestamp}) => {
       let loggerID;
       let loggerTrace;
@@ -49,7 +52,7 @@ export default class Logger {
         loggedMessageJSON.parent=loggerParent;
       }
     
-      if(prettyPrint === "true"){
+      if(prettyPrint){
         return JSON.stringify(loggedMessageJSON, null, "\t");
       } else {
         return JSON.stringify(loggedMessageJSON);
@@ -75,7 +78,7 @@ export default class Logger {
       },
       transports: [
         new transports.Console({
-          level: process.env.MS_LOGLEVEL ? process.env.MS_LOGLEVEL : "info"
+          level: typeof Util.getGlobalThis().MS_LOGLEVEL === "undefined" ? Util.getGlobalThis().MS_LOGLEVEL : "info"
         })
       ]
     });
@@ -175,5 +178,12 @@ export default class Logger {
     }
     this.logger.log(newLevel, aMsg, {"meta":aMeta});
   }
+
+  static getInstance() {
+    if (!_Logger) {
+      _Logger = new Logger();
+    }
+    return _Logger;
+  } 
 
 }

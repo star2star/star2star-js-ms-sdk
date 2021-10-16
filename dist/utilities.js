@@ -3,7 +3,7 @@
 
 const config = require("./config.json");
 
-const uuidv4 = require("uuid/v4");
+const { v4 } = require("uuid");
 
 const request = require("request-promise");
 
@@ -142,7 +142,7 @@ const replaceVariables = function replaceVariables() {
 
 
 const createUUID = () => {
-  return uuidv4();
+  return v4();
 };
 /**
  *
@@ -293,7 +293,7 @@ const addRequestTrace = function addRequestTrace(request) {
     if (typeof trace === "object" && trace.hasOwnProperty(keyName)) {
       request.headers[keyName] = trace[keyName]; //logger.debug(`Found Trace ${keyName}: ${request.headers[keyName]}`);
     } else {
-      request.headers[keyName] = uuidv4(); //logger.debug(`Assigning Trace ${keyName}: ${request.headers[keyName]}`);
+      request.headers[keyName] = v4(); //logger.debug(`Assigning Trace ${keyName}: ${request.headers[keyName]}`);
     }
   });
 
@@ -320,7 +320,7 @@ const generateNewMetaData = function generateNewMetaData() {
   if (oldMetaData.hasOwnProperty("trace")) {
     rObject.trace = oldMetaData.trace;
   } else {
-    rObject.trace = uuidv4();
+    rObject.trace = v4();
   }
 
   if (config.msDebug) {
@@ -331,7 +331,7 @@ const generateNewMetaData = function generateNewMetaData() {
     rObject.debug = false;
   }
 
-  rObject.id = uuidv4();
+  rObject.id = v4();
   return rObject;
 };
 /**
@@ -424,7 +424,7 @@ const formatError = error => {
   const returnedObject = {
     "code": undefined,
     "message": "unspecified error",
-    "trace_id": uuidv4(),
+    "trace_id": v4(),
     "details": []
   };
 

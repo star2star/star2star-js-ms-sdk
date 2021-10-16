@@ -9,11 +9,10 @@ const after = mocha.after;
 
 //test requires
 const fs = require("fs");
-const uuidv4 = require("uuid/v4");
+const { v4 } = require("uuid");
 const s2sMS = require("../src/index");
 const Util = require("../src/utilities");
-const Logger = require("../src/node-logger");
-const logger = new Logger.default();
+const logger = require("./node-logger").getInstance();
 const objectMerge = require("object-merge");
 const newMeta = Util.generateNewMetaData;
 let trace = newMeta();
@@ -79,14 +78,14 @@ describe("Scheduler MS Test Suite", function() {
             {
               "name": "Manual",
               "type": "start",
-              "uuid": uuidv4(),
+              "uuid": v4(),
               "description": ""
             },
             {
               "name": "End",
               "description": "End Node",
               "type": "finish",
-              "uuid": uuidv4()
+              "uuid": v4()
             }
           ],
           "transitions": [
@@ -104,7 +103,7 @@ describe("Scheduler MS Test Suite", function() {
               "next_timeout_state": "End",
               "start_state": "Manual",
               "timeout": "0",
-              "uuid": uuidv4()
+              "uuid": v4()
             }
           ],
           "users": {
