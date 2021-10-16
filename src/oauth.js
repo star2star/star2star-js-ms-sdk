@@ -3,7 +3,7 @@
 
 const Util = require("./utilities");
 const request = require("request-promise");
-const uuidv4 = require("uuid/v4");
+const { v4 } = require("uuid");
 
 /**
  * @async 
@@ -107,7 +107,7 @@ const getAccessToken = async (
   email = "null email",
   pwd = "null pwd",
   scope = "default",
-  deviceId = uuidv4(),
+  deviceId = v4(),
   trace = {}
 ) => {
   try {

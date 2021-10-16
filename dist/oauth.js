@@ -5,6 +5,7 @@ require("core-js/modules/es.symbol.js");
 
 require("core-js/modules/es.symbol.description.js");
 
+<<<<<<< HEAD
 require("core-js/modules/es.symbol.iterator.js");
 
 require("core-js/modules/es.array.iterator.js");
@@ -38,6 +39,9 @@ var Util = require("./utilities");
 var request = require("request-promise");
 
 var uuidv4 = require("uuid/v4");
+=======
+const { v4 } = require("uuid");
+>>>>>>> start fixing browser support
 /**
  * @async 
  * @description This function creates a client for a provided user uuid.
@@ -199,6 +203,7 @@ var generateBasicToken = /*#__PURE__*/function () {
  */
 
 
+<<<<<<< HEAD
 var getAccessToken = /*#__PURE__*/function () {
   var _ref3 = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee3() {
     var oauthToken,
@@ -268,6 +273,44 @@ var getAccessToken = /*#__PURE__*/function () {
     return _ref3.apply(this, arguments);
   };
 }();
+=======
+const getAccessToken = async function getAccessToken() {
+  let oauthToken = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : "null oauth token";
+  let email = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : "null email";
+  let pwd = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : "null pwd";
+  let scope = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : "default";
+  let deviceId = arguments.length > 4 && arguments[4] !== undefined ? arguments[4] : v4();
+  let trace = arguments.length > 5 && arguments[5] !== undefined ? arguments[5] : {};
+
+  try {
+    const MS = Util.getAuthHost();
+    const VERSION = Util.getVersion();
+    const requestOptions = {
+      method: "POST",
+      uri: "".concat(MS, "/oauth/token"),
+      headers: {
+        Authorization: "Basic ".concat(oauthToken),
+        "x-api-version": "".concat(VERSION),
+        "x-device-id": deviceId,
+        "Content-type": "application/x-www-form-urlencoded"
+      },
+      form: {
+        grant_type: "password",
+        scope: scope,
+        email: email,
+        password: pwd
+      },
+      json: true // resolveWithFullResponse: true
+
+    };
+    Util.addRequestTrace(requestOptions, trace);
+    const response = await request(requestOptions);
+    return response;
+  } catch (error) {
+    return Promise.reject(Util.formatError(error));
+  }
+};
+>>>>>>> start fixing browser support
 /**
  * @async
  * @description This function will call the oauth microservice with the basic token you passed in.

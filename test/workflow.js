@@ -10,9 +10,8 @@ const before = mocha.before;
 const fs = require("fs");
 const s2sMS = require("../src/index");
 const Util = require("../src/utilities");
-const Logger = require("../src/node-logger");
-const logger = new Logger.default();
-const uuidv4 = require("uuid/v4");
+const logger = require("./node-logger").getInstance();
+const { v4 } = require("uuid");
 const objectMerge = require("object-merge");
 const newMeta = Util.generateNewMetaData;
 let trace = newMeta();
@@ -128,7 +127,7 @@ describe("Workflow", function() {
       const response = await s2sMS.Workflow.createWorkflowTemplate(
         accessToken,
         {
-          uuid: uuidv4(),
+          uuid: v4(),
           name: "Unit-Test",
           description: "Unit-Test",
           status: "inavlid-status",
@@ -165,20 +164,20 @@ describe("Workflow", function() {
           {
             "name": "Trigger Manually",
             "type": "start",
-            "uuid": uuidv4(),
+            "uuid": v4(),
             "description": ""
           },
           {
             "name": "End Workflow",
             "description": "Indicate the end of a Workflow (required).",
             "type": "finish",
-            "uuid": uuidv4()
+            "uuid": v4()
           },
           {
             "name": "Run External Process",
             "description": "Execute a process outside of the Workflow, and branches based on results.",
             "type": "normal",
-            "uuid": uuidv4()
+            "uuid": v4()
           }
         ],
         "transitions": [
@@ -196,7 +195,7 @@ describe("Workflow", function() {
             "next_timeout_state": "Run External Process",
             "start_state": "Trigger Manually",
             "timeout": "0",
-            "uuid": uuidv4()
+            "uuid": v4()
           },
           {
             "condition": {
@@ -216,7 +215,7 @@ describe("Workflow", function() {
             "next_timeout_state": "End Workflow",
             "start_state": "Run External Process",
             "timeout": "30000",
-            "uuid": uuidv4()
+            "uuid": v4()
           }
         ]
       },
@@ -248,26 +247,26 @@ describe("Workflow", function() {
           {
             "name": "Trigger Manually",
             "type": "start",
-            "uuid": uuidv4(),
+            "uuid": v4(),
             "description": ""
           },
           {
             "name": "End Workflow",
             "description": "Indicate the end of a Workflow (required).",
             "type": "finish",
-            "uuid": uuidv4()
+            "uuid": v4()
           },
           {
             "name": "Run External Process",
             "description": "Execute a process outside of the Workflow, and branches based on results.",
             "type": "normal",
-            "uuid": uuidv4()
+            "uuid": v4()
           },
           {
             "name": "Pause Workflow",
             "description": "",
             "type": "normal",
-            "uuid": uuidv4()
+            "uuid": v4()
           }
         ],
         "transitions": [
@@ -285,7 +284,7 @@ describe("Workflow", function() {
             "next_timeout_state": "Pause Workflow",
             "start_state": "Trigger Manually",
             "timeout": "0",
-            "uuid": uuidv4()
+            "uuid": v4()
           },
           {
             "condition": {
@@ -305,7 +304,7 @@ describe("Workflow", function() {
             "next_timeout_state": "End Workflow",
             "start_state": "Run External Process",
             "timeout": "30000",
-            "uuid": uuidv4()
+            "uuid": v4()
           },
           {
             "condition": {
@@ -323,7 +322,7 @@ describe("Workflow", function() {
             "next_timeout_state": "End Workflow",
             "start_state": "Pause Workflow",
             "timeout": "30000",
-            "uuid": uuidv4()
+            "uuid": v4()
           }
         ]
       },
@@ -352,26 +351,26 @@ describe("Workflow", function() {
           {
             "name": "Trigger Manually",
             "type": "start",
-            "uuid": uuidv4(),
+            "uuid": v4(),
             "description": ""
           },
           {
             "name": "End Workflow",
             "description": "Indicate the end of a Workflow (required).",
             "type": "finish",
-            "uuid": uuidv4()
+            "uuid": v4()
           },
           {
             "name": "Sum Lambda",
             "description": "Execute a process outside of the Workflow, and branches based on results.",
             "type": "normal",
-            "uuid": uuidv4()
+            "uuid": v4()
           },
           {
             "name": "Compare Values",
             "description": "Analyze data and branch the Workflow accordingly.",
             "type": "decision",
-            "uuid": uuidv4(),
+            "uuid": v4(),
             "decision": {
               "rules": {
                 ">=": [
@@ -392,13 +391,13 @@ describe("Workflow", function() {
             "name": "True Lamda",
             "description": "Execute a process outside of the Workflow, and branches based on results.",
             "type": "normal",
-            "uuid": uuidv4()
+            "uuid": v4()
           },
           {
             "name": "False Lambda",
             "description": "Execute a process outside of the Workflow, and branches based on results.",
             "type": "normal",
-            "uuid": uuidv4()
+            "uuid": v4()
           }
         ],
         "transitions": [
@@ -416,7 +415,7 @@ describe("Workflow", function() {
             "next_timeout_state": "Sum Lambda",
             "start_state": "Trigger Manually",
             "timeout": "0",
-            "uuid": uuidv4()
+            "uuid": v4()
           },
           {
             "condition": {
@@ -437,7 +436,7 @@ describe("Workflow", function() {
             "next_timeout_state": "End Workflow",
             "start_state": "Sum Lambda",
             "timeout": "30000",
-            "uuid": uuidv4()
+            "uuid": v4()
           },
           {
             "condition": {
@@ -452,7 +451,7 @@ describe("Workflow", function() {
             "next_state": "True Lamda",
             "next_timeout_state": "True Lamda",
             "start_state": "Compare Values",
-            "uuid": uuidv4(),
+            "uuid": v4(),
             "timeout": 0
           },
           {
@@ -468,7 +467,7 @@ describe("Workflow", function() {
             "next_state": "False Lambda",
             "next_timeout_state": "False Lambda",
             "start_state": "Compare Values",
-            "uuid": uuidv4(),
+            "uuid": v4(),
             "timeout": 0
           },
           {
@@ -493,7 +492,7 @@ describe("Workflow", function() {
             "next_timeout_state": "End Workflow",
             "start_state": "True Lamda",
             "timeout": "30000",
-            "uuid": uuidv4()
+            "uuid": v4()
           },
           {
             "condition": {
@@ -517,7 +516,7 @@ describe("Workflow", function() {
             "next_timeout_state": "End Workflow",
             "start_state": "False Lambda",
             "timeout": "30000",
-            "uuid": uuidv4()
+            "uuid": v4()
           }
         ]
       },

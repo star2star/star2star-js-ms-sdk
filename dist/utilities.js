@@ -3,7 +3,11 @@
 
 require("core-js/modules/es.symbol.js");
 
+<<<<<<< HEAD
 require("core-js/modules/es.symbol.description.js");
+=======
+const { v4 } = require("uuid");
+>>>>>>> start fixing browser support
 
 require("core-js/modules/es.symbol.iterator.js");
 
@@ -187,8 +191,13 @@ var replaceVariables = function replaceVariables() {
  */
 
 
+<<<<<<< HEAD
 var createUUID = function createUUID() {
   return uuidv4();
+=======
+const createUUID = () => {
+  return v4();
+>>>>>>> start fixing browser support
 };
 /**
  *
@@ -405,7 +414,7 @@ var addRequestTrace = function addRequestTrace(request) {
     if (_typeof(trace) === "object" && trace.hasOwnProperty(keyName)) {
       request.headers[keyName] = trace[keyName]; //logger.debug(`Found Trace ${keyName}: ${request.headers[keyName]}`);
     } else {
-      request.headers[keyName] = uuidv4(); //logger.debug(`Assigning Trace ${keyName}: ${request.headers[keyName]}`);
+      request.headers[keyName] = v4(); //logger.debug(`Assigning Trace ${keyName}: ${request.headers[keyName]}`);
     }
   });
 
@@ -432,7 +441,7 @@ var generateNewMetaData = function generateNewMetaData() {
   if (oldMetaData.hasOwnProperty("trace")) {
     rObject.trace = oldMetaData.trace;
   } else {
-    rObject.trace = uuidv4();
+    rObject.trace = v4();
   }
 
   if (config.msDebug) {
@@ -443,7 +452,7 @@ var generateNewMetaData = function generateNewMetaData() {
     rObject.debug = false;
   }
 
-  rObject.id = uuidv4();
+  rObject.id = v4();
   return rObject;
 };
 /**
@@ -594,7 +603,7 @@ var formatError = function formatError(error) {
   var returnedObject = {
     "code": undefined,
     "message": "unspecified error",
-    "trace_id": uuidv4(),
+    "trace_id": v4(),
     "details": []
   };
 

@@ -1,16 +1,17 @@
 {
   "name": "star2star-js-ms-sdk",
-  "version": "3.7.1",
+  "version": "4.0.0",
   "description": "Star2Star JavaScript Micro Service SDK",
-  "main": "./dist/index.js",
+  "main": "./lib/index.js",
   "scripts": {
-    "init": "mkdir dist",
-    "clean": "rm -rf dist && touch package-lock.json && rm package-lock.json && rm -rf node_modules && npm install --no-save",
-    "test": "env MS_LOGLEVEL=emerg mocha --timeout 15000",
-    "debug": "env MS_LOGLEVEL=debug MS_LOGPRETTY=true mocha --timeout 15000",
-    "build": "babel src -d dist",
-    "postbuild": "cp src/config.json dist/config.json",
-    "doc": "documentation build src/index.js -f html -o . --config documentation.yml"
+    "preclean": "npm install --no-save rimraf",
+    "clean": "rimraf lib && mkdir lib && rimraf package-lock.json && rimraf node_modules && npm install",
+    "test": "env MS_LOGLEVEL=info mocha --timeout 15000",
+    "debug": "env MS_LOGLEVEL=debug MS_LOGPRETTY=true mocha --timeout 15000 --require @babel/register",
+    "build": "npm run clean && babel src -d lib && npm prune --production",
+    "gitTag": "git tag \"$npm_package_name\"_\"$npm_package_version\" && git push origin \"$npm_package_name\"_\"$npm_package_version\"",
+    "postbuild": "cp src/config.json lib/config.json",
+    "doc": "documentation build src/index.js -f md -o README.md --config documentation.yml"
   },
   "keywords": [
     "micro service",
@@ -18,27 +19,26 @@
     "ms",
     "js"
   ],
-  "author": "James Schimmoeller",
-  "license": "Apache 2.0",
+  "author": "Sangoma Integration Studio Team",
+  "license": "MIT",
   "dependencies": {
-    "ajv": "6.10.0",
     "core-js": "3.17.3",
     "email-validator": "2.0.4",
+    "node-fetch": "2.6.5",
     "object-merge": "2.5.1",
-    "request": "2.88.0",
-    "request-promise": "4.2.4",
-    "uuid": "3.3.2",
-    "winston": "3.2.1"
+    "request": "2.88.2",
+    "request-promise": "4.2.6",
+    "uuid": "8.3.2",
+    "winston": "3.3.3"
   },
   "devDependencies": {
     "@babel/cli": "7.15.4",
     "@babel/core": "7.15.5",
     "@babel/preset-env": "7.15.6",
-    "assert": "1.4.1",
-    "documentation": "13.2.1",
-    "eslint": "5.1.0",
-    "eslint-plugin-react": "7.10.0",
-    "mocha": "8.3.2"
+    "assert": "1.5.0",
+    "documentation": "13.2.5",
+    "eslint": "5.16.0",
+    "mocha": "8.4.0"
   },
   "publishConfig": {
     "registry": "https://registry.npmjs.org"

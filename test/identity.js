@@ -9,12 +9,10 @@ const before = mocha.before;
 //test requires
 const fs = require("fs");
 const s2sMS = require("../src/index");
-const Util = require("../src/utilities");
-const Logger = require("../src/node-logger");
-const logger = new Logger.default();
+const Util = s2sMS.Util;
+const logger = require("../src/node-logger").getInstance();
 const objectMerge = require("object-merge");
-const newMeta = Util.generateNewMetaData;
-let trace = newMeta();
+let trace = Util.generateNewMetaData();
 
 //utility function to simplify test code
 const mochaAsync = (func, name) => {

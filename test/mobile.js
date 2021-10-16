@@ -10,10 +10,9 @@ const before = mocha.before;
 const fs = require("fs");
 const s2sMS = require("../src/index");
 const Util = require("../src/utilities");
-const Logger = require("../src/node-logger");
-const logger = new Logger.default();
+const logger = require("./node-logger").getInstance();
 const objectMerge = require("object-merge");
-const uuidv4 = require("uuid/v4");
+const { v4 } = require("uuid");
 const newMeta = Util.generateNewMetaData;
 let trace = newMeta();
 
