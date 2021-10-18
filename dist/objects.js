@@ -505,10 +505,10 @@ const updateDataObject = async function updateDataObject() {
 
     if (accountUUID //required to update associated resource groups.
     ) {
-        nextTrace = objectMerge({}, nextTrace, Util.generateNewMetaData(nextTrace));
-        await ResourceGroups.updateResourceGroups(accessToken, dataUUID, accountUUID, "object", //specifies the system role to find in config.json
-        users, nextTrace);
-      }
+      nextTrace = objectMerge({}, nextTrace, Util.generateNewMetaData(nextTrace));
+      await ResourceGroups.updateResourceGroups(accessToken, dataUUID, accountUUID, "object", //specifies the system role to find in config.json
+      users, nextTrace);
+    }
 
     const response = await request(requestOptions);
     const updatedObj = response.body; // update returns a 202....suspend return until the new resource is ready

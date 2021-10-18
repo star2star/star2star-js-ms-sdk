@@ -23,7 +23,8 @@
     "MOBILE": "/mobilenotification",
     "FORMS": "/forms",
     "ENTITLEMENTS": "/entitlements",
-    "ACTIVITY": "/activity"
+    "ACTIVITY": "/activity",
+    "RESOURCES": "/resourcecms"
   },
   "msDelay": 1000,
   "pollInterval": 1000,

@@ -213,6 +213,10 @@ toc:
       - listCustomSubscriptions
       - listUserSubscriptions
       - updateSubscriptionExpiresDate
+  - name: Resource CMS
+    children:
+      - getResourceInstance
+      - listResources
   - name: Resource Groups
     children:
       - createResourceGroups

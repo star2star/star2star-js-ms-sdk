@@ -49,6 +49,8 @@ const Entitlements = require("./entitlements");
 
 const Activity = require("./activity");
 
+const Resources = require("./resources");
+
 let cpaasKey;
 /**
  * 
@@ -173,5 +175,6 @@ module.exports = {
   Mobile,
   Forms,
   Entitlements,
-  Activity
+  Activity,
+  Resources
 };
