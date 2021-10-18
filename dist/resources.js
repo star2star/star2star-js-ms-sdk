@@ -43,8 +43,7 @@ const getResourceInstance = async function getResourceInstance() {
         ["rows.limit"]: limit,
         ["rows.offset"]: offset
       },
-      json: true,
-      resolveWithFullResponse: true
+      json: true
     }; // add expand query param if defined
 
     if (expand !== undefined) {
