@@ -29,36 +29,26 @@ const mochaAsync = (func, name) => {
   };
 };
 
-let creds = {
-  CPAAS_OAUTH_TOKEN: "Basic your oauth token here",
-  CPAAS_API_VERSION: "v1",
-  email: "email@email.com",
-  password: "pwd",
-  isValid: false
-};
+
 
 describe("Groups Test Suite", function() {
   let accessToken, identityData, testGroupUuid;
 
   before(async () => {
     try {
-      // file system uses full path so will do it like this
-      if (fs.existsSync("./test/credentials.json")) {
-      // do not need test folder here
-        creds = require("./credentials.json");
-      }
+      
 
       // For tests, use the dev msHost
-      s2sMS.setMsHost(creds.MS_HOST);
-      s2sMS.setMSVersion(creds.CPAAS_API_VERSION);
-      s2sMS.setMsAuthHost(creds.AUTH_HOST);
+      s2sMS.setMsHost(process.env.MS_HOST);
+      s2sMS.setMSVersion(process.env.CPAAS_API_VERSION);
+      s2sMS.setMsAuthHost(process.env.AUTH_HOST);
       // get accessToken to use in test cases
       // Return promise so that test cases will not fire until it resolves.
     
       const oauthData = await s2sMS.Oauth.getAccessToken(
-        creds.CPAAS_OAUTH_TOKEN,
-        creds.email,
-        creds.password
+        process.env.CPAAS_OAUTH_TOKEN,
+        process.env.EMAIL,
+        process.env.PASSWORD
       );
       accessToken = oauthData.access_token;
       const idData = await s2sMS.Identity.getMyIdentityData(accessToken);
@@ -69,7 +59,7 @@ describe("Groups Test Suite", function() {
   });
 
   it("List Groups", mochaAsync(async () => {
-    if (!creds.isValid) throw new Error("Invalid Credentials");
+    if (!process.env.isValid) throw new Error("Invalid Credentials");
     trace = objectMerge({}, trace, Util.generateNewMetaData(trace));
     const filters = [];
     filters["expand"] = "members";
@@ -90,7 +80,7 @@ describe("Groups Test Suite", function() {
   
   // This is broken CSRVS-254. Returns 202 but polling does not work
   it("Create Group", mochaAsync(async () => {
-    if (!creds.isValid) throw new Error("Invalid Credentials");
+    if (!process.env.isValid) throw new Error("Invalid Credentials");
     trace = objectMerge({}, trace, Util.generateNewMetaData(trace));
     //FIXME needs default attribute CCORE-179
     const body = {
@@ -98,7 +88,7 @@ describe("Groups Test Suite", function() {
       description: "A test group",
       members: [
         {
-          uuid: creds.testIdentity
+          uuid: process.env.TEST_IDENTITY
         }
       ],
       name: "Test",
@@ -114,7 +104,7 @@ describe("Groups Test Suite", function() {
   },"Create Group"));
   
   it("Get One Group", mochaAsync(async () => {
-    if (!creds.isValid) throw new Error("Invalid Credentials");
+    if (!process.env.isValid) throw new Error("Invalid Credentials");
     trace = objectMerge({}, trace, Util.generateNewMetaData(trace));
     const filters = [];
     filters["expand"] = "members.type";
@@ -128,7 +118,7 @@ describe("Groups Test Suite", function() {
   },"Get One Group"));
   
   it("Get Group Members", mochaAsync(async () => {
-    if (!creds.isValid) throw new Error("Invalid Credentials");
+    if (!process.env.isValid) throw new Error("Invalid Credentials");
     trace = objectMerge({}, trace, Util.generateNewMetaData(trace));
     const filters = [];
     filters["expand"] = "members.type";
@@ -142,7 +132,7 @@ describe("Groups Test Suite", function() {
   },"Get Group Members"));
   
   it("Add User to Group", mochaAsync(async () => {
-    if (!creds.isValid) throw new Error("Invalid Credentials");
+    if (!process.env.isValid) throw new Error("Invalid Credentials");
     trace = objectMerge({}, trace, Util.generateNewMetaData(trace));
     const testMembers = [
       {
@@ -160,7 +150,7 @@ describe("Groups Test Suite", function() {
   },"Add User to Group"));
   
   it("Delete User from Group", mochaAsync(async () => {
-    if (!creds.isValid) throw new Error("Invalid Credentials");
+    if (!process.env.isValid) throw new Error("Invalid Credentials");
     trace = objectMerge({}, trace, Util.generateNewMetaData(trace));
     const members = [
       {
@@ -176,7 +166,7 @@ describe("Groups Test Suite", function() {
   },"Delete User from Group"));
   
   it("Modify Group", mochaAsync(async () => {
-    if (!creds.isValid) throw new Error("Invalid Credentials");
+    if (!process.env.isValid) throw new Error("Invalid Credentials");
     trace = objectMerge({}, trace, Util.generateNewMetaData(trace));
     const body = {
       description: "new description",
@@ -191,7 +181,7 @@ describe("Groups Test Suite", function() {
   },"Modify Group"));
   
   it("Deactivate Group", mochaAsync(async () => {
-    if (!creds.isValid) throw new Error("Invalid Credentials");
+    if (!process.env.isValid) throw new Error("Invalid Credentials");
     trace = objectMerge({}, trace, Util.generateNewMetaData(trace));
     const response = await s2sMS.Groups.deactivateGroup(accessToken, testGroupUuid, trace);
     assert.ok(
@@ -202,7 +192,7 @@ describe("Groups Test Suite", function() {
   },"Deactivate Group"));
   
   it("Reactivate Group", mochaAsync(async () => {
-    if (!creds.isValid) throw new Error("Invalid Credentials");
+    if (!process.env.isValid) throw new Error("Invalid Credentials");
     trace = objectMerge({}, trace, Util.generateNewMetaData(trace));
     const response = await s2sMS.Groups.reactivateGroup(accessToken, testGroupUuid, trace);
     assert.ok(
@@ -213,7 +203,7 @@ describe("Groups Test Suite", function() {
   },"Reactivate Group"));
   
   it("Delete Group", mochaAsync(async () => {
-    if (!creds.isValid) throw new Error("Invalid Credentials");
+    if (!process.env.isValid) throw new Error("Invalid Credentials");
     trace = objectMerge({}, trace, Util.generateNewMetaData(trace));
     const response = await s2sMS.Groups.deleteGroup(accessToken, testGroupUuid, trace);
     assert.ok(
