@@ -13,8 +13,8 @@ var config = require("../src/config.json");
 const creds = require("./credentials.json");
 
 beforeEach(function () {
-  s2sMS.setMsHost(creds.MS_HOST);
-  s2sMS.setMsAuthHost(creds.AUTH_HOST);
+  s2sMS.setMsHost(process.env.MS_HOST);
+  s2sMS.setMsAuthHost(process.env.AUTH_HOST);
 });
 
 describe("Util", function () {
@@ -113,7 +113,7 @@ describe("Util", function () {
 
   it("test getEndpoint valid", function (done) {
     const prodEndPoint = Util.getEndpoint("IDENTITY");
-    assert.equal(`${creds.MS_HOST}/identity`, prodEndPoint);
+    assert.equal(`${process.env.MS_HOST}/identity`, prodEndPoint);
     done();
   });
 
@@ -149,13 +149,13 @@ describe("Util", function () {
 
   it("test getEndpoint valid - lowercase ", function (done) {
     const prodEndPoint = Util.getEndpoint("identity");
-    assert.equal(`${creds.MS_HOST}/identity`, prodEndPoint);
+    assert.equal(`${process.env.MS_HOST}/identity`, prodEndPoint);
     done();
   });
 
   it("test getAuthHost valid - lowercase ", function (done) {
     const prodAuthHost = Util.getAuthHost();
-    assert.equal(creds.AUTH_HOST, prodAuthHost);
+    assert.equal(process.env.AUTH_HOST, prodAuthHost);
     done();
   });
 

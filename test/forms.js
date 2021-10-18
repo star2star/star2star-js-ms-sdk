@@ -29,13 +29,7 @@ const mochaAsync = (func, name) => {
   };
 };
 
-let creds = {
-  CPAAS_OAUTH_TOKEN: "Basic your oauth token here",
-  CPAAS_API_VERSION: "v1",
-  email: "email@email.com",
-  password: "pwd",
-  isValid: false
-};
+
 
 describe("Form", function() {
   let accessToken,
@@ -50,15 +44,15 @@ describe("Form", function() {
       }
 
       // For tests, use the dev msHost
-      s2sMS.setMsHost(creds.MS_HOST);
-      s2sMS.setMSVersion(creds.CPAAS_API_VERSION);
-      s2sMS.setMsAuthHost(creds.AUTH_HOST);
+      s2sMS.setMsHost(process.env.MS_HOST);
+      s2sMS.setMSVersion(process.env.CPAAS_API_VERSION);
+      s2sMS.setMsAuthHost(process.env.AUTH_HOST);
       // get accessToken to use in test cases
       // Return promise so that test cases will not fire until it resolves.
       const oauthData = await s2sMS.Oauth.getAccessToken(
-        creds.CPAAS_OAUTH_TOKEN,
-        creds.email,
-        creds.password
+        process.env.CPAAS_OAUTH_TOKEN,
+        process.env.EMAIL,
+        process.env.PASSWORD
       );
       // console.log('>>>', JSON.stringify(oauthData))
       accessToken = oauthData.access_token;
@@ -66,7 +60,7 @@ describe("Form", function() {
       const idData = await s2sMS.Identity.getMyIdentityData(accessToken);
       // console.log('>>>>', JSON.stringify(idData))
       identityData = await s2sMS.Identity.getIdentityDetails(accessToken, idData.user_uuid);
-      creds.isValid = true;
+      process.env.isValid = true;
     } catch (error){
       return Promise.reject(error);
     }
@@ -74,7 +68,7 @@ describe("Form", function() {
 
   it("listUserForms", mochaAsync(async () => {
     try{
-      if (!creds.isValid) throw new Error("Invalid Credentials");
+      if (!process.env.isValid) throw new Error("Invalid Credentials");
       trace = objectMerge({}, trace, Util.generateNewMetaData(trace));
       const response = await s2sMS.Forms.listUserForms(
         accessToken,
@@ -100,7 +94,7 @@ describe("Form", function() {
 
   it("listUserFormSubmissions", mochaAsync(async () => {
     try{
-      if (!creds.isValid) throw new Error("Invalid Credentials");
+      if (!process.env.isValid) throw new Error("Invalid Credentials");
       trace = objectMerge({}, trace, Util.generateNewMetaData(trace));
       const response = await s2sMS.Forms.listUserFormSubmissions(
         accessToken,

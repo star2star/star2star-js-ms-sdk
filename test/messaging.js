@@ -29,13 +29,7 @@ const mochaAsync = (func, name) => {
   };
 };
 
-let creds = {
-  CPAAS_OAUTH_TOKEN: "Basic your oauth token here",
-  CPAAS_API_VERSION: "v1",
-  email: "email@email.com",
-  password: "pwd",
-  isValid: false
-};
+
 
 describe("Messaging MS Unit Test Suite", function () {
 
@@ -43,23 +37,19 @@ describe("Messaging MS Unit Test Suite", function () {
 
   before(async () => {
     try {
-      // file system uses full path so will do it like this
-      if (fs.existsSync("./test/credentials.json")) {
-      // do not need test folder here
-        creds = require("./credentials.json");
-      }
+      
 
       // For tests, use the dev msHost
-      s2sMS.setMsHost(creds.MS_HOST);
-      s2sMS.setMSVersion(creds.CPAAS_API_VERSION);
-      s2sMS.setMsAuthHost(creds.AUTH_HOST);
+      s2sMS.setMsHost(process.env.MS_HOST);
+      s2sMS.setMSVersion(process.env.CPAAS_API_VERSION);
+      s2sMS.setMsAuthHost(process.env.AUTH_HOST);
       // get accessToken to use in test cases
       // Return promise so that test cases will not fire until it resolves.
     
       const oauthData = await s2sMS.Oauth.getAccessToken(
-        creds.CPAAS_OAUTH_TOKEN,
-        creds.email,
-        creds.password
+        process.env.CPAAS_OAUTH_TOKEN,
+        process.env.EMAIL,
+        process.env.PASSWORD
       );
       accessToken = oauthData.access_token;
       const idData = await s2sMS.Identity.getMyIdentityData(accessToken);
@@ -70,12 +60,12 @@ describe("Messaging MS Unit Test Suite", function () {
   });
 
   it("Send Simple SMS", mochaAsync(async () => {
-    if (!creds.isValid) throw new Error("Invalid Credentials");
+    if (!process.env.isValid) throw new Error("Invalid Credentials");
     trace = objectMerge({}, trace, Util.generateNewMetaData(trace));
     const response = await s2sMS.Messaging.sendSimpleSMS(
       accessToken,
-      creds.smsFrom,
-      creds.smsTo,
+      process.env.SMS_FROM,
+      process.env.SMS_TO,
       "a test",
       "text",
       {},
@@ -89,12 +79,12 @@ describe("Messaging MS Unit Test Suite", function () {
   },"Send Simple SMS"));
 
   it("Get Conversation", mochaAsync(async () => {
-    if (!creds.isValid) throw new Error("Invalid Credentials");
+    if (!process.env.isValid) throw new Error("Invalid Credentials");
     trace = objectMerge({}, trace, Util.generateNewMetaData(trace));
     const response = await s2sMS.Messaging.getConversation(
       accessToken,
       identityData.uuid,
-      creds.smsTo,
+      process.env.smsTo,
       trace
     );
     assert.ok(
@@ -106,12 +96,12 @@ describe("Messaging MS Unit Test Suite", function () {
   },"Get Conversation"));
 
   it("Get Conversation UUID", mochaAsync(async () => {
-    if (!creds.isValid) throw new Error("Invalid Credentials");
+    if (!process.env.isValid) throw new Error("Invalid Credentials");
     trace = objectMerge({}, trace, Util.generateNewMetaData(trace));
     const response = await s2sMS.Messaging.getConversationUuid(
       accessToken,
       identityData.uuid,
-      creds.smsTo,
+      process.env.smsTo,
       trace
     );
     assert.ok(
@@ -122,7 +112,7 @@ describe("Messaging MS Unit Test Suite", function () {
   },"Get Conversation UUID"));
 
   it("Retrieve Conversations", mochaAsync(async () => {
-    if (!creds.isValid) throw new Error("Invalid Credentials");
+    if (!process.env.isValid) throw new Error("Invalid Credentials");
     trace = objectMerge({}, trace, Util.generateNewMetaData(trace));
     const response = await s2sMS.Messaging.retrieveConversations(
       accessToken,
@@ -139,7 +129,7 @@ describe("Messaging MS Unit Test Suite", function () {
   },"Retrieve Conversations"));
 
   it("Mark All Conversations Read", mochaAsync(async () => {
-    if (!creds.isValid) throw new Error("Invalid Credentials");
+    if (!process.env.isValid) throw new Error("Invalid Credentials");
     trace = objectMerge({}, trace, Util.generateNewMetaData(trace));
     const response = await s2sMS.Messaging.markAllConversationMessagesRead(
       accessToken,
@@ -154,7 +144,7 @@ describe("Messaging MS Unit Test Suite", function () {
   },"Mark All Conversations Read"));
   
   it("Delete Conversation", mochaAsync(async () => {
-    if (!creds.isValid) throw new Error("Invalid Credentials");
+    if (!process.env.isValid) throw new Error("Invalid Credentials");
     trace = objectMerge({}, trace, Util.generateNewMetaData(trace));
     const response = await s2sMS.Messaging.deleteConversation(
       accessToken,
@@ -169,7 +159,7 @@ describe("Messaging MS Unit Test Suite", function () {
   },"Delete Conversation"));
 
   it("Delete Multiple Conversations", mochaAsync(async () => {
-    if (!creds.isValid) throw new Error("Invalid Credentials");
+    if (!process.env.isValid) throw new Error("Invalid Credentials");
     trace = objectMerge({}, trace, Util.generateNewMetaData(trace));
     const response = await s2sMS.Messaging.deleteMultipleConversations(
       accessToken,
@@ -186,7 +176,7 @@ describe("Messaging MS Unit Test Suite", function () {
   },"Delete Multiple Conversations"));
 
   it("Snooze Unsnooze Conversation", mochaAsync(async () => {
-    if (!creds.isValid) throw new Error("Invalid Credentials");
+    if (!process.env.isValid) throw new Error("Invalid Credentials");
     trace = objectMerge({}, trace, Util.generateNewMetaData(trace));
     const response = await s2sMS.Messaging.snoozeUnsnoozeConversation(
       accessToken,
@@ -203,7 +193,7 @@ describe("Messaging MS Unit Test Suite", function () {
   },"Snooze Unsnooze Conversation"));
 
   it("Delete Message", mochaAsync(async () => {
-    if (!creds.isValid) throw new Error("Invalid Credentials");
+    if (!process.env.isValid) throw new Error("Invalid Credentials");
     trace = objectMerge({}, trace, Util.generateNewMetaData(trace));
     const response = await s2sMS.Messaging.deleteMessage(
       accessToken,
@@ -219,7 +209,7 @@ describe("Messaging MS Unit Test Suite", function () {
   },"Delete Message"));
 
   it("Delete Multiple Messages", mochaAsync(async () => {
-    if (!creds.isValid) throw new Error("Invalid Credentials");
+    if (!process.env.isValid) throw new Error("Invalid Credentials");
     trace = objectMerge({}, trace, Util.generateNewMetaData(trace));
     const response = await s2sMS.Messaging.deleteMultipleMessages(
       accessToken,
@@ -235,7 +225,7 @@ describe("Messaging MS Unit Test Suite", function () {
 
 
   it("Valid SMS Number", mochaAsync(async () => {
-    if (!creds.isValid) throw new Error("Invalid Credentials");
+    if (!process.env.isValid) throw new Error("Invalid Credentials");
     trace = objectMerge({}, trace, Util.generateNewMetaData(trace));
     const response = await s2sMS.Messaging.getSMSNumber(
       accessToken,
@@ -243,7 +233,7 @@ describe("Messaging MS Unit Test Suite", function () {
       trace
     );
     assert.ok(
-      response === creds.smsFrom,
+      response === process.env.smsFrom,
       JSON.stringify(response, null, "\t")
     );
     return response;
@@ -251,7 +241,7 @@ describe("Messaging MS Unit Test Suite", function () {
   
   it("GetSMS for Invalid USER UUID", mochaAsync(async () => {
     try {
-      if (!creds.isValid) throw new Error("Invalid Credentials");
+      if (!process.env.isValid) throw new Error("Invalid Credentials");
       trace = objectMerge({}, trace, Util.generateNewMetaData(trace));
       const response = await s2sMS.Messaging.getSMSNumber(
         accessToken,
@@ -273,7 +263,7 @@ describe("Messaging MS Unit Test Suite", function () {
 
   // FIXME once CSRVS-155 is figured out
   // it("Send SMS", mochaAsync(async () => {
-  //   if (!creds.isValid) throw new Error("Invalid Credentials");
+  //   if (!process.env.isValid) throw new Error("Invalid Credentials");
   //   trace = objectMerge({}, trace, Util.generateNewMetaData(trace));
   //   const response = await s2sMS.Messaging.sendSMS(
   //     accessToken,
@@ -291,7 +281,7 @@ describe("Messaging MS Unit Test Suite", function () {
 
   // template
   // it("change me", mochaAsync(async () => {
-  //   if (!creds.isValid) throw new Error("Invalid Credentials");
+  //   if (!process.env.isValid) throw new Error("Invalid Credentials");
   //   trace = objectMerge({}, trace, Util.generateNewMetaData(trace));
   //   const response = await somethingAsync();
   //   assert.ok(

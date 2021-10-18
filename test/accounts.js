@@ -30,13 +30,7 @@ const mochaAsync = (func, name) => {
   };
 };
 
-let creds = {
-  CPAAS_OAUTH_TOKEN: "Basic your oauth token here",
-  CPAAS_API_VERSION: "v1",
-  email: "email@email.com",
-  password: "pwd",
-  isValid: false
-};
+
 
 describe("Accounts MS Unit Test Suite", function() {
   let accessToken, accountUUID, contactUUID;
@@ -47,23 +41,18 @@ describe("Accounts MS Unit Test Suite", function() {
 
   before(async () => {
     try {
-      // file system uses full path so will do it like this
-      if (fs.existsSync("./test/credentials.json")) {
-      // do not need test folder here
-        creds = require("./credentials.json");
-      }
-
+      
       // For tests, use the dev msHost
-      s2sMS.setMsHost(creds.MS_HOST);
-      s2sMS.setMSVersion(creds.CPAAS_API_VERSION);
-      s2sMS.setMsAuthHost(creds.AUTH_HOST);
+      s2sMS.setMsHost(process.env.MS_HOST);
+      s2sMS.setMSVersion(process.env.CPAAS_API_VERSION);
+      s2sMS.setMsAuthHost(process.env.AUTH_HOST);
       // get accessToken to use in test cases
       // Return promise so that test cases will not fire until it resolves.
     
       const oauthData = await s2sMS.Oauth.getAccessToken(
-        creds.CPAAS_OAUTH_TOKEN,
-        creds.email,
-        creds.password
+        process.env.CPAAS_OAUTH_TOKEN,
+        process.env.EMAIL,
+        process.env.PASSWORD
       );
       accessToken = oauthData.access_token;
       const idData = await s2sMS.Identity.getMyIdentityData(accessToken);
@@ -76,7 +65,7 @@ describe("Accounts MS Unit Test Suite", function() {
 
   it("Create Account Without Parent-uuid", mochaAsync(async () => {
     try {
-      if (!creds.isValid) throw new Error("Invalid Credentials");
+      if (!process.env.isValid) throw new Error("Invalid Credentials");
       const body = {
         name: "Unit Test",
         number: time,
@@ -117,7 +106,7 @@ describe("Accounts MS Unit Test Suite", function() {
   },"Create Account Without Parent-uuid"));
 
   it("Create Account", mochaAsync(async () => {
-    if (!creds.isValid) throw new Error("Invalid Credentials");
+    if (!process.env.isValid) throw new Error("Invalid Credentials");
     const body = {
       name: "Unit Test",
       number: ++time,
@@ -157,7 +146,7 @@ describe("Accounts MS Unit Test Suite", function() {
   },"Create Account"));
 
   it("Get Account Default User Groups", async () => {
-    if (!creds.isValid) throw new Error("Invalid Credentials");
+    if (!process.env.isValid) throw new Error("Invalid Credentials");
     
     trace = objectMerge({}, trace, Util.generateNewMetaData(trace));
     const response = await s2sMS.Auth.getAccountDefaultGroups(
@@ -177,7 +166,7 @@ describe("Accounts MS Unit Test Suite", function() {
   
   //Limit of 1 breaks call CSRVS-330
   it("List Accounts", mochaAsync(async () => {
-    if (!creds.isValid) throw new Error("Invalid Credentials");
+    if (!process.env.isValid) throw new Error("Invalid Credentials");
     trace = objectMerge({}, trace, Util.generateNewMetaData(trace));
     const response = await s2sMS.Accounts
       .listAccounts(
@@ -198,7 +187,7 @@ describe("Accounts MS Unit Test Suite", function() {
   },"List Accounts"));
   
   it("Get Account Data and Check Relationships", mochaAsync(async () => {
-    if (!creds.isValid) throw new Error("Invalid Credentials");
+    if (!process.env.isValid) throw new Error("Invalid Credentials");
     //Workaround for CSRVS-181
     trace = objectMerge({}, trace, Util.generateNewMetaData(trace));
     const response = await s2sMS.Accounts.getAccount(accessToken, accountUUID, trace);
@@ -211,7 +200,7 @@ describe("Accounts MS Unit Test Suite", function() {
   },"Get Account Data and Check Relationships"));
   
   it("Modify Account", mochaAsync(async () => {
-    if (!creds.isValid) throw new Error("Invalid Credentials");
+    if (!process.env.isValid) throw new Error("Invalid Credentials");
     //Test Partial Update -- Address
     const body = {
       type: "Reseller",
@@ -254,7 +243,7 @@ describe("Accounts MS Unit Test Suite", function() {
   },"Modify Account"));
   
   it("Get Account Data After Modify", mochaAsync(async () => {
-    if (!creds.isValid) throw new Error("Invalid Credentials");
+    if (!process.env.isValid) throw new Error("Invalid Credentials");
     //Workaround for CSRVS-181
     trace = objectMerge({}, trace, Util.generateNewMetaData(trace));
     const response = await s2sMS.Accounts.getAccount(accessToken, accountUUID, trace);
@@ -267,7 +256,7 @@ describe("Accounts MS Unit Test Suite", function() {
   },"Get Account Data After Modify"));
   
   it("List Account Relationships", mochaAsync(async () => {
-    if (!creds.isValid) throw new Error("Invalid Credentials");
+    if (!process.env.isValid) throw new Error("Invalid Credentials");
     trace = objectMerge({}, trace, Util.generateNewMetaData(trace));
     const response = await s2sMS.Accounts.listAccountRelationships(
       accessToken,
@@ -290,7 +279,7 @@ describe("Accounts MS Unit Test Suite", function() {
   },"List Account Relationships"));
   
   it("Suspend Account", mochaAsync(async () => {
-    if (!creds.isValid) throw new Error("Invalid Credentials");
+    if (!process.env.isValid) throw new Error("Invalid Credentials");
     trace = objectMerge({}, trace, Util.generateNewMetaData(trace));
     const response = await s2sMS.Accounts.suspendAccount(accessToken, accountUUID, trace);
     assert.ok(
@@ -301,7 +290,7 @@ describe("Accounts MS Unit Test Suite", function() {
   },"Suspend Account"));
 
   it("Reinstate Account", mochaAsync(async () => {
-    if (!creds.isValid) throw new Error("Invalid Credentials");
+    if (!process.env.isValid) throw new Error("Invalid Credentials");
     trace = objectMerge({}, trace, Util.generateNewMetaData(trace));
     const response = await s2sMS.Accounts.reinstateAccount(accessToken, accountUUID, trace);
     assert.ok(
@@ -312,7 +301,7 @@ describe("Accounts MS Unit Test Suite", function() {
   },"Reinstate Account"));
 
   it("Delete Account", mochaAsync(async () => {
-    if (!creds.isValid) throw new Error("Invalid Credentials");
+    if (!process.env.isValid) throw new Error("Invalid Credentials");
     trace = objectMerge({}, trace, Util.generateNewMetaData(trace));
     const response = await s2sMS.Accounts.deleteAccount(accessToken, accountUUID, trace);
     assert.ok(
@@ -324,7 +313,7 @@ describe("Accounts MS Unit Test Suite", function() {
 
   // template
   // it("change me", mochaAsync(async () => {
-  //   if (!creds.isValid) throw new Error("Invalid Credentials");
+  //   if (!process.env.isValid) throw new Error("Invalid Credentials");
   //   trace = objectMerge({}, trace, Util.generateNewMetaData(trace));
   //   const response = await somethingAsync();
   //   assert.ok(

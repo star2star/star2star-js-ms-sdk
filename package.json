@@ -6,8 +6,7 @@
   "scripts": {
     "preclean": "npm install --no-save rimraf",
     "clean": "rimraf lib && mkdir lib && rimraf package-lock.json && rimraf node_modules && npm install",
-    "test": "env MS_LOGLEVEL=info mocha --timeout 15000",
-    "debug": "env MS_LOGLEVEL=debug MS_LOGPRETTY=true mocha --timeout 15000 --require @babel/register",
+    "test": "env-cmd mocha --timeout 15000",
     "build": "npm run clean && babel src -d lib && npm prune --production",
     "gitTag": "git tag \"$npm_package_name\"_\"$npm_package_version\" && git push origin \"$npm_package_name\"_\"$npm_package_version\"",
     "postbuild": "cp src/config.json lib/config.json",
@@ -37,6 +36,7 @@
     "@babel/preset-env": "7.15.6",
     "assert": "1.5.0",
     "documentation": "13.2.5",
+    "env-cmd": "10.1.0",
     "eslint": "5.16.0",
     "mocha": "8.4.0"
   },
