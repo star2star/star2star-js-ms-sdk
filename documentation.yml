@@ -123,12 +123,8 @@ toc:
       - validatePasswordToken
   - name: Index
     children:
-      - getApplicationKey
       - getAuthHost
-      - getEnv
       - getMsHost
-      - setApplicationKey
-      - setEnv
       - setMsHost
       - setMsAuthHost
       - setMSVersion    
@@ -262,7 +258,6 @@ toc:
       - updateWorkflowGroup
   - name: Util
     children:
-      - isBrowser
       - aggregate
       - createUUID
       - decrypt
@@ -273,7 +268,6 @@ toc:
       - getAuthHost
       - getVersion
       - getValueFromObjectTree
-      - isBrowser
       - paginate
       - pendingResource
       - replaceStaticValues
