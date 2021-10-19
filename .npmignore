@@ -1,6 +1,6 @@
 .env.json
 .vscode
-bable.config.json
+babel.config.json
 documentation.yml
 creds.sh
 index.html
