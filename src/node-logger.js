@@ -5,12 +5,8 @@ module.exports = class Logger {
   constructor(){
     const { createLogger, format, transports } = require('winston');
     const { combine, timestamp, label, printf } = format;
-    const Util = require("./utilities");
-    console.log("GLOBAL THIS", Util.getGlobalThis());
-    console.log("LOG PRETTY", Util.getGlobalThis().MS_LOGPRETTY);
-    
+    const Util = require("./utilities");    
     const prettyPrint = typeof Util.getGlobalThis().MS_LOGPRETTY !== "undefined" ? Boolean(Util.getGlobalThis().MS_LOGPRETTY) : false;
-    console.log("LOG prettyPrint", Util.getGlobalThis().MS_LOGPRETTY);
 
     const theFormat = printf(({level, message, meta, label, timestamp}) => {
       let loggerID;
@@ -58,11 +54,8 @@ module.exports = class Logger {
       }
     
       if(prettyPrint){
-        console.log("GOT HERE")
         return JSON.stringify(loggedMessageJSON, null, "\t");
       } else {
-        console.log("GOT HERE INSTEAD", prettyPrint)
-
         return JSON.stringify(loggedMessageJSON);
       }
       

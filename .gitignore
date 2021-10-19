@@ -1,5 +1,5 @@
 node_modules
 .vscode
-**/credentials.json
 .env.json
 creds.sh
+lib

@@ -1,4 +1,4 @@
-{
+module.exports = {
   "ms_version": "v1",
   "microservices": {
     "EMAIL": "/email",
@@ -33,4 +33,4 @@
   "resourceRoleDescriptions": {
     "objects": "system role - 01e77463-bf4e-453d-8a89-c145f83d3f54"
   }
-}
+};
