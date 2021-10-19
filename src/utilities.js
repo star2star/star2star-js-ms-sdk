@@ -280,7 +280,7 @@ const addRequestTrace = (request, trace = {}) => {
   } else {
     request.headers["debug"] = false;
   }
- 
+
   return request;
 };
 
@@ -339,7 +339,7 @@ const pendingResource = async (
     const expires = Date.now() + config.pollTimeout;
     while (Date.now() < expires) {
       let response = await request(requestOptions);
-      
+
       if (response.headers.hasOwnProperty("x-status")) {
         switch (response.headers["x-status"]) {
           case "processing":
@@ -380,172 +380,185 @@ const pendingResource = async (
  * @returns {Object} - error object formatted to standard
  */
 const formatError = (error) => {
-  //console.log("formatError() THE ERROR!!!!", error);
-  // defaults ensure we always get a compatbile format back
-  const returnedObject = {
-    code: undefined,
-    message: "unspecified error",
-    trace_id: v4(),
-    details: [],
-  };
+  const retObj = {};
 
-  try {
-    if (error) {
-      //const retObj = {};
-      // request-promise errors, non 2xx or 3xx response
-      if (error.hasOwnProperty("name") && error.name === "StatusCodeError") {
-        // just pass along what we got back from API
-        if (
-          error.hasOwnProperty("response") &&
-          error.response.hasOwnProperty("body")
-        ) {
-          // for external systems that don't follow our standards, try to return something ...
-          if (typeof error.response.body === "string") {
-            try {
-              const parsedBody = JSON.parse(error.response.body);
-              error.response.body = parsedBody;
-            } catch (e) {
-              const body = error.response.body;
-              error.response.body = {
-                message: body,
-              };
-            }
-          }
-          returnedObject.code =
-            error.response.body.hasOwnProperty("code") &&
-            error.response.body.code &&
-            error.response.body.code.toString().length === 3
-              ? error.response.body.code
-              : returnedObject.code;
-          returnedObject.message =
-            error.response.body.hasOwnProperty("message") &&
-            error.response.body.message &&
-            error.response.body.message.length > 0
-              ? error.response.body.message
-              : returnedObject.message;
-          returnedObject.trace_id =
-            error.response.body.hasOwnProperty("trace_id") &&
-            error.response.body.trace_id &&
-            error.response.body.trace_id.length > 0
-              ? error.response.body.trace_id
-              : returnedObject.trace_id;
+  //parse error from request-promise
+  if (typeof error?.name?.StatusCodeError !== "undefined") {
+    // just pass along what we got back from API
+    if (typeof error?.response?.body !== "undefined") {
+      // for external systems that don't follow our standards, try to return something ...
+      if (typeof error.response.body === "string") {
+        try {
+          const parsedBody = JSON.parse(error.response.body);
+          error.response.body = parsedBody;
+        } catch (e) {
+          const body = objectMerge({}, error.response.body);
+          error.response.body = {
+            message: body,
+          };
+        }
+      }
+      
+      retObj.code = typeof error?.response?.body?.code === "number" && error.response.body.code.toString().length === 3
+        ? error.response.body.code
+        : 500;
 
-          // if we have no message add the body to details since this is a non-standard error message
-          if (returnedObject.message === "unspecified error") {
-            returnedObject.details.push(error.response.body);
-          }
-          //make sure details is an array of objects or strings
-          if (
-            error.response.body.hasOwnProperty("details") &&
-            Array.isArray(error.response.body.details)
-          ) {
-            const filteredDetails = returnedObject.details
-              .concat(error.response.body.details)
-              .filter((detail) => {
-                return (
-                  (typeof detail === "object" && detail !== null) ||
-                  typeof detail === "string"
-                );
-              })
-              .map((detail) => {
-                if (typeof detail === "object") {
-                  try {
-                    return JSON.stringify(detail);
-                  } catch (e) {
-                    
-                  }
-                }
-                return detail;
-              });
-            returnedObject.details = filteredDetails;
-          }
-        }
-        // in case we didn't get a body, or the body was missing the code, try to get code from the http response code
-        if (
-          error.hasOwnProperty("statusCode") &&
-          error.statusCode.toString().length === 3
-        ) {
-          // we did not get a code out of the response body
-          if (!returnedObject.code) {
-            returnedObject.code = error.statusCode;
-          } else if (
-            returnedObject.code.toString() !== error.statusCode.toString()
-          ) {
-            // record a mismatch between the http response code and the "code" property returned in the respose body
-            // this seems strage but CPaaS will sometimes bubble back nested responses that are different than the http response code
-            returnedObject.message = `${returnedObject.code} - ${returnedObject.message}`;
-            // make the code property match the actual http response code
-            returnedObject.code = error.statusCode;
-          }
-        }
-        // in case we didn't get a trace_id in the body, it should match the one we sent so use that instead
-        if (
-          error.hasOwnProperty("options") &&
-          error.options.hasOwnProperty("headers") &&
-          error.options.headers.hasOwnProperty("trace") &&
-          error.options.headers.trace.toString().length > 0
-        ) {
-          returnedObject.trace_id = error.options.headers.trace;
-        }
+      retObj.message = typeof error?.response?.body?.message === "string" && error.response.body.message.length > 0
+        ? error.response.body.message
+        : "unspecified error";
 
-        // some problem making request, general JS errors, or already formatted from nested call
-      } else {
-        returnedObject.code =
-          error.hasOwnProperty("code") &&
-          error.code &&
-          error.code.toString().length === 3
-            ? error.code
-            : returnedObject.code;
-        returnedObject.message =
-          error.hasOwnProperty("message") &&
-          error.message &&
-          error.message.toString().length > 0
-            ? error.message
-            : returnedObject.message;
-        returnedObject.trace_id =
-          error.hasOwnProperty("trace_id") &&
-          error.trace_id &&
-          error.trace_id.toString().length > 0
-            ? error.trace_id
-            : returnedObject.trace_id;
-        //make sure details is an array of objects
-        if (error.hasOwnProperty("details") && Array.isArray(error.details)) {
-          const filteredDetails = error.details
-            .filter((detail) => {
-              return (
-                (typeof detail === "object" && detail !== null) ||
-                typeof detail === "string"
-              );
-            })
-            .map((detail) => {
-              if (typeof detail === "object") {
+      retObj.trace_id = typeof error?.response?.body?.trace_id  === "string" && error.response.body.trace_id.length > 0
+        ? error.response.body.trace_id
+        : v4();
+
+      // if we have no message add the body to details since this is a non-standard error message
+      if (retObj.message === "unspecified error") {
+        returnedObject.details.push(error.response.body);
+      }
+      //make sure details is an array of objects or strings
+      if (Array.isArray(error?.response?.body?.details)) {
+        const filteredDetails = returnedObject.details
+          .concat(error.response.body.details)
+          .filter((detail) => {
+            return (
+              (typeof detail === "object" && detail !== null) ||
+              typeof detail === "string"
+            );
+          })
+          .map((detail) => {
+            if (typeof detail === "object") {
+              try {
                 return JSON.stringify(detail);
+              } catch (e) {
+                return "unable to parse detail"
               }
-              return detail;
-            });
-          returnedObject.details = filteredDetails;
+            }
+            return detail;
+          });
+        returnedObject.details = filteredDetails;
+      }
+    }
+    // in case we didn't get a body, or the body was missing the code, try to get code from the http response code
+    if (
+      error.hasOwnProperty("statusCode") &&
+      error.statusCode.toString().length === 3
+    ) {
+      // we did not get a code out of the response body
+      if (!returnedObject.code) {
+        returnedObject.code = error.statusCode;
+      } else if (
+        returnedObject.code.toString() !== error.statusCode.toString()
+      ) {
+        // record a mismatch between the http response code and the "code" property returned in the respose body
+        // this seems strage but CPaaS will sometimes bubble back nested responses that are different than the http response code
+        returnedObject.message = `${returnedObject.code} - ${returnedObject.message}`;
+        // make the code property match the actual http response code
+        returnedObject.code = error.statusCode;
+      }
+    }
+    // in case we didn't get a trace_id in the body, it should match the one we sent so use that instead
+    if (typeof error?.options?.headers?.trace === "string" && error.options.headers.trace.toString().length > 0) {
+      returnedObject.trace_id = error.options.headers.trace;
+    }
+  } else {
+    // code
+    if (typeof error?.code !== "undefined") {
+      try {
+        const code = parseInt(error.code);
+        if (code.toString() !== "NaN" && code.toString().length === 3) {
+          retObj.code = code;
         }
+      } catch (e) {
+        console.warn("formatError unable to parse error code", FormatError(e));
+        retObj.code = 500;
       }
-      //if error is just a string, set it as the message
-      if (typeof error === "string" && error.length > 0) {
-        returnedObject.message = error;
+      // default
+    } else {
+      retObj.code = 500;
+    }
+
+    // message
+    retObj.message =
+      typeof error?.message === "string" && error.message.length > 0
+        ? error.message
+        : "unspecified error";
+
+    // trace
+    retObj.traceId =
+      typeof error?.trace_id === "string" && error.trace_id.length > 0
+        ? error.trace_id
+        : v4();
+
+    //make sure details is an array of strings
+    retObj.details =
+      error.hasOwnProperty("details") && Array.isArray(error.details)
+        ? error.details.reduce((acc, curr) => {
+            if (typeof curr === "object" && curr !== null) {
+              try {
+                return acc.concat(JSON.stringify(curr));
+              } catch (e) {
+                console.warn(
+                  "fetch error formatter unable to parse detail",
+                  FormatError(e)
+                );
+              }
+            } else if (typeof curr === "string" && curr.length > 0) {
+              return acc.concat(curr);
+            }
+          }, [])
+        : [];
+
+    //if error is just a string, set it as the message
+    if (typeof error === "string" && error.length > 0) {
+      retObj.message = error;
+    } else if (
+      typeof error === "object" &&
+      error !== null &&
+      retObj.message === "unspecified error" &&
+      retObj.details.length === 0
+    ) {
+      // error is an object, but does not follow CPaaS format standards
+      // try to add it to the details array
+      try {
+        retObj.details = retObj.details.concat(JSON.stringify(error));
+      } catch (e) {
+        console.warn("formatError unable to parse error json", FormatError(e));
       }
     }
-    // we did not get a code anywhere to use a default internal server error
-    if (!returnedObject.code) {
-      returnedObject.code = 500;
+  }
+
+  return retObj;
+};
+
+const formatFetchError = async (fetchResponse) => {
+  try {
+    const retObj = {
+      code:
+        typeof fetchResponse?.status === "number" ? fetchResponse.status : 500,
+      message: "unspecified error",
+      details: [],
+      trace_id: v4(),
+    };
+
+    // set returned code for now. this may get overwritted if there are details in the body
+    const parseType =
+      fetchResponse?.headers?.get("Content-Type").split(";")[0] === "text/html"
+        ? "text"
+        : "json";
+    const errorBody = await fetchResponse[parseType]();
+
+    if (typeof errorBody === "string") {
+      retObj.message = errorBody;
+      return retObj;
+    } else {
+      if (typeof errorBody.code === "undefined") {
+        errorBody.code = retObj.code;
+      }
+      return formatError(errorBody);
     }
-    return returnedObject;
-  } catch (error) {
-    // something blew up formatting or parsing somewhere. try to handle it....
-    returnedObject.code = 500;
-    returnedObject.message = error.hasOwnProperty("message")
-      ? error.message
-      : "error format failed";
-    returnedObject.details = [
-      { location: "formatError() utilities.js star2star-js-ms-sdk" },
-    ];
-    return returnedObject;
+  } catch (e) {
+    // pass this up the call stack in standard format
+    throw formatError(e);
   }
 };
 
@@ -605,6 +618,7 @@ module.exports = {
   generateNewMetaData,
   pendingResource,
   formatError,
+  formatFetchError,
   encrypt,
-  decrypt
+  decrypt,
 };
