@@ -10,7 +10,7 @@ const before = mocha.before;
 const fs = require("fs");
 const s2sMS = require("../src/index");
 const Util = require("../src/utilities");
-const logger = require("./node-logger").getInstance();
+const logger = require("../src/node-logger").getInstance();
 const { v4 } = require("uuid");
 const objectMerge = require("object-merge");
 const newMeta = Util.generateNewMetaData;
@@ -47,11 +47,7 @@ describe("Workflow", function() {
 
   before(async () => {
     try {
-      // file system uses full path so will do it like this
-      if (fs.existsSync("./test/credentials.json")) {
-        // do not need test folder here
-        creds = require("./credentials.json");
-      }
+      
 
       // For tests, use the dev msHost
       s2sMS.setMsHost(process.env.MS_HOST);

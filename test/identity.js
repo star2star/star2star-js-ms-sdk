@@ -37,7 +37,6 @@ describe("Identity MS Unit Test Suite", function () {
   before(async () => {
     try {
       
-logger.info("ENV!!!!", process.env);
       // For tests, use the dev msHost
       s2sMS.setMsHost(process.env.MS_HOST);
       s2sMS.setMSVersion(process.env.CPAAS_API_VERSION);

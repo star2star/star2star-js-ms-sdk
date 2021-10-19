@@ -12,7 +12,7 @@ const fs = require("fs");
 const { v4 } = require("uuid");
 const s2sMS = require("../src/index");
 const Util = require("../src/utilities");
-const logger = require("./node-logger").getInstance();
+const logger = require("../src/node-logger").getInstance();
 const objectMerge = require("object-merge");
 const newMeta = Util.generateNewMetaData;
 let trace = newMeta();
@@ -31,20 +31,12 @@ const mochaAsync = (func, name) => {
   };
 };
 
-
-
 describe("Scheduler MS Test Suite", function() {
   let accessToken, identityData, event, workflowUUID;
 
   before(async function() {
     try {
       
-      // file system uses full path so will do it like this
-      if (fs.existsSync("./test/credentials.json")) {
-        // do not need test folder here
-        creds = require("./credentials.json");
-      }
-
       // For tests, use the dev msHost
       s2sMS.setMsHost(process.env.MS_HOST);
       s2sMS.setMSVersion(process.env.CPAAS_API_VERSION);

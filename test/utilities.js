@@ -9,8 +9,7 @@ const beforeEach = mocha.beforeEach;
 //test requires
 const s2sMS = require("../src/index");
 const Util = require("../src/utilities");
-var config = require("../src/config.json");
-const creds = require("./credentials.json");
+var config = require("../src/config");
 
 beforeEach(function () {
   s2sMS.setMsHost(process.env.MS_HOST);

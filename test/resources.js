@@ -9,8 +9,7 @@ const before = mocha.before;
 const fs = require("fs");
 const s2sMS = require("../src/index");
 const Util = require("../src/utilities");
-const Logger = require("../src/node-logger");
-const logger = new Logger.default();
+const logger = require("../src/node-logger").getInstance();
 const objectMerge = require("object-merge");
 const newMeta = Util.generateNewMetaData;
 let trace = newMeta();
@@ -29,32 +28,29 @@ const mochaAsync = (func, name) => {
   };
 };
 
-
 describe("Resource CMS Test Suite", function() {
   let accessToken;
 
   before(async () => {
     try {
-      // file system uses full path so will do it like this
-      if (fs.existsSync("./test/credentials.json")) {
-        // do not need test folder here
-        creds = require("./credentials.json");
-      }
-
+      
       // For tests, use the dev msHost
-      s2sMS.setMsHost(creds.MS_HOST);
-      s2sMS.setMSVersion(creds.CPAAS_API_VERSION);
-      s2sMS.setMsAuthHost(creds.AUTH_HOST);
+      s2sMS.setMsHost(process.env.MS_HOST);
+      s2sMS.setMSVersion(process.env.CPAAS_API_VERSION);
+      s2sMS.setMsAuthHost(process.env.AUTH_HOST);
       // get accessToken to use in test cases
       // Return promise so that test cases will not fire until it resolves.
-      const oauthData = await s2sMS.Oauth.getAccessToken(
-        creds.CPAAS_OAUTH_TOKEN,
-        creds.email,
-        creds.password
+    
+      oauthData = await s2sMS.Oauth.getAccessToken(
+        process.env.CPAAS_OAUTH_TOKEN,
+        process.env.EMAIL,
+        process.env.PASSWORD
       );
-      console.log("OSUTH", oauthData);
       accessToken = oauthData.access_token;
-    } catch (error){
+      const idData =  await s2sMS.Identity.getMyIdentityData(accessToken); 
+      identityData = await s2sMS.Identity.getIdentityDetails(accessToken, idData.user_uuid);
+
+    } catch (error) {
       throw error;
     }
   });
