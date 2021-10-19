@@ -9,7 +9,7 @@
     "test": "env-cmd mocha --timeout 15000",
     "build": "npm run clean && npm run doc && babel src -d lib && npm prune --production",
     "gitTag": "git tag \"$npm_package_name\"_\"$npm_package_version\" && git push origin \"$npm_package_name\"_\"$npm_package_version\"",
-    "doc": "documentation build src/index.js -f md -o README.md --config documentation.yml"
+    "doc": "documentation build src/index.js -f htm -o index.html --config documentation.yml"
   },
   "keywords": [
     "micro service",
