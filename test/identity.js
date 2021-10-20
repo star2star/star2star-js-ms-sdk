@@ -22,12 +22,12 @@ const mochaAsync = (func, name) => {
       logger.debug(name, response);
       return response; 
     } catch (error) {
+      logger.debug(name, Util.formatError(error));
       //mocha will log out the error
-      return Promise.reject(error);
+      throw error;
     }
   };
 };
-
 
 
 describe("Identity MS Unit Test Suite", function () {
@@ -36,7 +36,6 @@ describe("Identity MS Unit Test Suite", function () {
 
   before(async () => {
     try {
-      
       // For tests, use the dev msHost
       s2sMS.setMsHost(process.env.MS_HOST);
       s2sMS.setMSVersion(process.env.CPAAS_API_VERSION);
@@ -53,7 +52,7 @@ describe("Identity MS Unit Test Suite", function () {
       const idData = await s2sMS.Identity.getMyIdentityData(accessToken);
       identityData = await s2sMS.Identity.getIdentityDetails(accessToken, idData.user_uuid);
     } catch (error) {
-      return Promise.reject(error);
+       throw error;
     }
   });
 
@@ -109,6 +108,7 @@ describe("Identity MS Unit Test Suite", function () {
     );
     trace = objectMerge({}, trace, Util.generateNewMetaData(trace));
     const response = await s2sMS.Identity.getIdentityDetails(accessToken,testUUID, trace);
+    logger.debug("response", {"debug": true})
     assert.ok(
       response.aliases[0].sms === "5555555556",
       JSON.stringify(response, null, "\t")

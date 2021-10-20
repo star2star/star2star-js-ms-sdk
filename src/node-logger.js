@@ -7,7 +7,6 @@ module.exports = class Logger {
     const { combine, timestamp, label, printf } = format;
     const Util = require("./utilities");    
     const prettyPrint = typeof Util.getGlobalThis().MS_LOGPRETTY !== "undefined" ? Boolean(Util.getGlobalThis().MS_LOGPRETTY) : false;
-
     const theFormat = printf(({level, message, meta, label, timestamp}) => {
       let loggerID;
       let loggerTrace;
@@ -59,27 +58,29 @@ module.exports = class Logger {
         return JSON.stringify(loggedMessageJSON);
       }
       
-    }); 
+    });
+    //RFC5424
+    const LEVELS = { 
+      emerg: 0, 
+      alert: 1, 
+      crit: 2, 
+      error: 3, 
+      warning: 4, 
+      notice: 5, 
+      info: 6, 
+      debug: 7
+    }; 
     this.logger = createLogger({
       format: combine(
         label({ label: 's2sMsSDK' }),
         timestamp(),
         theFormat
       ),
-      //RFC5424
-      levels: { 
-        emerg: 0, 
-        alert: 1, 
-        crit: 2, 
-        error: 3, 
-        warning: 4, 
-        notice: 5, 
-        info: 6, 
-        debug: 7
-      },
+      
+      levels: LEVELS,
       transports: [
         new transports.Console({
-          level: typeof Util.getGlobalThis().MS_LOGLEVEL === "undefined" ? Util.getGlobalThis().MS_LOGLEVEL : "info"
+          level: Object.keys(LEVELS).indexOf(Util.getGlobalThis().MS_LOGLEVEL) !== -1 ? Util.getGlobalThis().MS_LOGLEVEL : "info"
         })
       ]
     });

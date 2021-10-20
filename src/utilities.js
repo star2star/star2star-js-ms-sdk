@@ -6,8 +6,8 @@ const request = require("request-promise");
 const objectMerge = require("object-merge");
 const crypto = require("crypto");
 const { v4 } = require("uuid");
-//const Logger = require("./node-logger");
-//Logger.getInstance().debug("message", object);
+const Logger = require("./node-logger");
+
 /**
  *
  * @description Returns a platform specitic reference to global runtime
@@ -381,9 +381,8 @@ const pendingResource = async (
  */
 const formatError = (error) => {
   const retObj = {};
-
   //parse error from request-promise
-  if (typeof error?.name?.StatusCodeError !== "undefined") {
+  if (error?.constructor?.name === "StatusCodeError") {
     // just pass along what we got back from API
     if (typeof error?.response?.body !== "undefined") {
       // for external systems that don't follow our standards, try to return something ...
@@ -410,55 +409,55 @@ const formatError = (error) => {
       retObj.trace_id = typeof error?.response?.body?.trace_id  === "string" && error.response.body.trace_id.length > 0
         ? error.response.body.trace_id
         : v4();
-
+        
       // if we have no message add the body to details since this is a non-standard error message
       if (retObj.message === "unspecified error") {
-        returnedObject.details.push(error.response.body);
+        const newBody = objectMerge({}, error.response.body);
+        error.response.body = {
+          details: [newBody]
+        }
       }
       //make sure details is an array of objects or strings
       if (Array.isArray(error?.response?.body?.details)) {
-        const filteredDetails = returnedObject.details
-          .concat(error.response.body.details)
-          .filter((detail) => {
-            return (
-              (typeof detail === "object" && detail !== null) ||
-              typeof detail === "string"
-            );
-          })
-          .map((detail) => {
-            if (typeof detail === "object") {
-              try {
-                return JSON.stringify(detail);
-              } catch (e) {
-                return "unable to parse detail"
-              }
+        retObj.details = error.response.body.details.reduce((acc, curr) => {
+          if((typeof curr === "object" && curr !== null)){
+            try {
+              return acc.concat([JSON.stringify(curr)]);
+            } catch (e) {
+              Logger.getInstance().debug("formatError unable to parse error detail", formatError(e));
+              return acc.concat(["unable to parse error detail"]);
             }
-            return detail;
-          });
-        returnedObject.details = filteredDetails;
+          } else if (typeof curr === "string" && curr.length > 0){
+            return acc.concat([curr]);
+          }
+          else {
+            return acc;
+          }
+        },[]);
       }
     }
+    
     // in case we didn't get a body, or the body was missing the code, try to get code from the http response code
     if (
       error.hasOwnProperty("statusCode") &&
       error.statusCode.toString().length === 3
     ) {
       // we did not get a code out of the response body
-      if (!returnedObject.code) {
-        returnedObject.code = error.statusCode;
+      if (!retObj.code) {
+        retObj.code = error.statusCode;
       } else if (
-        returnedObject.code.toString() !== error.statusCode.toString()
+        retObj.code.toString() !== error.statusCode.toString()
       ) {
         // record a mismatch between the http response code and the "code" property returned in the respose body
         // this seems strage but CPaaS will sometimes bubble back nested responses that are different than the http response code
-        returnedObject.message = `${returnedObject.code} - ${returnedObject.message}`;
+        retObj.message = `${retObj.code} - ${retObj.message}`;
         // make the code property match the actual http response code
-        returnedObject.code = error.statusCode;
+        retObj.code = error.statusCode;
       }
     }
     // in case we didn't get a trace_id in the body, it should match the one we sent so use that instead
     if (typeof error?.options?.headers?.trace === "string" && error.options.headers.trace.toString().length > 0) {
-      returnedObject.trace_id = error.options.headers.trace;
+      retObj.trace_id = error.options.headers.trace;
     }
   } else {
     // code
@@ -469,7 +468,7 @@ const formatError = (error) => {
           retObj.code = code;
         }
       } catch (e) {
-        console.warn("formatError unable to parse error code", FormatError(e));
+        Logger.getInstance().debug("formatError unable to parse error code", formatError(e));
         retObj.code = 500;
       }
       // default
@@ -522,7 +521,7 @@ const formatError = (error) => {
       try {
         retObj.details = retObj.details.concat(JSON.stringify(error));
       } catch (e) {
-        console.warn("formatError unable to parse error json", FormatError(e));
+        Logger.getInstance().debug("formatError unable to parse error json", formatError(e));
       }
     }
   }
