@@ -29,7 +29,6 @@ module.exports = {
   "msDelay": 1000,
   "pollInterval": 1000,
   "pollTimeout": 9000,
-  "msDebug": false,
   "resourceRoleDescriptions": {
     "objects": "system role - 01e77463-bf4e-453d-8a89-c145f83d3f54"
   }

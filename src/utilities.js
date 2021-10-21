@@ -263,29 +263,51 @@ const aggregate = async (request, requestOptions, trace = {}) => {
   }
 };
 
-const addRequestTrace = (request, trace = {}) => {
+/**
+ *
+ *
+ * @param {*} requestOptions
+ * @param {*} [trace={}]
+ * @returns
+ */
+const addRequestTrace = (requestOptions, trace = {}) => {
+  console.log("Trace", trace);
+  // don't modify request options if trace is bad
+  if (typeof trace !== "object" || trace === null) {
+    return requestOptions;
+  }
+
   const headerKeys = ["id", "trace", "parent"];
 
   headerKeys.forEach((keyName) => {
-    if (typeof trace === "object" && trace.hasOwnProperty(keyName)) {
-      request.headers[keyName] = trace[keyName];
+    if (typeof trace?.[keyName] === "string") {
+      requestOptions.headers[keyName] = trace[keyName];
     } else {
-      request.headers[keyName] = v4();
+      requestOptions.headers[keyName] = v4();
     }
   });
-  if (typeof trace === "object" && trace.hasOwnProperty("debug")) {
-    request.headers["debug"] = trace["debug"];
-  } else if (config.msDebug) {
-    request.headers["debug"] = true;
+  if (typeof trace?.debug === true) {
+    requestOptions.headers["debug"] = true;
+  } else if (
+    typeof getGlobalThis().DEBUG !== "undefined" &&
+    getGlobalThis().DEBUG.toString().toLowerCase() === "true"
+  ) {
+    requestOptions.headers["debug"] = true;
   } else {
-    request.headers["debug"] = false;
+    requestOptions.headers["debug"] = false;
   }
+  console.log("REQ OPTS", requestOptions);
 
-  return request;
+  return requestOptions;
 };
 
 const generateNewMetaData = (oldMetaData = {}) => {
   let rObject = {};
+
+  if (typeof oldMetaData !== "object" || oldMetaData === null) {
+    oldMetaData = {};
+  }
+
   if (oldMetaData.hasOwnProperty("id")) {
     rObject.parent = oldMetaData.id;
   }
@@ -296,10 +318,13 @@ const generateNewMetaData = (oldMetaData = {}) => {
     rObject.trace = v4();
   }
 
-  if (config.msDebug) {
-    rObject.debug = true;
-  } else if (oldMetaData.hasOwnProperty("debug")) {
+  if (oldMetaData.hasOwnProperty("debug")) {
     rObject.debug = oldMetaData.debug;
+  } else if (
+    typeof getGlobalThis().DEBUG !== "undefined" &&
+    getGlobalThis().DEBUG.toString().toLowerCase() === "true"
+  ) {
+    rObject.debug = true;
   } else {
     rObject.debug = false;
   }
@@ -405,8 +430,8 @@ const formatError = (error) => {
           ? error.response.body.code
           : typeof error?.statusCode === "number" &&
             error.statusCode.toString().length === 3
-            ? error.statusCode
-            : 500;
+          ? error.statusCode
+          : 500;
 
       retObj.message =
         typeof error?.response?.body?.message === "string" &&
@@ -452,7 +477,7 @@ const formatError = (error) => {
     // in case we didn't get a trace_id in the body, it should match the one we sent so use that instead
     if (
       typeof error?.options?.headers?.trace === "string" &&
-      error.options.headers.trace.toString().length > 0
+      error.options.headers.trace.length > 0
     ) {
       retObj.trace_id = error.options.headers.trace;
     }
@@ -613,6 +638,21 @@ const decrypt = (cryptoKey, text) => {
   return decrypted;
 };
 
+// adds "debug" header to all requests if not included in trace
+// does not override trace.debug set to "false" explicitly
+const setMsDebug = (bool = false) => {
+  if (typeof bool === "boolean") {
+    getGlobalThis().DEBUG = bool;
+  }
+};
+
+const getMsDebug = () => {
+  if (typeof getGlobalThis().DEBUG === "boolean") {
+    return getGlobalThis().DEBUG;
+  }
+  return false;
+};
+
 module.exports = {
   getGlobalThis,
   getEndpoint,
@@ -631,4 +671,6 @@ module.exports = {
   formatFetchError,
   encrypt,
   decrypt,
+  setMsDebug,
+  getMsDebug,
 };
