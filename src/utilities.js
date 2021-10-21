@@ -271,13 +271,18 @@ const aggregate = async (request, requestOptions, trace = {}) => {
  * @returns
  */
 const addRequestTrace = (requestOptions, trace = {}) => {
-  console.log("Trace", trace);
-  // don't modify request options if trace is bad
-  if (typeof trace !== "object" || trace === null) {
-    return requestOptions;
+  if (typeof requestOptions !== "object" || requestOptions === null){
+    requestOptions = {}
+  }
+  if(typeof requestOptions.headers === "undefined"){
+    requestOptions.headers = {};
   }
 
-  const headerKeys = ["id", "trace", "parent"];
+  if (typeof trace !== "object" || trace === null){
+    trace = {}
+  }
+
+  const headerKeys = ["x-id", "x-trace", "x-parent"];
 
   headerKeys.forEach((keyName) => {
     if (typeof trace?.[keyName] === "string") {
@@ -286,17 +291,17 @@ const addRequestTrace = (requestOptions, trace = {}) => {
       requestOptions.headers[keyName] = v4();
     }
   });
-  if (typeof trace?.debug === true) {
-    requestOptions.headers["debug"] = true;
+  if (typeof trace?.["x-debug"] === true) {
+    requestOptions.headers["x-debug"] = true;
   } else if (
     typeof getGlobalThis().DEBUG !== "undefined" &&
     getGlobalThis().DEBUG.toString().toLowerCase() === "true"
   ) {
-    requestOptions.headers["debug"] = true;
+    requestOptions.headers["x-debug"] = true;
   } else {
-    requestOptions.headers["debug"] = false;
+    requestOptions.headers["x-debug"] = false;
   }
-  console.log("REQ OPTS", requestOptions);
+  Logger.getInstance().debug(`Microservice Request ${requestOptions.method}: ${requestOptions.uri}`, requestOptions.headers);
 
   return requestOptions;
 };
@@ -308,28 +313,28 @@ const generateNewMetaData = (oldMetaData = {}) => {
     oldMetaData = {};
   }
 
-  if (oldMetaData.hasOwnProperty("id")) {
-    rObject.parent = oldMetaData.id;
+  if (oldMetaData.hasOwnProperty("x-id")) {
+    rObject["x-parent"] = oldMetaData["x-id"];
   }
 
-  if (oldMetaData.hasOwnProperty("trace")) {
-    rObject.trace = oldMetaData.trace;
+  if (oldMetaData.hasOwnProperty("x-trace")) {
+    rObject["x-trace"] = oldMetaData["x-trace"];
   } else {
-    rObject.trace = v4();
+    rObject["x-trace"] = v4();
   }
 
-  if (oldMetaData.hasOwnProperty("debug")) {
-    rObject.debug = oldMetaData.debug;
+  if (oldMetaData.hasOwnProperty("x-debug")) {
+    rObject["x-debug"] = oldMetaData["x-debug"];
   } else if (
     typeof getGlobalThis().DEBUG !== "undefined" &&
     getGlobalThis().DEBUG.toString().toLowerCase() === "true"
   ) {
-    rObject.debug = true;
+    rObject["x-debug"] = true;
   } else {
-    rObject.debug = false;
+    rObject["x-debug"] = false;
   }
 
-  rObject.id = v4();
+  rObject["x-id"] = v4();
 
   return rObject;
 };
