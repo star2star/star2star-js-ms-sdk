@@ -1,9 +1,25 @@
 /* global require module*/
 "use strict";
 
-const request = require("request-promise");
+require("regenerator-runtime/runtime.js");
 
-const util = require("./utilities");
+require("core-js/modules/es.object.to-string.js");
+
+require("core-js/modules/es.promise.js");
+
+require("core-js/modules/web.dom-collections.for-each.js");
+
+require("core-js/modules/es.object.keys.js");
+
+require("core-js/modules/es.array.concat.js");
+
+function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { Promise.resolve(value).then(_next, _throw); } }
+
+function _asyncToGenerator(fn) { return function () { var self = this, args = arguments; return new Promise(function (resolve, reject) { var gen = fn.apply(self, args); function _next(value) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "next", value); } function _throw(err) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "throw", err); } _next(undefined); }); }; }
+
+var request = require("request-promise");
+
+var util = require("./utilities");
 /**
  * @async
  * @description This function will return a list of push notification registrations by user uuid
@@ -14,33 +30,62 @@ const util = require("./utilities");
  */
 
 
-const getUserRegistrations = async function getUserRegistrations() {
-  let accessToken = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : "null accessToken";
-  let userUUID = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : "null userUUID";
-  let trace = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : {};
+var getUserRegistrations = /*#__PURE__*/function () {
+  var _ref = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee() {
+    var accessToken,
+        userUUID,
+        trace,
+        MS,
+        requestOptions,
+        response,
+        _args = arguments;
+    return regeneratorRuntime.wrap(function _callee$(_context) {
+      while (1) {
+        switch (_context.prev = _context.next) {
+          case 0:
+            accessToken = _args.length > 0 && _args[0] !== undefined ? _args[0] : "null accessToken";
+            userUUID = _args.length > 1 && _args[1] !== undefined ? _args[1] : "null userUUID";
+            trace = _args.length > 2 && _args[2] !== undefined ? _args[2] : {};
+            _context.prev = 3;
+            MS = util.getEndpoint("mobile");
+            requestOptions = {
+              method: "GET",
+              uri: "".concat(MS, "/registration"),
+              headers: {
+                "Content-type": "application/json",
+                "Authorization": "Bearer ".concat(accessToken),
+                "x-api-version": "".concat(util.getVersion())
+              },
+              qs: {
+                "user_uuid": userUUID
+              },
+              json: true
+            };
+            util.addRequestTrace(requestOptions, trace);
+            _context.next = 9;
+            return request(requestOptions);
 
-  try {
-    const MS = util.getEndpoint("mobile");
-    const requestOptions = {
-      method: "GET",
-      uri: "".concat(MS, "/registration"),
-      headers: {
-        "Content-type": "application/json",
-        "Authorization": "Bearer ".concat(accessToken),
-        "x-api-version": "".concat(util.getVersion())
-      },
-      qs: {
-        "user_uuid": userUUID
-      },
-      json: true
-    };
-    util.addRequestTrace(requestOptions, trace);
-    const response = await request(requestOptions);
-    return response;
-  } catch (error) {
-    return Promise.reject(util.formatError(error));
-  }
-};
+          case 9:
+            response = _context.sent;
+            return _context.abrupt("return", response);
+
+          case 13:
+            _context.prev = 13;
+            _context.t0 = _context["catch"](3);
+            return _context.abrupt("return", Promise.reject(util.formatError(_context.t0)));
+
+          case 16:
+          case "end":
+            return _context.stop();
+        }
+      }
+    }, _callee, null, [[3, 13]]);
+  }));
+
+  return function getUserRegistrations() {
+    return _ref.apply(this, arguments);
+  };
+}();
 /**
  * @async
  * @description This function will ask the cpaas media service for the list of user's files they have uploaded.
@@ -55,41 +100,74 @@ const getUserRegistrations = async function getUserRegistrations() {
  */
 
 
-const registerPushToken = async function registerPushToken() {
-  let accessToken = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : "null accessToken";
-  let userUUID = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : "no user uuid provided";
-  let deviceID = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : "no device uuid provided";
-  let pushToken = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : "no push token provided";
-  let application = arguments.length > 4 && arguments[4] !== undefined ? arguments[4] : "no application provided";
-  let platform = arguments.length > 5 && arguments[5] !== undefined ? arguments[5] : "no platform provided";
-  let trace = arguments.length > 6 && arguments[6] !== undefined ? arguments[6] : {};
+var registerPushToken = /*#__PURE__*/function () {
+  var _ref2 = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee2() {
+    var accessToken,
+        userUUID,
+        deviceID,
+        pushToken,
+        application,
+        platform,
+        trace,
+        MS,
+        requestOptions,
+        response,
+        _args2 = arguments;
+    return regeneratorRuntime.wrap(function _callee2$(_context2) {
+      while (1) {
+        switch (_context2.prev = _context2.next) {
+          case 0:
+            accessToken = _args2.length > 0 && _args2[0] !== undefined ? _args2[0] : "null accessToken";
+            userUUID = _args2.length > 1 && _args2[1] !== undefined ? _args2[1] : "no user uuid provided";
+            deviceID = _args2.length > 2 && _args2[2] !== undefined ? _args2[2] : "no device uuid provided";
+            pushToken = _args2.length > 3 && _args2[3] !== undefined ? _args2[3] : "no push token provided";
+            application = _args2.length > 4 && _args2[4] !== undefined ? _args2[4] : "no application provided";
+            platform = _args2.length > 5 && _args2[5] !== undefined ? _args2[5] : "no platform provided";
+            trace = _args2.length > 6 && _args2[6] !== undefined ? _args2[6] : {};
+            _context2.prev = 7;
+            MS = util.getEndpoint("mobile");
+            requestOptions = {
+              "method": "POST",
+              "uri": "".concat(MS, "/registration"),
+              "headers": {
+                "Content-type": "application/json",
+                "Authorization": "Bearer ".concat(accessToken),
+                "x-api-version": "".concat(util.getVersion())
+              },
+              "body": {
+                "user_uuid": userUUID,
+                "device_id": deviceID,
+                "push_token": pushToken,
+                "application": application,
+                "platform": platform
+              },
+              "json": true
+            };
+            util.addRequestTrace(requestOptions, trace);
+            _context2.next = 13;
+            return request(requestOptions);
 
-  try {
-    const MS = util.getEndpoint("mobile");
-    const requestOptions = {
-      "method": "POST",
-      "uri": "".concat(MS, "/registration"),
-      "headers": {
-        "Content-type": "application/json",
-        "Authorization": "Bearer ".concat(accessToken),
-        "x-api-version": "".concat(util.getVersion())
-      },
-      "body": {
-        "user_uuid": userUUID,
-        "device_id": deviceID,
-        "push_token": pushToken,
-        "application": application,
-        "platform": platform
-      },
-      "json": true
-    };
-    util.addRequestTrace(requestOptions, trace);
-    const response = await request(requestOptions);
-    return response;
-  } catch (error) {
-    return Promise.reject(util.formatError(error));
-  }
-};
+          case 13:
+            response = _context2.sent;
+            return _context2.abrupt("return", response);
+
+          case 17:
+            _context2.prev = 17;
+            _context2.t0 = _context2["catch"](7);
+            return _context2.abrupt("return", Promise.reject(util.formatError(_context2.t0)));
+
+          case 20:
+          case "end":
+            return _context2.stop();
+        }
+      }
+    }, _callee2, null, [[7, 17]]);
+  }));
+
+  return function registerPushToken() {
+    return _ref2.apply(this, arguments);
+  };
+}();
 /**
  * @async
  * @description This function will send a push notification to a mobile device
@@ -106,52 +184,88 @@ const registerPushToken = async function registerPushToken() {
  */
 
 
-const sendPushNotification = async function sendPushNotification() {
-  let accessToken = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : "null accessToken";
-  let application = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : "no application provided";
-  let userUUID = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : "no user uuid provided";
-  let deviceIDs = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : "no deviceIDs array provided";
-  let title = arguments.length > 4 && arguments[4] !== undefined ? arguments[4] : undefined;
-  let message = arguments.length > 5 && arguments[5] !== undefined ? arguments[5] : undefined;
-  let data = arguments.length > 6 && arguments[6] !== undefined ? arguments[6] : undefined;
-  let platformData = arguments.length > 7 && arguments[7] !== undefined ? arguments[7] : undefined;
-  let trace = arguments.length > 8 && arguments[8] !== undefined ? arguments[8] : {};
+var sendPushNotification = /*#__PURE__*/function () {
+  var _ref3 = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee3() {
+    var accessToken,
+        application,
+        userUUID,
+        deviceIDs,
+        title,
+        message,
+        data,
+        platformData,
+        trace,
+        MS,
+        requestOptions,
+        optionalParams,
+        response,
+        _args3 = arguments;
+    return regeneratorRuntime.wrap(function _callee3$(_context3) {
+      while (1) {
+        switch (_context3.prev = _context3.next) {
+          case 0:
+            accessToken = _args3.length > 0 && _args3[0] !== undefined ? _args3[0] : "null accessToken";
+            application = _args3.length > 1 && _args3[1] !== undefined ? _args3[1] : "no application provided";
+            userUUID = _args3.length > 2 && _args3[2] !== undefined ? _args3[2] : "no user uuid provided";
+            deviceIDs = _args3.length > 3 && _args3[3] !== undefined ? _args3[3] : "no deviceIDs array provided";
+            title = _args3.length > 4 && _args3[4] !== undefined ? _args3[4] : undefined;
+            message = _args3.length > 5 && _args3[5] !== undefined ? _args3[5] : undefined;
+            data = _args3.length > 6 && _args3[6] !== undefined ? _args3[6] : undefined;
+            platformData = _args3.length > 7 && _args3[7] !== undefined ? _args3[7] : undefined;
+            trace = _args3.length > 8 && _args3[8] !== undefined ? _args3[8] : {};
+            _context3.prev = 9;
+            MS = util.getEndpoint("mobile");
+            requestOptions = {
+              "method": "POST",
+              "uri": "".concat(MS, "/notification"),
+              "headers": {
+                "Content-type": "application/json",
+                "Authorization": "Bearer ".concat(accessToken),
+                "x-api-version": "".concat(util.getVersion())
+              },
+              "body": {
+                "application": application,
+                "user_uuid": userUUID,
+                "device_ids": deviceIDs
+              },
+              "json": true
+            };
+            optionalParams = {
+              "title": title,
+              "message": message,
+              "data": data,
+              "platform_specific_data": platformData
+            };
+            Object.keys(optionalParams).forEach(function (param) {
+              if (typeof optionalParams[param] !== "undefined") {
+                requestOptions.body[param] = optionalParams[param];
+              }
+            });
+            util.addRequestTrace(requestOptions, trace);
+            _context3.next = 17;
+            return request(requestOptions);
 
-  try {
-    const MS = util.getEndpoint("mobile");
-    const requestOptions = {
-      "method": "POST",
-      "uri": "".concat(MS, "/notification"),
-      "headers": {
-        "Content-type": "application/json",
-        "Authorization": "Bearer ".concat(accessToken),
-        "x-api-version": "".concat(util.getVersion())
-      },
-      "body": {
-        "application": application,
-        "user_uuid": userUUID,
-        "device_ids": deviceIDs
-      },
-      "json": true
-    };
-    const optionalParams = {
-      "title": title,
-      "message": message,
-      "data": data,
-      "platform_specific_data": platformData
-    };
-    Object.keys(optionalParams).forEach(param => {
-      if (typeof optionalParams[param] !== "undefined") {
-        requestOptions.body[param] = optionalParams[param];
+          case 17:
+            response = _context3.sent;
+            return _context3.abrupt("return", response);
+
+          case 21:
+            _context3.prev = 21;
+            _context3.t0 = _context3["catch"](9);
+            return _context3.abrupt("return", Promise.reject(util.formatError(_context3.t0)));
+
+          case 24:
+          case "end":
+            return _context3.stop();
+        }
       }
-    });
-    util.addRequestTrace(requestOptions, trace);
-    const response = await request(requestOptions);
-    return response;
-  } catch (error) {
-    return Promise.reject(util.formatError(error));
-  }
-};
+    }, _callee3, null, [[9, 21]]);
+  }));
+
+  return function sendPushNotification() {
+    return _ref3.apply(this, arguments);
+  };
+}();
 /**
  * @async
  * @description This function will ask the cpaas media service for the list of user's files they have uploaded.
@@ -161,42 +275,79 @@ const sendPushNotification = async function sendPushNotification() {
  */
 
 
-const unregisterPushToken = async function unregisterPushToken() {
-  let accessToken = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : "null accessToken";
-  let pushToken = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : "no push token provided";
-  let trace = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : {};
+var unregisterPushToken = /*#__PURE__*/function () {
+  var _ref4 = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee4() {
+    var accessToken,
+        pushToken,
+        trace,
+        MS,
+        requestOptions,
+        response,
+        _args4 = arguments;
+    return regeneratorRuntime.wrap(function _callee4$(_context4) {
+      while (1) {
+        switch (_context4.prev = _context4.next) {
+          case 0:
+            accessToken = _args4.length > 0 && _args4[0] !== undefined ? _args4[0] : "null accessToken";
+            pushToken = _args4.length > 1 && _args4[1] !== undefined ? _args4[1] : "no push token provided";
+            trace = _args4.length > 2 && _args4[2] !== undefined ? _args4[2] : {};
+            _context4.prev = 3;
+            MS = util.getEndpoint("mobile");
+            requestOptions = {
+              "method": "DELETE",
+              "uri": "".concat(MS, "/registration/").concat(pushToken),
+              "headers": {
+                "Content-type": "application/json",
+                "Authorization": "Bearer ".concat(accessToken),
+                "x-api-version": "".concat(util.getVersion())
+              },
+              "resolveWithFullResponse": true,
+              "json": true
+            };
+            util.addRequestTrace(requestOptions, trace);
+            _context4.next = 9;
+            return request(requestOptions);
 
-  try {
-    const MS = util.getEndpoint("mobile");
-    const requestOptions = {
-      "method": "DELETE",
-      "uri": "".concat(MS, "/registration/").concat(pushToken),
-      "headers": {
-        "Content-type": "application/json",
-        "Authorization": "Bearer ".concat(accessToken),
-        "x-api-version": "".concat(util.getVersion())
-      },
-      "resolveWithFullResponse": true,
-      "json": true
-    };
-    util.addRequestTrace(requestOptions, trace);
-    const response = await request(requestOptions);
+          case 9:
+            response = _context4.sent;
 
-    if (response.statusCode === 202) {
-      return {
-        status: "ok"
-      };
-    } else {
-      throw util.formatError(response);
-    }
-  } catch (error) {
-    return Promise.reject(util.formatError(error));
-  }
-};
+            if (!(response.statusCode === 202)) {
+              _context4.next = 14;
+              break;
+            }
+
+            return _context4.abrupt("return", {
+              status: "ok"
+            });
+
+          case 14:
+            throw util.formatError(response);
+
+          case 15:
+            _context4.next = 20;
+            break;
+
+          case 17:
+            _context4.prev = 17;
+            _context4.t0 = _context4["catch"](3);
+            return _context4.abrupt("return", Promise.reject(util.formatError(_context4.t0)));
+
+          case 20:
+          case "end":
+            return _context4.stop();
+        }
+      }
+    }, _callee4, null, [[3, 17]]);
+  }));
+
+  return function unregisterPushToken() {
+    return _ref4.apply(this, arguments);
+  };
+}();
 
 module.exports = {
-  getUserRegistrations,
-  registerPushToken,
-  sendPushNotification,
-  unregisterPushToken
+  getUserRegistrations: getUserRegistrations,
+  registerPushToken: registerPushToken,
+  sendPushNotification: sendPushNotification,
+  unregisterPushToken: unregisterPushToken
 };

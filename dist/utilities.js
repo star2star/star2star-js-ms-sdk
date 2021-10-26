@@ -1,19 +1,65 @@
 /* global require process module*/
 "use strict";
 
-const config = require("./config.json");
+require("core-js/modules/es.symbol.js");
 
-const uuidv4 = require("uuid/v4");
+require("core-js/modules/es.symbol.description.js");
 
-const request = require("request-promise");
+require("core-js/modules/es.symbol.iterator.js");
 
-const objectMerge = require("object-merge");
+require("core-js/modules/es.array.iterator.js");
 
-const Logger = require("./node-logger");
+require("core-js/modules/es.string.iterator.js");
 
-const logger = new Logger.default();
+require("core-js/modules/web.dom-collections.iterator.js");
 
-const crypto = require("crypto");
+require("regenerator-runtime/runtime.js");
+
+require("core-js/modules/es.regexp.exec.js");
+
+require("core-js/modules/es.string.replace.js");
+
+require("core-js/modules/es.object.keys.js");
+
+require("core-js/modules/es.string.match.js");
+
+require("core-js/modules/web.dom-collections.for-each.js");
+
+require("core-js/modules/es.array.slice.js");
+
+require("core-js/modules/es.array.filter.js");
+
+require("core-js/modules/es.array.concat.js");
+
+require("core-js/modules/es.object.to-string.js");
+
+require("core-js/modules/es.promise.js");
+
+require("core-js/modules/es.function.name.js");
+
+require("core-js/modules/es.regexp.to-string.js");
+
+require("core-js/modules/es.array.map.js");
+
+function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { Promise.resolve(value).then(_next, _throw); } }
+
+function _asyncToGenerator(fn) { return function () { var self = this, args = arguments; return new Promise(function (resolve, reject) { var gen = fn.apply(self, args); function _next(value) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "next", value); } function _throw(err) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "throw", err); } _next(undefined); }); }; }
+
+function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+
+var config = require("./config.json");
+
+var uuidv4 = require("uuid/v4");
+
+var request = require("request-promise");
+
+var objectMerge = require("object-merge");
+
+var Logger = require("./node-logger");
+
+var logger = new Logger.default();
+
+var crypto = require("crypto");
 /**
  *
  * @description This function will determine microservice endpoint URI.
@@ -22,10 +68,10 @@ const crypto = require("crypto");
  */
 
 
-const getEndpoint = function getEndpoint() {
-  let microservice = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : "NOTHING";
-  const upperMS = microservice.toUpperCase();
-  const env = isBrowser() ? window.s2sJsMsSdk : process.env;
+var getEndpoint = function getEndpoint() {
+  var microservice = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : "NOTHING";
+  var upperMS = microservice.toUpperCase();
+  var env = isBrowser() ? window.s2sJsMsSdk : process.env;
   return config.microservices[upperMS] ? env.MS_HOST + config.microservices[upperMS] : undefined;
 };
 /**
@@ -36,7 +82,7 @@ const getEndpoint = function getEndpoint() {
  */
 
 
-const getAuthHost = () => {
+var getAuthHost = function getAuthHost() {
   return isBrowser() ? window.s2sJsMsSdk.AUTH_HOST : process.env.AUTH_HOST;
 };
 /**
@@ -46,8 +92,8 @@ const getAuthHost = () => {
  */
 
 
-const getVersion = () => {
-  const env = isBrowser() ? window.s2sJsMsSdk : process.env;
+var getVersion = function getVersion() {
+  var env = isBrowser() ? window.s2sJsMsSdk : process.env;
   return env.MS_VERSION ? env.MS_VERSION : config.ms_version;
 };
 /**
@@ -58,11 +104,11 @@ const getVersion = () => {
  */
 
 
-const replaceStaticValues = matchString => {
-  const TDATE = new Date();
-  const MONTH = "" + (TDATE.getMonth() + 1);
-  const MYDAY = "" + TDATE.getDate();
-  const aValues = {
+var replaceStaticValues = function replaceStaticValues(matchString) {
+  var TDATE = new Date();
+  var MONTH = "" + (TDATE.getMonth() + 1);
+  var MYDAY = "" + TDATE.getDate();
+  var aValues = {
     datetime: TDATE,
     YYYY: TDATE.getFullYear(),
     MM: ("0" + MONTH).substring(MONTH.length + 1 - 2),
@@ -80,26 +126,26 @@ const replaceStaticValues = matchString => {
  */
 
 
-const getValueFromObjectTree = function getValueFromObjectTree() {
-  let matchString = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : "";
-  let objectTree = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
-  const mString = matchString.replace(/%/g, "");
-  const sValue = replaceStaticValues(mString);
+var getValueFromObjectTree = function getValueFromObjectTree() {
+  var matchString = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : "";
+  var objectTree = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
+  var mString = matchString.replace(/%/g, "");
+  var sValue = replaceStaticValues(mString);
 
   if (sValue) {
     return sValue;
   }
 
-  let xReturn; //console.log('---', mString, matchString, objectTree)
+  var xReturn; //console.log('---', mString, matchString, objectTree)
 
   if (Object.keys(objectTree).indexOf(mString) > -1) {
     //console.log('rrrr', matchString, objectTree[mString])
     xReturn = objectTree[mString];
   } else {
-    xReturn = Object.keys(objectTree).reduce((p, c) => {
+    xReturn = Object.keys(objectTree).reduce(function (p, c) {
       if (p === undefined) {
         //console.log(p)
-        if (typeof objectTree[c] === "object") {
+        if (_typeof(objectTree[c]) === "object") {
           return getValueFromObjectTree(mString, objectTree[c]);
         }
       }
@@ -120,15 +166,15 @@ const getValueFromObjectTree = function getValueFromObjectTree() {
  */
 
 
-const replaceVariables = function replaceVariables() {
-  let inputValue = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : "";
-  let objectTree = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
+var replaceVariables = function replaceVariables() {
+  var inputValue = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : "";
+  var objectTree = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
   // will search for %xxxxx%
-  const myRegex = /(%[\w|\d|.\-*/]+%)/g;
-  let returnString = inputValue;
-  const arrayOfMatches = inputValue.match(myRegex);
-  arrayOfMatches !== null && arrayOfMatches.forEach(theMatch => {
-    const retrievedValue = getValueFromObjectTree(theMatch, objectTree); //console.log('^^^^^^^^', theMatch, retrievedValue)
+  var myRegex = /(%[\w|\d|.\-*/]+%)/g;
+  var returnString = inputValue;
+  var arrayOfMatches = inputValue.match(myRegex);
+  arrayOfMatches !== null && arrayOfMatches.forEach(function (theMatch) {
+    var retrievedValue = getValueFromObjectTree(theMatch, objectTree); //console.log('^^^^^^^^', theMatch, retrievedValue)
 
     returnString = returnString.replace(theMatch, retrievedValue ? retrievedValue : theMatch);
   });
@@ -141,7 +187,7 @@ const replaceVariables = function replaceVariables() {
  */
 
 
-const createUUID = () => {
+var createUUID = function createUUID() {
   return uuidv4();
 };
 /**
@@ -154,14 +200,14 @@ const createUUID = () => {
  */
 
 
-const paginate = function paginate(response) {
-  let offset = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 0;
-  let limit = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : 10;
-  const total = response.items.length;
-  const paginatedResponse = {
+var paginate = function paginate(response) {
+  var offset = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 0;
+  var limit = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : 10;
+  var total = response.items.length;
+  var paginatedResponse = {
     items: response.items.slice(offset, offset + limit)
   };
-  const count = paginatedResponse.items.length;
+  var count = paginatedResponse.items.length;
   paginatedResponse.metadata = {
     total: total,
     offset: offset,
@@ -179,14 +225,14 @@ const paginate = function paginate(response) {
  */
 
 
-const filterResponse = (response, filters) => {
+var filterResponse = function filterResponse(response, filters) {
   //console.log("*****FILTERS*****", filters);
-  Object.keys(filters).forEach(filter => {
-    const filteredResponse = response.items.filter(filterItem => {
-      let found = false;
+  Object.keys(filters).forEach(function (filter) {
+    var filteredResponse = response.items.filter(function (filterItem) {
+      var found = false;
 
-      const doFilter = (obj, filter) => {
-        Object.keys(obj).forEach(prop => {
+      var doFilter = function doFilter(obj, filter) {
+        Object.keys(obj).forEach(function (prop) {
           if (found) return; //not seaching through arrays
 
           if (!Array.isArray(obj[prop])) {
@@ -197,7 +243,7 @@ const filterResponse = (response, filters) => {
               // console.log("FILTERS[FILTER}",filters[filter]);
               found = prop === filter && obj[prop] === filters[filter];
               return;
-            } else if (typeof obj[prop] === "object" && obj[prop] !== null) {
+            } else if (_typeof(obj[prop]) === "object" && obj[prop] !== null) {
               //console.log("************ Filter recursing **************",obj[prop]);
               return doFilter(obj[prop], filter);
             }
@@ -223,50 +269,116 @@ const filterResponse = (response, filters) => {
  */
 
 
-const aggregate = async function aggregate(request, requestOptions) {
-  let trace = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : {};
+var aggregate = /*#__PURE__*/function () {
+  var _ref = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee2(request, requestOptions) {
+    var trace,
+        total,
+        offset,
+        makeRequest,
+        response,
+        _args2 = arguments;
+    return regeneratorRuntime.wrap(function _callee2$(_context2) {
+      while (1) {
+        switch (_context2.prev = _context2.next) {
+          case 0:
+            trace = _args2.length > 2 && _args2[2] !== undefined ? _args2[2] : {};
+            _context2.prev = 1;
+            offset = 0;
 
-  //uncomment and set to less than total expected resources to force aggregation for testing.
-  //requestOptions.qs.limit = 1;
-  try {
-    let total,
-        offset = 0;
+            makeRequest = /*#__PURE__*/function () {
+              var _ref2 = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee(request, requestOptions) {
+                var trace,
+                    nextTrace,
+                    _response,
+                    nextResponse,
+                    items,
+                    _args = arguments;
 
-    const makeRequest = async function makeRequest(request, requestOptions) {
-      let trace = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : {};
+                return regeneratorRuntime.wrap(function _callee$(_context) {
+                  while (1) {
+                    switch (_context.prev = _context.next) {
+                      case 0:
+                        trace = _args.length > 2 && _args[2] !== undefined ? _args[2] : {};
+                        _context.prev = 1;
+                        nextTrace = generateNewMetaData(trace);
+                        addRequestTrace(requestOptions, nextTrace);
+                        _context.next = 6;
+                        return request(requestOptions);
 
-      try {
-        const nextTrace = generateNewMetaData(trace);
-        addRequestTrace(requestOptions, nextTrace);
-        const response = await request(requestOptions);
-        total = response.metadata.total;
-        offset = (response.metadata.hasOwnProperty("offset") ? response.metadata.offset : 0) + response.metadata.count;
+                      case 6:
+                        _response = _context.sent;
+                        total = _response.metadata.total;
+                        offset = (_response.metadata.hasOwnProperty("offset") ? _response.metadata.offset : 0) + _response.metadata.count;
 
-        if (total > offset) {
-          requestOptions.qs.offset = offset;
-          const nextResponse = await makeRequest(request, requestOptions);
-          const items = response.items.concat(nextResponse.items);
-          response.items = items;
-          response.metadata.offset = 0;
-          response.metadata.count = total;
-          response.metadata.limit = total;
-          delete response.links; //the links are invalid now
+                        if (!(total > offset)) {
+                          _context.next = 23;
+                          break;
+                        }
 
-          return response;
-        } else {
-          return response;
+                        requestOptions.qs.offset = offset;
+                        _context.next = 13;
+                        return makeRequest(request, requestOptions);
+
+                      case 13:
+                        nextResponse = _context.sent;
+                        items = _response.items.concat(nextResponse.items);
+                        _response.items = items;
+                        _response.metadata.offset = 0;
+                        _response.metadata.count = total;
+                        _response.metadata.limit = total;
+                        delete _response.links; //the links are invalid now
+
+                        return _context.abrupt("return", _response);
+
+                      case 23:
+                        return _context.abrupt("return", _response);
+
+                      case 24:
+                        _context.next = 29;
+                        break;
+
+                      case 26:
+                        _context.prev = 26;
+                        _context.t0 = _context["catch"](1);
+                        return _context.abrupt("return", Promise.reject(formatError(_context.t0)));
+
+                      case 29:
+                      case "end":
+                        return _context.stop();
+                    }
+                  }
+                }, _callee, null, [[1, 26]]);
+              }));
+
+              return function makeRequest(_x3, _x4) {
+                return _ref2.apply(this, arguments);
+              };
+            }();
+
+            _context2.next = 6;
+            return makeRequest(request, requestOptions, trace);
+
+          case 6:
+            response = _context2.sent;
+            return _context2.abrupt("return", response);
+
+          case 10:
+            _context2.prev = 10;
+            _context2.t0 = _context2["catch"](1);
+            return _context2.abrupt("return", Promise.reject(formatError(_context2.t0)));
+
+          case 13:
+          case "end":
+            return _context2.stop();
         }
-      } catch (error) {
-        return Promise.reject(formatError(error));
       }
-    };
+    }, _callee2, null, [[1, 10]]);
+  }));
 
-    const response = await makeRequest(request, requestOptions, trace);
-    return response;
-  } catch (error) {
-    return Promise.reject(formatError(error));
-  }
-};
+  return function aggregate(_x, _x2) {
+    return _ref.apply(this, arguments);
+  };
+}();
 /**
  * @description Returns true is window is found and sets sdk namespace if needed.
  *
@@ -274,7 +386,7 @@ const aggregate = async function aggregate(request, requestOptions) {
  */
 
 
-const isBrowser = () => {
+var isBrowser = function isBrowser() {
   if (typeof window === "undefined") {
     return false;
   } else {
@@ -286,18 +398,18 @@ const isBrowser = () => {
   }
 };
 
-const addRequestTrace = function addRequestTrace(request) {
-  let trace = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
-  const headerKeys = ["id", "trace", "parent"];
-  headerKeys.forEach(keyName => {
-    if (typeof trace === "object" && trace.hasOwnProperty(keyName)) {
+var addRequestTrace = function addRequestTrace(request) {
+  var trace = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
+  var headerKeys = ["id", "trace", "parent"];
+  headerKeys.forEach(function (keyName) {
+    if (_typeof(trace) === "object" && trace.hasOwnProperty(keyName)) {
       request.headers[keyName] = trace[keyName]; //logger.debug(`Found Trace ${keyName}: ${request.headers[keyName]}`);
     } else {
       request.headers[keyName] = uuidv4(); //logger.debug(`Assigning Trace ${keyName}: ${request.headers[keyName]}`);
     }
   });
 
-  if (typeof trace === "object" && trace.hasOwnProperty("debug")) {
+  if (_typeof(trace) === "object" && trace.hasOwnProperty("debug")) {
     request.headers["debug"] = trace["debug"];
   } else if (config.msDebug) {
     request.headers["debug"] = true;
@@ -309,9 +421,9 @@ const addRequestTrace = function addRequestTrace(request) {
   return request;
 };
 
-const generateNewMetaData = function generateNewMetaData() {
-  let oldMetaData = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
-  let rObject = {};
+var generateNewMetaData = function generateNewMetaData() {
+  var oldMetaData = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
+  var rObject = {};
 
   if (oldMetaData.hasOwnProperty("id")) {
     rObject.parent = oldMetaData.id;
@@ -343,74 +455,132 @@ const generateNewMetaData = function generateNewMetaData() {
  */
 
 
-const pendingResource = async function pendingResource(resourceLoc, requestOptions, trace) {
-  let startingResourceStatus = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : "processing";
-  logger.debug("Pending Resource Location", resourceLoc, requestOptions);
+var pendingResource = /*#__PURE__*/function () {
+  var _ref3 = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee3(resourceLoc, requestOptions, trace) {
+    var startingResourceStatus,
+        nextTrace,
+        expires,
+        response,
+        _args3 = arguments;
+    return regeneratorRuntime.wrap(function _callee3$(_context3) {
+      while (1) {
+        switch (_context3.prev = _context3.next) {
+          case 0:
+            startingResourceStatus = _args3.length > 3 && _args3[3] !== undefined ? _args3[3] : "processing";
+            logger.debug("Pending Resource Location", resourceLoc, requestOptions);
+            _context3.prev = 2;
 
-  try {
-    // if the startingResourceStatus is complete, there is nothing to do since the resource is ready
-    if (startingResourceStatus === "complete") {
-      return {
-        "status": "ok"
-      };
-    } //update our requestOptions for the verification URL
+            if (!(startingResourceStatus === "complete")) {
+              _context3.next = 5;
+              break;
+            }
 
+            return _context3.abrupt("return", {
+              "status": "ok"
+            });
 
-    requestOptions.method = "HEAD";
-    requestOptions.uri = resourceLoc;
-    delete requestOptions.body; //add trace headers
+          case 5:
+            //update our requestOptions for the verification URL
+            requestOptions.method = "HEAD";
+            requestOptions.uri = resourceLoc;
+            delete requestOptions.body; //add trace headers
 
-    const nextTrace = objectMerge({}, generateNewMetaData(trace));
-    addRequestTrace(requestOptions, nextTrace); // starting resource is not complete, poll the verify endpoint
+            nextTrace = objectMerge({}, generateNewMetaData(trace));
+            addRequestTrace(requestOptions, nextTrace); // starting resource is not complete, poll the verify endpoint
 
-    const expires = Date.now() + config.pollTimeout;
+            expires = Date.now() + config.pollTimeout;
 
-    while (Date.now() < expires) {
-      let response = await request(requestOptions);
-      logger.debug("Pending Resource verification HEAD response", response.headers, response.statusCode);
+          case 11:
+            if (!(Date.now() < expires)) {
+              _context3.next = 31;
+              break;
+            }
 
-      if (response.headers.hasOwnProperty("x-status")) {
-        switch (response.headers["x-status"]) {
-          case "processing":
+            _context3.next = 14;
+            return request(requestOptions);
+
+          case 14:
+            response = _context3.sent;
+            logger.debug("Pending Resource verification HEAD response", response.headers, response.statusCode);
+
+            if (!response.headers.hasOwnProperty("x-status")) {
+              _context3.next = 26;
+              break;
+            }
+
+            _context3.t0 = response.headers["x-status"];
+            _context3.next = _context3.t0 === "processing" ? 20 : _context3.t0 === "complete" ? 21 : _context3.t0 === "failure" ? 22 : 23;
             break;
 
-          case "complete":
-            return {
+          case 20:
+            return _context3.abrupt("break", 24);
+
+          case 21:
+            return _context3.abrupt("return", {
               "status": "ok"
+            });
+
+          case 22:
+            throw response;
+
+          case 23:
+            throw response;
+
+          case 24:
+            _context3.next = 27;
+            break;
+
+          case 26:
+            throw "x-status missing from response: ".concat(JSON.stringify(response));
+
+          case 27:
+            _context3.next = 29;
+            return new Promise(function (resolve) {
+              return setTimeout(resolve, config.pollInterval);
+            });
+
+          case 29:
+            _context3.next = 11;
+            break;
+
+          case 31:
+            throw {
+              "code": 408,
+              "message": "request timeout",
+              "details": [{
+                "requestOptions": requestOptions
+              }]
             };
 
-          case "failure":
-            throw response;
+          case 34:
+            _context3.prev = 34;
+            _context3.t1 = _context3["catch"](2);
 
-          default:
-            throw response;
+            if (!(startingResourceStatus === "deleting" && _context3.t1.hasOwnProperty("statusCode") && _context3.t1.statusCode === 404)) {
+              _context3.next = 39;
+              break;
+            }
+
+            logger.debug("Pending Resource Deleted", _context3.t1.message);
+            return _context3.abrupt("return", {
+              "status": "ok"
+            });
+
+          case 39:
+            throw formatError(_context3.t1);
+
+          case 40:
+          case "end":
+            return _context3.stop();
         }
-      } else {
-        throw "x-status missing from response: ".concat(JSON.stringify(response));
       }
+    }, _callee3, null, [[2, 34]]);
+  }));
 
-      await new Promise(resolve => setTimeout(resolve, config.pollInterval));
-    }
-
-    throw {
-      "code": 408,
-      "message": "request timeout",
-      "details": [{
-        "requestOptions": requestOptions
-      }]
-    };
-  } catch (error) {
-    // a fetch on an item we are deleting should return a 404 when complete.
-    if (startingResourceStatus === "deleting" && error.hasOwnProperty("statusCode") && error.statusCode === 404) {
-      logger.debug("Pending Resource Deleted", error.message);
-      return {
-        "status": "ok"
-      };
-    }
-
-    throw formatError(error);
-  }
-};
+  return function pendingResource(_x5, _x6, _x7) {
+    return _ref3.apply(this, arguments);
+  };
+}();
 /**
  * @description This function standardizes error responses to objects containing "code", "message", "trace_id", and "details properties"
  * @param {object} error - standard javascript error object, or request-promise error object
@@ -418,10 +588,10 @@ const pendingResource = async function pendingResource(resourceLoc, requestOptio
  */
 
 
-const formatError = error => {
+var formatError = function formatError(error) {
   //console.log("formatError() THE ERROR!!!!", error);
   // defaults ensure we always get a compatbile format back
-  const returnedObject = {
+  var returnedObject = {
     "code": undefined,
     "message": "unspecified error",
     "trace_id": uuidv4(),
@@ -438,10 +608,10 @@ const formatError = error => {
           // for external systems that don't follow our standards, try to return something ...
           if (typeof error.response.body === "string") {
             try {
-              const parsedBody = JSON.parse(error.response.body);
+              var parsedBody = JSON.parse(error.response.body);
               error.response.body = parsedBody;
             } catch (e) {
-              const body = error.response.body;
+              var body = error.response.body;
               error.response.body = {
                 "message": body
               };
@@ -458,10 +628,10 @@ const formatError = error => {
 
 
           if (error.response.body.hasOwnProperty("details") && Array.isArray(error.response.body.details)) {
-            const filteredDetails = returnedObject.details.concat(error.response.body.details).filter(detail => {
-              return typeof detail === "object" && detail !== null || typeof detail === "string";
-            }).map(detail => {
-              if (typeof detail === "object") {
+            var filteredDetails = returnedObject.details.concat(error.response.body.details).filter(function (detail) {
+              return _typeof(detail) === "object" && detail !== null || typeof detail === "string";
+            }).map(function (detail) {
+              if (_typeof(detail) === "object") {
                 try {
                   return JSON.stringify(detail);
                 } catch (e) {
@@ -500,16 +670,17 @@ const formatError = error => {
         returnedObject.trace_id = error.hasOwnProperty("trace_id") && error.trace_id && error.trace_id.toString().length > 0 ? error.trace_id : returnedObject.trace_id; //make sure details is an array of objects
 
         if (error.hasOwnProperty("details") && Array.isArray(error.details)) {
-          const filteredDetails = error.details.filter(detail => {
-            return typeof detail === "object" && detail !== null || typeof detail === "string";
-          }).map(detail => {
-            if (typeof detail === "object") {
+          var _filteredDetails = error.details.filter(function (detail) {
+            return _typeof(detail) === "object" && detail !== null || typeof detail === "string";
+          }).map(function (detail) {
+            if (_typeof(detail) === "object") {
               return JSON.stringify(detail);
             }
 
             return detail;
           });
-          returnedObject.details = filteredDetails;
+
+          returnedObject.details = _filteredDetails;
         }
       } //if error is just a string, set it as the message
 
@@ -545,16 +716,16 @@ const formatError = error => {
  */
 
 
-const encrypt = (cryptoKey, text) => {
-  const algorithm = "aes-192-cbc"; // Use the async `crypto.scrypt()` instead.
+var encrypt = function encrypt(cryptoKey, text) {
+  var algorithm = "aes-192-cbc"; // Use the async `crypto.scrypt()` instead.
 
-  const key = crypto.scryptSync(cryptoKey, "salt", 24); // Use `crypto.randomBytes` to generate a random iv instead of the static iv
+  var key = crypto.scryptSync(cryptoKey, "salt", 24); // Use `crypto.randomBytes` to generate a random iv instead of the static iv
   // shown here.
 
-  const iv = Buffer.alloc(16, 0); // Initialization vector.
+  var iv = Buffer.alloc(16, 0); // Initialization vector.
 
-  const cipher = crypto.createCipheriv(algorithm, key, iv);
-  let encrypted = cipher.update(text, "utf8", "hex");
+  var cipher = crypto.createCipheriv(algorithm, key, iv);
+  var encrypted = cipher.update(text, "utf8", "hex");
   encrypted += cipher.final("hex");
   return encrypted;
 };
@@ -566,39 +737,39 @@ const encrypt = (cryptoKey, text) => {
  */
 
 
-const decrypt = (cryptoKey, text) => {
-  const algorithm = "aes-192-cbc"; // Use the async `crypto.scrypt()` instead.
+var decrypt = function decrypt(cryptoKey, text) {
+  var algorithm = "aes-192-cbc"; // Use the async `crypto.scrypt()` instead.
 
-  const key = crypto.scryptSync(cryptoKey, "salt", 24); // The IV is usually passed along with the ciphertext.
+  var key = crypto.scryptSync(cryptoKey, "salt", 24); // The IV is usually passed along with the ciphertext.
 
-  const iv = Buffer.alloc(16, 0); // Initialization vector.
+  var iv = Buffer.alloc(16, 0); // Initialization vector.
 
-  const decipher = crypto.createDecipheriv(algorithm, key, iv);
-  let decrypted = decipher.update(text, "hex", "utf8");
+  var decipher = crypto.createDecipheriv(algorithm, key, iv);
+  var decrypted = decipher.update(text, "hex", "utf8");
   decrypted += decipher.final("utf8");
   return decrypted;
 };
 
 module.exports = {
-  getEndpoint,
-  getAuthHost,
-  getVersion,
-  config,
-  replaceVariables,
-  createUUID,
-  aggregate,
+  getEndpoint: getEndpoint,
+  getAuthHost: getAuthHost,
+  getVersion: getVersion,
+  config: config,
+  replaceVariables: replaceVariables,
+  createUUID: createUUID,
+  aggregate: aggregate,
   //TODO Unit test 9/27/18 nh
-  filterResponse,
+  filterResponse: filterResponse,
   //TODO Unit test 9/27/18 nh
-  paginate,
+  paginate: paginate,
   //TODO Unit test 9/27/18 nh
-  isBrowser,
+  isBrowser: isBrowser,
   //TODO Unit test 10/05/18 nh
-  addRequestTrace,
+  addRequestTrace: addRequestTrace,
   //TODO Unit test 10/10/18 nh
-  generateNewMetaData,
-  pendingResource,
-  formatError,
-  encrypt,
-  decrypt
+  generateNewMetaData: generateNewMetaData,
+  pendingResource: pendingResource,
+  formatError: formatError,
+  encrypt: encrypt,
+  decrypt: decrypt
 };

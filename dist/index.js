@@ -1,65 +1,65 @@
 /*global require process module*/
 "use strict";
 
-const Accounts = require("./accounts");
+var Accounts = require("./accounts");
 
-const Lambda = require("./lambda");
+var Lambda = require("./lambda");
 
-const Identity = require("./identity");
+var Identity = require("./identity");
 
-const Messaging = require("./messaging");
+var Messaging = require("./messaging");
 
-const Objects = require("./objects");
+var Objects = require("./objects");
 
-const Util = require("./utilities");
+var Util = require("./utilities");
 
-const Groups = require("./groups");
+var Groups = require("./groups");
 
-const ShortUrls = require("./shorturls");
+var ShortUrls = require("./shorturls");
 
-const Auth = require("./auth");
+var Auth = require("./auth");
 
-const Chat = require("./chat");
+var Chat = require("./chat");
 
-const Contacts = require("./contacts");
+var Contacts = require("./contacts");
 
-const Oauth = require("./oauth");
+var Oauth = require("./oauth");
 
-const Media = require("./media");
+var Media = require("./media");
 
-const Providers = require("./providers");
+var Providers = require("./providers");
 
-const Pubsub = require("./pubsub");
+var Pubsub = require("./pubsub");
 
-const Workflow = require("./workflow");
+var Workflow = require("./workflow");
 
-const Email = require("./email");
+var Email = require("./email");
 
-const ResourceGroups = require("./resourceGroups");
+var ResourceGroups = require("./resourceGroups");
 
-const Scheduler = require("./scheduler");
+var Scheduler = require("./scheduler");
 
-const Metadata = require("./metadata");
+var Metadata = require("./metadata");
 
-const Mobile = require("./mobile");
+var Mobile = require("./mobile");
 
-const Forms = require("./forms");
+var Forms = require("./forms");
 
-const Entitlements = require("./entitlements");
+var Entitlements = require("./entitlements");
 
-const Activity = require("./activity");
+var Activity = require("./activity");
 
-const Resources = require("./resources");
+var Resources = require("./resources");
 
-let cpaasKey;
+var cpaasKey;
 /**
  * 
  * @description This function sets the microservice target host (MS_HOST) variable.
  * @param {string} [msHost="https://cpaas.star2star.com/api"] - valid url for microservice host server
  */
 
-const setMsHost = function setMsHost() {
-  let msHost = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : "https://cpaas.star2star.com/api";
+var setMsHost = function setMsHost() {
+  var msHost = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : "https://cpaas.star2star.com/api";
   Util.isBrowser() ? window.s2sJsMsSdk.MS_HOST = msHost : process.env.MS_HOST = msHost;
 };
 /**
@@ -69,8 +69,8 @@ const setMsHost = function setMsHost() {
  */
 
 
-const setMsAuthHost = function setMsAuthHost() {
-  let authHost = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : "https://auth.star2starglobal.net";
+var setMsAuthHost = function setMsAuthHost() {
+  var authHost = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : "https://auth.star2starglobal.net";
   Util.isBrowser() ? window.s2sJsMsSdk.AUTH_HOST = authHost : process.env.AUTH_HOST = authHost;
 };
 /**
@@ -80,8 +80,8 @@ const setMsAuthHost = function setMsAuthHost() {
  */
 
 
-const setMSVersion = function setMSVersion() {
-  let version = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : "v1";
+var setMSVersion = function setMSVersion() {
+  var version = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : "v1";
   Util.isBrowser() ? window.s2sJsMsSdk.MS_VERSION = version : process.env.MS_VERSION = version;
 };
 /**
@@ -91,7 +91,7 @@ const setMSVersion = function setMSVersion() {
  */
 
 
-const getMsHost = () => {
+var getMsHost = function getMsHost() {
   return Util.isBrowser() ? window.s2sJsMsSdk.MS_HOST : process.env.MS_HOST;
 };
 /**
@@ -101,8 +101,8 @@ const getMsHost = () => {
  */
 
 
-const setApplicationKey = function setApplicationKey() {
-  let key = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : "missing";
+var setApplicationKey = function setApplicationKey() {
+  var key = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : "missing";
   cpaasKey = key;
 };
 /**
@@ -112,7 +112,7 @@ const setApplicationKey = function setApplicationKey() {
  */
 
 
-const getApplicationKey = () => {
+var getApplicationKey = function getApplicationKey() {
   return cpaasKey;
 };
 /**
@@ -122,7 +122,7 @@ const getApplicationKey = () => {
  */
 
 
-const setEnv = env => {
+var setEnv = function setEnv(env) {
   Util.isBrowser() ? window.s2sJsMsSdk.MS_ENV = env : process.env.MS_ENV = env;
 };
 /**
@@ -132,8 +132,8 @@ const setEnv = env => {
  */
 
 
-const getEnv = () => {
-  let client;
+var getEnv = function getEnv() {
+  var client;
   Util.isBrowser() ? client = window.s2sJsMsSdk : client = process.env;
 
   if (!client.hasOwnProperty("MS_ENV")) {
@@ -144,37 +144,37 @@ const getEnv = () => {
 };
 
 module.exports = {
-  Accounts,
-  Lambda,
-  Identity,
-  Messaging,
-  Objects,
-  Util,
-  setMsHost,
-  getMsHost,
-  setMsAuthHost,
-  setApplicationKey,
-  getApplicationKey,
-  setEnv,
-  getEnv,
-  Groups,
-  ShortUrls,
-  Auth,
-  Oauth,
-  Chat,
-  Contacts,
-  Media,
-  Providers,
-  Pubsub,
-  setMSVersion,
-  Workflow,
-  Email,
-  ResourceGroups,
-  Scheduler,
-  Metadata,
-  Mobile,
-  Forms,
-  Entitlements,
-  Activity,
-  Resources
+  Accounts: Accounts,
+  Lambda: Lambda,
+  Identity: Identity,
+  Messaging: Messaging,
+  Objects: Objects,
+  Util: Util,
+  setMsHost: setMsHost,
+  getMsHost: getMsHost,
+  setMsAuthHost: setMsAuthHost,
+  setApplicationKey: setApplicationKey,
+  getApplicationKey: getApplicationKey,
+  setEnv: setEnv,
+  getEnv: getEnv,
+  Groups: Groups,
+  ShortUrls: ShortUrls,
+  Auth: Auth,
+  Oauth: Oauth,
+  Chat: Chat,
+  Contacts: Contacts,
+  Media: Media,
+  Providers: Providers,
+  Pubsub: Pubsub,
+  setMSVersion: setMSVersion,
+  Workflow: Workflow,
+  Email: Email,
+  ResourceGroups: ResourceGroups,
+  Scheduler: Scheduler,
+  Metadata: Metadata,
+  Mobile: Mobile,
+  Forms: Forms,
+  Entitlements: Entitlements,
+  Activity: Activity,
+  Resources: Resources
 };
