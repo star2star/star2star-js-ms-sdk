@@ -8,7 +8,7 @@ const request = require("request-promise");
  * @async
  * @description This function returns CMS resource instance rows
  * @param {string} [accessToken="null accessToken"] - cpaas access token
- * @param {string} [instanceUUID="null uuid"] - CMS instanc uuid
+ * @param {string} [type="null uuid"] - CMS instanc uuid
  * @param {int} [offset=0] - instance rows offset
  * @param {int} [limit=100] - instance rows limit
  * @param {string} [include=undefined] - optional query param "include"
@@ -21,7 +21,7 @@ const request = require("request-promise");
 
 const getResourceInstance = async function getResourceInstance() {
   let accessToken = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : "null accessToken";
-  let instanceUUID = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : "null uuid";
+  let type = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : "null type";
   let offset = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : 0;
   let limit = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : 100;
   let include = arguments.length > 4 && arguments[4] !== undefined ? arguments[4] : undefined;
@@ -30,10 +30,13 @@ const getResourceInstance = async function getResourceInstance() {
   let trace = arguments.length > 7 && arguments[7] !== undefined ? arguments[7] : {};
 
   try {
+    const listResponse = await listResources(accessToken, type, undefined, //not using include here
+    trace);
+    const nextTrace = util.generateNewMetaData(trace);
     const MS = util.getEndpoint("resources");
     const requestOptions = {
       method: "GET",
-      uri: "".concat(MS, "/instance/").concat(instanceUUID, "/"),
+      uri: "".concat(MS, "/instance/").concat(listResponse?.items?.[0]?.uuid, "/"),
       headers: {
         Authorization: "Bearer ".concat(accessToken),
         "Content-type": "application/json",
@@ -60,7 +63,7 @@ const getResourceInstance = async function getResourceInstance() {
       requestOptions.qs["reference_filter"] = referenceFilter;
     }
 
-    util.addRequestTrace(requestOptions, trace);
+    util.addRequestTrace(requestOptions, nextTrace);
     const response = await request(requestOptions);
     return response;
   } catch (error) {
@@ -79,8 +82,9 @@ const getResourceInstance = async function getResourceInstance() {
 
 const listResources = async function listResources() {
   let accessToken = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : "null accessToken";
-  let include = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : undefined;
-  let trace = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : {};
+  let type = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : undefined;
+  let include = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : undefined;
+  let trace = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : {};
 
   try {
     const MS = util.getEndpoint("resources");
@@ -92,13 +96,17 @@ const listResources = async function listResources() {
         "Content-type": "application/json",
         "x-api-version": "".concat(util.getVersion())
       },
+      qs: {},
       json: true
     }; // add include query param if defined
 
-    if (include !== undefined) {
-      requestOptions.qs = {
-        include: include
-      };
+    if (typeof type === "string") {
+      requestOptions.qs.type = type;
+    } // add include query param if defined
+
+
+    if (typeof include === "string") {
+      requestOptions.qs.include = include;
     }
 
     util.addRequestTrace(requestOptions, trace);

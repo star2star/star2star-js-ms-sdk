@@ -7,7 +7,7 @@ const request = require("request-promise");
  * @async
  * @description This function returns CMS resource instance rows
  * @param {string} [accessToken="null accessToken"] - cpaas access token
- * @param {string} [instanceUUID="null uuid"] - CMS instanc uuid
+ * @param {string} [type="null uuid"] - CMS instanc uuid
  * @param {int} [offset=0] - instance rows offset
  * @param {int} [limit=100] - instance rows limit
  * @param {string} [include=undefined] - optional query param "include"
@@ -18,7 +18,7 @@ const request = require("request-promise");
  */
 const getResourceInstance = async (
   accessToken = "null accessToken",
-  instanceUUID = "null uuid",
+  type = "null type",
   offset = 0,
   limit = 100,
   include = undefined,
@@ -27,10 +27,19 @@ const getResourceInstance = async (
   trace = {}
 ) => {
   try {
+    
+    const listResponse = await listResources(
+      accessToken,
+      type,
+      undefined, //not using include here
+      trace
+    );
+
+    const nextTrace = util.generateNewMetaData(trace);
     const MS = util.getEndpoint("resources");
     const requestOptions = {
       method: "GET",
-      uri: `${MS}/instance/${instanceUUID}/`,
+      uri: `${MS}/instance/${listResponse?.items?.[0]?.uuid}/`,
       headers: {
         Authorization: `Bearer ${accessToken}`,
         "Content-type": "application/json",
@@ -58,7 +67,7 @@ const getResourceInstance = async (
       requestOptions.qs["reference_filter"] = referenceFilter;
     }
 
-    util.addRequestTrace(requestOptions, trace);
+    util.addRequestTrace(requestOptions, nextTrace);
     const response = await request(requestOptions);
     return response;
   } catch (error) {
@@ -76,6 +85,7 @@ const getResourceInstance = async (
  */
 const listResources = async (
   accessToken = "null accessToken",
+  type = undefined,
   include = undefined,
   trace = {}
 ) => {
@@ -89,12 +99,18 @@ const listResources = async (
         "Content-type": "application/json",
         "x-api-version": `${util.getVersion()}`,
       },
+      qs: {},
       json: true,
     };
 
     // add include query param if defined
-    if (include !== undefined) {
-      requestOptions.qs = { include: include };
+    if (typeof type === "string") {
+      requestOptions.qs.type = type;
+    }
+
+    // add include query param if defined
+    if (typeof include === "string") {
+      requestOptions.qs.include = include;
     }
 
     util.addRequestTrace(requestOptions, trace);

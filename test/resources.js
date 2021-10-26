@@ -72,6 +72,7 @@ describe("Resource CMS Test Suite", function() {
     trace = objectMerge({}, trace, Util.generateNewMetaData(trace));
     const response = await s2sMS.Resources.listResources(
       accessToken,
+      "cwa_mass_contact",
       undefined, //include
       trace
     );
@@ -86,7 +87,7 @@ describe("Resource CMS Test Suite", function() {
     trace = objectMerge({}, trace, Util.generateNewMetaData(trace));
     const response = await s2sMS.Resources.getResourceInstance(
       accessToken,
-      "Eux6hXwBwSlR5_nlbdJ3",
+      "cwa_mass_contact",
       0, //rows offset
       100, // rows limit
       "rows,references", // include

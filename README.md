@@ -2838,7 +2838,7 @@ This function returns CMS resource instance rows
 #### Parameters
 
 -   `accessToken` **[string][471]** cpaas access token (optional, default `"null accessToken"`)
--   `instanceUUID` **[string][471]** CMS instanc uuid (optional, default `"null uuid"`)
+-   `type` **[string][471]** CMS instanc uuid (optional, default `"null uuid"`)
 -   `offset` **int** instance rows offset (optional, default `0`)
 -   `limit` **int** instance rows limit (optional, default `100`)
 -   `include` **[string][471]** optional query param "include" (optional, default `undefined`)
@@ -2855,6 +2855,7 @@ This function returns CMS resource instance rows
 #### Parameters
 
 -   `accessToken` **[string][471]** cpaas access token (optional, default `"null accessToken"`)
+-   `type`   (optional, default `undefined`)
 -   `include` **[string][471]** optional query param "include" (optional, default `undefined`)
 -   `trace` **[object][472]** optional microservice lifcycle headers (optional, default `{}`)
 
