@@ -282,7 +282,7 @@ const addRequestTrace = (requestOptions, trace = {}) => {
     trace = {}
   }
 
-  const headerKeys = ["x-id", "x-trace", "x-parent"];
+  const headerKeys = ["id", "trace", "parent"];
 
   headerKeys.forEach((keyName) => {
     if (typeof trace?.[keyName] === "string") {
@@ -291,15 +291,15 @@ const addRequestTrace = (requestOptions, trace = {}) => {
       requestOptions.headers[keyName] = v4();
     }
   });
-  if (typeof trace?.["x-debug"] === true) {
-    requestOptions.headers["x-debug"] = true;
+  if (typeof trace?.debug === true) {
+    requestOptions.headers.debug = true;
   } else if (
     typeof getGlobalThis().DEBUG !== "undefined" &&
     getGlobalThis().DEBUG.toString().toLowerCase() === "true"
   ) {
-    requestOptions.headers["x-debug"] = true;
+    requestOptions.headers.debug = true;
   } else {
-    requestOptions.headers["x-debug"] = false;
+    requestOptions.headers.debug = false;
   }
   Logger.getInstance().debug(`Microservice Request ${requestOptions.method}: ${requestOptions.uri}`, requestOptions.headers);
 
@@ -313,28 +313,29 @@ const generateNewMetaData = (oldMetaData = {}) => {
     oldMetaData = {};
   }
 
-  if (oldMetaData.hasOwnProperty("x-id")) {
-    rObject["x-parent"] = oldMetaData["x-id"];
+  if (oldMetaData.hasOwnProperty("id")) {
+    rObject.parent = oldMetaData.id;
   }
 
-  if (oldMetaData.hasOwnProperty("x-trace")) {
-    rObject["x-trace"] = oldMetaData["x-trace"];
+  if (oldMetaData.hasOwnProperty("trace")) {
+    rObject.trace = oldMetaData.trace;
   } else {
-    rObject["x-trace"] = v4();
+    rObject["trace"] = v4();
   }
 
-  if (oldMetaData.hasOwnProperty("x-debug")) {
-    rObject["x-debug"] = oldMetaData["x-debug"];
+  if (oldMetaData.hasOwnProperty("debug")) {
+    rObject.debug = oldMetaData.debug;
   } else if (
+    // env may be string "true" or boolean true
     typeof getGlobalThis().DEBUG !== "undefined" &&
     getGlobalThis().DEBUG.toString().toLowerCase() === "true"
   ) {
-    rObject["x-debug"] = true;
+    rObject.debug = true;
   } else {
-    rObject["x-debug"] = false;
+    rObject.debug = false;
   }
 
-  rObject["x-id"] = v4();
+  rObject.id = v4();
 
   return rObject;
 };
