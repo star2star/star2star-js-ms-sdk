@@ -7,14 +7,14 @@ const request = require("request-promise");
  * @async
  * @description This function returns CMS resource instance rows
  * @param {string} [accessToken="null accessToken"] - cpaas access token
- * @param {string} [type="null uuid"] - CMS instanc uuid
+ * @param {string} [type="null uuid"] - CMS instance uuid
  * @param {int} [offset=0] - instance rows offset
  * @param {int} [limit=100] - instance rows limit
  * @param {string} [include=undefined] - optional query param "include"
  * @param {string} [expand=undefined] - optional query param "expand"
  * @param {string} [referenceFilter=undefined] - optional query paran "reference_filter"
  * @param {object} [trace={}] - optional microservice lifcycle headers
- * @returns {Promise} - promise resolving to identity object
+ * @returns {Promise<object>} - promise resolving to instance object
  */
 const getResourceInstance = async (
   accessToken = "null accessToken",
@@ -75,6 +75,48 @@ const getResourceInstance = async (
   }
 };
 
+ /**
+  *
+  * @description This function returns a CMS resource instance row.
+  * @param {string} [accessToken="null accessToken"]
+  * @param {string} [instance_uuid="null instance_uuid"]
+  * @param {string} [row_id="null row_id"]
+  * @param {string} [include="content"]
+  * @param {object} [trace={}] - optional microservice lifcycle headers
+  * @returns {Promise<object>} - promise resolving to a CMS instance row object
+  * @returns
+  */
+
+ const getResourceInstanceRow = async (
+  accessToken = "null accessToken",
+  instance_uuid = "null instance_uuid",
+  row_id = "null row_id",
+  include = "content",
+  trace = {}
+) => {
+  try {
+    const nextTrace = util.generateNewMetaData(trace);
+    const MS = util.getEndpoint("resources");
+    const requestOptions = {
+      method: "GET",
+      uri: `${MS}/instance/${instance_uuid}/row/${row_id}`,
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+        "Content-type": "application/json",
+        "x-api-version": `${util.getVersion()}`,
+      },
+      qs: {include: include},
+      json: true
+    };
+
+    util.addRequestTrace(requestOptions, nextTrace);
+    const response = await request(requestOptions);
+    return response;
+  } catch (error) {
+    throw util.formatError(error);
+  }
+};
+
 /**
  * @async
  * @description This function returns CMS resource instance rows
@@ -123,5 +165,6 @@ const listResources = async (
 
 module.exports = {
   getResourceInstance,
+  getResourceInstanceRow,
   listResources
 };

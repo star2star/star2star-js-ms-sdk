@@ -22,14 +22,14 @@ var request = require("request-promise");
  * @async
  * @description This function returns CMS resource instance rows
  * @param {string} [accessToken="null accessToken"] - cpaas access token
- * @param {string} [type="null uuid"] - CMS instanc uuid
+ * @param {string} [type="null uuid"] - CMS instance uuid
  * @param {int} [offset=0] - instance rows offset
  * @param {int} [limit=100] - instance rows limit
  * @param {string} [include=undefined] - optional query param "include"
  * @param {string} [expand=undefined] - optional query param "expand"
  * @param {string} [referenceFilter=undefined] - optional query paran "reference_filter"
  * @param {object} [trace={}] - optional microservice lifcycle headers
- * @returns {Promise} - promise resolving to identity object
+ * @returns {Promise<object>} - promise resolving to instance object
  */
 
 
@@ -126,6 +126,81 @@ var getResourceInstance = /*#__PURE__*/function () {
   };
 }();
 /**
+ *
+ * @description This function returns a CMS resource instance row.
+ * @param {string} [accessToken="null accessToken"]
+ * @param {string} [instance_uuid="null instance_uuid"]
+ * @param {string} [row_id="null row_id"]
+ * @param {string} [include="content"]
+ * @param {object} [trace={}] - optional microservice lifcycle headers
+ * @returns {Promise<object>} - promise resolving to a CMS instance row object
+ * @returns
+ */
+
+
+var getResourceInstanceRow = /*#__PURE__*/function () {
+  var _ref2 = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee2() {
+    var accessToken,
+        instance_uuid,
+        row_id,
+        include,
+        trace,
+        nextTrace,
+        MS,
+        requestOptions,
+        response,
+        _args2 = arguments;
+    return regeneratorRuntime.wrap(function _callee2$(_context2) {
+      while (1) {
+        switch (_context2.prev = _context2.next) {
+          case 0:
+            accessToken = _args2.length > 0 && _args2[0] !== undefined ? _args2[0] : "null accessToken";
+            instance_uuid = _args2.length > 1 && _args2[1] !== undefined ? _args2[1] : "null instance_uuid";
+            row_id = _args2.length > 2 && _args2[2] !== undefined ? _args2[2] : "null row_id";
+            include = _args2.length > 3 && _args2[3] !== undefined ? _args2[3] : "content";
+            trace = _args2.length > 4 && _args2[4] !== undefined ? _args2[4] : {};
+            _context2.prev = 5;
+            nextTrace = util.generateNewMetaData(trace);
+            MS = util.getEndpoint("resources");
+            requestOptions = {
+              method: "GET",
+              uri: "".concat(MS, "/instance/").concat(instance_uuid, "/row/").concat(row_id),
+              headers: {
+                Authorization: "Bearer ".concat(accessToken),
+                "Content-type": "application/json",
+                "x-api-version": "".concat(util.getVersion())
+              },
+              qs: {
+                include: include
+              },
+              json: true
+            };
+            util.addRequestTrace(requestOptions, nextTrace);
+            _context2.next = 12;
+            return request(requestOptions);
+
+          case 12:
+            response = _context2.sent;
+            return _context2.abrupt("return", response);
+
+          case 16:
+            _context2.prev = 16;
+            _context2.t0 = _context2["catch"](5);
+            throw util.formatError(_context2.t0);
+
+          case 19:
+          case "end":
+            return _context2.stop();
+        }
+      }
+    }, _callee2, null, [[5, 16]]);
+  }));
+
+  return function getResourceInstanceRow() {
+    return _ref2.apply(this, arguments);
+  };
+}();
+/**
  * @async
  * @description This function returns CMS resource instance rows
  * @param {string} [accessToken="null accessToken"] - cpaas access token
@@ -136,7 +211,7 @@ var getResourceInstance = /*#__PURE__*/function () {
 
 
 var listResources = /*#__PURE__*/function () {
-  var _ref2 = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee2() {
+  var _ref3 = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee3() {
     var accessToken,
         type,
         include,
@@ -144,16 +219,16 @@ var listResources = /*#__PURE__*/function () {
         MS,
         requestOptions,
         response,
-        _args2 = arguments;
-    return regeneratorRuntime.wrap(function _callee2$(_context2) {
+        _args3 = arguments;
+    return regeneratorRuntime.wrap(function _callee3$(_context3) {
       while (1) {
-        switch (_context2.prev = _context2.next) {
+        switch (_context3.prev = _context3.next) {
           case 0:
-            accessToken = _args2.length > 0 && _args2[0] !== undefined ? _args2[0] : "null accessToken";
-            type = _args2.length > 1 && _args2[1] !== undefined ? _args2[1] : undefined;
-            include = _args2.length > 2 && _args2[2] !== undefined ? _args2[2] : undefined;
-            trace = _args2.length > 3 && _args2[3] !== undefined ? _args2[3] : {};
-            _context2.prev = 4;
+            accessToken = _args3.length > 0 && _args3[0] !== undefined ? _args3[0] : "null accessToken";
+            type = _args3.length > 1 && _args3[1] !== undefined ? _args3[1] : undefined;
+            include = _args3.length > 2 && _args3[2] !== undefined ? _args3[2] : undefined;
+            trace = _args3.length > 3 && _args3[3] !== undefined ? _args3[3] : {};
+            _context3.prev = 4;
             MS = util.getEndpoint("resources");
             requestOptions = {
               method: "GET",
@@ -177,32 +252,33 @@ var listResources = /*#__PURE__*/function () {
             }
 
             util.addRequestTrace(requestOptions, trace);
-            _context2.next = 12;
+            _context3.next = 12;
             return request(requestOptions);
 
           case 12:
-            response = _context2.sent;
-            return _context2.abrupt("return", response);
+            response = _context3.sent;
+            return _context3.abrupt("return", response);
 
           case 16:
-            _context2.prev = 16;
-            _context2.t0 = _context2["catch"](4);
-            throw util.formatError(_context2.t0);
+            _context3.prev = 16;
+            _context3.t0 = _context3["catch"](4);
+            throw util.formatError(_context3.t0);
 
           case 19:
           case "end":
-            return _context2.stop();
+            return _context3.stop();
         }
       }
-    }, _callee2, null, [[4, 16]]);
+    }, _callee3, null, [[4, 16]]);
   }));
 
   return function listResources() {
-    return _ref2.apply(this, arguments);
+    return _ref3.apply(this, arguments);
   };
 }();
 
 module.exports = {
   getResourceInstance: getResourceInstance,
+  getResourceInstanceRow: getResourceInstanceRow,
   listResources: listResources
 };

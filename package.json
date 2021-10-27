@@ -1,6 +1,6 @@
 {
   "name": "star2star-js-ms-sdk",
-  "version": "3.7.0",
+  "version": "3.7.1",
   "description": "Star2Star JavaScript Micro Service SDK",
   "main": "./dist/index.js",
   "scripts": {
@@ -10,7 +10,7 @@
     "debug": "env MS_LOGLEVEL=debug MS_LOGPRETTY=true mocha --timeout 15000",
     "build": "babel src -d dist",
     "postbuild": "cp src/config.json dist/config.json",
-    "doc": "documentation build src/index.js -f md -o README.md --config documentation.yml"
+    "doc": "documentation build src/index.js -f html -o . --config documentation.yml"
   },
   "keywords": [
     "micro service",

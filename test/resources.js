@@ -29,15 +29,6 @@ const mochaAsync = (func, name) => {
   };
 };
 
-let creds = {
-  CPAAS_OAUTH_TOKEN: "SmgwR0J0NUUwZllxZ2h0ZDB4VmI6RnpsNlZ1RlRMOGk3ZlJwb2VabDdHV0YyY3A5dGdEMDI4UFU3bVRPTQ==",
-  CPAAS_API_VERSION: "v1",
-  email: "nharris@star2star.com",
-  password: "8RtCHCyoN9Qy",
-  isValid: false,
-  MS_HOST: "https://cpaas-appdev.star2starglobal.net",
-  AUTH_HOST:"https://auth-appdev.star2starglobal.net"
-};
 
 describe("Resource CMS Test Suite", function() {
   let accessToken;
@@ -94,6 +85,20 @@ describe("Resource CMS Test Suite", function() {
       "references", // expand
       "appdev_james_2e05::9ex4hXwBwSlR5_nllNG-::a71fef3a-6184-4673-beb5-d1e0694fc3d9", //reference_filter
       trace
+    );
+    assert.ok(
+      1 === 1,
+      JSON.stringify(response, null, "\t")
+    );
+    return response;
+  },"Get Resource Instance"));
+
+  it("Get Resource Instance Row", mochaAsync(async () => {
+    trace = objectMerge({}, trace, Util.generateNewMetaData(trace));
+    const response = await s2sMS.Resources.getResourceInstanceRow(
+      accessToken,
+      "nfDtt3wBwSlR5_nlmHoL",
+      "nfDtt3wBwSlR5_nlmHoL/row/appdev_ack_template_849a::eFsCmXwB4LoNFLghuAIk::1a036a2d-b1d3-4886-8c5c-0fcf99695a03"
     );
     assert.ok(
       1 === 1,

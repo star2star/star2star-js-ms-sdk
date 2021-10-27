@@ -216,6 +216,7 @@ toc:
   - name: Resource CMS
     children:
       - getResourceInstance
+      - getResourceInstanceRow
       - listResources
   - name: Resource Groups
     children:
