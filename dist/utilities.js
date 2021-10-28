@@ -467,7 +467,7 @@ var pendingResource = /*#__PURE__*/function () {
         switch (_context3.prev = _context3.next) {
           case 0:
             startingResourceStatus = _args3.length > 3 && _args3[3] !== undefined ? _args3[3] : "processing";
-            logger.debug("Pending Resource Location", resourceLoc, requestOptions);
+            logger.debug("Pending Resource Location", resourceLoc);
             _context3.prev = 2;
 
             if (!(startingResourceStatus === "complete")) {

@@ -319,7 +319,7 @@ const generateNewMetaData = (oldMetaData = {}) => {
  * @returns {Promise} - Promise resolved when verify func is successful.
  */
 const pendingResource = async (resourceLoc, requestOptions, trace, startingResourceStatus = "processing") => {
-  logger.debug("Pending Resource Location", resourceLoc, requestOptions);
+  logger.debug("Pending Resource Location", resourceLoc);
   try {
     // if the startingResourceStatus is complete, there is nothing to do since the resource is ready
     if (startingResourceStatus === "complete") {
