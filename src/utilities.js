@@ -659,6 +659,33 @@ const getMsDebug = () => {
   return false;
 };
 
+const sanitizeObject = (obj) => {
+  const propsToClean = [
+    "_token",
+    "_basic_token",
+    "_client_token", // legacy
+    "_oauth2_app"
+  ];
+  Object.keys(obj).forEach(key => {
+    if(typeof obj[key] === "object" && obj[key] !== null){
+      if(Array.isArray(obj[key])){
+        obj[key].forEach(elem => {
+          if(typeof elem === "object" && elem !== null){
+            elem = sanitizeObject(elem);
+          } else if (typeof obj[key] === "string" && propsToClean.indexOf(key) !== -1){
+            delete obj[key];
+          }
+        });
+      } else {
+        obj[key] = sanitizeObject(obj[key]);
+      }
+    } else if (typeof obj[key] === "string" && propsToClean.indexOf(key) !== -1){
+      delete obj[key];
+    }
+  });
+  return obj;
+}
+
 module.exports = {
   getGlobalThis,
   getEndpoint,
@@ -679,4 +706,5 @@ module.exports = {
   decrypt,
   setMsDebug,
   getMsDebug,
+  sanitizeObject
 };
