@@ -684,7 +684,16 @@ const sanitizeObject = (obj) => {
     }
   });
   return obj;
-}
+};
+
+const getUserUuidFromToken = (token) => {
+  try {
+    return JSON.parse(Buffer.from(token.split(".")[1], "base64").toString())
+      .sub;
+  } catch (error) {
+    throw formatError(error);
+  }
+};
 
 module.exports = {
   getGlobalThis,
@@ -706,5 +715,6 @@ module.exports = {
   decrypt,
   setMsDebug,
   getMsDebug,
-  sanitizeObject
+  sanitizeObject,
+  getUserUuidFromToken
 };
