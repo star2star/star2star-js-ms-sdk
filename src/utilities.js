@@ -757,11 +757,11 @@ const arrayDiff = (oldArray = [], newArray = [], doDedupe = true) => {
     return target; 
   } else if (Array.isArray(target)){
     return target.map(elem => {
-      return this.findAndReplaceString(elem, oldValue, newValue);
+      return findAndReplaceString(elem, oldValue, newValue);
     }); 
   } else if (typeof target === "object"){
     Object.keys(target).forEach(prop => {
-      target[prop] = this.findAndReplaceString(target[prop], oldValue, newValue);
+      target[prop] = findAndReplaceString(target[prop], oldValue, newValue);
     });
     return target
   } else {
