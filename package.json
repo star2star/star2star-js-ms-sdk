@@ -1,6 +1,6 @@
 {
   "name": "star2star-js-ms-sdk",
-  "version": "4.0.16",
+  "version": "4.0.17",
   "description": "Star2Star JavaScript Micro Service SDK",
   "main": "./lib/index.js",
   "scripts": {
@@ -20,9 +20,10 @@
   "author": "Sangoma Integration Studio Team",
   "license": "MIT",
   "dependencies": {
+    "compare-versions": "4.0.1",
     "core-js": "3.17.3",
     "email-validator": "2.0.4",
-    "node-fetch": "2.6.5",
+    "node-fetch": "2.6.6",
     "object-merge": "2.5.1",
     "request": "2.88.2",
     "request-promise": "4.2.6",

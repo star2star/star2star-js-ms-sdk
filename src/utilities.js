@@ -4,6 +4,7 @@
 const config = require("./config");
 const request = require("request-promise");
 const objectMerge = require("object-merge");
+const compareVersions = require("compare-versions");
 const crypto = require("crypto");
 const { v4 } = require("uuid");
 const Logger = require("./node-logger");
@@ -695,6 +696,88 @@ const getUserUuidFromToken = (token) => {
   }
 };
 
+const arrayDiff = (oldArray = [], newArray = [], doDedupe = true) => {
+  const retObj = {
+    "added": [],
+    "removed": [] 
+  };
+  if(Array.isArray(oldArray) && Array.isArray(newArray)){
+    const dedupe = (arr, doDedupe = true) => {
+      if(!doDedupe){
+        return arr;
+      }
+      // using separate primatives here to prevent casting
+      const primatives = {
+        "boolean": [],
+        "number": [],
+        "string": []
+      }
+      return arr.filter(elem => {
+        const type = typeof elem;
+        let doInclude = false;
+        if(typeof primatives?.[type] !== "undefined"){
+          if(primatives[type].indexOf(elem) === -1){
+            primatives[type].push(elem);	
+            doInclude = true;
+          }
+        }
+        return doInclude;
+      });
+    }
+    retObj.added = dedupe(newArray, doDedupe)
+      .filter(elem => {return oldArray.indexOf(elem) === -1});
+    retObj.removed = dedupe(oldArray, doDedupe)
+      .filter(elem => {return newArray.indexOf(elem) === -1});
+  }
+  return retObj;
+};
+
+/**
+	 *
+	 * @desc Function recursively finds a target string and replaces it with a new value
+	 * @static
+	 * @param {object|array|string|number|boolean} target - any data type other than undefined or null
+	 * @param {string} oldValue - the string to be replaced
+	 * @param {string} newValue - the replacing string
+	 * @returns
+	 * @memberof Utilities
+	 */
+ const findAndReplaceString = (target, oldValue, newValue) => {
+  // TODO should this be able to handle other types of primitive for oldValue an newValue?
+  
+  //fail safe. if params invalid, return original
+  if (typeof target === "undefined" || target === null || typeof oldValue !== "string" || typeof newValue !== "string"){
+    return target;
+  } else if (typeof target === "string"){
+    const regexp = new RegExp(`\\b${oldValue}\\b`, 'g');
+     const replacedString = target.replace(regexp, newValue);
+    if(target !== replacedString){
+      return replacedString;
+    }
+    return target; 
+  } else if (Array.isArray(target)){
+    return target.map(elem => {
+      return this.findAndReplaceString(elem, oldValue, newValue);
+    }); 
+  } else if (typeof target === "object"){
+    Object.keys(target).forEach(prop => {
+      target[prop] = this.findAndReplaceString(target[prop], oldValue, newValue);
+    });
+    return target
+  } else {
+    // no match return original target
+    return target;
+  }
+};
+
+const isValidVersionString = (version) => {
+  return compareVersions.validate(version);
+};
+
+const isVersionHigher = (newVersion, oldVersion) => {
+  return compareVersions.compare(newVersion, oldVersion, ">");
+};
+
 module.exports = {
   getGlobalThis,
   getEndpoint,
@@ -716,5 +799,9 @@ module.exports = {
   setMsDebug,
   getMsDebug,
   sanitizeObject,
-  getUserUuidFromToken
+  getUserUuidFromToken,
+  arrayDiff,
+  findAndReplaceString,
+  isValidVersionString,
+  isVersionHigher
 };
