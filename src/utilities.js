@@ -292,7 +292,7 @@ const addRequestTrace = (requestOptions, trace = {}) => {
       requestOptions.headers[keyName] = v4();
     }
   });
-  if (typeof trace?.debug === true) {
+  if (trace.debug === true) {
     requestOptions.headers.debug = true;
   } else if (
     typeof getGlobalThis().DEBUG !== "undefined" &&
@@ -314,17 +314,17 @@ const generateNewMetaData = (oldMetaData = {}) => {
     oldMetaData = {};
   }
 
-  if (oldMetaData.hasOwnProperty("id")) {
+  if (typeof oldMetaData.id === "string") {
     rObject.parent = oldMetaData.id;
   }
 
-  if (oldMetaData.hasOwnProperty("trace")) {
+  if (typeof oldMetaData.trace === "string") {
     rObject.trace = oldMetaData.trace;
   } else {
     rObject["trace"] = v4();
   }
 
-  if (oldMetaData.hasOwnProperty("debug")) {
+  if (typeof oldMetaData.trace !== "undefined") {
     rObject.debug = oldMetaData.debug;
   } else if (
     // env may be string "true" or boolean true
@@ -533,7 +533,7 @@ const formatError = (error) => {
               } catch (e) {
                 console.warn(
                   "fetch error formatter unable to parse detail",
-                  FormatError(e)
+                  formatError(e)
                 );
               }
             } else if (typeof curr === "string" && curr.length > 0) {
