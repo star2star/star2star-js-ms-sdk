@@ -4,6 +4,5 @@ babel.config.json
 documentation.yml
 creds.sh
 index.html
-publish.sh
 test
 src

@@ -140,6 +140,60 @@ const deleteWorkflowTemplate = async (
 
 /**
  * @async
+ * @description This function will start a new workflow baed on the selected template.
+ * @param {string} [accessToken="null accessToken"] - cpaas access token
+ * @param {string} [wfTemplateUUID="null wfTemplateUUID"] - workflow template UUID
+ * @param {object} [body="null body"] - workflow template body
+ * @param {object} [trace = {}] - optional microservice lifecycle trace headers
+ * @returns {Promise}
+ */
+ /**
+  *
+  *
+  * @param {string} [accessToken="null accessToken"] CPaaS access token
+  * @param {string} [wfTemplateUUID="null wfTemplateUUID"] workflow template uuid
+  * @param {string} [workflowVarsPath="null workflowVarsPath"] json dot notation path to workflow vars to return
+  * @param {string} [responseContentType="application/json"] response content type
+  * @param {object} [inpputVars={}] workflow input vars
+  * @param {object} [trace={}] optional microservice lifecycle trace headers
+  * @returns {Promise} promise resolving to data in format of response content type matching workflow vars path
+  */
+ const execWorkflow = async (
+  accessToken,
+  wfTemplateUUID = "null wfTemplateUUID",
+  workflowVarsPath = "",
+  responseContentType = "application/json",
+  inputVars = {},
+  trace = {}
+) => {
+  try {
+    const MS = util.getEndpoint("workflow");
+    const requestOptions = {
+      method: "POST",
+      uri: `${MS}/workflows/${wfTemplateUUID}/instances/exec`,
+      body: {
+        workflow_vars_path: workflowVarsPath,
+        response_content_type: responseContentType,
+        input_vars: inputVars
+      },
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+        "Content-type": "application/json",
+        "x-api-version": `${util.getVersion()}`
+      },
+      resolveWithFullResponse: true,
+      json: true
+    };
+    util.addRequestTrace(requestOptions, trace);
+    const response = await request(requestOptions);
+    return response;
+  } catch (error) {
+    throw util.formatError(error);
+  }
+};
+
+/**
+ * @async
  * @description This function will get a specific workflow instance
  * @param {string} [accessToken="null access token"] - cpaas access token
  * @param {string} [wfTemplateUUID="null wfTemplateUUID"] - workflow template uuid
@@ -903,6 +957,7 @@ module.exports = {
   createWorkflowTemplate,
   cancelWorkflow,
   deleteWorkflowTemplate,
+  execWorkflow,
   getRunningWorkflow,
   getWfInstanceHistory,
   getWfTemplateHistory,

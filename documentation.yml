@@ -239,6 +239,7 @@ toc:
       - createWorkflowTemplate
       - cancelWorkflow
       - deleteWorkflowTemplate
+      - execWorkflow
       - getRunningWorkflow
       - getWfInstanceHistory
       - getWfInstanceWorkflowVars
