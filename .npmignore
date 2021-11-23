@@ -1,0 +1,8 @@
+.env.json
+.vscode
+babel.config.json
+documentation.yml
+creds.sh
+index.html
+test
+src

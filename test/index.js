@@ -7,11 +7,10 @@ const beforeEach=mocha.beforeEach;
 const it = mocha.it;
 //test requires
 const s2sMS = require("../src/index");
-const Config = require("../src/config.json");
-const creds = require("./credentials.json");
+const Config = require("../src/config");
 
 beforeEach(function () {
-  s2sMS.setMsHost(creds.MS_HOST);
+  s2sMS.setMsHost(process.env.MS_HOST);
 });
 
 describe("MS SDK Index", function () {
@@ -47,7 +46,8 @@ describe("MS SDK Index", function () {
       "Metadata",
       "Forms",
       "Entitlements",
-      "Activity"
+      "Activity",
+      "Resources"
     ];
     assert.deepEqual(Object.keys(s2sMS), msKeys);
     done();
@@ -61,8 +61,8 @@ describe("MS SDK Index", function () {
   });
 
   it("set/get msHost production ", function (done) {
-    s2sMS.setMsHost(creds.MS_HOST);
-    assert.equal(s2sMS.getMsHost(), creds.MS_HOST);
+    s2sMS.setMsHost(process.env.MS_HOST);
+    assert.equal(s2sMS.getMsHost(), process.env.MS_HOST);
     done();
   });
  

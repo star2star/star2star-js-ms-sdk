@@ -86,7 +86,6 @@ const getResourceInstance = async (
   * @returns {Promise<object>} - promise resolving to a CMS instance row object
   * @returns
   */
-
  const getResourceInstanceRow = async (
   accessToken = "null accessToken",
   instance_uuid = "null instance_uuid",

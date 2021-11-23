@@ -10,8 +10,7 @@ const after = mocha.after;
 const fs = require("fs");
 const s2sMS = require("../src/index");
 const Util = require("../src/utilities");
-const Logger = require("../src/node-logger");
-const logger = new Logger.default();
+const logger = require("../src/node-logger").getInstance();
 const objectMerge = require("object-merge");
 const newMeta = Util.generateNewMetaData;
 let trace = newMeta();
@@ -30,13 +29,7 @@ const mochaAsync = (func, name) => {
   };
 };
 
-let creds = {
-  CPAAS_OAUTH_TOKEN: "Basic your oauth token here",
-  CPAAS_API_VERSION: "v1",
-  email: "email@email.com",
-  password: "pwd",
-  isValid: false
-};
+
 
 describe("Objects MS Test Suite", function() {
   let accessToken,
@@ -46,22 +39,18 @@ describe("Objects MS Test Suite", function() {
 
   before(async () => {
     try {
-      // file system uses full path so will do it like this
-      if (fs.existsSync("./test/credentials.json")) {
-        // do not need test folder here
-        creds = require("./credentials.json");
-      }
+      
 
       // For tests, use the dev msHost
-      s2sMS.setMsHost(creds.MS_HOST);
-      s2sMS.setMSVersion(creds.CPAAS_API_VERSION);
-      s2sMS.setMsAuthHost(creds.AUTH_HOST);
+      s2sMS.setMsHost(process.env.MS_HOST);
+      s2sMS.setMSVersion(process.env.CPAAS_API_VERSION);
+      s2sMS.setMsAuthHost(process.env.AUTH_HOST);
       // get accessToken to use in test cases
       // Return promise so that test cases will not fire until it resolves.
       const oauthData = await s2sMS.Oauth.getAccessToken(
-        creds.CPAAS_OAUTH_TOKEN,
-        creds.email,
-        creds.password
+        process.env.CPAAS_OAUTH_TOKEN,
+        process.env.EMAIL,
+        process.env.PASSWORD
       );
       accessToken = oauthData.access_token;
       const idData = await s2sMS.Identity.getMyIdentityData(accessToken);
@@ -73,7 +62,7 @@ describe("Objects MS Test Suite", function() {
 
   // template
   // it("change me", mochaAsync(async () => {
-  //   if (!creds.isValid) throw new Error("Invalid Credentials");
+  //   if (!process.env.isValid) throw new Error("Invalid Credentials");
   //   trace = objectMerge({}, trace, Util.generateNewMetaData(trace));
   //   const response = await somethingAsync();
   //   assert.ok(
@@ -84,7 +73,7 @@ describe("Objects MS Test Suite", function() {
   // },"change me"));
 
   it("Create Shared User Object", mochaAsync(async () => {
-    if (!creds.isValid) throw new Error("Invalid Credentials");
+
     const response = await s2sMS.Objects.createUserDataObject(
       identityData.uuid,
       accessToken,
@@ -97,7 +86,7 @@ describe("Objects MS Test Suite", function() {
       identityData.account_uuid, // combined with users creates resource group scoping
       {
         rud: [identityData.uuid],
-        d: [creds.testIdentity] //users read, update, delete permissions
+        d: [process.env.TEST_IDENTITY] //users read, update, delete permissions
       },
       trace
     );
@@ -111,7 +100,7 @@ describe("Objects MS Test Suite", function() {
   },"Create Shared User Object"));
 
   it("List Shared User Objects", mochaAsync(async () => {
-    if (!creds.isValid) throw new Error("Invalid Credentials");
+
     const filters = {
       "type": "unit-test"
     };
@@ -135,7 +124,7 @@ describe("Objects MS Test Suite", function() {
   },"List Shared User Objects"));
 
   it("Update Shared User Object", mochaAsync(async () => {
-    if (!creds.isValid) throw new Error("Invalid Credentials");
+
     trace = objectMerge({}, trace, Util.generateNewMetaData(trace));
     const response = await s2sMS.Objects.updateDataObject(
       accessToken,
@@ -149,7 +138,7 @@ describe("Objects MS Test Suite", function() {
       },
       identityData.account_uuid,
       {
-        rud: [creds.testIdentity],
+        rud: [process.env.TEST_IDENTITY],
         rd: [identityData.uuid]
       },
       trace
@@ -163,7 +152,7 @@ describe("Objects MS Test Suite", function() {
   },"Update User Object"));
 
   it("List Shared User Objects After Update", mochaAsync(async () => {
-    if (!creds.isValid) throw new Error("Invalid Credentials");
+
     const filters = {
       "type": "unit-test"
     };
@@ -188,7 +177,7 @@ describe("Objects MS Test Suite", function() {
   
   // TODO make separate resource groups test? nh 12/19/18
   // it("Get Resource Group users", function(done) {
-  //   if (!creds.isValid) return done();
+  //   if (!process.env.isValid) return done();
   //   s2sMS.Auth.getResourceUsers(
   //     accessToken,
   //     userObjectUUID
@@ -212,7 +201,7 @@ describe("Objects MS Test Suite", function() {
   // });
 
   it("Delete Shared User Object", mochaAsync(async () => {
-    if (!creds.isValid) throw new Error("Invalid Credentials");
+
     trace = objectMerge({}, trace, Util.generateNewMetaData(trace));
     const response = await s2sMS.Objects.deleteDataObject(accessToken, userObjectUUID, trace);
     assert.ok(
@@ -224,7 +213,7 @@ describe("Objects MS Test Suite", function() {
   
 
   it("Create User Object", mochaAsync(async () => {
-    if (!creds.isValid) throw new Error("Invalid Credentials");
+
     const response = await s2sMS.Objects.createUserDataObject(
       identityData.uuid,
       accessToken,
@@ -248,7 +237,7 @@ describe("Objects MS Test Suite", function() {
   },"Create User Object"));
 
   it("Get One User Object", mochaAsync(async () => {
-    if (!creds.isValid) throw new Error("Invalid Credentials");
+
     trace = objectMerge({}, trace, Util.generateNewMetaData(trace));
     const response = await s2sMS.Objects.getDataObject(
       accessToken,
@@ -263,7 +252,7 @@ describe("Objects MS Test Suite", function() {
   },"Get One User Object"));
 
   it("List User Objects", mochaAsync(async () => {
-    if (!creds.isValid) throw new Error("Invalid Credentials");
+
     const filters = {
       "type": "unit-test"
     };
@@ -287,7 +276,7 @@ describe("Objects MS Test Suite", function() {
   },"List User Objects"));
 
   it("Update User Object", mochaAsync(async () => {
-    if (!creds.isValid) throw new Error("Invalid Credentials");
+
     trace = objectMerge({}, trace, Util.generateNewMetaData(trace));
     const response = await s2sMS.Objects.updateDataObject(
       accessToken,
@@ -312,7 +301,7 @@ describe("Objects MS Test Suite", function() {
   },"Update User Object"));
 
   it("List User Objects After Update", mochaAsync(async () => {
-    if (!creds.isValid) throw new Error("Invalid Credentials");
+
     const filters = {
       "type": "unit-test"
     };
@@ -336,7 +325,7 @@ describe("Objects MS Test Suite", function() {
   },"List User Objects After Update"));
 
   it("Get User Object By Type", mochaAsync(async () => {
-    if (!creds.isValid) throw new Error("Invalid Credentials");
+
     trace = objectMerge({}, trace, Util.generateNewMetaData(trace));
     const response = await s2sMS.Objects.getDataObjectByType(
       identityData.uuid,
@@ -355,7 +344,7 @@ describe("Objects MS Test Suite", function() {
   },"Get User Object By Type"));
   
   it("Get User Object By Type And Name", mochaAsync(async () => {
-    if (!creds.isValid) throw new Error("Invalid Credentials");
+
     trace = objectMerge({}, trace, Util.generateNewMetaData(trace));
     await s2sMS.Objects.createUserDataObject(
       identityData.uuid,
@@ -391,7 +380,7 @@ describe("Objects MS Test Suite", function() {
 
   //This test is incomplete until CSRVS-230 is resolved
   it("List Objects with SDK Aggregator, Paginator, and Filter", mochaAsync(async () => {
-    if (!creds.isValid) throw new Error("Invalid Credentials");
+
     const filters = {
       "type": "unit-test",
       "status": "inactive"
@@ -414,7 +403,7 @@ describe("Objects MS Test Suite", function() {
   },"List Objects with SDK Aggregator, Paginator, and Filter"));
 
   it("Delete User Object", mochaAsync(async () => {
-    if (!creds.isValid) throw new Error("Invalid Credentials");
+
     trace = objectMerge({}, trace, Util.generateNewMetaData(trace));
     const response = await s2sMS.Objects.deleteDataObject(accessToken, userObjectUUID, trace);
     assert.ok(
@@ -425,7 +414,7 @@ describe("Objects MS Test Suite", function() {
   },"Delete  User Object"));
   
   it("Create Global Object", mochaAsync(async () => {
-    if (!creds.isValid) throw new Error("Invalid Credentials");
+
     trace = objectMerge({}, trace, Util.generateNewMetaData(trace));
     const response = await s2sMS.Objects.createDataObject(
       accessToken,
@@ -446,7 +435,7 @@ describe("Objects MS Test Suite", function() {
   },"Create Global Object"));
 
   it("Get Global Object", mochaAsync(async () => {
-    if (!creds.isValid) throw new Error("Invalid Credentials");
+
     trace = objectMerge({}, trace, Util.generateNewMetaData(trace));
     const response = await s2sMS.Objects.getDataObject(accessToken, objectUUID, trace);
     assert.ok(
@@ -459,7 +448,7 @@ describe("Objects MS Test Suite", function() {
   },"Get Global Object"));
 
   it("Update Global Object", mochaAsync(async () => {
-    if (!creds.isValid) throw new Error("Invalid Credentials");
+
     trace = objectMerge({}, trace, Util.generateNewMetaData(trace));
     const response = await s2sMS.Objects.updateDataObject(
       accessToken,
@@ -484,7 +473,7 @@ describe("Objects MS Test Suite", function() {
   },"Update Global Object"));
 
   it("Get Global Object After Update", mochaAsync(async () => {
-    if (!creds.isValid) throw new Error("Invalid Credentials");
+
     trace = objectMerge({}, trace, Util.generateNewMetaData(trace));
     const response = await s2sMS.Objects.getDataObject(accessToken, objectUUID, trace);
     assert.ok(
@@ -497,7 +486,7 @@ describe("Objects MS Test Suite", function() {
   },"Get Global Object After Update"));
 
   it("Delete Global Object", mochaAsync(async () => {
-    if (!creds.isValid) throw new Error("Invalid Credentials");
+
     trace = objectMerge({}, trace, Util.generateNewMetaData(trace));
     const response = await s2sMS.Objects.deleteDataObject(accessToken, objectUUID, trace);
     assert.ok(
@@ -534,7 +523,7 @@ describe("Objects MS Test Suite", function() {
 
   // template
   // it("change me", mochaAsync(async () => {
-  //   if (!creds.isValid) throw new Error("Invalid Credentials");
+  //   if (!process.env.isValid) throw new Error("Invalid Credentials");
   //   trace = objectMerge({}, trace, Util.generateNewMetaData(trace));
   //   const response = await somethingAsync();
   //   assert.ok(

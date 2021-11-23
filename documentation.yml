@@ -31,6 +31,7 @@ toc:
       - deletePermissionFromRole
       - deleteRole
       - deleteRoleFromUserGroup
+      - deleteUserGroup
       - getAccountDefaultGroups
       - getApplicationDefaultResourceGroups
       - getApplicationDefaultUserGroups
@@ -123,12 +124,8 @@ toc:
       - validatePasswordToken
   - name: Index
     children:
-      - getApplicationKey
       - getAuthHost
-      - getEnv
       - getMsHost
-      - setApplicationKey
-      - setEnv
       - setMsHost
       - setMsAuthHost
       - setMSVersion    
@@ -242,6 +239,7 @@ toc:
       - createWorkflowTemplate
       - cancelWorkflow
       - deleteWorkflowTemplate
+      - execWorkflow
       - getRunningWorkflow
       - getWfInstanceHistory
       - getWfInstanceWorkflowVars
@@ -263,7 +261,6 @@ toc:
       - updateWorkflowGroup
   - name: Util
     children:
-      - isBrowser
       - aggregate
       - createUUID
       - decrypt
@@ -274,7 +271,6 @@ toc:
       - getAuthHost
       - getVersion
       - getValueFromObjectTree
-      - isBrowser
       - paginate
       - pendingResource
       - replaceStaticValues

@@ -2,8 +2,7 @@
 "use strict";
 const util = require("./utilities");
 const request = require("request-promise");
-const Logger = require("./node-logger");
-const logger = new Logger.default();
+const logger = require("./node-logger").getInstance();
 
 /**
  * @async

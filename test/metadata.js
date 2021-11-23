@@ -10,8 +10,7 @@ const before = mocha.before;
 const fs = require("fs");
 const s2sMS = require("../src/index");
 const Util = require("../src/utilities");
-const Logger = require("../src/node-logger");
-const logger = new Logger.default();
+const logger = require("../src/node-logger").getInstance();
 const objectMerge = require("object-merge");
 const newMeta = Util.generateNewMetaData;
 let trace = newMeta();
@@ -31,13 +30,7 @@ const mochaAsync = (func, name) => {
   };
 };
 
-let creds = {
-  CPAAS_OAUTH_TOKEN: "Basic your oauth token here",
-  CPAAS_API_VERSION: "v1",
-  email: "email@email.com",
-  password: "pwd",
-  isValid: false
-};
+
 
 describe("Media MS Unit Test Suite", function () {
 
@@ -45,23 +38,19 @@ describe("Media MS Unit Test Suite", function () {
 
   before(async () => {
     try {
-      // file system uses full path so will do it like this
-      if (fs.existsSync("./test/credentials.json")) {
-      // do not need test folder here
-        creds = require("./credentials.json");
-      }
+      
 
       // For tests, use the dev msHost
-      s2sMS.setMsHost(creds.MS_HOST);
-      s2sMS.setMSVersion(creds.CPAAS_API_VERSION);
-      s2sMS.setMsAuthHost(creds.AUTH_HOST);
+      s2sMS.setMsHost(process.env.MS_HOST);
+      s2sMS.setMSVersion(process.env.CPAAS_API_VERSION);
+      s2sMS.setMsAuthHost(process.env.AUTH_HOST);
       // get accessToken to use in test cases
       // Return promise so that test cases will not fire until it resolves.
     
       const oauthData = await s2sMS.Oauth.getAccessToken(
-        creds.CPAAS_OAUTH_TOKEN,
-        creds.email,
-        creds.password
+        process.env.CPAAS_OAUTH_TOKEN,
+        process.env.EMAIL,
+        process.env.PASSWORD
       );
       accessToken = oauthData.access_token;
       const idData = await s2sMS.Identity.getMyIdentityData(accessToken);
@@ -72,7 +61,7 @@ describe("Media MS Unit Test Suite", function () {
   });
 
   it("Get Metadata Subsystems", mochaAsync(async () => {
-    if (!creds.isValid) throw new Error("Invalid Credentials");
+    if (!process.env.isValid) throw new Error("Invalid Credentials");
     trace = objectMerge({}, trace, Util.generateNewMetaData(trace));
     const response = await s2sMS.Metadata.getMetadataSubsystems(
       accessToken,
@@ -88,7 +77,7 @@ describe("Media MS Unit Test Suite", function () {
 
   // this will need to be expanded as we increase the number of  services.
   it("Get Metadata for Specific Subsystems", mochaAsync(async () => {
-    if (!creds.isValid) throw new Error("Invalid Credentials");
+    if (!process.env.isValid) throw new Error("Invalid Credentials");
     trace = objectMerge({}, trace, Util.generateNewMetaData(trace));
     const response = await s2sMS.Metadata.getMetadataSubsystems(
       accessToken,
@@ -104,7 +93,7 @@ describe("Media MS Unit Test Suite", function () {
 
   // template
   // it("change me", mochaAsync(async () => {
-  //   if (!creds.isValid) throw new Error("Invalid Credentials");
+  //   if (!process.env.isValid) throw new Error("Invalid Credentials");
   //   trace = objectMerge({}, trace, Util.generateNewMetaData(trace));
   //   const response = await somethingAsync();
   //   assert.ok(

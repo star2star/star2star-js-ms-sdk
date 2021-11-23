@@ -11,8 +11,7 @@ const after = mocha.after;
 const fs = require("fs");
 const s2sMS = require("../src/index");
 const Util = require("../src/utilities");
-const Logger = require("../src/node-logger");
-const logger = new Logger.default();
+const logger = require("../src/node-logger").getInstance();
 const objectMerge = require("object-merge");
 const newMeta = Util.generateNewMetaData;
 let trace = newMeta();
@@ -60,13 +59,7 @@ const mochaAsync = (func, name) => {
   };
 };
 
-let creds = {
-  CPAAS_OAUTH_TOKEN: "Basic your oauth token here",
-  CPAAS_API_VERSION: "v1",
-  email: "email@email.com",
-  password: "pwd",
-  isValid: false
-};
+
 
 describe("Contacts MS Test Suite", function() {
   let accessToken,
@@ -76,22 +69,18 @@ describe("Contacts MS Test Suite", function() {
 
   before(async () => {
     try {
-      // file system uses full path so will do it like this
-      if (fs.existsSync("./test/credentials.json")) {
-        // do not need test folder here
-        creds = require("./credentials.json");
-      }
+      
 
       // For tests, use the dev msHost
-      s2sMS.setMsHost(creds.MS_HOST);
-      s2sMS.setMSVersion(creds.CPAAS_API_VERSION);
-      s2sMS.setMsAuthHost(creds.AUTH_HOST);
+      s2sMS.setMsHost(process.env.MS_HOST);
+      s2sMS.setMSVersion(process.env.CPAAS_API_VERSION);
+      s2sMS.setMsAuthHost(process.env.AUTH_HOST);
       // get accessToken to use in test cases
       // Return promise so that test cases will not fire until it resolves.
       const oauthData = await s2sMS.Oauth.getAccessToken(
-        creds.CPAAS_OAUTH_TOKEN,
-        creds.email,
-        creds.password
+        process.env.CPAAS_OAUTH_TOKEN,
+        process.env.EMAIL,
+        process.env.PASSWORD
       );
       accessToken = oauthData.access_token;
       const idData = await s2sMS.Identity.getMyIdentityData(accessToken);
@@ -103,7 +92,7 @@ describe("Contacts MS Test Suite", function() {
 
   // template
   // it("change me", mochaAsync(async () => {
-  //   if (!creds.isValid) throw new Error("Invalid Credentials");
+  //   if (!process.env.isValid) throw new Error("Invalid Credentials");
   //   trace = objectMerge({}, trace, Util.generateNewMetaData(trace));
   //   const response = await somethingAsync();
   //   assert.ok(
@@ -114,7 +103,7 @@ describe("Contacts MS Test Suite", function() {
   // },"change me"));
 
   it("Create User Contact", mochaAsync(async () => {
-    if (!creds.isValid) throw new Error("Invalid Credentials");
+    if (!process.env.isValid) throw new Error("Invalid Credentials");
     trace = objectMerge({}, trace, Util.generateNewMetaData(trace));
     const response = await s2sMS.Contacts.createUserContact(
       accessToken,
@@ -132,7 +121,7 @@ describe("Contacts MS Test Suite", function() {
   },"Create User Contact"));
 
   it("Export User Contacts", mochaAsync(async () => {
-    if (!creds.isValid) throw new Error("Invalid Credentials");
+    if (!process.env.isValid) throw new Error("Invalid Credentials");
     trace = objectMerge({}, trace, Util.generateNewMetaData(trace));
     const response = await s2sMS.Contacts.exportContacts(
       accessToken,
@@ -147,7 +136,7 @@ describe("Contacts MS Test Suite", function() {
   },"Export User Contact"));
 
   it("List Contacts", mochaAsync(async () => {
-    if (!creds.isValid) throw new Error("Invalid Credentials");
+    if (!process.env.isValid) throw new Error("Invalid Credentials");
     trace = objectMerge({}, trace, Util.generateNewMetaData(trace));
     const newContact = await s2sMS.Contacts.createUserContact(
       accessToken,
@@ -196,7 +185,7 @@ describe("Contacts MS Test Suite", function() {
   },"List Contacts"));
 
   it("Get One Contact", mochaAsync(async () => {
-    if (!creds.isValid) throw new Error("Invalid Credentials");
+    if (!process.env.isValid) throw new Error("Invalid Credentials");
     trace = objectMerge({}, trace, Util.generateNewMetaData(trace));
     const response = await s2sMS.Contacts.getContact(
       accessToken,
@@ -210,7 +199,7 @@ describe("Contacts MS Test Suite", function() {
   },"Get One Contact"));
 
   it("Delete User Contact", mochaAsync(async () => {
-    if (!creds.isValid) throw new Error("Invalid Credentials");
+    if (!process.env.isValid) throw new Error("Invalid Credentials");
     trace = objectMerge({}, trace, Util.generateNewMetaData(trace));
     const response = await s2sMS.Contacts.deleteContact(
       accessToken,

@@ -10,8 +10,7 @@ const before = mocha.before;
 const fs = require("fs");
 const s2sMS = require("../src/index");
 const Util = require("../src/utilities");
-const Logger = require("../src/node-logger");
-const logger = new Logger.default();
+const logger = require("../src/node-logger").getInstance();
 const objectMerge = require("object-merge");
 const newMeta = Util.generateNewMetaData;
 let trace = newMeta();
@@ -30,13 +29,7 @@ const mochaAsync = (func, name) => {
   };
 };
 
-let creds = {
-  CPAAS_OAUTH_TOKEN: "Basic your oauth token here",
-  CPAAS_API_VERSION: "v1",
-  email: "email@email.com",
-  password: "pwd",
-  isValid: false
-};
+
 
 describe("Providers", function() {
   let accessToken,
@@ -45,22 +38,18 @@ describe("Providers", function() {
   
   before(async () => {
     try {
-      // file system uses full path so will do it like this
-      if (fs.existsSync("./test/credentials.json")) {
-        // do not need test folder here
-        creds = require("./credentials.json");
-      }
+      
 
       // For tests, use the dev msHost
-      s2sMS.setMsHost(creds.MS_HOST);
-      s2sMS.setMSVersion(creds.CPAAS_API_VERSION);
-      s2sMS.setMsAuthHost(creds.AUTH_HOST);
+      s2sMS.setMsHost(process.env.MS_HOST);
+      s2sMS.setMSVersion(process.env.CPAAS_API_VERSION);
+      s2sMS.setMsAuthHost(process.env.AUTH_HOST);
       // get accessToken to use in test cases
       // Return promise so that test cases will not fire until it resolves.
       const oauthData = await s2sMS.Oauth.getAccessToken(
-        creds.CPAAS_OAUTH_TOKEN,
-        creds.email,
-        creds.password
+        process.env.CPAAS_OAUTH_TOKEN,
+        process.env.EMAIL,
+        process.env.PASSWORD
       );
       accessToken = oauthData.access_token;
       const idData = await s2sMS.Identity.getMyIdentityData(accessToken);
@@ -71,7 +60,7 @@ describe("Providers", function() {
   });
 
   // it("Authorize Provider", mochaAsync(async () => {
-  //   if (!creds.isValid) throw new Error("Invalid Credentials");
+  //   if (!process.env.isValid) throw new Error("Invalid Credentials");
   //   trace = objectMerge({}, trace, Util.generateNewMetaData(trace));
   //   const response = await s2sMS.Providers.authorizeProvider(
   //     //clientID,
@@ -93,7 +82,7 @@ describe("Providers", function() {
   // },"Authorize Provider"));
 
   // it("Get Provider Token", mochaAsync(async () => {
-  //   if (!creds.isValid) throw new Error("Invalid Credentials");
+  //   if (!process.env.isValid) throw new Error("Invalid Credentials");
   //   trace = objectMerge({}, trace, Util.generateNewMetaData(trace));
   //   const response = await s2sMS.Providers.getProviderToken(
   //     accessToken,
@@ -117,7 +106,7 @@ describe("Providers", function() {
 
 
   it("List all Available Providers", mochaAsync(async () => {
-    if (!creds.isValid) throw new Error("Invalid Credentials");
+    if (!process.env.isValid) throw new Error("Invalid Credentials");
     trace = objectMerge({}, trace, Util.generateNewMetaData(trace));
     const response = await s2sMS.Providers.listAvailableProviders(
       accessToken,
@@ -132,7 +121,7 @@ describe("Providers", function() {
   },"List all Available Providers"));
 
   it("List all User Providers", mochaAsync(async () => {
-    if (!creds.isValid) throw new Error("Invalid Credentials");
+    if (!process.env.isValid) throw new Error("Invalid Credentials");
     trace = objectMerge({}, trace, Util.generateNewMetaData(trace));
     const response = await s2sMS.Providers.listUsersProviders(
       accessToken,
@@ -147,7 +136,7 @@ describe("Providers", function() {
   },"List all User Providers"));
 
   it("List A User's Connections", mochaAsync(async () => {
-    if (!creds.isValid) throw new Error("Invalid Credentials");
+    if (!process.env.isValid) throw new Error("Invalid Credentials");
     trace = objectMerge({}, trace, Util.generateNewMetaData(trace));
     const response = await s2sMS.Providers.listUserProviderConnections(
       accessToken,
@@ -176,7 +165,7 @@ describe("Providers", function() {
   },"List A User's Connections"));
   
   it("Get Token by Connection", mochaAsync(async () => {
-    if (!creds.isValid) throw new Error("Invalid Credentials");
+    if (!process.env.isValid) throw new Error("Invalid Credentials");
     trace = objectMerge({}, trace, Util.generateNewMetaData(trace));
     const response = await s2sMS.Providers.getProviderTokenByConnection(
       accessToken,
@@ -193,7 +182,7 @@ describe("Providers", function() {
   },"Get Token by Connection"));
 
   it("Get Token by Policy", mochaAsync(async () => {
-    if (!creds.isValid) throw new Error("Invalid Credentials");
+    if (!process.env.isValid) throw new Error("Invalid Credentials");
     trace = objectMerge({}, trace, Util.generateNewMetaData(trace));
     const response = await s2sMS.Providers.getProviderToken(
       accessToken,
@@ -214,7 +203,7 @@ describe("Providers", function() {
 
   // template
   // it("change me", mochaAsync(async () => {
-  //   if (!creds.isValid) throw new Error("Invalid Credentials");
+  //   if (!process.env.isValid) throw new Error("Invalid Credentials");
   //   trace = objectMerge({}, trace, Util.generateNewMetaData(trace));
   //   const response = await somethingAsync();
   //   assert.ok(

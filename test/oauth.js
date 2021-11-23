@@ -10,10 +10,9 @@ const before = mocha.before;
 const fs = require("fs");
 const s2sMS = require("../src/index");
 const Util = require("../src/utilities");
-const Logger = require("../src/node-logger");
-const logger = new Logger.default();
+const logger = require("../src/node-logger").getInstance();
 const objectMerge = require("object-merge");
-const uuidv4 = require("uuid/v4");
+const { v4 } = require("uuid");
 const newMeta = Util.generateNewMetaData;
 let trace = newMeta();
 
@@ -32,13 +31,7 @@ const mochaAsync = (func, name) => {
   };
 };
 
-let creds = {
-  CPAAS_OAUTH_TOKEN: "Basic your oauth token here",
-  CPAAS_API_VERSION: "v1",
-  email: "email@email.com",
-  password: "pwd",
-  isValid: false
-};
+
 
 describe("Oauth MS Unit Test Suite", function () {
 
@@ -53,25 +46,21 @@ describe("Oauth MS Unit Test Suite", function () {
 
   before(async () => {
     try {
-      // file system uses full path so will do it like this
-      if (fs.existsSync("./test/credentials.json")) {
-      // do not need test folder here
-        creds = require("./credentials.json");
-      }
+      
 
       // For tests, use the dev msHost
-      s2sMS.setMsHost(creds.MS_HOST);
-      s2sMS.setMSVersion(creds.CPAAS_API_VERSION);
-      s2sMS.setMsAuthHost(creds.AUTH_HOST);
+      s2sMS.setMsHost(process.env.MS_HOST);
+      s2sMS.setMSVersion(process.env.CPAAS_API_VERSION);
+      s2sMS.setMsAuthHost(process.env.AUTH_HOST);
       // get accessToken to use in test cases
       // Return promise so that test cases will not fire until it resolves.
     
       oauthData = await s2sMS.Oauth.getAccessToken(
-        creds.CPAAS_OAUTH_TOKEN,
-        creds.email,
-        creds.password,
+        process.env.CPAAS_OAUTH_TOKEN,
+        process.env.EMAIL,
+        process.env.PASSWORD,
         "default",
-        uuidv4() //x-device-id
+        v4() //x-device-id
       );
       accessToken = oauthData.access_token;
       const idData = await s2sMS.Identity.getMyIdentityData(accessToken);
@@ -82,14 +71,14 @@ describe("Oauth MS Unit Test Suite", function () {
   });
 
   it("Get 2nd Device Token", mochaAsync(async () => {
-    if (!creds.isValid) throw new Error("Invalid Credentials");
+    if (!process.env.isValid) throw new Error("Invalid Credentials");
     trace = objectMerge({}, trace, Util.generateNewMetaData(trace));
     const oauthData2 = await s2sMS.Oauth.getAccessToken(
-      creds.CPAAS_OAUTH_TOKEN,
-      creds.email,
-      creds.password,
+      process.env.CPAAS_OAUTH_TOKEN,
+      process.env.EMAIL,
+      process.env.PASSWORD,
       "default",
-      uuidv4() //x-device-id
+      v4() //x-device-id
     );
     assert.ok(
       oauthData2.access_token !== oauthData.access_token,
@@ -99,10 +88,10 @@ describe("Oauth MS Unit Test Suite", function () {
   },"Get 2nd Device Token"));
 
   it("Refresh Token", mochaAsync(async () => {
-    if (!creds.isValid) throw new Error("Invalid Credentials");
+    if (!process.env.isValid) throw new Error("Invalid Credentials");
     trace = objectMerge({}, trace, Util.generateNewMetaData(trace));
     const response = await s2sMS.Oauth.refreshAccessToken(
-      creds.CPAAS_OAUTH_TOKEN,
+      process.env.CPAAS_OAUTH_TOKEN,
       oauthData.refresh_token,
       trace
     );
@@ -116,9 +105,9 @@ describe("Oauth MS Unit Test Suite", function () {
   },"Refresh Token"));
   
   it("Get Client Token", mochaAsync(async () => {
-    if (!creds.isValid) throw new Error("Invalid Credentials");
+    if (!process.env.isValid) throw new Error("Invalid Credentials");
     trace = objectMerge({}, trace, Util.generateNewMetaData(trace));
-    const response = await s2sMS.Oauth.getClientToken(creds.CPAAS_OAUTH_TOKEN, trace);
+    const response = await s2sMS.Oauth.getClientToken(process.env.CPAAS_OAUTH_TOKEN, trace);
     assert.ok(
       response.hasOwnProperty("access_token") &&
       response.hasOwnProperty("token_type") &&
@@ -129,7 +118,7 @@ describe("Oauth MS Unit Test Suite", function () {
   },"Get Client Token"));
   
   it("Create Client Application", mochaAsync(async () => {
-    if (!creds.isValid) throw new Error("Invalid Credentials");
+    if (!process.env.isValid) throw new Error("Invalid Credentials");
     trace = objectMerge({}, trace, Util.generateNewMetaData(trace));
     const response = await s2sMS.Oauth.createClientApp(
       accessToken,
@@ -155,7 +144,7 @@ describe("Oauth MS Unit Test Suite", function () {
   },"Create Client Application"));
  
   it("Scope Client App", mochaAsync(async () => {
-    if (!creds.isValid) throw new Error("Invalid Credentials");
+    if (!process.env.isValid) throw new Error("Invalid Credentials");
     trace = objectMerge({}, trace, Util.generateNewMetaData(trace));
     const response = await s2sMS.Oauth.scopeClientApp(
       accessToken,
@@ -171,7 +160,7 @@ describe("Oauth MS Unit Test Suite", function () {
   },"Scope Client App"));
   
   it("Generate Basic Token", mochaAsync(async () => {
-    if (!creds.isValid) throw new Error("Invalid Credentials");
+    if (!process.env.isValid) throw new Error("Invalid Credentials");
     trace = objectMerge({}, trace, Util.generateNewMetaData(trace));
     clientBasicToken = await s2sMS.Oauth.generateBasicToken(publicID, secret);
     assert.ok(
@@ -182,7 +171,7 @@ describe("Oauth MS Unit Test Suite", function () {
   },"Generate Basic Token"));
   
   it("Get Client Access Token and Test It", mochaAsync(async () => {
-    if (!creds.isValid) throw new Error("Invalid Credentials");
+    if (!process.env.isValid) throw new Error("Invalid Credentials");
     trace = objectMerge({}, trace, Util.generateNewMetaData(trace));
     // Tyk Delay...CCORE-431
     await new Promise(resolve => setTimeout(resolve, 3000));
@@ -201,7 +190,7 @@ describe("Oauth MS Unit Test Suite", function () {
   },"Get Client Access Token and Test It"));
   
   it("List Access Tokens", mochaAsync(async () => {
-    if (!creds.isValid) throw new Error("Invalid Credentials");
+    if (!process.env.isValid) throw new Error("Invalid Credentials");
     trace = objectMerge({}, trace, Util.generateNewMetaData(trace));
     const response = await s2sMS.Oauth.listClientTokens(
       accessToken,
@@ -209,7 +198,7 @@ describe("Oauth MS Unit Test Suite", function () {
       10, //limit
       {
         token_type: "client",
-        user_name: creds.email
+        user_name: process.env.EMAIL
       },
       trace
     );
@@ -223,7 +212,7 @@ describe("Oauth MS Unit Test Suite", function () {
   },"List Access Tokens"));
   
   it("Validate Access Token", mochaAsync(async () => {
-    if (!creds.isValid) throw new Error("Invalid Credentials");
+    if (!process.env.isValid) throw new Error("Invalid Credentials");
     trace = objectMerge({}, trace, Util.generateNewMetaData(trace));
     const response = await s2sMS.Oauth.validateToken(accessToken, clientAccessToken, trace);
     assert.ok(
@@ -234,7 +223,7 @@ describe("Oauth MS Unit Test Suite", function () {
   },"Validate Access Token"));
   
   it("Invalidate Access Token", mochaAsync(async () => {
-    if (!creds.isValid) throw new Error("Invalid Credentials");
+    if (!process.env.isValid) throw new Error("Invalid Credentials");
     trace = objectMerge({}, trace, Util.generateNewMetaData(trace));
     const response = await s2sMS.Oauth.invalidateToken(accessToken, clientAccessToken, trace);
     assert.ok(
@@ -245,7 +234,7 @@ describe("Oauth MS Unit Test Suite", function () {
   },"Invalidate Access Token"));
   
   it("List Access Tokens after Invalidation", mochaAsync(async () => {
-    if (!creds.isValid) throw new Error("Invalid Credentials");
+    if (!process.env.isValid) throw new Error("Invalid Credentials");
     trace = objectMerge({}, trace, Util.generateNewMetaData(trace));
     const response = await s2sMS.Oauth.listClientTokens(
       accessToken,
@@ -253,7 +242,7 @@ describe("Oauth MS Unit Test Suite", function () {
       10, //limit
       {
         token_type: "client",
-        user_name: creds.email
+        user_name: process.env.EMAIL
       },
       trace
     );
@@ -268,7 +257,7 @@ describe("Oauth MS Unit Test Suite", function () {
   
   // template
   // it("change me", mochaAsync(async () => {
-  //   if (!creds.isValid) throw new Error("Invalid Credentials");
+  //   if (!process.env.isValid) throw new Error("Invalid Credentials");
   //   trace = objectMerge({}, trace, Util.generateNewMetaData(trace));
   //   const response = await somethingAsync();
   //   assert.ok(

@@ -10,10 +10,9 @@ const before = mocha.before;
 const fs = require("fs");
 const s2sMS = require("../src/index");
 const Util = require("../src/utilities");
-const Logger = require("../src/node-logger");
-const logger = new Logger.default();
+const logger = require("../src/node-logger").getInstance();
 const objectMerge = require("object-merge");
-const uuidv4 = require("uuid/v4");
+const { v4 } = require("uuid");
 const newMeta = Util.generateNewMetaData;
 let trace = newMeta();
 
@@ -31,13 +30,7 @@ const mochaAsync = (func, name) => {
   };
 };
 
-let creds = {
-  CPAAS_OAUTH_TOKEN: "Basic your oauth token here",
-  CPAAS_API_VERSION: "v1",
-  email: "email@email.com",
-  password: "pwd",
-  isValid: false
-};
+
 
 describe("Pubsub MS Unit Test Suite", function () {
 
@@ -47,23 +40,19 @@ describe("Pubsub MS Unit Test Suite", function () {
 
   before(async () => {
     try {
-      // file system uses full path so will do it like this
-      if (fs.existsSync("./test/credentials.json")) {
-      // do not need test folder here
-        creds = require("./credentials.json");
-      }
+      
 
       // For tests, use the dev msHost
-      s2sMS.setMsHost(creds.MS_HOST);
-      s2sMS.setMSVersion(creds.CPAAS_API_VERSION);
-      s2sMS.setMsAuthHost(creds.AUTH_HOST);
+      s2sMS.setMsHost(process.env.MS_HOST);
+      s2sMS.setMSVersion(process.env.CPAAS_API_VERSION);
+      s2sMS.setMsAuthHost(process.env.AUTH_HOST);
       // get accessToken to use in test cases
       // Return promise so that test cases will not fire until it resolves.
     
       oauthData = await s2sMS.Oauth.getAccessToken(
-        creds.CPAAS_OAUTH_TOKEN,
-        creds.email,
-        creds.password
+        process.env.CPAAS_OAUTH_TOKEN,
+        process.env.EMAIL,
+        process.env.PASSWORD
       );
       accessToken = oauthData.access_token;
     } catch (error) {
@@ -72,7 +61,7 @@ describe("Pubsub MS Unit Test Suite", function () {
   });
  
   it("List user subscriptions", mochaAsync(async () => {
-    if (!creds.isValid) throw new Error("Invalid Credentials");
+    if (!process.env.isValid) throw new Error("Invalid Credentials");
     trace = objectMerge({}, trace, Util.generateNewMetaData(trace));
     const response = await s2sMS.Pubsub.listUserSubscriptions(
       "0904f8d5-627f-4ff5-b34d-68dc96487b1e",
@@ -88,7 +77,7 @@ describe("Pubsub MS Unit Test Suite", function () {
   },"List user subscriptions")); 
 
   it("add subscription", mochaAsync(async () => {
-    if (!creds.isValid) throw new Error("Invalid Credentials");
+    if (!process.env.isValid) throw new Error("Invalid Credentials");
     trace = objectMerge({}, trace, Util.generateNewMetaData(trace));
     const subscriptions = {
       identity: ["identity_property_change"]
@@ -99,8 +88,8 @@ describe("Pubsub MS Unit Test Suite", function () {
 
     const expiresDate = new Date(Date.now() + 100000).toISOString();
     const response = await s2sMS.Pubsub.addSubscription( 
-      creds.testIdentity,
-      creds.testAccount,
+      process.env.TEST_IDENTITY,
+      process.env.testAccount,
       "http://localhost:8001/foo",
       [],
       criteria,
@@ -118,7 +107,7 @@ describe("Pubsub MS Unit Test Suite", function () {
   },"add subscription"));
 
   // it("add subscription - sms workaround", mochaAsync(async () => {
-  //   if (!creds.isValid) throw new Error("Invalid Credentials");
+  //   if (!process.env.isValid) throw new Error("Invalid Credentials");
   //   trace = objectMerge({}, trace, Util.generateNewMetaData(trace));
   //   const subscriptions = {
   //     identity: ["identity_property_change"]
@@ -130,8 +119,8 @@ describe("Pubsub MS Unit Test Suite", function () {
 
   //   const expiresDate = new Date(Date.now() + 100000).toISOString();
   //   const response = await s2sMS.Pubsub.addSubscription( 
-  //     creds.testIdentity,
-  //     creds.testAccount,
+  //     process.env.TEST_IDENTITY,
+  //     process.env.testAccount,
   //     "http://localhost:8001/foo",
   //     [],
   //     criteria,
@@ -149,7 +138,7 @@ describe("Pubsub MS Unit Test Suite", function () {
   // },"add subscription - sms workaround"));
 
   it("update subscription expiration", mochaAsync(async () => {
-    if (!creds.isValid) throw new Error("Invalid Credentials");
+    if (!process.env.isValid) throw new Error("Invalid Credentials");
     trace = objectMerge({}, trace, Util.generateNewMetaData(trace));
     
     const response = await s2sMS.Pubsub.updateSubscriptionExpiresDate(  
@@ -166,7 +155,7 @@ describe("Pubsub MS Unit Test Suite", function () {
   },"update subscription expiration"));
   
   it("delete subscription", mochaAsync(async () => {
-    if (!creds.isValid) throw new Error("Invalid Credentials");
+    if (!process.env.isValid) throw new Error("Invalid Credentials");
     trace = objectMerge({}, trace, Util.generateNewMetaData(trace));
     const response = await s2sMS.Pubsub.deleteSubscription( 
       sub_uuid, 
@@ -181,10 +170,10 @@ describe("Pubsub MS Unit Test Suite", function () {
   },"delete subscription"));
 
   // Custom Pubsub Tests:
-  let app_uuid = uuidv4();
+  let app_uuid = v4();
   let custom_uuid;
   it("createCustomApplication", mochaAsync(async () => {
-    if (!creds.isValid) throw new Error("Invalid Credentials");
+    if (!process.env.isValid) throw new Error("Invalid Credentials");
     trace = objectMerge({}, trace, Util.generateNewMetaData(trace));
     const response = await s2sMS.Pubsub.createCustomApplication(
       accessToken,
@@ -207,7 +196,7 @@ describe("Pubsub MS Unit Test Suite", function () {
   },"createCustomApplication"));
 
   it("getCustomApplication", mochaAsync(async () => {
-    if (!creds.isValid) throw new Error("Invalid Credentials");
+    if (!process.env.isValid) throw new Error("Invalid Credentials");
     trace = objectMerge({}, trace, Util.generateNewMetaData(trace));
     const response = await s2sMS.Pubsub.getCustomApplication(
       accessToken,
@@ -225,7 +214,7 @@ describe("Pubsub MS Unit Test Suite", function () {
   },"getCustomApplication"));
 
   it("addCustomEventSubscription", mochaAsync(async () => {
-    if (!creds.isValid) throw new Error("Invalid Credentials");
+    if (!process.env.isValid) throw new Error("Invalid Credentials");
     trace = objectMerge({}, trace, Util.generateNewMetaData(trace));
     const response = await s2sMS.Pubsub.addCustomEventSubscription(
       accessToken,
@@ -251,7 +240,7 @@ describe("Pubsub MS Unit Test Suite", function () {
   },"addCustomEventSubscription"));
 
   it("getCustomSubscription", mochaAsync(async () => {
-    if (!creds.isValid) throw new Error("Invalid Credentials");
+    if (!process.env.isValid) throw new Error("Invalid Credentials");
     trace = objectMerge({}, trace, Util.generateNewMetaData(trace));
     const response = await s2sMS.Pubsub.getCustomSubscription(
       accessToken,
@@ -271,7 +260,7 @@ describe("Pubsub MS Unit Test Suite", function () {
   },"getCustomSubscription"));
 
   it("broadcastCustomApplication", mochaAsync(async () => {
-    if (!creds.isValid) throw new Error("Invalid Credentials");
+    if (!process.env.isValid) throw new Error("Invalid Credentials");
     trace = objectMerge({}, trace, Util.generateNewMetaData(trace));
     const response = await s2sMS.Pubsub.broadcastCustomApplication(
       accessToken,
@@ -291,7 +280,7 @@ describe("Pubsub MS Unit Test Suite", function () {
   },"broadcastCustomApplication"));
 
   it("deleteCustomSubscription", mochaAsync(async () => {
-    if (!creds.isValid) throw new Error("Invalid Credentials");
+    if (!process.env.isValid) throw new Error("Invalid Credentials");
     trace = objectMerge({}, trace, Util.generateNewMetaData(trace));
     const response = await s2sMS.Pubsub.deleteCustomSubscription(
       accessToken,
@@ -307,7 +296,7 @@ describe("Pubsub MS Unit Test Suite", function () {
   },"deleteCustomSubscription"));
 
   it("deleteCustomApplication", mochaAsync(async () => {
-    if (!creds.isValid) throw new Error("Invalid Credentials");
+    if (!process.env.isValid) throw new Error("Invalid Credentials");
     trace = objectMerge({}, trace, Util.generateNewMetaData(trace));
     const response = await s2sMS.Pubsub.deleteCustomApplication(
       accessToken,
@@ -324,7 +313,7 @@ describe("Pubsub MS Unit Test Suite", function () {
 
   // template
   // it("change me", mochaAsync(async () => {
-  //   if (!creds.isValid) throw new Error("Invalid Credentials");
+  //   if (!process.env.isValid) throw new Error("Invalid Credentials");
   //   trace = objectMerge({}, trace, Util.generateNewMetaData(trace));
   //   const response = await somethingAsync();
   //   assert.ok(

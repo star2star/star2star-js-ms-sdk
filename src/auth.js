@@ -691,6 +691,54 @@ const deleteRoleFromUserGroup = async (
 
 /**
  * @async
+ * @description This function deletes a role from a user-group.
+ * @param {string} [accessToken="null accessToken"] - cpaas access token
+ * @param {string} [userGroupUUID="null userGroupUUID"] - user group uuid
+ * @param {object} [trace = {}] - optional microservice lifecycle trace headers
+ * @returns {Promise<object>} - Promise resolving to a status data object
+ */
+ const deleteUserGroup = async (
+  accessToken = "null accessToken",
+  userGroupUUID = "null userGroupUUID",
+  trace = {}
+) => {
+  try {
+    const MS = Util.getEndpoint("auth");
+    const requestOptions = {
+      method: "DELETE",
+      uri: `${MS}/user-groups/${userGroupUUID}`,
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+        "Content-type": "application/json",
+        "x-api-version": `${Util.getVersion()}`
+      },
+      resolveWithFullResponse: true,
+      json: true
+    };
+    Util.addRequestTrace(requestOptions, trace);
+    const response = await request(requestOptions);
+    if (response.statusCode === 202) {
+      return { status: "ok" };
+    } else {
+      // this is an edge case, but protects against unexpected 2xx or 3xx response codes.
+      throw {
+        "code": response.statusCode,
+        "message": typeof response.body === "string" ? response.body : "delete role from user-group failed",
+        "trace_id": requestOptions.hasOwnProperty("headers") && requestOptions.headers.hasOwnProperty("trace")
+          ? requestOptions.headers.trace
+          : undefined,
+        "details": typeof response.body === "object" && response.body !== null
+          ? [response.body]
+          : []
+      };
+    }
+  } catch (error) {
+    return Promise.reject(Util.formatError(error));
+  }
+};
+
+/**
+ * @async
  * @description This function returns an accounts default user-groups
  * @param {string} [accessToken="null access token"] - access token for cpaas systems
  * @param {string} [accountUUID="null account uuid"] - account_uuid for an star2star account (customer)
@@ -1590,6 +1638,7 @@ module.exports = {
   deletePermissionFromRole,
   deleteRole,
   deleteRoleFromUserGroup,
+  deleteUserGroup,
   getAccountDefaultGroups,
   getApplicationDefaultResourceGroups,
   getApplicationDefaultUserGroups,

@@ -26,24 +26,22 @@ const Entitlements = require("./entitlements");
 const Activity = require("./activity");
 const Resources = require("./resources");
 
-let cpaasKey;
-
 /**
  * 
  * @description This function sets the microservice target host (MS_HOST) variable.
- * @param {string} [msHost="https://cpaas.star2star.com/api"] - valid url for microservice host server
+ * @param {string} [msHost="https://cpaas-api.star2star.com"] - valid url for microservice host server
  */
-const setMsHost = (msHost = "https://cpaas.star2star.com/api") => {
-  Util.isBrowser() ? window.s2sJsMsSdk.MS_HOST = msHost : process.env.MS_HOST = msHost;
+const setMsHost = (msHost = "https://cpaas-api.star2star.com") => {
+  Util.getGlobalThis().MS_HOST = msHost;
 };
 
 /**
  * 
  * @description This function sets the microservice target authentication host (AUTH_HOST) variable.
- * @param {string} [msHost="https://auth.star2starglobal.net"] - valid url for microservice host server
+ * @param {string} [msHost="https://auth.star2star.com"] - valid url for microservice host server
  */
-const setMsAuthHost = (authHost = "https://auth.star2starglobal.net") => {
-  Util.isBrowser() ? window.s2sJsMsSdk.AUTH_HOST = authHost : process.env.AUTH_HOST = authHost;
+const setMsAuthHost = (authHost = "https://auth.star2star.com") => {
+  Util.getGlobalThis().AUTH_HOST = authHost;
 };
 
 /**
@@ -52,7 +50,7 @@ const setMsAuthHost = (authHost = "https://auth.star2starglobal.net") => {
  * @param {string} [version="v1"] - configured microservice version
  */
 const setMSVersion = (version = "v1") => {
-  Util.isBrowser() ? window.s2sJsMsSdk.MS_VERSION = version : process.env.MS_VERSION = version;
+  Util.getGlobalThis().MS_VERSION  = version;
 };
 
 /**
@@ -61,49 +59,7 @@ const setMSVersion = (version = "v1") => {
  * @returns {string} - configured host URL
  */
 const getMsHost = () => {
-  return Util.isBrowser() ? window.s2sJsMsSdk.MS_HOST : process.env.MS_HOST;
-};
-
-/**
- *
- *@description This function sets the application key.
- * @param {string} [key="missing"] - valid cpaas application key
- */
-const setApplicationKey = (key = "missing") => {
-  cpaasKey = key;
-};
-
-/**
- *
- * @description This function returns the previously set app key.
- * @returns {string} - app key
- */
-const getApplicationKey = () => {
-  return cpaasKey;
-};
-
-/**
- *
- * @description This function sets the environment; development, production, etc...
- * @param {string} env
- */
-const setEnv = (env) => {
-  Util.isBrowser() ? window.s2sJsMsSdk.MS_ENV = env : process.env.MS_ENV = env;
-};
-
-/**
- *
- * @description - This function retreives the currently configured environment; development, production, etc...
- * @returns {string} - environment.
- */
-const getEnv = () => {
-  let client;
-  Util.isBrowser() ? client = window.s2sJsMsSdk : client = process.env;
-
-  if (!client.hasOwnProperty("MS_ENV")) {
-    setEnv(Util.config.env);
-  }
-  return client.MS_ENV;
+  return Util.getGlobalThis().MS_HOST;
 };
 
 module.exports = {
@@ -116,10 +72,6 @@ module.exports = {
   setMsHost,
   getMsHost,
   setMsAuthHost,
-  setApplicationKey,
-  getApplicationKey,
-  setEnv,
-  getEnv,
   Groups,
   ShortUrls,
   Auth,
