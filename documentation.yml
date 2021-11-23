@@ -261,14 +261,18 @@ toc:
       - updateWorkflowGroup
   - name: Util
     children:
+      - addRequestTrace
       - aggregate
       - createUUID
       - decrypt
       - encrypt
       - filterResponse
+      - findAndReplaceString
+      - formatFetchError
       - formatError
       - getEndpoint
       - getAuthHost
+      - getGlobalThis
       - getVersion
       - getValueFromObjectTree
       - paginate

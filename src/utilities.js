@@ -735,13 +735,12 @@ const arrayDiff = (oldArray = [], newArray = [], doDedupe = true) => {
 /**
 	 *
 	 * @desc Function recursively finds a target string and replaces it with a new value
-	 * @static
 	 * @param {object|array|string|number|boolean} target - any data type other than undefined or null
 	 * @param {string} oldValue - the string to be replaced
 	 * @param {string} newValue - the replacing string
 	 * @returns
-	 * @memberof Utilities
 	 */
+ 
  const findAndReplaceString = (target, oldValue, newValue) => {
   // TODO should this be able to handle other types of primitive for oldValue an newValue?
   
