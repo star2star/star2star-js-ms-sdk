@@ -138,18 +138,10 @@ const deleteWorkflowTemplate = async (
   }
 };
 
-/**
- * @async
- * @description This function will start a new workflow baed on the selected template.
- * @param {string} [accessToken="null accessToken"] - cpaas access token
- * @param {string} [wfTemplateUUID="null wfTemplateUUID"] - workflow template UUID
- * @param {object} [body="null body"] - workflow template body
- * @param {object} [trace = {}] - optional microservice lifecycle trace headers
- * @returns {Promise}
- */
  /**
   *
-  *
+  * @async
+  * @description This function will start a new workflow with a specific return type.
   * @param {string} [accessToken="null accessToken"] CPaaS access token
   * @param {string} [wfTemplateUUID="null wfTemplateUUID"] workflow template uuid
   * @param {string} [workflowVarsPath="null workflowVarsPath"] json dot notation path to workflow vars to return
@@ -161,6 +153,7 @@ const deleteWorkflowTemplate = async (
  const execWorkflow = async (
   accessToken,
   wfTemplateUUID = "null wfTemplateUUID",
+  groupUUID = "",
   workflowVarsPath = "",
   responseContentType = "application/json",
   inputVars = {},
@@ -184,6 +177,12 @@ const deleteWorkflowTemplate = async (
       resolveWithFullResponse: true,
       json: true
     };
+    
+    // add a group uuid if sepcified
+    if(typeof groupUUID === "string" && groupUUID.length > 0){
+      requestOptions.body.group_uuid = groupUUID;
+    }
+    
     util.addRequestTrace(requestOptions, trace);
     const response = await request(requestOptions);
     return response;
