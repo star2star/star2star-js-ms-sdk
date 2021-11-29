@@ -958,7 +958,6 @@ const startWorkflow = async (
         body[option] = optionalParams[option];
       }
     });
-    console.log("BODY!!!", body);
     const MS = util.getEndpoint("workflow");
     const baseURL = `${MS}/workflows/${workflow_uuid}/instances`;
     const options = {
