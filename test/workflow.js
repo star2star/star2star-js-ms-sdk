@@ -50,13 +50,13 @@ describe("Workflow", function() {
       
 
       // For tests, use the dev msHost
-      s2sMS.setMsHost(process.env.MS_HOST);
+      s2sMS.setMsHost(process.env.CPAAS_URL);
       s2sMS.setMSVersion(process.env.CPAAS_API_VERSION);
-      s2sMS.setMsAuthHost(process.env.AUTH_HOST);
+      s2sMS.setMsAuthHost(process.env.AUTH_URL);
       // get accessToken to use in test cases
       // Return promise so that test cases will not fire until it resolves.
       const oauthData = await s2sMS.Oauth.getAccessToken(
-        process.env.CPAAS_OAUTH_TOKEN,
+        process.env.BASIC_TOKEN,
         process.env.EMAIL,
         process.env.PASSWORD
       );
@@ -68,7 +68,7 @@ describe("Workflow", function() {
 
   it("Create Workflow With No Template", mochaAsync(async () => {
     try{
-      if (!process.env.isValid) throw new Error("Invalid Credentials");
+      
       trace = objectMerge({}, trace, Util.generateNewMetaData(trace));
       const response = await s2sMS.Workflow.createWorkflowTemplate(
         accessToken,
@@ -90,7 +90,7 @@ describe("Workflow", function() {
   
   it("Create Workflow With Empty Template", mochaAsync(async () => {
     try{
-      if (!process.env.isValid) throw new Error("Invalid Credentials");
+      
       trace = objectMerge({}, trace, Util.generateNewMetaData(trace));
       const response = await s2sMS.Workflow.createWorkflowTemplate(
         accessToken,
@@ -112,7 +112,7 @@ describe("Workflow", function() {
 
   it("Create Workflow With Invalid Template", mochaAsync(async () => {
     try{
-      if (!process.env.isValid) throw new Error("Invalid Credentials");
+      
       trace = objectMerge({}, trace, Util.generateNewMetaData(trace));
       const response = await s2sMS.Workflow.createWorkflowTemplate(
         accessToken,
@@ -140,7 +140,7 @@ describe("Workflow", function() {
   },"Create Workflow With Invalid Template"));
   
   it("Create Workflow Template", mochaAsync(async () => {
-    if (!process.env.isValid) throw new Error("Invalid Credentials");
+    
     trace = objectMerge({}, trace, Util.generateNewMetaData(trace));
     const response = await s2sMS.Workflow.createWorkflowTemplate(
       accessToken,
@@ -222,7 +222,7 @@ describe("Workflow", function() {
   },"Create Workflow Template"));
   
   it("Modify Workflow Template", mochaAsync(async () => {
-    if (!process.env.isValid) throw new Error("Invalid Credentials");
+    
     trace = objectMerge({}, trace, Util.generateNewMetaData(trace));
     const response = await s2sMS.Workflow.modifyWorkflowTemplate(
       accessToken,
@@ -327,7 +327,7 @@ describe("Workflow", function() {
   },"Modify Workflow Template"));
 
   it("Create New Version Of Template With Descision", mochaAsync(async () => {
-    if (!process.env.isValid) throw new Error("Invalid Credentials");
+    
     trace = objectMerge({}, trace, Util.generateNewMetaData(trace));
     const response = await s2sMS.Workflow.createWorkflowTemplate(
       accessToken,
@@ -521,7 +521,7 @@ describe("Workflow", function() {
   },"Create New Version Of Template With Descision"));
   
   it("Start Workflow Version 1", mochaAsync(async () => {
-    if (!process.env.isValid) throw new Error("Invalid Credentials");
+    
     trace = objectMerge({}, trace, Util.generateNewMetaData(trace));
     const response = await s2sMS.Workflow.startWorkflow(
       accessToken,
@@ -539,14 +539,14 @@ describe("Workflow", function() {
     assert.ok(
       response.hasOwnProperty("uuid") &&
       response.current_state === "Trigger Manually",
-      response.workflow_vars.params.x === 1,
+      response.input_vars.params.x === 1,
       JSON.stringify(response, null, "\t")
     );
     return response;
   },"Start Workflow Version 1"));
   
   it("List Running Workflows", mochaAsync(async () => {
-    if (!process.env.isValid) throw new Error("Invalid Credentials");
+    
     trace = objectMerge({}, trace, Util.generateNewMetaData(trace));
     const filters = [];
     filters["verion"] = version;
@@ -567,7 +567,7 @@ describe("Workflow", function() {
   },"List Running Workflows"));
   
   it("Get Workflow Instance", mochaAsync(async () => {
-    if (!process.env.isValid) throw new Error("Invalid Credentials");
+    
     trace = objectMerge({}, trace, Util.generateNewMetaData(trace));
     const response = await s2sMS.Workflow.getRunningWorkflow(
       accessToken,
@@ -583,7 +583,7 @@ describe("Workflow", function() {
   },"Get Workflow Instance"));
   
   it("Cancel Workflow Instance", mochaAsync(async () => {
-    if (!process.env.isValid) throw new Error("Invalid Credentials");
+    
     trace = objectMerge({}, trace, Util.generateNewMetaData(trace));
     const response = await s2sMS.Workflow.cancelWorkflow(
       accessToken,
@@ -598,7 +598,7 @@ describe("Workflow", function() {
   },"Cancel Workflow Instance"));
   
   it("Get Workflow Instance v1 History", mochaAsync(async () => {
-    if (!process.env.isValid) throw new Error("Invalid Credentials");
+    
     trace = objectMerge({}, trace, Util.generateNewMetaData(trace));
     const response = await s2sMS.Workflow.getWfInstanceHistory(
       accessToken,
@@ -613,7 +613,7 @@ describe("Workflow", function() {
   },"Get Workflow Instance v1 History"));
 
   it("Get Filtered Workflow Instance History", mochaAsync(async () => {
-    if (!process.env.isValid) throw new Error("Invalid Credentials");
+    
     trace = objectMerge({}, trace, Util.generateNewMetaData(trace));
     const response = await s2sMS.Workflow.getWfInstanceHistory(
       accessToken,
@@ -631,7 +631,7 @@ describe("Workflow", function() {
   },"Get Filtered Workflow Instance History"));
   
   it("Get Workflow Instance History Workflow Vars", mochaAsync(async () => {
-    if (!process.env.isValid) throw new Error("Invalid Credentials");
+    
     trace = objectMerge({}, trace, Util.generateNewMetaData(trace));
     const response = await s2sMS.Workflow.getWfInstanceWorkflowVars(
       accessToken,
@@ -646,7 +646,7 @@ describe("Workflow", function() {
   },"Get Workflow Instance History Workflow Vars"));
 
   it("Get Workflow Instance History Incoming Data", mochaAsync(async () => {
-    if (!process.env.isValid) throw new Error("Invalid Credentials");
+    
     trace = objectMerge({}, trace, Util.generateNewMetaData(trace));
     const response = await s2sMS.Workflow.getWfInstanceIncomingData(
       accessToken,
@@ -661,7 +661,7 @@ describe("Workflow", function() {
   },"Get Workflow Instance History Incoming Data"));
 
   it("Get Workflow Instance History Transition Results", mochaAsync(async () => {
-    if (!process.env.isValid) throw new Error("Invalid Credentials");
+    
     trace = objectMerge({}, trace, Util.generateNewMetaData(trace));
     const response = await s2sMS.Workflow.getWfInstanceResults(
       accessToken,
@@ -676,8 +676,37 @@ describe("Workflow", function() {
     return response;
   },"Get Workflow Instance History Transition Results"));
 
+  it("Start Workflow Version Flat", mochaAsync(async () => {
+    
+    trace = Util.generateNewMetaData(trace);
+    const uuid = v4();
+    const response = await s2sMS.Workflow.startWorkflowFlat(
+      accessToken,
+      wfTemplateUUID,
+      { params: { x: 1, y: 2 }}, // input vars
+      true, // return wf_vars
+      false, // wait until finished
+      version,
+      "Trigger Manually", // start state
+      groupName,
+      uuid, // group uuid
+      trace
+    );
+    console.log("response!!! ", response);
+    
+    assert.ok(
+      response?.template_uuid === wfTemplateUUID &&
+      response?.template_version === version &&
+      response?.input_vars?.params?.x === 1 &&
+      response?.group_uuid === uuid &&
+      response?.group_name === groupName,
+      JSON.stringify(response, null, "\t")
+    );
+    return response;
+  },"Start Workflow Version Flat"));
+
   it("List Workflow Templates", mochaAsync(async () => {
-    if (!process.env.isValid) throw new Error("Invalid Credentials");
+    
     trace = objectMerge({}, trace, Util.generateNewMetaData(trace));
     const response = await s2sMS.Workflow.listWorkflowTemplates(
       accessToken,
@@ -699,7 +728,7 @@ describe("Workflow", function() {
   },"List Workflow Templates"));
   
   it("Get Workflow Template", mochaAsync(async () => {
-    if (!process.env.isValid) throw new Error("Invalid Credentials");
+    
     trace = objectMerge({}, trace, Util.generateNewMetaData(trace));
     const response = await s2sMS.Workflow.getWorkflowTemplate(
       accessToken,
@@ -715,7 +744,7 @@ describe("Workflow", function() {
   },"Get Workflow Template"));
   
   it("Get Workflow Template With Version", mochaAsync(async () => {
-    if (!process.env.isValid) throw new Error("Invalid Credentials");
+    
     trace = objectMerge({}, trace, Util.generateNewMetaData(trace));
     const response = await s2sMS.Workflow.getWorkflowTemplate(
       accessToken,
@@ -732,7 +761,7 @@ describe("Workflow", function() {
   
   it("Get Workflow Template With Invalid Filters", mochaAsync(async () => {
     try{
-      if (!process.env.isValid) throw new Error("Invalid Credentials");
+      
       trace = objectMerge({}, trace, Util.generateNewMetaData(trace));
       const response = await s2sMS.Workflow.getWorkflowTemplate(
         accessToken,
@@ -757,7 +786,7 @@ describe("Workflow", function() {
   },"Get Workflow Template With Invalid Filters"));
   
   it("Start Workflow Version 2: False", mochaAsync(async () => {
-    if (!process.env.isValid) throw new Error("Invalid Credentials");
+    
     trace = objectMerge({}, trace, Util.generateNewMetaData(trace));
     const response = await s2sMS.Workflow.startWorkflow(
       accessToken,
@@ -778,7 +807,7 @@ describe("Workflow", function() {
   },"Start Workflow Version 2: False"));
     
   it("Start Workflow Version 2: True", mochaAsync(async () => {
-    if (!process.env.isValid) throw new Error("Invalid Credentials");
+    
     trace = objectMerge({}, trace, Util.generateNewMetaData(trace));
     await new Promise(resolve => setTimeout(resolve, 3000));
     const response = await s2sMS.Workflow.startWorkflow(
@@ -801,7 +830,7 @@ describe("Workflow", function() {
   },"Start Workflow Version 2: True"));
  
   it("Get Workflow Instance v2 History", mochaAsync(async () => {
-    if (!process.env.isValid) throw new Error("Invalid Credentials");
+    
     trace = objectMerge({}, trace, Util.generateNewMetaData(trace));
     await new Promise(resolve => setTimeout(resolve, 3000));
     const response = await s2sMS.Workflow.getWfInstanceHistory(
@@ -818,7 +847,7 @@ describe("Workflow", function() {
   
   //TODO Test start and end time filters....nh 8/30/18
   it("Get Workflow Template History", mochaAsync(async () => {
-    if (!process.env.isValid) throw new Error("Invalid Credentials");
+    
     trace = objectMerge({}, trace, Util.generateNewMetaData(trace));
     await new Promise(resolve => setTimeout(resolve, 3000));
     const response = await s2sMS.Workflow.getWfTemplateHistory(
@@ -840,7 +869,7 @@ describe("Workflow", function() {
   },"Get Workflow Template History"));
   
   it("List Workflow Groups", mochaAsync(async () => {
-    if (!process.env.isValid) throw new Error("Invalid Credentials");
+    
     trace = objectMerge({}, trace, Util.generateNewMetaData(trace));
     const response = await s2sMS.Workflow.listWorkflowGroups(
       accessToken,
@@ -859,7 +888,7 @@ describe("Workflow", function() {
   },"List Workflow Groups"));
 
   it("Get Workflow Group", mochaAsync(async () => {
-    if (!process.env.isValid) throw new Error("Invalid Credentials");
+    
     trace = objectMerge({}, trace, Util.generateNewMetaData(trace));
     const response = await s2sMS.Workflow.getWorkflowGroup(
       accessToken,
@@ -875,7 +904,7 @@ describe("Workflow", function() {
   },"Get Workflow Group"));
   
   it("Get Workflow Group Filtered", mochaAsync(async () => {
-    if (!process.env.isValid) throw new Error("Invalid Credentials");
+    
     trace = objectMerge({}, trace, Util.generateNewMetaData(trace));
     const response = await s2sMS.Workflow.getWorkflowGroupFiltered(
       accessToken,
@@ -892,7 +921,7 @@ describe("Workflow", function() {
   },"Get Workflow Group Filtered"));
 
   it("Get Workflow Group Master", mochaAsync(async () => {
-    if (!process.env.isValid) throw new Error("Invalid Credentials");
+    
     trace = objectMerge({}, trace, Util.generateNewMetaData(trace));
     const response = await s2sMS.Workflow.getWorkflowGroupMaster(
       accessToken, 
@@ -908,7 +937,7 @@ describe("Workflow", function() {
   },"Get Workflow Group Master"));
 
   it("Get Workflow Group Data", mochaAsync(async () => {
-    if (!process.env.isValid) throw new Error("Invalid Credentials");
+    
     trace = objectMerge({}, trace, Util.generateNewMetaData(trace));
     const response = await s2sMS.Workflow.getWorkflowGroupData(
       accessToken,
@@ -924,7 +953,7 @@ describe("Workflow", function() {
   },"Get Workflow Group Data"));
 
   it("Get Workflow Group Children", mochaAsync(async () => {
-    if (!process.env.isValid) throw new Error("Invalid Credentials");
+    
     trace = objectMerge({}, trace, Util.generateNewMetaData(trace));
     const response = await s2sMS.Workflow.getWorkflowGroupChildren(
       accessToken,
@@ -940,7 +969,7 @@ describe("Workflow", function() {
   },"Get Workflow Group Children"));
 
   it("Get Workflow Group Child", mochaAsync(async () => {
-    if (!process.env.isValid) throw new Error("Invalid Credentials");
+    
     trace = objectMerge({}, trace, Util.generateNewMetaData(trace));
     const response = await s2sMS.Workflow.getWorkflowGroupChild(
       accessToken,
@@ -958,7 +987,7 @@ describe("Workflow", function() {
   },"Get Workflow Group Child"));
 
   it("Update Workflow Group", mochaAsync(async () => {
-    if (!process.env.isValid) throw new Error("Invalid Credentials");
+    
     trace = objectMerge({}, trace, Util.generateNewMetaData(trace));
     const response = await s2sMS.Workflow.updateWorkflowGroup(
       accessToken,
@@ -976,7 +1005,7 @@ describe("Workflow", function() {
   },"Update Workflow Group"));
 
   it("Test Result Constant", mochaAsync(async () => {
-    if (!process.env.isValid) throw new Error("Invalid Credentials");
+    
     //create new version of WF
     trace = objectMerge({}, trace, Util.generateNewMetaData(trace));
     await s2sMS.Workflow.createWorkflowTemplate(
@@ -1153,7 +1182,7 @@ describe("Workflow", function() {
   },"Test Result Constant"));
   
   it("Delete Workflow Template", mochaAsync(async () => {
-    if (!process.env.isValid) throw new Error("Invalid Credentials");
+    
     trace = objectMerge({}, trace, Util.generateNewMetaData(trace));
     await s2sMS.Workflow.deleteWorkflowTemplate(
       accessToken,
@@ -1184,7 +1213,7 @@ describe("Workflow", function() {
   
   // template
   // it("change me", mochaAsync(async () => {
-  //   if (!process.env.isValid) throw new Error("Invalid Credentials");
+  //   
   //   trace = objectMerge({}, trace, Util.generateNewMetaData(trace));
   //   const response = await somethingAsync();
   //   assert.ok(

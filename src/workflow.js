@@ -3,7 +3,7 @@
 
 const request = require("request-promise");
 const util = require("./utilities");
-
+const fetch = require("node-fetch");
 /**
  * @async
  * @description This function will create a new workflow template
@@ -877,7 +877,7 @@ const modifyWorkflowTemplate = async (
 
 /**
  * @async
- * @description This function will start a new workflow baed on the selected template.
+ * @description This function will start a new workflow based on the selected template.
  * @param {string} [accessToken="null accessToken"] - cpaas access token
  * @param {string} [wfTemplateUUID="null wfTemplateUUID"] - workflow template UUID
  * @param {object} [body="null body"] - workflow template body
@@ -908,6 +908,88 @@ const startWorkflow = async (
     return response;
   } catch (error) {
     return Promise.reject(util.formatError(error));
+  }
+};
+
+ /**
+  * @async
+  * @description Same as startWorkflow, but ms request body is composed from params
+  * @param {string} [access_token="no access token provided"] CPaaS access token
+  * @param {string} [workflow_uuid="no workflow temaplte uuid provided"] workflow template to start
+  * @param {object} [input_vars={}] workflow variable to inject at start of runtime
+  * @param {boolean} [return_workflow_vars=true] include workflow runtime vars in response
+  * @param {boolean} [wait_until_finish=false] run workflow sync, waiting until complete to respond to request
+  * @param {string} version optional semver of workflow template to use
+  * @param {string} start_state optional start state
+  * @param {string} group_uuid optional group uuid
+  * @param {string} group_name optional group name
+  * @param {object} [trace={}] optional CPaaS microservice lifecycle headers
+  * @returns
+  */
+ const startWorkflowFlat = async (
+  access_token = "no access token provided",
+  workflow_uuid = "no workflow temaplte uuid provided",
+  input_vars = {},
+  return_workflow_vars = true,
+  wait_until_finish = false,
+  version,
+  start_state,
+  group_uuid,
+  group_name,
+  trace = {}
+) => {
+  try {
+    // default params
+    const body = {
+      input_vars: typeof input_vars === "object" && input_vars !== null ? input_vars : {}
+    };
+
+    // optional params
+    const optionalParams = {
+      group_uuid: group_uuid,
+      group_name: group_name,
+      return_workflow_vars: return_workflow_vars,
+      start_state: start_state,
+      version: version,
+      wait_until_finish: wait_until_finish
+    }
+    Object.keys(optionalParams).forEach(option =>{
+      if(typeof optionalParams[option] !== "undefined"){
+        body[option] = optionalParams[option];
+      }
+    });
+    console.log("BODY!!!", body);
+    const MS = util.getEndpoint("workflow");
+    const baseURL = `${MS}/workflows/${workflow_uuid}/instances`;
+    const options = {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${access_token}`,
+        "Content-type": "application/json",
+        "x-api-version": `${util.getVersion()}`
+      },
+      body: undefined
+    };
+    try {
+      options.body = JSON.stringify(body);
+    } catch (e){
+      throw {
+        code: 400,
+        message: "supplied parameters could not assembled into start request",
+        details: [JSON.stringify(util.formatError(e))]
+      };
+    }
+    // make the call
+    const response = await fetch(baseURL, util.addRequestTrace(options, trace));
+    if (response.ok === false) {
+      const error = await util.formatFetchError(response);
+      throw error;
+    } else {
+      const json = await response.json();
+      return json;
+    }
+  } catch (error) {
+    throw util.formatError(error);
   }
 };
 
@@ -972,6 +1054,7 @@ module.exports = {
   listWorkflowTemplates,
   modifyWorkflowTemplate,
   startWorkflow,
+  startWorkflowFlat,
   updateWorkflowGroup,
   getWfInstanceWorkflowVars,
   getWfInstanceIncomingData,

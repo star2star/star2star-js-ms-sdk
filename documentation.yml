@@ -258,6 +258,7 @@ toc:
       - listWorkflowTemplates
       - modifyWorkflowTemplate
       - startWorkflow
+      - startWorkflowFlat
       - updateWorkflowGroup
   - name: Util
     children:
