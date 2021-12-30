@@ -268,6 +268,52 @@ const listClientTokens = async (
 
 /**
  * @async
+ * @description This function returns a list of oauth2 clients
+ * @param {string} [accessToken="null accessToken"] cpaas access token
+ * @param {number} [offset=0] pagination offset
+ * @param {number} [limit=10] pagination limit
+ * @param {object} [filters=undefined] query param key value pairs
+ * @param {object} [trace={}] optional cpaas lifecycle headers
+ * @returns {Promise<object>} - Promise resolving to a list of oauth2 clients
+ */
+const listOauthClients = async (
+  accessToken = "null accessToken",
+  offset = 0,
+  limit = 10,
+  filters = undefined,
+  trace = {}
+) => {
+  try {
+    const MS = Util.getEndpoint("oauth");
+    const requestOptions = {
+      method: "GET",
+      uri: `${MS}/oauth/clients`,
+      qs: {
+        offset: offset,
+        limit: limit
+      },
+      json: true,
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+        "Content-type": "application/json",
+        "x-api-version": `${Util.getVersion()}`
+      }
+    };
+    if (filters && typeof filters == "object") {
+      Object.keys(filters).forEach(filter => {
+        requestOptions.qs[filter] = filters[filter];
+      });
+    }
+    Util.addRequestTrace(requestOptions, trace);
+    const response = request(requestOptions);
+    return response;
+  } catch (error) {
+    return Promise.reject(Util.formatError(error));
+  }
+};
+
+/**
+ * @async
  * @description This function will call the identity microservice to refresh user based on token.
  * @param {string} [oauthKey="null oauth key"] - key for oauth cpaas system
  * @param {string} [oauthToken="null oauth token"] - token for authentication to cpaas oauth system
@@ -423,6 +469,7 @@ module.exports = {
   getClientToken,
   invalidateToken,
   listClientTokens,
+  listOauthClients,
   refreshAccessToken,
   scopeClientApp,
   validateToken

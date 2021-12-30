@@ -173,6 +173,7 @@ toc:
       - getClientToken
       - invalidateToken
       - listClientTokens
+      - listOauthClients
       - refreshAccessToken
       - scopeClientApp
       - validateToken
