@@ -800,6 +800,50 @@ const getAccountDefaultGroups = async (
 };
 
 /**
+ * @description This function returns an oAuth client application resource groups
+ * @param {string} [accessToken="null accessToken"] - CPaaS access token
+ * @param {string} [applicationUUID="null applicationUUID"] - oauth2 client application uuid
+ * @param {object} [filters= {}] - optional filters, name, default, etc
+ * @param {object} [trace = {}] - optional microservice lifecycle trace headers 
+ * @returns {Promise<object>} - promise resolving to object containing resource groups.
+ */
+ const getApplicationResourceGroups = async (
+  accessToken = "null accessToken",
+  applicationUUID = "null applicationUUID",
+  filters = {},
+  trace = {}
+) => {
+  try {
+    const MS = Util.getEndpoint("auth");
+    const requestOptions = {
+      method: "GET",
+      uri: `${MS}/applications/${applicationUUID}/resource-groups`,
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+        "Content-type": "application/json",
+        "x-api-version": `${Util.getVersion()}`
+      },
+      json: true
+    };
+    if(typeof filters === "object" && filters !== null){
+      Object.keys(filters).forEach(filter => {
+        if(requestOptions.qs === undefined){
+          requestOptions.qs = {};
+        }
+        if(typeof filters[filter] === "string" || typeof filters[filter] === "number"){
+          requestOptions.qs[filter] = filters[filter];
+        }
+      });
+    }
+    Util.addRequestTrace(requestOptions, trace);
+    const response = await request(requestOptions);
+    return response;
+  } catch (error) {
+    throw Util.formatError(error);
+  }
+};
+
+/**
  * @description This function returns an oAuth client application default resource groups
  * @param {string} [accessToken="null accessToken"] - CPaaS access token
  * @param {string} [applicationUUID="null applicationUUID"] - oauth2 client application uuid
@@ -1642,6 +1686,7 @@ module.exports = {
   getAccountDefaultGroups,
   getApplicationDefaultResourceGroups,
   getApplicationDefaultUserGroups,
+  getApplicationResourceGroups,
   getResourceUsers,
   getResourceGroupRoles,
   getRole,

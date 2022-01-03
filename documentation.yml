@@ -35,6 +35,7 @@ toc:
       - getAccountDefaultGroups
       - getApplicationDefaultResourceGroups
       - getApplicationDefaultUserGroups
+      - getApplicationResourceGroups
       - getResourceUsers
       - getResourceGroupRoles
       - getRole
