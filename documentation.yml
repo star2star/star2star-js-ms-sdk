@@ -217,6 +217,9 @@ toc:
       - getResourceInstance
       - getResourceInstanceRow
       - listResources
+      - registerAccountTemplate
+      - registerUserTemplate
+      - createInstance
   - name: Resource Groups
     children:
       - createResourceGroups
