@@ -162,8 +162,154 @@ const listResources = async (
   }
 };
 
+/**
+ * @async
+ * @description This function register an account CMS resource template
+ * @param {string} [accessToken="null accessToken"] - cpaas access token
+ * @param {string} [account_uuid=undefined] -  account uuid 
+ * @param {string} [name=undefined] -  name
+ * @param {string} [description=undefined] -  description
+ * @param {object} [schema=undefined] -  schema
+ * @param {object} [trace={}] - optional microservice lifcycle headers
+ * @returns {Promise} - promise resolving to identity object
+ */
+ const registerAccountTemplate = async (
+  accessToken = "null accessToken",
+  account_uuid = undefined,
+  name = undefined,
+  description = undefined,
+  schema = undefined,
+  trace = {}
+) => {
+  try {
+    const MS = util.getEndpoint("resources");
+    const body = {
+      name,
+      description,
+      schema
+    }
+    const requestOptions = {
+      method: "POST",
+      uri: `${MS}/account/${account_uuid}/register`,
+      body: body,
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+        "Content-type": "application/json",
+        "x-api-version": `${util.getVersion()}`,
+      },
+      json: true,
+    };
+
+    util.addRequestTrace(requestOptions, trace);
+    const response = await request(requestOptions);
+    return response;
+  } catch (error) {
+    throw util.formatError(error);
+  }
+};
+
+/**
+ * @async
+ * @description This function register an user CMS resource template
+ * @param {string} [accessToken="null accessToken"] - cpaas access token
+ * @param {string} [user_uuid=undefined] -  user uuid 
+ * @param {string} [name=undefined] -  name
+ * @param {string} [description=undefined] -  description
+ * @param {object} [schema=undefined] -  schema
+ * @param {object} [trace={}] - optional microservice lifcycle headers
+ * @returns {Promise} - promise resolving to identity object
+ */
+ const registerUserTemplate = async (
+  accessToken = "null accessToken",
+  user_uuid = undefined,
+  name = undefined,
+  description = undefined,
+  schema = undefined,
+  trace = {}
+) => {
+  try {
+    const MS = util.getEndpoint("resources");
+    const body = {
+      name,
+      description,
+      schema
+    }
+    const requestOptions = {
+      method: "POST",
+      uri: `${MS}/user/${user_uuid}/register`,
+      body: body,
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+        "Content-type": "application/json",
+        "x-api-version": `${util.getVersion()}`,
+      },
+      json: true,
+    };
+
+    util.addRequestTrace(requestOptions, trace);
+    const response = await request(requestOptions);
+    return response;
+  } catch (error) {
+    throw util.formatError(error);
+  }
+};
+
+/**
+ * @async
+ * @description This function create an instance from a resource template
+ * @param {string} [accessToken="null accessToken"] - cpaas access token
+ * @param {string} [template_uuid=undefined] -  template uuid 
+ * @param {string} [name=undefined] -  name
+ * @param {string} [description=undefined] -  description
+ * @param {string} [type=undefined] -  optional type 
+ * @param {object} [trace={}] - optional microservice lifcycle headers
+ * @returns {Promise} - promise resolving to identity object
+ */
+ const createInstance = async (
+  accessToken = "null accessToken",
+  template_uuid = undefined,
+  name = undefined,
+  description = undefined,
+  type = undefined,
+  trace = {}
+) => {
+  try {
+    const MS = util.getEndpoint("resources");
+    const body = {
+      template_uuid,
+      name,
+      description
+    }
+    // optional parameter
+    if (type !== undefined) {
+      body.type = type;
+    }
+
+    const requestOptions = {
+      method: "POST",
+      uri: `${MS}/instance`,
+      body: body,
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+        "Content-type": "application/json",
+        "x-api-version": `${util.getVersion()}`,
+      },
+      json: true,
+    };
+
+    util.addRequestTrace(requestOptions, trace);
+    const response = await request(requestOptions);
+    return response;
+  } catch (error) {
+    throw util.formatError(error);
+  }
+};
+
 module.exports = {
   getResourceInstance,
   getResourceInstanceRow,
-  listResources
+  listResources,
+  registerAccountTemplate,
+  registerUserTemplate,
+  createInstance
 };
