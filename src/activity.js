@@ -139,8 +139,96 @@ const runReport = async (
   }
 };
 
+/**
+ * @async
+ * @description This function will list registered activity types
+ * @param {string} [accessToken="null access token"]
+ * @param {string} [include=undefined] - optional include 
+ * @param {number} [offset = 0] - pagination offset
+ * @param {number} [limit = 10] = pagination limit
+ * @param {object} [trace = {}] - optional microservice lifecycle trace headers 
+ * @returns {Promise<object>} - Promise resolving to a data object containing new relationship
+ */
+ const listRegisteredTypes = async (
+  accessToken = "null access token",
+  include=undefined,
+  offset = 0,
+  limit = 10,
+  trace = {}
+) => {
+  try{
+    const MS = util.getEndpoint("activity");
+    const requestOptions = {
+      method: "GET",
+      uri: `${MS}/registered`,
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+        "Content-type": "application/json",
+        "x-api-version": `${util.getVersion()}`
+      },
+      qs: {
+        offset,
+        limit,
+        include
+      },
+      json: true
+      
+    };
+    util.addRequestTrace(requestOptions, trace);
+    const response = await request(requestOptions);
+    return response;
+  } catch (error){
+    throw util.formatError(error);
+  }
+};
+
+/**
+ * @async
+ * @description This function will list registered sub activity types
+ * @param {string} [accessToken="null access token"]
+ * @param {string} [include=undefined] - optional include 
+ * @param {number} [offset = 0] - pagination offset
+ * @param {number} [limit = 10] = pagination limit
+ * @param {object} [trace = {}] - optional microservice lifecycle trace headers 
+ * @returns {Promise<object>} - Promise resolving to a data object containing new relationship
+ */
+ const listRegisteredSubTypes = async (
+  accessToken = "null access token",
+  include=undefined,
+  offset = 0,
+  limit = 10,
+  trace = {}
+) => {
+  try{
+    const MS = util.getEndpoint("activity");
+    const requestOptions = {
+      method: "GET",
+      uri: `${MS}/registered/subtype`,
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+        "Content-type": "application/json",
+        "x-api-version": `${util.getVersion()}`
+      },
+      qs: {
+        offset,
+        limit,
+        include
+      },
+      json: true
+      
+    };
+    util.addRequestTrace(requestOptions, trace);
+    const response = await request(requestOptions);
+    return response;
+  } catch (error){
+    throw util.formatError(error);
+  }
+};
+
 module.exports = {
   getReport,
   listReportTemplates,
-  runReport
+  runReport,
+  listRegisteredTypes,
+  listRegisteredSubTypes
 };
