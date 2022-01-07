@@ -96,6 +96,7 @@ const getFormInstance = async (
         "Content-type": "application/json",
         "x-api-version": `${util.getVersion()}`
       },
+      qs: {},
       json: true
     };
     util.addRequestTrace(requestOptions, trace);

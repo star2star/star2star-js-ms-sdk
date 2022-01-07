@@ -160,7 +160,7 @@ const runReport = async (
     const MS = util.getEndpoint("activity");
     const requestOptions = {
       method: "GET",
-      uri: `${MS}/registered`,
+      uri: `${MS}/register`,
       headers: {
         Authorization: `Bearer ${accessToken}`,
         "Content-type": "application/json",
@@ -203,7 +203,7 @@ const runReport = async (
     const MS = util.getEndpoint("activity");
     const requestOptions = {
       method: "GET",
-      uri: `${MS}/registered/subtype`,
+      uri: `${MS}/register/subtype`,
       headers: {
         Authorization: `Bearer ${accessToken}`,
         "Content-type": "application/json",
