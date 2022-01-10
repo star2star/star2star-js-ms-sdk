@@ -225,10 +225,156 @@ const runReport = async (
   }
 };
 
+/**
+ * @async
+ * @description This function will register an activity type
+ * @param {string} [accessToken="null access token"]
+ * @param {string} [activity_type = ""] - activity type
+ * @param {number} [version = 1] = version
+ * @param {object} [schema={}] = schema
+ * @param {object} [trace = {}] - optional microservice lifecycle trace headers 
+ * @returns {Promise<object>} - Promise resolving to a data object containing new relationship
+ */
+ const registerType = async (
+  accessToken = "null access token",
+  activity_type=undefined,
+  version = 1,
+  schema = undefined,
+  trace = {}
+) => {
+  try{
+    const MS = util.getEndpoint("activity");
+    const requestOptions = {
+      method: "POST",
+      uri: `${MS}/register`,
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+        "Content-type": "application/json",
+        "x-api-version": `${util.getVersion()}`
+      },
+      body: {
+        activity_type,
+        version,
+        schema
+      },
+      json: true
+      
+    };
+    util.addRequestTrace(requestOptions, trace);
+    const response = await request(requestOptions);
+    return response;
+  } catch (error){
+    throw util.formatError(error);
+  }
+};
+
+/**
+ * @async
+ * @description This function will register a sub activity type
+ * @param {string} [accessToken="null access token"]
+ * @param {string} [activity_type = ""] - activity type
+ * @param {string} [activity_subtype = ""] - activity subtype
+ * @param {number} [version = 1] = version
+ * @param {object} [schema={}] = schema
+ * @param {object} [trace = {}] - optional microservice lifecycle trace headers 
+ * @returns {Promise<object>} - Promise resolving to a data object containing new relationship
+ */
+ const registerSubType = async (
+  accessToken = "null access token",
+  activity_type=undefined,
+  activity_subtype=undefined,
+  version = 1,
+  schema = undefined,
+  trace = {}
+) => {
+  try{
+    const MS = util.getEndpoint("activity");
+    const requestOptions = {
+      method: "POST",
+      uri: `${MS}/register`,
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+        "Content-type": "application/json",
+        "x-api-version": `${util.getVersion()}`
+      },
+      body: {
+        activity_type,
+        activity_subtype,
+        version,
+        schema
+      },
+      json: true
+      
+    };
+    util.addRequestTrace(requestOptions, trace);
+    const response = await request(requestOptions);
+    return response;
+  } catch (error){
+    throw util.formatError(error);
+  }
+};
+
+
+/**
+ * @async
+ * @description This function will create an activity report template
+ * @param {string} [accessToken="null access token"]
+ * @param {string} [name = ""] - name
+ * @param {string} [description = ""] - description
+ * @param {string} [default_view = ""] = default view
+ * @param {object} [data_source={}] = data_source
+ * @param {array} [parameters=[]] = parameters
+ * @param {array} [columns=[]] = columns
+ * @param {array} [limits=[]] = limits
+ * @param {object} [sort={}] = sort
+ * @param {array} [aggregates=[]] = aggregates
+ * @param {object} [visualizations={}] = visualizations
+ * @param {object} [trace = {}] - optional microservice lifecycle trace headers 
+ * @returns {Promise<object>} - Promise resolving to an object 
+ */
+ const createReportTemplate = async (
+  accessToken = "null access token",
+  name=undefined,
+  description=undefined,
+  default_view = undefined,
+  data_source = undefined,
+  parameters = undefined,
+  columns = undefined,
+  limits = undefined, 
+  sort = undefined,
+  aggregates= undefined,
+  visualizations=undefined,
+  trace = {}
+) => {
+  try{
+    const MS = util.getEndpoint("activity");
+    const body = {name, description, default_view, data_source, parameters, columns, limits, sort, aggregates, visualizations};
+    const requestOptions = {
+      method: "POST",
+      uri: `${MS}/report/template`,
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+        "Content-type": "application/json",
+        "x-api-version": `${util.getVersion()}`
+      },
+      body: body,
+      json: true
+      
+    };
+    util.addRequestTrace(requestOptions, trace);
+    const response = await request(requestOptions);
+    return response;
+  } catch (error){
+    throw util.formatError(error);
+  }
+};
 module.exports = {
   getReport,
   listReportTemplates,
   runReport,
   listRegisteredTypes,
-  listRegisteredSubTypes
+  listRegisteredSubTypes,
+  registerType,
+  registerSubType,
+  createReportTemplate
 };

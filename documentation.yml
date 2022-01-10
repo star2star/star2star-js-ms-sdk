@@ -17,6 +17,9 @@ toc:
       - runReport
       - listRegisteredTypes
       - listRegisteredSubTypes
+      - registerType
+      - registerSubType
+      - createReportTemplate
   - name: Auth
     children:
       - activateRole
@@ -89,6 +92,7 @@ toc:
   - name: Forms
     children:
       - createFormInstance
+      - createFormTemplate
       - getFormInstance
       - getFormTemplate
       - listFormTemplates

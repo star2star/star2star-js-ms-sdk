@@ -72,6 +72,47 @@ const createFormInstance = async (
 };
 
 /**
+ * @description This function will create a form  template 
+ * @async
+ * @param {string} [accessToken="null access token"] - CPaaS access toke
+ * @param {string} [name="no name"] - instance name
+ * @param {string} [description=""] -  description
+ * @param {string} [account_uuid="null account uuid"] - account uuid
+ * @param {object} [form=undefined] - form definition - formio  
+ * @param {object} [trace={}] - optional CPaaS lifecycle headers
+ * @returns {Promise}
+ */
+ const createFormTemplate = async (
+  accessToken = "null access token",
+  name = "no name",
+  description = undefined,
+  account_uuid = undefined,
+  form = undefined,
+  trace = {}
+) => {
+  try {
+    const MS = util.getEndpoint("forms");
+    const requestOptions = {
+      method: "POST",
+      uri: `${MS}/forms/template`,
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+        "Content-type": "application/json",
+        "x-api-version": `${util.getVersion()}`
+      },
+      body: { name, description, account_uuid, form },
+      json: true
+    };
+ 
+    util.addRequestTrace(requestOptions, trace);
+    const response = await request(requestOptions);
+    return response;
+  } catch (error) {
+    throw util.formatError(error);
+  }
+};
+
+/**
  * @description This function will GET a form instance
  * @async
  * @param {string} [accessToken="null access token"] - CPaaS access token 
@@ -330,6 +371,7 @@ const listUserFormSubmissions = async (
 
 module.exports = {
   createFormInstance,
+  createFormTemplate,
   getFormInstance,
   getFormTemplate,
   listFormTemplates,
