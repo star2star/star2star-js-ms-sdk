@@ -34,22 +34,22 @@ const mochaAsync = (func, name) => {
 
 describe("Activity MS Unit Test Suite", function() {
   let accessToken,
+    cTemplate,
     reportTemplate,
     report;
 
   before(async () => {
     try {
       
-
       // For tests, use the dev msHost
-      s2sMS.setMsHost(process.env.MS_HOST);
+      s2sMS.setMsHost(process.env.CPAAS_URL);
       s2sMS.setMSVersion(process.env.CPAAS_API_VERSION);
-      s2sMS.setMsAuthHost(process.env.AUTH_HOST);
+      s2sMS.setMsAuthHost(process.env.AUTH_URL);
       // get accessToken to use in test cases
       // Return promise so that test cases will not fire until it resolves.
     
       const oauthData = await s2sMS.Oauth.getAccessToken(
-        process.env.CPAAS_OAUTH_TOKEN,
+        process.env.BASIC_TOKEN,
         process.env.EMAIL,
         process.env.PASSWORD
       );
@@ -63,12 +63,12 @@ describe("Activity MS Unit Test Suite", function() {
   });
 
   it("List Reports", mochaAsync(async () => {
-    if (!process.env.isValid) throw new Error("Invalid Credentials");
+    // if (!process.env.isValid) throw new Error("Invalid Credentials");
     trace = objectMerge({}, trace, Util.generateNewMetaData(trace));
     const response = await s2sMS.Activity.listReportTemplates(
       accessToken,
-      1, // offset
-      1,  // limit
+      0, // offset
+      1100,  // limit
       trace
     );
     assert.ok(
@@ -77,12 +77,21 @@ describe("Activity MS Unit Test Suite", function() {
       typeof response.items[0].template_uuid === "string",
       JSON.stringify(response, null, "\t")
     );
-    reportTemplate = response.items[0];
+    reportTemplate = response.items.reduce((p,r)=>{
+      if (!p) {
+        // console.log(r);
+        if (r.name === "Appt Conf Response"){
+          return r;
+        };
+      }
+      return p;
+    }, undefined);
+    // console.log(JSON.stringify(reportTemplate, null, 2))
     return response;
   },"List Reports"));
 
   it("Run Report", mochaAsync(async () => {
-    if (!process.env.isValid) throw new Error("Invalid Credentials");
+    // if (!process.env.isValid) throw new Error("Invalid Credentials");
     trace = objectMerge({}, trace, Util.generateNewMetaData(trace));
     const response = await s2sMS.Activity.runReport(
       accessToken,
@@ -91,7 +100,8 @@ describe("Activity MS Unit Test Suite", function() {
       identityData.account_uuid, 
       {
         "start_time": (Date.now() - 2592000),
-        "end_time": Date.now()
+        "end_time": Date.now(),
+        "name": "foo"
       }, //parameters
       trace
     );
@@ -107,7 +117,7 @@ describe("Activity MS Unit Test Suite", function() {
   it("Get Report", mochaAsync(async () => {
     // allow report to finish
     await new Promise(resolve => setTimeout(resolve, 3000));
-    if (!process.env.isValid) throw new Error("Invalid Credentials");
+    // if (!process.env.isValid) throw new Error("Invalid Credentials");
     trace = objectMerge({}, trace, Util.generateNewMetaData(trace));
     const response = await s2sMS.Activity.getReport(
       accessToken,
@@ -115,6 +125,7 @@ describe("Activity MS Unit Test Suite", function() {
       report.template_uuid, 
       trace
     );
+    // console.log('rrrrr', JSON.stringify(response, null, 2))
     assert.ok(
       1 === 1,
       JSON.stringify(response, null, "\t")
@@ -122,6 +133,108 @@ describe("Activity MS Unit Test Suite", function() {
     report = response;
     return response;
   },"Get Report"));
+
+  it("list register types", mochaAsync(async () => {
+    // if (!process.env.isValid) throw new Error("Invalid Credentials");
+    trace = objectMerge({}, trace, Util.generateNewMetaData(trace));
+    const response = await s2sMS.Activity.listRegisteredTypes(
+      accessToken,
+      undefined,
+      0,
+      100,
+      trace
+    );
+    assert.ok(
+      response.metadata.total > 0,
+      JSON.stringify(response, null, "\t")
+    );
+    return response;
+  },"list register types"));
+
+  it("list register subtypes", mochaAsync(async () => {
+    // if (!process.env.isValid) throw new Error("Invalid Credentials");
+    trace = objectMerge({}, trace, Util.generateNewMetaData(trace));
+    const response = await s2sMS.Activity.listRegisteredSubTypes(
+      accessToken, 
+      undefined,
+      0,
+      100,
+      trace
+    );
+    assert.ok(
+      response.metadata.total > 0,
+      JSON.stringify(response, null, "\t")
+    );
+    return response;
+  },"list register subtypes"));
+
+
+  it("create activity report template", mochaAsync(async () => {
+    // if (!process.env.isValid) throw new Error("Invalid Credentials");
+    trace = objectMerge({}, trace, Util.generateNewMetaData(trace));
+    const response = await s2sMS.Activity.createReportTemplate(
+      accessToken, 
+      "unit test name",
+      "unit test description",
+      "table",
+      {"source_type": "activity",  "activity": "cwa_urgent_history",  "local_data": [{}]},
+      [{"name": "created_ts", "type": "date"}],
+      [{"name": "status"}],
+      [[{"column": "created_ts", "op": ">=", "value": "$start_time"}]],
+      {"primary_column":"created_ts", "primary_direction": "ascending"},
+      undefined, // aggregates
+      undefined, //visualizations
+      trace
+    );
+    // console.log(JSON.stringify(response, null, 2));
+    cTemplate = response;
+
+    assert.ok(
+      response.hasOwnProperty("template_uuid"),
+      JSON.stringify(response, null, "\t")
+    );
+    return response;
+  },"create activity report template"));
+
+  it("update activity report template", mochaAsync(async () => {
+    // if (!process.env.isValid) throw new Error("Invalid Credentials");
+    trace = objectMerge({}, trace, Util.generateNewMetaData(trace));
+    const uResponse = await s2sMS.Activity.updateReportTemplate(
+      accessToken, 
+      cTemplate.template_uuid,
+      cTemplate, 
+      trace
+    );
+ 
+    assert.ok(
+      uResponse.hasOwnProperty("template_uuid"),
+      JSON.stringify(uResponse, null, "\t")
+    );
+    return uResponse;
+  },"update activity report template"));
+
+  it("delete activity report template", mochaAsync(async () => {
+    // if (!process.env.isValid) throw new Error("Invalid Credentials");
+    trace = objectMerge({}, trace, Util.generateNewMetaData(trace));
+
+    const dResponse = await s2sMS.Activity.deleteReportTemplate(
+      accessToken, 
+      cTemplate.template_uuid,
+      trace
+    );
+      // console.log(JSON.stringify(dResponse, null, 2))
+    assert.ok(
+      dResponse === undefined,
+      JSON.stringify(dResponse, null, "\t")
+    );
+    return dResponse;
+  }," delete activity report template"));
+
+/*
+  - registerType
+  - registerSubType
+*/
+
 
   // template
   // it("change me", mochaAsync(async () => {

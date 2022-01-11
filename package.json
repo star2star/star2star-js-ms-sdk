@@ -1,6 +1,6 @@
 {
   "name": "star2star-js-ms-sdk",
-  "version": "4.1.7",
+  "version": "4.1.8",
   "description": "Star2Star JavaScript Micro Service SDK",
   "main": "./lib/index.js",
   "scripts": {
@@ -23,6 +23,7 @@
     "compare-versions": "4.1.1",
     "core-js": "3.19.1",
     "email-validator": "2.0.4",
+    "merge-deep": "^3.0.3",
     "node-fetch": "2.6.6",
     "object-merge": "2.5.1",
     "request": "2.88.2",

@@ -368,6 +368,78 @@ const runReport = async (
     throw util.formatError(error);
   }
 };
+
+/**
+ * @async
+ * @description This function will update an activity report template
+ * @param {string} [accessToken="null access token"]
+ * @param {string} [template_uuid = ""] - template_uuid
+ * @param {object} [template={}] = template
+ * @param {object} [trace = {}] - optional microservice lifecycle trace headers 
+ * @returns {Promise<object>} - Promise resolving to an object 
+ */
+ const updateReportTemplate = async (
+  accessToken = "null access token",
+  template_uuid=undefined,
+  template=undefined,
+  trace = {}
+) => {
+  try{
+    const MS = util.getEndpoint("activity");
+    const requestOptions = {
+      method: "PUT",
+      uri: `${MS}/report/template/${template_uuid}`,
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+        "Content-type": "application/json",
+        "x-api-version": `${util.getVersion()}`
+      },
+      body: template,
+      json: true
+      
+    };
+    util.addRequestTrace(requestOptions, trace);
+    const response = await request(requestOptions);
+    return response;
+  } catch (error){
+    throw util.formatError(error);
+  }
+};
+
+/**
+ * @async
+ * @description This function will delete an activity report template
+ * @param {string} [accessToken="null access token"]
+ * @param {string} [template_uuid = ""] - template_uuid
+ * @param {object} [trace = {}] - optional microservice lifecycle trace headers 
+ * @returns {Promise<object>} - Promise resolving to an object 
+ */
+ const deleteReportTemplate = async (
+  accessToken = "null access token",
+  template_uuid=undefined,
+  trace = {}
+) => {
+  try{
+    const MS = util.getEndpoint("activity");
+    const requestOptions = {
+      method: "DELETE",
+      uri: `${MS}/report/template/${template_uuid}`,
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+        "Content-type": "application/json",
+        "x-api-version": `${util.getVersion()}`
+      },
+      json: true
+      
+    };
+    util.addRequestTrace(requestOptions, trace);
+    const response = await request(requestOptions);
+    return response;
+  } catch (error){
+    throw util.formatError(error);
+  }
+};
+
 module.exports = {
   getReport,
   listReportTemplates,
@@ -376,5 +448,7 @@ module.exports = {
   listRegisteredSubTypes,
   registerType,
   registerSubType,
-  createReportTemplate
+  createReportTemplate,
+  deleteReportTemplate,
+  updateReportTemplate
 };

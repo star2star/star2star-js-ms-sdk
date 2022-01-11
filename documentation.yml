@@ -20,6 +20,8 @@ toc:
       - registerType
       - registerSubType
       - createReportTemplate
+      - deleteReportTemplate
+      - updateReportTemplate
   - name: Auth
     children:
       - activateRole

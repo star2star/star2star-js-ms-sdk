@@ -42,7 +42,7 @@ describe("Accounts MS Unit Test Suite", function() {
   before(async () => {
     try {
       // console.log('ms host', process.env.CPAAS_OAUTH_TOKEN);
-
+      
       // For tests, use the dev msHost
       s2sMS.setMsHost(process.env.CPAAS_URL);
       s2sMS.setMSVersion(process.env.CPAAS_API_VERSION);
