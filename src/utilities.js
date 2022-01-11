@@ -414,6 +414,7 @@ const pendingResource = async (
 const formatError = (error) => {
   const retObj = {};
   //begin request-promise error formatting
+  // console.log('eeee', error)
   if (error?.constructor?.name === "StatusCodeError") {
     // just pass along what we got back from API
     if (typeof error?.response?.body !== "undefined") {
@@ -430,6 +431,7 @@ const formatError = (error) => {
         }
       }
 
+      console.log(error, error.StatusCode, typeof error.statusCode, error.statusCode.toString().length  )
       // try to get the code from the response body, fall back to http response code
       retObj.code =
         typeof error?.response?.body?.code === "number" &&
@@ -493,7 +495,7 @@ const formatError = (error) => {
     // begin generic error formatting
 
     // code
-    if (typeof error?.code !== "undefined") {
+    if (typeof error?.code !== "undefined" ) {
       try {
         const code = parseInt(error.code);
         if (code.toString() !== "NaN" && code.toString().length === 3) {
@@ -507,6 +509,8 @@ const formatError = (error) => {
         retObj.code = 500;
       }
       // default
+    } else if (error.hasOwnProperty("statusCode")) {
+      retObj.code = error.statusCode;
     } else {
       retObj.code = 500;
     }
@@ -515,7 +519,7 @@ const formatError = (error) => {
     retObj.message =
       typeof error?.message === "string" && error.message.length > 0
         ? error.message
-        : "unspecified error";
+        : error?.response?.body && typeof error?.response?.body === "string" ?error?.response?.body  : "unspecified error";
 
     // trace
     retObj.traceId =
