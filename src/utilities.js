@@ -431,7 +431,7 @@ const formatError = (error) => {
         }
       }
 
-      console.log(error, error.StatusCode, typeof error.statusCode, error.statusCode.toString().length  )
+      // console.log(error, error.StatusCode, typeof error.statusCode, error.statusCode.toString().length  )
       // try to get the code from the response body, fall back to http response code
       retObj.code =
         typeof error?.response?.body?.code === "number" &&
