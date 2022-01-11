@@ -8,7 +8,7 @@ const objectMerge = require("object-merge");
 
 /**
  * @async
- * @description This function will create a new room.
+ * @description This function will create a new channel.
  * @param {string} [access_token="null access token"] - access_token for cpaas systems
  * @param {string} [userUUID="null user uuid"] - user UUID to be used
  * @param {string} [name="no name specified for group"] - name
@@ -17,10 +17,12 @@ const objectMerge = require("object-merge");
  * @param {string} [groupUUID=undefined] - group UUID for members
  * @param {string} [accountUUID=undefined] - account uuid
  * @param {object} [metadata={}] - object for meta data
+ * @param {string} [type=undefined] - type
+ * @param {string} [parentUUID=undefined] - parent uuid
  * @param {object} [trace = {}] - optional microservice lifecycle trace headers
  * @returns {Promise<object>} - Promise resolving to a data object
  */
-const createRoom = async (
+const createChannel = async (
   access_token = "null access token",
   userUUID = "null user uuid",
   name = "no name specified for group",
@@ -29,24 +31,28 @@ const createRoom = async (
   groupUUID = undefined,
   accountUUID = undefined,
   metadata = {},
+  type= undefined,
+  parentUUID = undefined,
   trace = {}
 ) => {
   try{
     const MS = util.getEndpoint("chat");
 
     const b = {
-      name: name,
-      topic: topic,
-      description: description,
+       name,
+       topic,
+       description,
       account_uuid: accountUUID,
       group_uuid: groupUUID,
       owner_uuid: userUUID,
-      metadata: metadata
+      metadata,
+      type,
+      parent_uuid: parentUUID
     };
     //console.log('bbbbbbbb', b)
     const requestOptions = {
       method: "POST",
-      uri: `${MS}/rooms`,
+      uri: `${MS}/channels`,
       body: b,
       headers: {
         "Content-type": "application/json",
@@ -65,13 +71,13 @@ const createRoom = async (
 
 /**
  * @async
- * @description This function will list rooms.
+ * @description This function will list Channels.
  * @param {string} [access_token="null acess token"] - access token for cpaas systems
  * @param {object} [filter=undefined] - optional object,
   * @param {object} [trace = {}] - optional microservice lifecycle trace headers
  * @returns {Promise<object>} - Promise resolving to a data object
  */
-const listRooms = async (
+const listChannels = async (
   access_token = "null acess token",
   filter = undefined,
   trace = {}
@@ -81,7 +87,7 @@ const listRooms = async (
 
     const requestOptions = {
       method: "GET",
-      uri: `${MS}/rooms`,
+      uri: `${MS}/channels`,
       headers: {
         "Content-type": "application/json",
         Authorization: `Bearer ${access_token}`,
@@ -102,15 +108,15 @@ const listRooms = async (
 
 /**
  * @async
- * @description This function will get a specific room.
+ * @description This function will get a specific Channel.
  * @param {string} [access_token="null access token"] - access token for cpaas systems
- * @param {string} [roomUUID="no room uuid specified"] - room UUID
+ * @param {string} [channelUUID="no Channel uuid specified"] - Channel UUID
  * @param {object} [trace = {}] - optional microservice lifecycle trace headers
  * @returns {Promise<object>} - Promise resolving to a data object
  */
-const getRoom = async (
+const getChannel = async (
   access_token = "null access token",
-  roomUUID = "no room uuid specified",
+  channelUUID = "no Channel uuid specified",
   trace ={}
 ) => {
   try {
@@ -118,7 +124,7 @@ const getRoom = async (
 
     const requestOptions = {
       method: "GET",
-      uri: `${MS}/rooms/${roomUUID}`,
+      uri: `${MS}/channels/${channelUUID}`,
       headers: {
         "Content-type": "application/json",
         Authorization: `Bearer ${access_token}`,
@@ -136,15 +142,15 @@ const getRoom = async (
 
 /**
  * @async
- * @description This function will delete a room.
+ * @description This function will delete a channel.
  * @param {string} [access_token="null acess token"]
- * @param {string} [roomUUID="no room uuid specified"]
+ * @param {string} [channelUUID="no channel uuid specified"]
  * @param {object} [trace = {}] - optional microservice lifecycle trace headers
  * @returns {Promise<empty>} - Promise with no payload
  */
-const deleteRoom = async (
+const deleteChannel = async (
   access_token = "null acess token",
-  roomUUID = "no room uuid specified",
+  channelUUID = "no channel uuid specified",
   trace = {}
 ) => {
   try {
@@ -152,7 +158,7 @@ const deleteRoom = async (
 
     const requestOptions = {
       method: "DELETE",
-      uri: `${MS}/rooms/${roomUUID}`,
+      uri: `${MS}/channels/${channelUUID}`,
       headers: {
         "Content-type": "application/json",
         Authorization: `Bearer ${access_token}`,
@@ -170,16 +176,16 @@ const deleteRoom = async (
 
 /**
  * @async
- * @description This function will update room info
+ * @description This function will update channel info
  * @param {string} [access_token="null access_token"]
- * @param {string} [roomUUID="no room uuid specified"]
+ * @param {string} [channelUUID="no channel uuid specified"]
  * @param {object} [info={}] - object containing attributes to update
  * @param {object} [trace = {}] - optional microservice lifecycle trace headers
  * @returns {Promise<object>} - Promise resolving to a data object
  */
-const updateRoomInfo = async (
+const updateChannelInfo = async (
   access_token = "null access_token",
-  roomUUID = "no room uuid specified",
+  channelUUID = "no channel uuid specified",
   info = {},
   trace = {}
 ) => {
@@ -188,7 +194,7 @@ const updateRoomInfo = async (
 
     const requestOptions = {
       method: "PUT",
-      uri: `${MS}/rooms/${roomUUID}/info`,
+      uri: `${MS}/channels/${channelUUID}/info`,
       body: info,
       headers: {
         "Content-type": "application/json",
@@ -207,16 +213,16 @@ const updateRoomInfo = async (
 
 /**
  * @async
- * @description This function will udpate room meta
+ * @description This function will udpate channel meta
  * @param {string} [access_token="null access_token"] - access_token for cpaas systems
- * @param {string} [roomUUID="no room uuid specified"] - room uuid
+ * @param {string} [channelUUID="no channel uuid specified"] - channel uuid
  * @param {object} [meta={}] - metedata object
  * @param {object} [trace = {}] - optional microservice lifecycle trace headers
  * @returns {Promise<object>} - Promise resolving to a data object
  */
-const updateRoomMeta = async (
+const updateChannelMeta = async (
   access_token = "null access_token",
-  roomUUID = "no room uuid specified",
+  channelUUID = "no channel uuid specified",
   meta = {},
   trace = {}
 ) => {
@@ -226,7 +232,7 @@ const updateRoomMeta = async (
     //console.log('mmmmmmm', meta)
     const requestOptions = {
       method: "PUT",
-      uri: `${MS}/rooms/${roomUUID}/meta`,
+      uri: `${MS}/channels/${channelUUID}/meta`,
       body: meta,
       headers: {
         "Content-type": "application/json",
@@ -245,15 +251,15 @@ const updateRoomMeta = async (
 
 /**
  * @async
- * @description This function will return a list of room members.
+ * @description This function will return a list of channel members.
  * @param {string} [access_token="null access_token"]
- * @param {string} [roomUUID="no room uuid specified"]
+ * @param {string} [channelUUID="no channel uuid specified"]
  * @param {object} [trace = {}] - optional microservice lifecycle trace headers
  * @returns {Promise<object>} - Promise resolving to a data object
  */
-const getRoomMembers = async (
+const getChannelMembers = async (
   access_token = "null access_token",
-  roomUUID = "no room uuid specified",
+  channelUUID = "no channel uuid specified",
   trace = {}
 ) => {
   try {
@@ -262,7 +268,7 @@ const getRoomMembers = async (
     //console.log('mmmmmmm', meta)
     const requestOptions = {
       method: "GET",
-      uri: `${MS}/rooms/${roomUUID}/members`,
+      uri: `${MS}/channels/${channelUUID}/members`,
       headers: {
         "Content-type": "application/json",
         Authorization: `Bearer ${access_token}`,
@@ -280,16 +286,16 @@ const getRoomMembers = async (
 
 /**
  * @async
- * @description This function will add a member to a room.
+ * @description This function will add a member to a channel.
  * @param {string} [access_token="null access_token"] - access_token for cpaas system
- * @param {string} [roomUUID="no room uuid specified"] - room uuid
+ * @param {string} [channelUUID="no channel uuid specified"] - channel uuid
  * @param {object} memberData - object {"uuid": "string","type": "string"}
  * @param {object} [trace = {}] - optional microservice lifecycle trace headers
  * @returns {Promise<object>} - Promise resolving to a member data object
  */
 const addMember = async (
   access_token = "null access_token",
-  roomUUID = "no room uuid specified",
+  channelUUID = "no channel uuid specified",
   memberData,
   trace = {}
 ) => {
@@ -299,7 +305,7 @@ const addMember = async (
     //console.log('mmmmmmm', meta)
     const requestOptions = {
       method: "POST",
-      uri: `${MS}/rooms/${roomUUID}/members`,
+      uri: `${MS}/channels/${channelUUID}/members`,
       body: memberData,
       headers: {
         "Content-type": "application/json",
@@ -318,16 +324,16 @@ const addMember = async (
 
 /**
  * @async
- * @description This function will delete a member from room.
+ * @description This function will delete a member from channel.
  * @param {string} [access_token="null access_token"] - access_token for cpaas systems
- * @param {string} [roomUUID="no room uuid specified"] - member to remove
+ * @param {string} [channelUUID="no channel uuid specified"] - member to remove
  * @param {string} [memberUUID="empty"] - member to remove
  * @param {object} [trace = {}] - optional microservice lifecycle trace headers
  * @returns {Promise<object>} - Promise resolving to a member data object
  */
 const deleteMember = async (
   access_token = "null access_token",
-  roomUUID = "no room uuid specified",
+  channelUUID = "no channel uuid specified",
   memberUUID = "empty",
   trace = {}
 ) => {
@@ -337,7 +343,7 @@ const deleteMember = async (
     //console.log('mmmmmmm', meta)
     const requestOptions = {
       method: "DELETE",
-      uri: `${MS}/rooms/${roomUUID}/members/${memberUUID}`,
+      uri: `${MS}/channels/${channelUUID}/members/${memberUUID}`,
       headers: {
         "Content-type": "application/json",
         Authorization: `Bearer ${access_token}`,
@@ -355,16 +361,16 @@ const deleteMember = async (
 
 /**
  * @async
- * @description This function will get room messages.
+ * @description This function will get channel messages.
  * @param {string} [access_token="null access_token"] - access_token for cpaas systems
- * @param {string} [roomUUID="no room uuid specified"] - room uuid
+ * @param {string} [channelUUID="no channel uuid specified"] - channel uuid
  * @param {number} [max=100] - number of messages
  * @param {object} [trace = {}] - optional microservice lifecycle trace headers
  * @returns {Promise<object>} - Promise resolving to a data object containing a colelction of message objects.
  */
 const getMessages = async (
   access_token = "null access_token",
-  roomUUID = "no room uuid specified",
+  channelUUID = "no channel uuid specified",
   max = 100,
   trace = {}
 ) => {
@@ -374,7 +380,7 @@ const getMessages = async (
     //console.log('mmmmmmm', meta)
     const requestOptions = {
       method: "GET",
-      uri: `${MS}/rooms/${roomUUID}/messages`,
+      uri: `${MS}/channels/${channelUUID}/messages`,
       qs: {
         max: max
       },
@@ -395,10 +401,10 @@ const getMessages = async (
 
 /**
  * @async
- * @description This function will post a message to a room.
+ * @description This function will post a message to a channel.
  * @param {string} [access_token="null access_token"] - access_token for cpaas systems
  * @param {string} [userUUID="null user uuid"] - user UUID to be used
- * @param {string} [roomUUID="no room uuid specified"] - room uuid
+ * @param {string} [channelUUID="no channel uuid specified"] - channel uuid
  * @param {string} [message="missing text"] - message
  * @param {object} [trace = {}] - optional microservice lifecycle trace headers
  * @returns {Promise<object>} - Promise resolving to a data object
@@ -407,7 +413,7 @@ const getMessages = async (
 const sendMessage = async (
   access_token = "null access_token",
   userUUID = "null user uuid",
-  roomUUID = "no room uuid specified",
+  channelUUID = "no channel uuid specified",
   message = "missing text",
   trace = {}
 ) => {
@@ -424,7 +430,7 @@ const sendMessage = async (
 
     const requestOptions = {
       method: "POST",
-      uri: `${MS}/rooms/${roomUUID}/messages`,
+      uri: `${MS}/channels/${channelUUID}/messages`,
       body: b,
       headers: {
         "Content-type": "application/json",
@@ -443,24 +449,24 @@ const sendMessage = async (
 
 /**
  * @async
- * @description This function will get room info, messages, and members.
+ * @description This function will get channel info, messages, and members.
  * @param {string} [access_token="null access_token"] - access_token for cpaas systems
- * @param {string} [roomUUID="no room uuid specified"] - string message
+ * @param {string} [channelUUID="no channel uuid specified"] - string message
  * @param {number} [message_count=100]
  * @param {object} [trace = {}] - optional microservice lifecycle trace headers
  * @returns {Promise<object>} - Promise resolving to a data object
  */
-const getRoomInfo = async (
+const getChannelInfo = async (
   access_token = "null access_token",
-  roomUUID = "no room uuid specified",
+  channelUUID = "no channel uuid specified",
   message_count = 100,
   trace = {}
 ) => {
   try {
     const newMeta = util.generateNewMetaData;
-    const pInfo = getRoom(access_token, roomUUID, trace);
+    const pInfo = getChannel(access_token, channelUUID, trace);
     let nextMeta = objectMerge({}, trace, newMeta(trace));
-    const pMessages = getMessages(access_token, roomUUID, message_count, nextMeta);
+    const pMessages = getMessages(access_token, channelUUID, message_count, nextMeta);
     const pData = await Promise.all([pInfo, pMessages]);
     nextMeta = objectMerge({}, trace, newMeta(trace));
     const groupData = await Groups.getGroup(access_token, pData[0].group_uuid, nextMeta);
@@ -575,18 +581,18 @@ const listUsersChannels = async (
 };
 
 module.exports = {
-  createRoom,
-  deleteRoom,
-  listRooms,
-  getRoom,
-  updateRoomInfo,
-  updateRoomMeta,
-  getRoomMembers,
+  createChannel,
+  deleteChannel,
+  listChannels,
+  getChannel,
+  updateChannelInfo,
+  updateChannelMeta,
+  getChannelMembers,
   addMember,
   deleteMember,
   getMessages,
   sendMessage,
-  getRoomInfo,
+  getChannelInfo,
   sendMessageToChannel,
   listUsersChannels
 };

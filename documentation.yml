@@ -63,19 +63,19 @@ toc:
   - name: Chat
     children:
       - addMember
-      - createRoom
+      - createChannel
       - deleteMember
-      - deleteRoom
+      - deleteChannel
       - getMessages
-      - getRoom
-      - getRoomInfo
-      - getRoomMembers
-      - listRooms
+      - getChannel
+      - getChannelInfo
+      - getChannelMembers
+      - listChannels
       - listUsersChannels
       - sendMessage
       - sendMessageToChannel
-      - updateRoomInfo
-      - updateRoomMeta
+      - updateChannelInfo
+      - updateChannelMeta
   - name: Contacts
     children:
       - createUserContact
