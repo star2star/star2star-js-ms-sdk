@@ -38,21 +38,21 @@ describe("Email MS Unit Test Suite", function() {
     try {
       
 
-      // For tests, use the dev msHost
-      s2sMS.setMsHost(process.env.MS_HOST);
-      s2sMS.setMSVersion(process.env.CPAAS_API_VERSION);
-      s2sMS.setMsAuthHost(process.env.AUTH_HOST);
-      // get accessToken to use in test cases
-      // Return promise so that test cases will not fire until it resolves.
-    
-      const oauthData = await s2sMS.Oauth.getAccessToken(
-        process.env.CPAAS_OAUTH_TOKEN,
-        process.env.EMAIL,
-        process.env.PASSWORD
-      );
-      accessToken = oauthData.access_token;
-      const idData = await s2sMS.Identity.getMyIdentityData(accessToken);
-      identityData = await s2sMS.Identity.getIdentityDetails(accessToken, idData.user_uuid);
+     // For tests, use the dev msHost
+     s2sMS.setMsHost(process.env.CPAAS_URL);
+     s2sMS.setMSVersion(process.env.CPAAS_API_VERSION);
+     s2sMS.setMsAuthHost(process.env.AUTH_URL);
+     // get accessToken to use in test cases
+     // Return promise so that test cases will not fire until it resolves.
+   
+     const oauthData = await s2sMS.Oauth.getAccessToken(
+       process.env.BASIC_TOKEN,
+       process.env.EMAIL,
+       process.env.PASSWORD
+     );
+     accessToken = oauthData.access_token;
+     const idData = await s2sMS.Identity.getMyIdentityData(accessToken);
+     identityData = await s2sMS.Identity.getIdentityDetails(accessToken, idData.user_uuid);
     } catch (error) {
       return Promise.reject(error);
     }
@@ -60,7 +60,7 @@ describe("Email MS Unit Test Suite", function() {
   });
   
   it("Send Valid Email", mochaAsync(async () => {
-    if (!process.env.isValid) throw new Error("Invalid Credentials");
+    // if (!process.env.isValid) throw new Error("Invalid Credentials");
     trace = objectMerge({}, trace, Util.generateNewMetaData(trace));
     const sender = identityData.username;
     const to = [identityData.username];
@@ -85,7 +85,7 @@ describe("Email MS Unit Test Suite", function() {
   },"Send Valid Email"));
 
   it("Send Valid Email with bcc", mochaAsync(async () => {
-    if (!process.env.isValid) throw new Error("Invalid Credentials");
+    // if (!process.env.isValid) throw new Error("Invalid Credentials");
     trace = objectMerge({}, trace, Util.generateNewMetaData(trace));
     const sender = identityData.username;
     const to = {bcc: [identityData.username]};
@@ -110,7 +110,7 @@ describe("Email MS Unit Test Suite", function() {
   },"Send Valid Email with bcc"));
 
   it("Send Valid Email with cc", mochaAsync(async () => {
-    if (!process.env.isValid) throw new Error("Invalid Credentials");
+    // if (!process.env.isValid) throw new Error("Invalid Credentials");
     trace = objectMerge({}, trace, Util.generateNewMetaData(trace));
     const sender = identityData.username;
     const to = {cc: [identityData.username]};
@@ -135,7 +135,7 @@ describe("Email MS Unit Test Suite", function() {
   },"Send Valid Email with cc"));
 
   it("Send Valid Email with to", mochaAsync(async () => {
-    if (!process.env.isValid) throw new Error("Invalid Credentials");
+    // if (!process.env.isValid) throw new Error("Invalid Credentials");
     trace = objectMerge({}, trace, Util.generateNewMetaData(trace));
     const sender = identityData.username;
     const to = {to: [identityData.username]};
@@ -160,7 +160,7 @@ describe("Email MS Unit Test Suite", function() {
   },"Send Valid Email with to"));
 
   it("Send Valid Email with to, bcc, and cc", mochaAsync(async () => {
-    if (!process.env.isValid) throw new Error("Invalid Credentials");
+    // if (!process.env.isValid) throw new Error("Invalid Credentials");
     trace = objectMerge({}, trace, Util.generateNewMetaData(trace));
     const sender = identityData.username;
     const to = {bcc: [identityData.username], cc: [identityData.username], to: [identityData.username]};
@@ -185,7 +185,7 @@ describe("Email MS Unit Test Suite", function() {
   },"Send Valid Email with to, bcc, and cc"));
 
   it("Send Invalid Sender Email", mochaAsync(async () => {
-    if (!process.env.isValid) throw new Error("Invalid Credentials");
+    // if (!process.env.isValid) throw new Error("Invalid Credentials");
     try{
       trace = objectMerge({}, trace, Util.generateNewMetaData(trace));
       const sender = "invalid";
@@ -216,7 +216,7 @@ describe("Email MS Unit Test Suite", function() {
   },"Send Invalid Sender Email"));
 
   it("Send Invalid Recipient Email", mochaAsync(async () => {
-    if (!process.env.isValid) throw new Error("Invalid Credentials");
+    // if (!process.env.isValid) throw new Error("Invalid Credentials");
     try{
       trace = objectMerge({}, trace, Util.generateNewMetaData(trace));
       const sender = identityData.username;
@@ -250,7 +250,7 @@ describe("Email MS Unit Test Suite", function() {
 
   // template
   // it("change me", mochaAsync(async () => {
-  //   if (!process.env.isValid) throw new Error("Invalid Credentials");
+  //   // if (!process.env.isValid) throw new Error("Invalid Credentials");
   //   trace = objectMerge({}, trace, Util.generateNewMetaData(trace));
   //   const response = await somethingAsync();
   //   assert.ok(
