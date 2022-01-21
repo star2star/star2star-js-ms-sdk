@@ -291,7 +291,7 @@ const runReport = async (
     const MS = util.getEndpoint("activity");
     const requestOptions = {
       method: "POST",
-      uri: `${MS}/register`,
+      uri: `${MS}/register/subtype`,
       headers: {
         Authorization: `Bearer ${accessToken}`,
         "Content-type": "application/json",

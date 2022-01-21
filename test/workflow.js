@@ -692,7 +692,7 @@ describe("Workflow", function() {
       uuid, // group uuid
       trace
     );
-    console.log("response!!! ", response);
+    // console.log("response!!! ", response);
     
     assert.ok(
       response?.template_uuid === wfTemplateUUID &&
@@ -880,8 +880,9 @@ describe("Workflow", function() {
       },
       trace
     );
+    console.log('>>>>', wfInstanceUUID, JSON.stringify(response, null, 2))
     assert.ok(
-      response.items[0].master.uuid === wfInstanceUUID,
+      response.items[0].master.template_uuid === wfInstanceUUID,
       JSON.stringify(response, null, "\t")
     );
     return response;
@@ -1222,4 +1223,5 @@ describe("Workflow", function() {
   //   );
   //   return response;
   // },"change me"));
+   
 });
