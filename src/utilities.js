@@ -752,7 +752,7 @@ const arrayDiff = (oldArray = [], newArray = [], doDedupe = true) => {
   if (typeof target === "undefined" || target === null || typeof oldValue !== "string" || typeof newValue !== "string"){
     return target;
   } else if (typeof target === "string"){
-    const regexp = new RegExp(`\\b${oldValue}\\b`, 'g');
+    const regexp = new RegExp(`\\b${oldValue}`, 'g');
      const replacedString = target.replace(regexp, newValue);
     if(target !== replacedString){
       return replacedString;
