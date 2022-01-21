@@ -94,7 +94,7 @@ const createFormInstance = async (
     const MS = util.getEndpoint("forms");
     const requestOptions = {
       method: "POST",
-      uri: `${MS}/forms/template`,
+      uri: `${MS}/template`,
       headers: {
         Authorization: `Bearer ${accessToken}`,
         "Content-type": "application/json",
