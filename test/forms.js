@@ -148,6 +148,35 @@ describe("Form", function() {
     }
   },"create form template"));
 
+  it("getFormTemplate", mochaAsync(async () => {
+    try{
+      if (!process.env.isValid) throw new Error("Invalid Credentials");
+      const f = {
+        "display": "form",
+        "components": []
+    };
+      trace = objectMerge({}, trace, Util.generateNewMetaData(trace));
+      const response = await s2sMS.Forms.getFormTemplate(
+        accessToken,
+        templateUUID, 
+        undefined,
+        trace
+      );
+      console.log('>>>>', response)
+      templateUUID = response.uuid;
+      assert.ok(
+        true,
+        response.hasOwnProperty("uuid")
+      );
+      return response;
+    } catch(error) {
+      assert.ok(
+        error.code === 400,
+        JSON.stringify(error, null, "\t")
+      );
+    }
+  },"create form template"));
+
   it("deleteFormTemplate", mochaAsync(async () => {
     try{
       if (!process.env.isValid) throw new Error("Invalid Credentials");
