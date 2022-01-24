@@ -4,7 +4,7 @@
 const Util = require("./utilities");
 const Auth = require("./auth");
 const Groups = require("./groups");
-const objectMerge = require("object-merge");
+const merge = require("@star2star/merge-deep");
 const logger = require("./node-logger").getInstance();
 
 /**
@@ -35,7 +35,7 @@ const createResourceGroups = async (
       };
     }
     //create the groups
-    let nextTrace = objectMerge({}, trace);
+    let nextTrace = merge({}, trace);
     const roles = await Auth.getResourceGroupRoles(accessToken, nextTrace);
     if(Object.keys(roles).length === 0){
       throw {"code": "404", "message": "resource group system roles not found"};
@@ -51,7 +51,7 @@ const createResourceGroups = async (
       };
       logger.debug("Creating Resource Group. User-Group:",userGroup);
 
-      nextTrace = objectMerge({}, nextTrace, Util.generateNewMetaData(nextTrace));
+      nextTrace = merge({}, nextTrace, Util.generateNewMetaData(nextTrace));
       groupPromises.push(Auth.createUserGroup(
         accessToken,
         accountUUID,
@@ -67,7 +67,7 @@ const createResourceGroups = async (
     groups.forEach(group => {
       //extract the group type from the group name
       const groupType = groupTypeRegex.exec(group.name);
-      nextTrace = objectMerge({}, nextTrace, Util.generateNewMetaData(nextTrace));
+      nextTrace = merge({}, nextTrace, Util.generateNewMetaData(nextTrace));
       scopePromises.push(Auth.assignScopedRoleToUserGroup(
         accessToken,
         group.uuid,
@@ -118,7 +118,7 @@ const cleanUpResourceGroups = async (
       resourceGroups.items.length > 0
     ) {
       
-      let nextTrace = objectMerge({}, trace);
+      let nextTrace = merge({}, trace);
       const groupsToDelete = [];
       resourceGroups.items.forEach(group => {
         groupsToDelete.push(
@@ -128,7 +128,7 @@ const cleanUpResourceGroups = async (
             nextTrace
           )
         );
-        nextTrace = objectMerge({}, nextTrace, Util.generateNewMetaData(nextTrace));
+        nextTrace = merge({}, nextTrace, Util.generateNewMetaData(nextTrace));
       });
       await Promise.all(groupsToDelete);
       logger.debug("Cleaning up Resource Groups Successful");
@@ -165,7 +165,7 @@ const updateResourceGroups = async (
       };
     }
     logger.debug(`Updating Resource Groups For ${resourceUUID}`);
-    let nextTrace = objectMerge({}, trace);
+    let nextTrace = merge({}, trace);
     const resourceGroups = await Auth.listAccessByGroups(
       accessToken,
       resourceUUID,
@@ -192,7 +192,7 @@ const updateResourceGroups = async (
           // A resource group exists for this set of permissions.
           if (typeof users === "object" && users.hasOwnProperty(groupType) && users[groupType].length > 0) {
             logger.debug(`Updating Resource Groups For ${resourceUUID}: Fetching Group`, item.user_group.uuid);
-            nextTrace = objectMerge({}, nextTrace, Util.generateNewMetaData(nextTrace));
+            nextTrace = merge({}, nextTrace, Util.generateNewMetaData(nextTrace));
             updatePromises.push(
               Groups.getGroup(
                 accessToken,
@@ -208,7 +208,7 @@ const updateResourceGroups = async (
           } else {
             // we no longer have any users for this resource group, so delete it
             logger.debug(`Updating Resource Groups For ${resourceUUID}: Deleting Group`, item.user_group.uuid);
-            nextTrace = objectMerge({}, nextTrace, Util.generateNewMetaData(nextTrace));
+            nextTrace = merge({}, nextTrace, Util.generateNewMetaData(nextTrace));
             deletePromises.push(
               Groups.deleteGroup(
                 accessToken,
@@ -247,7 +247,7 @@ const updateResourceGroups = async (
             return { uuid: user, type: "user" };
           });
         if (addUsers && addUsers.length > 0) {
-          nextTrace = objectMerge({}, nextTrace, Util.generateNewMetaData(nextTrace));
+          nextTrace = merge({}, nextTrace, Util.generateNewMetaData(nextTrace));
           memberUpdatePromises.push(
             Groups.addMembersToGroup(
               accessToken,
@@ -272,7 +272,7 @@ const updateResourceGroups = async (
             return { uuid: groupUser.uuid };
           });
         if (deleteUsers && deleteUsers.length > 0) {
-          nextTrace = objectMerge({}, nextTrace, Util.generateNewMetaData(nextTrace));
+          nextTrace = merge({}, nextTrace, Util.generateNewMetaData(nextTrace));
           memberUpdatePromises.push(
             Groups.deleteGroupMembers(
               accessToken,
@@ -293,7 +293,7 @@ const updateResourceGroups = async (
     // add any new groups if needed
     // the properties for the groups that were updated or deleted were removed from users object above
     if (Object.keys(users).length > 0) {
-      nextTrace = objectMerge(
+      nextTrace = merge(
         {},
         nextTrace,
         Util.generateNewMetaData(nextTrace)

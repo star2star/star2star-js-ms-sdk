@@ -3,7 +3,7 @@
 const Util = require("./utilities");
 const request = require("request-promise");
 const Groups = require("./groups");
-const objectMerge = require("object-merge");
+const merge = require("@star2star/merge-deep");
 
 /**
  * @async
@@ -936,7 +936,7 @@ const getResourceUsers = async (
 ) => {
   try {
     const groups = await listAccessByGroups(accessToken, resourceUUID, trace);
-    let nextTrace = objectMerge({}, trace);
+    let nextTrace = merge({}, trace);
     const users = {};
     const groupTypeRegex = /^[r,u,d]{1,3}/;
     for (const group in groups.items) {
@@ -944,7 +944,7 @@ const getResourceUsers = async (
         groups.items[group].user_group.group_name
       );
       users[groupName] = [];
-      nextTrace = objectMerge(
+      nextTrace = merge(
         {},
         nextTrace,
         Util.generateNewMetaData(nextTrace)

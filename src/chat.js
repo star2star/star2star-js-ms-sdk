@@ -4,7 +4,7 @@
 const util = require("./utilities");
 const Groups = require("./groups");
 const request = require("request-promise");
-const objectMerge = require("object-merge");
+const merge = require("@star2star/merge-deep");
 
 /**
  * @async
@@ -465,10 +465,10 @@ const getChannelInfo = async (
   try {
     const newMeta = util.generateNewMetaData;
     const pInfo = getChannel(access_token, channelUUID, trace);
-    let nextMeta = objectMerge({}, trace, newMeta(trace));
+    let nextMeta = merge({}, trace, newMeta(trace));
     const pMessages = getMessages(access_token, channelUUID, message_count, nextMeta);
     const pData = await Promise.all([pInfo, pMessages]);
-    nextMeta = objectMerge({}, trace, newMeta(trace));
+    nextMeta = merge({}, trace, newMeta(trace));
     const groupData = await Groups.getGroup(access_token, pData[0].group_uuid, nextMeta);
       
 

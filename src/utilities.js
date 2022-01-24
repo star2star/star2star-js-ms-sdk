@@ -3,7 +3,7 @@
 
 const config = require("./config");
 const request = require("request-promise");
-const objectMerge = require("object-merge");
+const merge = require("@star2star/merge-deep");
 const compareVersions = require("compare-versions");
 const crypto = require("crypto");
 const { v4 } = require("uuid");
@@ -365,7 +365,7 @@ const pendingResource = async (
     delete requestOptions.body;
 
     //add trace headers
-    const nextTrace = objectMerge({}, generateNewMetaData(trace));
+    const nextTrace = merge({}, generateNewMetaData(trace));
     addRequestTrace(requestOptions, nextTrace);
     // starting resource is not complete, poll the verify endpoint
     const expires = Date.now() + config.pollTimeout;
@@ -424,7 +424,7 @@ const formatError = (error) => {
           const parsedBody = JSON.parse(error.response.body);
           error.response.body = parsedBody;
         } catch (e) {
-          const body = objectMerge({}, error.response.body);
+          const body = merge({}, error.response.body);
           error.response.body = {
             message: body,
           };
@@ -456,7 +456,7 @@ const formatError = (error) => {
 
       // if we have no message add the body to details since this is a non-standard error message
       if (retObj.message === "unspecified error") {
-        const newBody = objectMerge({}, error.response.body);
+        const newBody = merge({}, error.response.body);
         error.response.body = {
           details: [newBody],
         };
@@ -700,6 +700,15 @@ const getUserUuidFromToken = (token) => {
   }
 };
 
+const getAccountUuidFromToken = (token) => {
+  try{
+    return JSON.parse(Buffer.from(token.split(".")[1], 'base64').toString())
+      .tid;
+  } catch(error){
+  throw formatError(error);
+  }
+};
+
 const arrayDiff = (oldArray = [], newArray = [], doDedupe = true) => {
   const retObj = {
     "added": [],
@@ -803,6 +812,7 @@ module.exports = {
   getMsDebug,
   sanitizeObject,
   getUserUuidFromToken,
+  getAccountUuidFromToken,
   arrayDiff,
   findAndReplaceString,
   isValidVersionString,

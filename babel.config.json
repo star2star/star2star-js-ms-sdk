@@ -3,7 +3,10 @@
     [
       "@babel/preset-env",
       {
-        "targets": "> 0.25%, not dead, node 12",
+        "targets": {
+          "chrome": "97",
+          "node": "12.22.9"
+        },
         "useBuiltIns": "usage",
         "corejs": 3,
         "debug": true
