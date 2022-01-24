@@ -33,31 +33,32 @@ const mochaAsync = (func, name) => {
 
 describe("Form", function() {
   let accessToken,
-    identityData;
+    identityData, templateUUID;
 
   before(async () => {
     try {
       
 
       // For tests, use the dev msHost
-      s2sMS.setMsHost(process.env.MS_HOST);
+      s2sMS.setMsHost(process.env.CPAAS_URL);
       s2sMS.setMSVersion(process.env.CPAAS_API_VERSION);
-      s2sMS.setMsAuthHost(process.env.AUTH_HOST);
+      s2sMS.setMsAuthHost(process.env.AUTH_URL);
       // get accessToken to use in test cases
       // Return promise so that test cases will not fire until it resolves.
+    
       const oauthData = await s2sMS.Oauth.getAccessToken(
-        process.env.CPAAS_OAUTH_TOKEN,
+        process.env.BASIC_TOKEN,
         process.env.EMAIL,
         process.env.PASSWORD
       );
-      // console.log('>>>', JSON.stringify(oauthData))
       accessToken = oauthData.access_token;
-      // console.log('aaaa', accessToken)
       const idData = await s2sMS.Identity.getMyIdentityData(accessToken);
-      // console.log('>>>>', JSON.stringify(idData))
       identityData = await s2sMS.Identity.getIdentityDetails(accessToken, idData.user_uuid);
+      // console.log('iii', JSON.stringify(identityData, null, 2 ));
+      accountUUID = identityData.account_uuid;
       process.env.isValid = true;
     } catch (error){
+      console.log('>>>>', error)
       return Promise.reject(error);
     }
   });
@@ -115,4 +116,64 @@ describe("Form", function() {
       );
     }
   },"List user Form Submissions"));
+
+  it("createFormTemplate", mochaAsync(async () => {
+    try{
+      if (!process.env.isValid) throw new Error("Invalid Credentials");
+      const f = {
+        "display": "form",
+        "components": []
+    };
+      trace = objectMerge({}, trace, Util.generateNewMetaData(trace));
+      const response = await s2sMS.Forms.createFormTemplate(
+        accessToken,
+        "test form",
+        "test desc",
+        identityData.account_uuid,
+        f,
+        trace
+      );
+      // console.log('>>>>', response)
+      templateUUID = response.uuid;
+      assert.ok(
+        true,
+        response.hasOwnProperty("uuid")
+      );
+      return response;
+    } catch(error) {
+      assert.ok(
+        error.code === 400,
+        JSON.stringify(error, null, "\t")
+      );
+    }
+  },"create form template"));
+
+  it("deleteFormTemplate", mochaAsync(async () => {
+    try{
+      if (!process.env.isValid) throw new Error("Invalid Credentials");
+      const f = {
+        "display": "form",
+        "components": []
+    };
+      trace = objectMerge({}, trace, Util.generateNewMetaData(trace));
+      const response = await s2sMS.Forms.deleteFormTemplate(
+        accessToken,
+        templateUUID, 
+        trace
+      );
+      //console.log('>>>> <<<< ', response)
+      assert.ok(
+        true,
+        response.statusCode === 202
+      );
+      return response;
+    } catch(error) {
+      //console.log('eeee', error)
+      assert.ok(
+        error.code === 400,
+        JSON.stringify(error, null, "\t")
+      );
+    }
+  },"create form template"));
+
 });
