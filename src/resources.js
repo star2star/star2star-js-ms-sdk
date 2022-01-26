@@ -120,15 +120,18 @@ const getResourceInstance = async (
  * @async
  * @description This function returns CMS resource instance rows
  * @param {string} [accessToken="null accessToken"] - cpaas access token
+ * @param {string} [type=undefined] - optional query param "type"
  * @param {string} [include=undefined] - optional query param "include"
  * @param {object} [trace={}] - optional microservice lifcycle headers
+ * @param {string} [account_uuid=undefined] - optional query param "account_uuid"
  * @returns {Promise} - promise resolving to identity object
  */
 const listResources = async (
   accessToken = "null accessToken",
   type = undefined,
   include = undefined,
-  trace = {}
+  trace = {},
+  account_uuid = undefined
 ) => {
   try {
     const MS = util.getEndpoint("resources");
@@ -152,6 +155,10 @@ const listResources = async (
     // add include query param if defined
     if (typeof include === "string") {
       requestOptions.qs.include = include;
+    }
+
+    if (typeof account_uuid === "string") {
+      requestOptions.qs.account_uuid = account_uuid;
     }
 
     util.addRequestTrace(requestOptions, trace);

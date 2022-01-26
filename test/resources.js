@@ -35,19 +35,19 @@ describe("Resource CMS Test Suite", function() {
     try {
       
       // For tests, use the dev msHost
-      s2sMS.setMsHost(process.env.MS_HOST);
+      s2sMS.setMsHost(process.env.CPAAS_URL);
       s2sMS.setMSVersion(process.env.CPAAS_API_VERSION);
-      s2sMS.setMsAuthHost(process.env.AUTH_HOST);
+      s2sMS.setMsAuthHost(process.env.AUTH_URL);
       // get accessToken to use in test cases
       // Return promise so that test cases will not fire until it resolves.
     
-      oauthData = await s2sMS.Oauth.getAccessToken(
-        process.env.CPAAS_OAUTH_TOKEN,
+      const oauthData = await s2sMS.Oauth.getAccessToken(
+        process.env.BASIC_TOKEN,
         process.env.EMAIL,
         process.env.PASSWORD
       );
       accessToken = oauthData.access_token;
-      const idData =  await s2sMS.Identity.getMyIdentityData(accessToken); 
+      const idData = await s2sMS.Identity.getMyIdentityData(accessToken);
       identityData = await s2sMS.Identity.getIdentityDetails(accessToken, idData.user_uuid);
 
     } catch (error) {
@@ -59,7 +59,7 @@ describe("Resource CMS Test Suite", function() {
     trace = objectMerge({}, trace, Util.generateNewMetaData(trace));
     const response = await s2sMS.Resources.listResources(
       accessToken,
-      "cwa_mass_contact",
+      undefined,
       undefined, //include
       trace
     );
@@ -89,19 +89,19 @@ describe("Resource CMS Test Suite", function() {
     return response;
   },"Get Resource Instance"));
 
-  it("Get Resource Instance Row", mochaAsync(async () => {
-    trace = objectMerge({}, trace, Util.generateNewMetaData(trace));
-    const response = await s2sMS.Resources.getResourceInstanceRow(
-      accessToken,
-      "nfDtt3wBwSlR5_nlmHoL",
-      "nfDtt3wBwSlR5_nlmHoL/row/appdev_ack_template_849a::eFsCmXwB4LoNFLghuAIk::1a036a2d-b1d3-4886-8c5c-0fcf99695a03"
-    );
-    assert.ok(
-      1 === 1,
-      JSON.stringify(response, null, "\t")
-    );
-    return response;
-  },"Get Resource Instance"));
+  // it("Get Resource Instance Row", mochaAsync(async () => {
+  //   trace = objectMerge({}, trace, Util.generateNewMetaData(trace));
+  //   const response = await s2sMS.Resources.getResourceInstanceRow(
+  //     accessToken,
+  //     "nfDtt3wBwSlR5_nlmHoL",
+  //     "nfDtt3wBwSlR5_nlmHoL/row/appdev_ack_template_849a::eFsCmXwB4LoNFLghuAIk::1a036a2d-b1d3-4886-8c5c-0fcf99695a03"
+  //   );
+  //   assert.ok(
+  //     1 === 1,
+  //     JSON.stringify(response, null, "\t")
+  //   );
+  //   return response;
+  // },"Get Resource Instance"));
 
   
 
