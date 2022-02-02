@@ -88,7 +88,7 @@ const createResourceGroups = async (
     return { status: "ok" };
   } catch (error) {
     logger.debug("Creating Resource Group Failed", error);
-    return Promise.reject(Util.formatError(error));
+    throw Util.formatError(error);
   }
 };
 
@@ -136,7 +136,7 @@ const cleanUpResourceGroups = async (
     }
   } catch (error) {
     logger.debug("Cleaning up Resource Groups Failed", error);
-    return Promise.reject(Util.formatError(error));
+    throw Util.formatError(error);
   }
 };
 
@@ -311,7 +311,7 @@ const updateResourceGroups = async (
     return {"status":"ok"};
   } catch (error) {
     logger.debug(`Updating Resource Groups For ${resourceUUID} Failed`, error);
-    return Promise.reject(Util.formatError(error));
+    throw Util.formatError(error);
   }
 };
 
