@@ -254,13 +254,13 @@ const aggregate = async (request, requestOptions, trace = {}) => {
           return response;
         }
       } catch (error) {
-        return Promise.reject(formatError(error));
+        throw formatError(error);
       }
     };
     const response = await makeRequest(request, requestOptions, trace);
     return response;
   } catch (error) {
-    return Promise.reject(formatError(error));
+    throw formatError(error);
   }
 };
 
