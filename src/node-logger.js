@@ -79,7 +79,7 @@ module.exports = class Logger {
 
             try {
               console[consoleMethod](
-                JSON.stringify(log, undefined, prettyPrint ? "  " : undefined)
+                JSON.stringify(log, null, prettyPrint ? "  " : undefined)
               );
             } catch (e) {
               console.error(

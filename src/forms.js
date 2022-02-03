@@ -163,7 +163,7 @@ const getFormInstance = async (
 const getFormTemplate = async (
   accessToken = "null access token",
   templateUUID = "null template uuid",
-  accountUUID = undefined,
+  includeDefinition = false,
   trace = {}
 ) => {
   try {
@@ -171,45 +171,24 @@ const getFormTemplate = async (
     const MS = util.getEndpoint("forms");
     const requestOptions = {
       method: "GET",
-      uri: `${MS}/template`,
+      uri: `${MS}/template/${templateUUID}`,
       headers: {
         Authorization: `Bearer ${accessToken}`,
         "Content-type": "application/json",
         "x-api-version": `${util.getVersion()}`
       },
-      qs: {
-        limit: 1000
-      },
+      qs: {},
       json: true
     };
+    
+    if(includeDefinition == true){
+      requestOptions.qs.include = "form_definition";
+    }
     util.addRequestTrace(requestOptions, trace);
     
-    if (typeof accountUUID === "string") {
-      requestOptions.qs.account_uuid = accountUUID;
-    } else {
-      try{
-        requestOptions.qs.account_uuid = JSON.parse(Buffer.from(accessToken.split(".")[1], "base64").toString()).tid;
-      } catch(error){
-        throw this.formatError(error);
-      }
-    }
     const response = await request(requestOptions);
-    // TODO swap this out with a direct get when CSRVS*** is done.
-    const template = response.items.reduce((acc, curr)=>{
-      if(typeof acc === "undefined"){
-        if(curr.uuid === templateUUID){
-          return curr;
-        }
-      }
-      return acc;
-    }, undefined);
-    if(typeof template === "undefined"){
-      throw {
-        "code": 404,
-        "message": `template ${templateUUID} not found`
-      };
-    }
-    return template;
+    
+    return response;
   } catch (error) {
     throw util.formatError(error);
   }
@@ -414,6 +393,45 @@ const listUserFormSubmissions = async (
   } 
 };
 
+/**
+ * @description This function will create a form  template 
+ * @async
+ * @param {string} [accessToken="null access token"] - CPaaS access toke
+ * @param {string} [name="no name"] - instance name
+ * @param {string} [description=""] -  description
+ * @param {string} [account_uuid="null account uuid"] - account uuid
+ * @param {object} [form=undefined] - form definition - formio  
+ * @param {object} [trace={}] - optional CPaaS lifecycle headers
+ * @returns {Promise}
+ */
+ const updateFormTemplate = async (
+  accessToken = "no access token",
+  templateUUID = "no form template uuid",
+  form = undefined,
+  trace = {}
+) => {
+  try {
+    const MS = util.getEndpoint("forms");
+    const requestOptions = {
+      method: "PUT",
+      uri: `${MS}/template/${templateUUID}`,
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+        "Content-type": "application/json",
+        "x-api-version": `${util.getVersion()}`
+      },
+      body: form,
+      json: true
+    };
+ 
+    util.addRequestTrace(requestOptions, trace);
+    const response = await request(requestOptions);
+    return response;
+  } catch (error) {
+    throw util.formatError(error);
+  }
+};
+
 
 module.exports = {
   createFormInstance,
@@ -424,4 +442,5 @@ module.exports = {
   listFormTemplates,
   listUserForms, 
   listUserFormSubmissions,
+  updateFormTemplate
 };
