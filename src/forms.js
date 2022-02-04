@@ -156,7 +156,7 @@ const getFormInstance = async (
  * @async
  * @param {string} [accessToken="null access token"] - CPaaS access token
  * @param {string} [templateUUID="null template uuid"] - form template uuid to look up
- * @param {string} [accountUUID=undefined] - optional account uuid
+ * @param {string} [includeDefinition=false] - include form definition in response
  * @param {object} [trace={}] - optional CPaaS lifecycle headers
  * @returns {Promise}
  */
@@ -389,7 +389,7 @@ const listUserFormSubmissions = async (
     }
     return {"status": "ok"};
   } catch(error){
-    return Promise.reject(util.formatError(error));
+    throw util.formatError(error)
   } 
 };
 
@@ -420,7 +420,7 @@ const listUserFormSubmissions = async (
         "Content-type": "application/json",
         "x-api-version": `${util.getVersion()}`
       },
-      body: form,
+      body: form.form, //this will just be form once CSRVS-798 is fixed
       json: true
     };
  

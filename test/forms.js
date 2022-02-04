@@ -169,7 +169,7 @@ describe("Form", function () {
             response.hasOwnProperty("form"),
           JSON.stringify(response, null, "\t")
         );
-        formTemplate = response.form;
+        formTemplate = response;
         return response;
       } catch (error) {
         throw error;
@@ -181,7 +181,7 @@ describe("Form", function () {
     "update form template",
     mochaAsync(async () => {
       try {
-        formTemplate.components = ["a"];
+        formTemplate.form.components = ["a"];
         trace = Util.generateNewMetaData(trace);
         const response = await s2sMS.Forms.updateFormTemplate(
           accessToken,
@@ -190,7 +190,7 @@ describe("Form", function () {
           trace
         );
         assert.ok(
-          response.form.components[0] === formTemplate.components[0],
+          response.form.components[0] === formTemplate.form.components[0],
           JSON.stringify(response, null, "\t")
         );
         return response;
