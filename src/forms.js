@@ -420,7 +420,7 @@ const listUserFormSubmissions = async (
         "Content-type": "application/json",
         "x-api-version": `${util.getVersion()}`
       },
-      body: form.form, //this will just be form once CSRVS-798 is fixed
+      body: form,
       json: true
     };
  
