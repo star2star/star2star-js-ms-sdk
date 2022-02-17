@@ -11,7 +11,6 @@ const fs = require("fs");
 const s2sMS = require("../src/index");
 const Util = require("../src/utilities");
 const logger = require("../src/node-logger").getInstance();
-const objectMerge = require("object-merge");
 const newMeta = Util.generateNewMetaData;
 let trace = newMeta();
 let identityData;
@@ -25,7 +24,7 @@ const mochaAsync = (func, name) => {
       return response; 
     } catch (error) {
       //mocha will log out the error
-      return Promise.reject(error);
+      throw error;
     }
   };
 };
@@ -69,7 +68,7 @@ describe("Accounts MS Unit Test Suite", function() {
 
   it("Create Account Without Parent-uuid", mochaAsync(async () => {
     try {
-      // if (!process.env.isValid) throw new Error("Invalid Credentials");
+      
       const body = {
         name: "Unit Test",
         number: time,
@@ -110,84 +109,77 @@ describe("Accounts MS Unit Test Suite", function() {
     }  
   },"Create Account Without Parent-uuid"));
 
-  // JES invalid since we dont have an account 
-  // it("Create Account", mochaAsync(async () => {
-  //   // if (!process.env.isValid) throw new Error("Invalid Credentials");
-  //   const body = {
-  //     name: "Unit Test",
-  //     number: ++time,
-  //     type: "Customer",
-  //     description: "Free form text",
-  //     address: {
-  //       line1: "123 ABC St",
-  //       line2: "Optional text",
-  //       city: "Sarasota",
-  //       state: "FL",
-  //       postal_code: "12345",
-  //       country: "US"
-  //     },
-  //     contacts: [
-  //       {
-  //         type: "primary",
-  //         first_name: "First",
-  //         last_name: "Last",
-  //         email: "abc@test.com",
-  //         phone: "1112223333"
-  //       }
-  //     ],
-  //     reference: "Free form text",
-  //     status: "Active",
-  //     parent_uuid: identityData.account_uuid
-  //   };
-  //   trace = objectMerge({}, trace, Util.generateNewMetaData(trace));
-  //   try{
-  //       const response = await s2sMS.Accounts.createAccount(accessToken, body, trace);
-  //       //save the account number for other tests
-  //       assert.ok(
-  //         response.name === "Unit Test",
-  //         JSON.stringify(response, null, "\t")
-  //       );
-  //       accountUUID = response.uuid;
-  //       contactUUID = response.contacts[0].uuid;
-  //       return response;
-  //   } catch(e){
-  //     console.log(e);
-  //     return error;
-  //   }
-  
-
-  // },"Create Account"));
-
-  // JES access denied so removing it 
-
-  // it("Get Account Default User Groups", async () => {
-  //   // if (!process.env.isValid) throw new Error("Invalid Credentials");
+  it("Create Account", mochaAsync(async () => {
     
-  //   trace = objectMerge({}, trace, Util.generateNewMetaData(trace));
-  //   const response = await s2sMS.Auth.getAccountDefaultGroups(
-  //     accessToken,
-  //     accountUUID,
-  //     trace
-  //   );
-  //   assert.ok(
-  //     response.hasOwnProperty("admin") &&
-  //     response.hasOwnProperty("user") &&
-  //     response.admin.length > 0 &&
-  //     response.user.length > 0,
-  //     JSON.stringify(response, null, "\t")
-  //   );
-  //   logger.debug(this.ctx.test.title, response);
-  // });
+    const body = {
+      name: "Unit Test",
+      number: ++time,
+      type: "Location",
+      description: "Free form text",
+      address: {
+        line1: "123 ABC St",
+        line2: "Optional text",
+        city: "Sarasota",
+        state: "FL",
+        postal_code: "12345",
+        country: "US"
+      },
+      contacts: [
+        {
+          type: "primary",
+          first_name: "First",
+          last_name: "Last",
+          email: "abc@test.com",
+          phone: "1112223333"
+        }
+      ],
+      reference: "Free form text",
+      status: "Active",
+      parent_uuid: identityData.account_uuid
+    };
+    trace = Util.generateNewMetaData(trace)
+    try{
+        const response = await s2sMS.Accounts.createAccount(accessToken, body, trace);
+        //save the account number for other tests
+        assert.ok(
+          response.name === "Unit Test",
+          JSON.stringify(response, null, "\t")
+        );
+        accountUUID = response.uuid;
+        contactUUID = response.contacts[0].uuid;
+        return response;
+    } catch(e){
+      console.log(e);
+      return error;
+    }
+  },"Create Account"));
+
+  it("Get Account Default User Groups", async () => {
+    trace = Util.generateNewMetaData(trace)
+    const response = await s2sMS.Auth.getAccountDefaultGroups(
+      accessToken,
+      accountUUID,
+      trace
+    );
+    assert.ok(
+      response.hasOwnProperty("admin") &&
+      response.hasOwnProperty("user") &&
+      response.admin.length > 0 &&
+      response.user.length > 0,
+      JSON.stringify(response, null, "\t")
+    );
+    logger.debug(this.ctx.test.title, response);
+  });
   
-  //Limit of 1 breaks call CSRVS-330
-  // CCORE-1414 opened 
+  // Limit of 1 breaks call CSRVS-330
+  // Super Admins this fails: CCORE-1414 opened 
   it("List Accounts", mochaAsync(async () => {
-    // if (!process.env.isValid) throw new Error("Invalid Credentials");
-    trace = objectMerge({}, trace, Util.generateNewMetaData(trace));
+    
+    trace = Util.generateNewMetaData(trace)
     const response = await s2sMS.Accounts
       .listAccounts(
         accessToken, 
-        1, //offset
+        0, //offset
         1, //limit
         {
           "type": "Customer", 
@@ -204,9 +196,9 @@ describe("Accounts MS Unit Test Suite", function() {
   
  
   it("Get Account Data and Check Relationships", mochaAsync(async () => {
-    // if (!process.env.isValid) throw new Error("Invalid Credentials");
+    
     //Workaround for CSRVS-181
-    trace = objectMerge({}, trace, Util.generateNewMetaData(trace));
+    trace = Util.generateNewMetaData(trace)
     const response = await s2sMS.Accounts.getAccount(accessToken, accountUUID, trace);
     // console.log("rrrrrr", response);
     assert.ok(
@@ -218,12 +210,12 @@ describe("Accounts MS Unit Test Suite", function() {
   },"Get Account Data and Check Relationships"));
   
   it("Modify Account", mochaAsync(async () => {
-    // if (!process.env.isValid) throw new Error("Invalid Credentials");
+    
     //Test Partial Update -- Address
     const rAccount = await s2sMS.Accounts.getAccount(accessToken, accountUUID, trace);
     rAccount.address.line2 = "james";
 
-    trace = objectMerge({}, trace, Util.generateNewMetaData(trace));
+    trace = Util.generateNewMetaData(trace)
     const response = await s2sMS.Accounts.modifyAccount(
       accessToken,
       accountUUID,
@@ -239,9 +231,9 @@ describe("Accounts MS Unit Test Suite", function() {
   },"Modify Account"));
   
   it("Get Account Data After Modify", mochaAsync(async () => {
-    // if (!process.env.isValid) throw new Error("Invalid Credentials");
+    
     //Workaround for CSRVS-181
-    trace = objectMerge({}, trace, Util.generateNewMetaData(trace));
+    trace = Util.generateNewMetaData(trace)
     const response = await s2sMS.Accounts.getAccount(accessToken, accountUUID, trace);
     assert.ok(
       response.uuid === accountUUID &&
@@ -252,8 +244,8 @@ describe("Accounts MS Unit Test Suite", function() {
   },"Get Account Data After Modify"));
   
   it("List Account Relationships", mochaAsync(async () => {
-    // if (!process.env.isValid) throw new Error("Invalid Credentials");
-    trace = objectMerge({}, trace, Util.generateNewMetaData(trace));
+    
+    trace = Util.generateNewMetaData(trace)
     const response = await s2sMS.Accounts.listAccountRelationships(
       accessToken,
       identityData.account_uuid,
@@ -275,8 +267,8 @@ describe("Accounts MS Unit Test Suite", function() {
   },"List Account Relationships"));
   
   it("Suspend Account", mochaAsync(async () => {
-    // if (!process.env.isValid) throw new Error("Invalid Credentials");
-    trace = objectMerge({}, trace, Util.generateNewMetaData(trace));
+    
+    trace = Util.generateNewMetaData(trace)
     const response = await s2sMS.Accounts.suspendAccount(accessToken, accountUUID, trace);
     // console.log('jjjj', JSON.stringify(response, null, 2));
     assert.ok(
@@ -287,8 +279,8 @@ describe("Accounts MS Unit Test Suite", function() {
   },"Suspend Account"));
 
   it("Reinstate Account", mochaAsync(async () => {
-    // if (!process.env.isValid) throw new Error("Invalid Credentials");
-    trace = objectMerge({}, trace, Util.generateNewMetaData(trace));
+    
+    trace = Util.generateNewMetaData(trace)
     const response = await s2sMS.Accounts.reinstateAccount(accessToken, accountUUID, trace);
     assert.ok(
       response.status === "ok",
@@ -297,22 +289,20 @@ describe("Accounts MS Unit Test Suite", function() {
     return response;
   },"Reinstate Account"));
 
-  // no deleting yet 
-  // it("Delete Account", mochaAsync(async () => {
-  //   if (!process.env.isValid) throw new Error("Invalid Credentials");
-  //   trace = objectMerge({}, trace, Util.generateNewMetaData(trace));
-  //   const response = await s2sMS.Accounts.deleteAccount(accessToken, accountUUID, trace);
-  //   assert.ok(
-  //     response.status === "ok",
-  //     JSON.stringify(response, null, "\t")
-  //   );
-  //   return response;
-  // },"Delete Account"));
+  it("Delete Account", mochaAsync(async () => {
+    trace = Util.generateNewMetaData(trace)
+    const response = await s2sMS.Accounts.deleteAccount(accessToken, accountUUID, trace);
+    assert.ok(
+      response.status === "ok",
+      JSON.stringify(response, null, "\t")
+    );
+    return response;
+  },"Delete Account"));
 
   // template
   // it("change me", mochaAsync(async () => {
   //   if (!process.env.isValid) throw new Error("Invalid Credentials");
-  //   trace = objectMerge({}, trace, Util.generateNewMetaData(trace));
+  //   trace = Util.generateNewMetaData(trace)
   //   const response = await somethingAsync();
   //   assert.ok(
   //     1 === 1,

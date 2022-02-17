@@ -1,6 +1,7 @@
 node_modules
 .vscode
 .env.json
+.env-cmdrc
 creds.sh
 lib
 **/credentials.json

@@ -12,9 +12,7 @@ const fs = require("fs");
 const s2sMS = require("../src/index");
 const Util = require("../src/utilities");
 const logger = require("../src/node-logger").getInstance();
-const objectMerge = require("object-merge");
-const newMeta = Util.generateNewMetaData;
-let trace = newMeta();
+let trace = Util.generateNewMetaData();
 
 
 const testContact = {
@@ -54,7 +52,7 @@ const mochaAsync = (func, name) => {
       return response; 
     } catch (error) {
       //mocha will log out the error
-      return Promise.reject(error);
+      throw error;
     }
   };
 };
@@ -86,14 +84,14 @@ describe("Contacts MS Test Suite", function() {
       const idData = await s2sMS.Identity.getMyIdentityData(accessToken);
       identityData = await s2sMS.Identity.getIdentityDetails(accessToken, idData.user_uuid);
     } catch (error){
-      return Promise.reject(error);
+      throw error;
     }
   });
 
   // template
   // it("change me", mochaAsync(async () => {
   //   if (!process.env.isValid) throw new Error("Invalid Credentials");
-  //   trace = objectMerge({}, trace, Util.generateNewMetaData(trace));
+  //   trace = Util.generateNewMetaData(trace);
   //   const response = await somethingAsync();
   //   assert.ok(
   //     1 === 1,
@@ -101,10 +99,9 @@ describe("Contacts MS Test Suite", function() {
   //   );
   //   return response;
   // },"change me"));
-console.log("access token", accessToken)
   it("Create User Contact", mochaAsync(async () => {
 
-    trace = objectMerge({}, trace, Util.generateNewMetaData(trace));
+    trace = Util.generateNewMetaData(trace);
     const response = await s2sMS.Contacts.createUserContact(
       accessToken,
       identityData.uuid,
@@ -122,7 +119,7 @@ console.log("access token", accessToken)
 
   it("Export User Contacts", mochaAsync(async () => {
 
-    trace = objectMerge({}, trace, Util.generateNewMetaData(trace));
+    trace = Util.generateNewMetaData(trace);
     const response = await s2sMS.Contacts.exportContacts(
       accessToken,
       identityData.uuid
@@ -137,20 +134,20 @@ console.log("access token", accessToken)
 
   it("List Contacts", mochaAsync(async () => {
 
-    trace = objectMerge({}, trace, Util.generateNewMetaData(trace));
+    trace = Util.generateNewMetaData(trace);
     const newContact = await s2sMS.Contacts.createUserContact(
       accessToken,
       identityData.uuid,
       testContact2
     );
     contact2UUID = newContact.uuid;
-    trace = objectMerge({}, trace, Util.generateNewMetaData(trace));
-    trace = objectMerge({}, trace, Util.generateNewMetaData(trace));
+    trace = Util.generateNewMetaData(trace);
+    trace = Util.generateNewMetaData(trace);
     const response = await s2sMS.Contacts.listContacts(
       accessToken,
       identityData.uuid,
       0, //offset
-      100, //limit
+      1000, //limit
       {"search": "9"},
       trace
     );
@@ -159,7 +156,7 @@ console.log("access token", accessToken)
       accessToken,
       identityData.uuid,
       0, //offset
-      100, //limit
+      1000, //limit
       {"search": "oth"},
       trace
     );
@@ -186,7 +183,7 @@ console.log("access token", accessToken)
 
   it("Get One Contact", mochaAsync(async () => {
 
-    trace = objectMerge({}, trace, Util.generateNewMetaData(trace));
+    trace = Util.generateNewMetaData(trace);
     const response = await s2sMS.Contacts.getContact(
       accessToken,
       contactUUID
@@ -200,7 +197,7 @@ console.log("access token", accessToken)
 
   it("Delete User Contact", mochaAsync(async () => {
 
-    trace = objectMerge({}, trace, Util.generateNewMetaData(trace));
+    trace = Util.generateNewMetaData(trace);
     const response = await s2sMS.Contacts.deleteContact(
       accessToken,
       contactUUID

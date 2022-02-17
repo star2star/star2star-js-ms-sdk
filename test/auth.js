@@ -12,12 +12,7 @@ const fs = require("fs");
 const s2sMS = require("../src/index");
 const Util = require("../src/utilities");
 const logger = require("../src/node-logger").getInstance();
-const objectMerge = require("object-merge");
-const merge = require("merge-deep");
-const newMeta = Util.generateNewMetaData;
-let trace = newMeta();
-
-
+let trace = Util.generateNewMetaData();
 
 describe("Permissions MS Test Suite", function() {
   let accessToken,
@@ -48,7 +43,7 @@ describe("Permissions MS Test Suite", function() {
   // Template for New Test............
   // it("change me", mochaAsync(async () => {
   //   if (!process.env.isValid) throw new Error("Invalid Credentials");
-  //   trace = objectMerge({}, trace, Util.generateNewMetaData(trace));
+  //   trace = Util.generateNewMetaData(trace);
   //   const response = await somethingAsync();
   //   assert.ok(1 === 1);
   //   return response;
@@ -59,7 +54,7 @@ describe("Permissions MS Test Suite", function() {
     const filters = {
       "resource_type": "account"
     };
-    trace = objectMerge({}, trace, Util.generateNewMetaData(trace));
+    trace = Util.generateNewMetaData(trace);
     const response = await s2sMS.Auth.listPermissions(
       accessToken,
       0, // offset
@@ -83,7 +78,7 @@ describe("Permissions MS Test Suite", function() {
       users: [identityData.uuid],
       description: "A test group"
     };
-    trace = objectMerge({}, trace, Util.generateNewMetaData(trace));
+    trace = Util.generateNewMetaData(trace);
     const response = await s2sMS.Auth.createUserGroup(
       accessToken,
       identityData.account_uuid,
@@ -106,7 +101,7 @@ describe("Permissions MS Test Suite", function() {
       "name": "Unit-Test",
       "description": "A test group"
     };
-    trace = objectMerge({}, trace, Util.generateNewMetaData(trace));
+    trace = Util.generateNewMetaData(trace);
     const response = await s2sMS.Auth.listUserGroups(
       accessToken,
       0, //offset
@@ -127,7 +122,7 @@ describe("Permissions MS Test Suite", function() {
     const body = {
       "description": "A modified test group"
     };
-    trace = objectMerge({}, trace, Util.generateNewMetaData(trace));
+    trace = Util.generateNewMetaData(trace);
     const response = await s2sMS.Auth.modifyUserGroup(
       accessToken,
       userGroupUUID,
@@ -147,7 +142,7 @@ describe("Permissions MS Test Suite", function() {
       "name": "Unit-Test",
       "description": "A modified test group"
     };
-    trace = objectMerge({}, trace, Util.generateNewMetaData(trace));
+    trace = Util.generateNewMetaData(trace);
     const response = await s2sMS.Auth.listUserGroups(
       accessToken,
       0, //offset
@@ -171,7 +166,7 @@ describe("Permissions MS Test Suite", function() {
       status: "Active",
       permissions: [permissions[0]?.uuid]
     };
-    trace = objectMerge({}, trace, Util.generateNewMetaData(trace));
+    trace = Util.generateNewMetaData(trace);
     const response = await s2sMS.Auth.createRole(
       accessToken,
       identityData.account_uuid,
@@ -193,7 +188,7 @@ describe("Permissions MS Test Suite", function() {
     const filters = {
       "name": "Unit-Test"
     };
-    trace = objectMerge({}, trace, Util.generateNewMetaData(trace));
+    trace = Util.generateNewMetaData(trace);
     const response = await s2sMS.Auth.listRoles(
       accessToken,
       0,
@@ -212,7 +207,7 @@ describe("Permissions MS Test Suite", function() {
 
   it("Get Role By UUID", async () => {
     // if (!process.env.isValid) throw new Error("Invalid Credentials");
-    trace = objectMerge({}, trace, Util.generateNewMetaData(trace));
+    trace = Util.generateNewMetaData(trace);
     const response = await s2sMS.Auth.getRole(
       accessToken,
       role,
@@ -234,7 +229,7 @@ describe("Permissions MS Test Suite", function() {
 
   it("Assign Permissions to Role", async () => {
     // if (!process.env.isValid) throw new Error("Invalid Credentials");
-    trace = objectMerge({}, trace, Util.generateNewMetaData(trace));
+    trace = Util.generateNewMetaData(trace);
     const body = {
       permissions: [permissions[1].uuid]
     };
@@ -259,7 +254,7 @@ describe("Permissions MS Test Suite", function() {
     };
  
 
-    trace = objectMerge({}, trace, Util.generateNewMetaData(trace));
+    trace = Util.generateNewMetaData(trace);
     const response = await s2sMS.Auth.modifyRole(
       accessToken,
       role,
@@ -279,7 +274,7 @@ describe("Permissions MS Test Suite", function() {
     const filters = {
       "name": "Unit-Test"
     };
-    trace = objectMerge({}, trace, Util.generateNewMetaData(trace));
+    trace = Util.generateNewMetaData(trace);
     const response = await s2sMS.Auth.listRoles(
       accessToken,
       0, // offset
@@ -301,7 +296,7 @@ describe("Permissions MS Test Suite", function() {
     const body = {
       roles: [role]
     };
-    trace = objectMerge({}, trace, Util.generateNewMetaData(trace));
+    trace = Util.generateNewMetaData(trace);
     const response = await s2sMS.Auth.assignRolesToUserGroup(
       accessToken,
       userGroupUUID,
@@ -317,7 +312,7 @@ describe("Permissions MS Test Suite", function() {
 
   it("List a Role's Groups", async () => {
     // if (!process.env.isValid) throw new Error("Invalid Credentials");
-    trace = objectMerge({}, trace, Util.generateNewMetaData(trace));
+    trace = Util.generateNewMetaData(trace);
     const response = await s2sMS.Auth.listRoleUserGroups(
       accessToken,
       role,
@@ -348,7 +343,7 @@ describe("Permissions MS Test Suite", function() {
     const filters = {
       "resource_type": "account"
     };
-    trace = objectMerge({}, trace, Util.generateNewMetaData(trace));
+    trace = Util.generateNewMetaData(trace);
     const response = await s2sMS.Auth.listRolePermissions(
       accessToken,
       role,
@@ -368,7 +363,7 @@ describe("Permissions MS Test Suite", function() {
     const filters = {
       "name": "Unit-Test"
     };
-    trace = objectMerge({}, trace, Util.generateNewMetaData(trace));
+    trace = Util.generateNewMetaData(trace);
     await new Promise(resolve => setTimeout(resolve, Util.config.msDelay));
     const response = await s2sMS.Auth.listPermissionRoles(
       accessToken,
@@ -387,7 +382,7 @@ describe("Permissions MS Test Suite", function() {
 
   it("List a Group's Roles", async () => {
     // if (!process.env.isValid) throw new Error("Invalid Credentials");
-    trace = objectMerge({}, trace, Util.generateNewMetaData(trace));
+    trace = Util.generateNewMetaData(trace);
     const response = await s2sMS.Auth.listUserGroupRoles(
       accessToken,
       userGroupUUID,
@@ -407,7 +402,7 @@ describe("Permissions MS Test Suite", function() {
         uuid: identityData.uuid
       }
     ];
-    trace = objectMerge({}, trace, Util.generateNewMetaData(trace));
+    trace = Util.generateNewMetaData(trace);
     const response = await s2sMS.Groups.deleteGroupMembers(
       accessToken,
       userGroupUUID,
@@ -426,7 +421,7 @@ describe("Permissions MS Test Suite", function() {
       "name": "Unit-Test",
       "description": "A modified test group"
     };
-    trace = objectMerge({}, trace, Util.generateNewMetaData(trace));
+    trace = Util.generateNewMetaData(trace);
     const response = await s2sMS.Auth.listUserGroups(
       accessToken,
       0, //offset
@@ -450,7 +445,7 @@ describe("Permissions MS Test Suite", function() {
         uuid: identityData.uuid
       }
     ];
-    trace = objectMerge({}, trace, Util.generateNewMetaData(trace));
+    trace = Util.generateNewMetaData(trace);
     const response = await s2sMS.Groups.addMembersToGroup(
       accessToken,
       userGroupUUID,
@@ -470,7 +465,7 @@ describe("Permissions MS Test Suite", function() {
       "name": "Unit-Test",
       "description": "A modified test group"
     };
-    trace = objectMerge({}, trace, Util.generateNewMetaData(trace));
+    trace = Util.generateNewMetaData(trace);
     const response = await s2sMS.Auth.listUserGroups(
       accessToken,
       0, //offset
@@ -490,7 +485,7 @@ describe("Permissions MS Test Suite", function() {
   it("Delete Permission From Role With User Group Attached", async () => {
     // if (!process.env.isValid) throw new Error("Invalid Credentials");
     try {
-      trace = objectMerge({}, trace, Util.generateNewMetaData(trace));
+      trace = Util.generateNewMetaData(trace);
       const response = await s2sMS.Auth.deletePermissionFromRole(
         accessToken,
         role,
@@ -514,7 +509,7 @@ describe("Permissions MS Test Suite", function() {
   
   it("Delete Role From User Group", async () => {
     // if (!process.env.isValid) throw new Error("Invalid Credentials");
-    trace = objectMerge({}, trace, Util.generateNewMetaData(trace));
+    trace = Util.generateNewMetaData(trace);
     const deleteResponse = await s2sMS.Auth.deleteRoleFromUserGroup(
       accessToken,
       userGroupUUID,
@@ -525,7 +520,7 @@ describe("Permissions MS Test Suite", function() {
       deleteResponse.status === "ok",
       JSON.stringify(deleteResponse, null, "\t")
     );
-    trace = objectMerge({}, trace, Util.generateNewMetaData(trace));
+    trace = Util.generateNewMetaData(trace);
     const listResponse = await s2sMS.Auth.listUserGroupRoles(
       accessToken,
       userGroupUUID,
@@ -540,7 +535,7 @@ describe("Permissions MS Test Suite", function() {
 
   // it("Delete Permission From Role", async () => {
   //   if (!process.env.isValid) throw new Error("Invalid Credentials");
-  //   trace = objectMerge({}, trace, Util.generateNewMetaData(trace));
+  //   trace = Util.generateNewMetaData(trace);
   //   const response = await s2sMS.Auth.deletePermissionFromRole(
   //     accessToken,
   //     role,
@@ -559,7 +554,7 @@ describe("Permissions MS Test Suite", function() {
   //   const filters = {
   //     "name": "Unit-Test"
   //   };
-  //   trace = objectMerge({}, trace, Util.generateNewMetaData(trace));
+  //   trace = Util.generateNewMetaData(trace);
   //   const response = await s2sMS.Auth.listRoles(
   //     accessToken,
   //     0, // offset
@@ -579,7 +574,7 @@ describe("Permissions MS Test Suite", function() {
 
   it("Deactivate Role", async () => {
     // if (!process.env.isValid) throw new Error("Invalid Credentials");
-    trace = objectMerge({}, trace, Util.generateNewMetaData(trace));
+    trace = Util.generateNewMetaData(trace);
     const response = await s2sMS.Auth.deactivateRole(accessToken, role, trace);
     assert.ok(
       response.status === "ok",
@@ -590,7 +585,7 @@ describe("Permissions MS Test Suite", function() {
 
   it("Reactivate Role", async () => {
     // if (!process.env.isValid) throw new Error("Invalid Credentials");
-    trace = objectMerge({}, trace, Util.generateNewMetaData(trace));
+    trace = Util.generateNewMetaData(trace);
     const response = await s2sMS.Auth.activateRole(accessToken, role, trace);
     assert.ok(
       response.status === "ok",
@@ -601,7 +596,7 @@ describe("Permissions MS Test Suite", function() {
 
   // it("Delete Role", async () => {
   //   if (!process.env.isValid) throw new Error("Invalid Credentials");
-  //   trace = objectMerge({}, trace, Util.generateNewMetaData(trace));
+  //   trace = Util.generateNewMetaData(trace);
   //   const response = await s2sMS.Auth.deleteRole(accessToken, role, trace);
   //   assert.ok(
   //     response.status === "ok",
@@ -613,7 +608,7 @@ describe("Permissions MS Test Suite", function() {
   
   // it("Delete User Group", async () => {
   //   if (!process.env.isValid) throw new Error("Invalid Credentials");
-  //   trace = objectMerge({}, trace, Util.generateNewMetaData(trace));
+  //   trace = Util.generateNewMetaData(trace);
   //   const response = await s2sMS.Groups.deleteGroup(accessToken, userGroupUUID, trace);
   //   assert.ok(
   //     response.status === "ok",
@@ -627,7 +622,7 @@ describe("Permissions MS Test Suite", function() {
     const filters = {
       "name": "Unit-Test"
     };
-    trace = objectMerge({}, trace, Util.generateNewMetaData(trace));
+    trace = Util.generateNewMetaData(trace);
     const groupsResponse = await s2sMS.Auth.listUserGroups(
       accessToken,
       0, //offset
@@ -637,14 +632,14 @@ describe("Permissions MS Test Suite", function() {
     );
     const deletePromises = [];
     groupsResponse.items.forEach(item => {
-      trace = objectMerge({}, trace, Util.generateNewMetaData(trace));
+      trace = Util.generateNewMetaData(trace);
       deletePromises.push(
         s2sMS.Groups.deleteGroup(accessToken, item.uuid, trace)
       );
     });
 
     filters.name = "new name";
-    trace = objectMerge({}, trace, Util.generateNewMetaData(trace));
+    trace = Util.generateNewMetaData(trace);
     const rolesResponse = await s2sMS.Auth.listRoles(
       accessToken,
       0, //offset
@@ -653,7 +648,7 @@ describe("Permissions MS Test Suite", function() {
       trace
     );
     rolesResponse.items.forEach(item => {
-      trace = objectMerge({}, trace, Util.generateNewMetaData(trace));
+      trace = Util.generateNewMetaData(trace);
       deletePromises.push(
         s2sMS.Auth.deleteRole(accessToken, item.uuid, trace)
       );
