@@ -312,11 +312,50 @@ const listResources = async (
   }
 };
 
+/**
+  * @async
+  * @description This function searches a CMS resource.
+  * @param {string} [accessToken="null accessToken"]
+  * @param {string} [resourceUUID="null resourceUUID"] resource uuid
+  * @param {object} [body={}] search expression object
+  * @param {object} [trace={}] - optional microservice lifcycle headers
+  * @returns {Promise<object>} - promise resolving to a CMS instance row object
+  */
+ const searchResourceInstance = async (
+  accessToken = "null accessToken",
+  resourceUUID = "null resource_uuid",
+  body = {},
+  trace = {}
+) => {
+  try {
+    const nextTrace = util.generateNewMetaData(trace);
+    const MS = util.getEndpoint("resources");
+    const requestOptions = {
+      method: "POST",
+      uri: `${MS}instance/${resourceUUID}/search`,
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+        "Content-type": "application/json",
+        "x-api-version": `${util.getVersion()}`,
+      },
+      body: body,
+      json: true
+    };
+
+    util.addRequestTrace(requestOptions, nextTrace);
+    const response = await request(requestOptions);
+    return response;
+  } catch (error) {
+    throw util.formatError(error);
+  }
+};
+
 module.exports = {
   getResourceInstance,
   getResourceInstanceRow,
   listResources,
   registerAccountTemplate,
   registerUserTemplate,
+  searchResourceInstance,
   createInstance
 };
