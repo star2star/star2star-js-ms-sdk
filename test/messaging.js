@@ -28,7 +28,7 @@ const mochaAsync = (func, name) => {
 };
 
 describe("Messaging MS Unit Test Suite", function () {
-  let accessToken, identityData, conversationUUID, messageUUID;
+  let accessToken, identityData, conversationUUID, context, messages;
 
   before(async () => {
     try {
@@ -51,7 +51,7 @@ describe("Messaging MS Unit Test Suite", function () {
         idData.user_uuid
       );
     } catch (error) {
-      return Promise.reject(error);
+      throw error;
     }
   });
 
@@ -68,8 +68,6 @@ describe("Messaging MS Unit Test Suite", function () {
         {},
         trace
       );
-      messageUUID = response.uuid;
-      console.log("MESSAGEUUID", messageUUID);
       assert.ok(
         response.hasOwnProperty("uuid"),
         JSON.stringify(response, null, "\t")
@@ -90,9 +88,87 @@ describe("Messaging MS Unit Test Suite", function () {
       );
       assert.ok(true, JSON.stringify(response, null, "\t"));
       conversationUUID = response.uuid;
-
+      context = response.context.uuid;
       return response;
     }, "Get Conversation")
+  );
+
+  it(
+    "Send Message",
+    mochaAsync(async () => {
+      trace = Util.generateNewMetaData(trace);
+      //only saving last response
+      let response;
+      for (const i of ["one","two","three"]){
+
+      
+      response = await s2sMS.Messaging.sendMessage(
+        accessToken,
+        identityData.uuid,
+        context,
+        process.env.SMS_FROM,
+        "sms",
+        [
+          {
+            "type": "text",
+            "body": i
+          }
+        ],
+        trace
+      );
+      }
+      assert.ok(true, JSON.stringify(response, null, "\t"));
+
+      return response;
+    }, "Send Message")
+  );
+
+  it(
+    "Retrieve Messages",
+    mochaAsync(async () => {
+      trace = Util.generateNewMetaData(trace);
+      const response = await s2sMS.Messaging.retrieveMessages(
+        accessToken,
+        conversationUUID,
+        0, // offest
+        100, // limit
+        trace
+      );
+      messages = response.items;
+      assert.ok(true, JSON.stringify(response, null, "\t"));
+      return response;
+    }, "Retrieve Messages")
+  );
+
+  it(
+    "Delete Message",
+    mochaAsync(async () => {
+      trace = Util.generateNewMetaData(trace);
+      const response = await s2sMS.Messaging.deleteMessage(
+        accessToken,
+        messages[0].uuid,
+        trace
+      );
+      assert.ok(true, JSON.stringify(response, null, "\t"));
+      return response;
+    }, "Delete Message")
+  );
+
+  it(
+    "Delete Multiple Messages",
+    mochaAsync(async () => {
+      trace = Util.generateNewMetaData(trace);
+      const response = await s2sMS.Messaging.deleteMultipleMessages(
+        accessToken,
+        [
+          messages[1].uuid,
+          messages[2].uuid,
+        ],
+        trace
+      );
+      assert.ok(true, JSON.stringify(response, null, "\t"));
+      return response;
+    }, "Delete Multiple Messages")
   );
 
   it(
@@ -118,10 +194,9 @@ describe("Messaging MS Unit Test Suite", function () {
         accessToken,
         identityData.uuid,
         0, // offset
-        105, // limit
+        100, // limit
         trace
       );
-      console.log("RESPONSE!!!", response);
       assert.ok(true, JSON.stringify(response, null, "\t"));
       return response;
     }, "Retrieve Conversations")
@@ -189,38 +264,6 @@ describe("Messaging MS Unit Test Suite", function () {
       assert.ok(true, JSON.stringify(response, null, "\t"));
       return response;
     }, "Snooze Unsnooze Conversation")
-  );
-
-  it(
-    "Delete Message",
-    mochaAsync(async () => {
-      trace = Util.generateNewMetaData(trace);
-      const response = await s2sMS.Messaging.deleteMessage(
-        accessToken,
-        //messageUUID,
-        "74314a73-51a6-4dd3-9e40-58c03d76b381",
-        trace
-      );
-      assert.ok(true, JSON.stringify(response, null, "\t"));
-      return response;
-    }, "Delete Message")
-  );
-
-  it(
-    "Delete Multiple Messages",
-    mochaAsync(async () => {
-      trace = Util.generateNewMetaData(trace);
-      const response = await s2sMS.Messaging.deleteMultipleMessages(
-        accessToken,
-        [
-          "4e861d10-d569-4bb5-a43e-5c28912931b0",
-          "b633fab3-78f4-434f-bf92-5c9d2ec60e08",
-        ],
-        trace
-      );
-      assert.ok(true, JSON.stringify(response, null, "\t"));
-      return response;
-    }, "Delete Multiple Messages")
   );
 
   it(

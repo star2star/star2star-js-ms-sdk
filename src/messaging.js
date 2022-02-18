@@ -20,7 +20,6 @@ const getConversation = async (
   trace = {}
 ) => {
   try {
-    console.log("TO PHONE NUMBER", toPhoneNumber); 
     const MS = util.getEndpoint("Messaging");
     const requestOptions = {
       method: "POST",
