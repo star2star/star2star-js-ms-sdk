@@ -10,9 +10,7 @@ const fs = require("fs");
 const s2sMS = require("../src/index");
 const Util = require("../src/utilities");
 const logger = require("../src/node-logger").getInstance();
-const objectMerge = require("object-merge");
-const newMeta = Util.generateNewMetaData;
-let trace = newMeta();
+let trace = Util.generateNewMetaData();
 
 //utility function to simplify test code
 const mochaAsync = (func, name) => {
@@ -23,7 +21,7 @@ const mochaAsync = (func, name) => {
       return response; 
     } catch (error) {
       //mocha will log out the error
-      return Promise.reject(error);
+      throw error;
     }
   };
 };
@@ -39,25 +37,27 @@ describe("Objects MS Test Suite", function() {
       
 
       // For tests, use the dev msHost
-      s2sMS.setMsHost(process.env.MS_HOST);
-      s2sMS.setMSVersion(process.env.CPAAS_API_VERSION);
-      s2sMS.setMsAuthHost(process.env.AUTH_HOST);
+      s2sMS.setMsHost(process.env.CPAAS_URL);
+     s2sMS.setMSVersion(process.env.CPAAS_API_VERSION);
+     s2sMS.setMsAuthHost(process.env.AUTH_URL);
       // get accessToken to use in test cases
       // Return promise so that test cases will not fire until it resolves.
       const oauthData = await s2sMS.Oauth.getAccessToken(
-        process.env.CPAAS_OAUTH_TOKEN,
+        process.env.BASIC_TOKEN,
         process.env.EMAIL,
         process.env.PASSWORD
       );
-      accessToken = oauthData.access_token;
+
+      accessToken = process.env.WSG_TOKEN//oauthData.access_token;
+      console.log("ARRRR", accessToken)
+
     } catch (error){
       throw error;
     }
   });
 
   it("Get Products", mochaAsync(async () => {
-    if (!process.env.isValid) throw new Error("Invalid Credentials");
-    trace = objectMerge({}, trace, Util.generateNewMetaData(trace));
+        trace = Util.generateNewMetaData(trace);
     const response = await s2sMS.Entitlements.getProducts(
       accessToken,
       3,
@@ -76,8 +76,7 @@ describe("Objects MS Test Suite", function() {
   },"Get Products"));
 
   it("Get Filtered Proudcts", mochaAsync(async () => {
-    if (!process.env.isValid) throw new Error("Invalid Credentials");
-    trace = objectMerge({}, trace, Util.generateNewMetaData(trace));
+        trace = Util.generateNewMetaData(trace);
     const response = await s2sMS.Entitlements.getProducts(
       accessToken,
       0,
@@ -97,8 +96,7 @@ describe("Objects MS Test Suite", function() {
   },"Get Filtered Proudcts"));
 
   it("Get Product", mochaAsync(async () => {
-    if (!process.env.isValid) throw new Error("Invalid Credentials");
-    trace = objectMerge({}, trace, Util.generateNewMetaData(trace));
+        trace = Util.generateNewMetaData(trace);
     const response = await s2sMS.Entitlements.getProduct(
       accessToken,
       uuid,
@@ -114,8 +112,7 @@ describe("Objects MS Test Suite", function() {
 
   // template
   // it("change me", mochaAsync(async () => {
-  //   if (!process.env.isValid) throw new Error("Invalid Credentials");
-  //   trace = objectMerge({}, trace, Util.generateNewMetaData(trace));
+  //     //   trace = Util.generateNewMetaData(trace);
   //   const response = await somethingAsync();
   //   assert.ok(
   //     1 === 1,

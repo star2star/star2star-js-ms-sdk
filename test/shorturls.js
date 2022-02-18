@@ -43,14 +43,14 @@ describe("Pubsub MS Unit Test Suite", function () {
       
 
       // For tests, use the dev msHost
-      s2sMS.setMsHost(process.env.MS_HOST);
-      s2sMS.setMSVersion(process.env.CPAAS_API_VERSION);
-      s2sMS.setMsAuthHost(process.env.AUTH_HOST);
+      s2sMS.setMsHost(process.env.CPAAS_URL);
+     s2sMS.setMSVersion(process.env.CPAAS_API_VERSION);
+     s2sMS.setMsAuthHost(process.env.AUTH_URL);
       // get accessToken to use in test cases
       // Return promise so that test cases will not fire until it resolves.
     
       oauthData = await s2sMS.Oauth.getAccessToken(
-        process.env.CPAAS_OAUTH_TOKEN,
+        process.env.BASIC_TOKEN,
         process.env.EMAIL,
         process.env.PASSWORD
       );
@@ -64,8 +64,7 @@ describe("Pubsub MS Unit Test Suite", function () {
  
 
   it("Create Short URL", mochaAsync(async () => {
-    if (!process.env.isValid) throw new Error("Invalid Credentials");
-    trace = objectMerge({}, trace, Util.generateNewMetaData(trace));
+        trace = objectMerge({}, trace, Util.generateNewMetaData(trace));
     const response = await s2sMS.ShortUrls.createShortUrl(
       accessToken,
       { "url": "http://www.google.com"},
@@ -80,8 +79,7 @@ describe("Pubsub MS Unit Test Suite", function () {
   },"Create Short URL"));
 
   it("List Short URLs", mochaAsync(async () => {
-    if (!process.env.isValid) throw new Error("Invalid Credentials");
-    trace = objectMerge({}, trace, Util.generateNewMetaData(trace));
+        trace = objectMerge({}, trace, Util.generateNewMetaData(trace));
     const response = await s2sMS.ShortUrls.listShortUrls(
       identityData.uuid,
       accessToken,
@@ -95,8 +93,7 @@ describe("Pubsub MS Unit Test Suite", function () {
   },"List Short URLs"));
 
   it("Delete Short URL", mochaAsync(async () => {
-    if (!process.env.isValid) throw new Error("Invalid Credentials");
-    trace = objectMerge({}, trace, Util.generateNewMetaData(trace));
+        trace = objectMerge({}, trace, Util.generateNewMetaData(trace));
     const response = await s2sMS.ShortUrls.deleteShortCode(
       identityData.uuid,
       accessToken,

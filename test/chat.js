@@ -68,8 +68,7 @@ describe("Chat MS Test Suite", function() {
   // },"change me"));
 
   it("Create Channel", mochaAsync(async () => {
-    // if (!process.env.isValid) throw new Error("Invalid Credentials");
-    //create temporary group
+        //create temporary group
     const body = {
       account_uuid: identityData.account_uuid,
       description: "A test group",
@@ -117,8 +116,7 @@ describe("Chat MS Test Suite", function() {
   },"Create Channel"));
 
   it("List Channels", mochaAsync(async () => {
-    // if (!process.env.isValid) throw new Error("Invalid Credentials");
-    trace = Util.generateNewMetaData(trace);
+        trace = Util.generateNewMetaData(trace);
     const responseData = await s2sMS.Chat.listChannels(accessToken, trace);
     assert.ok(
       responseData.items &&
@@ -129,8 +127,7 @@ describe("Chat MS Test Suite", function() {
   },"List Channels"));
 
   it("Get Channel", mochaAsync(async () => {
-    // if (!process.env.isValid) throw new Error("Invalid Credentials");
-    trace = Util.generateNewMetaData(trace);
+        trace = Util.generateNewMetaData(trace);
     const channelData = await s2sMS.Chat.getChannel(
       accessToken,
       test_channel.uuid,
@@ -145,8 +142,7 @@ describe("Chat MS Test Suite", function() {
     return channelData;
   },"Get Channel"));
   it("Modify Channel Info", mochaAsync(async () => {
-    // if (!process.env.isValid) throw new Error("Invalid Credentials");
-    const newInfo = objectMerge({}, test_channel);
+        const newInfo = objectMerge({}, test_channel);
     newInfo.name = "james";
     newInfo.topic = "test2";
     newInfo.description = "updated description";
@@ -171,8 +167,7 @@ describe("Chat MS Test Suite", function() {
   },"Modify Channel Info"));
   
   it("Modify Channel Metadata", mochaAsync(async () => {
-    // if (!process.env.isValid) throw new Error("Invalid Credentials");
-    const newMeta = {};
+        const newMeta = {};
     newMeta.foo = "bar";
     trace = Util.generateNewMetaData(trace);
     const channelUpdate = await s2sMS.Chat.updateChannelMeta(
@@ -190,8 +185,7 @@ describe("Chat MS Test Suite", function() {
   },"Modify Channel Metadata"));
   
   it("Modify Channel Metadata which had old metadata", mochaAsync(async () => {
-    // if (!process.env.isValid) throw new Error("Invalid Credentials");
-    const newMeta = {};
+        const newMeta = {};
     newMeta.foo = "baz";
     trace = Util.generateNewMetaData(trace);
     const channelUpdate = await s2sMS.Chat.updateChannelMeta(
@@ -209,8 +203,7 @@ describe("Chat MS Test Suite", function() {
   },"Modify Channel Metadata which had old metadata"));
   
   it("Delete A Member", mochaAsync(async () => {
-    // if (!process.env.isValid) throw new Error("Invalid Credentials");
-    trace = Util.generateNewMetaData(trace);
+        trace = Util.generateNewMetaData(trace);
     const memberData = await s2sMS.Chat.deleteMember(
       accessToken,
       test_channel.uuid,
@@ -225,8 +218,7 @@ describe("Chat MS Test Suite", function() {
   },"Delete A Member"));
 
   it("Add Member To Channel", mochaAsync(async () => {
-    // if (!process.env.isValid) throw new Error("Invalid Credentials");
-    trace = Util.generateNewMetaData(trace);
+        trace = Util.generateNewMetaData(trace);
     const memberData = await s2sMS.Chat.addMember(
       accessToken,
       test_channel.uuid,
@@ -244,8 +236,7 @@ describe("Chat MS Test Suite", function() {
   },"Add Member To Channel"));
 
   it("Get Channel Members", mochaAsync(async () => {
-    // if (!process.env.isValid) throw new Error("Invalid Credentials");
-    trace = Util.generateNewMetaData(trace);
+        trace = Util.generateNewMetaData(trace);
     const memberData = await s2sMS.Chat.getChannelMembers(
       accessToken,
       test_channel.uuid,
@@ -260,8 +251,7 @@ describe("Chat MS Test Suite", function() {
   },"Get Channel Members"));
 
   it("Send Message", mochaAsync(async () => {
-    // if (!process.env.isValid) throw new Error("Invalid Credentials");
-    trace = Util.generateNewMetaData(trace);
+        trace = Util.generateNewMetaData(trace);
     const sendResponse = await s2sMS.Chat.sendMessage(
       accessToken,
       identityData.uuid,
@@ -277,8 +267,7 @@ describe("Chat MS Test Suite", function() {
   },"Send Message"));
   
   it("Get Messages", mochaAsync(async () => {
-    // if (!process.env.isValid) throw new Error("Invalid Credentials");
-    trace = Util.generateNewMetaData(trace);
+        trace = Util.generateNewMetaData(trace);
     const messageData = await s2sMS.Chat.getMessages(
       accessToken,
       test_channel.uuid,
@@ -293,8 +282,7 @@ describe("Chat MS Test Suite", function() {
   },"Get Messages"));
   
   it("Get Channel Info (data, members, messages)", mochaAsync(async () => {
-    // if (!process.env.isValid) throw new Error("Invalid Credentials");
-    trace = Util.generateNewMetaData(trace);
+        trace = Util.generateNewMetaData(trace);
     const channelInfo = await s2sMS.Chat.getChannelInfo(
       accessToken,
       test_channel.uuid,
@@ -310,8 +298,7 @@ describe("Chat MS Test Suite", function() {
   },"Get Channel Info (data, members, messages)"));
 
   it("Send Simple Message to Channel", mochaAsync(async () => {
-    // if (!process.env.isValid) throw new Error("Invalid Credentials");
-    trace = Util.generateNewMetaData(trace);
+        trace = Util.generateNewMetaData(trace);
     const response = await s2sMS.Chat.sendMessageToChannel(
       accessToken,
       test_channel.uuid,
@@ -326,8 +313,7 @@ describe("Chat MS Test Suite", function() {
   },"Send Simple Message to Channel"));
 
   it("Send Multipart Message to Channel", mochaAsync(async () => {
-    // if (!process.env.isValid) throw new Error("Invalid Credentials");
-    trace = Util.generateNewMetaData(trace);
+        trace = Util.generateNewMetaData(trace);
     const response = await s2sMS.Chat.sendMessageToChannel(
       accessToken,
       test_channel.uuid,
@@ -351,8 +337,7 @@ describe("Chat MS Test Suite", function() {
   },"Send Multipart Message to Channel"));
 
   it("Send Invalid Message to Channel", mochaAsync(async () => {
-    // if (!process.env.isValid) throw new Error("Invalid Credentials");
-    try{
+        try{
       trace = Util.generateNewMetaData(trace);
       const response = await s2sMS.Chat.sendMessageToChannel(
         accessToken,
@@ -376,8 +361,7 @@ describe("Chat MS Test Suite", function() {
   },"Send Invalid Message to Channel"));
 
   it("List User's Channles", mochaAsync(async () => {
-    // if (!process.env.isValid) throw new Error("Invalid Credentials");
-    trace = Util.generateNewMetaData(trace);
+        trace = Util.generateNewMetaData(trace);
     const response = await s2sMS.Chat.listUsersChannels(
       accessToken,
       identityData.uuid,
@@ -397,8 +381,7 @@ describe("Chat MS Test Suite", function() {
   },"List User's Channels"));
 
   it("Delete Channel", mochaAsync(async () => {
-    // if (!process.env.isValid) throw new Error("Invalid Credentials");
-    trace = Util.generateNewMetaData(trace);
+        trace = Util.generateNewMetaData(trace);
     const groupResponse = await s2sMS.Groups.deleteGroup(accessToken, test_groupUUID, trace);
     assert.ok(
       groupResponse.status === "ok",

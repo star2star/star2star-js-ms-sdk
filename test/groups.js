@@ -39,14 +39,14 @@ describe("Groups Test Suite", function() {
       
 
       // For tests, use the dev msHost
-      s2sMS.setMsHost(process.env.MS_HOST);
-      s2sMS.setMSVersion(process.env.CPAAS_API_VERSION);
-      s2sMS.setMsAuthHost(process.env.AUTH_HOST);
+      s2sMS.setMsHost(process.env.CPAAS_URL);
+     s2sMS.setMSVersion(process.env.CPAAS_API_VERSION);
+     s2sMS.setMsAuthHost(process.env.AUTH_URL);
       // get accessToken to use in test cases
       // Return promise so that test cases will not fire until it resolves.
     
       const oauthData = await s2sMS.Oauth.getAccessToken(
-        process.env.CPAAS_OAUTH_TOKEN,
+        process.env.BASIC_TOKEN,
         process.env.EMAIL,
         process.env.PASSWORD
       );
@@ -59,8 +59,7 @@ describe("Groups Test Suite", function() {
   });
 
   it("List Groups", mochaAsync(async () => {
-    if (!process.env.isValid) throw new Error("Invalid Credentials");
-    trace = objectMerge({}, trace, Util.generateNewMetaData(trace));
+        trace = objectMerge({}, trace, Util.generateNewMetaData(trace));
     const filters = [];
     filters["expand"] = "members";
     filters["member_limit"] = 5;
@@ -80,8 +79,7 @@ describe("Groups Test Suite", function() {
   
   // This is broken CSRVS-254. Returns 202 but polling does not work
   it("Create Group", mochaAsync(async () => {
-    if (!process.env.isValid) throw new Error("Invalid Credentials");
-    trace = objectMerge({}, trace, Util.generateNewMetaData(trace));
+        trace = objectMerge({}, trace, Util.generateNewMetaData(trace));
     //FIXME needs default attribute CCORE-179
     const body = {
       account_id: identityData.account_uuid,
@@ -104,8 +102,7 @@ describe("Groups Test Suite", function() {
   },"Create Group"));
   
   it("Get One Group", mochaAsync(async () => {
-    if (!process.env.isValid) throw new Error("Invalid Credentials");
-    trace = objectMerge({}, trace, Util.generateNewMetaData(trace));
+        trace = objectMerge({}, trace, Util.generateNewMetaData(trace));
     const filters = [];
     filters["expand"] = "members.type";
     const response = await s2sMS.Groups.getGroup(accessToken, testGroupUuid, filters, trace);
@@ -118,8 +115,7 @@ describe("Groups Test Suite", function() {
   },"Get One Group"));
   
   it("Get Group Members", mochaAsync(async () => {
-    if (!process.env.isValid) throw new Error("Invalid Credentials");
-    trace = objectMerge({}, trace, Util.generateNewMetaData(trace));
+        trace = objectMerge({}, trace, Util.generateNewMetaData(trace));
     const filters = [];
     filters["expand"] = "members.type";
     const response = await s2sMS.Groups.listGroupMembers(accessToken, testGroupUuid, filters, trace);
@@ -132,8 +128,7 @@ describe("Groups Test Suite", function() {
   },"Get Group Members"));
   
   it("Add User to Group", mochaAsync(async () => {
-    if (!process.env.isValid) throw new Error("Invalid Credentials");
-    trace = objectMerge({}, trace, Util.generateNewMetaData(trace));
+        trace = objectMerge({}, trace, Util.generateNewMetaData(trace));
     const testMembers = [
       {
         type: "user",
@@ -150,8 +145,7 @@ describe("Groups Test Suite", function() {
   },"Add User to Group"));
   
   it("Delete User from Group", mochaAsync(async () => {
-    if (!process.env.isValid) throw new Error("Invalid Credentials");
-    trace = objectMerge({}, trace, Util.generateNewMetaData(trace));
+        trace = objectMerge({}, trace, Util.generateNewMetaData(trace));
     const members = [
       {
         uuid: identityData.uuid
@@ -166,8 +160,7 @@ describe("Groups Test Suite", function() {
   },"Delete User from Group"));
   
   it("Modify Group", mochaAsync(async () => {
-    if (!process.env.isValid) throw new Error("Invalid Credentials");
-    trace = objectMerge({}, trace, Util.generateNewMetaData(trace));
+        trace = objectMerge({}, trace, Util.generateNewMetaData(trace));
     const body = {
       description: "new description",
       name: "new name"
@@ -181,8 +174,7 @@ describe("Groups Test Suite", function() {
   },"Modify Group"));
   
   it("Deactivate Group", mochaAsync(async () => {
-    if (!process.env.isValid) throw new Error("Invalid Credentials");
-    trace = objectMerge({}, trace, Util.generateNewMetaData(trace));
+        trace = objectMerge({}, trace, Util.generateNewMetaData(trace));
     const response = await s2sMS.Groups.deactivateGroup(accessToken, testGroupUuid, trace);
     assert.ok(
       response.status === "Inactive",
@@ -192,8 +184,7 @@ describe("Groups Test Suite", function() {
   },"Deactivate Group"));
   
   it("Reactivate Group", mochaAsync(async () => {
-    if (!process.env.isValid) throw new Error("Invalid Credentials");
-    trace = objectMerge({}, trace, Util.generateNewMetaData(trace));
+        trace = objectMerge({}, trace, Util.generateNewMetaData(trace));
     const response = await s2sMS.Groups.reactivateGroup(accessToken, testGroupUuid, trace);
     assert.ok(
       response.status === "Active",
@@ -203,8 +194,7 @@ describe("Groups Test Suite", function() {
   },"Reactivate Group"));
   
   it("Delete Group", mochaAsync(async () => {
-    if (!process.env.isValid) throw new Error("Invalid Credentials");
-    trace = objectMerge({}, trace, Util.generateNewMetaData(trace));
+        trace = objectMerge({}, trace, Util.generateNewMetaData(trace));
     const response = await s2sMS.Groups.deleteGroup(accessToken, testGroupUuid, trace);
     assert.ok(
       response.status === "ok",

@@ -57,7 +57,7 @@ const listGroups = async (
  * @async
  * @description This function will create a new group associated with a user
  * @param {string} [accessToken="null accessToken"] - cpaas access token
- * @param {string} [body="null body"] - object conatining group data
+ * @param {object} [body="null body"] - object conatining group data
  * @param {object} [trace = {}] - optional microservice lifecycle trace headers
  * @returns
  */

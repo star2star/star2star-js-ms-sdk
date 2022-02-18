@@ -41,13 +41,13 @@ describe("Providers", function() {
       
 
       // For tests, use the dev msHost
-      s2sMS.setMsHost(process.env.MS_HOST);
-      s2sMS.setMSVersion(process.env.CPAAS_API_VERSION);
-      s2sMS.setMsAuthHost(process.env.AUTH_HOST);
+      s2sMS.setMsHost(process.env.CPAAS_URL);
+     s2sMS.setMSVersion(process.env.CPAAS_API_VERSION);
+     s2sMS.setMsAuthHost(process.env.AUTH_URL);
       // get accessToken to use in test cases
       // Return promise so that test cases will not fire until it resolves.
       const oauthData = await s2sMS.Oauth.getAccessToken(
-        process.env.CPAAS_OAUTH_TOKEN,
+        process.env.BASIC_TOKEN,
         process.env.EMAIL,
         process.env.PASSWORD
       );
@@ -60,8 +60,7 @@ describe("Providers", function() {
   });
 
   // it("Authorize Provider", mochaAsync(async () => {
-  //   if (!process.env.isValid) throw new Error("Invalid Credentials");
-  //   trace = objectMerge({}, trace, Util.generateNewMetaData(trace));
+  //     //   trace = objectMerge({}, trace, Util.generateNewMetaData(trace));
   //   const response = await s2sMS.Providers.authorizeProvider(
   //     //clientID,
   //     "689129445930-qqdrkf38fu6e37gd84nt758lur5kagq2.apps.googleusercontent.com",
@@ -82,8 +81,7 @@ describe("Providers", function() {
   // },"Authorize Provider"));
 
   // it("Get Provider Token", mochaAsync(async () => {
-  //   if (!process.env.isValid) throw new Error("Invalid Credentials");
-  //   trace = objectMerge({}, trace, Util.generateNewMetaData(trace));
+  //     //   trace = objectMerge({}, trace, Util.generateNewMetaData(trace));
   //   const response = await s2sMS.Providers.getProviderToken(
   //     accessToken,
   //     //clientID,
@@ -106,8 +104,7 @@ describe("Providers", function() {
 
 
   it("List all Available Providers", mochaAsync(async () => {
-    if (!process.env.isValid) throw new Error("Invalid Credentials");
-    trace = objectMerge({}, trace, Util.generateNewMetaData(trace));
+        trace = objectMerge({}, trace, Util.generateNewMetaData(trace));
     const response = await s2sMS.Providers.listAvailableProviders(
       accessToken,
       trace
@@ -121,8 +118,7 @@ describe("Providers", function() {
   },"List all Available Providers"));
 
   it("List all User Providers", mochaAsync(async () => {
-    if (!process.env.isValid) throw new Error("Invalid Credentials");
-    trace = objectMerge({}, trace, Util.generateNewMetaData(trace));
+        trace = objectMerge({}, trace, Util.generateNewMetaData(trace));
     const response = await s2sMS.Providers.listUsersProviders(
       accessToken,
       userUUID,
@@ -136,8 +132,7 @@ describe("Providers", function() {
   },"List all User Providers"));
 
   it("List A User's Connections", mochaAsync(async () => {
-    if (!process.env.isValid) throw new Error("Invalid Credentials");
-    trace = objectMerge({}, trace, Util.generateNewMetaData(trace));
+        trace = objectMerge({}, trace, Util.generateNewMetaData(trace));
     const response = await s2sMS.Providers.listUserProviderConnections(
       accessToken,
       userUUID,
@@ -165,8 +160,7 @@ describe("Providers", function() {
   },"List A User's Connections"));
   
   it("Get Token by Connection", mochaAsync(async () => {
-    if (!process.env.isValid) throw new Error("Invalid Credentials");
-    trace = objectMerge({}, trace, Util.generateNewMetaData(trace));
+        trace = objectMerge({}, trace, Util.generateNewMetaData(trace));
     const response = await s2sMS.Providers.getProviderTokenByConnection(
       accessToken,
       connection.uuid,
@@ -182,8 +176,7 @@ describe("Providers", function() {
   },"Get Token by Connection"));
 
   it("Get Token by Policy", mochaAsync(async () => {
-    if (!process.env.isValid) throw new Error("Invalid Credentials");
-    trace = objectMerge({}, trace, Util.generateNewMetaData(trace));
+        trace = objectMerge({}, trace, Util.generateNewMetaData(trace));
     const response = await s2sMS.Providers.getProviderToken(
       accessToken,
       connection.provider_uuid,
@@ -203,8 +196,7 @@ describe("Providers", function() {
 
   // template
   // it("change me", mochaAsync(async () => {
-  //   if (!process.env.isValid) throw new Error("Invalid Credentials");
-  //   trace = objectMerge({}, trace, Util.generateNewMetaData(trace));
+  //     //   trace = objectMerge({}, trace, Util.generateNewMetaData(trace));
   //   const response = await somethingAsync();
   //   assert.ok(
   //     1 === 1,

@@ -84,8 +84,7 @@ describe("Form", function () {
 
   it("listUserFormSubmissions", mochaAsync(async () => {
     try{
-      if (!process.env.isValid) throw new Error("Invalid Credentials");
-      trace = Util.generateNewMetaData(trace);
+            trace = Util.generateNewMetaData(trace);
       const response = await s2sMS.Forms.listUserFormSubmissions(
         accessToken,
         identityData.account_uuid,

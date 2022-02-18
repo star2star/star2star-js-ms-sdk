@@ -43,14 +43,14 @@ describe("Pubsub MS Unit Test Suite", function () {
       
 
       // For tests, use the dev msHost
-      s2sMS.setMsHost(process.env.MS_HOST);
-      s2sMS.setMSVersion(process.env.CPAAS_API_VERSION);
-      s2sMS.setMsAuthHost(process.env.AUTH_HOST);
+      s2sMS.setMsHost(process.env.CPAAS_URL);
+     s2sMS.setMSVersion(process.env.CPAAS_API_VERSION);
+     s2sMS.setMsAuthHost(process.env.AUTH_URL);
       // get accessToken to use in test cases
       // Return promise so that test cases will not fire until it resolves.
     
       oauthData = await s2sMS.Oauth.getAccessToken(
-        process.env.CPAAS_OAUTH_TOKEN,
+        process.env.BASIC_TOKEN,
         process.env.EMAIL,
         process.env.PASSWORD
       );
@@ -64,8 +64,7 @@ describe("Pubsub MS Unit Test Suite", function () {
   });
  
   it("Register Push Token", mochaAsync(async () => {
-    if (!process.env.isValid) throw new Error("Invalid Credentials");
-    trace = objectMerge({}, trace, Util.generateNewMetaData(trace));
+        trace = objectMerge({}, trace, Util.generateNewMetaData(trace));
     const response = await s2sMS.Mobile.registerPushToken(
       accessToken,
       identityData.uuid,
@@ -82,8 +81,7 @@ describe("Pubsub MS Unit Test Suite", function () {
   },"Register Push Token")); 
 
   it("List Push Tokens", mochaAsync(async () => {
-    if (!process.env.isValid) throw new Error("Invalid Credentials");
-    trace = objectMerge({}, trace, Util.generateNewMetaData(trace));
+        trace = objectMerge({}, trace, Util.generateNewMetaData(trace));
     const response = await s2sMS.Mobile.getUserRegistrations(
       accessToken,
       identityData.uuid,
@@ -97,8 +95,7 @@ describe("Pubsub MS Unit Test Suite", function () {
   },"List Push Tokens")); 
 
   it("Unregister Push Token", mochaAsync(async () => {
-    if (!process.env.isValid) throw new Error("Invalid Credentials");
-    trace = objectMerge({}, trace, Util.generateNewMetaData(trace));
+        trace = objectMerge({}, trace, Util.generateNewMetaData(trace));
     const response = await s2sMS.Mobile.unregisterPushToken(
       accessToken,
       process.env.PUSH_TOKEN,
@@ -115,8 +112,7 @@ describe("Pubsub MS Unit Test Suite", function () {
 
   // template
   // it("change me", mochaAsync(async () => {
-  //   if (!process.env.isValid) throw new Error("Invalid Credentials");
-  //   trace = objectMerge({}, trace, Util.generateNewMetaData(trace));
+  //     //   trace = objectMerge({}, trace, Util.generateNewMetaData(trace));
   //   const response = await somethingAsync();
   //   assert.ok(
   //     1 === 1,

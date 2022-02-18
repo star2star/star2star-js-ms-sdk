@@ -38,14 +38,14 @@ describe("Scheduler MS Test Suite", function() {
     try {
       
       // For tests, use the dev msHost
-      s2sMS.setMsHost(process.env.MS_HOST);
-      s2sMS.setMSVersion(process.env.CPAAS_API_VERSION);
-      s2sMS.setMsAuthHost(process.env.AUTH_HOST);
+      s2sMS.setMsHost(process.env.CPAAS_URL);
+     s2sMS.setMSVersion(process.env.CPAAS_API_VERSION);
+     s2sMS.setMsAuthHost(process.env.AUTH_URL);
       
       // get accessToken to use in test cases
       // Return promise so that test cases will not fire until it resolves.
       const oauthData = await s2sMS.Oauth.getAccessToken(
-        process.env.CPAAS_OAUTH_TOKEN,
+        process.env.BASIC_TOKEN,
         process.env.EMAIL,
         process.env.PASSWORD
       );
@@ -112,16 +112,14 @@ describe("Scheduler MS Test Suite", function() {
 
   // Template for New Test............
   // it("change me", mochaAsync(async () => {
-  //   if (!process.env.isValid) throw new Error("Invalid Credentials");
-  //   trace = objectMerge({}, trace, Util.generateNewMetaData(trace));
+  //     //   trace = objectMerge({}, trace, Util.generateNewMetaData(trace));
   //   const response = await somethingAsync();
   //   assert.ok(1 === 1);
   //   return response;
   // },"change me"));
 
   it("Shedule Event", mochaAsync(async () => {
-    if (!process.env.isValid) throw new Error("Invalid Credentials");
-    trace = objectMerge({}, trace, Util.generateNewMetaData(trace));
+        trace = objectMerge({}, trace, Util.generateNewMetaData(trace));
     const response = await s2sMS.Scheduler.scheduleEvent(
       accessToken,
       identityData.uuid, //user_uuid
@@ -161,8 +159,7 @@ describe("Scheduler MS Test Suite", function() {
   },"Shedule Event"));
 
   it("List Events", mochaAsync(async () => {
-    if (!process.env.isValid) throw new Error("Invalid Credentials");
-    trace = objectMerge({}, trace, Util.generateNewMetaData(trace));
+        trace = objectMerge({}, trace, Util.generateNewMetaData(trace));
     //update event body
     const response = await s2sMS.Scheduler.listEvents(
       accessToken,
@@ -178,8 +175,7 @@ describe("Scheduler MS Test Suite", function() {
   },"List Events"));
 
   it("Get Event", mochaAsync(async () => {
-    if (!process.env.isValid) throw new Error("Invalid Credentials");
-    trace = objectMerge({}, trace, Util.generateNewMetaData(trace));
+        trace = objectMerge({}, trace, Util.generateNewMetaData(trace));
     const response = await s2sMS.Scheduler.getEvent(
       accessToken,
       event.uuid,
@@ -193,8 +189,7 @@ describe("Scheduler MS Test Suite", function() {
   
   it("Check Event Fired", mochaAsync(async () => {
     console.log("******* \"Check Event Fired\" is running, and can take several seconds to complete. *******");
-    if (!process.env.isValid) throw new Error("Invalid Credentials");
-    //setting the timout for this test to overide mocha config.
+        //setting the timout for this test to overide mocha config.
     //this.timeout(90000);
     //wait for the scheduler to run the workflow
     await new Promise(resolve => setTimeout(resolve, 70000));
@@ -219,8 +214,7 @@ describe("Scheduler MS Test Suite", function() {
   },"Check Event Fired")).timeout(90000);
 
   it("Update Event", mochaAsync(async () => {
-    if (!process.env.isValid) throw new Error("Invalid Credentials");
-    trace = objectMerge({}, trace, Util.generateNewMetaData(trace));
+        trace = objectMerge({}, trace, Util.generateNewMetaData(trace));
     event.start_datetime = new Date(Date.now() + 60000).toISOString();
     event.frequency.type = "once";
     delete event.frequency.interval;
@@ -243,8 +237,7 @@ describe("Scheduler MS Test Suite", function() {
   },"Update Event"));
   
   it("Delete Event", mochaAsync(async () => {
-    if (!process.env.isValid) throw new Error("Invalid Credentials");
-    trace = objectMerge({}, trace, Util.generateNewMetaData(trace));
+        trace = objectMerge({}, trace, Util.generateNewMetaData(trace));
     //update event body
     const response = await s2sMS.Scheduler.deleteEvent(
       accessToken,
@@ -260,8 +253,7 @@ describe("Scheduler MS Test Suite", function() {
 
   // template
   // it("change me", mochaAsync(async () => {
-  //   if (!process.env.isValid) throw new Error("Invalid Credentials");
-  //   trace = objectMerge({}, trace, Util.generateNewMetaData(trace));
+  //     //   trace = objectMerge({}, trace, Util.generateNewMetaData(trace));
   //   const response = await somethingAsync();
   //   assert.ok(
   //     1 === 1,
