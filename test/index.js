@@ -25,10 +25,6 @@ describe("MS SDK Index", function () {
       "setMsHost",
       "getMsHost",
       "setMsAuthHost",
-      "setApplicationKey",
-      "getApplicationKey",
-      "setEnv",
-      "getEnv",
       "Groups",
       "ShortUrls",
       "Auth",
@@ -44,6 +40,7 @@ describe("MS SDK Index", function () {
       "ResourceGroups",
       "Scheduler",
       "Metadata",
+      "Mobile",
       "Forms",
       "Entitlements",
       "Activity",
@@ -53,25 +50,10 @@ describe("MS SDK Index", function () {
     done();
   });
 
-  it("set/get Application Key", function (done) {
-    const appKey = "james";
-    s2sMS.setApplicationKey(appKey);
-    assert(s2sMS.getApplicationKey() === appKey);
-    done();
-  });
-
   it("set/get msHost production ", function (done) {
     s2sMS.setMsHost(process.env.MS_HOST);
     assert.equal(s2sMS.getMsHost(), process.env.MS_HOST);
     done();
   });
  
-  it("set/get env", function (done) {
-    const env = s2sMS.getEnv();
-    assert.equal(env, Config.env);
-    s2sMS.setEnv("prod");
-    assert.equal(s2sMS.getEnv(), "prod");
-    done();
-  });
-
 });

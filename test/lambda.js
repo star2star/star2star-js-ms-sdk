@@ -11,9 +11,7 @@ const fs = require("fs");
 const s2sMS = require("../src/index");
 const Util = require("../src/utilities");
 const logger = require("../src/node-logger").getInstance();
-const objectMerge = require("object-merge");
-const newMeta = Util.generateNewMetaData;
-let trace = newMeta();
+let trace = Util.generateNewMetaData();
 
 //utility function to simplify test code
 const mochaAsync = (func, name) => {
@@ -24,7 +22,7 @@ const mochaAsync = (func, name) => {
       return response; 
     } catch (error) {
       //mocha will log out the error
-      return Promise.reject(error);
+      throw error;
     }
   };
 };
@@ -52,35 +50,33 @@ describe("Lamda MS Unit Test Suite", function() {
       );
       accessToken = oauthData.access_token;
     } catch (error) {
-      return Promise.reject(error);
+      throw error;
     }  
   });
 
   it("list lambdas", mochaAsync(async () => {
-        trace = objectMerge({}, trace, Util.generateNewMetaData(trace));
-    const response = await s2sMS.Lambda.listLambdas(accessToken, trace);
+        trace = Util.generateNewMetaData(trace);
+    const response = await s2sMS.Lambda.listLambdas(accessToken, 0, 100, trace);
     assert.ok(
       response.items.length > 0 &&
       response.items[0].hasOwnProperty("name"),
       JSON.stringify(response, null, "\t")
     );
+    console.log("RESP!!!", response);
     return response;
   },"list lambdas"));
   
   it("invokeGoodLambda", mochaAsync(async () => {
-        trace = objectMerge({}, trace, Util.generateNewMetaData(trace));
-    const params = {
-      x: 1,
-      y: 2
-    };
+        trace = Util.generateNewMetaData(trace);
+    const params = {nbrs:[1,2]};
     const response = await s2sMS.Lambda.invokeLambda(
       accessToken,
-      "james-add-numbers",
+      "sumnumbers",
       params,
       trace
     );
     assert.ok(
-      response.add === 3,
+      response?.body?.sum === 3,
       JSON.stringify(response, null, "\t")
     );
     return response;
@@ -88,7 +84,7 @@ describe("Lamda MS Unit Test Suite", function() {
 
   it("invokeBadLambda", mochaAsync(async () => {
     try {
-            trace = objectMerge({}, trace, Util.generateNewMetaData(trace));
+            trace = Util.generateNewMetaData(trace);
       const response = await s2sMS.Lambda.invokeLambda(
         accessToken, 
         "this one does not exist",
@@ -110,7 +106,7 @@ describe("Lamda MS Unit Test Suite", function() {
   
   // template
   // it("change me", mochaAsync(async () => {
-  //     //   trace = objectMerge({}, trace, Util.generateNewMetaData(trace));
+  //     //   trace = Util.generateNewMetaData(trace);
   //   const response = await somethingAsync();
   //   assert.ok(
   //     1 === 1,

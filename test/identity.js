@@ -11,8 +11,7 @@ const fs = require("fs");
 const s2sMS = require("../src/index");
 const Util = s2sMS.Util;
 const logger = require("../src/node-logger").getInstance();
-const objectMerge = require("object-merge");
-let trace = Util.generateNewMetaData();
+let trace;
 
 //utility function to simplify test code
 const mochaAsync = (func, name) => {
@@ -60,6 +59,7 @@ describe("Identity MS Unit Test Suite", function () {
     "Create Identity",
     mochaAsync(async () => {
       trace = Util.generateNewMetaData(trace);
+      console.log("TRACE", trace);
       const body = {
         account_uuid: identityData.account_uuid,
         type: "user",

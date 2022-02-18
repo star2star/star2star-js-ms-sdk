@@ -48,7 +48,7 @@ const createIdentity = async (
     }
     return identity;
   } catch (error) {
-    return Promise.reject(util.formatError(error));
+    throw util.formatError(error);
   }
 };
 

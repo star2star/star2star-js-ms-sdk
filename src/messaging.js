@@ -20,6 +20,7 @@ const getConversation = async (
   trace = {}
 ) => {
   try {
+    console.log("TO PHONE NUMBER", toPhoneNumber); 
     const MS = util.getEndpoint("Messaging");
     const requestOptions = {
       method: "POST",
@@ -38,7 +39,7 @@ const getConversation = async (
     const response = await request(requestOptions);
     return response;
   } catch (error) {
-    return Promise.reject(util.formatError(error));
+    throw util.formatError(error);
   }
 }; // end function getConversation
 
@@ -74,7 +75,7 @@ const deleteConversation = async (
     return {"status": "ok"};
 
   } catch (error) {
-    return Promise.reject(util.formatError(error));
+    throw util.formatError(error);
   }
 }; // end function deleteConversation
 
@@ -114,7 +115,7 @@ const deleteMultipleConversations = async (
     return {"status": "ok"};
 
   } catch (error) {
-    return Promise.reject(util.formatError(error));
+    throw util.formatError(error);
   }
 }; // end function deleteMultipleConversations
 
@@ -153,7 +154,7 @@ const getConversationUuid = async (
     const response = await request(requestOptions);
     return response.context.uuid;
   } catch (error) {
-    return Promise.reject(util.formatError(error));
+    throw util.formatError(error);
   }
 }; // end function getConversation UUID
 
@@ -202,7 +203,7 @@ const sendMessage = async (
     const response = await request(requestOptions);
     return response;
   } catch (error) {
-    return Promise.reject(util.formatError(error));
+    throw util.formatError(error);
   }
 };
 
@@ -254,7 +255,7 @@ const sendSMSMessage = async (
     const response = await request(requestOptions);
     return response;
   } catch (error) {
-    return Promise.reject(util.formatError(error));
+    throw util.formatError(error);
   }
 };
 
@@ -289,7 +290,7 @@ const sendSMS = async (
     );
     return response;
   } catch (error) {
-    return Promise.reject(util.formatError(error));
+    throw util.formatError(error);
   }
 };
 
@@ -346,7 +347,7 @@ const retrieveConversations = async (
       return response;
     }
   } catch (error) {
-    return Promise.reject(util.formatError(error));
+    throw util.formatError(error);
   }
 };
 
@@ -390,7 +391,7 @@ const retrieveMessages = async (
     const response = await request(requestOptions);
     return response;
   } catch (error) {
-    return Promise.reject(util.formatError(error));
+    throw util.formatError(error);
   } 
 };
 
@@ -451,7 +452,7 @@ const getSMSNumber = async (accessToken, userUuid, trace = {}) => {
       };
     }
   } catch (error) {
-    return Promise.reject(util.formatError(error));
+    throw util.formatError(error);
   }  
 };
 
@@ -503,13 +504,13 @@ const sendSimpleSMS = async (
     const response = await request(requestOptions);
     return response;
   } catch (error) {
-    return Promise.reject(util.formatError(error));
+    throw util.formatError(error);
   } 
 };
 
 /**
  * @async
- * @deprecated - This function will mark all conversations read
+ * @description - This function will mark all conversations read
  * @param {string} [accessToken="null accessToken"] - cpaas access token
  * @param {string} [conversationUUID="null conversationUUID"] - conversation uuid
  * @param {object} [trace={}] - microservice lifecyce headers
@@ -541,7 +542,7 @@ const markAllConversationMessagesRead = async (
     const response = await request(requestOptions);
     return response;
   } catch (error) {
-    return Promise.reject(util.formatError(error));
+    throw util.formatError(error);
   } 
 };
 
@@ -588,7 +589,7 @@ const deleteMessage = async (
       };
     }
   } catch (error) {
-    return Promise.reject(util.formatError(error));
+    throw util.formatError(error);
   }
 }; // end function deleteMessage
 
@@ -640,13 +641,13 @@ const deleteMultipleMessages = async (
     }
 
   } catch (error) {
-    return Promise.reject(util.formatError(error));
+    throw util.formatError(error);
   }
 }; // end function deleteMultipleMessages
 
 /**
  * @async
- * @deprecated - This function will snooze/un-snooze conversations
+ * @description - This function will snooze/un-snooze conversations
  * @param {string} [accessToken="null accessToken"] - cpaas access token
  * @param {string} [conversationUUID="null conversationUUID"] - conversation uuid
  * @param {boolean} [snooze="false snooze"] - snooze:true OR snooze:false to either snooze / un-snooze
@@ -678,7 +679,7 @@ const snoozeUnsnoozeConversation = async (
     const response = await request(requestOptions);
     return response;
   } catch (error) {
-    return Promise.reject(util.formatError(error));
+    throw util.formatError(error);
   } 
 };
 
