@@ -22,7 +22,7 @@ const mochaAsync = (func, name) => {
     try {
       const response = await func();
       logger.debug(name, response);
-      return response; 
+      return response;
     } catch (error) {
       //mocha will log out the error
       return Promise.reject(error);
@@ -30,25 +30,18 @@ const mochaAsync = (func, name) => {
   };
 };
 
-
-
 describe("Pubsub MS Unit Test Suite", function () {
-
-  let accessToken,
-    oauthData,
-    sub_uuid;
+  let accessToken, oauthData, sub_uuid;
 
   before(async () => {
     try {
-      
-
       // For tests, use the dev msHost
       s2sMS.setMsHost(process.env.CPAAS_URL);
-     s2sMS.setMSVersion(process.env.CPAAS_API_VERSION);
-     s2sMS.setMsAuthHost(process.env.AUTH_URL);
+      s2sMS.setMSVersion(process.env.CPAAS_API_VERSION);
+      s2sMS.setMsAuthHost(process.env.AUTH_URL);
       // get accessToken to use in test cases
       // Return promise so that test cases will not fire until it resolves.
-    
+
       oauthData = await s2sMS.Oauth.getAccessToken(
         process.env.BASIC_TOKEN,
         process.env.EMAIL,
@@ -59,50 +52,76 @@ describe("Pubsub MS Unit Test Suite", function () {
       return Promise.reject(error);
     }
   });
- 
-  it("List user subscriptions", mochaAsync(async () => {
-        trace = objectMerge({}, trace, Util.generateNewMetaData(trace));
-    const response = await s2sMS.Pubsub.listUserSubscriptions(
-      "0904f8d5-627f-4ff5-b34d-68dc96487b1e",
-      accessToken,
-      trace
-    );
-    assert.ok(
-      response.hasOwnProperty("items") &&
-      response.hasOwnProperty("metadata"),
-      JSON.stringify(response, null, "\t")
-    );
-    return response;
-  },"List user subscriptions")); 
 
-  it("add subscription", mochaAsync(async () => {
-        trace = objectMerge({}, trace, Util.generateNewMetaData(trace));
-    const subscriptions = {
-      identity: ["identity_property_change"]
-    };
-    const criteria = [{
-      user_uuid: "0904f8d5-627f-4ff5-b34d-68dc96487b1e"
-    }];
+  it(
+    "List account subscriptions",
+    mochaAsync(async () => {
+      trace = objectMerge({}, trace, Util.generateNewMetaData(trace));
+      const response = await s2sMS.Pubsub.listAccountSubscriptions(
+        accessToken,
+        process.env.ACCOUNT_UUID,
+        0,
+        5,
+        trace
+      );
+      assert.ok(
+        response.hasOwnProperty("items") && response.hasOwnProperty("metadata"),
+        JSON.stringify(response, null, "\t")
+      );
+      return response;
+    }, "List account subscriptions")
+  );
 
-    const expiresDate = new Date(Date.now() + 100000).toISOString();
-    const response = await s2sMS.Pubsub.addSubscription( 
-      process.env.TEST_IDENTITY,
-      process.env.testAccount,
-      "http://localhost:8001/foo",
-      [],
-      criteria,
-      subscriptions, 
-      accessToken,
-      expiresDate,
-      trace
-    );
-    sub_uuid = response.subscription_uuid;
-    assert.ok(
-      response.hasOwnProperty("subscription_uuid"),
-      JSON.stringify(response, null, "\t")
-    );
-    return response;
-  },"add subscription"));
+  it(
+    "List user subscriptions",
+    mochaAsync(async () => {
+      trace = objectMerge({}, trace, Util.generateNewMetaData(trace));
+      const response = await s2sMS.Pubsub.listUserSubscriptions(
+        process.env.USER_UUID,
+        accessToken,
+        trace
+      );
+      assert.ok(
+        response.hasOwnProperty("items") && response.hasOwnProperty("metadata"),
+        JSON.stringify(response, null, "\t")
+      );
+      return response;
+    }, "List user subscriptions")
+  );
+
+  it(
+    "add subscription",
+    mochaAsync(async () => {
+      trace = objectMerge({}, trace, Util.generateNewMetaData(trace));
+      const subscriptions = {
+        identity: ["identity_property_change"],
+      };
+      const criteria = [
+        {
+          user_uuid: "0904f8d5-627f-4ff5-b34d-68dc96487b1e",
+        },
+      ];
+
+      const expiresDate = new Date(Date.now() + 100000).toISOString();
+      const response = await s2sMS.Pubsub.addSubscription(
+        process.env.TEST_IDENTITY,
+        process.env.testAccount,
+        "http://localhost:8001/foo",
+        [],
+        criteria,
+        subscriptions,
+        accessToken,
+        expiresDate,
+        trace
+      );
+      sub_uuid = response.subscription_uuid;
+      assert.ok(
+        response.hasOwnProperty("subscription_uuid"),
+        JSON.stringify(response, null, "\t")
+      );
+      return response;
+    }, "add subscription")
+  );
 
   // it("add subscription - sms workaround", mochaAsync(async () => {
   //     //   trace = objectMerge({}, trace, Util.generateNewMetaData(trace));
@@ -115,13 +134,13 @@ describe("Pubsub MS Unit Test Suite", function () {
   //   ];
 
   //   const expiresDate = new Date(Date.now() + 100000).toISOString();
-  //   const response = await s2sMS.Pubsub.addSubscription( 
+  //   const response = await s2sMS.Pubsub.addSubscription(
   //     process.env.TEST_IDENTITY,
   //     process.env.testAccount,
   //     "http://localhost:8001/foo",
   //     [],
   //     criteria,
-  //     subscriptions, 
+  //     subscriptions,
   //     accessToken,
   //     expiresDate,
   //     trace
@@ -134,170 +153,183 @@ describe("Pubsub MS Unit Test Suite", function () {
   //   return response;
   // },"add subscription - sms workaround"));
 
-  it("update subscription expiration", mochaAsync(async () => {
-        trace = objectMerge({}, trace, Util.generateNewMetaData(trace));
-    
-    const response = await s2sMS.Pubsub.updateSubscriptionExpiresDate(  
-      accessToken,
-      sub_uuid,
-      new Date(Date.now() + 1000000).toISOString(),
-      trace
-    );
-    assert.ok(
-      1===1,
-      JSON.stringify(response, null, "\t")
-    );
-    return response;
-  },"update subscription expiration"));
-  
-  it("delete subscription", mochaAsync(async () => {
-        trace = objectMerge({}, trace, Util.generateNewMetaData(trace));
-    const response = await s2sMS.Pubsub.deleteSubscription( 
-      sub_uuid, 
-      accessToken,
-      trace
-    );
-    assert.ok(
-      response.status === "ok",
-      JSON.stringify(response, null, "\t")
-    );
-    return response;
-  },"delete subscription"));
+  it(
+    "update subscription expiration",
+    mochaAsync(async () => {
+      trace = objectMerge({}, trace, Util.generateNewMetaData(trace));
+
+      const response = await s2sMS.Pubsub.updateSubscriptionExpiresDate(
+        accessToken,
+        sub_uuid,
+        new Date(Date.now() + 1000000).toISOString(),
+        trace
+      );
+      assert.ok(1 === 1, JSON.stringify(response, null, "\t"));
+      return response;
+    }, "update subscription expiration")
+  );
+
+  it(
+    "delete subscription",
+    mochaAsync(async () => {
+      trace = objectMerge({}, trace, Util.generateNewMetaData(trace));
+      const response = await s2sMS.Pubsub.deleteSubscription(
+        sub_uuid,
+        accessToken,
+        trace
+      );
+      assert.ok(response.status === "ok", JSON.stringify(response, null, "\t"));
+      return response;
+    }, "delete subscription")
+  );
 
   // Custom Pubsub Tests:
   let app_uuid = v4();
   let custom_uuid;
-  it("createCustomApplication", mochaAsync(async () => {
-        trace = objectMerge({}, trace, Util.generateNewMetaData(trace));
-    const response = await s2sMS.Pubsub.createCustomApplication(
-      accessToken,
-      app_uuid, //app_uuid
-      [
+  it(
+    "createCustomApplication",
+    mochaAsync(async () => {
+      trace = objectMerge({}, trace, Util.generateNewMetaData(trace));
+      const response = await s2sMS.Pubsub.createCustomApplication(
+        accessToken,
+        app_uuid, //app_uuid
+        ["event1", "event2"], // events
+        trace
+      );
+      assert.ok(
+        response.hasOwnProperty("events") &&
+          Array.isArray(response.events) &&
+          response.events.length === 2 &&
+          response.hasOwnProperty("app_uuid"),
+        JSON.stringify(response, null, "\t")
+      );
+      app_uuid = response.app_uuid;
+      return response;
+    }, "createCustomApplication")
+  );
+
+  it(
+    "getCustomApplication",
+    mochaAsync(async () => {
+      trace = objectMerge({}, trace, Util.generateNewMetaData(trace));
+      const response = await s2sMS.Pubsub.getCustomApplication(
+        accessToken,
+        app_uuid,
+        trace
+      );
+      assert.ok(
+        response.hasOwnProperty("events") &&
+          Array.isArray(response.events) &&
+          response.events.length === 2 &&
+          response.hasOwnProperty("app_uuid"),
+        JSON.stringify(response, null, "\t")
+      );
+      return response;
+    }, "getCustomApplication")
+  );
+
+  it(
+    "addCustomEventSubscription",
+    mochaAsync(async () => {
+      trace = objectMerge({}, trace, Util.generateNewMetaData(trace));
+      const response = await s2sMS.Pubsub.addCustomEventSubscription(
+        accessToken,
+        app_uuid,
+        "http://localhost/some/fake/route", // callback url this can't work so it doesn't matte
+        [{ important_header: true }],
+        [], // criteria, but we are not filtering
+        ["event1"],
+        undefined, //expires date
+        trace
+      );
+      assert.ok(
+        response.hasOwnProperty("events") &&
+          Array.isArray(response.events) &&
+          response.events[0] === "event1" &&
+          response.app_uuid === app_uuid &&
+          response.hasOwnProperty("callback") &&
+          response.callback.hasOwnProperty("headers"),
+        JSON.stringify(response, null, "\t")
+      );
+      custom_uuid = response.uuid;
+      return response;
+    }, "addCustomEventSubscription")
+  );
+
+  it(
+    "getCustomSubscription",
+    mochaAsync(async () => {
+      trace = objectMerge({}, trace, Util.generateNewMetaData(trace));
+      const response = await s2sMS.Pubsub.getCustomSubscription(
+        accessToken,
+        custom_uuid,
+        trace
+      );
+      assert.ok(
+        response.hasOwnProperty("events") &&
+          Array.isArray(response.events) &&
+          response.events[0] === "event1" &&
+          response.app_uuid === app_uuid &&
+          response.hasOwnProperty("callback") &&
+          response.callback.hasOwnProperty("headers"),
+        JSON.stringify(response, null, "\t")
+      );
+      return response;
+    }, "getCustomSubscription")
+  );
+
+  it(
+    "broadcastCustomApplication",
+    mochaAsync(async () => {
+      trace = objectMerge({}, trace, Util.generateNewMetaData(trace));
+      const response = await s2sMS.Pubsub.broadcastCustomApplication(
+        accessToken,
+        app_uuid,
         "event1",
-        "event2"
-      ], // events
-      trace
-    );
-    assert.ok(
-      response.hasOwnProperty("events") &&
-      Array.isArray(response.events) &&
-      response.events.length === 2 &&
-      response.hasOwnProperty("app_uuid"),
-      JSON.stringify(response, null, "\t")
-    );
-    app_uuid = response.app_uuid;
-    return response;
-  },"createCustomApplication"));
+        {
+          importantStuff: true,
+          lessImportantStuff: { foo: "bar" },
+        },
+        trace
+      );
+      assert.ok(1 === 1, JSON.stringify(response, null, "\t"));
+      return response;
+    }, "broadcastCustomApplication")
+  );
 
-  it("getCustomApplication", mochaAsync(async () => {
-        trace = objectMerge({}, trace, Util.generateNewMetaData(trace));
-    const response = await s2sMS.Pubsub.getCustomApplication(
-      accessToken,
-      app_uuid,
-      trace
-    );
-    assert.ok(
-      response.hasOwnProperty("events") &&
-      Array.isArray(response.events) &&
-      response.events.length === 2 &&
-      response.hasOwnProperty("app_uuid"),
-      JSON.stringify(response, null, "\t")
-    );
-    return response;
-  },"getCustomApplication"));
+  it(
+    "deleteCustomSubscription",
+    mochaAsync(async () => {
+      trace = objectMerge({}, trace, Util.generateNewMetaData(trace));
+      const response = await s2sMS.Pubsub.deleteCustomSubscription(
+        accessToken,
+        custom_uuid,
+        trace
+      );
+      assert.ok(
+        response.hasOwnProperty("status") && response.status === "ok",
+        JSON.stringify(response, null, "\t")
+      );
+      return response;
+    }, "deleteCustomSubscription")
+  );
 
-  it("addCustomEventSubscription", mochaAsync(async () => {
-        trace = objectMerge({}, trace, Util.generateNewMetaData(trace));
-    const response = await s2sMS.Pubsub.addCustomEventSubscription(
-      accessToken,
-      app_uuid,
-      "http://localhost/some/fake/route", // callback url this can't work so it doesn't matte
-      [{"important_header": true}],
-      [], // criteria, but we are not filtering
-      ["event1"],
-      undefined, //expires date
-      trace
-    );
-    assert.ok(
-      response.hasOwnProperty("events") &&
-      Array.isArray(response.events) &&
-      response.events[0] === "event1" &&
-      response.app_uuid === app_uuid &&
-      response.hasOwnProperty("callback") &&
-      response.callback.hasOwnProperty("headers"),
-      JSON.stringify(response, null, "\t")
-    );
-    custom_uuid = response.uuid;
-    return response;
-  },"addCustomEventSubscription"));
-
-  it("getCustomSubscription", mochaAsync(async () => {
-        trace = objectMerge({}, trace, Util.generateNewMetaData(trace));
-    const response = await s2sMS.Pubsub.getCustomSubscription(
-      accessToken,
-      custom_uuid,
-      trace
-    );
-    assert.ok(
-      response.hasOwnProperty("events") &&
-      Array.isArray(response.events) &&
-      response.events[0] === "event1" &&
-      response.app_uuid === app_uuid &&
-      response.hasOwnProperty("callback") &&
-      response.callback.hasOwnProperty("headers"),
-      JSON.stringify(response, null, "\t")
-    );
-    return response;
-  },"getCustomSubscription"));
-
-  it("broadcastCustomApplication", mochaAsync(async () => {
-        trace = objectMerge({}, trace, Util.generateNewMetaData(trace));
-    const response = await s2sMS.Pubsub.broadcastCustomApplication(
-      accessToken,
-      app_uuid,
-      "event1",
-      {
-        "importantStuff": true,
-        "lessImportantStuff": {"foo": "bar"}
-      },
-      trace
-    );
-    assert.ok(
-      1 === 1,
-      JSON.stringify(response, null, "\t")
-    );
-    return response;
-  },"broadcastCustomApplication"));
-
-  it("deleteCustomSubscription", mochaAsync(async () => {
-        trace = objectMerge({}, trace, Util.generateNewMetaData(trace));
-    const response = await s2sMS.Pubsub.deleteCustomSubscription(
-      accessToken,
-      custom_uuid,
-      trace
-    );
-    assert.ok(
-      response.hasOwnProperty("status") &&
-      response.status === "ok",
-      JSON.stringify(response, null, "\t")
-    );
-    return response;
-  },"deleteCustomSubscription"));
-
-  it("deleteCustomApplication", mochaAsync(async () => {
-        trace = objectMerge({}, trace, Util.generateNewMetaData(trace));
-    const response = await s2sMS.Pubsub.deleteCustomApplication(
-      accessToken,
-      app_uuid,
-      trace
-    );
-    assert.ok(
-      response.hasOwnProperty("status") &&
-      response.status === "ok",
-      JSON.stringify(response, null, "\t")
-    );
-    return response;
-  },"deleteCustomApplication"));
+  it(
+    "deleteCustomApplication",
+    mochaAsync(async () => {
+      trace = objectMerge({}, trace, Util.generateNewMetaData(trace));
+      const response = await s2sMS.Pubsub.deleteCustomApplication(
+        accessToken,
+        app_uuid,
+        trace
+      );
+      assert.ok(
+        response.hasOwnProperty("status") && response.status === "ok",
+        JSON.stringify(response, null, "\t")
+      );
+      return response;
+    }, "deleteCustomApplication")
+  );
 
   // template
   // it("change me", mochaAsync(async () => {

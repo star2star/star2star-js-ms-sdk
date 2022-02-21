@@ -219,6 +219,7 @@ toc:
       - getCustomSubscription
       - getSubscription
       - listCustomSubscriptions
+      - listAccountSubscriptions
       - listUserSubscriptions
       - updateSubscriptionExpiresDate
   - name: Resource CMS

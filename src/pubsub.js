@@ -518,6 +518,46 @@ const listCustomSubscriptions = async (
  * @param {object} [trace = {}] - optional microservice lifecycle trace headers
  * @returns {Promise<object>} - Promise resolving to a data object containing a list of subscriptions for this user
  */
+ const listAccountSubscriptions = async (
+  accessToken = "null accessToken",
+  accountUUID = "no user uuid provided",
+  offset = 0,
+  limit = 10,
+  trace = {}
+) => {
+  try {
+    const MS = util.getEndpoint("pubsub");
+    const requestOptions = {
+      method: "GET",
+      uri: `${MS}/subscriptions`,
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+        "Content-type": "application/json",
+        "x-api-version": `${util.getVersion()}`
+      },
+      qs: {
+        account_uuid: accountUUID,
+        offset: offset,
+        limit: limit
+      },
+      json: true
+    };
+    util.addRequestTrace(requestOptions, trace);
+    const response = await request(requestOptions);
+    return response;
+  } catch (error) {
+    throw util.formatError(error);
+  }
+};
+
+/**
+ * @async
+ * @description This function will ask the cpaas pubsub service for the list of user's subscriptions.
+ * @param {string} [user_uuid="no user uuid provided"] - uuid for a star2star user
+ * @param {string} [accessToken="null accessToken"] - access token for cpaas systems
+ * @param {object} [trace = {}] - optional microservice lifecycle trace headers
+ * @returns {Promise<object>} - Promise resolving to a data object containing a list of subscriptions for this user
+ */
 const listUserSubscriptions = async (
   user_uuid = "no user uuid provided",
   accessToken = "null accessToken",
@@ -597,6 +637,7 @@ module.exports = {
   getCustomSubscription,
   getSubscription,
   listCustomSubscriptions,
+  listAccountSubscriptions,
   listUserSubscriptions,
   updateSubscriptionExpiresDate 
 };

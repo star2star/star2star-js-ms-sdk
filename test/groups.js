@@ -58,24 +58,24 @@ describe("Groups Test Suite", function() {
     }
   });
 
-  it("List Groups", mochaAsync(async () => {
-        trace = objectMerge({}, trace, Util.generateNewMetaData(trace));
-    const filters = [];
-    filters["expand"] = "members";
-    filters["member_limit"] = 5;
-    const response = await s2sMS.Groups.listGroups(
-      accessToken,
-      0, //offset
-      10, //limit
-      filters,
-      trace
-    );
-    assert.ok(
-      response.hasOwnProperty("items"),
-      JSON.stringify(response, null, "\t")
-    );
-    return response;
-  },"List Groups"));
+  // it("List Groups", mochaAsync(async () => {
+  //       trace = objectMerge({}, trace, Util.generateNewMetaData(trace));
+  //   const filters = [];
+  //   filters["expand"] = "members";
+  //   filters["member_limit"] = 5;
+  //   const response = await s2sMS.Groups.listGroups(
+  //     accessToken,
+  //     0, //offset
+  //     10, //limit
+  //     filters,
+  //     trace
+  //   );
+  //   assert.ok(
+  //     response.hasOwnProperty("items"),
+  //     JSON.stringify(response, null, "\t")
+  //   );
+  //   return response;
+  // },"List Groups"));
   
   // This is broken CSRVS-254. Returns 202 but polling does not work
   it("Create Group", mochaAsync(async () => {
@@ -86,7 +86,7 @@ describe("Groups Test Suite", function() {
       description: "A test group",
       members: [
         {
-          uuid: process.env.TEST_IDENTITY
+          uuid: process.env.USER_UUID
         }
       ],
       name: "Test",
@@ -119,6 +119,7 @@ describe("Groups Test Suite", function() {
     const filters = [];
     filters["expand"] = "members.type";
     const response = await s2sMS.Groups.listGroupMembers(accessToken, testGroupUuid, filters, trace);
+    console.log("TTTTTTT", JSON.stringify(response, null, "  "));
     assert.ok(
       response.metadata.total === 1 &&
       response.items[0].type === "user",
