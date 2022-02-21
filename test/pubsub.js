@@ -61,7 +61,8 @@ describe("Pubsub MS Unit Test Suite", function () {
         accessToken,
         process.env.ACCOUNT_UUID,
         0,
-        5,
+        1000,
+        {"suspended": 0},
         trace
       );
       assert.ok(

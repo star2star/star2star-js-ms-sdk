@@ -185,7 +185,6 @@ const filterResponse = (response, filters) => {
       const doFilter = (obj, filter) => {
         Object.keys(obj).forEach((prop) => {
           if (found) return;
-          //not seaching through arrays
           if (!Array.isArray(obj[prop])) {
             if (
               typeof obj[prop] === "string" ||
@@ -202,6 +201,10 @@ const filterResponse = (response, filters) => {
               //console.log("************ Filter recursing **************",obj[prop]);
               return doFilter(obj[prop], filter);
             }
+          } else {
+            return obj[prop].forEach(elem => {
+              return doFilter(elem, filter);
+            })
           }
         });
         //console.log("FOUND", found);

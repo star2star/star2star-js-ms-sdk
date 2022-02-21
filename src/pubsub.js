@@ -3,6 +3,8 @@
 
 const request = require("request-promise");
 const util = require("./utilities");
+const logger = require("./node-logger").getInstance();
+
 
 /**
  * @async
@@ -523,6 +525,7 @@ const listCustomSubscriptions = async (
   accountUUID = "no user uuid provided",
   offset = 0,
   limit = 10,
+  filters,
   trace = {}
 ) => {
   try {
@@ -542,9 +545,42 @@ const listCustomSubscriptions = async (
       },
       json: true
     };
-    util.addRequestTrace(requestOptions, trace);
-    const response = await request(requestOptions);
-    return response;
+
+    let response;
+    if (typeof filters !== "undefined" && (typeof filters !== "object" || filters === null)) {
+      // filter param has been passed in, make sure it is an array befor proceeding
+      throw {
+        "code": 400,
+        "message": "filters param not an object",
+        "trace_id": requestOptions.hasOwnProperty("headers") && requestOptions.headers.hasOwnProperty("trace")
+          ? requestOptions.headers.trace 
+          : undefined,
+        "details": [{"filters": filters}]
+      };
+    }
+
+    if (Object.keys(filters).length === 0) {
+      requestOptions.qs.offset = offset;
+      requestOptions.qs.limit = limit;
+      response = await request(requestOptions);
+      return response;
+    } else {
+      response = await util.aggregate(request, requestOptions, trace);
+      logger.debug("****** AGGREGATE RESPONSE *******",response);
+      if (response.hasOwnProperty("items") && response.items.length > 0) {
+        const filteredResponse = util.filterResponse(response, filters);
+        //logger.debug("******* FILTERED RESPONSE ********",filteredResponse);
+        const paginatedResponse = util.paginate(
+          filteredResponse,
+          offset,
+          limit
+        );
+        logger.debug("******* PAGINATED RESPONSE ********",paginatedResponse);
+        return paginatedResponse;
+      } else {
+        return response;
+      } 
+    }
   } catch (error) {
     throw util.formatError(error);
   }
