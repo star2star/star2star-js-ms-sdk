@@ -559,14 +559,14 @@ const listCustomSubscriptions = async (
       };
     }
 
-    if (Object.keys(filters).length === 0) {
+    if (typeof filters === "undefined" || Object.keys(filters).length === 0) {
       requestOptions.qs.offset = offset;
       requestOptions.qs.limit = limit;
       response = await request(requestOptions);
       return response;
     } else {
       response = await util.aggregate(request, requestOptions, trace);
-      logger.debug("****** AGGREGATE RESPONSE *******",response);
+      //logger.debug("****** AGGREGATE RESPONSE *******",response);
       if (response.hasOwnProperty("items") && response.items.length > 0) {
         const filteredResponse = util.filterResponse(response, filters);
         //logger.debug("******* FILTERED RESPONSE ********",filteredResponse);
@@ -575,7 +575,7 @@ const listCustomSubscriptions = async (
           offset,
           limit
         );
-        logger.debug("******* PAGINATED RESPONSE ********",paginatedResponse);
+        //logger.debug("******* PAGINATED RESPONSE ********",paginatedResponse);
         return paginatedResponse;
       } else {
         return response;

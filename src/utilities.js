@@ -202,6 +202,7 @@ const filterResponse = (response, filters) => {
               return doFilter(obj[prop], filter);
             }
           } else {
+            // Iterate array. The if/esle blocks in this function need to be refactored with this addition
             return obj[prop].forEach(elem => {
               return doFilter(elem, filter);
             })
