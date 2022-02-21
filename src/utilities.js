@@ -185,6 +185,7 @@ const filterResponse = (response, filters) => {
       const doFilter = (obj, filter) => {
         Object.keys(obj).forEach((prop) => {
           if (found) return;
+          // property is not array
           if (!Array.isArray(obj[prop])) {
             if (
               typeof obj[prop] === "string" ||
@@ -202,10 +203,20 @@ const filterResponse = (response, filters) => {
               return doFilter(obj[prop], filter);
             }
           } else {
-            // Iterate array. The if/esle blocks in this function need to be refactored with this addition
+            // property is array
             return obj[prop].forEach(elem => {
-              return doFilter(elem, filter);
-            })
+              if (typeof elem === "string" || typeof elem === "number" || typeof elem === "boolean") {
+                // console.log("PROP", prop);
+                // console.log("OBJ[PROP]", obj[prop]);
+                // console.log("FILTER", filter);
+                // console.log("FILTERS[FILTER}",filters[filter]);
+                found = prop === filter && elem === filters[filter];
+                return;
+              } else if (typeof elem === "object" && elem !== null) {
+                //console.log("************ Filter recursing **************",obj[prop]);
+                return doFilter(elem, filter);
+              }
+            });
           }
         });
         //console.log("FOUND", found);
