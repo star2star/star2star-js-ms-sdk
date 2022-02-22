@@ -179,53 +179,47 @@ const paginate = (response, offset = 0, limit = 10) => {
  */
 const filterResponse = (response, filters) => {
   //console.log("*****FILTERS*****", filters);
+
+  // recursive function to search
+  const doFilter = (obj, filter, filters, found) => {
+    Object.keys(obj).forEach((prop) => {
+      if (found) return;
+      // property is array
+      if (Array.isArray(obj[prop])) {
+        // property is array
+        return obj[prop].forEach((elem) => {
+          found = checkProp(elem, prop, filter, filters, found);
+        });
+      } else {
+        found = checkProp(obj[prop], prop, filter, filters, found);
+      }
+    });
+    //console.log("FOUND", found);
+    return found;
+  };
+
+  const checkProp = (obj, prop, filter, filters, found) => {
+    if (
+      typeof obj === "string" ||
+      typeof obj === "number" ||
+      typeof obj === "boolean"
+    ) {
+      return prop === filter && obj === filters[filter];
+    } else if (typeof obj === "object" && obj !== null) {
+      //console.log("************ Filter recursing **************",obj[prop]);
+      return doFilter(obj, filter, filters, found);
+    }
+  };
+
+  // filters are "AND", so return only matches when all filters are satisfied
+  // do the things here
   Object.keys(filters).forEach((filter) => {
     const filteredResponse = response.items.filter((filterItem) => {
       let found = false;
-      const doFilter = (obj, filter) => {
-        Object.keys(obj).forEach((prop) => {
-          if (found) return;
-          // property is not array
-          if (!Array.isArray(obj[prop])) {
-            if (
-              typeof obj[prop] === "string" ||
-              typeof obj[prop] === "number" ||
-              typeof obj[prop] === "boolean"
-            ) {
-              // console.log("PROP", prop);
-              // console.log("OBJ[PROP]", obj[prop]);
-              // console.log("FILTER", filter);
-              // console.log("FILTERS[FILTER}",filters[filter]);
-              found = prop === filter && obj[prop] === filters[filter];
-              return;
-            } else if (typeof obj[prop] === "object" && obj[prop] !== null) {
-              //console.log("************ Filter recursing **************",obj[prop]);
-              return doFilter(obj[prop], filter);
-            }
-          } else {
-            // property is array
-            return obj[prop].forEach(elem => {
-              if (typeof elem === "string" || typeof elem === "number" || typeof elem === "boolean") {
-                // console.log("PROP", prop);
-                // console.log("OBJ[PROP]", obj[prop]);
-                // console.log("FILTER", filter);
-                // console.log("FILTERS[FILTER}",filters[filter]);
-                found = prop === filter && elem === filters[filter];
-                return;
-              } else if (typeof elem === "object" && elem !== null) {
-                //console.log("************ Filter recursing **************",obj[prop]);
-                return doFilter(elem, filter);
-              }
-            });
-          }
-        });
-        //console.log("FOUND", found);
-        return found;
-      };
-      return doFilter(filterItem, filter);
+      return doFilter(filterItem, filter, filters, found);
     });
-    response.items = filteredResponse;
     //console.log("FILTERED RESPONSE", filteredResponse);
+    response.items = filteredResponse;
   });
   //console.log("FINAL RESPONSE ARRAY", response.items.length, response.items);
   return response;
@@ -287,15 +281,15 @@ const aggregate = async (request, requestOptions, trace = {}) => {
  * @returns
  */
 const addRequestTrace = (requestOptions, trace = {}) => {
-  if (typeof requestOptions !== "object" || requestOptions === null){
-    requestOptions = {}
+  if (typeof requestOptions !== "object" || requestOptions === null) {
+    requestOptions = {};
   }
-  if(typeof requestOptions.headers === "undefined"){
+  if (typeof requestOptions.headers === "undefined") {
     requestOptions.headers = {};
   }
 
-  if (typeof trace !== "object" || trace === null){
-    trace = {}
+  if (typeof trace !== "object" || trace === null) {
+    trace = {};
   }
 
   const headerKeys = ["id", "trace", "parent"];
@@ -317,7 +311,10 @@ const addRequestTrace = (requestOptions, trace = {}) => {
   } else {
     requestOptions.headers.debug = false;
   }
-  Logger.getInstance().debug(`Microservice Request ${requestOptions.method}: ${requestOptions.uri}`, requestOptions.headers);
+  Logger.getInstance().debug(
+    `Microservice Request ${requestOptions.method}: ${requestOptions.uri}`,
+    requestOptions.headers
+  );
 
   return requestOptions;
 };
@@ -510,7 +507,7 @@ const formatError = (error) => {
     // begin generic error formatting
 
     // code
-    if (typeof error?.code !== "undefined" ) {
+    if (typeof error?.code !== "undefined") {
       try {
         const code = parseInt(error.code);
         if (code.toString() !== "NaN" && code.toString().length === 3) {
@@ -534,7 +531,9 @@ const formatError = (error) => {
     retObj.message =
       typeof error?.message === "string" && error.message.length > 0
         ? error.message
-        : error?.response?.body && typeof error?.response?.body === "string" ?error?.response?.body  : "unspecified error";
+        : error?.response?.body && typeof error?.response?.body === "string"
+        ? error?.response?.body
+        : "unspecified error";
 
     // trace
     retObj.traceId =
@@ -684,22 +683,28 @@ const sanitizeObject = (obj) => {
     "_token",
     "_basic_token",
     "_client_token", // legacy
-    "_oauth2_app"
+    "_oauth2_app",
   ];
-  Object.keys(obj).forEach(key => {
-    if(typeof obj[key] === "object" && obj[key] !== null){
-      if(Array.isArray(obj[key])){
-        obj[key].forEach(elem => {
-          if(typeof elem === "object" && elem !== null){
+  Object.keys(obj).forEach((key) => {
+    if (typeof obj[key] === "object" && obj[key] !== null) {
+      if (Array.isArray(obj[key])) {
+        obj[key].forEach((elem) => {
+          if (typeof elem === "object" && elem !== null) {
             elem = sanitizeObject(elem);
-          } else if (typeof obj[key] === "string" && propsToClean.indexOf(key) !== -1){
+          } else if (
+            typeof obj[key] === "string" &&
+            propsToClean.indexOf(key) !== -1
+          ) {
             delete obj[key];
           }
         });
       } else {
         obj[key] = sanitizeObject(obj[key]);
       }
-    } else if (typeof obj[key] === "string" && propsToClean.indexOf(key) !== -1){
+    } else if (
+      typeof obj[key] === "string" &&
+      propsToClean.indexOf(key) !== -1
+    ) {
       delete obj[key];
     }
   });
@@ -716,81 +721,88 @@ const getUserUuidFromToken = (token) => {
 };
 
 const getAccountUuidFromToken = (token) => {
-  try{
-    return JSON.parse(Buffer.from(token.split(".")[1], 'base64').toString())
+  try {
+    return JSON.parse(Buffer.from(token.split(".")[1], "base64").toString())
       .tid;
-  } catch(error){
-  throw formatError(error);
+  } catch (error) {
+    throw formatError(error);
   }
 };
 
 const arrayDiff = (oldArray = [], newArray = [], doDedupe = true) => {
   const retObj = {
-    "added": [],
-    "removed": [] 
+    added: [],
+    removed: [],
   };
-  if(Array.isArray(oldArray) && Array.isArray(newArray)){
+  if (Array.isArray(oldArray) && Array.isArray(newArray)) {
     const dedupe = (arr, doDedupe = true) => {
-      if(!doDedupe){
+      if (!doDedupe) {
         return arr;
       }
       // using separate primatives here to prevent casting
       const primatives = {
-        "boolean": [],
-        "number": [],
-        "string": []
-      }
-      return arr.filter(elem => {
+        boolean: [],
+        number: [],
+        string: [],
+      };
+      return arr.filter((elem) => {
         const type = typeof elem;
         let doInclude = false;
-        if(typeof primatives?.[type] !== "undefined"){
-          if(primatives[type].indexOf(elem) === -1){
-            primatives[type].push(elem);	
+        if (typeof primatives?.[type] !== "undefined") {
+          if (primatives[type].indexOf(elem) === -1) {
+            primatives[type].push(elem);
             doInclude = true;
           }
         }
         return doInclude;
       });
-    }
-    retObj.added = dedupe(newArray, doDedupe)
-      .filter(elem => {return oldArray.indexOf(elem) === -1});
-    retObj.removed = dedupe(oldArray, doDedupe)
-      .filter(elem => {return newArray.indexOf(elem) === -1});
+    };
+    retObj.added = dedupe(newArray, doDedupe).filter((elem) => {
+      return oldArray.indexOf(elem) === -1;
+    });
+    retObj.removed = dedupe(oldArray, doDedupe).filter((elem) => {
+      return newArray.indexOf(elem) === -1;
+    });
   }
   return retObj;
 };
 
 /**
-	 *
-	 * @desc Function recursively finds a target string and replaces it with a new value
-	 * @param {object|array|string|number|boolean} target - any data type other than undefined or null
-	 * @param {string} oldValue - the string to be replaced
-	 * @param {string} newValue - the replacing string
-	 * @returns
-	 */
- 
- const findAndReplaceString = (target, oldValue, newValue) => {
+ *
+ * @desc Function recursively finds a target string and replaces it with a new value
+ * @param {object|array|string|number|boolean} target - any data type other than undefined or null
+ * @param {string} oldValue - the string to be replaced
+ * @param {string} newValue - the replacing string
+ * @returns
+ */
+
+const findAndReplaceString = (target, oldValue, newValue) => {
   // TODO should this be able to handle other types of primitive for oldValue an newValue?
-  
+
   //fail safe. if params invalid, return original
-  if (typeof target === "undefined" || target === null || typeof oldValue !== "string" || typeof newValue !== "string"){
+  if (
+    typeof target === "undefined" ||
+    target === null ||
+    typeof oldValue !== "string" ||
+    typeof newValue !== "string"
+  ) {
     return target;
-  } else if (typeof target === "string"){
-    const regexp = new RegExp(`\\b${oldValue}`, 'g');
-     const replacedString = target.replace(regexp, newValue);
-    if(target !== replacedString){
+  } else if (typeof target === "string") {
+    const regexp = new RegExp(`\\b${oldValue}`, "g");
+    const replacedString = target.replace(regexp, newValue);
+    if (target !== replacedString) {
       return replacedString;
     }
-    return target; 
-  } else if (Array.isArray(target)){
-    return target.map(elem => {
+    return target;
+  } else if (Array.isArray(target)) {
+    return target.map((elem) => {
       return findAndReplaceString(elem, oldValue, newValue);
-    }); 
-  } else if (typeof target === "object"){
-    Object.keys(target).forEach(prop => {
+    });
+  } else if (typeof target === "object") {
+    Object.keys(target).forEach((prop) => {
       target[prop] = findAndReplaceString(target[prop], oldValue, newValue);
     });
-    return target
+    return target;
   } else {
     // no match return original target
     return target;
@@ -831,5 +843,5 @@ module.exports = {
   arrayDiff,
   findAndReplaceString,
   isValidVersionString,
-  isVersionHigher
+  isVersionHigher,
 };
