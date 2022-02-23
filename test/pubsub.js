@@ -22,6 +22,7 @@ const mochaAsync = (func, name) => {
       logger.debug(name, response);
       return response;
     } catch (error) {
+      console.log("!!!!!!", error);
       //mocha will log out the error
       throw error;
     }

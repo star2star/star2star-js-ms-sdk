@@ -1,11 +1,11 @@
 /* global require module*/
 "use strict";
 
-const request = require("request-promise");
+const request = require("./request-promise");
 const util = require("./utilities");
 const logger = require("./node-logger").getInstance();
 
-
+console.log("!!!!", request);
 /**
  * @async
  * @description This function will add a subscription.

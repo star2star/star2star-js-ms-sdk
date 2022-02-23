@@ -282,6 +282,8 @@ toc:
       - updateWorkflowGroup
   - name: Util
     children:
+      - addUrlQueryParams
+      - extractProps
       - addRequestTrace
       - aggregate
       - createUUID

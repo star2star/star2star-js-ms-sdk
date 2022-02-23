@@ -2,7 +2,7 @@
 "use strict";
 
 const config = require("./config");
-const request = require("request-promise");
+//const request = require("./request-promise");
 const merge = require("@star2star/merge-deep");
 const compareVersions = require("compare-versions");
 const crypto = require("crypto");
@@ -817,7 +817,69 @@ const isVersionHigher = (newVersion, oldVersion) => {
   return compareVersions.compare(newVersion, oldVersion, ">");
 };
 
+/**
+   *
+   *
+   * @param {*} baseUrl
+   * @param {*} [queryParamsObj={}]
+   * @param {*} [filterArray=[]]
+   * @returns
+   */
+ const addUrlQueryParams = (baseUrl, queryParamsObj = {}, filterArray = []) => {
+  const filteredParamsObj = Utilities.extractProps(
+    queryParamsObj,
+    filterArray
+  );
+  const queryParamsString = Object.keys(filteredParamsObj).reduce(
+    (acc, curr) => {
+      // skip properties with empty values
+      if (typeof filteredParamsObj[curr] === "undefined") {
+        return acc;
+      }
+      const encodedValue = encodeURIComponent(filteredParamsObj[curr]);
+      //first pass starts with a '?'
+      if (acc === "") {
+        return `?${curr}=${encodedValue}`;
+      }
+      // thereafter append with '&'
+      return `${acc}&${curr}=${encodedValue}`;
+    },
+    "" // default to an empty string
+  );
+  return `${baseUrl}${queryParamsString}`;
+};
+
+/**
+ *
+ *
+ * @param {*} sourceObj
+ * @param {*} filterArray
+ * @returns
+ */
+const extractProps = (sourceObj, filterArray) => {
+  if (!Array.isArray(filterArray) || filterArray.length === 0) {
+    return sourceObj;
+  } else {
+    // clone to ensure we don't affect any linking to source obj
+    try {
+      const clonedObj = JSON.parse(JSON.stringify(sourceObj));
+      Object.keys(sourceObj).forEach((prop) => {
+        if (filterArray.indexOf(prop) === -1) {
+          delete clonedObj[prop];
+        }
+      });
+      return clonedObj;
+    } catch (error) {
+      console.warn("unable to extract props", Utilities.formatError(error));
+      // fail safe
+      return sourceObj;
+    }
+  }
+};
+
 module.exports = {
+  addUrlQueryParams,
+  extractProps,
   getGlobalThis,
   getEndpoint,
   getAuthHost,
