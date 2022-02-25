@@ -364,7 +364,7 @@ const listUserFormSubmissions = async (
     const MS = util.getEndpoint("forms");
     const requestOptions = {
       method: "DELETE",
-      uri: `${MS}/forms/"${formUUID}`,
+      uri: `${MS}/forms/${formUUID}`,
       resolveWithFullResponse: true,
       json: true,
       headers: {
