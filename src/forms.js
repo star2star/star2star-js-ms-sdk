@@ -349,6 +349,52 @@ const listUserFormSubmissions = async (
 
 /**
  * @async
+ * @description This function will delete the form instance
+ * @param {string} [accessToken="null access token"] - access token for cpaas systems
+ * @param {string} [formUUID="null form uuid"] - uuid of form instance to delete
+ * @param {object} [trace = {}] - optional microservice lifecycle trace headers 
+ * @returns {Promise<object>} - Promise resolving to a status data object
+ */
+ const deleteFormInstance = async (
+  accessToken = "null access token",
+  formUUID = "null template uuid",
+  trace = {}
+) => {
+  try {
+    const MS = util.getEndpoint("forms");
+    const requestOptions = {
+      method: "DELETE",
+      uri: `${MS}/forms/"${formUUID}`,
+      resolveWithFullResponse: true,
+      json: true,
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+        "Content-type": "application/json",
+        "x-api-version": `${util.getVersion()}`
+      }
+    };
+    util.addRequestTrace(requestOptions, trace);
+    const response = await request(requestOptions);
+    // delete returns a 202....suspend return until the new resource is ready
+    if (response.hasOwnProperty("statusCode") && 
+        response.statusCode === 202 &&
+        response.headers.hasOwnProperty("location"))
+    {    
+      await util.pendingResource(
+        response.headers.location,
+        requestOptions, //reusing the request options instead of passing in multiple params
+        trace,
+        "deleting"
+      );
+    }
+    return {"status": "ok"};
+  } catch(error){
+    throw util.formatError(error)
+  } 
+};
+
+/**
+ * @async
  * @description This function will delete the form template
  * @param {string} [accessToken="null access token"] - access token for cpaas systems
  * @param {string} [templateUUID="null template uuid"] - uuid of template to delete
@@ -436,6 +482,7 @@ const listUserFormSubmissions = async (
 module.exports = {
   createFormInstance,
   createFormTemplate,
+  deleteFormInstance,
   deleteFormTemplate,
   getFormInstance,
   getFormTemplate,
