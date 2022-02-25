@@ -1,6 +1,6 @@
 {
   "name": "star2star-js-ms-sdk",
-  "version": "4.1.24",
+  "version": "4.1.25",
   "description": "Star2Star JavaScript Micro Service SDK",
   "main": "./lib/index.js",
   "scripts": {
@@ -38,6 +38,7 @@
     "documentation": "13.2.5",
     "env-cmd": "10.1.0",
     "eslint": "5.16.0",
+    "jsonata": "1.8.6",
     "mocha": "8.4.0"
   },
   "publishConfig": {

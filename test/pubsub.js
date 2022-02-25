@@ -11,10 +11,8 @@ const fs = require("fs");
 const s2sMS = require("../src/index");
 const Util = require("../src/utilities");
 const logger = require("../src/node-logger").getInstance();
-const objectMerge = require("object-merge");
 const { v4 } = require("uuid");
-const newMeta = Util.generateNewMetaData;
-let trace = newMeta();
+let trace = Util.generateNewMetaData();
 
 //utility function to simplify test code
 const mochaAsync = (func, name) => {
@@ -25,13 +23,13 @@ const mochaAsync = (func, name) => {
       return response;
     } catch (error) {
       //mocha will log out the error
-      return Promise.reject(error);
+      throw error;
     }
   };
 };
 
 describe("Pubsub MS Unit Test Suite", function () {
-  let accessToken, oauthData, sub_uuid;
+  let accessToken, oauthData, sub_uuid, sub;
 
   before(async () => {
     try {
@@ -56,7 +54,7 @@ describe("Pubsub MS Unit Test Suite", function () {
   it(
     "List account subscriptions",
     mochaAsync(async () => {
-      trace = objectMerge({}, trace, Util.generateNewMetaData(trace));
+      trace = Util.generateNewMetaData(trace);
       const response = await s2sMS.Pubsub.listAccountSubscriptions(
         accessToken,
         process.env.ACCOUNT_UUID,
@@ -76,7 +74,7 @@ describe("Pubsub MS Unit Test Suite", function () {
   it(
     "List user subscriptions",
     mochaAsync(async () => {
-      trace = objectMerge({}, trace, Util.generateNewMetaData(trace));
+      trace = Util.generateNewMetaData(trace);
       const response = await s2sMS.Pubsub.listUserSubscriptions(
         process.env.USER_UUID,
         accessToken,
@@ -93,7 +91,7 @@ describe("Pubsub MS Unit Test Suite", function () {
   it(
     "add subscription",
     mochaAsync(async () => {
-      trace = objectMerge({}, trace, Util.generateNewMetaData(trace));
+      trace = Util.generateNewMetaData(trace);
       const subscriptions = {
         identity: ["identity_property_change"],
       };
@@ -105,10 +103,10 @@ describe("Pubsub MS Unit Test Suite", function () {
 
       const expiresDate = new Date(Date.now() + 100000).toISOString();
       const response = await s2sMS.Pubsub.addSubscription(
-        process.env.TEST_IDENTITY,
-        process.env.testAccount,
+        process.env.USER_UUID,
+        process.env.ACCOUNT_UUID,
         "http://localhost:8001/foo",
-        [],
+        [{"x-foo": "bar"}],
         criteria,
         subscriptions,
         accessToken,
@@ -116,6 +114,8 @@ describe("Pubsub MS Unit Test Suite", function () {
         trace
       );
       sub_uuid = response.subscription_uuid;
+      sub = response;
+      console.log(JSON.stringify(response));
       assert.ok(
         response.hasOwnProperty("subscription_uuid"),
         JSON.stringify(response, null, "\t")
@@ -123,9 +123,28 @@ describe("Pubsub MS Unit Test Suite", function () {
       return response;
     }, "add subscription")
   );
+  
+  it(
+    "update subscription",
+    mochaAsync(async () => {
+      trace = Util.generateNewMetaData(trace);
+      sub.callback.headers = [{"x-foo": "baz"}]
+      const response = await s2sMS.Pubsub.updateSubscription(
+        accessToken,
+        sub_uuid,
+        sub,
+        trace
+      );
+      assert.ok(
+        response.hasOwnProperty(response?.callback?.headers?.[0]?.["x-foo"] === "baz"),
+        JSON.stringify(response, null, "\t")
+      );
+      return response;
+    }, "update subscription")
+  );
 
   // it("add subscription - sms workaround", mochaAsync(async () => {
-  //     //   trace = objectMerge({}, trace, Util.generateNewMetaData(trace));
+  //     //   trace = Util.generateNewMetaData(trace);
   //   const subscriptions = {
   //     identity: ["identity_property_change"]
   //   };
@@ -157,7 +176,7 @@ describe("Pubsub MS Unit Test Suite", function () {
   it(
     "update subscription expiration",
     mochaAsync(async () => {
-      trace = objectMerge({}, trace, Util.generateNewMetaData(trace));
+      trace = Util.generateNewMetaData(trace);
 
       const response = await s2sMS.Pubsub.updateSubscriptionExpiresDate(
         accessToken,
@@ -170,19 +189,19 @@ describe("Pubsub MS Unit Test Suite", function () {
     }, "update subscription expiration")
   );
 
-  it(
-    "delete subscription",
-    mochaAsync(async () => {
-      trace = objectMerge({}, trace, Util.generateNewMetaData(trace));
-      const response = await s2sMS.Pubsub.deleteSubscription(
-        sub_uuid,
-        accessToken,
-        trace
-      );
-      assert.ok(response.status === "ok", JSON.stringify(response, null, "\t"));
-      return response;
-    }, "delete subscription")
-  );
+  // it(
+  //   "delete subscription",
+  //   mochaAsync(async () => {
+  //     trace = Util.generateNewMetaData(trace);
+  //     const response = await s2sMS.Pubsub.deleteSubscription(
+  //       sub_uuid,
+  //       accessToken,
+  //       trace
+  //     );
+  //     assert.ok(response.status === "ok", JSON.stringify(response, null, "\t"));
+  //     return response;
+  //   }, "delete subscription")
+  // );
 
   // Custom Pubsub Tests:
   let app_uuid = v4();
@@ -190,7 +209,7 @@ describe("Pubsub MS Unit Test Suite", function () {
   it(
     "createCustomApplication",
     mochaAsync(async () => {
-      trace = objectMerge({}, trace, Util.generateNewMetaData(trace));
+      trace = Util.generateNewMetaData(trace);
       const response = await s2sMS.Pubsub.createCustomApplication(
         accessToken,
         app_uuid, //app_uuid
@@ -212,7 +231,7 @@ describe("Pubsub MS Unit Test Suite", function () {
   it(
     "getCustomApplication",
     mochaAsync(async () => {
-      trace = objectMerge({}, trace, Util.generateNewMetaData(trace));
+      trace = Util.generateNewMetaData(trace);
       const response = await s2sMS.Pubsub.getCustomApplication(
         accessToken,
         app_uuid,
@@ -232,7 +251,7 @@ describe("Pubsub MS Unit Test Suite", function () {
   it(
     "addCustomEventSubscription",
     mochaAsync(async () => {
-      trace = objectMerge({}, trace, Util.generateNewMetaData(trace));
+      trace = Util.generateNewMetaData(trace);
       const response = await s2sMS.Pubsub.addCustomEventSubscription(
         accessToken,
         app_uuid,
@@ -260,7 +279,7 @@ describe("Pubsub MS Unit Test Suite", function () {
   it(
     "getCustomSubscription",
     mochaAsync(async () => {
-      trace = objectMerge({}, trace, Util.generateNewMetaData(trace));
+      trace = Util.generateNewMetaData(trace);
       const response = await s2sMS.Pubsub.getCustomSubscription(
         accessToken,
         custom_uuid,
@@ -282,7 +301,7 @@ describe("Pubsub MS Unit Test Suite", function () {
   it(
     "broadcastCustomApplication",
     mochaAsync(async () => {
-      trace = objectMerge({}, trace, Util.generateNewMetaData(trace));
+      trace = Util.generateNewMetaData(trace);
       const response = await s2sMS.Pubsub.broadcastCustomApplication(
         accessToken,
         app_uuid,
@@ -301,7 +320,7 @@ describe("Pubsub MS Unit Test Suite", function () {
   it(
     "deleteCustomSubscription",
     mochaAsync(async () => {
-      trace = objectMerge({}, trace, Util.generateNewMetaData(trace));
+      trace = Util.generateNewMetaData(trace);
       const response = await s2sMS.Pubsub.deleteCustomSubscription(
         accessToken,
         custom_uuid,
@@ -318,7 +337,7 @@ describe("Pubsub MS Unit Test Suite", function () {
   it(
     "deleteCustomApplication",
     mochaAsync(async () => {
-      trace = objectMerge({}, trace, Util.generateNewMetaData(trace));
+      trace = Util.generateNewMetaData(trace);
       const response = await s2sMS.Pubsub.deleteCustomApplication(
         accessToken,
         app_uuid,
@@ -334,7 +353,7 @@ describe("Pubsub MS Unit Test Suite", function () {
 
   // template
   // it("change me", mochaAsync(async () => {
-  //     //   trace = objectMerge({}, trace, Util.generateNewMetaData(trace));
+  //     //   trace = Util.generateNewMetaData(trace);
   //   const response = await somethingAsync();
   //   assert.ok(
   //     1 === 1,

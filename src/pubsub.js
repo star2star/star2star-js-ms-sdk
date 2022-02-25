@@ -515,10 +515,13 @@ const listCustomSubscriptions = async (
 /**
  * @async
  * @description This function will ask the cpaas pubsub service for the list of user's subscriptions.
- * @param {string} [user_uuid="no user uuid provided"] - uuid for a star2star user
  * @param {string} [accessToken="null accessToken"] - access token for cpaas systems
+ * @param {string} [accountUUID="no account uuid provided"] - cpaas account uuid
+ * @param {number} [offset=0] pagination offset
+ * @param {number} [limit=10] pagination limit
+ * @param {object} filters optional response filters in key-value
  * @param {object} [trace = {}] - optional microservice lifecycle trace headers
- * @returns {Promise<object>} - Promise resolving to a data object containing a list of subscriptions for this user
+ * @returns {Promise<object>} - Promise resolving to a data object containing a list of subscriptions
  */
  const listAccountSubscriptions = async (
   accessToken = "null accessToken",
@@ -594,6 +597,75 @@ const listCustomSubscriptions = async (
  * @param {object} [trace = {}] - optional microservice lifecycle trace headers
  * @returns {Promise<object>} - Promise resolving to a data object containing a list of subscriptions for this user
  */
+ const listSubscriptions = async (
+  accessToken = "null accessToken",
+  offset = 0,
+  limit = 10,
+  filters,
+  trace = {}
+) => {
+  try {
+    const MS = util.getEndpoint("pubsub");
+    const requestOptions = {
+      method: "GET",
+      uri: `${MS}/subscriptions`,
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+        "Content-type": "application/json",
+        "x-api-version": `${util.getVersion()}`
+      },
+      qs: {},
+      json: true
+    };
+
+    let response;
+    if (typeof filters !== "undefined" && (typeof filters !== "object" || filters === null)) {
+      // filter param has been passed in, make sure it is an array befor proceeding
+      throw {
+        "code": 400,
+        "message": "filters param not an object",
+        "trace_id": requestOptions.hasOwnProperty("headers") && requestOptions.headers.hasOwnProperty("trace")
+          ? requestOptions.headers.trace 
+          : undefined,
+        "details": [{"filters": filters}]
+      };
+    }
+
+    if (typeof filters === "undefined" || Object.keys(filters).length === 0) {
+      requestOptions.qs.offset = offset;
+      requestOptions.qs.limit = limit;
+      response = await request(requestOptions);
+      return response;
+    } else {
+      response = await util.aggregate(request, requestOptions, trace);
+      // logger.debug("****** AGGREGATE RESPONSE *******",response);
+      if (response.hasOwnProperty("items") && response.items.length > 0) {
+        const filteredResponse = util.filterResponse(response, filters);
+        // logger.debug("******* FILTERED RESPONSE ********",filteredResponse);
+        const paginatedResponse = util.paginate(
+          filteredResponse,
+          offset,
+          limit
+        );
+        //logger.debug("******* PAGINATED RESPONSE ********",paginatedResponse);
+        return paginatedResponse;
+      } else {
+        return response;
+      } 
+    }
+  } catch (error) {
+    throw util.formatError(error);
+  }
+};
+
+/**
+ * @async
+ * @description This function will ask the cpaas pubsub service for the list of user's subscriptions.
+ * @param {string} [user_uuid="no user uuid provided"] - uuid for a star2star user
+ * @param {string} [accessToken="null accessToken"] - access token for cpaas systems
+ * @param {object} [trace = {}] - optional microservice lifecycle trace headers
+ * @returns {Promise<object>} - Promise resolving to a data object containing a list of subscriptions for this user
+ */
 const listUserSubscriptions = async (
   user_uuid = "no user uuid provided",
   accessToken = "null accessToken",
@@ -619,6 +691,49 @@ const listUserSubscriptions = async (
     return response;
   } catch (error) {
     return Promise.reject(util.formatError(error));
+  }
+};
+
+/**
+ * @async
+ * @description This function updates a subscription expiration date
+ * @param {string} [accessToken="null accessToken"] - access token for cpaas systems
+ * @param {string} subscriptionUUID - subscription uuid
+ * @param {object} [body="null body"] - subscription
+ * @param {object} [trace={}] - optional cpaas lifecycle headers
+ * @returns {Promise<object>} - Promise resolving to a data object containing updated subscription
+ */
+ const updateSubscription = async (
+  accessToken = "null accessToken",
+  subscriptionUUID,
+  body = "null body",
+  trace = {}
+) => {
+  try {
+    if(typeof body !== "object" || body === null){
+      throw {
+        code: 400,
+        message: "request body invalid format"
+      };
+    }
+    const MS = util.getEndpoint("pubsub");
+    const requestOptions = {
+      method: "PUT",
+      uri: `${MS}/subscriptions/${subscriptionUUID}`,
+      body: body,
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+        "Content-type": "application/json",
+        "x-api-version": `${util.getVersion()}`
+      },
+
+      json: true
+    };
+    util.addRequestTrace(requestOptions, trace);
+    const response = await request(requestOptions);
+    return response;
+  } catch (error) {
+    throw util.formatError(error);
   }
 };
 
@@ -674,6 +789,8 @@ module.exports = {
   getSubscription,
   listCustomSubscriptions,
   listAccountSubscriptions,
+  listSubscriptions,
   listUserSubscriptions,
+  updateSubscription,
   updateSubscriptionExpiresDate 
 };
