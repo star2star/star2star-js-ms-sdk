@@ -6,11 +6,16 @@ const util = require("./utilities");
  * @param {object} requestOptions request-promise formatted request options
  * @returns {Promise<any>} Promise resolving to the HTTP response specified
  */
-const request = async function(requestOptions) {
+const request = async function (requestOptions) {
   try {
+   // const requestOptions = merge(options);
     let uri = requestOptions?.uri;
-    delete requestOptions.uri;
-
+    if (typeof uri === "undefined") {
+      throw {
+        code: 400,
+        message: "request missing URI",
+      };
+    }
     // the body should be JSON if this is true
     if (
       requestOptions.json === true &&
@@ -39,36 +44,33 @@ const request = async function(requestOptions) {
     }
 
     const response = await fetch(uri, requestOptions);
-    
     if (response.ok === false) {
-        const error = await util.formatFetchError(response);
-        throw error;
+      const error = await util.formatFetchError(response);
+      throw error;
+    } else {
+      let payload;
+      const responseType = response.headers.get("Content-Type");
+      if (typeof responseType === "string" && responseType.indexOf("application/json") !== -1) {
+        payload = await response.json();
       } else {
-        let payload 
-        try {
-          payload = await response.json();
-        } catch (e){
-          payload = await response.text();
-        }
-        // now check the payload to see if the execution had an error
-        console.log("GOT HERE", response.ok,payload);
-        
+        payload = await response.text();
+      }
+
+      // caller needs the status code
+      if (requestOptions.resolveWithFullResponse === true) {
+        const fullResponse = {
+          ...response,
+          statusCode: response.status,
+          body: payload,
+        };
+        return fullResponse;
+      } else {
         return payload;
+      }
     }
   } catch (e) {
     throw util.formatError(e);
   }
-  // const requestOptions = {
-  //     method: "POST",
-  //     uri: `${MS}/users/${userUuid}/contacts`,
-  //     headers: {
-  //       Authorization: `Bearer ${accessToken}`,
-  //       "Content-type": "application/json",
-  //       "x-api-version": `${util.getVersion()}`
-  //     },
-  //     body: contactData,
-  //     json: true
-  //   };
 };
 
 module.exports = request;

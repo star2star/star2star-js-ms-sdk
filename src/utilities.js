@@ -826,7 +826,7 @@ const isVersionHigher = (newVersion, oldVersion) => {
    * @returns
    */
  const addUrlQueryParams = (baseUrl, queryParamsObj = {}, filterArray = []) => {
-  const filteredParamsObj = Utilities.extractProps(
+  const filteredParamsObj = extractProps(
     queryParamsObj,
     filterArray
   );
@@ -870,7 +870,7 @@ const extractProps = (sourceObj, filterArray) => {
       });
       return clonedObj;
     } catch (error) {
-      console.warn("unable to extract props", Utilities.formatError(error));
+      console.warn("unable to extract props", formatError(error));
       // fail safe
       return sourceObj;
     }
