@@ -2,7 +2,7 @@
 "use strict";
 
 const Util = require("./utilities");
-const request = require("request-promise");
+const request = require("./requestPromise");
 const merge = require("@star2star/merge-deep");
 const ResourceGroups = require("./resourceGroups");
 const logger = require("./node-logger").getInstance();

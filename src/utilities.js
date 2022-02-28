@@ -839,6 +839,9 @@ const isVersionHigher = (newVersion, oldVersion) => {
       const encodedValue = encodeURIComponent(filteredParamsObj[curr]);
       //first pass starts with a '?'
       if (acc === "") {
+        if(baseUrl === ""){
+          return `${curr}=${encodedValue}`;
+        }
         return `?${curr}=${encodedValue}`;
       }
       // thereafter append with '&'

@@ -8,7 +8,7 @@ const util = require("./utilities");
  */
 const request = async function (requestOptions) {
   try {
-   // const requestOptions = merge(options);
+    // const requestOptions = merge(options);
     let uri = requestOptions?.uri;
     if (typeof uri === "undefined") {
       throw {
@@ -18,10 +18,10 @@ const request = async function (requestOptions) {
     }
     // the body should be JSON if this is true
     if (
-      requestOptions.json === true &&
       typeof requestOptions?.body === "object" &&
       requestOptions.body !== null
     ) {
+      // application/json
       try {
         const stringifiedBody = JSON.stringify(requestOptions.body);
         requestOptions.body = stringifiedBody;
@@ -32,6 +32,12 @@ const request = async function (requestOptions) {
           details: [JSON.stringify(util.formatError(e))],
         };
       }
+    } else if (
+      // application/x-www-form-urlencoded
+      typeof requestOptions?.form === "object" &&
+      requestOptions.form !== null
+    ) {
+      requestOptions.body = util.addUrlQueryParams("", requestOptions.form);
     }
 
     // build the query string onto the base URI
@@ -50,7 +56,11 @@ const request = async function (requestOptions) {
     } else {
       let payload;
       const responseType = response.headers.get("Content-Type");
-      if (typeof responseType === "string" && responseType.indexOf("application/json") !== -1) {
+      if (
+        typeof responseType === "string" &&
+        responseType.indexOf("application/json") !== -1 &&
+        requestOptions.json === true
+      ) {
         payload = await response.json();
       } else {
         payload = await response.text();

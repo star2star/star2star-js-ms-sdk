@@ -2,7 +2,7 @@
 "use strict";
 
 const Util = require("./utilities");
-const request = require("request-promise");
+const request = require("./requestPromise");
 const { v4 } = require("uuid");
 
 /**
@@ -48,7 +48,7 @@ const createClientApp = async (
     if (response.hasOwnProperty("statusCode") && 
         response.statusCode === 202 &&
         response.headers.hasOwnProperty("location"))
-    {    
+    {
       await Util.pendingResource(
         response.headers.location,
         requestOptions, //reusing the request options instead of passing in multiple params
