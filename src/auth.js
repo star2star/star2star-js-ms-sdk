@@ -1,7 +1,7 @@
 /*global require module*/
 "use strict";
 const Util = require("./utilities");
-const request = require("request-promise");
+const request = require("./requestPromise");
 const Groups = require("./groups");
 const merge = require("@star2star/merge-deep");
 

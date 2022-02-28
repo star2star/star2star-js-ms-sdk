@@ -87,6 +87,11 @@ const getDataObjects = async (
     };
     Util.addRequestTrace(requestOptions, trace);
     let response;
+
+    // default the filter to empty object
+    if(typeof filters === "undefined"){
+      filters = {};
+    }
     //here we determine if we will need to handle aggrigation, pagination, and filtering or send it to the microservice
     if (filters) {
       // filter param has been passed in, make sure it is an array befor proceeding
@@ -138,7 +143,7 @@ const getDataObjects = async (
       }
     }
   } catch (error) {
-    return Promise.reject(Util.formatError(error));
+    throw Util.formatError(error);
   }
 };
 

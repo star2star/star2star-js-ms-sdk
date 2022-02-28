@@ -69,9 +69,9 @@ const request = async function (requestOptions) {
       // caller needs the status code
       if (requestOptions.resolveWithFullResponse === true) {
         const fullResponse = {
-          ...response,
-          statusCode: response.status,
-          body: payload,
+          headers: response.headers,
+          statusCode: response.status, // backward compatible
+          body: payload
         };
         return fullResponse;
       } else {

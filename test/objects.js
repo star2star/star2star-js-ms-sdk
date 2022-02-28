@@ -24,7 +24,7 @@ const mochaAsync = (func, name) => {
       return response; 
     } catch (error) {
       //mocha will log out the error
-      return Promise.reject(error);
+      throw error;
     }
   };
 };
@@ -56,7 +56,7 @@ describe("Objects MS Test Suite", function() {
       const idData = await s2sMS.Identity.getMyIdentityData(accessToken);
       identityData = await s2sMS.Identity.getIdentityDetails(accessToken, idData.user_uuid);
     } catch (error){
-      return Promise.reject(error);
+      throw error;
     }
   });
 
@@ -98,7 +98,7 @@ describe("Objects MS Test Suite", function() {
     return response;
   },"Create Shared User Object"));
 
-  it("List Shared User Objects", mochaAsync(async () => {
+ it("List Shared User Objects", mochaAsync(async () => {
 
     const filters = {
       "type": "unit-test"
