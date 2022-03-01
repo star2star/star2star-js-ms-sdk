@@ -11,7 +11,6 @@ const fs = require("fs");
 const s2sMS = require("../src/index");
 const Util = require("../src/utilities");
 const logger = require("../src/node-logger").getInstance();
-const objectMerge = require("object-merge");
 let trace = Util.generateNewMetaData();
 
 describe("Chat MS Test Suite", function() {
@@ -27,7 +26,7 @@ describe("Chat MS Test Suite", function() {
         return response; 
       } catch (error) {
         //mocha will log out the error
-        return Promise.reject(error);
+        throw error;
       }
     };
   };
@@ -54,7 +53,7 @@ describe("Chat MS Test Suite", function() {
       identityData = await s2sMS.Identity.getIdentityDetails(accessToken, idData.user_uuid);
 
     } catch (error){
-      return Promise.reject(error);
+      throw error;
     }
   });
 
@@ -142,7 +141,7 @@ describe("Chat MS Test Suite", function() {
     return channelData;
   },"Get Channel"));
   it("Modify Channel Info", mochaAsync(async () => {
-        const newInfo = objectMerge({}, test_channel);
+        const newInfo = Object.assign({}, test_channel);
     newInfo.name = "james";
     newInfo.topic = "test2";
     newInfo.description = "updated description";

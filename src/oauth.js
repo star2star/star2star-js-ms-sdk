@@ -49,8 +49,9 @@ const createClientApp = async (
         response.statusCode === 202 &&
         response.headers.hasOwnProperty("location"))
     {
-      await Util.pendingResource(
+       await Util.pendingResource(
         response.headers.location,
+        request,
         requestOptions, //reusing the request options instead of passing in multiple params
         trace
       );

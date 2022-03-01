@@ -2,7 +2,6 @@
 "use strict";
 
 const config = require("./config");
-//const request = require("./request-promise");
 const merge = require("@star2star/merge-deep");
 const compareVersions = require("compare-versions");
 const crypto = require("crypto");
@@ -356,12 +355,17 @@ const generateNewMetaData = (oldMetaData = {}) => {
 /**
  * @async
  * @description This function takes in a request and polls the microservice until it is ready
- * @param {function} verifyFunc - function that is used to confirm resource is ready.
- * @param {string} startingResourceStatus - argument to specify expected resolution or skip polling if ready
+ * @param {string} resourceLoc location of resource updates
+ * @param {async function} request node fetch for request promise syntax
+ * @param {object} requestOptions fetch request options from original request
+ * @param {object} trace optional CPaaS lifecycle headers
+ * @param {string} [startingResourceStatus="processing"] - argument to specify expected resolution or skip polling if ready
  * @returns {Promise} - Promise resolved when verify func is successful.
+ * @returns
  */
 const pendingResource = async (
   resourceLoc,
+  request,
   requestOptions,
   trace,
   startingResourceStatus = "processing"
@@ -371,13 +375,14 @@ const pendingResource = async (
     if (startingResourceStatus === "complete") {
       return { status: "ok" };
     }
-    //update our requestOptions for the verification URL
+    // update our requestOptions for the verification URL
+    // at this point we may not need to pass in options to this function
     requestOptions.method = "HEAD";
     requestOptions.uri = resourceLoc;
     delete requestOptions.body;
 
     //add trace headers
-    const nextTrace = merge({}, generateNewMetaData(trace));
+    const nextTrace = generateNewMetaData(trace);
     addRequestTrace(requestOptions, nextTrace);
     // starting resource is not complete, poll the verify endpoint
     const expires = Date.now() + config.pollTimeout;

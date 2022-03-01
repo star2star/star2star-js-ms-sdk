@@ -11,9 +11,7 @@ const fs = require("fs");
 const s2sMS = require("../src/index");
 const Util = require("../src/utilities");
 const logger = require("../src/node-logger").getInstance();
-const objectMerge = require("object-merge");
-const newMeta = Util.generateNewMetaData;
-let trace = newMeta();
+let trace = Util.generateNewMetaData();
 let file_id;
 
 //utility function to simplify test code
@@ -25,7 +23,7 @@ const mochaAsync = (func, name) => {
       return response; 
     } catch (error) {
       //mocha will log out the error
-      return Promise.reject(error);
+      throw error;
     }
   };
 };
@@ -56,12 +54,12 @@ describe("Media MS Unit Test Suite", function () {
       const idData = await s2sMS.Identity.getMyIdentityData(accessToken);
       identityData = await s2sMS.Identity.getIdentityDetails(accessToken, idData.user_uuid);
     } catch (error) {
-      return Promise.reject(error);
+      throw error;
     }
   });
 
   it("Get Metadata Subsystems", mochaAsync(async () => {
-        trace = objectMerge({}, trace, Util.generateNewMetaData(trace));
+        trace = Util.generateNewMetaData(trace);
     const response = await s2sMS.Metadata.getMetadataSubsystems(
       accessToken,
       undefined, // not specifying subsystems
@@ -76,7 +74,7 @@ describe("Media MS Unit Test Suite", function () {
 
   // this will need to be expanded as we increase the number of  services.
   it("Get Metadata for Specific Subsystems", mochaAsync(async () => {
-        trace = objectMerge({}, trace, Util.generateNewMetaData(trace));
+        trace = Util.generateNewMetaData(trace);
     const response = await s2sMS.Metadata.getMetadataSubsystems(
       accessToken,
       "voice-api",
@@ -91,7 +89,7 @@ describe("Media MS Unit Test Suite", function () {
 
   // template
   // it("change me", mochaAsync(async () => {
-  //     //   trace = objectMerge({}, trace, Util.generateNewMetaData(trace));
+  //     //   trace = Util.generateNewMetaData(trace);
   //   const response = await somethingAsync();
   //   assert.ok(
   //     1 === 1,

@@ -77,7 +77,7 @@ const addSubscription = async (
     const response = await request(requestOptions);
     return response;
   } catch (error) {
-    return Promise.reject(util.formatError(error));
+    throw util.formatError(error);
   }
 };
 
@@ -135,7 +135,7 @@ const addCustomEventSubscription = async (
     const response = await request(requestOptions);
     return response;
   } catch (error) {
-    return Promise.reject(util.formatError(error));
+    throw util.formatError(error);
   }
 };
 
@@ -179,7 +179,7 @@ const broadcastCustomApplication = async (
     const response = await request(requestOptions);
     return response;
   } catch (error) {
-    return Promise.reject(util.formatError(error));
+    throw util.formatError(error);
   }
 };
 
@@ -218,7 +218,7 @@ const createCustomApplication = async (
     const response = await request(requestOptions);
     return response;
   } catch (error) {
-    return Promise.reject(util.formatError(error));
+    throw util.formatError(error);
   }
 };
 
@@ -266,7 +266,7 @@ const deleteCustomApplication = async (
       };
     } 
   } catch (error) {
-    return Promise.reject(util.formatError(error));
+    throw util.formatError(error);
   }
 };
 
@@ -315,7 +315,7 @@ const deleteCustomSubscription = async (
       };
     } 
   } catch (error) {
-    return Promise.reject(util.formatError(error));
+    throw util.formatError(error);
   }
 };
 
@@ -364,7 +364,7 @@ const deleteSubscription = async (
       };
     } 
   } catch (error) {
-    return Promise.reject(util.formatError(error));
+    throw util.formatError(error);
   }
 };
 
@@ -397,7 +397,7 @@ const getCustomApplication = async (
     const response = await request(requestOptions);
     return response;
   } catch (error) {
-    return Promise.reject(util.formatError(error));
+    throw util.formatError(error);
   }
 };
 
@@ -430,7 +430,7 @@ const getCustomSubscription = async (
     const response = await request(requestOptions);
     return response;
   } catch (error) {
-    return Promise.reject(util.formatError(error));
+    throw util.formatError(error);
   }
 };
 
@@ -465,7 +465,7 @@ const getSubscription = async (
     const response = await request(requestOptions);
     return response;
   } catch (error) {
-    return Promise.reject(util.formatError(error));
+    throw util.formatError(error);
   }
 };
 
@@ -689,7 +689,7 @@ const listUserSubscriptions = async (
     const response = await request(requestOptions);
     return response;
   } catch (error) {
-    return Promise.reject(util.formatError(error));
+    throw util.formatError(error);
   }
 };
 
@@ -771,7 +771,7 @@ const updateSubscriptionExpiresDate = async (
     const response = await request(requestOptions);
     return response;
   } catch (error) {
-    return Promise.reject(util.formatError(error));
+    throw util.formatError(error);
   }
 };
 

@@ -48,7 +48,7 @@ describe("Pubsub MS Unit Test Suite", function () {
       );
       accessToken = oauthData.access_token;
     } catch (error) {
-      return Promise.reject(error);
+      throw error;
     }
   });
 

@@ -1,7 +1,7 @@
 /* global require module*/
 "use strict";
 const util = require("./utilities");
-const request = require("request-promise");
+const request = require("./requestPromise");
 const logger = require("./node-logger").getInstance();
 
 /**

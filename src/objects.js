@@ -327,6 +327,7 @@ const createUserDataObject = async (
       {    
         await Util.pendingResource(
           response.headers.location,
+          request,
           requestOptions, //reusing the request options instead of passing in multiple params
           trace
         );
@@ -426,8 +427,9 @@ const createDataObject = async (
         response.statusCode === 202 &&
         response.headers.hasOwnProperty("location"))
     {    
-      await Util.pendingResource(
+       await Util.pendingResource(
         response.headers.location,
+        request,
         requestOptions, //reusing the request options instead of passing in multiple params
         trace
       );
@@ -481,6 +483,7 @@ const deleteDataObject = async (
     {    
       await Util.pendingResource(
         response.headers.location,
+        request,
         requestOptions, //reusing the request options instead of passing in multiple params
         trace,
         "deleting"
@@ -547,8 +550,9 @@ const updateDataObject = async (
         response.statusCode === 202 &&
         response.headers.hasOwnProperty("location"))
     {    
-      await Util.pendingResource(
+       await Util.pendingResource(
         response.headers.location,
+        request,
         requestOptions, //reusing the request options instead of passing in multiple params
         trace
       );

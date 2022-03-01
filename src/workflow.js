@@ -1,7 +1,7 @@
 /* global require module*/
 "use strict";
 
-const request = require("request-promise");
+const request = require("./requestPromise");
 const util = require("./utilities");
 const fetch = require("node-fetch");
 /**
@@ -34,7 +34,7 @@ const createWorkflowTemplate = async (
     const response = await request(requestOptions);
     return response;
   } catch (error) {
-    return Promise.reject(util.formatError(error));
+    throw util.formatError(error);
   }
 };
 
@@ -84,7 +84,7 @@ const cancelWorkflow = async (
       };
     }
   } catch (error) {
-    return Promise.reject(util.formatError(error));
+    throw util.formatError(error);
   }
 };
 
@@ -134,7 +134,7 @@ const deleteWorkflowTemplate = async (
       };
     }
   } catch (error) {
-    return Promise.reject(util.formatError(error));
+    throw util.formatError(error);
   }
 };
 
@@ -222,7 +222,7 @@ const getRunningWorkflow = async (
     const response = await request(requestOptions);
     return response;
   } catch (error) {
-    return Promise.reject(util.formatError(error));
+    throw util.formatError(error);
   }
 };
 
@@ -255,7 +255,7 @@ const getWorkflowGroup = async (
     const response = await request(requestOptions);
     return response;
   } catch (error) {
-    return Promise.reject(util.formatError(error));
+    throw util.formatError(error);
   }
 };
 
@@ -298,7 +298,7 @@ const getWorkflowGroupFiltered = async (
     const response = await request(requestOptions);
     return response;
   } catch (error) {
-    return Promise.reject(util.formatError(error));
+    throw util.formatError(error);
   }
 };
 
@@ -331,7 +331,7 @@ const getWorkflowGroupMaster = async (
     const response = await request(requestOptions);
     return response;
   } catch (error) {
-    return Promise.reject(util.formatError(error));
+    throw util.formatError(error);
   }
 };
 
@@ -364,7 +364,7 @@ const getWorkflowGroupData = async (
     const response = await request(requestOptions);
     return response;
   } catch (error) {
-    return Promise.reject(util.formatError(error));
+    throw util.formatError(error);
   }
 };
 
@@ -397,7 +397,7 @@ const getWorkflowGroupChildren = async (
     const response = await request(requestOptions);
     return response;
   } catch (error) {
-    return Promise.reject(util.formatError(error));
+    throw util.formatError(error);
   }
 };
 
@@ -432,7 +432,7 @@ const getWorkflowGroupChild = async (
     const response = await request(requestOptions);
     return response;
   } catch (error) {
-    return Promise.reject(util.formatError(error));
+    throw util.formatError(error);
   }
 };
 
@@ -475,7 +475,7 @@ const getWfInstanceHistory = async (
     const response = await request(requestOptions);
     return response;
   } catch (error) {
-    return Promise.reject(util.formatError(error));
+    throw util.formatError(error);
   }
 };
 
@@ -508,7 +508,7 @@ const getWfInstanceWorkflowVars = async (
     const response = await request(requestOptions);
     return response;
   } catch (error) {
-    return Promise.reject(util.formatError(error));
+    throw util.formatError(error);
   }
 };
 
@@ -541,7 +541,7 @@ const getWfInstanceIncomingData = async (
     const response = await request(requestOptions);
     return response;
   } catch (error) {
-    return Promise.reject(util.formatError(error));
+    throw util.formatError(error);
   }
 };
 
@@ -576,7 +576,7 @@ const getWfInstanceResults = async (
     const response = await request(requestOptions);
     return response;
   } catch (error) {
-    return Promise.reject(util.formatError(error));
+    throw util.formatError(error);
   }
 };
 
@@ -638,7 +638,7 @@ const getWfTemplateHistory = async (
     }
     return response;
   } catch (error) {
-    return Promise.reject(util.formatError(error));
+    throw util.formatError(error);
   }
 };
 
@@ -695,7 +695,7 @@ const getWorkflowTemplate = async (
       return response;
     }
   } catch (error) {
-    return Promise.reject(util.formatError(error));
+    throw util.formatError(error);
   }
 };
 
@@ -743,7 +743,7 @@ const listRunningWorkflows = async (
     const response = await request(requestOptions);
     return response;
   } catch (error) {
-    return Promise.reject(util.formatError(error));
+    throw util.formatError(error);
   }
 };
 
@@ -789,7 +789,7 @@ const listWorkflowGroups = async (
     const response = await request(requestOptions);
     return response;
   } catch (error) {
-    return Promise.reject(util.formatError(error));
+    throw util.formatError(error);
   }
 };
 
@@ -835,7 +835,7 @@ const listWorkflowTemplates = async (
     const response = await request(requestOptions);
     return response;
   } catch (error) {
-    return Promise.reject(util.formatError(error));
+    throw util.formatError(error);
   }
 };
 
@@ -871,7 +871,7 @@ const modifyWorkflowTemplate = async (
     const response = await request(requestOptions);
     return response;
   } catch (error) {
-    return Promise.reject(util.formatError(error));
+    throw util.formatError(error);
   }
 };
 
@@ -907,7 +907,7 @@ const startWorkflow = async (
     const response = await request(requestOptions);
     return response;
   } catch (error) {
-    return Promise.reject(util.formatError(error));
+    throw util.formatError(error);
   }
 };
 
@@ -1029,7 +1029,7 @@ const updateWorkflowGroup = async (
     const response = await request(requestOptions);
     return response;
   } catch (error) {
-    return Promise.reject(util.formatError(error));
+    throw util.formatError(error);
   }
 };
 

@@ -1,7 +1,7 @@
 /*global module require */
 "use strict";
 const Util = require("./utilities");
-const request = require("request-promise");
+const request = require("./requestPromise");
 
 /**
  * @description This function returns a single entitlement product

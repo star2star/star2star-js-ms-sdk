@@ -1,7 +1,7 @@
 /*global module require */
 "use strict";
 const util = require("./utilities");
-const request = require("request-promise");
+const request = require("./requestPromise");
 const emailValidator = require("email-validator");
 
 const validateEmail = email => {

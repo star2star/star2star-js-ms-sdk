@@ -11,10 +11,8 @@ const fs = require("fs");
 const s2sMS = require("../src/index");
 const Util = require("../src/utilities");
 const logger = require("../src/node-logger").getInstance();
-const objectMerge = require("object-merge");
 const { v4 } = require("uuid");
-const newMeta = Util.generateNewMetaData;
-let trace = newMeta();
+let trace = Util.generateNewMetaData();
 
 //utility function to simplify test code
 const mochaAsync = (func, name) => {
@@ -26,7 +24,7 @@ const mochaAsync = (func, name) => {
     } catch (error) {
       logger.error(name, error);
       //mocha will log out the error
-      return Promise.reject(error);
+      throw error;
     }
   };
 };
@@ -66,12 +64,12 @@ describe("Oauth MS Unit Test Suite", function () {
       const idData = await s2sMS.Identity.getMyIdentityData(accessToken);
       identityData = await s2sMS.Identity.getIdentityDetails(accessToken, idData.user_uuid);
     } catch (error) {
-      return Promise.reject(error);
+      throw error;
     }
   });
 
   it("Get 2nd Device Token", mochaAsync(async () => {
-        trace = objectMerge({}, trace, Util.generateNewMetaData(trace));
+        trace = Util.generateNewMetaData(trace);
     const oauthData2 = await s2sMS.Oauth.getAccessToken(
       process.env.BASIC_TOKEN,
       process.env.EMAIL,
@@ -87,7 +85,7 @@ describe("Oauth MS Unit Test Suite", function () {
   },"Get 2nd Device Token"));
 
   it("Refresh Token", mochaAsync(async () => {
-        trace = objectMerge({}, trace, Util.generateNewMetaData(trace));
+        trace = Util.generateNewMetaData(trace);
     const response = await s2sMS.Oauth.refreshAccessToken(
       process.env.BASIC_TOKEN,
       oauthData.refresh_token,
@@ -103,7 +101,7 @@ describe("Oauth MS Unit Test Suite", function () {
   },"Refresh Token"));
   
   it("Get Client Token", mochaAsync(async () => {
-        trace = objectMerge({}, trace, Util.generateNewMetaData(trace));
+        trace = Util.generateNewMetaData(trace);
     const response = await s2sMS.Oauth.getClientToken(process.env.BASIC_TOKEN, trace);
     assert.ok(
       response.hasOwnProperty("access_token") &&
@@ -115,7 +113,7 @@ describe("Oauth MS Unit Test Suite", function () {
   },"Get Client Token"));
   
   it("Create Client Application", mochaAsync(async () => {
-        trace = objectMerge({}, trace, Util.generateNewMetaData(trace));
+        trace = Util.generateNewMetaData(trace);
     const response = await s2sMS.Oauth.createClientApp(
       accessToken,
       identityData.uuid,
@@ -140,7 +138,7 @@ describe("Oauth MS Unit Test Suite", function () {
   },"Create Client Application"));
  
   it("Scope Client App", mochaAsync(async () => {
-        trace = objectMerge({}, trace, Util.generateNewMetaData(trace));
+        trace = Util.generateNewMetaData(trace);
     const response = await s2sMS.Oauth.scopeClientApp(
       accessToken,
       clientUUID,
@@ -155,7 +153,7 @@ describe("Oauth MS Unit Test Suite", function () {
   },"Scope Client App"));
   
   it("Generate Basic Token", mochaAsync(async () => {
-        trace = objectMerge({}, trace, Util.generateNewMetaData(trace));
+        trace = Util.generateNewMetaData(trace);
     clientBasicToken = await s2sMS.Oauth.generateBasicToken(publicID, secret);
     assert.ok(
       Buffer.from(clientBasicToken, "base64").toString() === `${publicID}:${secret}`,
@@ -165,7 +163,7 @@ describe("Oauth MS Unit Test Suite", function () {
   },"Generate Basic Token"));
   
   it("Get Client Access Token and Test It", mochaAsync(async () => {
-        trace = objectMerge({}, trace, Util.generateNewMetaData(trace));
+        trace = Util.generateNewMetaData(trace);
     // Tyk Delay...CCORE-431
     await new Promise(resolve => setTimeout(resolve, 3000));
     const response = await s2sMS.Oauth.getClientToken(clientBasicToken, trace);
@@ -183,7 +181,7 @@ describe("Oauth MS Unit Test Suite", function () {
   },"Get Client Access Token and Test It"));
   
   it("List Access Tokens", mochaAsync(async () => {
-        trace = objectMerge({}, trace, Util.generateNewMetaData(trace));
+        trace = Util.generateNewMetaData(trace);
     const response = await s2sMS.Oauth.listClientTokens(
       accessToken,
       0, //offest
@@ -204,7 +202,7 @@ describe("Oauth MS Unit Test Suite", function () {
   },"List Access Tokens"));
   
   it("Validate Access Token", mochaAsync(async () => {
-        trace = objectMerge({}, trace, Util.generateNewMetaData(trace));
+        trace = Util.generateNewMetaData(trace);
     const response = await s2sMS.Oauth.validateToken(accessToken, clientAccessToken, trace);
     assert.ok(
       response.status === "ok",
@@ -214,7 +212,7 @@ describe("Oauth MS Unit Test Suite", function () {
   },"Validate Access Token"));
   
   it("Invalidate Access Token", mochaAsync(async () => {
-        trace = objectMerge({}, trace, Util.generateNewMetaData(trace));
+        trace = Util.generateNewMetaData(trace);
     const response = await s2sMS.Oauth.invalidateToken(accessToken, clientAccessToken, trace);
     assert.ok(
       response.status === "ok",
@@ -224,7 +222,7 @@ describe("Oauth MS Unit Test Suite", function () {
   },"Invalidate Access Token"));
   
   it("List Access Tokens after Invalidation", mochaAsync(async () => {
-        trace = objectMerge({}, trace, Util.generateNewMetaData(trace));
+        trace = Util.generateNewMetaData(trace);
     const response = await s2sMS.Oauth.listClientTokens(
       accessToken,
       0, //offest
@@ -246,7 +244,7 @@ describe("Oauth MS Unit Test Suite", function () {
   
   // template
   // it("change me", mochaAsync(async () => {
-  //     //   trace = objectMerge({}, trace, Util.generateNewMetaData(trace));
+  //     //   trace = Util.generateNewMetaData(trace);
   //   const response = await somethingAsync();
   //   assert.ok(
   //     1 === 1,

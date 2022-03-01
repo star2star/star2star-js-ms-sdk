@@ -61,7 +61,7 @@ describe("Accounts MS Unit Test Suite", function() {
       accountUUID = identityData.account_uuid;
 
     } catch (error) {
-      return Promise.reject(error);
+      throw error;
     }
     
   });

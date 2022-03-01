@@ -12,9 +12,7 @@ const s2sMS = require("../src/index");
 const Util = require("../src/utilities");
 const logger = require("../src/node-logger").getInstance();
 const { v4 } = require("uuid");
-const objectMerge = require("object-merge");
-const newMeta = Util.generateNewMetaData;
-let trace = newMeta();
+let trace = Util.generateNewMetaData();
 
 //utility function to simplify test code
 const mochaAsync = (func, name) => {
@@ -25,7 +23,7 @@ const mochaAsync = (func, name) => {
       return response; 
     } catch (error) {
       //mocha will log out the error
-      return Promise.reject(error);
+      throw error;
     }
   };
 };
@@ -62,14 +60,14 @@ describe("Workflow", function() {
       );
       accessToken = oauthData.access_token;
     } catch (error){
-      return Promise.reject(error);
+      throw error;
     }
   });
 
   it("Create Workflow With No Template", mochaAsync(async () => {
     try{
       
-      trace = objectMerge({}, trace, Util.generateNewMetaData(trace));
+      trace = Util.generateNewMetaData(trace);
       const response = await s2sMS.Workflow.createWorkflowTemplate(
         accessToken,
         undefined,
@@ -91,7 +89,7 @@ describe("Workflow", function() {
   it("Create Workflow With Empty Template", mochaAsync(async () => {
     try{
       
-      trace = objectMerge({}, trace, Util.generateNewMetaData(trace));
+      trace = Util.generateNewMetaData(trace);
       const response = await s2sMS.Workflow.createWorkflowTemplate(
         accessToken,
         {},
@@ -113,7 +111,7 @@ describe("Workflow", function() {
   it("Create Workflow With Invalid Template", mochaAsync(async () => {
     try{
       
-      trace = objectMerge({}, trace, Util.generateNewMetaData(trace));
+      trace = Util.generateNewMetaData(trace);
       const response = await s2sMS.Workflow.createWorkflowTemplate(
         accessToken,
         {
@@ -141,7 +139,7 @@ describe("Workflow", function() {
   
   it("Create Workflow Template", mochaAsync(async () => {
     
-    trace = objectMerge({}, trace, Util.generateNewMetaData(trace));
+    trace = Util.generateNewMetaData(trace);
     const response = await s2sMS.Workflow.createWorkflowTemplate(
       accessToken,
       {
@@ -223,7 +221,7 @@ describe("Workflow", function() {
   
   it("Modify Workflow Template", mochaAsync(async () => {
     
-    trace = objectMerge({}, trace, Util.generateNewMetaData(trace));
+    trace = Util.generateNewMetaData(trace);
     const response = await s2sMS.Workflow.modifyWorkflowTemplate(
       accessToken,
       wfTemplateUUID,
@@ -328,7 +326,7 @@ describe("Workflow", function() {
 
   it("Create New Version Of Template With Descision", mochaAsync(async () => {
     
-    trace = objectMerge({}, trace, Util.generateNewMetaData(trace));
+    trace = Util.generateNewMetaData(trace);
     const response = await s2sMS.Workflow.createWorkflowTemplate(
       accessToken,
       {
@@ -522,7 +520,7 @@ describe("Workflow", function() {
   
   it("Start Workflow Version 1", mochaAsync(async () => {
     
-    trace = objectMerge({}, trace, Util.generateNewMetaData(trace));
+    trace = Util.generateNewMetaData(trace);
     const response = await s2sMS.Workflow.startWorkflow(
       accessToken,
       wfTemplateUUID,
@@ -547,7 +545,7 @@ describe("Workflow", function() {
   
   it("List Running Workflows", mochaAsync(async () => {
     
-    trace = objectMerge({}, trace, Util.generateNewMetaData(trace));
+    trace = Util.generateNewMetaData(trace);
     const filters = [];
     filters["verion"] = version;
     const response = await s2sMS.Workflow.listRunningWorkflows(
@@ -568,7 +566,7 @@ describe("Workflow", function() {
   
   it("Get Workflow Instance", mochaAsync(async () => {
     
-    trace = objectMerge({}, trace, Util.generateNewMetaData(trace));
+    trace = Util.generateNewMetaData(trace);
     const response = await s2sMS.Workflow.getRunningWorkflow(
       accessToken,
       wfTemplateUUID,
@@ -584,7 +582,7 @@ describe("Workflow", function() {
   
   it("Cancel Workflow Instance", mochaAsync(async () => {
     
-    trace = objectMerge({}, trace, Util.generateNewMetaData(trace));
+    trace = Util.generateNewMetaData(trace);
     const response = await s2sMS.Workflow.cancelWorkflow(
       accessToken,
       wfTemplateUUID,
@@ -599,7 +597,7 @@ describe("Workflow", function() {
   
   it("Get Workflow Instance v1 History", mochaAsync(async () => {
     
-    trace = objectMerge({}, trace, Util.generateNewMetaData(trace));
+    trace = Util.generateNewMetaData(trace);
     const response = await s2sMS.Workflow.getWfInstanceHistory(
       accessToken,
       wfInstanceUUID,
@@ -614,7 +612,7 @@ describe("Workflow", function() {
 
   it("Get Filtered Workflow Instance History", mochaAsync(async () => {
     
-    trace = objectMerge({}, trace, Util.generateNewMetaData(trace));
+    trace = Util.generateNewMetaData(trace);
     const response = await s2sMS.Workflow.getWfInstanceHistory(
       accessToken,
       wfInstanceUUID,
@@ -632,7 +630,7 @@ describe("Workflow", function() {
   
   it("Get Workflow Instance History Workflow Vars", mochaAsync(async () => {
     
-    trace = objectMerge({}, trace, Util.generateNewMetaData(trace));
+    trace = Util.generateNewMetaData(trace);
     const response = await s2sMS.Workflow.getWfInstanceWorkflowVars(
       accessToken,
       wfInstanceUUID,
@@ -647,7 +645,7 @@ describe("Workflow", function() {
 
   it("Get Workflow Instance History Incoming Data", mochaAsync(async () => {
     
-    trace = objectMerge({}, trace, Util.generateNewMetaData(trace));
+    trace = Util.generateNewMetaData(trace);
     const response = await s2sMS.Workflow.getWfInstanceIncomingData(
       accessToken,
       wfInstanceUUID,
@@ -662,7 +660,7 @@ describe("Workflow", function() {
 
   it("Get Workflow Instance History Transition Results", mochaAsync(async () => {
     
-    trace = objectMerge({}, trace, Util.generateNewMetaData(trace));
+    trace = Util.generateNewMetaData(trace);
     const response = await s2sMS.Workflow.getWfInstanceResults(
       accessToken,
       wfInstanceUUID,
@@ -707,7 +705,7 @@ describe("Workflow", function() {
 
   it("List Workflow Templates", mochaAsync(async () => {
     
-    trace = objectMerge({}, trace, Util.generateNewMetaData(trace));
+    trace = Util.generateNewMetaData(trace);
     const response = await s2sMS.Workflow.listWorkflowTemplates(
       accessToken,
       0, //offset
@@ -729,7 +727,7 @@ describe("Workflow", function() {
   
   it("Get Workflow Template", mochaAsync(async () => {
     
-    trace = objectMerge({}, trace, Util.generateNewMetaData(trace));
+    trace = Util.generateNewMetaData(trace);
     const response = await s2sMS.Workflow.getWorkflowTemplate(
       accessToken,
       wfTemplateUUID,
@@ -745,7 +743,7 @@ describe("Workflow", function() {
   
   it("Get Workflow Template With Version", mochaAsync(async () => {
     
-    trace = objectMerge({}, trace, Util.generateNewMetaData(trace));
+    trace = Util.generateNewMetaData(trace);
     const response = await s2sMS.Workflow.getWorkflowTemplate(
       accessToken,
       wfTemplateUUID,
@@ -762,7 +760,7 @@ describe("Workflow", function() {
   it("Get Workflow Template With Invalid Filters", mochaAsync(async () => {
     try{
       
-      trace = objectMerge({}, trace, Util.generateNewMetaData(trace));
+      trace = Util.generateNewMetaData(trace);
       const response = await s2sMS.Workflow.getWorkflowTemplate(
         accessToken,
         wfTemplateUUID,
@@ -787,7 +785,7 @@ describe("Workflow", function() {
   
   it("Start Workflow Version 2: False", mochaAsync(async () => {
     
-    trace = objectMerge({}, trace, Util.generateNewMetaData(trace));
+    trace = Util.generateNewMetaData(trace);
     const response = await s2sMS.Workflow.startWorkflow(
       accessToken,
       wfTemplateUUID,
@@ -808,7 +806,7 @@ describe("Workflow", function() {
     
   it("Start Workflow Version 2: True", mochaAsync(async () => {
     
-    trace = objectMerge({}, trace, Util.generateNewMetaData(trace));
+    trace = Util.generateNewMetaData(trace);
     await new Promise(resolve => setTimeout(resolve, 3000));
     const response = await s2sMS.Workflow.startWorkflow(
       accessToken,
@@ -831,7 +829,7 @@ describe("Workflow", function() {
  
   it("Get Workflow Instance v2 History", mochaAsync(async () => {
     
-    trace = objectMerge({}, trace, Util.generateNewMetaData(trace));
+    trace = Util.generateNewMetaData(trace);
     await new Promise(resolve => setTimeout(resolve, 3000));
     const response = await s2sMS.Workflow.getWfInstanceHistory(
       accessToken,
@@ -848,7 +846,7 @@ describe("Workflow", function() {
   //TODO Test start and end time filters....nh 8/30/18
   it("Get Workflow Template History", mochaAsync(async () => {
     
-    trace = objectMerge({}, trace, Util.generateNewMetaData(trace));
+    trace = Util.generateNewMetaData(trace);
     await new Promise(resolve => setTimeout(resolve, 3000));
     const response = await s2sMS.Workflow.getWfTemplateHistory(
       accessToken,
@@ -870,7 +868,7 @@ describe("Workflow", function() {
   
   it("List Workflow Groups", mochaAsync(async () => {
     
-    trace = objectMerge({}, trace, Util.generateNewMetaData(trace));
+    trace = Util.generateNewMetaData(trace);
     const response = await s2sMS.Workflow.listWorkflowGroups(
       accessToken,
       0, //offset
@@ -890,7 +888,7 @@ describe("Workflow", function() {
 
   it("Get Workflow Group", mochaAsync(async () => {
     
-    trace = objectMerge({}, trace, Util.generateNewMetaData(trace));
+    trace = Util.generateNewMetaData(trace);
     const response = await s2sMS.Workflow.getWorkflowGroup(
       accessToken,
       // groupUUID,
@@ -906,7 +904,7 @@ describe("Workflow", function() {
   
   it("Get Workflow Group Filtered", mochaAsync(async () => {
     
-    trace = objectMerge({}, trace, Util.generateNewMetaData(trace));
+    trace = Util.generateNewMetaData(trace);
     const response = await s2sMS.Workflow.getWorkflowGroupFiltered(
       accessToken,
       // groupUUID,
@@ -923,7 +921,7 @@ describe("Workflow", function() {
 
   it("Get Workflow Group Master", mochaAsync(async () => {
     
-    trace = objectMerge({}, trace, Util.generateNewMetaData(trace));
+    trace = Util.generateNewMetaData(trace);
     const response = await s2sMS.Workflow.getWorkflowGroupMaster(
       accessToken, 
       // groupUUID,
@@ -939,7 +937,7 @@ describe("Workflow", function() {
 
   it("Get Workflow Group Data", mochaAsync(async () => {
     
-    trace = objectMerge({}, trace, Util.generateNewMetaData(trace));
+    trace = Util.generateNewMetaData(trace);
     const response = await s2sMS.Workflow.getWorkflowGroupData(
       accessToken,
       // groupUUID,
@@ -955,7 +953,7 @@ describe("Workflow", function() {
 
   it("Get Workflow Group Children", mochaAsync(async () => {
     
-    trace = objectMerge({}, trace, Util.generateNewMetaData(trace));
+    trace = Util.generateNewMetaData(trace);
     const response = await s2sMS.Workflow.getWorkflowGroupChildren(
       accessToken,
       // groupUUID,
@@ -971,7 +969,7 @@ describe("Workflow", function() {
 
   it("Get Workflow Group Child", mochaAsync(async () => {
     
-    trace = objectMerge({}, trace, Util.generateNewMetaData(trace));
+    trace = Util.generateNewMetaData(trace);
     const response = await s2sMS.Workflow.getWorkflowGroupChild(
       accessToken,
       // groupUUID,
@@ -989,7 +987,7 @@ describe("Workflow", function() {
 
   it("Update Workflow Group", mochaAsync(async () => {
     
-    trace = objectMerge({}, trace, Util.generateNewMetaData(trace));
+    trace = Util.generateNewMetaData(trace);
     const response = await s2sMS.Workflow.updateWorkflowGroup(
       accessToken,
       groupUUID,
@@ -1008,7 +1006,7 @@ describe("Workflow", function() {
   it("Test Result Constant", mochaAsync(async () => {
     
     //create new version of WF
-    trace = objectMerge({}, trace, Util.generateNewMetaData(trace));
+    trace = Util.generateNewMetaData(trace);
     await s2sMS.Workflow.createWorkflowTemplate(
       accessToken,
       {
@@ -1131,7 +1129,7 @@ describe("Workflow", function() {
       trace
     );
     //start the WF
-    trace = objectMerge({}, trace, Util.generateNewMetaData(trace));
+    trace = Util.generateNewMetaData(trace);
     const response = await s2sMS.Workflow.startWorkflow(
       accessToken,
       wfTemplateUUID,
@@ -1160,7 +1158,7 @@ describe("Workflow", function() {
     //wait for completion
     await new Promise(resolve => setTimeout(resolve, 4000));
 
-    trace = objectMerge({}, trace, Util.generateNewMetaData(trace));
+    trace = Util.generateNewMetaData(trace);
     const wfResults = await s2sMS.Workflow.getWfInstanceHistory(
       accessToken,
       response.uuid,
@@ -1184,7 +1182,7 @@ describe("Workflow", function() {
   
   it("Delete Workflow Template", mochaAsync(async () => {
     
-    trace = objectMerge({}, trace, Util.generateNewMetaData(trace));
+    trace = Util.generateNewMetaData(trace);
     await s2sMS.Workflow.deleteWorkflowTemplate(
       accessToken,
       wfTemplateUUID,
@@ -1215,7 +1213,7 @@ describe("Workflow", function() {
   // template
   // it("change me", mochaAsync(async () => {
   //   
-  //   trace = objectMerge({}, trace, Util.generateNewMetaData(trace));
+  //   trace = Util.generateNewMetaData(trace);
   //   const response = await somethingAsync();
   //   assert.ok(
   //     1 === 1,

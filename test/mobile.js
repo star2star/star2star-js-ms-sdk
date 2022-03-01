@@ -11,10 +11,8 @@ const fs = require("fs");
 const s2sMS = require("../src/index");
 const Util = require("../src/utilities");
 const logger = require("../src/node-logger").getInstance();
-const objectMerge = require("object-merge");
 const { v4 } = require("uuid");
-const newMeta = Util.generateNewMetaData;
-let trace = newMeta();
+let trace = Util.generateNewMetaData();
 
 //utility function to simplify test code
 const mochaAsync = (func, name) => {
@@ -25,7 +23,7 @@ const mochaAsync = (func, name) => {
       return response; 
     } catch (error) {
       //mocha will log out the error
-      return Promise.reject(error);
+      throw error;
     }
   };
 };
@@ -59,12 +57,12 @@ describe("Pubsub MS Unit Test Suite", function () {
       identityData = await s2sMS.Identity.getIdentityDetails(accessToken, idData.user_uuid);
 
     } catch (error) {
-      return Promise.reject(error);
+      throw error;
     }
   });
  
   it("Register Push Token", mochaAsync(async () => {
-        trace = objectMerge({}, trace, Util.generateNewMetaData(trace));
+        trace = Util.generateNewMetaData(trace);
     const response = await s2sMS.Mobile.registerPushToken(
       accessToken,
       identityData.uuid,
@@ -81,7 +79,7 @@ describe("Pubsub MS Unit Test Suite", function () {
   },"Register Push Token")); 
 
   it("List Push Tokens", mochaAsync(async () => {
-        trace = objectMerge({}, trace, Util.generateNewMetaData(trace));
+        trace = Util.generateNewMetaData(trace);
     const response = await s2sMS.Mobile.getUserRegistrations(
       accessToken,
       identityData.uuid,
@@ -95,7 +93,7 @@ describe("Pubsub MS Unit Test Suite", function () {
   },"List Push Tokens")); 
 
   it("Unregister Push Token", mochaAsync(async () => {
-        trace = objectMerge({}, trace, Util.generateNewMetaData(trace));
+        trace = Util.generateNewMetaData(trace);
     const response = await s2sMS.Mobile.unregisterPushToken(
       accessToken,
       process.env.PUSH_TOKEN,
@@ -112,7 +110,7 @@ describe("Pubsub MS Unit Test Suite", function () {
 
   // template
   // it("change me", mochaAsync(async () => {
-  //     //   trace = objectMerge({}, trace, Util.generateNewMetaData(trace));
+  //     //   trace = Util.generateNewMetaData(trace);
   //   const response = await somethingAsync();
   //   assert.ok(
   //     1 === 1,

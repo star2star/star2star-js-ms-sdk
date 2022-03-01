@@ -1,6 +1,6 @@
 /* global require module*/
 "use strict";
-const request = require("request-promise");
+const request = require("./requestPromise");
 const util = require("./utilities");
 
 /**
@@ -38,7 +38,7 @@ const authorizeProvider = async (
     const response = await request(requestOptions);
     return response;
   } catch (error) {
-    return Promise.reject(util.formatError(error));
+    throw util.formatError(error);
   }
 };
 
@@ -97,7 +97,7 @@ const getProviderToken = async (
     const response = await request(requestOptions);
     return response;
   } catch (error) {
-    return Promise.reject(util.formatError(error));
+    throw util.formatError(error);
   }
 };
 
@@ -134,7 +134,7 @@ const getProviderTokenByConnection = async (
     const response = await request(requestOptions);
     return response;
   } catch (error) {
-    return Promise.reject(util.formatError(error));
+    throw util.formatError(error);
   }
 };
 
@@ -166,7 +166,7 @@ const listAvailableProviders = async (
     const response = await request(requestOptions);
     return response;
   } catch (error) {
-    return Promise.reject(util.formatError(error));
+    throw util.formatError(error);
   }
 };
 
@@ -218,7 +218,7 @@ const listUserProviderConnections = async (
     const response = await request(requestOptions);
     return response;
   } catch (error) {
-    return Promise.reject(util.formatError(error));
+    throw util.formatError(error);
   }
 };
 
@@ -252,7 +252,7 @@ const listUsersProviders = async (
     const response = await request(requestOptions);
     return response;
   } catch (error) {
-    return Promise.reject(util.formatError(error));
+    throw util.formatError(error);
   }
 };
 

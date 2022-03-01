@@ -40,6 +40,7 @@ const activateRole = async (
     {    
       await Util.pendingResource(
         response.headers.location,
+        request,
         requestOptions, //reusing the request options instead of passing in multiple params
         trace
       );
@@ -86,8 +87,9 @@ const addResourcesToGroup = async (
         response.statusCode === 202 &&
         response.headers.hasOwnProperty("location"))
     {    
-      await Util.pendingResource(
+       await Util.pendingResource(
         response.headers.location,
+        request,
         requestOptions, //reusing the request options instead of passing in multiple params
         trace
       );
@@ -136,8 +138,9 @@ const addUsersToGroup = async (
         response.statusCode === 202 &&
         response.headers.hasOwnProperty("location"))
     {    
-      await Util.pendingResource(
+       await Util.pendingResource(
         response.headers.location,
+        request,
         requestOptions, //reusing the request options instead of passing in multiple params
         trace
       );
@@ -296,8 +299,9 @@ const assignScopedRoleToUserGroup = async (
         response.statusCode === 202 &&
         response.headers.hasOwnProperty("location"))
     {    
-      await Util.pendingResource(
+       await Util.pendingResource(
         response.headers.location,
+        request,
         requestOptions, //reusing the request options instead of passing in multiple params
         trace
       );
@@ -388,8 +392,9 @@ const createApplicationResourceGroup = async (
         response.statusCode === 202 &&
         response.headers.hasOwnProperty("location"))
     {    
-      await Util.pendingResource(
+       await Util.pendingResource(
         response.headers.location,
+        request,
         requestOptions, //reusing the request options instead of passing in multiple params
         trace
       );
@@ -437,8 +442,9 @@ const createUserGroup = async (
         response.statusCode === 202 &&
         response.headers.hasOwnProperty("location"))
     {    
-      await Util.pendingResource(
+       await Util.pendingResource(
         response.headers.location,
+        request,
         requestOptions, //reusing the request options instead of passing in multiple params
         trace
       );
@@ -486,8 +492,9 @@ const createRole = async (
         response.statusCode === 202 &&
         response.headers.hasOwnProperty("location"))
     {    
-      await Util.pendingResource(
+       await Util.pendingResource(
         response.headers.location,
+        request,
         requestOptions, //reusing the request options instead of passing in multiple params
         trace
       );
@@ -531,8 +538,9 @@ const deactivateRole = async (
         response.statusCode === 202 &&
         response.headers.hasOwnProperty("location"))
     {    
-      await Util.pendingResource(
+       await Util.pendingResource(
         response.headers.location,
+        request,
         requestOptions, //reusing the request options instead of passing in multiple params
         trace
       );
@@ -626,8 +634,9 @@ const deleteRole = async (
         response.statusCode === 202 &&
         response.headers.hasOwnProperty("location"))
     {    
-      await Util.pendingResource(
+       await Util.pendingResource(
         response.headers.location,
+        request,
         requestOptions, //reusing the request options instead of passing in multiple params
         trace
       );
@@ -1508,8 +1517,9 @@ const modifyRole = async (
         response.statusCode === 202 &&
         response.headers.hasOwnProperty("location"))
     {    
-      await Util.pendingResource(
+       await Util.pendingResource(
         response.headers.location,
+        request,
         requestOptions, //reusing the request options instead of passing in multiple params
         trace
       );
@@ -1557,8 +1567,9 @@ const modifyUserGroup = async (
         response.statusCode === 202 &&
         response.headers.hasOwnProperty("location"))
     {    
-      await Util.pendingResource(
+       await Util.pendingResource(
         response.headers.location,
+        request,
         requestOptions, //reusing the request options instead of passing in multiple params
         trace
       );
@@ -1605,8 +1616,9 @@ const removeResourceFromGroup = async (
         response.statusCode === 202 &&
         response.headers.hasOwnProperty("location"))
     {    
-      await Util.pendingResource(
+       await Util.pendingResource(
         response.headers.location,
+        request,
         requestOptions, //reusing the request options instead of passing in multiple params
         trace
       );
@@ -1655,8 +1667,9 @@ const removeUsersFromGroup = async (
         response.statusCode === 202 &&
         response.headers.hasOwnProperty("location"))
     {    
-      await Util.pendingResource(
+       await Util.pendingResource(
         response.headers.location,
+        request,
         requestOptions, //reusing the request options instead of passing in multiple params
         trace
       );
