@@ -96,6 +96,20 @@ describe("Media MS Unit Test Suite", function () {
   );
 
   it(
+    "get media file content",
+    mochaAsync(async () => {
+      trace = Util.generateNewMetaData(trace);
+      const response = await s2sMS.Media.getMediaFileContent(
+        accessToken,
+        file_id,
+        trace
+      );
+      assert.ok(1 === 1, JSON.stringify(response, null, "\t"));
+      return response;
+    }, "get media file content")
+  );
+  
+  it(
     "delete user Media",
     mochaAsync(async () => {
       trace = Util.generateNewMetaData(trace);

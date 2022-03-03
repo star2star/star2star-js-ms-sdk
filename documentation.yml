@@ -147,8 +147,9 @@ toc:
       - invokeLambda
   - name: Media
     children:
-      - getMediaFileUrl
       - deleteMedia
+      - getMediaFileContent
+      - getMediaFileUrl
       - listUserMedia
       - uploadFile
   - name: Messaging
