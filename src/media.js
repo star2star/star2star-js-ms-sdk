@@ -34,9 +34,17 @@ const getMediaFileContent = async (
  * @async
  * @description This function will return media file metadata including a URL
  * @param {string} [accessToken="null accessToken"] - cpaas access token
- * @param {string} [fileUUID="null fileUUID"] - file UUID
+ * @param {number} [offset=0] pagination offset
+ * @param {number} [limit=10] pagination limit
+ * @param {date} startDatetime UTC format start date
+ * @param {date} endDatetime UTC format end date
+ * @param {string} sort column sort
+ * @param {boolean} includeDeleted included flagged deleted
+ * @param {string} fileCategory file category to search for
+ * @param {string} filter search by file_name, file_title, or description
+ * @param {boolean} includeThumbnails include refs to thumbnail versions
  * @param {object} [trace={}] - optional microservice lifecycle trace headers
- * @returns {Promise<object>} - Promise resolving to a data object containing file meta-data
+ * @returns {Promise<object>} - Promise resolving to list or global media objects
  */
 const getGlobalMedia = async (
   accessToken = "null accessToken",
