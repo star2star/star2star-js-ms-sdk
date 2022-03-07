@@ -74,6 +74,33 @@ describe("Media MS Unit Test Suite", function () {
   );
 
   it(
+    "List global Media",
+    mochaAsync(async () => {
+      trace = Util.generateNewMetaData(trace);
+      const response = await s2sMS.Media.getGlobalMedia(
+        accessToken,
+        0, // offest
+        10, // limit
+        undefined, // startDatetime,
+        undefined, // endDatetime,
+        undefined, // sort,
+        undefined, // includeDeleted,
+        undefined, // fileCategory,
+        "ringback", // filter
+        undefined, // includeThumbnails,
+        trace
+      );
+      assert.ok(
+        response.hasOwnProperty("items") &&
+          response.hasOwnProperty("metadata") &&
+          response.items?.[0]?.file_title === "ringback",
+        JSON.stringify(response, null, "\t")
+      );
+      return response;
+    }, "List global Media")
+  );
+
+  it(
     "Upload user Media",
     mochaAsync(async () => {
       trace = Util.generateNewMetaData(trace);
@@ -108,7 +135,7 @@ describe("Media MS Unit Test Suite", function () {
       return response;
     }, "get media file content")
   );
-  
+
   it(
     "delete user Media",
     mochaAsync(async () => {

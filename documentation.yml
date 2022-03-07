@@ -148,6 +148,7 @@ toc:
   - name: Media
     children:
       - deleteMedia
+      - getGlobalMedia
       - getMediaFileContent
       - getMediaFileUrl
       - listUserMedia
