@@ -92,6 +92,8 @@ const request = async function (requestOptions) {
       let payload;
       const responseType = response.headers.get("Content-Type");
       if (
+        response.status !== 204 &&
+        typeof responseType === "string" &&
         typeof responseType === "string" &&
         responseType.indexOf("application/json") !== -1 &&
         requestOptions.json === true
