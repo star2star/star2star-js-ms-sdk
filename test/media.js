@@ -11,9 +11,7 @@ const fs = require("fs");
 const s2sMS = require("../src/index");
 const Util = require("../src/utilities");
 const logger = require("../src/node-logger").getInstance();
-const objectMerge = require("object-merge");
-const newMeta = Util.generateNewMetaData;
-let trace = newMeta();
+let trace = Util.generateNewMetaData();
 let file_id;
 
 //utility function to simplify test code
@@ -61,7 +59,7 @@ describe("Media MS Unit Test Suite", function () {
   });
 
   it("List user Media", mochaAsync(async () => {
-        trace = objectMerge({}, trace, Util.generateNewMetaData(trace));
+        trace = Util.generateNewMetaData(trace);
     const response = await s2sMS.Media.listUserMedia(
       identityData.uuid,
       accessToken,
@@ -75,8 +73,33 @@ describe("Media MS Unit Test Suite", function () {
     return response;
   },"List user Media"));
 
+  it("List global Media", mochaAsync(async () => {
+    trace = Util.generateNewMetaData(trace);
+const response = await s2sMS.Media.getGlobalMedia(
+  accessToken,
+  0, // offest
+  10, // limit
+  undefined, // startDatetime,
+  undefined, // endDatetime,
+  undefined, // sort,
+  undefined, // includeDeleted,
+  undefined, // fileCategory,
+  "ringback", // filter
+  undefined, // includeThumbnails,
+  trace
+);
+assert.ok(
+  response.hasOwnProperty("items") &&
+  response.hasOwnProperty("metadata") &&
+  response.items?.[0]?.file_title === "ringback"
+  ,
+  JSON.stringify(response, null, "\t")
+);
+return response;
+},"List user Media"));
+
   it("Upload user Media", mochaAsync(async () => {
-        trace = objectMerge({}, trace, Util.generateNewMetaData(trace));
+    trace = Util.generateNewMetaData(trace);
     const fileName = "git-cheat-sheet.png";
     const response = await s2sMS.Media.uploadFile(
       fileName,
@@ -95,7 +118,7 @@ describe("Media MS Unit Test Suite", function () {
   },"Upload user Media"));
 
   it("delete user Media", mochaAsync(async () => {
-        trace = objectMerge({}, trace, Util.generateNewMetaData(trace));
+        trace = Util.generateNewMetaData(trace);
     const response = await s2sMS.Media.deleteMedia(
       file_id,
       accessToken,
@@ -110,7 +133,7 @@ describe("Media MS Unit Test Suite", function () {
   
   // template
   // it("change me", mochaAsync(async () => {
-  //     //   trace = objectMerge({}, trace, Util.generateNewMetaData(trace));
+  //     //   trace = Util.generateNewMetaData(trace);
   //   const response = await somethingAsync();
   //   assert.ok(
   //     1 === 1,

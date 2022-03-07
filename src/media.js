@@ -11,6 +11,66 @@ const util = require("./utilities");
  * @param {object} [trace={}] - optional microservice lifecycle trace headers
  * @returns {Promise<object>} - Promise resolving to a data object containing file meta-data
  */
+const getGlobalMedia = async (
+  accessToken = "null accessToken",
+  offset = 0,
+  limit = 10,
+  startDatetime,
+  endDatetime,
+  sort,
+  includeDeleted,
+  fileCategory,
+  filter,
+  includeThumbnails,
+  trace = {}
+) => {
+  try {
+    const MS = util.getEndpoint("media");
+
+    const requestOptions = {
+      method: "GET",
+      uri: `${MS}/media`,
+      headers: {
+        "Content-type": "application/json",
+        Authorization: `Bearer ${accessToken}`,
+        "x-api-version": `${util.getVersion()}`,
+      },
+      qs: {
+        offset: offset,
+        limit: limit,
+      },
+      json: true,
+    };
+    const optionalParams = {
+      start_datetime: startDatetime,
+      end_datetime: endDatetime,
+      sort: sort,
+      include_deleted: includeDeleted,
+      file_dategory: fileCategory,
+      filter: filter,
+      include_thumbnails: includeThumbnails,
+    };
+    Object.keys(optionalParams).forEach((param) => {
+      if (typeof optionalParams[param] !== "undefined") {
+        requestOptions.qs[param] = optionalParams[param];
+      }
+    });
+    util.addRequestTrace(requestOptions, trace);
+    const response = await request(requestOptions);
+    return response;
+  } catch (error) {
+    return Promise.reject(util.formatError(error));
+  }
+};
+
+/**
+ * @async
+ * @description This function will return media file metadata including a URL
+ * @param {string} [accessToken="null accessToken"] - cpaas access token
+ * @param {string} [fileUUID="null fileUUID"] - file UUID
+ * @param {object} [trace={}] - optional microservice lifecycle trace headers
+ * @returns {Promise<object>} - Promise resolving to a data object containing file meta-data
+ */
 const getMediaFileUrl = async (
   accessToken = "null accessToken",
   fileUUID = "null fileUUID",
@@ -25,12 +85,12 @@ const getMediaFileUrl = async (
       headers: {
         "Content-type": "application/json",
         Authorization: `Bearer ${accessToken}`,
-        "x-api-version": `${util.getVersion()}`
+        "x-api-version": `${util.getVersion()}`,
       },
       qs: {
-        "content_url": true
+        content_url: true,
       },
-      json: true
+      json: true,
     };
     util.addRequestTrace(requestOptions, trace);
     const response = await request(requestOptions);
@@ -39,7 +99,6 @@ const getMediaFileUrl = async (
     return Promise.reject(util.formatError(error));
   }
 };
-
 
 /**
  * @async
@@ -62,9 +121,9 @@ const listUserMedia = async (
       headers: {
         "Content-type": "application/json",
         Authorization: `Bearer ${accessToken}`,
-        "x-api-version": `${util.getVersion()}`
+        "x-api-version": `${util.getVersion()}`,
       },
-      json: true
+      json: true,
     };
     util.addRequestTrace(requestOptions, trace);
     const response = await request(requestOptions);
@@ -99,18 +158,18 @@ const uploadFile = async (
       uri: `${MS}/users/${user_uuid}/media`,
       headers: {
         Authorization: `Bearer ${accessToken}`,
-        "x-api-version": `${util.getVersion()}`
+        "x-api-version": `${util.getVersion()}`,
       },
       formData: {
         file: {
           value: file,
           options: {
-            filename: "file_name"
-          }
+            filename: "file_name",
+          },
         },
-        file_name: file_name
+        file_name: file_name,
       },
-      json: true
+      json: true,
     };
     util.addRequestTrace(requestOptions, trace);
     const response = await request(requestOptions);
@@ -141,26 +200,32 @@ const deleteMedia = async (
       uri: `${MS}/media/${file_id}`,
       headers: {
         Authorization: `Bearer ${accessToken}`,
-        "x-api-version": `${util.getVersion()}`
+        "x-api-version": `${util.getVersion()}`,
       },
       json: true,
-      resolveWithFullResponse: true
+      resolveWithFullResponse: true,
     };
     util.addRequestTrace(requestOptions, trace);
     const response = await request(requestOptions);
-    if(response.statusCode === 204) {
-      return {"status": "ok"};
+    if (response.statusCode === 204) {
+      return { status: "ok" };
     } else {
       // this is an edge case, but protects against unexpected 2xx or 3xx response codes.
       throw {
-        "code": response.statusCode,
-        "message": typeof response.body === "string" ? response.body : "delete media failed",
-        "trace_id": requestOptions.hasOwnProperty("headers") && requestOptions.headers.hasOwnProperty("trace")
-          ? requestOptions.headers.trace 
-          : undefined,
-        "details": typeof response.body === "object" && response.body !== null
-          ? [response.body]
-          : []
+        code: response.statusCode,
+        message:
+          typeof response.body === "string"
+            ? response.body
+            : "delete media failed",
+        trace_id:
+          requestOptions.hasOwnProperty("headers") &&
+          requestOptions.headers.hasOwnProperty("trace")
+            ? requestOptions.headers.trace
+            : undefined,
+        details:
+          typeof response.body === "object" && response.body !== null
+            ? [response.body]
+            : [],
       };
     }
   } catch (error) {
@@ -170,8 +235,8 @@ const deleteMedia = async (
 
 module.exports = {
   deleteMedia,
+  getGlobalMedia,
   getMediaFileUrl,
   listUserMedia,
   uploadFile,
-  
 };
