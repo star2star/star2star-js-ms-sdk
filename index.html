@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset='utf-8'>
-  <title>star2star-js-ms-sdk 4.1.29 | Documentation</title>
+  <title>star2star-js-ms-sdk 4.1.30 | Documentation</title>
   <meta name='description' content='Star2Star JavaScript Micro Service SDK'>
   <meta name='viewport' content='width=device-width,initial-scale=1'>
   <link href='assets/bass.css' rel='stylesheet'>
@@ -15,7 +15,7 @@
       <div id='split-left' class='overflow-auto fs0 height-viewport-100'>
         <div class='py1 px2'>
           <h3 class='mb0 no-anchor'>star2star-js-ms-sdk</h3>
-          <div class='mb1'><code>4.1.29</code></div>
+          <div class='mb1'><code>4.1.30</code></div>
           <input
             placeholder='Filter'
             id='filter-input'
@@ -15134,74 +15134,83 @@ accessToken you passed in.</p>
       
         <div class='space-bottom0'>
           <div>
-            <span class='code bold'>offset</span> <code class='quiet'>(any
+            <span class='code bold'>offset</span> <code class='quiet'>(<a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number">number</a>
             = <code>0</code>)</code>
-	    
+	    pagination offset
+
           </div>
           
         </div>
       
         <div class='space-bottom0'>
           <div>
-            <span class='code bold'>limit</span> <code class='quiet'>(any
+            <span class='code bold'>limit</span> <code class='quiet'>(<a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number">number</a>
             = <code>10</code>)</code>
-	    
+	    pagination limit
+
           </div>
           
         </div>
       
         <div class='space-bottom0'>
           <div>
-            <span class='code bold'>startDatetime</span> <code class='quiet'>(any)</code>
-	    
+            <span class='code bold'>startDatetime</span> <code class='quiet'>(<a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Date">date</a>)</code>
+	    UTC format start date
+
           </div>
           
         </div>
       
         <div class='space-bottom0'>
           <div>
-            <span class='code bold'>endDatetime</span> <code class='quiet'>(any)</code>
-	    
+            <span class='code bold'>endDatetime</span> <code class='quiet'>(<a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Date">date</a>)</code>
+	    UTC format end date
+
           </div>
           
         </div>
       
         <div class='space-bottom0'>
           <div>
-            <span class='code bold'>sort</span> <code class='quiet'>(any)</code>
-	    
+            <span class='code bold'>sort</span> <code class='quiet'>(<a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String">string</a>)</code>
+	    column sort
+
           </div>
           
         </div>
       
         <div class='space-bottom0'>
           <div>
-            <span class='code bold'>includeDeleted</span> <code class='quiet'>(any)</code>
-	    
+            <span class='code bold'>includeDeleted</span> <code class='quiet'>(<a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Boolean">boolean</a>)</code>
+	    included flagged deleted
+
           </div>
           
         </div>
       
         <div class='space-bottom0'>
           <div>
-            <span class='code bold'>fileCategory</span> <code class='quiet'>(any)</code>
-	    
+            <span class='code bold'>fileCategory</span> <code class='quiet'>(<a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String">string</a>)</code>
+	    file category to search for
+
           </div>
           
         </div>
       
         <div class='space-bottom0'>
           <div>
-            <span class='code bold'>filter</span> <code class='quiet'>(any)</code>
-	    
+            <span class='code bold'>filter</span> <code class='quiet'>(<a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String">string</a>)</code>
+	    search by file_name, file_title, or description
+
           </div>
           
         </div>
       
         <div class='space-bottom0'>
           <div>
-            <span class='code bold'>includeThumbnails</span> <code class='quiet'>(any)</code>
-	    
+            <span class='code bold'>includeThumbnails</span> <code class='quiet'>(<a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Boolean">boolean</a>)</code>
+	    include refs to thumbnail versions
+
           </div>
           
         </div>
@@ -15216,16 +15225,6 @@ accessToken you passed in.</p>
           
         </div>
       
-        <div class='space-bottom0'>
-          <div>
-            <span class='code bold'>fileUUID</span> <code class='quiet'>(<a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String">string</a>
-            = <code>&quot;null fileUUID&quot;</code>)</code>
-	    file UUID
-
-          </div>
-          
-        </div>
-      
     </div>
   
 
@@ -15235,7 +15234,7 @@ accessToken you passed in.</p>
     
       <div class='py1 quiet mt1 prose-big'>Returns</div>
       <code><a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise">Promise</a>&#x3C;<a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object">object</a>></code>:
-        Promise resolving to a data object containing file meta-data
+        Promise resolving to list or global media objects
 
       
     
@@ -24713,6 +24712,16 @@ type of object with name.</p>
             <span class='code bold'>trace</span> <code class='quiet'>(<a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object">object</a>
             = <code>{}</code>)</code>
 	    optional debug headers
+
+          </div>
+          
+        </div>
+      
+        <div class='space-bottom0'>
+          <div>
+            <span class='code bold'>type</span> <code class='quiet'>(<a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String">string</a>
+            = <code>&quot;&quot;</code>)</code>
+	    optional schedule type
 
           </div>
           

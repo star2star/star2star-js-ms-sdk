@@ -226,6 +226,7 @@ const listEventsHistory = async (
  * @param {object} [notification={}] - optional notification
  * @param {object} [metadata={}] - optional custom data to include with the event.
  * @param {object} [trace={}] - optional debug headers
+ * @param {string} [type=""] - optional schedule type 
  * @returns {Promise} - scheduled event object
  */
 const scheduleEvent = async (
@@ -241,7 +242,8 @@ const scheduleEvent = async (
   trigger = {},
   notification = {},
   metadata = {},
-  trace = {}
+  trace = {},
+  type=""
 ) => {
   try {
     const MS = Util.getEndpoint("scheduler");
@@ -263,7 +265,8 @@ const scheduleEvent = async (
         "frequency": frequency,
         "trigger": trigger,
         "notification": notification,
-        "metadata": metadata
+        "metadata": metadata,
+        "type": type
       },
       json: true
     };
