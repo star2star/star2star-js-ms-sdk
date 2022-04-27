@@ -3,33 +3,6 @@
 const request = require("./requestPromise");
 const util = require("./utilities");
 
-
-const getMediaFileContent = async (
-  accessToken = "null accessToken",
-  fileUUID = "null fileUUID",
-  trace = {}
-) => {
-  try {
-    const MS = util.getEndpoint("media");
-
-    const requestOptions = {
-      method: "GET",
-      uri: `${MS}/media/${fileUUID}/content`,
-      headers: {
-        "Content-type": "application/json",
-        Authorization: `Bearer ${accessToken}`,
-        "x-api-version": `${util.getVersion()}`
-      },
-      json: true
-    };
-    util.addRequestTrace(requestOptions, trace);
-    const response = await request(requestOptions);
-    return response;
-  } catch (error) {
-    throw util.formatError(error);
-  }
-};
-
 /**
  * @async
  * @description This function will return media file metadata including a URL
@@ -271,7 +244,6 @@ const deleteMedia = async (
 module.exports = {
   deleteMedia,
   getGlobalMedia,
-  getMediaFileContent,
   getMediaFileUrl,
   listUserMedia,
   uploadFile,

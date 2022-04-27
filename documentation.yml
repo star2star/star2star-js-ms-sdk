@@ -149,7 +149,6 @@ toc:
     children:
       - deleteMedia
       - getGlobalMedia
-      - getMediaFileContent
       - getMediaFileUrl
       - listUserMedia
       - uploadFile
