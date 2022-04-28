@@ -86,6 +86,17 @@ const request = async function (requestOptions) {
 
     const response = await fetch(uri, requestOptions);
     if (response.ok === false) {
+      if(response.redirected === true){
+        // the request may have failed due to included bearer token that we have no control over.
+        const redirectOptions = {
+          uri: response.url
+        };
+        if(requestOptions.resolveWithFullResponse === true){
+          redirectOptions.resolveWithFullResponse = true;
+        }
+        const redirectPayload = await request(redirectOptions);
+        return redirectPayload;
+      }
       const error = await util.formatFetchError(response);
       throw error;
     } else {
