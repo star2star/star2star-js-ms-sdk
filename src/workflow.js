@@ -1033,6 +1033,73 @@ const updateWorkflowGroup = async (
   }
 };
 
+/**
+ * @async
+ * @description This function provides a way to search workflow history 
+ * @param {string} [accessToken="null access token"] - cpaas access token
+ * @param {string} [wfTemplateUUID="null wfTemplateUUID"] - workflow template uuid
+ * @param {string} [start_datetime="2022-05-12T14:19:00.000Z"] - start datetime(RFC3339 format)
+ * @param {string} [end_datetime="2022-05-12T14:19:00.000Z"] - end datetime (RFC3339 format)
+ * @param {string} [search="null"] - search values can be comma seperated
+ * @param {number} [limit=50] - pagination limit ... max 50
+ * @param {array} [filters=undefined] - optional filters, version
+ * @param {object} [trace = {}] - optional microservice lifecycle trace headers
+ * @returns {Promise}
+ */
+ const searchWFHistory = async (
+  accessToken = "null access token",
+  wfTemplateUUID = "null wfTemplateUUID",
+  start_datetime = "2022-05-12T14:19:00.000Z",
+  end_datetime="2022-05-12T14:19:00.000Z",
+  search = "null",
+  limit = 50,
+  filters = undefined,
+  trace = {}
+) => {
+  try {
+    const MS = util.getEndpoint("workflow");
+    const requestOptions = {
+      method: "GET",
+      uri: `${MS}/history`,
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+        "Content-type": "application/json",
+        "x-api-version": `${util.getVersion()}`
+      },
+      qs: {
+        template_uuid: wfTemplateUUID,
+        limit: limit,
+        search: search,
+        start_datetime: start_datetime, 
+        end_datetime: end_datetime
+      },
+      json: true
+    };
+    util.addRequestTrace(requestOptions, trace);
+    let aggregate = false;
+    if (filters) {
+      if(filters.hasOwnProperty("aggregate")){
+        if(typeof filters.aggregate === "boolean"){
+          aggregate = filters.aggregate;
+        }
+        delete filters.aggregate;
+      }
+      Object.keys(filters).forEach(filter => {
+        requestOptions.qs[filter] = filters[filter];
+      });
+    } 
+    let response;
+    if(aggregate){
+      response = await util.aggregate(request, requestOptions, trace);
+    } else {
+      response = await request(requestOptions);
+    }
+    return response;
+  } catch (error) {
+    return Promise.reject(util.formatError(error));
+  }
+};
+
 module.exports = {
   createWorkflowTemplate,
   cancelWorkflow,
@@ -1057,5 +1124,6 @@ module.exports = {
   updateWorkflowGroup,
   getWfInstanceWorkflowVars,
   getWfInstanceIncomingData,
-  getWfInstanceResults
+  getWfInstanceResults,
+  searchWFHistory
 };

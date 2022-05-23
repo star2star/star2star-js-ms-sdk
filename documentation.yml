@@ -279,6 +279,7 @@ toc:
       - listWorkflowGroups
       - listWorkflowTemplates
       - modifyWorkflowTemplate
+      - searchWFHistory
       - startWorkflow
       - startWorkflowFlat
       - updateWorkflowGroup
