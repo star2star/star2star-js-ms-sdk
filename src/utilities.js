@@ -541,7 +541,7 @@ const formatError = (error) => {
         : "unspecified error";
 
     // trace
-    retObj.traceId =
+    retObj.trace_id =
       typeof error?.trace_id === "string" && error.trace_id.length > 0
         ? error.trace_id
         : v4();
