@@ -112,11 +112,12 @@ describe("Pubsub MS Unit Test Suite", function () {
         subscriptions,
         accessToken,
         expiresDate,
-        trace
+        trace,
+        keepAlive = true
       );
       sub_uuid = response.subscription_uuid;
       sub = response;
-      console.log(JSON.stringify(response));
+      console.log(JSON.stringify(response, null, "  "));
       assert.ok(
         response.hasOwnProperty("subscription_uuid"),
         JSON.stringify(response, null, "\t")

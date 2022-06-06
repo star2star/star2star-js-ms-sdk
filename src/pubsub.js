@@ -17,6 +17,7 @@ const logger = require("./node-logger").getInstance();
  * @param {string} [accessToken="null accessToken"] - access token for cpaas systems
  * @param {string} [expiresDate=undefined] - optional expires date (RFC3339 format)
  * @param {object} [trace = {}] - optional microservice lifecycle trace headers
+ * @param {boolean} [keep_alive = false] - optional high availability keep alive
  * @returns {Promise<object>} - Promise resolving to a data object containing a new subscription
  */
 const addSubscription = async (
@@ -28,7 +29,8 @@ const addSubscription = async (
   subscriptions = {},
   accessToken = "null accessToken",
   expiresDate = undefined,
-  trace = {}
+  trace = {},
+  keep_alive = false,
 ) => {
   try {
     const MS = util.getEndpoint("pubsub");
@@ -40,10 +42,11 @@ const addSubscription = async (
         account_uuid: account_uuid,
         callback: {
           url: callback_url,
-          headers: callback_headers
+          headers: callback_headers,
+          keep_alive: keep_alive
         },
         //criteria: criteria, temporary sms workaround
-        events: subscriptions
+        events: subscriptions,
       },
       headers: {
         Authorization: `Bearer ${accessToken}`,
@@ -695,7 +698,7 @@ const listUserSubscriptions = async (
 
 /**
  * @async
- * @description This function updates a subscription expiration date
+ * @description This function updates a subscription
  * @param {string} [accessToken="null accessToken"] - access token for cpaas systems
  * @param {string} subscriptionUUID - subscription uuid
  * @param {object} [body="null body"] - subscription
