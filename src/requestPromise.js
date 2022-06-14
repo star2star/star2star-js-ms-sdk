@@ -1,7 +1,15 @@
-const fetch = require("node-fetch");
+const nodeFetch = require("node-fetch");
 const util = require("./utilities");
 const { URLSearchParams } = require("url");
 const FormData = require("form-data");
+
+// ensure we use the correct fetch for the given environment
+let fetch;
+if(typeof window === "object" && typeof window.fetch === "function"){
+  fetch = window.fetch;
+} else {
+  fetch = nodeFetch;
+}
 
 /**
  * @async
@@ -91,8 +99,12 @@ const request = async function (requestOptions) {
         const redirectOptions = {
           uri: response.url
         };
+        // pass along original options to redirect retry
         if(requestOptions.resolveWithFullResponse === true){
           redirectOptions.resolveWithFullResponse = true;
+        }
+        if(requestOptions.json === true){
+          redirectOptions.json = true;
         }
         const redirectPayload = await request(redirectOptions);
         return redirectPayload;
@@ -104,7 +116,6 @@ const request = async function (requestOptions) {
       const responseType = response.headers.get("Content-Type");
       if (
         response.status !== 204 &&
-        typeof responseType === "string" &&
         typeof responseType === "string" &&
         responseType.indexOf("application/json") !== -1 &&
         requestOptions.json === true
