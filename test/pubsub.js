@@ -52,98 +52,98 @@ describe("Pubsub MS Unit Test Suite", function () {
     }
   });
 
-  it(
-    "List account subscriptions",
-    mochaAsync(async () => {
-      trace = Util.generateNewMetaData(trace);
-      const response = await s2sMS.Pubsub.listAccountSubscriptions(
-        accessToken,
-        process.env.ACCOUNT_UUID,
-        0,
-        1000,
-        {"suspended": 0},
-        trace
-      );
-      assert.ok(
-        response.hasOwnProperty("items") && response.hasOwnProperty("metadata"),
-        JSON.stringify(response, null, "\t")
-      );
-      return response;
-    }, "List account subscriptions")
-  );
+  // it(
+  //   "List account subscriptions",
+  //   mochaAsync(async () => {
+  //     trace = Util.generateNewMetaData(trace);
+  //     const response = await s2sMS.Pubsub.listAccountSubscriptions(
+  //       accessToken,
+  //       process.env.ACCOUNT_UUID,
+  //       0,
+  //       1000,
+  //       {"suspended": 0},
+  //       trace
+  //     );
+  //     assert.ok(
+  //       response.hasOwnProperty("items") && response.hasOwnProperty("metadata"),
+  //       JSON.stringify(response, null, "\t")
+  //     );
+  //     return response;
+  //   }, "List account subscriptions")
+  // );
 
-  it(
-    "List user subscriptions",
-    mochaAsync(async () => {
-      trace = Util.generateNewMetaData(trace);
-      const response = await s2sMS.Pubsub.listUserSubscriptions(
-        process.env.USER_UUID,
-        accessToken,
-        trace
-      );
-      assert.ok(
-        response.hasOwnProperty("items") && response.hasOwnProperty("metadata"),
-        JSON.stringify(response, null, "\t")
-      );
-      return response;
-    }, "List user subscriptions")
-  );
+  // it(
+  //   "List user subscriptions",
+  //   mochaAsync(async () => {
+  //     trace = Util.generateNewMetaData(trace);
+  //     const response = await s2sMS.Pubsub.listUserSubscriptions(
+  //       process.env.USER_UUID,
+  //       accessToken,
+  //       trace
+  //     );
+  //     assert.ok(
+  //       response.hasOwnProperty("items") && response.hasOwnProperty("metadata"),
+  //       JSON.stringify(response, null, "\t")
+  //     );
+  //     return response;
+  //   }, "List user subscriptions")
+  // );
 
-  it(
-    "add subscription",
-    mochaAsync(async () => {
-      trace = Util.generateNewMetaData(trace);
-      const subscriptions = {
-        identity: ["identity_property_change"],
-      };
-      const criteria = [
-        {
-          user_uuid: "0904f8d5-627f-4ff5-b34d-68dc96487b1e",
-        },
-      ];
+  // it(
+  //   "add subscription",
+  //   mochaAsync(async () => {
+  //     trace = Util.generateNewMetaData(trace);
+  //     const subscriptions = {
+  //       identity: ["identity_property_change"],
+  //     };
+  //     const criteria = [
+  //       {
+  //         user_uuid: "0904f8d5-627f-4ff5-b34d-68dc96487b1e",
+  //       },
+  //     ];
 
-      const expiresDate = new Date(Date.now() + 100000).toISOString();
-      const response = await s2sMS.Pubsub.addSubscription(
-        process.env.USER_UUID,
-        process.env.ACCOUNT_UUID,
-        "http://localhost:8001/foo",
-        [{"x-foo": "bar"}],
-        criteria,
-        subscriptions,
-        accessToken,
-        expiresDate,
-        trace,
-        keepAlive = true
-      );
-      sub_uuid = response.subscription_uuid;
-      sub = response;
-      console.log(JSON.stringify(response, null, "  "));
-      assert.ok(
-        response.hasOwnProperty("subscription_uuid"),
-        JSON.stringify(response, null, "\t")
-      );
-      return response;
-    }, "add subscription")
-  );
+  //     const expiresDate = new Date(Date.now() + 100000).toISOString();
+  //     const response = await s2sMS.Pubsub.addSubscription(
+  //       process.env.USER_UUID,
+  //       process.env.ACCOUNT_UUID,
+  //       "http://localhost:8001/foo",
+  //       [{"x-foo": "bar"}],
+  //       criteria,
+  //       subscriptions,
+  //       accessToken,
+  //       expiresDate,
+  //       trace,
+  //       keepAlive = true
+  //     );
+  //     sub_uuid = response.subscription_uuid;
+  //     sub = response;
+  //     console.log(JSON.stringify(response, null, "  "));
+  //     assert.ok(
+  //       response.hasOwnProperty("subscription_uuid"),
+  //       JSON.stringify(response, null, "\t")
+  //     );
+  //     return response;
+  //   }, "add subscription")
+  // );
   
-  it(
-    "update subscription",
-    mochaAsync(async () => {
-      trace = Util.generateNewMetaData(trace);
-      sub.callback.headers = [{"x-foo": "baz"}]
-      const response = await s2sMS.Pubsub.updateSubscription(
-        accessToken,
-        sub_uuid,
-        sub,
-        trace
-      );
-      assert.ok(
-        response.hasOwnProperty(response?.callback?.headers?.[0]?.["x-foo"] === "baz"),
-        JSON.stringify(response, null, "\t")
-      );
-      return response;
-    }, "update subscription")
-  );
+  // it(
+  //   "update subscription",
+  //   mochaAsync(async () => {
+  //     trace = Util.generateNewMetaData(trace);
+  //     sub.callback.headers = [{"x-foo": "baz"}]
+  //     const response = await s2sMS.Pubsub.updateSubscription(
+  //       accessToken,
+  //       sub_uuid,
+  //       sub,
+  //       trace
+  //     );
+  //     assert.ok(
+  //       response.hasOwnProperty(response?.callback?.headers?.[0]?.["x-foo"] === "baz"),
+  //       JSON.stringify(response, null, "\t")
+  //     );
+  //     return response;
+  //   }, "update subscription")
+  // );
 
   // it("add subscription - sms workaround", mochaAsync(async () => {
   //     //   trace = Util.generateNewMetaData(trace);
@@ -175,21 +175,21 @@ describe("Pubsub MS Unit Test Suite", function () {
   //   return response;
   // },"add subscription - sms workaround"));
 
-  it(
-    "update subscription expiration",
-    mochaAsync(async () => {
-      trace = Util.generateNewMetaData(trace);
+  // it(
+  //   "update subscription expiration",
+  //   mochaAsync(async () => {
+  //     trace = Util.generateNewMetaData(trace);
 
-      const response = await s2sMS.Pubsub.updateSubscriptionExpiresDate(
-        accessToken,
-        sub_uuid,
-        new Date(Date.now() + 1000000).toISOString(),
-        trace
-      );
-      assert.ok(1 === 1, JSON.stringify(response, null, "\t"));
-      return response;
-    }, "update subscription expiration")
-  );
+  //     const response = await s2sMS.Pubsub.updateSubscriptionExpiresDate(
+  //       accessToken,
+  //       sub_uuid,
+  //       new Date(Date.now() + 1000000).toISOString(),
+  //       trace
+  //     );
+  //     assert.ok(1 === 1, JSON.stringify(response, null, "\t"));
+  //     return response;
+  //   }, "update subscription expiration")
+  // );
 
   // it(
   //   "delete subscription",
@@ -206,8 +206,8 @@ describe("Pubsub MS Unit Test Suite", function () {
   // );
 
   // Custom Pubsub Tests:
-  let app_uuid = v4();
-  let custom_uuid;
+   let app_uuid = v4();
+   let custom_uuid;
   it(
     "createCustomApplication",
     mochaAsync(async () => {
@@ -256,6 +256,7 @@ describe("Pubsub MS Unit Test Suite", function () {
       trace = Util.generateNewMetaData(trace);
       const response = await s2sMS.Pubsub.addCustomEventSubscription(
         accessToken,
+        process.env.USER_UUID,
         app_uuid,
         "http://localhost/some/fake/route", // callback url this can't work so it doesn't matte
         [{ important_header: true }],
@@ -306,7 +307,7 @@ describe("Pubsub MS Unit Test Suite", function () {
       trace = Util.generateNewMetaData(trace);
       const response = await s2sMS.Pubsub.broadcastCustomApplication(
         accessToken,
-        app_uuid,
+        app_uuid, //app_uuid,
         "event1",
         {
           importantStuff: true,
@@ -317,6 +318,23 @@ describe("Pubsub MS Unit Test Suite", function () {
       assert.ok(1 === 1, JSON.stringify(response, null, "\t"));
       return response;
     }, "broadcastCustomApplication")
+  );
+
+  it(
+    "listCustomSubscriptions",
+    mochaAsync(async () => {
+      trace = Util.generateNewMetaData(trace);
+      const response = await s2sMS.Pubsub.listCustomSubscriptions(
+        accessToken,
+        process.env.USER_UUID,
+        app_uuid, //app_uuid,
+        0, // offset
+        10000, // limit
+        trace
+      );
+      assert.ok(1 === 1, JSON.stringify(response, null, "\t"));
+      return response;
+    }, "listCustomSubscriptions")
   );
 
   it(
