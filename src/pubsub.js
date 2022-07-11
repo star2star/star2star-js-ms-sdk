@@ -193,6 +193,9 @@ const broadcastCustomApplication = async (
  * @param {string} [accessToken="null accessToken"] - CPaaS access token
  * @param {string} [app_uuid="account uuid not provided "] - application_uuid
  * @param {array} [events=[]] - events as array of objects
+ * @param {string} app_name - application name
+ * @param {string} description - application description
+ * @param {object} metadata - application metadata
  * @param {object} [trace={}] - optional CPaaS lifecycle headers
  * @returns {Promise} - promise resolving to success or failure
  */
@@ -200,6 +203,9 @@ const createCustomApplication = async (
   accessToken = "null accessToken",
   app_uuid = "account uuid not provided ",
   events = [],
+  app_name,
+  description,
+  metadata = {},
   trace = {}
 ) => {
   try {
@@ -214,6 +220,9 @@ const createCustomApplication = async (
       "uri": `${MS}/applications`,
       "body": {
         "app_uuid": app_uuid,
+        "app_name": typeof app_name === "string" ? app_name : "",
+        "description": typeof description === "string" ? description : "",
+        "metadata": metadata,
         "events": events
       },
       "json": true

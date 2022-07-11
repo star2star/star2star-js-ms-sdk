@@ -214,8 +214,11 @@ describe("Pubsub MS Unit Test Suite", function () {
       trace = Util.generateNewMetaData(trace);
       const response = await s2sMS.Pubsub.createCustomApplication(
         accessToken,
-        app_uuid, //app_uuid
+        app_uuid, // app_uuid
         ["event1", "event2"], // events
+        "name", // name
+        "description", // description
+        {}, // metadata
         trace
       );
       assert.ok(
@@ -243,7 +246,9 @@ describe("Pubsub MS Unit Test Suite", function () {
         response.hasOwnProperty("events") &&
           Array.isArray(response.events) &&
           response.events.length === 2 &&
-          response.hasOwnProperty("app_uuid"),
+          response.hasOwnProperty("app_uuid") &&
+          response.app_name === "name" &&
+          response.description === "description",
         JSON.stringify(response, null, "\t")
       );
       return response;
@@ -311,7 +316,8 @@ describe("Pubsub MS Unit Test Suite", function () {
         "event1",
         {
           importantStuff: true,
-          lessImportantStuff: { foo: "bar" },
+          lessImportantStuff: false,
+          foo: "baz"
         },
         trace
       );
