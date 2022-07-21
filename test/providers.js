@@ -11,9 +11,7 @@ const fs = require("fs");
 const s2sMS = require("../src/index");
 const Util = require("../src/utilities");
 const logger = require("../src/node-logger").getInstance();
-const objectMerge = require("object-merge");
-const newMeta = Util.generateNewMetaData;
-let trace = newMeta();
+let trace = Util.generateNewMetaData();
 
 //utility function to simplify test code
 const mochaAsync = (func, name) => {
@@ -24,7 +22,7 @@ const mochaAsync = (func, name) => {
       return response; 
     } catch (error) {
       //mocha will log out the error
-      return Promise.reject(error);
+      throw error;
     }
   };
 };
@@ -55,12 +53,12 @@ describe("Providers", function() {
       const idData = await s2sMS.Identity.getMyIdentityData(accessToken);
       userUUID = idData.user_uuid;
     } catch (error){
-      return Promise.reject(error);
+      throw error;
     }
   });
 
   // it("Authorize Provider", mochaAsync(async () => {
-  //     //   trace = objectMerge({}, trace, Util.generateNewMetaData(trace));
+  //     //   trace = Util.generateNewMetaData(trace);
   //   const response = await s2sMS.Providers.authorizeProvider(
   //     //clientID,
   //     "689129445930-qqdrkf38fu6e37gd84nt758lur5kagq2.apps.googleusercontent.com",
@@ -81,7 +79,7 @@ describe("Providers", function() {
   // },"Authorize Provider"));
 
   // it("Get Provider Token", mochaAsync(async () => {
-  //     //   trace = objectMerge({}, trace, Util.generateNewMetaData(trace));
+  //     //   trace = Util.generateNewMetaData(trace);
   //   const response = await s2sMS.Providers.getProviderToken(
   //     accessToken,
   //     //clientID,
@@ -104,7 +102,7 @@ describe("Providers", function() {
 
 
   it("List all Available Providers", mochaAsync(async () => {
-        trace = objectMerge({}, trace, Util.generateNewMetaData(trace));
+        trace = Util.generateNewMetaData(trace);
     const response = await s2sMS.Providers.listAvailableProviders(
       accessToken,
       trace
@@ -118,7 +116,7 @@ describe("Providers", function() {
   },"List all Available Providers"));
 
   it("List all User Providers", mochaAsync(async () => {
-        trace = objectMerge({}, trace, Util.generateNewMetaData(trace));
+        trace = Util.generateNewMetaData(trace);
     const response = await s2sMS.Providers.listUsersProviders(
       accessToken,
       userUUID,
@@ -132,7 +130,7 @@ describe("Providers", function() {
   },"List all User Providers"));
 
   it("List A User's Connections", mochaAsync(async () => {
-        trace = objectMerge({}, trace, Util.generateNewMetaData(trace));
+        trace = Util.generateNewMetaData(trace);
     const response = await s2sMS.Providers.listUserProviderConnections(
       accessToken,
       userUUID,
@@ -160,7 +158,7 @@ describe("Providers", function() {
   },"List A User's Connections"));
   
   it("Get Token by Connection", mochaAsync(async () => {
-        trace = objectMerge({}, trace, Util.generateNewMetaData(trace));
+        trace = Util.generateNewMetaData(trace);
     const response = await s2sMS.Providers.getProviderTokenByConnection(
       accessToken,
       connection.uuid,
@@ -176,7 +174,7 @@ describe("Providers", function() {
   },"Get Token by Connection"));
 
   it("Get Token by Policy", mochaAsync(async () => {
-        trace = objectMerge({}, trace, Util.generateNewMetaData(trace));
+        trace = Util.generateNewMetaData(trace);
     const response = await s2sMS.Providers.getProviderToken(
       accessToken,
       connection.provider_uuid,
@@ -196,7 +194,7 @@ describe("Providers", function() {
 
   // template
   // it("change me", mochaAsync(async () => {
-  //     //   trace = objectMerge({}, trace, Util.generateNewMetaData(trace));
+  //     //   trace = Util.generateNewMetaData(trace);
   //   const response = await somethingAsync();
   //   assert.ok(
   //     1 === 1,

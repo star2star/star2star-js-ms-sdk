@@ -147,9 +147,9 @@ toc:
       - invokeLambda
   - name: Media
     children:
+      - deleteMedia
       - getGlobalMedia
       - getMediaFileUrl
-      - deleteMedia
       - listUserMedia
       - uploadFile
   - name: Messaging
@@ -187,6 +187,7 @@ toc:
       - invalidateToken
       - listClientTokens
       - listOauthClients
+      - listScopes
       - refreshAccessToken
       - scopeClientApp
       - validateToken
@@ -284,6 +285,8 @@ toc:
       - updateWorkflowGroup
   - name: Util
     children:
+      - addUrlQueryParams
+      - extractProps
       - addRequestTrace
       - aggregate
       - createUUID

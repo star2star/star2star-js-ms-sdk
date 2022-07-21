@@ -1,6 +1,6 @@
 /* global require module*/
 "use strict";
-const request = require("request-promise");
+const request = require("./requestPromise");
 const util = require("./utilities");
 
 /**
@@ -49,7 +49,7 @@ const listGroups = async (
     const response = await request(requestOptions);
     return response;
   } catch (error) {
-    return Promise.reject(util.formatError(error));
+    throw util.formatError(error);
   }
 };
 
@@ -87,10 +87,12 @@ const createGroup = async (
       json: true
     };
     util.addRequestTrace(requestOptions, trace);
+
+    console.log("REQ OPTS", requestOptions);
     const response = await request(requestOptions);
     return response;
   } catch(error){
-    return Promise.reject(util.formatError(error));
+    throw util.formatError(error);
   }
 };
 
@@ -137,7 +139,7 @@ const getGroup = async (
     }
     return response;
   } catch (error) {
-    Promise.reject(util.formatError(error));
+    throw util.formatError(error);
   }
   
 };
@@ -185,7 +187,7 @@ const listGroupMembers = async (
     }
     return response; 
   } catch(error){
-    return Promise.reject(util.formatError(error));
+    throw util.formatError(error);
   }
 };
 
@@ -225,6 +227,7 @@ const deleteGroup = async (
     {    
       await util.pendingResource(
         response.headers.location,
+        request,
         requestOptions, //reusing the request options instead of passing in multiple params
         trace,
         "deleting"
@@ -232,7 +235,7 @@ const deleteGroup = async (
     }
     return {"status":"ok"};
   } catch(error){
-    return Promise.reject(util.formatError(error));
+    throw util.formatError(error);
   } 
 };
 
@@ -282,6 +285,7 @@ const addMembersToGroup = async (
     {    
       await util.pendingResource(
         response.headers.location,
+        request,
         requestOptions, //reusing the request options instead of passing in multiple params
         trace
       );
@@ -289,7 +293,7 @@ const addMembersToGroup = async (
     group.total_members = group.hasOwnProperty("total_members") ? (group.total_members + 1) : undefined;
     return group;
   } catch (error) {
-    return Promise.reject(util.formatError(error));
+    throw util.formatError(error);
   }
   
 
@@ -340,13 +344,14 @@ const deleteGroupMembers = async (
     {    
       await util.pendingResource(
         response.headers.location,
+        request,
         requestOptions, //reusing the request options instead of passing in multiple params
         trace
       );
     }
     return {"status": "ok"};
   } catch(error){
-    return Promise.reject(util.formatError(error));
+    throw util.formatError(error);
   }
 };
 
@@ -385,6 +390,7 @@ const deactivateGroup = async(
     {    
       await util.pendingResource(
         response.headers.location,
+        request,
         requestOptions, //reusing the request options instead of passing in multiple params
         trace
       );
@@ -393,7 +399,7 @@ const deactivateGroup = async(
     response.status = "Inactive";
     return response;
   } catch (error) {
-    Promise.reject(util.formatError(error));
+    throw util.formatError(error);
   }
 };
 
@@ -432,6 +438,7 @@ const reactivateGroup = async (
     {    
       await util.pendingResource(
         response.headers.location,
+        request,
         requestOptions, //reusing the request options instead of passing in multiple params
         trace
       );
@@ -440,7 +447,7 @@ const reactivateGroup = async (
     response.status = "Active";
     return response;
   } catch (error) {
-    Promise.reject(util.formatError(error));
+    throw util.formatError(error);
   }
 };
 
@@ -476,7 +483,7 @@ const modifyGroup = async (
     const response = await request(requestOptions);
     return response;
   } catch (error){
-    return Promise.reject(util.formatError(error));
+    throw util.formatError(error);
   }
   
 };

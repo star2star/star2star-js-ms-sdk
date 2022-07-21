@@ -1,7 +1,7 @@
 /* global require module*/
 "use strict";
 
-const request = require("request-promise");
+const request = require("./requestPromise");
 const util = require("./utilities");
 const merge = require("@star2star/merge-deep");
 
@@ -37,7 +37,7 @@ const listShortUrls = async (
     const response = await request(requestOptions);
     return response;
   } catch (error) {
-    return Promise.reject(util.formatError(error));
+    throw util.formatError(error);
   }
 };
 
@@ -88,7 +88,7 @@ const createShortUrl = async (accessToken = "null accessToken", options = {}, tr
     const response = await request(requestOptions);
     return response;
   } catch (error) {
-    return Promise.reject(util.formatError(error));
+    throw util.formatError(error);
   }
 };
 
@@ -141,7 +141,7 @@ const deleteShortCode = async (
       };
     }
   } catch (error) {
-    return Promise.reject(util.formatError(error));
+    throw util.formatError(error);
   }
 };
 

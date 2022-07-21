@@ -1,6 +1,6 @@
 /* global require module*/
 "use strict";
-const request = require("request-promise");
+const request = require("./requestPromise");
 const util = require("./utilities");
 
 /**
@@ -35,7 +35,7 @@ const getUserRegistrations = async (
     const response = await request(requestOptions);
     return response;
   } catch (error) {
-    return Promise.reject(util.formatError(error));
+    throw util.formatError(error);
   }
 };
 
@@ -83,7 +83,7 @@ const registerPushToken = async (
     const response = await request(requestOptions);
     return response;
   } catch (error) {
-    return Promise.reject(util.formatError(error));
+    throw util.formatError(error);
   }
 };
 
@@ -147,7 +147,7 @@ const sendPushNotification = async (
     const response = await request(requestOptions);
     return response;
   } catch (error) {
-    return Promise.reject(util.formatError(error));
+    throw util.formatError(error);
   }
 };
 
@@ -185,7 +185,7 @@ const unregisterPushToken = async (
       throw util.formatError(response);
     }
   } catch (error) {
-    return Promise.reject(util.formatError(error));
+    throw util.formatError(error);
   }
 };
 

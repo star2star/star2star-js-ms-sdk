@@ -1,7 +1,7 @@
 /*global module require */
 "use strict";
 const util = require("./utilities");
-const request = require("request-promise");
+const request = require("./requestPromise");
 
 /**
  * @async
@@ -34,7 +34,7 @@ const createRelationship = async (
     const response = await request(requestOptions);
     return response;
   } catch (error){
-    return Promise.reject(util.formatError(error));
+    throw util.formatError(error);
   }
 };
 
@@ -81,7 +81,7 @@ const listAccounts = async (
     const response = await request(requestOptions);
     return response;
   } catch (error) {
-    return Promise.reject(util.formatError(error));
+    throw util.formatError(error);
   }
 };
 
@@ -122,13 +122,14 @@ const createAccount = async (
     {    
       await util.pendingResource(
         response.headers.location,
+        request,
         requestOptions, //reusing the request options instead of passing in multiple params
         trace
       );
     }
     return newAccount;
   } catch (error){
-    return Promise.reject(util.formatError(error));
+    throw util.formatError(error);
   }  
 };
 
@@ -165,7 +166,7 @@ const getAccount = async (
     const response = await request(requestOptions);
     return response;
   } catch (error){
-    return Promise.reject(util.formatError(error));
+    throw util.formatError(error);
   }
 };
 
@@ -210,6 +211,7 @@ const modifyAccount = async (
     {    
       await util.pendingResource(
         response.headers.location,
+        request,
         requestOptions, //reusing the request options instead of passing in multiple params
         trace
       );
@@ -263,7 +265,7 @@ const listAccountRelationships = async (
     const response = await request(requestOptions);
     return response;
   } catch (error){
-    return Promise.reject(util.formatError(error));
+    throw util.formatError(error);
   }   
 };
 
@@ -310,7 +312,7 @@ const reinstateAccount = async (
           : []
       };
     }  } catch (error) {
-    return Promise.reject(util.formatError(error));
+    throw util.formatError(error);
   }
 };
 
@@ -358,7 +360,7 @@ const suspendAccount = async (
       };
     }
   } catch (error) {
-    return Promise.reject(util.formatError(error));
+    throw util.formatError(error);
   }
 };
 
@@ -397,6 +399,7 @@ const deleteAccount = async (
     {    
       await util.pendingResource(
         response.headers.location,
+        request,
         requestOptions, //reusing the request options instead of passing in multiple params
         trace,
         "deleting"
@@ -404,7 +407,7 @@ const deleteAccount = async (
     }
     return {"status": "ok"};
   } catch(error){
-    return Promise.reject(util.formatError(error));
+    throw util.formatError(error);
   } 
 };
 

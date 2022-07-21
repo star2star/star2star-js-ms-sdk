@@ -2,7 +2,6 @@
 "use strict";
 
 const config = require("./config");
-const request = require("request-promise");
 const merge = require("@star2star/merge-deep");
 const compareVersions = require("compare-versions");
 const crypto = require("crypto");
@@ -356,12 +355,17 @@ const generateNewMetaData = (oldMetaData = {}) => {
 /**
  * @async
  * @description This function takes in a request and polls the microservice until it is ready
- * @param {function} verifyFunc - function that is used to confirm resource is ready.
- * @param {string} startingResourceStatus - argument to specify expected resolution or skip polling if ready
+ * @param {string} resourceLoc location of resource updates
+ * @param {async function} request node fetch for request promise syntax
+ * @param {object} requestOptions fetch request options from original request
+ * @param {object} trace optional CPaaS lifecycle headers
+ * @param {string} [startingResourceStatus="processing"] - argument to specify expected resolution or skip polling if ready
  * @returns {Promise} - Promise resolved when verify func is successful.
+ * @returns
  */
 const pendingResource = async (
   resourceLoc,
+  request,
   requestOptions,
   trace,
   startingResourceStatus = "processing"
@@ -371,13 +375,14 @@ const pendingResource = async (
     if (startingResourceStatus === "complete") {
       return { status: "ok" };
     }
-    //update our requestOptions for the verification URL
+    // update our requestOptions for the verification URL
+    // at this point we may not need to pass in options to this function
     requestOptions.method = "HEAD";
     requestOptions.uri = resourceLoc;
     delete requestOptions.body;
 
     //add trace headers
-    const nextTrace = merge({}, generateNewMetaData(trace));
+    const nextTrace = generateNewMetaData(trace);
     addRequestTrace(requestOptions, nextTrace);
     // starting resource is not complete, poll the verify endpoint
     const expires = Date.now() + config.pollTimeout;
@@ -536,7 +541,7 @@ const formatError = (error) => {
         : "unspecified error";
 
     // trace
-    retObj.traceId =
+    retObj.trace_id =
       typeof error?.trace_id === "string" && error.trace_id.length > 0
         ? error.trace_id
         : v4();
@@ -817,7 +822,72 @@ const isVersionHigher = (newVersion, oldVersion) => {
   return compareVersions.compare(newVersion, oldVersion, ">");
 };
 
+/**
+   *
+   *
+   * @param {*} baseUrl
+   * @param {*} [queryParamsObj={}]
+   * @param {*} [filterArray=[]]
+   * @returns
+   */
+ const addUrlQueryParams = (baseUrl, queryParamsObj = {}, filterArray = []) => {
+  const filteredParamsObj = extractProps(
+    queryParamsObj,
+    filterArray
+  );
+  const queryParamsString = Object.keys(filteredParamsObj).reduce(
+    (acc, curr) => {
+      // skip properties with empty values
+      if (typeof filteredParamsObj[curr] === "undefined") {
+        return acc;
+      }
+      const encodedValue = encodeURIComponent(filteredParamsObj[curr]);
+      //first pass starts with a '?'
+      if (acc === "") {
+        if(baseUrl === ""){
+          return `${curr}=${encodedValue}`;
+        }
+        return `?${curr}=${encodedValue}`;
+      }
+      // thereafter append with '&'
+      return `${acc}&${curr}=${encodedValue}`;
+    },
+    "" // default to an empty string
+  );
+  return `${baseUrl}${queryParamsString}`;
+};
+
+/**
+ *
+ *
+ * @param {*} sourceObj
+ * @param {*} filterArray
+ * @returns
+ */
+const extractProps = (sourceObj, filterArray) => {
+  if (!Array.isArray(filterArray) || filterArray.length === 0) {
+    return sourceObj;
+  } else {
+    // clone to ensure we don't affect any linking to source obj
+    try {
+      const clonedObj = JSON.parse(JSON.stringify(sourceObj));
+      Object.keys(sourceObj).forEach((prop) => {
+        if (filterArray.indexOf(prop) === -1) {
+          delete clonedObj[prop];
+        }
+      });
+      return clonedObj;
+    } catch (error) {
+      console.warn("unable to extract props", formatError(error));
+      // fail safe
+      return sourceObj;
+    }
+  }
+};
+
 module.exports = {
+  addUrlQueryParams,
+  extractProps,
   getGlobalThis,
   getEndpoint,
   getAuthHost,

@@ -1,6 +1,6 @@
 /*global require module*/
 "use strict";
-const request = require("request-promise");
+const request = require("./requestPromise");
 const util = require("./utilities");
 
 /**
@@ -37,7 +37,7 @@ const createUserContact = async (
     const response = await request(requestOptions);
     return response;
   } catch(error){
-    return Promise.reject(util.formatError(error));
+    throw util.formatError(error);
   }
 };
 
@@ -85,7 +85,7 @@ const deleteContact = async (
       };
     }
   } catch (error) {
-    return Promise.reject(util.formatError(error));
+    throw util.formatError(error);
   } 
 };
 
@@ -122,7 +122,7 @@ const exportContacts = async (
     const response = await util.aggregate(request, requestOptions, trace);
     return response;
   } catch (error) {
-    return Promise.reject(util.formatError(error));
+    throw util.formatError(error);
   }
 };
 
@@ -155,7 +155,7 @@ const getContact = async (
     const response = await request(requestOptions);
     return response;
   } catch(error){
-    return Promise.reject(util.formatError(error));
+    throw util.formatError(error);
   }
 };
 
@@ -204,7 +204,7 @@ const listContacts = async (
     const response = await request(requestOptions);
     return response;
   } catch(error){
-    return Promise.reject(util.formatError(error));
+    throw util.formatError(error);
   }
 };
 
@@ -240,7 +240,7 @@ const updateContact = async (
     const response = await request(requestOptions);
     return response;
   } catch(error){
-    return Promise.reject(util.formatError(error));
+    throw util.formatError(error);
   }
 };
 

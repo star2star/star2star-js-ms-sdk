@@ -11,9 +11,7 @@ const fs = require("fs");
 const s2sMS = require("../src/index");
 const Util = require("../src/utilities");
 const logger = require("../src/node-logger").getInstance();
-const objectMerge = require("object-merge");
-const newMeta = Util.generateNewMetaData;
-let trace = newMeta();
+let trace = Util.generateNewMetaData();
 
 //utility function to simplify test code
 const mochaAsync = (func, name) => {
@@ -24,7 +22,7 @@ const mochaAsync = (func, name) => {
       return response; 
     } catch (error) {
       //mocha will log out the error
-      return Promise.reject(error);
+      throw error;
     }
   };
 };
@@ -56,13 +54,13 @@ describe("Objects MS Test Suite", function() {
       const idData = await s2sMS.Identity.getMyIdentityData(accessToken);
       identityData = await s2sMS.Identity.getIdentityDetails(accessToken, idData.user_uuid);
     } catch (error){
-      return Promise.reject(error);
+      throw error;
     }
   });
 
   // template
   // it("change me", mochaAsync(async () => {
-  //     //   trace = objectMerge({}, trace, Util.generateNewMetaData(trace));
+  //     //   trace = Util.generateNewMetaData(trace);
   //   const response = await somethingAsync();
   //   assert.ok(
   //     1 === 1,
@@ -98,12 +96,12 @@ describe("Objects MS Test Suite", function() {
     return response;
   },"Create Shared User Object"));
 
-  it("List Shared User Objects", mochaAsync(async () => {
+ it("List Shared User Objects", mochaAsync(async () => {
 
     const filters = {
       "type": "unit-test"
     };
-    trace = objectMerge({}, trace, Util.generateNewMetaData(trace));
+    trace = Util.generateNewMetaData(trace);
     const response = await s2sMS.Objects.getDataObjects(
       accessToken,
       identityData.uuid,
@@ -124,7 +122,7 @@ describe("Objects MS Test Suite", function() {
 
   it("Update Shared User Object", mochaAsync(async () => {
 
-    trace = objectMerge({}, trace, Util.generateNewMetaData(trace));
+    trace = Util.generateNewMetaData(trace);
     const response = await s2sMS.Objects.updateDataObject(
       accessToken,
       userObjectUUID,
@@ -155,7 +153,7 @@ describe("Objects MS Test Suite", function() {
     const filters = {
       "type": "unit-test"
     };
-    trace = objectMerge({}, trace, Util.generateNewMetaData(trace));
+    trace = Util.generateNewMetaData(trace);
     const response = await s2sMS.Objects.getDataObjects(
       accessToken,
       identityData.uuid,
@@ -201,7 +199,7 @@ describe("Objects MS Test Suite", function() {
 
   it("Delete Shared User Object", mochaAsync(async () => {
 
-    trace = objectMerge({}, trace, Util.generateNewMetaData(trace));
+    trace = Util.generateNewMetaData(trace);
     const response = await s2sMS.Objects.deleteDataObject(accessToken, userObjectUUID, trace);
     assert.ok(
       response.status === "ok",
@@ -237,7 +235,7 @@ describe("Objects MS Test Suite", function() {
 
   it("Get One User Object", mochaAsync(async () => {
 
-    trace = objectMerge({}, trace, Util.generateNewMetaData(trace));
+    trace = Util.generateNewMetaData(trace);
     const response = await s2sMS.Objects.getDataObject(
       accessToken,
       userObjectUUID,
@@ -255,7 +253,7 @@ describe("Objects MS Test Suite", function() {
     const filters = {
       "type": "unit-test"
     };
-    trace = objectMerge({}, trace, Util.generateNewMetaData(trace));
+    trace = Util.generateNewMetaData(trace);
     const response = await s2sMS.Objects.getDataObjects(
       accessToken,
       identityData.uuid,
@@ -276,7 +274,7 @@ describe("Objects MS Test Suite", function() {
 
   it("Update User Object", mochaAsync(async () => {
 
-    trace = objectMerge({}, trace, Util.generateNewMetaData(trace));
+    trace = Util.generateNewMetaData(trace);
     const response = await s2sMS.Objects.updateDataObject(
       accessToken,
       userObjectUUID,
@@ -304,7 +302,7 @@ describe("Objects MS Test Suite", function() {
     const filters = {
       "type": "unit-test"
     };
-    trace = objectMerge({}, trace, Util.generateNewMetaData(trace));
+    trace = Util.generateNewMetaData(trace);
     const response = await s2sMS.Objects.getDataObjects(
       accessToken,
       identityData.uuid,
@@ -325,7 +323,7 @@ describe("Objects MS Test Suite", function() {
 
   it("Get User Object By Type", mochaAsync(async () => {
 
-    trace = objectMerge({}, trace, Util.generateNewMetaData(trace));
+    trace = Util.generateNewMetaData(trace);
     const response = await s2sMS.Objects.getDataObjectByType(
       identityData.uuid,
       accessToken,
@@ -344,7 +342,7 @@ describe("Objects MS Test Suite", function() {
   
   it("Get User Object By Type And Name", mochaAsync(async () => {
 
-    trace = objectMerge({}, trace, Util.generateNewMetaData(trace));
+    trace = Util.generateNewMetaData(trace);
     await s2sMS.Objects.createUserDataObject(
       identityData.uuid,
       accessToken,
@@ -359,7 +357,7 @@ describe("Objects MS Test Suite", function() {
       undefined, // users object not required for private objects
       trace
     );
-    trace = objectMerge({}, trace, Util.generateNewMetaData(trace));
+    trace = Util.generateNewMetaData(trace);
     const response = await s2sMS.Objects.getDataObjectByTypeAndName(
       identityData.uuid,
       accessToken,
@@ -384,7 +382,7 @@ describe("Objects MS Test Suite", function() {
       "type": "unit-test",
       "status": "inactive"
     };
-    trace = objectMerge({}, trace, Util.generateNewMetaData(trace));
+    trace = Util.generateNewMetaData(trace);
     const response = await s2sMS.Objects.getDataObjects(
       accessToken,
       identityData.uuid,
@@ -403,7 +401,7 @@ describe("Objects MS Test Suite", function() {
 
   it("Delete User Object", mochaAsync(async () => {
 
-    trace = objectMerge({}, trace, Util.generateNewMetaData(trace));
+    trace = Util.generateNewMetaData(trace);
     const response = await s2sMS.Objects.deleteDataObject(accessToken, userObjectUUID, trace);
     assert.ok(
       response.status === "ok",
@@ -414,7 +412,7 @@ describe("Objects MS Test Suite", function() {
   
   it("Create Global Object", mochaAsync(async () => {
 
-    trace = objectMerge({}, trace, Util.generateNewMetaData(trace));
+    trace = Util.generateNewMetaData(trace);
     const response = await s2sMS.Objects.createDataObject(
       accessToken,
       "Unit-Test",
@@ -435,7 +433,7 @@ describe("Objects MS Test Suite", function() {
 
   it("Get Global Object", mochaAsync(async () => {
 
-    trace = objectMerge({}, trace, Util.generateNewMetaData(trace));
+    trace = Util.generateNewMetaData(trace);
     const response = await s2sMS.Objects.getDataObject(accessToken, objectUUID, trace);
     assert.ok(
       response.type === "global-unit-test" &&
@@ -448,7 +446,7 @@ describe("Objects MS Test Suite", function() {
 
   it("Update Global Object", mochaAsync(async () => {
 
-    trace = objectMerge({}, trace, Util.generateNewMetaData(trace));
+    trace = Util.generateNewMetaData(trace);
     const response = await s2sMS.Objects.updateDataObject(
       accessToken,
       objectUUID,
@@ -473,7 +471,7 @@ describe("Objects MS Test Suite", function() {
 
   it("Get Global Object After Update", mochaAsync(async () => {
 
-    trace = objectMerge({}, trace, Util.generateNewMetaData(trace));
+    trace = Util.generateNewMetaData(trace);
     const response = await s2sMS.Objects.getDataObject(accessToken, objectUUID, trace);
     assert.ok(
       response.description === "the modified description" &&
@@ -486,7 +484,7 @@ describe("Objects MS Test Suite", function() {
 
   it("Delete Global Object", mochaAsync(async () => {
 
-    trace = objectMerge({}, trace, Util.generateNewMetaData(trace));
+    trace = Util.generateNewMetaData(trace);
     const response = await s2sMS.Objects.deleteDataObject(accessToken, objectUUID, trace);
     assert.ok(
       response.status === "ok",
@@ -500,7 +498,7 @@ describe("Objects MS Test Suite", function() {
     const filters = {
       "type": "unit-test"
     };
-    trace = objectMerge({}, trace, Util.generateNewMetaData(trace));
+    trace = Util.generateNewMetaData(trace);
     const response = await s2sMS.Objects.getDataObjects(
       accessToken,
       identityData.uuid,
@@ -512,7 +510,7 @@ describe("Objects MS Test Suite", function() {
     );
     const deletePromises = [];
     response.items.forEach(item => {
-      trace = objectMerge({}, trace, Util.generateNewMetaData(trace));
+      trace = Util.generateNewMetaData(trace);
       deletePromises.push(
         s2sMS.Objects.deleteDataObject(accessToken, item.uuid, trace)
       );
@@ -522,7 +520,7 @@ describe("Objects MS Test Suite", function() {
 
   // template
   // it("change me", mochaAsync(async () => {
-  //     //   trace = objectMerge({}, trace, Util.generateNewMetaData(trace));
+  //     //   trace = Util.generateNewMetaData(trace);
   //   const response = await somethingAsync();
   //   assert.ok(
   //     1 === 1,

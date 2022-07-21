@@ -1,6 +1,6 @@
 /* global require module*/
 "use strict";
-const request = require("request-promise");
+const request = require("./requestPromise");
 const util = require("./utilities");
 
 /**
@@ -104,7 +104,7 @@ const getMediaFileUrl = async (
     const response = await request(requestOptions);
     return response;
   } catch (error) {
-    return Promise.reject(util.formatError(error));
+    throw util.formatError(error);
   }
 };
 
@@ -137,7 +137,7 @@ const listUserMedia = async (
     const response = await request(requestOptions);
     return response;
   } catch (error) {
-    return Promise.reject(util.formatError(error));
+    throw util.formatError(error);
   }
 };
 
@@ -183,7 +183,7 @@ const uploadFile = async (
     const response = await request(requestOptions);
     return response;
   } catch (error) {
-    return Promise.reject(util.formatError(error));
+    throw util.formatError(error);
   }
 };
 
@@ -237,7 +237,7 @@ const deleteMedia = async (
       };
     }
   } catch (error) {
-    return Promise.reject(util.formatError(error));
+    throw util.formatError(error);
   }
 };
 

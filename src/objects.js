@@ -2,7 +2,7 @@
 "use strict";
 
 const Util = require("./utilities");
-const request = require("request-promise");
+const request = require("./requestPromise");
 const merge = require("@star2star/merge-deep");
 const ResourceGroups = require("./resourceGroups");
 const logger = require("./node-logger").getInstance();
@@ -87,6 +87,11 @@ const getDataObjects = async (
     };
     Util.addRequestTrace(requestOptions, trace);
     let response;
+
+    // default the filter to empty object
+    if(typeof filters === "undefined"){
+      filters = {};
+    }
     //here we determine if we will need to handle aggrigation, pagination, and filtering or send it to the microservice
     if (filters) {
       // filter param has been passed in, make sure it is an array befor proceeding
@@ -138,7 +143,7 @@ const getDataObjects = async (
       }
     }
   } catch (error) {
-    return Promise.reject(Util.formatError(error));
+    throw Util.formatError(error);
   }
 };
 
@@ -322,6 +327,7 @@ const createUserDataObject = async (
       {    
         await Util.pendingResource(
           response.headers.location,
+          request,
           requestOptions, //reusing the request options instead of passing in multiple params
           trace
         );
@@ -421,8 +427,9 @@ const createDataObject = async (
         response.statusCode === 202 &&
         response.headers.hasOwnProperty("location"))
     {    
-      await Util.pendingResource(
+       await Util.pendingResource(
         response.headers.location,
+        request,
         requestOptions, //reusing the request options instead of passing in multiple params
         trace
       );
@@ -476,6 +483,7 @@ const deleteDataObject = async (
     {    
       await Util.pendingResource(
         response.headers.location,
+        request,
         requestOptions, //reusing the request options instead of passing in multiple params
         trace,
         "deleting"
@@ -542,8 +550,9 @@ const updateDataObject = async (
         response.statusCode === 202 &&
         response.headers.hasOwnProperty("location"))
     {    
-      await Util.pendingResource(
+       await Util.pendingResource(
         response.headers.location,
+        request,
         requestOptions, //reusing the request options instead of passing in multiple params
         trace
       );

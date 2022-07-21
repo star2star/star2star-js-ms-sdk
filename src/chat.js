@@ -3,7 +3,7 @@
 "use strict";
 const util = require("./utilities");
 const Groups = require("./groups");
-const request = require("request-promise");
+const request = require("./requestPromise");
 const merge = require("@star2star/merge-deep");
 
 /**
@@ -65,7 +65,7 @@ const createChannel = async (
     const response = await request(requestOptions);
     return response;
   } catch (error){
-    Promise.reject(util.formatError(error));
+    throw util.formatError(error);
   }
 };
 
@@ -102,7 +102,7 @@ const listChannels = async (
     const response = await request(requestOptions);
     return response;
   } catch (error){
-    Promise.reject(util.formatError(error));
+    throw util.formatError(error);
   }
 };
 
@@ -136,7 +136,7 @@ const getChannel = async (
     const response = await request(requestOptions);
     return response;
   } catch (error){
-    Promise.reject(util.formatError(error));
+    throw util.formatError(error);
   }
 };
 
@@ -170,7 +170,7 @@ const deleteChannel = async (
     const response  = await request(requestOptions);
     return response;
   } catch (error){
-    Promise.reject(util.formatError(error));
+    throw util.formatError(error);
   }
 };
 
@@ -207,7 +207,7 @@ const updateChannelInfo = async (
     const response = await request(requestOptions);
     return response;
   } catch (error) {
-    Promise.reject(util.formatError(error));
+    throw util.formatError(error);
   }
 };
 
@@ -245,7 +245,7 @@ const updateChannelMeta = async (
     const response = await request(requestOptions);
     return response;
   } catch (error) {
-    Promise.reject(util.formatError(error));
+    throw util.formatError(error);
   }
 };
 
@@ -280,7 +280,7 @@ const getChannelMembers = async (
     const response = await request(requestOptions);
     return response;
   } catch (error) {
-    Promise.reject(util.formatError(error));
+    throw util.formatError(error);
   }
 };
 
@@ -318,7 +318,7 @@ const addMember = async (
     const response = await request(requestOptions);
     return response;
   } catch (error) {
-    Promise.reject(util.formatError(error));
+    throw util.formatError(error);
   }
 };
 
@@ -355,7 +355,7 @@ const deleteMember = async (
     const response = await request(requestOptions);
     return response;
   } catch (error) {
-    Promise.reject(util.formatError(error));
+    throw util.formatError(error);
   }  
 };
 
@@ -395,7 +395,7 @@ const getMessages = async (
     const response = await request(requestOptions);
     return response;
   } catch (error) {
-    Promise.reject(util.formatError(error));
+    throw util.formatError(error);
   }
 };
 
@@ -443,7 +443,7 @@ const sendMessage = async (
     const response = await request(requestOptions);
     return response;
   } catch (error) {
-    Promise.reject(util.formatError(error));
+    throw util.formatError(error);
   }
 };
 
@@ -478,7 +478,7 @@ const getChannelInfo = async (
       messages: pData[1].items
     };
   } catch (error) {
-    Promise.reject(util.formatError(error));
+    throw util.formatError(error);
   }
 };
 

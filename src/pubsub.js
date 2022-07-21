@@ -1,10 +1,9 @@
 /* global require module*/
 "use strict";
 
-const request = require("request-promise");
+const request = require("./requestPromise");
 const util = require("./utilities");
 const logger = require("./node-logger").getInstance();
-
 
 /**
  * @async
@@ -18,6 +17,7 @@ const logger = require("./node-logger").getInstance();
  * @param {string} [accessToken="null accessToken"] - access token for cpaas systems
  * @param {string} [expiresDate=undefined] - optional expires date (RFC3339 format)
  * @param {object} [trace = {}] - optional microservice lifecycle trace headers
+ * @param {boolean} [keep_alive = false] - optional high availability keep alive
  * @returns {Promise<object>} - Promise resolving to a data object containing a new subscription
  */
 const addSubscription = async (
@@ -29,7 +29,8 @@ const addSubscription = async (
   subscriptions = {},
   accessToken = "null accessToken",
   expiresDate = undefined,
-  trace = {}
+  trace = {},
+  keep_alive = false,
 ) => {
   try {
     const MS = util.getEndpoint("pubsub");
@@ -41,10 +42,11 @@ const addSubscription = async (
         account_uuid: account_uuid,
         callback: {
           url: callback_url,
-          headers: callback_headers
+          headers: callback_headers,
+          keep_alive: keep_alive
         },
         //criteria: criteria, temporary sms workaround
-        events: subscriptions
+        events: subscriptions,
       },
       headers: {
         Authorization: `Bearer ${accessToken}`,
@@ -78,7 +80,7 @@ const addSubscription = async (
     const response = await request(requestOptions);
     return response;
   } catch (error) {
-    return Promise.reject(util.formatError(error));
+    throw util.formatError(error);
   }
 };
 
@@ -97,6 +99,7 @@ const addSubscription = async (
  */
 const addCustomEventSubscription = async (
   accessToken = "null accessToken",
+  user_uuid = "user uuid not provided",
   app_uuid = "account uuid not provided ",
   callback_url = "not set callback",
   callback_headers = [],
@@ -109,22 +112,22 @@ const addCustomEventSubscription = async (
     const MS = util.getEndpoint("pubsub");
     
     const requestOptions = {
-      "method": "POST",
-      "headers": {
-        "Authorization": `Bearer ${accessToken}`,
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
         "Content-type": "application/json",
-        "x-api-version": `${util.getVersion()}`
+        "x-api-version": `${util.getVersion()}`,
       },
-      "uri": `${MS}/customevents`,
-      "body": {
-        "app_uuid": app_uuid,
-        "callback": {
-          "url": callback_url,
-          "headers": callback_headers
+      uri: `${MS}/customevents`,
+      body: {
+        app_uuid: app_uuid,
+        callback: {
+          url: callback_url,
+          headers: [{ "x-user-uuid": user_uuid }, ...callback_headers], // work around for CCORE-1545
         },
-        "events": events
+        events: events,
       },
-      "json": true
+      json: true,
     };
     if(Array.isArray(criteria) && criteria.length > 0){
       requestOptions.body.criteria = criteria;
@@ -136,7 +139,7 @@ const addCustomEventSubscription = async (
     const response = await request(requestOptions);
     return response;
   } catch (error) {
-    return Promise.reject(util.formatError(error));
+    throw util.formatError(error);
   }
 };
 
@@ -180,7 +183,7 @@ const broadcastCustomApplication = async (
     const response = await request(requestOptions);
     return response;
   } catch (error) {
-    return Promise.reject(util.formatError(error));
+    throw util.formatError(error);
   }
 };
 
@@ -190,6 +193,9 @@ const broadcastCustomApplication = async (
  * @param {string} [accessToken="null accessToken"] - CPaaS access token
  * @param {string} [app_uuid="account uuid not provided "] - application_uuid
  * @param {array} [events=[]] - events as array of objects
+ * @param {string} app_name - application name
+ * @param {string} description - application description
+ * @param {object} metadata - application metadata
  * @param {object} [trace={}] - optional CPaaS lifecycle headers
  * @returns {Promise} - promise resolving to success or failure
  */
@@ -197,6 +203,9 @@ const createCustomApplication = async (
   accessToken = "null accessToken",
   app_uuid = "account uuid not provided ",
   events = [],
+  app_name,
+  description,
+  metadata = {},
   trace = {}
 ) => {
   try {
@@ -211,6 +220,9 @@ const createCustomApplication = async (
       "uri": `${MS}/applications`,
       "body": {
         "app_uuid": app_uuid,
+        "app_name": typeof app_name === "string" ? app_name : "",
+        "description": typeof description === "string" ? description : "",
+        "metadata": metadata,
         "events": events
       },
       "json": true
@@ -219,7 +231,7 @@ const createCustomApplication = async (
     const response = await request(requestOptions);
     return response;
   } catch (error) {
-    return Promise.reject(util.formatError(error));
+    throw util.formatError(error);
   }
 };
 
@@ -267,7 +279,7 @@ const deleteCustomApplication = async (
       };
     } 
   } catch (error) {
-    return Promise.reject(util.formatError(error));
+    throw util.formatError(error);
   }
 };
 
@@ -316,7 +328,7 @@ const deleteCustomSubscription = async (
       };
     } 
   } catch (error) {
-    return Promise.reject(util.formatError(error));
+    throw util.formatError(error);
   }
 };
 
@@ -365,7 +377,7 @@ const deleteSubscription = async (
       };
     } 
   } catch (error) {
-    return Promise.reject(util.formatError(error));
+    throw util.formatError(error);
   }
 };
 
@@ -398,7 +410,7 @@ const getCustomApplication = async (
     const response = await request(requestOptions);
     return response;
   } catch (error) {
-    return Promise.reject(util.formatError(error));
+    throw util.formatError(error);
   }
 };
 
@@ -431,7 +443,7 @@ const getCustomSubscription = async (
     const response = await request(requestOptions);
     return response;
   } catch (error) {
-    return Promise.reject(util.formatError(error));
+    throw util.formatError(error);
   }
 };
 
@@ -466,7 +478,7 @@ const getSubscription = async (
     const response = await request(requestOptions);
     return response;
   } catch (error) {
-    return Promise.reject(util.formatError(error));
+    throw util.formatError(error);
   }
 };
 
@@ -474,6 +486,7 @@ const getSubscription = async (
  * @async
  * @description - This function will return a custom subscription
  * @param {string} [accessToken="null accessToken"] - CPaaS access token
+ * @param {string} [userUUID="no user uuid provided"] - custom user uuid
  * @param {string} [appUUID="no app uuid provided"] - custom application uuid
  * @param {number} [offset=0] - pagination offset
  * @param {number} [limit=10] - pagination limit
@@ -482,6 +495,7 @@ const getSubscription = async (
  */
 const listCustomSubscriptions = async (
   accessToken = "null accessToken",
+  userUUID = "no user uuid provided",
   appUUID = "no app uuid provided",
   offset = 0,
   limit = 10,
@@ -499,14 +513,21 @@ const listCustomSubscriptions = async (
       },
       qs: {
         app_uuid: appUUID,
-        offset: offset,
-        limit: limit
+        // offset: offset,
+        // limit: limit
       },
       json: true
     };
     util.addRequestTrace(requestOptions, trace);
-    const response = await request(requestOptions);
-    return response;
+    // work around for CCORE-1545
+    const response = await util.aggregate(request, requestOptions, trace);
+    const filteredResponse = util.filterResponse(response, {"x-user-uuid": userUUID});
+    const paginatedResponse = util.paginate(
+      filteredResponse,
+      offset,
+      limit
+    );
+    return paginatedResponse;
   } catch (error) {
     throw util.formatError(error);
   }
@@ -690,13 +711,13 @@ const listUserSubscriptions = async (
     const response = await request(requestOptions);
     return response;
   } catch (error) {
-    return Promise.reject(util.formatError(error));
+    throw util.formatError(error);
   }
 };
 
 /**
  * @async
- * @description This function updates a subscription expiration date
+ * @description This function updates a subscription
  * @param {string} [accessToken="null accessToken"] - access token for cpaas systems
  * @param {string} subscriptionUUID - subscription uuid
  * @param {object} [body="null body"] - subscription
@@ -772,7 +793,7 @@ const updateSubscriptionExpiresDate = async (
     const response = await request(requestOptions);
     return response;
   } catch (error) {
-    return Promise.reject(util.formatError(error));
+    throw util.formatError(error);
   }
 };
 

@@ -1,7 +1,7 @@
 /* global require module*/
 "use strict";
 
-const request = require("request-promise");
+const request = require("./requestPromise");
 const util = require("./utilities");
 
 /**
@@ -382,6 +382,7 @@ const listUserFormSubmissions = async (
     {    
       await util.pendingResource(
         response.headers.location,
+        request,
         requestOptions, //reusing the request options instead of passing in multiple params
         trace,
         "deleting"
@@ -389,7 +390,7 @@ const listUserFormSubmissions = async (
     }
     return {"status": "ok"};
   } catch(error){
-    throw util.formatError(error)
+    throw util.formatError(error);
   } 
 };
 
@@ -428,6 +429,7 @@ const listUserFormSubmissions = async (
     {    
       await util.pendingResource(
         response.headers.location,
+        request,
         requestOptions, //reusing the request options instead of passing in multiple params
         trace,
         "deleting"
@@ -435,7 +437,7 @@ const listUserFormSubmissions = async (
     }
     return {"status": "ok"};
   } catch(error){
-    throw util.formatError(error)
+    throw util.formatError(error);
   } 
 };
 

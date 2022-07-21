@@ -2,7 +2,7 @@
 "use strict";
 
 const Util = require("./utilities");
-const request = require("request-promise");
+const request = require("./requestPromise");
 const { v4 } = require("uuid");
 
 /**
@@ -48,9 +48,10 @@ const createClientApp = async (
     if (response.hasOwnProperty("statusCode") && 
         response.statusCode === 202 &&
         response.headers.hasOwnProperty("location"))
-    {    
-      await Util.pendingResource(
+    {
+       await Util.pendingResource(
         response.headers.location,
+        request,
         requestOptions, //reusing the request options instead of passing in multiple params
         trace
       );
@@ -86,7 +87,7 @@ const generateBasicToken = async (
       return basicToken;
     }
   } catch (error) {
-    return Promise.reject(Util.formatError(error));
+    throw Util.formatError(error)
   }
 };
 
@@ -135,7 +136,7 @@ const getAccessToken = async (
     const response =  await request(requestOptions);
     return response;
   } catch (error) {
-    return Promise.reject(Util.formatError(error));
+    throw Util.formatError(error)
   }
 };
 
@@ -169,7 +170,7 @@ const getClientToken = async (oauthToken = "null oauth token", trace = {}) => {
     const response = request(requestOptions);
     return response;
   } catch (error) {
-    return Promise.reject(Util.formatError(error));
+    throw Util.formatError(error)
   }
 };
 
@@ -216,7 +217,7 @@ const invalidateToken = async (accessToken = "null accessToken", token = "null t
       };
     }
   } catch (error) {
-    return Promise.reject(Util.formatError(error));
+    throw Util.formatError(error)
   }
 };
 
@@ -262,7 +263,7 @@ const listClientTokens = async (
     const response = request(requestOptions);
     return response;
   } catch (error) {
-    return Promise.reject(Util.formatError(error));
+    throw Util.formatError(error)
   }
 };
 
@@ -305,10 +306,41 @@ const listOauthClients = async (
       });
     }
     Util.addRequestTrace(requestOptions, trace);
-    const response = request(requestOptions);
+    const response = await request(requestOptions);
     return response;
   } catch (error) {
-    return Promise.reject(Util.formatError(error));
+    throw Util.formatError(error)
+  }
+};
+
+/**
+ * @async
+ * @description This function returns a list of oauth2 scopes
+ * @param {string} [accessToken="null accessToken"] cpaas access token
+ * @param {object} [trace={}] optional cpaas lifecycle headers
+ * @returns {Promise<object>} - Promise resolving to a list of oauth2 clients
+ */
+ const listScopes = async (
+  accessToken = "null accessToken",
+  trace = {}
+) => {
+  try {
+    const MS = Util.getEndpoint("oauth");
+    const requestOptions = {
+      method: "GET",
+      uri: `${MS}/scopes`,
+      json: true,
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+        "Content-type": "application/json",
+        "x-api-version": `${Util.getVersion()}`
+      }
+    };
+    Util.addRequestTrace(requestOptions, trace);
+    const response = await request(requestOptions);
+    return response;
+  } catch (error) {
+    throw Util.formatError(error)
   }
 };
 
@@ -410,7 +442,7 @@ const scopeClientApp = async (
       };
     }
   } catch (error) {
-    return Promise.reject(Util.formatError(error));
+    throw Util.formatError(error);
   }
 };
 
@@ -457,7 +489,7 @@ const validateToken = async (accessToken = "null accessToken", token= "null toke
       };
     }
   } catch (error) {
-    return Promise.reject(Util.formatError(error));
+    throw Util.formatError(error)
   }
 
 };
@@ -470,6 +502,7 @@ module.exports = {
   invalidateToken,
   listClientTokens,
   listOauthClients,
+  listScopes,
   refreshAccessToken,
   scopeClientApp,
   validateToken

@@ -13,9 +13,7 @@ const { v4 } = require("uuid");
 const s2sMS = require("../src/index");
 const Util = require("../src/utilities");
 const logger = require("../src/node-logger").getInstance();
-const objectMerge = require("object-merge");
-const newMeta = Util.generateNewMetaData;
-let trace = newMeta();
+let trace = Util.generateNewMetaData();
 
 //utility function to simplify test code
 const mochaAsync = (func, name) => {
@@ -26,7 +24,7 @@ const mochaAsync = (func, name) => {
       return response; 
     } catch (error) {
       //mocha will log out the error
-      return Promise.reject(error);
+      throw error;
     }
   };
 };
@@ -106,20 +104,20 @@ describe("Scheduler MS Test Suite", function() {
       workflowUUID = workflow.uuid;
       logger.debug(`Workflow UUID: ${workflowUUID}`);
     } catch(error) {
-      return Promise.reject(error);
+      throw error;
     }  
   });
 
   // Template for New Test............
   // it("change me", mochaAsync(async () => {
-  //     //   trace = objectMerge({}, trace, Util.generateNewMetaData(trace));
+  //     //   trace = Util.generateNewMetaData(trace);
   //   const response = await somethingAsync();
   //   assert.ok(1 === 1);
   //   return response;
   // },"change me"));
 
   it("Shedule Event", mochaAsync(async () => {
-        trace = objectMerge({}, trace, Util.generateNewMetaData(trace));
+        trace = Util.generateNewMetaData(trace);
     const response = await s2sMS.Scheduler.scheduleEvent(
       accessToken,
       identityData.uuid, //user_uuid
@@ -159,7 +157,7 @@ describe("Scheduler MS Test Suite", function() {
   },"Shedule Event"));
 
   it("List Events", mochaAsync(async () => {
-        trace = objectMerge({}, trace, Util.generateNewMetaData(trace));
+        trace = Util.generateNewMetaData(trace);
     //update event body
     const response = await s2sMS.Scheduler.listEvents(
       accessToken,
@@ -175,7 +173,7 @@ describe("Scheduler MS Test Suite", function() {
   },"List Events"));
 
   it("Get Event", mochaAsync(async () => {
-        trace = objectMerge({}, trace, Util.generateNewMetaData(trace));
+        trace = Util.generateNewMetaData(trace);
     const response = await s2sMS.Scheduler.getEvent(
       accessToken,
       event.uuid,
@@ -194,7 +192,7 @@ describe("Scheduler MS Test Suite", function() {
     //wait for the scheduler to run the workflow
     await new Promise(resolve => setTimeout(resolve, 70000));
 
-    trace = objectMerge({}, trace, Util.generateNewMetaData(trace));
+    trace = Util.generateNewMetaData(trace);
     const response = await s2sMS.Workflow.getWfTemplateHistory(
       accessToken,
       workflowUUID,
@@ -214,7 +212,7 @@ describe("Scheduler MS Test Suite", function() {
   },"Check Event Fired")).timeout(90000);
 
   it("Update Event", mochaAsync(async () => {
-        trace = objectMerge({}, trace, Util.generateNewMetaData(trace));
+        trace = Util.generateNewMetaData(trace);
     event.start_datetime = new Date(Date.now() + 60000).toISOString();
     event.frequency.type = "once";
     delete event.frequency.interval;
@@ -237,7 +235,7 @@ describe("Scheduler MS Test Suite", function() {
   },"Update Event"));
   
   it("Delete Event", mochaAsync(async () => {
-        trace = objectMerge({}, trace, Util.generateNewMetaData(trace));
+        trace = Util.generateNewMetaData(trace);
     //update event body
     const response = await s2sMS.Scheduler.deleteEvent(
       accessToken,
@@ -253,7 +251,7 @@ describe("Scheduler MS Test Suite", function() {
 
   // template
   // it("change me", mochaAsync(async () => {
-  //     //   trace = objectMerge({}, trace, Util.generateNewMetaData(trace));
+  //     //   trace = Util.generateNewMetaData(trace);
   //   const response = await somethingAsync();
   //   assert.ok(
   //     1 === 1,
