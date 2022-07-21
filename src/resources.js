@@ -332,7 +332,7 @@ const listResources = async (
     const MS = util.getEndpoint("resources");
     const requestOptions = {
       method: "POST",
-      uri: `${MS}instance/${resourceUUID}/search`,
+      uri: `${MS}/instance/${resourceUUID}/search`,
       headers: {
         Authorization: `Bearer ${accessToken}`,
         "Content-type": "application/json",
