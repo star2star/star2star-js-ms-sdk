@@ -100,6 +100,7 @@ const sendEmail = async (
       body.bcc = typeof body.to.bcc !== "undefined" ? body.to.bcc : [];
       body.cc = typeof body.to.cc !== "undefined" ? body.to.cc : [];
       body.to = typeof body.to.to !== "undefined" ? body.to.to : (Array.isArray(body.to) ? body.to : []);
+      body.replyto = typeof body.to.replyto !== "undefined" ? body.to.replyto : [];
       
       requestOptions.body = body;
       util.addRequestTrace(requestOptions, trace);
