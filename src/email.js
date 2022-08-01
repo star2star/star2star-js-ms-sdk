@@ -97,12 +97,19 @@ const sendEmail = async (
 
       // check for polymorphic to with bcc and cc
       const body = validatedEmail.details[0].email;
-      body.bcc = typeof body.to.bcc !== "undefined" ? body.to.bcc : [];
-      body.cc = typeof body.to.cc !== "undefined" ? body.to.cc : [];
-      body.to = typeof body.to.to !== "undefined" ? body.to.to : (Array.isArray(body.to) ? body.to : []);
-      body.replyto = typeof body.to.replyto !== "undefined" ? body.to.replyto : [];
+      // restructure body - required for backward compatibility 
+      const newBody = {
+        content: body.content,
+        from: body.from,
+        subject: body.subject,
+        bcc: typeof body.to.bcc !== "undefined" ? body.to.bcc : [],
+        cc: typeof body.to.cc !== "undefined" ? body.to.cc : [],
+        replyto: typeof body.to.replyto !== "undefined" ? body.to.replyto : [],
+        to: typeof body.to.to !== "undefined" ? body.to.to : (Array.isArray(body.to) ? body.to : [])
+      };
       
-      requestOptions.body = body;
+      console.log(newBody)
+      requestOptions.body = newBody;
       util.addRequestTrace(requestOptions, trace);
       const response = await request(requestOptions);
       return response;

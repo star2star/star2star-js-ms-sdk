@@ -153,10 +153,10 @@ describe("Email MS Unit Test Suite", function() {
     return response;
   },"Send Valid Email with to"));
 
-  it("Send Valid Email with to, bcc, and cc", mochaAsync(async () => {
+  it("Send Valid Email with to, bcc, cc, and replyto", mochaAsync(async () => {
         trace = Util.generateNewMetaData(trace);
     const sender = SENDER;
-    const to = {bcc: [identityData.username], cc: [identityData.username], to: [identityData.username]};
+    const to = {bcc: [identityData.username], cc: [identityData.username], to: [identityData.username], replyto: ["third-party-support+emailtest@sangoma.com"]};
     const subject = "a test";
     const message = "a test";
     const type = "text";
@@ -175,7 +175,7 @@ describe("Email MS Unit Test Suite", function() {
       JSON.stringify(response, null, "\t")
     );
     return response;
-  },"Send Valid Email with to, bcc, and cc"));
+  },"Send Valid Email with to, bcc, cc, and replyto"));
 
   it("Send Invalid Sender Email", mochaAsync(async () => {
         try{
