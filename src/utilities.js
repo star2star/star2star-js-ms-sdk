@@ -54,7 +54,8 @@ const getAuthHost = () => {
  * @returns {string} - the configured string value or undefined
  */
 const getVersion = () => {
-  return getGlobalThis().MS_VERSION;
+  const MS_VERSION = getGlobalThis().MS_VERSION
+  return typeof MS_VERSION === "undefined" ? "v1" : MS_VERSION;
 };
 
 /**
