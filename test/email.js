@@ -239,6 +239,37 @@ describe("Email MS Unit Test Suite", function() {
     
   },"Send Invalid Recipient Email"));
 
+
+
+  it("Send Valid Email with attachement", mochaAsync(async () => {
+    trace = Util.generateNewMetaData(trace);
+    const sender = SENDER;
+    const to = [identityData.username];
+    const subject = "email attachment test";
+    const message = "<p>this is a small image&nbsp;</p><figure class=\"image\"><img src=\"cid:0\"></figure><p>footer</p>";
+    const attachment = [{
+      "type": "image/png",
+      "id": "0",
+      "body": "iVBORw0KGgoAAAANSUhEUgAAAAgAAAAIAQMAAAD+wSzIAAAABlBMVEX///+/v7+jQ3Y5AAAADklEQVQI12P4AIX8EAgALgAD/aNpbtEAAAAASUVORK5CYII="
+    }];
+    const type = "html";
+    const response = await s2sMS.Email.sendEmailAttachment(
+      accessToken,
+      sender,
+      to,
+      subject,
+      message,
+      type,
+      attachment,
+      trace
+    );
+    assert.ok(
+      response.hasOwnProperty("status") &&
+      response.status === "sent",
+      JSON.stringify(response, null, "\t")
+    );
+    return response;
+    },"Send Valid Email with attachment"));
   // template
   // it("change me", mochaAsync(async () => {
   //     //   trace = Util.generateNewMetaData(trace);
