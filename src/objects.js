@@ -278,6 +278,7 @@ const getDataObject = async (
  * @param {string} [accountUUID="null accountUUID"] - optional account uuid to scope user permissions
  * @param {object} [users=undefined] - optional object containing users for creating permissions groups
  * @param {object} [trace = {}] - microservice lifecycle trace headers
+ * @param {object} [metadata = {}] - metadata obj
  * @returns {Promise<object>} Promise resolving to a data object
  */
 const createUserDataObject = async (
@@ -289,7 +290,8 @@ const createUserDataObject = async (
   content = {},
   accountUUID = undefined,
   users = undefined,
-  trace = {}
+  trace = {},
+  metadata = {}
 ) => {
   try {
     const MS = Util.getEndpoint("objects");
@@ -298,7 +300,8 @@ const createUserDataObject = async (
       type: objectType,
       description: objectDescription,
       content_type: "application/json",
-      content: content
+      content: content,
+      metadata: metadata
     };
 
     const requestOptions = {
@@ -387,6 +390,7 @@ const createUserDataObject = async (
  * @param {string} objectDescription - string object description
  * @param {object} [content={}] - object with contents
  * @param {object} [trace = {}] - microservice lifecycle trace headers
+ * @param {object} [metadata = {}] - metadata obj
  * @returns {Promise<object>} Promise resolving to a data object
  */
 const createDataObject = async (
@@ -395,7 +399,8 @@ const createDataObject = async (
   objectType,
   objectDescription,
   content = {},
-  trace = {}
+  trace = {},
+  metadata = {} 
 ) => {
   try {
     const MS = Util.getEndpoint("objects");
@@ -404,7 +409,8 @@ const createDataObject = async (
       type: objectType,
       description: objectDescription,
       content_type: "application/json",
-      content: content
+      content: content,
+      metadata: metadata
     };
     //console.log('bbbbbbbb', b)
     const requestOptions = {
