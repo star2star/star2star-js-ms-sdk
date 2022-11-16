@@ -110,7 +110,14 @@ const addCustomEventSubscription = async (
 ) => {
   try {
     const MS = util.getEndpoint("pubsub");
-    
+    const hasUserUuid = callback_headers.reduce((p,c)=>{
+      if (!p) {
+        return c.hasOwnProperty("x-user-uuid");
+      }
+      return p;
+    }, false );
+
+    const user_headers = ( hasUserUuid === false ? [{ "x-user-uuid": user_uuid }] : []);
     const requestOptions = {
       method: "POST",
       headers: {
@@ -123,7 +130,7 @@ const addCustomEventSubscription = async (
         app_uuid: app_uuid,
         callback: {
           url: callback_url,
-          headers: [{ "x-user-uuid": user_uuid }, ...callback_headers], // work around for CCORE-1545
+          headers: [...user_headers, ...callback_headers], // work around for CCORE-1545
         },
         events: events,
       },
