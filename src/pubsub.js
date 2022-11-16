@@ -496,7 +496,7 @@ const getSubscription = async (
 const listCustomSubscriptions = async (
   accessToken = "null accessToken",
   userUUID = "no user uuid provided",
-  appUUID = "no app uuid provided",
+  appUUID=undefined,
   offset = 0,
   limit = 10,
   trace = {}
@@ -512,12 +512,15 @@ const listCustomSubscriptions = async (
         "x-api-version": `${util.getVersion()}`
       },
       qs: {
-        app_uuid: appUUID,
-        // offset: offset,
-        // limit: limit
       },
       json: true
     };
+
+    // add appUUID if set 
+    if (appUUID) {
+      requestOptions.qs.appUUID = appUUID;
+    }
+    
     util.addRequestTrace(requestOptions, trace);
     // work around for CCORE-1545
     const response = await util.aggregate(request, requestOptions, trace);
