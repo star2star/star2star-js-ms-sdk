@@ -520,7 +520,7 @@ const listCustomSubscriptions = async (
     if (appUUID) {
       requestOptions.qs.appUUID = appUUID;
     }
-    
+
     util.addRequestTrace(requestOptions, trace);
     // work around for CCORE-1545
     const response = await util.aggregate(request, requestOptions, trace);
@@ -800,6 +800,38 @@ const updateSubscriptionExpiresDate = async (
   }
 };
 
+/**
+ * @async
+ * @description - This function will return a list of all custom pubsub applications
+ * @param {string} [accessToken="null accessToken"] - CPaaS access token
+ * @param {*} [trace={}] - optional CPaaS lifecycle headers
+ * @returns {Promise} - promise resolving to custom application object
+ */
+ const listCustomApplications = async (
+  accessToken = "null accessToken",
+  app_uuid = "account uuid not provided ",
+  trace = {}
+) => {
+  try {
+    const MS = util.getEndpoint("pubsub");
+    const requestOptions = {
+      "method": "GET",
+      "headers": {
+        "Authorization": `Bearer ${accessToken}`,
+        "Content-type": "application/json",
+        "x-api-version": `${util.getVersion()}`
+      },
+      "uri": `${MS}/applications`,
+      "json": true
+    };   
+    util.addRequestTrace(requestOptions, trace);
+    const response = await request(requestOptions);
+    return response;
+  } catch (error) {
+    throw util.formatError(error);
+  }
+};
+
 module.exports = {
   addSubscription,
   addCustomEventSubscription,
@@ -811,6 +843,7 @@ module.exports = {
   getCustomApplication,
   getCustomSubscription,
   getSubscription,
+  listCustomApplications,
   listCustomSubscriptions,
   listAccountSubscriptions,
   listSubscriptions,
