@@ -24,7 +24,8 @@ module.exports = {
     "FORMS": "/forms",
     "ENTITLEMENTS": "/entitlements",
     "ACTIVITY": "/activity",
-    "RESOURCES": "/resourcecms"
+    "RESOURCES": "/resourcecms",
+    "USAGE": "/usage"
   },
   "msDelay": 1000,
   "pollInterval": 1000,

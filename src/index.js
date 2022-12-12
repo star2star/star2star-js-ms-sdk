@@ -25,6 +25,7 @@ const Forms = require("./forms");
 const Entitlements = require("./entitlements");
 const Activity = require("./activity");
 const Resources = require("./resources");
+const Usage = require("./usage");
 
 /**
  * 
@@ -91,5 +92,6 @@ module.exports = {
   Forms,
   Entitlements,
   Activity,
-  Resources
+  Resources,
+  Usage
 };
