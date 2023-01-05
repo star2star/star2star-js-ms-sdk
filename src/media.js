@@ -76,12 +76,14 @@ const getGlobalMedia = async (
  * @description This function will return media file metadata including a URL
  * @param {string} [accessToken="null accessToken"] - cpaas access token
  * @param {string} [fileUUID="null fileUUID"] - file UUID
+ * @param {number} [expiry_mills=undefined] - expiry of url in milliseconds
  * @param {object} [trace={}] - optional microservice lifecycle trace headers
  * @returns {Promise<object>} - Promise resolving to a data object containing file meta-data
  */
 const getMediaFileUrl = async (
   accessToken = "null accessToken",
   fileUUID = "null fileUUID",
+  expiry_millis=undefined, 
   trace = {}
 ) => {
   try {
@@ -100,6 +102,9 @@ const getMediaFileUrl = async (
       },
       json: true,
     };
+    if (expiry_millis && expiry_millis > 0) {
+      requestOptions.qs.expiry_timestamp = expiry_millis
+    }
     util.addRequestTrace(requestOptions, trace);
     const response = await request(requestOptions);
     return response;
