@@ -383,6 +383,119 @@ const createUserDataObject = async (
 
 /**
  * @async
+ * @description This function will create a new account data object.
+ * @param {string} [userUUID="null user uuid"] - user UUID to be used
+ * @param {string} [accessToken="null accessToken"] - Access Token
+ * @param {string} objectName - object name
+ * @param {string} objectType - object type (use '_' between words)
+ * @param {string} objectDescription - object description
+ * @param {object} [content={}] - object to be created
+ * @param {string} [accountUUID="null accountUUID"] - optional account uuid to scope user permissions
+ * @param {object} [trace = {}] - microservice lifecycle trace headers
+ * @param {object} [metadata = {}] - metadata obj
+ * @returns {Promise<object>} Promise resolving to a data object
+ */
+const createAccountDataObject = async (
+  userUUID = "null user uuid",
+  accessToken = "null accessToken",
+  objectName,
+  objectType,
+  objectDescription,
+  content = {},
+  accountUUID = undefined,
+  trace = {},
+  metadata = {}
+) => {
+  try {
+    const MS = Util.getEndpoint("objects");
+    const body = {
+      name: objectName,
+      type: objectType,
+      description: objectDescription,
+      content_type: "application/json",
+      content: content,
+      metadata: metadata
+    };
+
+    const requestOptions = {
+      method: "POST",
+      uri: `${MS}/accounts/${accountUUID}/objects`,
+      body: body,
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+        "Content-type": "application/json",
+        "x-api-version": `${Util.getVersion()}`
+      },
+      resolveWithFullResponse: true,
+      json: true
+    };
+    Util.addRequestTrace(requestOptions, trace);
+    //create the object first
+    let newObject;
+    let nextTrace = merge({}, trace);
+    try {
+      const response = await request(requestOptions);
+      newObject = response.body;
+      // create returns a 202....suspend return until the new resource is ready
+      if (response.hasOwnProperty("statusCode") &&
+        response.statusCode === 202 &&
+        response.headers.hasOwnProperty("location")) {
+        await Util.pendingResource(
+          response.headers.location,
+          request,
+          requestOptions, //reusing the request options instead of passing in multiple params
+          trace
+        );
+      }
+
+
+      // //need to create permissions resource groups
+      // if (
+      //   accountUUID &&
+      //   users &&
+      //   typeof users === "object"
+      // ) {
+      //   nextTrace = merge({}, nextTrace, Util.generateNewMetaData(nextTrace));
+      //   await ResourceGroups.createResourceGroups(
+      //     accessToken,
+      //     accountUUID,
+      //     newObject.uuid,
+      //     "object", //system role type
+      //     users,
+      //     nextTrace
+      //   );
+      // }
+      return newObject;
+    } catch (createError) {
+      //delete the object if we have one
+      if (newObject && newObject.hasOwnProperty("uuid")) {
+        try {
+          nextTrace = merge(
+            {},
+            nextTrace,
+            Util.generateNewMetaData(nextTrace)
+          );
+          await deleteDataObject(accessToken, newObject.uuid, nextTrace); //this will clean up the groups created if there are any.
+        } catch (cleanupError) {
+          throw {
+            "code": 500,
+            "message": "create user data object resource groups failed. unable to clean up data object",
+            "details": [
+              { "groups_error": createError },
+              { "delete_object_error": cleanupError }
+            ]
+          };
+        }
+      }
+      throw createError;
+    }
+  } catch (error) {
+    return Promise.reject(Util.formatError(error));
+  }
+};
+
+/**
+ * @async
  * @description This function will create a new data object.
  * @param {string} [accessToken="null accessToken"] - Access Token
  * @param {string} objectName - string object name
@@ -577,6 +690,7 @@ module.exports = {
   getDataObjectByTypeAndName,
   createDataObject,
   createUserDataObject,
+  createAccountDataObject,
   deleteDataObject,
   updateDataObject
 };

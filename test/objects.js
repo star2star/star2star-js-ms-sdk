@@ -33,6 +33,7 @@ describe("Objects MS Test Suite", function() {
   let accessToken,
     identityData,
     userObjectUUID,
+    accountObjectUUID,
     objectUUID;
 
   before(async () => {
@@ -492,6 +493,34 @@ describe("Objects MS Test Suite", function() {
     );
     return response;
   },"Delete Global Object"));
+
+  it("Create Account Object", mochaAsync(async () => {
+
+    const response = await s2sMS.Objects.createAccountDataObject(
+      identityData.uuid,
+      accessToken,
+      "Unit-Test", // name
+      "unit-test", // type
+      "the description", // description  
+      {
+        a: 1, //content
+        b: "b"
+      },
+      identityData.account_uuid,
+      trace
+    );
+    accountObjectUUID = response.uuid;
+    assert.ok(
+      response.content.a === 1 &&
+      response.content.b === "b" &&
+      response.description === "the description",
+      JSON.stringify(response, null, "\t")
+    );
+    return response;
+  }, "Create Account Object"));
+
+
+
 
   // clean up any objects left behind
   after(async () => {
