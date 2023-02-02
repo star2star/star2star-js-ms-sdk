@@ -246,10 +246,49 @@ const deleteMedia = async (
   }
 };
 
+/**
+ * @async
+ * @description This function will ask the cpaas media service to delete a specific user file.
+ * @param {string} [accessToken="null accessToken"] - Access token for cpaas systems
+ * @param {string} [file_id="no file_id provided"] - File ID
+ * @param {string} [user_uuid="invalid user uuid"] - user uuid to share with 
+ * @param {object} [trace = {}] - optional microservice lifecycle trace headers
+ * @returns {Promise<empty>} - Promise resolving success or failure.
+ */
+const shareMedia = async (
+  accessToken = "null accessToken",
+  file_id = "no file_id provided",
+  user_uuid = "invalid user uuid",
+  trace = {}
+) => {
+  try {
+    const MS = util.getEndpoint("media");
+
+    const requestOptions = {
+      method: "POST",
+      uri: `${MS}/media/${file_id}/share`,
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+        "x-api-version": `${util.getVersion()}`,
+      },
+      "body": {
+        "user_uuid": user_uuid
+      },
+      json: true, 
+    };
+    util.addRequestTrace(requestOptions, trace);
+    const response = await request(requestOptions);
+    return response;
+  } catch (error) {
+    throw util.formatError(error);
+  }
+};
+
 module.exports = {
   deleteMedia,
   getGlobalMedia,
   getMediaFileUrl,
   listUserMedia,
   uploadFile,
+  shareMedia,
 };
