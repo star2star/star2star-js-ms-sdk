@@ -136,6 +136,27 @@ describe("Media MS Unit Test Suite", function () {
     }, "delete user Media")
   );
 
+  it(
+    "share Media",
+    mochaAsync(async () => {
+      trace = Util.generateNewMetaData(trace);
+      try {
+        const response = await s2sMS.Media.shareMedia(
+          accessToken,
+          "b8876774-42d1-42de-aad9-a64495f63ada",
+          "f3fcefca-8584-4fee-b21d-c3a2845ebe82",
+          trace
+        );
+        console.log('>>>>>', response);
+        assert.ok(true, JSON.stringify(response, null, "\t"));
+        return response;
+      } catch (e) {
+        console.error(e);
+        assert.fail(e);
+      }
+
+    }, "share Media")
+  );
   // template
   // it("change me", mochaAsync(async () => {
   //     //   trace = Util.generateNewMetaData(trace);

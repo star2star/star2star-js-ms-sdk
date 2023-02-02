@@ -270,6 +270,7 @@ const shareMedia = async (
       headers: {
         Authorization: `Bearer ${accessToken}`,
         "x-api-version": `${util.getVersion()}`,
+        "Content-Type": "application/json",
       },
       "body": {
         "user_uuid": user_uuid
