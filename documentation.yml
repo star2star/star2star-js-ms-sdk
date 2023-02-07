@@ -154,6 +154,10 @@ toc:
       - uploadFile
   - name: Messaging
     children:
+      - deleteConversation
+      - deleteMultipleConversations
+      - deleteMessage
+      - deleteMultipleMessages
       - getConversation
       - getConversationUuid 
       - getSMSNumber
@@ -164,10 +168,6 @@ toc:
       - sendSimpleSMS
       - sendSMS
       - sendSMSMessage
-      - deleteConversation
-      - deleteMultipleConversations
-      - deleteMessage
-      - deleteMultipleMessages
       - snoozeUnsnoozeConversation
   - name: Metadata
     children:
@@ -178,6 +178,12 @@ toc:
       - registerPushToken
       - sendPushNotification
       - unregisterPushToken
+  - name: Numbers
+    children:
+      - getAvailableAreaCodes
+      - getAvailableRateCenters
+      - getAvailableStates
+      - listAvailableNumbers
   - name: Oauth
     children: 
       - createClientApp

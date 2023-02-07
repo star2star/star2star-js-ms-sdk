@@ -25,7 +25,8 @@ module.exports = {
     "ENTITLEMENTS": "/entitlements",
     "ACTIVITY": "/activity",
     "RESOURCES": "/resourcecms",
-    "USAGE": "/usage"
+    "USAGE": "/usage",
+    "NUMBERS": "/numbers"
   },
   "msDelay": 1000,
   "pollInterval": 1000,

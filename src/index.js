@@ -26,6 +26,7 @@ const Entitlements = require("./entitlements");
 const Activity = require("./activity");
 const Resources = require("./resources");
 const Usage = require("./usage");
+const Numbers = require("./numbers");
 
 /**
  * 
@@ -93,5 +94,6 @@ module.exports = {
   Entitlements,
   Activity,
   Resources,
-  Usage
+  Usage,
+  Numbers
 };

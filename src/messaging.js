@@ -457,7 +457,7 @@ const getSMSNumber = async (accessToken, userUuid, trace = {}) => {
 
 /**
  * @async
- * @description This function sends a basic SMS message
+ * @description This function sends a basic SMS message without using the messaging API
  * @param {string} [accessToken="null access token" - cpaas access token
  * @param {string} [receiver="null receiver"] - recipient number (+15555555555)
  * @param {string} [sender="null sender"] - sender number (+15555555555)
