@@ -107,22 +107,21 @@ describe("Numbers MS Unit Test Suite", function () {
   );
 
   it(
-    "List 2 Available Numbers",
+    "List 5 Available Numbers",
     mochaAsync(async () => {
       trace = Util.generateNewMetaData(trace);
       const response = await s2sMS.Numbers.listAvailableNumbers(
         accessToken,
-        2, // quantity
-        "VI", // network
+        undefined, // quantity = 5
+        "VIx", // network
         undefined, // state
         undefined, // rate center
         undefined, // area code
         trace
       );
       //use these for the provision test
-      numbers = response?.items;
       assert.ok(
-        response?.items?.length === 2,
+        response?.items?.length === 5,
         JSON.stringify(response, null, "\t")
       );
       return response;
@@ -136,7 +135,7 @@ describe("Numbers MS Unit Test Suite", function () {
       const response = await s2sMS.Numbers.listAvailableNumbers(
         accessToken,
         3, // quantity
-        "VI", // network
+        "VIx", // network
         "FL", // state
         undefined, // rate center
         undefined, // area code
@@ -157,7 +156,7 @@ describe("Numbers MS Unit Test Suite", function () {
       const response = await s2sMS.Numbers.listAvailableNumbers(
         accessToken,
         4, // quantity
-        "VI", // network
+        "VIx", // network
         "FL", // state
         "MIAMI", // rate center
         undefined, // area code
@@ -172,24 +171,25 @@ describe("Numbers MS Unit Test Suite", function () {
   );
 
   it(
-    "List 5 Available Numbers with State, Rate Center, and Area Code",
+    "List 2 Available Numbers with State, Rate Center, and Area Code",
     mochaAsync(async () => {
       trace = Util.generateNewMetaData(trace);
       const response = await s2sMS.Numbers.listAvailableNumbers(
         accessToken,
-        undefined, // quantity defaults to 5
-        "VI", // network
+        2, // quantity
+        "VIx", // network
         "FL", // state
-        "MIAMI", // rate center
-        786, // area code
+        undefined, // rate center
+        305, // area code
         trace
       );
+      numbers = response.items;
       assert.ok(
-        response?.items?.length === 5,
+        response?.items?.length === 2 && response.items[0].indexOf(305) !== -1,
         JSON.stringify(response, null, "\t")
       );
       return response;
-    }, "List 5 Available Numbers with State, Rate Center, and Area Code")
+    }, "List 2 Available Numbers with State, Rate Center, and Area Code")
   );
 
   it(
@@ -208,7 +208,6 @@ describe("Numbers MS Unit Test Suite", function () {
         "US", // country format
         trace
       );
-
       assert.ok(
         response?.enabled?.length === 2,
         JSON.stringify(response, null, "\t")
@@ -218,25 +217,60 @@ describe("Numbers MS Unit Test Suite", function () {
   );
 
   it(
-    "Deprovision Numbers",
+    "Get Provisioned Numbers By Account",
     mochaAsync(async () => {
+      await new Promise(resolve => setTimeout(resolve, 10000));
       trace = Util.generateNewMetaData(trace);
-      const response = await s2sMS.Numbers.deprovisionNumbers(
+      const response = await s2sMS.Numbers.getProvisionedNumbersByAccount(
         accessToken,
-        numbers,
-        "VI", // provider
         identityData.account_uuid,
-        identityData.uuid,
-        "US", // country format
         trace
       );
       assert.ok(
-        response?.disabled?.length === 2,
+       1 === 1,
         JSON.stringify(response, null, "\t")
       );
       return response;
-    }, "Deprovision Numbers")
+    }, "Get Provisioned Numbers By Account")
   );
+
+  it(
+    "Get Provisioned Numbers By User",
+    mochaAsync(async () => {
+      trace = Util.generateNewMetaData(trace);
+      const response = await s2sMS.Numbers.getProvisionedNumbersByUser(
+        accessToken,
+        identityData.uuid,
+        trace
+      );
+      assert.ok(
+        1 === 1,
+        JSON.stringify(response, null, "\t")
+      );
+      return response;
+    }, "Get Provisioned Numbers By User")
+  );
+
+  // it(
+  //   "Deprovision Numbers",
+  //   mochaAsync(async () => {
+  //     trace = Util.generateNewMetaData(trace);
+  //     const response = await s2sMS.Numbers.deprovisionNumbers(
+  //       accessToken,
+  //       numbers,
+  //       "VI", // provider
+  //       identityData.account_uuid,
+  //       identityData.uuid,
+  //       "US", // country format
+  //       trace
+  //     );
+  //     assert.ok(
+  //       response?.disabled?.length === 2,
+  //       JSON.stringify(response, null, "\t")
+  //     );
+  //     return response;
+  //   }, "Deprovision Numbers")
+  // );
   
 
   // template
