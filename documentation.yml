@@ -180,10 +180,12 @@ toc:
       - unregisterPushToken
   - name: Numbers
     children:
+      - deprovisionNumbers
       - getAvailableAreaCodes
       - getAvailableRateCenters
       - getAvailableStates
       - listAvailableNumbers
+      - provisionNumbers
   - name: Oauth
     children: 
       - createClientApp

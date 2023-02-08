@@ -14,6 +14,7 @@ let trace = Util.generateNewMetaData();
 
 //utility function to simplify test code
 const mochaAsync = (func, name) => {
+
   return async () => {
     try {
       const response = await func();
@@ -27,7 +28,7 @@ const mochaAsync = (func, name) => {
 };
 
 describe("Numbers MS Unit Test Suite", function () {
-  let accessToken, identityData;
+  let accessToken, identityData, numbers;
 
   before(async () => {
     try {
@@ -118,6 +119,8 @@ describe("Numbers MS Unit Test Suite", function () {
         undefined, // area code
         trace
       );
+      //use these for the provision test
+      numbers = response?.items;
       assert.ok(
         response?.items?.length === 2,
         JSON.stringify(response, null, "\t")
@@ -187,6 +190,52 @@ describe("Numbers MS Unit Test Suite", function () {
       );
       return response;
     }, "List 5 Available Numbers with State, Rate Center, and Area Code")
+  );
+
+  it(
+    "Provision Numbers",
+    mochaAsync(async () => {
+      trace = Util.generateNewMetaData(trace);
+      const response = await s2sMS.Numbers.provisionNumbers(
+        accessToken,
+        numbers,
+        "VI", // provider
+        identityData.account_uuid,
+        identityData.uuid,
+        "A very helpful help message",
+        true, // is campaign
+        Date.now(), // reference id
+        "US", // country format
+        trace
+      );
+
+      assert.ok(
+        response?.enabled?.length === 2,
+        JSON.stringify(response, null, "\t")
+      );
+      return response;
+    }, "Provision Numbers")
+  );
+
+  it(
+    "Deprovision Numbers",
+    mochaAsync(async () => {
+      trace = Util.generateNewMetaData(trace);
+      const response = await s2sMS.Numbers.deprovisionNumbers(
+        accessToken,
+        numbers,
+        "VI", // provider
+        identityData.account_uuid,
+        identityData.uuid,
+        "US", // country format
+        trace
+      );
+      assert.ok(
+        response?.disabled?.length === 2,
+        JSON.stringify(response, null, "\t")
+      );
+      return response;
+    }, "Deprovision Numbers")
   );
   
 
