@@ -113,7 +113,7 @@ describe("Numbers MS Unit Test Suite", function () {
       const response = await s2sMS.Numbers.listAvailableNumbers(
         accessToken,
         2, // quantity
-        "VIx", // network
+        "VI", // network
         undefined, // state
         undefined, // rate center
         undefined, // area code
@@ -136,7 +136,7 @@ describe("Numbers MS Unit Test Suite", function () {
       const response = await s2sMS.Numbers.listAvailableNumbers(
         accessToken,
         3, // quantity
-        "VIx", // network
+        "VI", // network
         "FL", // state
         undefined, // rate center
         undefined, // area code
@@ -157,7 +157,7 @@ describe("Numbers MS Unit Test Suite", function () {
       const response = await s2sMS.Numbers.listAvailableNumbers(
         accessToken,
         4, // quantity
-        "VIx", // network
+        "VI", // network
         "FL", // state
         "MIAMI", // rate center
         undefined, // area code
@@ -178,7 +178,7 @@ describe("Numbers MS Unit Test Suite", function () {
       const response = await s2sMS.Numbers.listAvailableNumbers(
         accessToken,
         undefined, // quantity defaults to 5
-        "VIx", // network
+        "VI", // network
         "FL", // state
         "MIAMI", // rate center
         786, // area code

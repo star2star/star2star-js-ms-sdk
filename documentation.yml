@@ -184,6 +184,8 @@ toc:
       - getAvailableAreaCodes
       - getAvailableRateCenters
       - getAvailableStates
+      - getProvisionedNumbersByAccount
+      - getProvisionedNumbersByUser
       - listAvailableNumbers
       - provisionNumbers
   - name: Oauth

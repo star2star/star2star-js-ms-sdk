@@ -152,6 +152,73 @@ const getAvailableStates = async (
 
 /**
  * @async
+ * @description - This function will list states numbers provisioned to a CPaaS account
+ * @param {string} [accessToken="null accessToken"] - cpaas access token
+ * @param {string} [accessToken="null accessToken"] - cpaas account_uuid
+ * @param {object} [trace={}] - microservice lifecyce headers
+ * @returns {Promise} - Promise resolving to a list of available DIDs
+ */
+const getProvisionedNumbersByAccount = async (
+  accessToken = "null accessToken",
+  accountUUID = "null accountUUID",
+  trace = {}
+) => {
+  try {
+    const MS = util.getEndpoint("sms");
+    const requestOptions = {
+      method: "GET",
+      uri: `${MS}/provision/numbers/account/${accountUUID}`,
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+        "x-api-version": `${util.getVersion()}`,
+        "Content-type": "application/json",
+      },
+      json: true,
+    };
+    util.addRequestTrace(requestOptions, trace);
+    const response = await request(requestOptions);
+    return response;
+  } catch (error) {
+    throw util.formatError(error);
+  }
+};
+
+/**
+ * @async
+ * @description - This function will list states numbers provisioned to a CPaaS user
+ * @param {string} [accessToken="null accessToken"] - cpaas access token
+ * @param {string} [userUUID="null userUUID"] - cpaas user uuid
+ * @param {object} [trace={}] - microservice lifecyce headers
+ * @returns {Promise} - Promise resolving to a list of available DIDs
+ */
+const getProvisionedNumbersByUser = async (
+  accessToken = "null accessToken",
+  userUUID = "null userUUID",
+  trace = {}
+) => {
+  try {
+    const MS = util.getEndpoint("sms");
+    const requestOptions = {
+      method: "GET",
+      uri: `${MS}/provision/numbers/user/${userUUID}`,
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+        "x-api-version": `${util.getVersion()}`,
+        "Content-type": "application/json",
+      },
+      json: true,
+    };
+    util.addRequestTrace(requestOptions, trace);
+    const response = await request(requestOptions);
+    return response;
+  } catch (error) {
+    throw util.formatError(error);
+  }
+};
+
+
+/**
+ * @async
  * @description - This function will list numbers available for purchase
  * @param {string} [accessToken="null accessToken"] - cpaas access token
  * @param {number} [quantity=5] - number of DIDs to return
@@ -189,7 +256,7 @@ const listAvailableNumbers = async (
       json: true,
     };
     if (typeof rateCenter === "string") {
-      requestOptions.qs.rateCenter = rateCenter;
+      requestOptions.qs.ratecenter = rateCenter;
     }
     if (typeof areaCode === "string" || typeof areaCode === "number") {
       requestOptions.qs.npa = areaCode;
@@ -260,10 +327,12 @@ const provisionNumbers = async (
 };
 
 module.exports = {
+  deprovisionNumbers,
   getAvailableAreaCodes,
   getAvailableRateCenters,
   getAvailableStates,
+  getProvisionedNumbersByAccount,
+  getProvisionedNumbersByUser,
   listAvailableNumbers,
-  provisionNumbers,
-  deprovisionNumbers,
+  provisionNumbers
 };
