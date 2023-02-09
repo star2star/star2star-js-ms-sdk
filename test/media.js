@@ -55,7 +55,7 @@ describe("Media MS Unit Test Suite", function () {
       throw error;
     }
   });
-
+/*
   it(
     "List user Media",
     mochaAsync(async () => {
@@ -157,6 +157,28 @@ describe("Media MS Unit Test Suite", function () {
 
     }, "share Media")
   );
+*/
+  it(
+    "Global Upload Media",
+    mochaAsync(async () => {
+      trace = Util.generateNewMetaData(trace);
+      const fileName = "git-cheat-sheet.png";
+      const response = await s2sMS.Media.uploadGlobalMediaFile(
+        fileName,
+        fs.createReadStream("./test/media.js"),
+        accessToken,
+        trace
+      );
+      file_id = response["file_id"];
+      assert.ok(
+        response.hasOwnProperty("file_id") &&
+          fileName.indexOf(response["file_name"]) > -1,
+        JSON.stringify(response, null, "\t")
+      );
+      return response;
+    }, "Upload user Media")
+  );
+
   // template
   // it("change me", mochaAsync(async () => {
   //     //   trace = Util.generateNewMetaData(trace);

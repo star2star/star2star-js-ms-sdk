@@ -285,6 +285,50 @@ const shareMedia = async (
   }
 };
 
+/**
+ * @async
+ * @description This function will upload a file to the cpaas media service for global use.
+ * @param {string} [file_name=Date.now()] - File name.
+ * @param {formData} file - File to be uploaded
+ * @param {string} [accessToken="null accessToken"] - Access token for cpaas systems
+ * @param {object} [trace = {}] - optional microservice lifecycle trace headers
+ * @returns {Promise<object>} - Promise resolving to a data object containing upload attributes.
+ */
+const uploadGlobalMediaFile = async (
+  file_name = Date.now(),
+  file,
+  accessToken = "null accessToken",
+  trace = {}
+) => {
+  try {
+    const MS = util.getEndpoint("media");
+    //console.log(">>>>>", file )
+    const requestOptions = {
+      method: "POST",
+      uri: `${MS}/media`,
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+        "x-api-version": `${util.getVersion()}`,
+      },
+      formData: {
+        file: {
+          value: file,
+          options: {
+            filename: "file_name",
+          },
+        },
+        file_name: file_name,
+      },
+      json: true,
+    };
+    util.addRequestTrace(requestOptions, trace);
+    const response = await request(requestOptions);
+    return response;
+  } catch (error) {
+    throw util.formatError(error);
+  }
+};
+
 module.exports = {
   deleteMedia,
   getGlobalMedia,
@@ -292,4 +336,5 @@ module.exports = {
   listUserMedia,
   uploadFile,
   shareMedia,
+  uploadGlobalMediaFile,
 };
