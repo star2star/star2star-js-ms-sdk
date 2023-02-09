@@ -188,6 +188,8 @@ toc:
       - getProvisionedNumbersByUser
       - listAvailableNumbers
       - provisionNumbers
+      - provisionNumbersHelp
+      - provisionNumbersRefId
   - name: Oauth
     children: 
       - createClientApp

@@ -112,7 +112,7 @@ describe("Numbers MS Unit Test Suite", function () {
       trace = Util.generateNewMetaData(trace);
       const response = await s2sMS.Numbers.listAvailableNumbers(
         accessToken,
-        undefined, // quantity = 5
+        "AL", // quantity = 5
         "VIx", // network
         undefined, // state
         undefined, // rate center
@@ -217,9 +217,47 @@ describe("Numbers MS Unit Test Suite", function () {
   );
 
   it(
+    "Update Numbers Help",
+    mochaAsync(async () => {
+      trace = Util.generateNewMetaData(trace);
+      const response = await s2sMS.Numbers.provisionNumbersHelp(
+        accessToken,
+        numbers,
+        "An updated very helpful help message",
+        "US", // country format
+        trace
+      );
+      console.log("help text", response)
+      assert.ok(
+        response.help_text === "An updated very helpful help message",
+        JSON.stringify(response, null, "\t")
+      );
+      return response;
+    }, "Update Numbers Help")
+  );
+
+  it(
+    "Update Numbers Reference ID",
+    mochaAsync(async () => {
+      trace = Util.generateNewMetaData(trace);
+      const response = await s2sMS.Numbers.provisionNumbersRefId(
+        accessToken,
+        numbers,
+        "updated_ref_id", // reference id
+        "US", // country format
+        trace
+      );
+      assert.ok(
+        response.reference_id === "updated_ref_id",
+        JSON.stringify(response, null, "\t")
+      );
+      return response;
+    }, "Update Numbers Reference ID")
+  );
+
+  it(
     "Get Provisioned Numbers By Account",
     mochaAsync(async () => {
-      await new Promise(resolve => setTimeout(resolve, 10000));
       trace = Util.generateNewMetaData(trace);
       const response = await s2sMS.Numbers.getProvisionedNumbersByAccount(
         accessToken,
@@ -251,26 +289,26 @@ describe("Numbers MS Unit Test Suite", function () {
     }, "Get Provisioned Numbers By User")
   );
 
-  // it(
-  //   "Deprovision Numbers",
-  //   mochaAsync(async () => {
-  //     trace = Util.generateNewMetaData(trace);
-  //     const response = await s2sMS.Numbers.deprovisionNumbers(
-  //       accessToken,
-  //       numbers,
-  //       "VI", // provider
-  //       identityData.account_uuid,
-  //       identityData.uuid,
-  //       "US", // country format
-  //       trace
-  //     );
-  //     assert.ok(
-  //       response?.disabled?.length === 2,
-  //       JSON.stringify(response, null, "\t")
-  //     );
-  //     return response;
-  //   }, "Deprovision Numbers")
-  // );
+  it(
+    "Deprovision Numbers",
+    mochaAsync(async () => {
+      trace = Util.generateNewMetaData(trace);
+      const response = await s2sMS.Numbers.deprovisionNumbers(
+        accessToken,
+        numbers,
+        "VI", // provider
+        identityData.account_uuid,
+        identityData.uuid,
+        "US", // country format
+        trace
+      );
+      assert.ok(
+        response?.disabled?.length === 2,
+        JSON.stringify(response, null, "\t")
+      );
+      return response;
+    }, "Deprovision Numbers")
+  );
   
 
   // template

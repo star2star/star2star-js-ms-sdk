@@ -152,15 +152,19 @@ const getAvailableStates = async (
 
 /**
  * @async
- * @description - This function will list states numbers provisioned to a CPaaS account
+ * @description - This function will list numbers provisioned to a CPaaS account
  * @param {string} [accessToken="null accessToken"] - cpaas access token
- * @param {string} [accessToken="null accessToken"] - cpaas account_uuid
+ * @param {string} [accountUUID="null accountUUID"] - cpaas account_uuid
+ * @param {number} [offset=0] - pagination offset
+ * @param {number} [limet=10] - pagination limit
  * @param {object} [trace={}] - microservice lifecyce headers
  * @returns {Promise} - Promise resolving to a list of available DIDs
  */
 const getProvisionedNumbersByAccount = async (
   accessToken = "null accessToken",
   accountUUID = "null accountUUID",
+  offset = 0,
+  limit = 10,
   trace = {}
 ) => {
   try {
@@ -172,6 +176,10 @@ const getProvisionedNumbersByAccount = async (
         Authorization: `Bearer ${accessToken}`,
         "x-api-version": `${util.getVersion()}`,
         "Content-type": "application/json",
+      },
+      qs:{
+        offset: offset,
+        limit: limit
       },
       json: true,
     };
@@ -185,9 +193,11 @@ const getProvisionedNumbersByAccount = async (
 
 /**
  * @async
- * @description - This function will list states numbers provisioned to a CPaaS user
+ * @description - This function will list numbers provisioned to a CPaaS user
  * @param {string} [accessToken="null accessToken"] - cpaas access token
- * @param {string} [userUUID="null userUUID"] - cpaas user uuid
+ * @param {string} [userUUID="null userUUID"] - cpaas user_uuid
+ * @param {number} [offset=0] - pagination offset
+ * @param {number} [limet=10] - pagination limit
  * @param {object} [trace={}] - microservice lifecyce headers
  * @returns {Promise} - Promise resolving to a list of available DIDs
  */
@@ -206,6 +216,10 @@ const getProvisionedNumbersByUser = async (
         "x-api-version": `${util.getVersion()}`,
         "Content-type": "application/json",
       },
+      qs:{
+        offset: offset,
+        limit: limit
+      },
       json: true,
     };
     util.addRequestTrace(requestOptions, trace);
@@ -223,7 +237,7 @@ const getProvisionedNumbersByUser = async (
  * @param {string} [accessToken="null accessToken"] - cpaas access token
  * @param {number} [quantity=5] - number of DIDs to return
  * @param {string} [network="VI"] - telephony network
- * @param {string} [state="AL"] - US state
+ * @param {string} [state] - 2 letter US state code
  * @param {string} [rateCenter] - town or population center name
  * @param {number} [areaCode] - npa or area code
  * @param {object} [trace={}] - microservice lifecyce headers
@@ -233,7 +247,7 @@ const listAvailableNumbers = async (
   accessToken = "null accessToken",
   quantity = 5,
   network = "VI",
-  state = "AL",
+  state,
   rateCenter,
   areaCode,
   trace = {}
@@ -326,6 +340,90 @@ const provisionNumbers = async (
   }
 };
 
+/**
+ * @async
+ * @description - This function will update the automated help message for the provided numbers
+ * @param {string} [accessToken="null accessToken"] - cpaas access token
+ * @param {array} [numbers=[]] - array of numbers to provision
+ * @param {string} [helpText] - help message for automated sms responses
+ * @param {string} [countryFormat] - optional country code to use to format and validate the provided numbers, defaults to "US"
+ * @param {object} [trace={}] - microservice lifecyce headers
+ * @returns {Promise} - Promise resolving to a object containing provisioning confirmation details
+ */
+const provisionNumbersHelp = async (
+  accessToken = "null accessToken",
+  numbers = [],
+  helpText,
+  countryFormat,
+  trace = {}
+) => {
+  try {
+    const MS = util.getEndpoint("sms");
+    const requestOptions = {
+      method: "PUT",
+      uri: `${MS}/provision/numbers/help`,
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+        "x-api-version": `${util.getVersion()}`,
+        "Content-type": "application/json",
+      },
+      body: {
+        numbers: numbers,
+        help_text: helpText,
+        country_format: countryFormat,
+      },
+      json: true,
+    };
+    util.addRequestTrace(requestOptions, trace);
+    const response = await request(requestOptions);
+    return response;
+  } catch (error) {
+    throw util.formatError(error);
+  }
+};
+
+/**
+ * @async
+ * @description - This function will update the reference id for the provided numbers
+ * @param {string} [accessToken="null accessToken"] - cpaas access token
+ * @param {array} [numbers=[]] - array of numbers to provision
+ * @param {string} [referenceID] - reference id
+ * @param {string} [countryFormat] - optional country code to use to format and validate the provided numbers, defaults to "US"
+ * @param {object} [trace={}] - microservice lifecyce headers
+ * @returns {Promise} - Promise resolving to a object containing provisioning confirmation details
+ */
+const provisionNumbersRefId = async (
+  accessToken = "null accessToken",
+  numbers = [],
+  referenceID,
+  countryFormat,
+  trace = {}
+) => {
+  try {
+    const MS = util.getEndpoint("sms");
+    const requestOptions = {
+      method: "PUT",
+      uri: `${MS}/provision/numbers/reference_id`,
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+        "x-api-version": `${util.getVersion()}`,
+        "Content-type": "application/json",
+      },
+      body: {
+        numbers: numbers,
+        reference_id: referenceID,
+        country_format: countryFormat,
+      },
+      json: true,
+    };
+    util.addRequestTrace(requestOptions, trace);
+    const response = await request(requestOptions);
+    return response;
+  } catch (error) {
+    throw util.formatError(error);
+  }
+};
+
 module.exports = {
   deprovisionNumbers,
   getAvailableAreaCodes,
@@ -334,5 +432,7 @@ module.exports = {
   getProvisionedNumbersByAccount,
   getProvisionedNumbersByUser,
   listAvailableNumbers,
-  provisionNumbers
+  provisionNumbers,
+  provisionNumbersHelp,
+  provisionNumbersRefId
 };
