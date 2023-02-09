@@ -204,6 +204,8 @@ const getProvisionedNumbersByAccount = async (
 const getProvisionedNumbersByUser = async (
   accessToken = "null accessToken",
   userUUID = "null userUUID",
+  offset = 0,
+  limit = 10,
   trace = {}
 ) => {
   try {
