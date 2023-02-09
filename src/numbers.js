@@ -156,7 +156,7 @@ const getAvailableStates = async (
  * @param {string} [accessToken="null accessToken"] - cpaas access token
  * @param {string} [accountUUID="null accountUUID"] - cpaas account_uuid
  * @param {number} [offset=0] - pagination offset
- * @param {number} [limet=10] - pagination limit
+ * @param {number} [limit=10] - pagination limit
  * @param {object} [trace={}] - microservice lifecyce headers
  * @returns {Promise} - Promise resolving to a list of available DIDs
  */
@@ -197,7 +197,7 @@ const getProvisionedNumbersByAccount = async (
  * @param {string} [accessToken="null accessToken"] - cpaas access token
  * @param {string} [userUUID="null userUUID"] - cpaas user_uuid
  * @param {number} [offset=0] - pagination offset
- * @param {number} [limet=10] - pagination limit
+ * @param {number} [limit=10] - pagination limit
  * @param {object} [trace={}] - microservice lifecyce headers
  * @returns {Promise} - Promise resolving to a list of available DIDs
  */
