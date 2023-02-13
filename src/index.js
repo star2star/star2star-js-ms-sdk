@@ -27,6 +27,7 @@ const Activity = require("./activity");
 const Resources = require("./resources");
 const Usage = require("./usage");
 const Numbers = require("./numbers");
+const Campaigns = require("./campaigns");
 
 /**
  * 
@@ -95,5 +96,6 @@ module.exports = {
   Activity,
   Resources,
   Usage,
-  Numbers
+  Numbers,
+  Campaigns
 };

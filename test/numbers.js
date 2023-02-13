@@ -112,9 +112,9 @@ describe("Numbers MS Unit Test Suite", function () {
       trace = Util.generateNewMetaData(trace);
       const response = await s2sMS.Numbers.listAvailableNumbers(
         accessToken,
-        "AL", // quantity = 5
+        undefined, // quantity = 5
         "VIx", // network
-        undefined, // state
+        "AL", // state
         undefined, // rate center
         undefined, // area code
         trace

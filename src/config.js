@@ -26,7 +26,8 @@ module.exports = {
     "ACTIVITY": "/activity",
     "RESOURCES": "/resourcecms",
     "USAGE": "/usage",
-    "NUMBERS": "/numbers"
+    "NUMBERS": "/sms",
+    "CAMPAIGNS": "/sms"
   },
   "msDelay": 1000,
   "pollInterval": 1000,
