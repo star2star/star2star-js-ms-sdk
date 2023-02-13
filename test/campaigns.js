@@ -63,7 +63,6 @@ describe("Numbers MS Unit Test Suite", function () {
         accessToken,
         trace
       );
-      console.log("!!!!response", response)
       assert.ok(
         Array.isArray(response.entity_types) && 
         response.entity_types.length > 0 && 
@@ -74,7 +73,75 @@ describe("Numbers MS Unit Test Suite", function () {
         JSON.stringify(response, null, "\t")
       );
       return response;
-    }, "Get Available States")
+    }, "Get Enumerations")
+  );
+
+  it(
+    "Create Brand",
+    mochaAsync(async () => {
+      trace = Util.generateNewMetaData(trace);
+      const response = await s2sMS.Campaigns.createBrand(
+        accessToken,
+        identityData.account_uuid,
+        `Sangoma Unit Test ${Date.now()}`, // legalName
+        `Sangoma Unit Test ${Date.now()}`, // brandName
+        "PUBLIC_PROFIT", // organization_type
+        "US", // registrationCountry
+        555555555, // taxId
+        "US", // taxIdCountry 
+        undefined, // altBusinessIdType,
+        undefined, // altBusinessId,
+        "TECHNOLOGY", // vertical
+        "300 N. Cattlemen Rd. Suite 300", // address
+        "Sarasota", // city
+        "FL", // state
+        34232, // postalCode
+        "https://sangoma.com", // website
+        "SANG", // stockSymbol
+        "NASDAQ", // stockExchange
+        "third-party-support+10DLC-test@sangoma.com", // emailAddress
+        "9412340001", // phoneNumber
+        "Unit", // firstName
+        "Test", // lastName
+        trace
+      );
+      assert.ok(response.account_uuid === identityData.account_uuid,
+        JSON.stringify(response, null, "\t")
+      );
+      return response;
+    }, "Create Brand")
+  );
+
+  it(
+    "Get Brand",
+    mochaAsync(async () => {
+      trace = Util.generateNewMetaData(trace);
+      const response = await s2sMS.Campaigns.getBrand(
+        accessToken,
+        identityData.account_uuid,
+        trace
+      );
+      assert.ok(response.account_uuid === identityData.account_uuid,
+        JSON.stringify(response, null, "\t")
+      );
+      return response;
+    }, "Get Brand")
+  );
+
+  it(
+    "Delete Brand",
+    mochaAsync(async () => {
+      trace = Util.generateNewMetaData(trace);
+      const response = await s2sMS.Campaigns.deleteBrand(
+        accessToken,
+        identityData.account_uuid,
+        trace
+      );
+      assert.ok(response.status === "success",
+        JSON.stringify(response, null, "\t")
+      );
+      return response;
+    }, "Delete Brand")
   );
 
   // template

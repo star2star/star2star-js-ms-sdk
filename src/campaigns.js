@@ -38,10 +38,10 @@ const createBrand = async (
   trace = {}
 ) => {
   try {
-    const MS = util.getEndpoint("sms");
+    const MS = util.getEndpoint("campaigns");
     const requestOptions = {
       method: "POST",
-      uri: `${MS}/deprovision`,
+      uri: `${MS}/10dlc/customers`,
       headers: {
         Authorization: `Bearer ${accessToken}`,
         "x-api-version": `${util.getVersion()}`,
@@ -94,7 +94,7 @@ const deleteBrand = async (
   trace = {}
 ) => {
   try {
-    const MS = util.getEndpoint("campaign");
+    const MS = util.getEndpoint("campaigns");
     const requestOptions = {
       method: "DELETE",
       uri: `${MS}/10dlc/customers/${accountUUID}`,
@@ -102,13 +102,6 @@ const deleteBrand = async (
         Authorization: `Bearer ${accessToken}`,
         "x-api-version": `${util.getVersion()}`,
         "Content-type": "application/json",
-      },
-      body: {
-        numbers: numbers,
-        provider: provider,
-        account_uuid: accountUUID,
-        user_uuid: userUUID,
-        country_format: countryFormat,
       },
       json: true,
     };
@@ -134,7 +127,7 @@ const getBrand = async (
   trace = {}
 ) => {
   try {
-    const MS = util.getEndpoint("campaign");
+    const MS = util.getEndpoint("campaigns");
     const requestOptions = {
       method: "GET",
       uri: `${MS}/10dlc/customers/${accountUUID}`,
