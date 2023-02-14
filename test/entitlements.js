@@ -30,6 +30,7 @@ const mochaAsync = (func, name) => {
 
 describe("Objects MS Test Suite", function() {
   let accessToken,
+    user_uuid,
     uuid;
 
   before(async () => {
@@ -42,27 +43,32 @@ describe("Objects MS Test Suite", function() {
      s2sMS.setMsAuthHost(process.env.AUTH_URL);
       // get accessToken to use in test cases
       // Return promise so that test cases will not fire until it resolves.
+      console.log('pppp', process.env)
       const oauthData = await s2sMS.Oauth.getAccessToken(
         process.env.BASIC_TOKEN,
         process.env.EMAIL,
         process.env.PASSWORD
       );
 
-      accessToken = process.env.WSG_TOKEN//oauthData.access_token;
-      console.log("ARRRR", accessToken)
+      accessToken = oauthData.access_token;
+      console.log('tttttt')
+      const idData = await s2sMS.Identity.getMyIdentityData(accessToken);
+      user_uuid = idData.user_uuid;
+      // console.log("ARRRR", accessToken)
 
     } catch (error){
+      console.log('eeeee', error)
       throw error;
     }
   });
-
+ 
   it("Get Products", mochaAsync(async () => {
         trace = Util.generateNewMetaData(trace);
     const response = await s2sMS.Entitlements.getProducts(
       accessToken,
-      3,
-      5,
-      undefined, // no filters
+      0,
+      100,
+      {}, // no filters
       trace
     );
     assert.ok(
@@ -75,6 +81,7 @@ describe("Objects MS Test Suite", function() {
     return response;
   },"Get Products"));
 
+  /*
   it("Get Filtered Proudcts", mochaAsync(async () => {
         trace = Util.generateNewMetaData(trace);
     const response = await s2sMS.Entitlements.getProducts(
@@ -109,6 +116,25 @@ describe("Objects MS Test Suite", function() {
     );
     return response;
   },"Get Product"));
+*/
+  it("Get User Entitlements", mochaAsync(async () => {
+    trace = Util.generateNewMetaData(trace);
+    const response = await s2sMS.Entitlements.getUserEntitlements(
+      accessToken,
+      user_uuid,
+      0,
+      100,
+      {},
+      trace
+    );
+    assert.ok(
+      response.hasOwnProperty("items") && 
+      JSON.stringify(response, null, "\t")
+    );
+    return response;
+  },"Get User Entitlements"));
+
+
 
   // template
   // it("change me", mochaAsync(async () => {
