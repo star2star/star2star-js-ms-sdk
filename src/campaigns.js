@@ -148,6 +148,39 @@ const getBrand = async (
 
 /**
  * @async
+ * @description - This function will get campaign options for an SMS 10DLC Brand
+ * @param {string} [accessToken="null accessToken"] - cpaas access token
+ * @param {string} [accountUUID] - account uuid to provision on behalf of
+ * @param {object} [trace={}] - microservice lifecyce headers
+ * @returns {Promise} - Promise resolving to a object containing a CPaaS account 10DLC brand registrations
+ */
+const getBrandUseCases = async (
+  accessToken = "null accessToken",
+  accountUUID,
+  trace = {}
+) => {
+  try {
+    const MS = util.getEndpoint("campaigns");
+    const requestOptions = {
+      method: "GET",
+      uri: `${MS}/10dlc/customers/${accountUUID}/usecases`,
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+        "x-api-version": `${util.getVersion()}`,
+        "Content-type": "application/json",
+      },
+      json: true,
+    };
+    util.addRequestTrace(requestOptions, trace);
+    const response = await request(requestOptions);
+    return response;
+  } catch (error) {
+    throw util.formatError(error);
+  }
+};
+
+/**
+ * @async
  * @description - This function will deprovision numbers from a CPaaS account and/or user
  * @param {string} [accessToken="null accessToken"] - cpaas access token
  * @param {object} [trace={}] - microservice lifecyce headers
@@ -181,5 +214,6 @@ module.exports = {
   createBrand,
   deleteBrand,
   getBrand,
+  getBrandUseCases,
   getEnumerations
 };

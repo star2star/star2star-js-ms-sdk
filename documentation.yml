@@ -64,6 +64,7 @@ toc:
       - createBrand
       - deleteBrand
       - getBrand
+      - getBrandUseCases
       - getEnumerations
   - name: Chat
     children:

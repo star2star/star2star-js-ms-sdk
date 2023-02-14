@@ -129,6 +129,22 @@ describe("Numbers MS Unit Test Suite", function () {
   );
 
   it(
+    "Get Brand Usecases",
+    mochaAsync(async () => {
+      trace = Util.generateNewMetaData(trace);
+      const response = await s2sMS.Campaigns.getBrandUseCases(
+        accessToken,
+        identityData.account_uuid,
+        trace
+      );
+      assert.ok(Array.isArray(response),
+        JSON.stringify(response, null, "\t")
+      );
+      return response;
+    }, "Get Brand Usecases")
+  );
+
+  it(
     "Delete Brand",
     mochaAsync(async () => {
       trace = Util.generateNewMetaData(trace);
