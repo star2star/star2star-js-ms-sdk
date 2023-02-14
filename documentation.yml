@@ -61,11 +61,16 @@ toc:
       - removeResourceFromGroup
       - removeUsersFromGroup
   - name: Campaigns
+      - createCampaign
       - createBrand
       - deleteBrand
+      - deleteCampaign
       - getBrand
       - getBrandUseCases
+      - getCampaign
       - getEnumerations
+      - listCampaigns
+      - updateCampaign
   - name: Chat
     children:
       - addMember
