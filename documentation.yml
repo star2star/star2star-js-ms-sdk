@@ -61,6 +61,7 @@ toc:
       - removeResourceFromGroup
       - removeUsersFromGroup
   - name: Campaigns
+      - assignToSMSCampaign
       - createCampaign
       - createBrand
       - deleteBrand
@@ -70,6 +71,7 @@ toc:
       - getCampaign
       - getEnumerations
       - listCampaigns
+      - removeFromSMSCampaign
       - updateCampaign
   - name: Chat
     children:

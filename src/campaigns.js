@@ -6,9 +6,69 @@ const logger = require("./node-logger").getInstance();
 
 /**
  * @async
+ * @description - This function will assign numbers a SMS 10DLC Campaign
+ * @param {string} [accessToken="null accessToken"] cpaas access token
+ * @param {string} [accountUUID="null accountUUID"] cpaas account uuid to provision
+ * @param {string} [campaignId="null campaignId"] 10dlc campaign id
+ * @param {array} [numbers=[]] array of numbers to assign
+ * @param {object} [trace={}] - microservice lifecyce headers
+ * @returns {Promise} - Promise resolving to a object confirming the assignment of numbers
+ */
+const assignToSMSCampaign = async (
+  accessToken = "null accessToken",
+  accountUUID = "null accountUUID",
+  campaignId = [],
+  numbers,
+  trace = {}
+) => {
+  try {
+    const MS = util.getEndpoint("campaigns");
+    const requestOptions = {
+      method: "POST",
+      uri: `${MS}/10dlc/customers/${accountUUID}/campaigns/${campaignId}/numbers/assign`,
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+        "x-api-version": `${util.getVersion()}`,
+        "Content-type": "application/json",
+      },
+      body: {
+        tns: numbers,
+      },
+      json: true,
+    };
+    util.addRequestTrace(requestOptions, trace);
+    const response = await request(requestOptions);
+    return response;
+  } catch (error) {
+    throw util.formatError(error);
+  }
+};
+
+/**
+ * @async
  * @description - This function will create a SMS 10DLC Brand
  * @param {string} [accessToken="null accessToken"] - cpaas access token
  * @param {string} [accountUUID] - account uuid to provision on behalf of
+ * @param {string} legalName company legal name
+ * @param {string} brandName brand name
+ * @param {string} organizationType organization type
+ * @param {string} [registrationCountry="US"] registration country
+ * @param {string} taxId tax id
+ * @param {string} [taxIdCountry="US"] tax country
+ * @param {string} altBusinessIdType alternate business type
+ * @param {string} altBusinessId alternate business id
+ * @param {string} vertical business vertical
+ * @param {string} address legal streed address
+ * @param {string} city legal address city
+ * @param {string} state legal address state
+ * @param {string} postalCode legal address postal code
+ * @param {string} website company website
+ * @param {string} stockSymbol public stock symbol
+ * @param {string} stockExchange public stock exchange
+ * @param {string} emailAddress contact email address
+ * @param {string} phoneNumber contact phone number
+ * @param {string} firstName contact first name
+ * @param {string} lastName contact last name
  * @param {object} [trace={}] - microservice lifecyce headers
  * @returns {Promise} - Promise resolving to a object containing a new 10DLC Brand
  */
@@ -99,7 +159,7 @@ const createBrand = async (
  * @param {boolean} affMarketing message content controlled by affiliate marketing other than the brand?
  * @param {boolean} ageGated campaign includes age gated message content?
  * @param {string} usecaseId usecase id
- * @param {array} subUsecaseId sub usecase ids (strings)
+ * @param {array} subUsecaseIds sub usecase ids (strings)
  * @param {string} [messageFlow="Users may opt-in by sending START to any number associated with the campaign. Users may also sign up to receive messages from this campaign via a website after accepting terms and conditions."] how subscribers are added or opt-in to the campaign
  * @param {boolean} [autoRenewal=true] subscription auto-renews?
  * @param {boolean} [subOptIn=true] provides automated opt-in?
@@ -131,7 +191,7 @@ const createCampaign = async (
   affMarketing,
   ageGated,
   usecaseId,
-  subUsecaseId,
+  subUsecaseIds = [],
   messageFlow = "Users may opt-in by sending START to any number associated with the campaign. Users may also sign up to receive messages from this campaign via a website after accepting terms and conditions.",
   autoRenewal = true,
   subOptIn = true,
@@ -174,7 +234,7 @@ const createCampaign = async (
         aff_marketing: affMarketing,
         age_gated: ageGated,
         usecase_id: usecaseId,
-        sub_usecase_ids: subUsecaseId,
+        sub_usecase_ids: subUsecaseIds,
         help_message: helpMessage,
         auto_renewal: autoRenewal,
         opt_in_keywords: optInKeywords,
@@ -395,7 +455,7 @@ const getEnumerations = async (
 
 /**
  * @async
- * @description - This function will get a campaign for a SMS 10DLC Brand / CPaaS account
+ * @description - This function will list campaigns for a SMS 10DLC Brand / CPaaS account
  * @param {string} [accessToken="null accessToken"] - cpaas access token
  * @param {string} [accountUUID] - CPaaS account uuid
  * @param {object} [trace={}] - microservice lifecyce headers
@@ -410,11 +470,51 @@ const listCampaigns = async (
     const MS = util.getEndpoint("campaigns");
     const requestOptions = {
       method: "GET",
-      uri: `${MS}/10dlc/customers/${accountUUID}/campaigns/${campaignId}`,
+      uri: `${MS}/10dlc/customers/${accountUUID}/campaigns`,
       headers: {
         Authorization: `Bearer ${accessToken}`,
         "x-api-version": `${util.getVersion()}`,
         "Content-type": "application/json",
+      },
+      json: true,
+    };
+    util.addRequestTrace(requestOptions, trace);
+    const response = await request(requestOptions);
+    return response;
+  } catch (error) {
+    throw util.formatError(error);
+  }
+};
+
+/**
+ * @async
+ * @description - This function will remove numbers a SMS 10DLC Campaign
+ * @param {string} [accessToken="null accessToken"] cpaas access token
+ * @param {string} [accountUUID="null accountUUID"] cpaas account uuid to provision
+ * @param {string} [campaignId="null campaignId"] 10dlc campaign id
+ * @param {array} [numbers=[]] array of numbers to assign
+ * @param {object} [trace={}] - microservice lifecyce headers
+ * @returns {Promise} - Promise resolving to a object confirming the removal of numbers
+ */
+const removeFromSMSCampaign = async (
+  accessToken = "null accessToken",
+  accountUUID = "null accountUUID",
+  campaignId = "null campaignId",
+  numbers,
+  trace = {}
+) => {
+  try {
+    const MS = util.getEndpoint("campaigns");
+    const requestOptions = {
+      method: "POST",
+      uri: `${MS}/10dlc/customers/${accountUUID}/campaigns/${campaignId}/numbers/unassign`,
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+        "x-api-version": `${util.getVersion()}`,
+        "Content-type": "application/json",
+      },
+      body: {
+        tns: numbers,
       },
       json: true,
     };
@@ -542,6 +642,7 @@ const updateCampaign = async (
 };
 
 module.exports = {
+  assignToSMSCampaign,
   createBrand,
   createCampaign,
   deleteBrand,
@@ -551,5 +652,6 @@ module.exports = {
   getCampaign,
   getEnumerations,
   listCampaigns,
+  removeFromSMSCampaign,
   updateCampaign,
 };

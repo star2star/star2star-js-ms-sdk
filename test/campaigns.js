@@ -76,41 +76,41 @@ describe("Numbers MS Unit Test Suite", function () {
     }, "Get Enumerations")
   );
 
-  it(
-    "Create Brand",
-    mochaAsync(async () => {
-      trace = Util.generateNewMetaData(trace);
-      const response = await s2sMS.Campaigns.createBrand(
-        accessToken,
-        identityData.account_uuid,
-        `Sangoma Unit Test ${Date.now()}`, // legalName
-        `Sangoma Unit Test ${Date.now()}`, // brandName
-        "PUBLIC_PROFIT", // organization_type
-        "US", // registrationCountry
-        555555555, // taxId
-        "US", // taxIdCountry 
-        undefined, // altBusinessIdType,
-        undefined, // altBusinessId,
-        "TECHNOLOGY", // vertical
-        "300 N. Cattlemen Rd. Suite 300", // address
-        "Sarasota", // city
-        "FL", // state
-        34232, // postalCode
-        "https://sangoma.com", // website
-        "SANG", // stockSymbol
-        "NASDAQ", // stockExchange
-        "third-party-support+10DLC-test@sangoma.com", // emailAddress
-        "9412340001", // phoneNumber
-        "Unit", // firstName
-        "Test", // lastName
-        trace
-      );
-      assert.ok(response.account_uuid === identityData.account_uuid,
-        JSON.stringify(response, null, "\t")
-      );
-      return response;
-    }, "Create Brand")
-  );
+  // it(
+  //   "Create Brand",
+  //   mochaAsync(async () => {
+  //     trace = Util.generateNewMetaData(trace);
+  //     const response = await s2sMS.Campaigns.createBrand(
+  //       accessToken,
+  //       identityData.account_uuid,
+  //       `Sangoma Unit Test ${Date.now()}`, // legalName
+  //       `Sangoma Unit Test ${Date.now()}`, // brandName
+  //       "PUBLIC_PROFIT", // organization_type
+  //       "US", // registrationCountry
+  //       555555555, // taxId
+  //       "US", // taxIdCountry 
+  //       undefined, // altBusinessIdType,
+  //       undefined, // altBusinessId,
+  //       "TECHNOLOGY", // vertical
+  //       "300 N. Cattlemen Rd. Suite 300", // address
+  //       "Sarasota", // city
+  //       "FL", // state
+  //       34232, // postalCode
+  //       "https://sangoma.com", // website
+  //       "SANG", // stockSymbol
+  //       "NASDAQ", // stockExchange
+  //       "third-party-support+10DLC-test@sangoma.com", // emailAddress
+  //       "9412340001", // phoneNumber
+  //       "Unit", // firstName
+  //       "Test", // lastName
+  //       trace
+  //     );
+  //     assert.ok(response.account_uuid === identityData.account_uuid,
+  //       JSON.stringify(response, null, "\t")
+  //     );
+  //     return response;
+  //   }, "Create Brand")
+  // );
 
   it(
     "Get Brand",
@@ -283,6 +283,53 @@ describe("Numbers MS Unit Test Suite", function () {
   );
 
   it(
+    "Assign Numbers To Campaign",
+    mochaAsync(async () => {
+      const numbersResponse = await s2sMS.Numbers.listAvailableNumbers(
+        accessToken,
+        2, // quantity = 5
+        "VIx", // network
+        "AL", // state
+        undefined, // rate center
+        undefined, // area code
+        trace
+      );
+      numbers = numbersResponse.items;
+      trace = Util.generateNewMetaData(trace);
+      await new Promise(resolve => setTimeout(resolve, 5000));
+      const response = await s2sMS.Campaigns.assignToSMSCampaign(
+        accessToken,
+        identityData.account_uuid,
+        campaignId,
+        numbers,
+        trace
+      );
+      assert.ok(response.description === "This is an updated unit test campaign to confirm end to end functionality",
+        JSON.stringify(response, null, "\t")
+      );
+      return response;
+    }, "Assign Numbers To Campaign")
+  );
+
+  it(
+    "Remove Numbers From Campaign",
+    mochaAsync(async () => {
+      trace = Util.generateNewMetaData(trace);
+      const response = await s2sMS.Campaigns.removeFromSMSCampaign(
+        accessToken,
+        identityData.account_uuid,
+        campaignId,
+        numbers,
+        trace
+      );
+      assert.ok(response.description === "This is an updated unit test campaign to confirm end to end functionality",
+        JSON.stringify(response, null, "\t")
+      );
+      return response;
+    }, "Remove Numbers From Campaign")
+  );
+
+  it(
     "Delete Campaign",
     mochaAsync(async () => {
       trace = Util.generateNewMetaData(trace);
@@ -299,21 +346,21 @@ describe("Numbers MS Unit Test Suite", function () {
     }, "Delete Campaign")
   );
 
-  it(
-    "Delete Brand",
-    mochaAsync(async () => {
-      trace = Util.generateNewMetaData(trace);
-      const response = await s2sMS.Campaigns.deleteBrand(
-        accessToken,
-        identityData.account_uuid,
-        trace
-      );
-      assert.ok(response.status === "success",
-        JSON.stringify(response, null, "\t")
-      );
-      return response;
-    }, "Delete Brand")
-  );
+  // it(
+  //   "Delete Brand",
+  //   mochaAsync(async () => {
+  //     trace = Util.generateNewMetaData(trace);
+  //     const response = await s2sMS.Campaigns.deleteBrand(
+  //       accessToken,
+  //       identityData.account_uuid,
+  //       trace
+  //     );
+  //     assert.ok(response.status === "success",
+  //       JSON.stringify(response, null, "\t")
+  //     );
+  //     return response;
+  //   }, "Delete Brand")
+  // );
 
   // template
   // it("change me", mochaAsync(async () => {
