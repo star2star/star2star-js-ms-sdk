@@ -164,13 +164,13 @@ const createBrand = async (
  * @param {boolean} [autoRenewal=true] subscription auto-renews?
  * @param {boolean} [subOptIn=true] provides automated opt-in?
  * @param {string} [optInKeywords="START"] opt-in keywords (comma separated)
- * @param {string} [optInMessage="You are now opted-in.\n\nFor help, reply HELP.\n\nTo opt-out, reply STOP"] automated opt-in message
+ * @param {string} [optInMessage="You have replied \"START\" and will begin receiving messages again. Reply \"STOP\" to unsubscribe."] automated opt-in message
  * @param {boolean} [subOptOut=true] provides automated opt-out?
  * @param {string} [optOutKeywords="STOP"] opt-out key words (comma separated)
- * @param {string} [optOutMessage="You have successfully opted-out.\n\nYou will not receive any more messages from this number.\n\nYou may reply START at any time to opt-in again."] automated opt-out message
+ * @param {string} [optOutMessage="You have been unsubscribed from the mailing list and will not receive any more messages. Send \"START\" to resubscribe."] automated opt-out message
  * @param {boolean} [subHelp=true] provides automated help?
  * @param {string} [helpKeywords="HELP"] help keywords (comma separated)
- * @param {string} [helpMessage="To opt-in and receive messages from this number, reply START.\n\nFor help, reply HELP.\n\nTo opt-out at any time, reply STOP"] automated help message
+ * @param {string} [helpMessage="To unsubscribe, reply \"STOP\" to this number.  Msg&data rates may apply."] automated help message
  * @param {object} [trace={}] optional CPaaS lifecycle headers
  * @return {Promsise<object>} promise resolving to a brand registration document
  */
@@ -196,13 +196,13 @@ const createCampaign = async (
   autoRenewal = true,
   subOptIn = true,
   optInKeywords = "START",
-  optInMessage = "You are now opted-in.\n\nFor help, reply HELP.\n\nTo opt-out, reply STOP",
+  optInMessage = "You have replied \"START\" and will begin receiving messages again. Reply \"STOP\" to unsubscribe.",
   subOptOut = true,
   optOutKeywords = "STOP",
-  optOutMessage = "You have successfully opted-out.\n\nYou will not receive any more messages from this number.\n\nYou may reply START at any time to opt-in again.",
+  optOutMessage = "You have been unsubscribed from the mailing list and will not receive any more messages. Send \"START\" to resubscribe.",
   subHelp = true,
   helpKeywords = "HELP",
-  helpMessage = "To opt-in and receive messages from this number, reply START.\n\nFor help, reply HELP.\n\nTo opt-out at any time, reply STOP",
+  helpMessage = "To unsubscribe, reply \"STOP\" to this number.  Msg&data rates may apply.",
   trace = {}
 ) => {
   try {
