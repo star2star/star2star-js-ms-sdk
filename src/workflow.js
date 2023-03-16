@@ -148,6 +148,7 @@ const deleteWorkflowTemplate = async (
   * @param {string} [responseContentType="application/json"] response content type
   * @param {object} [inpputVars={}] workflow input vars
   * @param {object} [trace={}] optional microservice lifecycle trace headers
+  * @param {string} [startState=undefined] The Start State to start with 
   * @returns {Promise} promise resolving to data in format of response content type matching workflow vars path
   */
  const execWorkflow = async (
@@ -157,7 +158,8 @@ const deleteWorkflowTemplate = async (
   workflowVarsPath = "",
   responseContentType = "application/json",
   inputVars = {},
-  trace = {}
+  trace = {},
+  startState = undefined
 ) => {
   try {
     const MS = util.getEndpoint("workflow");
@@ -181,6 +183,11 @@ const deleteWorkflowTemplate = async (
     // add a group uuid if sepcified
     if(typeof groupUUID === "string" && groupUUID.length > 0){
       requestOptions.body.group_uuid = groupUUID;
+    }
+
+    // start State 
+    if (startState && startState.length > 0) {
+      requestOptions.body.start_state = startState;
     }
     
     util.addRequestTrace(requestOptions, trace);
