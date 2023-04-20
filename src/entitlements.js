@@ -63,49 +63,21 @@ const getProducts = async (
         "Content-type": "application/json",
         "x-api-version": `${Util.getVersion()}`
       },
-      json: true
+      json: true,
+      qs:{}
     };
     Util.addRequestTrace(requestOptions, trace);
-    let response;
-    //here we determine if we will need to handle aggrigation, pagination, and filtering or send it to the microservice
-    if (typeof filters !== "undefined") {
-      if (typeof filters !== "object" || filters === null) {
-        throw {
-          "code": 400,
-          "message": "filters param not an object",
-          "trace_id": requestOptions.hasOwnProperty("headers") && requestOptions.headers.hasOwnProperty("trace")
-            ? requestOptions.headers.trace 
-            : undefined,
-          "details": [{"filters": filters}]
-        };
-      }
+    if (filters) {
+      Object.keys(filters).forEach(filter => {
+        requestOptions.qs[filter] = filters[filter];
+      });
+    }
+    requestOptions.qs.offset = offset;
+    requestOptions.qs.limit = limit ;
+    
+    const response = await request(requestOptions);
+    return response;
       
-      // API limited to 100 per page
-      requestOptions.qs = {
-        offset: 0,
-        limit: 100
-      };
-
-      response = await Util.aggregate(request, requestOptions, trace);
-      if (response.hasOwnProperty("items") && response.items.length > 0) {
-        const filteredResponse = Util.filterResponse(response, filters);
-        const paginatedResponse = Util.paginate(
-          filteredResponse,
-          offset,
-          limit
-        );
-        return paginatedResponse;
-      } else {
-        return response;
-      }    
-    } else {
-      requestOptions.qs = {
-        offset: offset,
-        limit: limit
-      };
-      response = await request(requestOptions);
-      return response;
-    }       
   } catch (error) {
     throw Util.formatError(error);
   }

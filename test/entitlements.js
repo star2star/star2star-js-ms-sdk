@@ -81,6 +81,44 @@ describe("Objects MS Test Suite", function() {
     return response;
   },"Get Products"));
 
+  it("Get Products by application_uuid", mochaAsync(async () => {
+    trace = Util.generateNewMetaData(trace);
+const response = await s2sMS.Entitlements.getProducts(
+  accessToken,
+  0,
+  10,
+  {"application_uuid": "aee1083e-219f-41b3-9530-782752ade1d4"}, 
+  trace
+);
+assert.ok(
+  response.hasOwnProperty("items") && 
+  response.items[0].hasOwnProperty("uuid") &&
+  response.items[0].uuid !== undefined,
+  JSON.stringify(response, null, "\t")
+);
+uuid = response.items[0].uuid;
+return response;
+},"Get Products by application_uuid"));
+
+it("Get Products by type", mochaAsync(async () => {
+  trace = Util.generateNewMetaData(trace);
+const response = await s2sMS.Entitlements.getProducts(
+accessToken,
+0,
+10,
+{"type": "cwa_curbside"}, 
+trace
+);
+assert.ok(
+response.hasOwnProperty("items") && 
+response.items[0].hasOwnProperty("uuid") &&
+response.items[0].uuid !== undefined,
+JSON.stringify(response, null, "\t")
+);
+uuid = response.items[0].uuid;
+return response;
+},"Get Products by type"));
+
   /*
   it("Get Filtered Proudcts", mochaAsync(async () => {
         trace = Util.generateNewMetaData(trace);
