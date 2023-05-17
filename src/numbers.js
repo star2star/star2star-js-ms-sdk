@@ -390,14 +390,16 @@ const provisionNumbersHelp = async (
  * @param {string} [accessToken="null accessToken"] - cpaas access token
  * @param {array} [numbers=[]] - array of numbers to provision
  * @param {string} [referenceID] - reference id
+ * @param {string} [referenceText] - reference text
  * @param {string} [countryFormat] - optional country code to use to format and validate the provided numbers, defaults to "US"
  * @param {object} [trace={}] - microservice lifecyce headers
  * @returns {Promise} - Promise resolving to a object containing provisioning confirmation details
  */
-const provisionNumbersRefId = async (
+const provisionNumbersReference = async (
   accessToken = "null accessToken",
   numbers = [],
   referenceID,
+  referenceText,
   countryFormat,
   trace = {}
 ) => {
@@ -405,7 +407,7 @@ const provisionNumbersRefId = async (
     const MS = util.getEndpoint("sms");
     const requestOptions = {
       method: "PUT",
-      uri: `${MS}/provision/numbers/reference_id`,
+      uri: `${MS}/provision/numbers/reference`,
       headers: {
         Authorization: `Bearer ${accessToken}`,
         "x-api-version": `${util.getVersion()}`,
@@ -414,6 +416,7 @@ const provisionNumbersRefId = async (
       body: {
         numbers: numbers,
         reference_id: referenceID,
+        reference_text, referenceText,
         country_format: countryFormat,
       },
       json: true,
@@ -436,5 +439,5 @@ module.exports = {
   listAvailableNumbers,
   provisionNumbers,
   provisionNumbersHelp,
-  provisionNumbersRefId
+  provisionNumbersReference
 };
