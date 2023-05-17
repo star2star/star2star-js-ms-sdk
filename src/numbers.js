@@ -416,7 +416,7 @@ const provisionNumbersReference = async (
       body: {
         numbers: numbers,
         reference_id: referenceID,
-        reference_text, referenceText,
+        reference_text: referenceText,
         country_format: countryFormat,
       },
       json: true,

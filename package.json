@@ -1,6 +1,6 @@
 {
   "name": "star2star-js-ms-sdk",
-  "version": "4.4.17",
+  "version": "4.4.18",
   "description": "Star2Star JavaScript Micro Service SDK",
   "main": "./lib/index.js",
   "scripts": {
