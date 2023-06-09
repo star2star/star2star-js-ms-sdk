@@ -24,13 +24,13 @@ const getProduct = async (
       headers: {
         Authorization: `Bearer ${accessToken}`,
         "Content-type": "application/json",
-        "x-api-version": `${Util.getVersion()}`
+        "x-api-version": `${Util.getVersion()}`,
       },
-      json: true
+      json: true,
     };
     Util.addRequestTrace(requestOptions, trace);
     const response = await request(requestOptions);
-    return response; 
+    return response;
   } catch (error) {
     throw Util.formatError(error);
   }
@@ -61,23 +61,22 @@ const getProducts = async (
       headers: {
         Authorization: `Bearer ${accessToken}`,
         "Content-type": "application/json",
-        "x-api-version": `${Util.getVersion()}`
+        "x-api-version": `${Util.getVersion()}`,
       },
       json: true,
-      qs:{}
+      qs: {},
     };
     Util.addRequestTrace(requestOptions, trace);
     if (filters) {
-      Object.keys(filters).forEach(filter => {
+      Object.keys(filters).forEach((filter) => {
         requestOptions.qs[filter] = filters[filter];
       });
     }
     requestOptions.qs.offset = offset;
-    requestOptions.qs.limit = limit ;
-    
+    requestOptions.qs.limit = limit;
+
     const response = await request(requestOptions);
     return response;
-      
   } catch (error) {
     throw Util.formatError(error);
   }
@@ -110,9 +109,9 @@ const getUserEntitlements = async (
       headers: {
         Authorization: `Bearer ${accessToken}`,
         "Content-type": "application/json",
-        "x-api-version": `${Util.getVersion()}`
+        "x-api-version": `${Util.getVersion()}`,
       },
-      json: true
+      json: true,
     };
     Util.addRequestTrace(requestOptions, trace);
     let response;
@@ -120,19 +119,21 @@ const getUserEntitlements = async (
     if (typeof filters !== "undefined") {
       if (typeof filters !== "object" || filters === null) {
         throw {
-          "code": 400,
-          "message": "filters param not an object",
-          "trace_id": requestOptions.hasOwnProperty("headers") && requestOptions.headers.hasOwnProperty("trace")
-            ? requestOptions.headers.trace 
-            : undefined,
-          "details": [{"filters": filters}]
+          code: 400,
+          message: "filters param not an object",
+          trace_id:
+            requestOptions.hasOwnProperty("headers") &&
+            requestOptions.headers.hasOwnProperty("trace")
+              ? requestOptions.headers.trace
+              : undefined,
+          details: [{ filters: filters }],
         };
       }
-      
+
       // API limited to 100 per page
       requestOptions.qs = {
         offset: 0,
-        limit: 100
+        limit: 100,
       };
 
       response = await Util.aggregate(request, requestOptions, trace);
@@ -146,21 +147,59 @@ const getUserEntitlements = async (
         return paginatedResponse;
       } else {
         return response;
-      }    
+      }
     } else {
       requestOptions.qs = {
         offset: offset,
-        limit: limit
+        limit: limit,
       };
       response = await request(requestOptions);
       return response;
-    }       
+    }
   } catch (error) {
     throw Util.formatError(error);
   }
 };
+/**
+ * @description This fuction will update a product specified 
+ * @async
+ * @param {string} [accessToken="null accessToken"] - CPaaS access token
+ * @param {string} [product_uuid="null"] - product uuid
+ * @param {object} [product=undefined] - the product object  
+ * @param {object} [trace={}] - optional CPaaS lifecycle headers
+ * @returns {Promise<object>} Promise resolving the updated product
+ */
+const updateProduct = async (
+  accessToken = "null accessToken",
+  product_uuid = "null productUUID",
+  product = undefined,
+  trace = {}
+) => {
+  try {
+    const MS = Util.getEndpoint("entitlements");
+    const requestOptions = {
+      method: "PUT",
+      uri: `${MS}/products/${product_uuid}`,
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+        "Content-type": "application/json",
+        "x-api-version": `${Util.getVersion()}`,
+      },
+      body: product,
+      json: true
+    };
+    Util.addRequestTrace(requestOptions, trace);
+    const response = await request(requestOptions);
+    return response;
+  } catch (error) {
+    throw Util.formatError(error);
+  }
+
+};
+
 module.exports = {
   getProduct,
   getProducts,
-  getUserEntitlements
+  updateProduct,
+  getUserEntitlements,
 };

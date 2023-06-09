@@ -1,12 +1,12 @@
 {
   "name": "star2star-js-ms-sdk",
-  "version": "4.4.18",
+  "version": "4.4.19",
   "description": "Star2Star JavaScript Micro Service SDK",
   "main": "./lib/index.js",
   "scripts": {
     "preclean": "npm install --no-save rimraf",
     "clean": "rimraf lib && mkdir lib && rimraf package-lock.json && rimraf node_modules && npm install",
-    "test": "read -p 'env: [appDev] ' testEnv && testEnv=${testEnv:-appDev} && env-cmd --verbose -e $testEnv mocha --timeout 15000",
+    "test": "read -p 'env: [appDev] ' testEnv && testEnv=${testEnv:-appDev} && env-cmd --verbose -e $testEnv nyc --reporter=text mocha --timeout 15000",
     "build": "npm run clean && npm run doc && babel src -d lib && npm prune --production",
     "gitTag": "git tag \"$npm_package_name\"_\"$npm_package_version\" && git push origin \"$npm_package_name\"_\"$npm_package_version\"",
     "doc": "documentation build src/index.js -f html -o . --config documentation.yml"
@@ -37,7 +37,8 @@
     "env-cmd": "10.1.0",
     "eslint": "5.16.0",
     "jsonata": "1.8.6",
-    "mocha": "8.4.0"
+    "mocha": "8.4.0",
+    "nyc": "^15.1.0"
   },
   "publishConfig": {
     "registry": "https://registry.npmjs.org"
