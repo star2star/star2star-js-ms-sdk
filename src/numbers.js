@@ -238,6 +238,7 @@ const getProvisionedNumbersByUser = async (
  * @description - This function will list numbers available for purchase
  * @param {string} [accessToken="null accessToken"] - cpaas access token
  * @param {number} [quantity=5] - number of DIDs to return
+ * @param {number} [tier=1] - price tier (1-4, 4 being most expensive)
  * @param {string} [network="VI"] - telephony network
  * @param {string} [state] - 2 letter US state code
  * @param {string} [rateCenter] - town or population center name
@@ -248,7 +249,8 @@ const getProvisionedNumbersByUser = async (
 const listAvailableNumbers = async (
   accessToken = "null accessToken",
   quantity = 5,
-  network = "VI",
+  tier = 1,
+  network,
   state,
   rateCenter,
   areaCode,
@@ -266,16 +268,22 @@ const listAvailableNumbers = async (
       },
       qs: {
         qty: quantity,
-        network: network,
-        state: state,
+        tier: tier
       },
       json: true,
     };
+    // optional params
+    if (typeof areaCode === "string" || typeof areaCode === "number") {
+      requestOptions.qs.npa = areaCode;
+    }
     if (typeof rateCenter === "string") {
       requestOptions.qs.ratecenter = rateCenter;
     }
-    if (typeof areaCode === "string" || typeof areaCode === "number") {
-      requestOptions.qs.npa = areaCode;
+    if (typeof network === "string") {
+      requestOptions.qs.network = network;
+    }
+    if (typeof state === "string") {
+      requestOptions.qs.state = state;
     }
     util.addRequestTrace(requestOptions, trace);
     const response = await request(requestOptions);
