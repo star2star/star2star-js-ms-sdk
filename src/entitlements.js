@@ -4,6 +4,43 @@ const Util = require("./utilities");
 const request = require("./requestPromise");
 
 /**
+ * @description This fuction will activate a pending async entitlement 
+ * @async
+ * @param {string} [accessToken="null accessToken"] - CPaaS access token
+ * @param {string} [userUUID="null userUUID"] - CPaaS user uuid
+ * @param {object} [entitlementUUID="null entitlementUUID"] - entitlement uuid
+ * @param {object} [trace={}] - optional CPaaS lifecycle headers
+ * @returns {Promise<object>} Promise resolving to an acknowledgement of the entitlement being activated
+ */
+const activateUserEntitlement = async (
+  accessToken = "null accessToken",
+  userUUID = "null userUUID",
+  entitlementUUID = "null entitlementUUID",
+  trace = {}
+) => {
+  try {
+    const MS = Util.getEndpoint("entitlements");
+    const requestOptions = {
+      method: "POST",
+      uri: `${MS}/users/${userUUID}/entitlements/${entitlementUUID}/activate`,
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+        "Content-type": "application/json",
+        "x-api-version": `${Util.getVersion()}`,
+      },
+      body: {},
+      json: true
+    };
+    Util.addRequestTrace(requestOptions, trace);
+    const response = await request(requestOptions);
+    return response;
+  } catch (error) {
+    throw Util.formatError(error);
+  }
+
+};
+
+/**
  * @description This function returns a single entitlement product
  * @async
  * @param {string} [accessToken="null accessToken"] - CPaaS access token
@@ -198,6 +235,7 @@ const updateProduct = async (
 };
 
 module.exports = {
+  activateUserEntitlement,
   getProduct,
   getProducts,
   updateProduct,

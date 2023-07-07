@@ -102,8 +102,11 @@ toc:
       - sendEmail
   - name: Entitlements
     children:
+      - activateUserEntitlement
       - getProduct
       - getProducts
+      - getUserEntitlements
+      - updateProduct
   - name: Forms
     children:
       - createFormInstance
