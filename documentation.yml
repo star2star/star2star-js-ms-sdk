@@ -61,6 +61,7 @@ toc:
       - removeResourceFromGroup
       - removeUsersFromGroup
   - name: Campaigns
+    children:
       - assignToSMSCampaign
       - createCampaign
       - createBrand
