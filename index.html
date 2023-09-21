@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset='utf-8'>
-  <title>star2star-js-ms-sdk 4.4.21 | Documentation</title>
+  <title>star2star-js-ms-sdk 4.4.22 | Documentation</title>
   <meta name='description' content='Star2Star JavaScript Micro Service SDK'>
   <meta name='viewport' content='width=device-width,initial-scale=1'>
   <link href='assets/bass.css' rel='stylesheet'>
@@ -15,7 +15,7 @@
       <div id='split-left' class='overflow-auto fs0 height-viewport-100'>
         <div class='py1 px2'>
           <h3 class='mb0 no-anchor'>star2star-js-ms-sdk</h3>
-          <div class='mb1'><code>4.4.21</code></div>
+          <div class='mb1'><code>4.4.22</code></div>
           <input
             placeholder='Filter'
             id='filter-input'
@@ -2242,6 +2242,26 @@
                   href='#createaccountdataobject'
                   class="">
                   createAccountDataObject
+                  
+                </a>
+                
+                </li>
+              
+                
+                <li><a
+                  href='#encryptobject'
+                  class="">
+                  encryptObject
+                  
+                </a>
+                
+                </li>
+              
+                
+                <li><a
+                  href='#decryptobject'
+                  class="">
+                  decryptObject
                   
                 </a>
                 
@@ -30513,6 +30533,26 @@ type of object with name.</p>
           
         </div>
       
+        <div class='space-bottom0'>
+          <div>
+            <span class='code bold'>salt</span> <code class='quiet'>(<a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String">string</a>
+            = <code>&quot;salt&quot;</code>)</code>
+	    optional but recommended salt value
+
+          </div>
+          
+        </div>
+      
+        <div class='space-bottom0'>
+          <div>
+            <span class='code bold'>algorithm</span> <code class='quiet'>(<a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String">string</a>
+            = <code>&quot;aes-192-cbc&quot;</code>)</code>
+	    optional encryption algorithm
+
+          </div>
+          
+        </div>
+      
     </div>
   
 
@@ -30588,6 +30628,26 @@ type of object with name.</p>
           <div>
             <span class='code bold'>text</span> <code class='quiet'>(<a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String">string</a>)</code>
 	    text to be encrypted
+
+          </div>
+          
+        </div>
+      
+        <div class='space-bottom0'>
+          <div>
+            <span class='code bold'>salt</span> <code class='quiet'>(<a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String">string</a>
+            = <code>&quot;salt&quot;</code>)</code>
+	    optional but recommended salt value
+
+          </div>
+          
+        </div>
+      
+        <div class='space-bottom0'>
+          <div>
+            <span class='code bold'>algorithm</span> <code class='quiet'>(<a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String">string</a>
+            = <code>&quot;aes-192-cbc&quot;</code>)</code>
+	    optional encryption algorithm
 
           </div>
           
@@ -31842,6 +31902,196 @@ type of object with name.</p>
       <div class='py1 quiet mt1 prose-big'>Returns</div>
       <code><a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise">Promise</a>&#x3C;<a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object">object</a>></code>:
         Promise resolving to a data object
+
+      
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+</section>
+
+          
+        
+          
+          <section class='p2 mb2 clearfix bg-white minishadow'>
+
+  
+  <div class='clearfix'>
+    
+    <h3 class='fl m0' id='encryptobject'>
+      encryptObject
+    </h3>
+    
+    
+  </div>
+  
+
+  <p>This function decrypts an encrypted string into an object</p>
+
+    <div class='pre p1 fill-light mt0'>encryptObject</div>
+  
+  
+
+  
+  
+  
+  
+  
+  
+
+  
+    <div class='py1 quiet mt1 prose-big'>Parameters</div>
+    <div class='prose'>
+      
+        <div class='space-bottom0'>
+          <div>
+            <span class='code bold'>key</span> <code class='quiet'>(<a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String">string</a>)</code>
+	    key / password used to encrypt
+
+          </div>
+          
+        </div>
+      
+        <div class='space-bottom0'>
+          <div>
+            <span class='code bold'>obj</span> <code class='quiet'>(<a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object">object</a>)</code>
+	    object to be decrypted
+
+          </div>
+          
+        </div>
+      
+        <div class='space-bottom0'>
+          <div>
+            <span class='code bold'>iv</span> <code class='quiet'>(any)</code>
+	    
+          </div>
+          
+        </div>
+      
+        <div class='space-bottom0'>
+          <div>
+            <span class='code bold'>algorithm</span> <code class='quiet'>(<a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String">string</a>
+            = <code>&quot;aes-256-cbc&quot;</code>)</code>
+	    optional encryption algorithm
+
+          </div>
+          
+        </div>
+      
+    </div>
+  
+
+  
+
+  
+    
+      <div class='py1 quiet mt1 prose-big'>Returns</div>
+      <code><a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object">object</a></code>:
+        decrypted object containing iv and encrypted strting
+
+      
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+</section>
+
+          
+        
+          
+          <section class='p2 mb2 clearfix bg-white minishadow'>
+
+  
+  <div class='clearfix'>
+    
+    <h3 class='fl m0' id='decryptobject'>
+      decryptObject
+    </h3>
+    
+    
+  </div>
+  
+
+  <p>This function decrypts an encrypted string into an object</p>
+
+    <div class='pre p1 fill-light mt0'>decryptObject</div>
+  
+  
+
+  
+  
+  
+  
+  
+  
+
+  
+    <div class='py1 quiet mt1 prose-big'>Parameters</div>
+    <div class='prose'>
+      
+        <div class='space-bottom0'>
+          <div>
+            <span class='code bold'>key</span> <code class='quiet'>(<a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String">string</a>)</code>
+	    key / password used to encrypt
+
+          </div>
+          
+        </div>
+      
+        <div class='space-bottom0'>
+          <div>
+            <span class='code bold'>ciphertext</span> <code class='quiet'>(<a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String">string</a>)</code>
+	    string to be decrypted
+
+          </div>
+          
+        </div>
+      
+        <div class='space-bottom0'>
+          <div>
+            <span class='code bold'>algorithm</span> <code class='quiet'>(<a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String">string</a>
+            = <code>&#39;aes-256-cbc&#39;</code>)</code>
+	    optional encryption algorithm
+
+          </div>
+          
+        </div>
+      
+    </div>
+  
+
+  
+
+  
+    
+      <div class='py1 quiet mt1 prose-big'>Returns</div>
+      <code><a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object">object</a></code>:
+        decrypted object
 
       
     

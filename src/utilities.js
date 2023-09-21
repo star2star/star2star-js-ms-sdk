@@ -7,6 +7,7 @@ const compareVersions = require("compare-versions");
 const crypto = require("crypto");
 const { v4 } = require("uuid");
 const Logger = require("./node-logger");
+const zlib = require("node:zlib");
 
 /**
  *
@@ -632,13 +633,13 @@ const formatFetchError = async (fetchResponse) => {
  * @description This function encrypts a string with a key
  * @param {string} cryptoKey - key used to encrypt
  * @param {string} text - text to be encrypted
+ * @param {string} salt - optional but recommended salt value
+ * @param {string} algorithm - optional encryption algorithm
  * @returns {string} - encrypted string
  */
-const encrypt = (cryptoKey, text) => {
-  const algorithm = "aes-192-cbc";
+const encrypt = (cryptoKey, text, salt = "salt", algorithm = "aes-192-cbc") => {
   // Use the async `crypto.scrypt()` instead.
-  const key = crypto.scryptSync(cryptoKey, "salt", 24);
-  // Use `crypto.randomBytes` to generate a random iv instead of the static iv
+  const key = crypto.scryptSync(cryptoKey, salt, 24);
   // shown here.
   const iv = Buffer.alloc(16, 0); // Initialization vector.
 
@@ -653,12 +654,13 @@ const encrypt = (cryptoKey, text) => {
  * @description This function decrypts a string with a key
  * @param {string} cryptoKey - key used to encrypt
  * @param {string} text - text to be encrypted
+ * @param {string} salt - optional but recommended salt value
+ * @param {string} algorithm - optional encryption algorithm
  * @returns - decrypted string
  */
-const decrypt = (cryptoKey, text) => {
-  const algorithm = "aes-192-cbc";
+const decrypt = (cryptoKey, text, salt = "salt", algorithm = "aes-192-cbc") => {
   // Use the async `crypto.scrypt()` instead.
-  const key = crypto.scryptSync(cryptoKey, "salt", 24);
+  const key = crypto.scryptSync(cryptoKey, salt, 24);
   // The IV is usually passed along with the ciphertext.
   const iv = Buffer.alloc(16, 0); // Initialization vector.
 
@@ -668,6 +670,90 @@ const decrypt = (cryptoKey, text) => {
   decrypted += decipher.final("utf8");
   return decrypted;
 };
+
+
+/**
+ * @description This function decrypts an encrypted string into an object
+ * @param {string} key - key / password used to encrypt
+ * @param {object} obj - object to be decrypted
+ * @param {string} algorithm - optional encryption algorithm
+ * @returns {object} decrypted object containing iv and encrypted strting
+ */
+const encryptObject = (key, obj, iv, algorithm = "aes-256-cbc") => {
+  try {
+    {
+      let objAsString;
+      try {
+        if (typeof obj !== "object" || obj === null) {
+          throw new Error("obj param not object or null");
+        }
+        // turn the object into a string to be encrypted or compressed further before encryption
+        objAsString = zlib.gzipSync(JSON.stringify(obj)).toString("base64");
+      } catch (e) {
+        console.warn(e);
+        throw new Error(
+          "unable to process object for encryption. check that input is valid JSON"
+        );
+      }
+      // create a random iv if we don't get one passed in.
+      let initializationVector = crypto.randomBytes(16);
+      if (typeof iv === "string") {
+        // we received a iv, use it.
+        initializationVector = Buffer.from(iv, "hex");
+      }
+      // convert the iv buffer to a strint to use as a salt in the key
+      // the iv and salt can be public, but they greatly aid in the randomness.
+      // only the key itself needs to be secret.
+      const salt = initializationVector.toString("hex");
+      const saltedKey = crypto.scryptSync(key, salt, 32);
+      const cipher = crypto.createCipheriv(
+        algorithm,
+        saltedKey,
+        initializationVector
+      );
+      let ciphertext = cipher.update(objAsString, "utf8", "hex");
+      ciphertext += cipher.final("hex");
+      // return an object with the iv so other objects can be bound with the same iv
+      return {
+        iv: salt,
+        ciphertext: zlib
+          .gzipSync(
+            JSON.stringify({
+              iv: salt, // the iv as a string which will be required to decrypt this data
+              ciphertext: ciphertext, // compressed encrypted data as a string
+            })
+          )
+          .toString("base64"),
+      };
+    }
+  } catch (e){
+    console.error(e);
+    throw new Error("encrypt object failed: ", e.message ? e.message : "unspecified error");
+  }
+};
+
+/**
+ * @description This function decrypts an encrypted string into an object
+ * @param {string} key - key / password used to encrypt
+ * @param {string} ciphertext - string to be decrypted
+ * @param {string} algorithm - optional encryption algorithm
+ * @returns {object} - decrypted object
+ */
+const decryptObject = (key, ciphertext, algorithm = 'aes-256-cbc') => {
+  try {
+    const cipherObj = JSON.parse(zlib.gunzipSync(Buffer.from(ciphertext, "base64")));
+    const initializationVector = Buffer.from(cipherObj.iv, 'hex');
+    const saltedKey = crypto.scryptSync(key, cipherObj.iv, 32);
+    const decipher = crypto.createDecipheriv(algorithm, saltedKey, initializationVector);
+    let decrypted = decipher.update(cipherObj.ciphertext, 'hex', 'utf8');
+    decrypted += decipher.final('utf8');
+    decrypted = zlib.gunzipSync(Buffer.from(decrypted, "base64"));
+    return JSON.parse(decrypted);
+  } catch (e){
+    console.error("error decrypting", e);
+    throw new Error("decrypt object failed: ", e.message ? e.message : "unspecified error");
+  }
+}
 
 // adds "debug" header to all requests if not included in trace
 // does not override trace.debug set to "false" explicitly
@@ -905,7 +991,9 @@ module.exports = {
   formatError,
   formatFetchError,
   encrypt,
+  encryptObject,
   decrypt,
+  decryptObject,
   setMsDebug,
   getMsDebug,
   sanitizeObject,

@@ -176,10 +176,29 @@ describe("Util", function () {
     assert(parsedError.message === "some error string");
     done();
   });
-
+  
   it("test encrypt", function (done) {
     const encString = Util.encrypt("123456", "This is a sample text");
     assert.equal(encString, "052485834a702c703a8a6f96ac4b0e313c0b3f91c7bc86a37d452fd4fff8095a");
+    done();
+  });
+  
+  let encryptedObj;
+  const sampleObj = {
+    name: "AccountAdmin",
+    description: "AccountAdmin role",
+    type: "role_permission",
+    uuid: "bc631965-681f-4183-ba85-ec1a6ef85385",
+  };
+  it("test encrypt obj", function (done) {
+    encryptedObj = Util.encryptObject("123456", sampleObj);
+    assert.ok(encryptedObj.hasOwnProperty("iv") && encryptedObj.hasOwnProperty("ciphertext"));
+    done();
+  });
+
+  it("test decryptObj", function (done) {
+    const decObj = Util.decryptObject("123456", encryptedObj.ciphertext);
+    assert.ok(sampleObj.name === decObj.name);
     done();
   });
 
