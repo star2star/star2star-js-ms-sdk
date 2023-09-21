@@ -198,7 +198,7 @@ describe("Util", function () {
 
   it("test decryptObj", function (done) {
     const decObj = Util.decryptObject("123456", encryptedObj.ciphertext);
-    assert.ok(sampleObj.name === decObj.name);
+    assert.ok(sampleObj.name === decObj.obj.name && encryptedObj.iv === decObj.iv);
     done();
   });
 

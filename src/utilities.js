@@ -738,7 +738,7 @@ const encryptObject = (key, obj, iv, algorithm = "aes-256-cbc") => {
  * @param {string} key - key / password used to encrypt
  * @param {string} ciphertext - string to be decrypted
  * @param {string} algorithm - optional encryption algorithm
- * @returns {object} - decrypted object
+ * @returns {object} - object containing iv and decrypted object
  */
 const decryptObject = (key, ciphertext, algorithm = 'aes-256-cbc') => {
   try {
@@ -749,7 +749,10 @@ const decryptObject = (key, ciphertext, algorithm = 'aes-256-cbc') => {
     let decrypted = decipher.update(cipherObj.ciphertext, 'hex', 'utf8');
     decrypted += decipher.final('utf8');
     decrypted = zlib.gunzipSync(Buffer.from(decrypted, "base64"));
-    return JSON.parse(decrypted);
+    return {
+      iv : cipherObj.iv,
+      obj: JSON.parse(decrypted)
+    }
   } catch (e){
     console.error("error decrypting", e);
     throw new Error("decrypt object failed: ", e.message ? e.message : "unspecified error");
