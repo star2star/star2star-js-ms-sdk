@@ -675,7 +675,7 @@ const decrypt = (cryptoKey, text, salt = "salt", algorithm = "aes-192-cbc") => {
 /**
  * @description This function decrypts an encrypted string into an object
  * @param {string} key - key / password used to encrypt
- * @param {object} obj - object to be decrypted
+ * @param {object} obj - object to be encrypted
  * @param {string} iv - optional initialization vector. string should be hex
  * @param {string} algorithm - optional encryption algorithm
  * @returns {object} decrypted object containing iv and encrypted strting
