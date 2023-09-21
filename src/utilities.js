@@ -678,7 +678,7 @@ const decrypt = (cryptoKey, text, salt = "salt", algorithm = "aes-192-cbc") => {
  * @param {object} obj - object to be encrypted
  * @param {string} iv - optional initialization vector. string should be hex
  * @param {string} algorithm - optional encryption algorithm
- * @returns {object} decrypted object containing iv and encrypted strting
+ * @returns {object} object containing iv and encrypted strting
  */
 const encryptObject = (key, obj, iv, algorithm = "aes-256-cbc") => {
   try {
