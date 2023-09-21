@@ -5,3 +5,4 @@ node_modules
 creds.sh
 lib
 **/credentials.json
+.nyc_output

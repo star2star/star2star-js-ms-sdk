@@ -6,3 +6,4 @@ creds.sh
 index.html
 test
 src
+.nyc_output
