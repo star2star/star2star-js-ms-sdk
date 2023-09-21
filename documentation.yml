@@ -319,7 +319,9 @@ toc:
       - aggregate
       - createUUID
       - decrypt
+      - decryptObject
       - encrypt
+      - encryptObject
       - filterResponse
       - findAndReplaceString
       - formatFetchError
