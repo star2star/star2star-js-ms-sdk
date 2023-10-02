@@ -6,6 +6,59 @@ const request = require("./requestPromise");
 const { v4 } = require("uuid");
 
 /**
+ * @async
+ * @description This function will restrict the client token to specific microservices
+ * @param {string} [accessToken="null accessToken"] - cpaas access token
+ * @param {string} [clientUUID="null clientUUID"] - client uuid (obtained when creating using createClientApp()
+ * @param {string} [scope=["default"]] - array of microservices the token should be able to access
+ * @param {object} [trace={}] - optional trace headers for debugging.
+ * @returns {Promise} - promise resolving to a request status message.
+ */
+const assignPolicyToClientApp = async (
+  accessToken = "null accessToken",
+  clientUUID = "null clientUUID",
+  scope = ["default"],
+  trace = {}
+) => {
+  try {
+    const MS = Util.getAuthHost();
+    const requestOptions = {
+      method: "POST",
+      uri: `${MS}/oauth/clients/${clientUUID}/scopes`,
+      body: {
+        scope: scope
+      },
+      resolveWithFullResponse: true,
+      json: true,
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+        "Content-type": "application/json",
+        "x-api-version": `${Util.getVersion()}`
+      }
+    };
+    Util.addRequestTrace(requestOptions, trace);
+    const response = await request(requestOptions);
+    if(response.statusCode === 204) {
+      return { status: "ok" };
+    } else {
+      // this is an edge case, but protects against unexpected 2xx or 3xx response codes.
+      throw {
+        "code": response.statusCode,
+        "message": typeof response.body === "string" ? response.body : "scope client app failed",
+        "trace_id": requestOptions.hasOwnProperty("headers") && requestOptions.headers.hasOwnProperty("trace")
+          ? requestOptions.headers.trace 
+          : undefined,
+        "details": typeof response.body === "object" && response.body !== null
+          ? [response.body]
+          : []
+      };
+    }
+  } catch (error) {
+    throw Util.formatError(error);
+  }
+};
+
+/**
  * @async 
  * @description This function creates a client for a provided user uuid.
  * @param {string} [accessToken="null access token"] - cpaas access token
@@ -63,17 +116,15 @@ const createClientApp = async (
 };
 
 /**
- * @async
  * @description This function returns a Basic token from a client public ID and secret
  * @param {string} [publicID="null publicID"]
  * @param {string} [secret="null secret"]
  * @returns {string} - base64 encoded Basic token
  */
-const generateBasicToken = async (
+const generateBasicToken = (
   publicID = "null publicID",
   secret = "null secret"
 ) => {
-  // why is this async?
   try {
     let basicToken = undefined;
     basicToken = Buffer.from(`${publicID}:${secret}`).toString("base64");
@@ -495,6 +546,7 @@ const validateToken = async (accessToken = "null accessToken", token= "null toke
 };
 
 module.exports = {
+  assignPolicyToClientApp,
   createClientApp,
   generateBasicToken,
   getAccessToken,

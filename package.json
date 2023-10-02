@@ -1,6 +1,6 @@
 {
   "name": "star2star-js-ms-sdk",
-  "version": "4.4.23",
+  "version": "4.4.24",
   "description": "Star2Star JavaScript Micro Service SDK",
   "main": "./lib/index.js",
   "scripts": {
@@ -21,6 +21,7 @@
   "license": "MIT",
   "dependencies": {
     "@star2star/merge-deep": "0.0.2",
+    "browserify-zlib": "0.2.0",
     "compare-versions": "4.1.4",
     "core-js": "3.30.2",
     "email-validator": "2.0.4",

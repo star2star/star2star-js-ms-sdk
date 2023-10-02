@@ -101,6 +101,7 @@ toc:
   - name: Email
     children:
       - sendEmail
+      - sendEmailAttachment
   - name: Entitlements
     children:
       - activateUserEntitlement
@@ -168,7 +169,9 @@ toc:
       - getGlobalMedia
       - getMediaFileUrl
       - listUserMedia
+      - shareMedia
       - uploadFile
+      - uploadGlobalMediaFile
   - name: Messaging
     children:
       - deleteConversation
@@ -208,7 +211,8 @@ toc:
       - provisionNumbersHelp
       - provisionNumbersReference
   - name: Oauth
-    children: 
+    children:
+      - assignPolicyToClientApp 
       - createClientApp
       - generateBasicToken
       - getAccessToken
@@ -222,14 +226,15 @@ toc:
       - validateToken
   - name: Objects
     children:
+      - createAccountDataObject
+      - createDataObject
+      - createUserDataObject
+      - deleteDataObject
       - getByType
       - getDataObject
       - getDataObjects
       - getDataObjectByType
       - getDataObjectByTypeAndName
-      - createDataObject
-      - createUserDataObject
-      - deleteDataObject
       - updateDataObject
   - name: Providers
     children:
@@ -251,6 +256,7 @@ toc:
       - getCustomApplication
       - getCustomSubscription
       - getSubscription
+      - listCustomApplications
       - listCustomSubscriptions
       - listAccountSubscriptions
       - listSubscriptions
@@ -312,6 +318,9 @@ toc:
       - startWorkflow
       - startWorkflowFlat
       - updateWorkflowGroup
+  - name: Usage
+    children:
+      - createEvent
   - name: Util
     children:
       - addUrlQueryParams
@@ -336,5 +345,6 @@ toc:
       - pendingResource
       - replaceStaticValues
       - replaceVariables
+      - request
 
      

@@ -7,7 +7,7 @@ const compareVersions = require("compare-versions");
 const crypto = require("crypto");
 const { v4 } = require("uuid");
 const Logger = require("./node-logger");
-const zlib = require("node:zlib");
+const zlib = globalThis.hasOwnProperty("document") ? require("browserify-zlib") : require("node:zlib");
 
 /**
  *

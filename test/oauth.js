@@ -187,7 +187,7 @@ describe("Oauth MS Unit Test Suite", function () {
     "Generate Basic Token",
     mochaAsync(async () => {
       trace = Util.generateNewMetaData(trace);
-      clientBasicToken = await s2sMS.Oauth.generateBasicToken(publicID, secret);
+      clientBasicToken = s2sMS.Oauth.generateBasicToken(publicID, secret);
       assert.ok(
         Buffer.from(clientBasicToken, "base64").toString() ===
           `${publicID}:${secret}`,
