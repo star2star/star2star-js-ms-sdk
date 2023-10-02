@@ -10,23 +10,23 @@ const { v4 } = require("uuid");
  * @description This function will restrict the client token to specific microservices
  * @param {string} [accessToken="null accessToken"] - cpaas access token
  * @param {string} [clientUUID="null clientUUID"] - client uuid (obtained when creating using createClientApp()
- * @param {string} [scope=["default"]] - array of microservices the token should be able to access
+ * @param {string} [policyUUID="null policyUUID"] - policy uuid
  * @param {object} [trace={}] - optional trace headers for debugging.
  * @returns {Promise} - promise resolving to a request status message.
  */
 const assignPolicyToClientApp = async (
   accessToken = "null accessToken",
   clientUUID = "null clientUUID",
-  scope = ["default"],
+  policyUUID = " null policyUUID",
   trace = {}
 ) => {
   try {
     const MS = Util.getAuthHost();
     const requestOptions = {
       method: "POST",
-      uri: `${MS}/oauth/clients/${clientUUID}/scopes`,
+      uri: `${MS}/clients/${clientUUID}/policy`,
       body: {
-        scope: scope
+        uuid: policyUUID
       },
       resolveWithFullResponse: true,
       json: true,
