@@ -683,5 +683,14 @@ const updateDataObject = async (
 };
 
 module.exports = {
-  
+  getByType,
+  getDataObject,
+  getDataObjects,
+  getDataObjectByType,
+  getDataObjectByTypeAndName,
+  createDataObject,
+  createUserDataObject,
+  createAccountDataObject,
+  deleteDataObject,
+  updateDataObject,
 };
