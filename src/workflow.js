@@ -3,7 +3,7 @@
 
 const request = require("./requestPromise");
 const util = require("./utilities");
-const fetch = require("node-fetch");
+
 /**
  * @async
  * @description This function will create a new workflow template

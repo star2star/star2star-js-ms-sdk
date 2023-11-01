@@ -1,15 +1,6 @@
-const nodeFetch = require("node-fetch");
 const util = require("./utilities");
 const { URLSearchParams } = require("url");
 const FormData = require("form-data");
-
-// ensure we use the correct fetch for the given environment
-let fetch;
-if(typeof window === "object" && typeof window.fetch === "function"){
-  fetch = window.fetch;
-} else {
-  fetch = nodeFetch;
-}
 
 /**
  * @async

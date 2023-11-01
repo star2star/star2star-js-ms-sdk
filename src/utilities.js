@@ -7,7 +7,6 @@ const compareVersions = require("compare-versions");
 const crypto = require("crypto");
 const { v4 } = require("uuid");
 const Logger = require("./node-logger");
-const zlib = require("node:zlib");
 
 /**
  *
@@ -680,7 +679,7 @@ const decrypt = (cryptoKey, text, salt = "salt", algorithm = "aes-192-cbc") => {
  * @param {string} algorithm - optional encryption algorithm
  * @returns {object} object containing iv and encrypted strting
  */
-const encryptObject = (key, obj, iv, algorithm = "aes-256-cbc") => {
+const encryptObject = (zlib, key, obj, iv, algorithm = "aes-256-cbc") => {
   try {
     {
       let objAsString;
@@ -740,7 +739,7 @@ const encryptObject = (key, obj, iv, algorithm = "aes-256-cbc") => {
  * @param {string} algorithm - optional encryption algorithm
  * @returns {object} - object containing iv and decrypted object
  */
-const decryptObject = (key, ciphertext, algorithm = 'aes-256-cbc') => {
+const decryptObject = (zlib, key, ciphertext, algorithm = 'aes-256-cbc') => {
   try {
     const cipherObj = JSON.parse(zlib.gunzipSync(Buffer.from(ciphertext, "base64")));
     const initializationVector = Buffer.from(cipherObj.iv, 'hex');
