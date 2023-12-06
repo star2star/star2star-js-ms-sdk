@@ -806,7 +806,7 @@ const listWorkflowGroups = async (
  * @param {string} [accessToken="null access token"] - cpaas access token
  * @param {number} [offset=0] - pagination offset
  * @param {number} [limit=10] - pagination limit
- * @param {string} [status=undefined] - option status filter
+ * @param {object} [filter=undefined] - option filter object status or type 
  * @param {object} [trace = {}] - optional microservice lifecycle trace headers
  * @returns {Promise}
  */
