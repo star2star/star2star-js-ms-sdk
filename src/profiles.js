@@ -5,6 +5,7 @@ const util = require("./utilities");
 /**
  * @async
  * @description This function create a user profile property 
+ * @param {string} [accessToken="null accessToken"] - CPaaS access token
  * @param {string} [userUUID="null userUUID"] - CPaaS user uuid
  * @param {string} [propertyName="no_property_name"] - property name
  * @param {string} [propertyValue="no_property_value"] - property value
@@ -14,6 +15,7 @@ const util = require("./utilities");
  * @returns {Promise<redirect to 3rd party oauth2 api>} - promise resolving to redirect
  */
 const createUserProperty = async (
+    accessToken = "null accessToken",  
     userUUID = "null userUUID",
     propertyName = "no_property_name",
     propertyValue = "no_property_value",
@@ -90,12 +92,14 @@ const listUserProperties = async (
 /**
  * @async
  * @description This function updates a user profile property 
+ * @param {string} [accessToken="null accessToken"] - CPaaS access token
  * @param {string} [propertyUUID="null propertyUUID"] - property uuid
  * @param {object} [propertyObject={}] - property object with all props that you want to change and leave the same 
  * @param {object} [trace={}] - optional CPaaS lifecycle headers
  * @returns {Promise<redirect to 3rd party oauth2 api>} - promise resolving to redirect
  */
 const updateProperty = async (
+    accessToken = "null accessToken",  
     propertyUUID = "null propertyUUID",
     propertyObject = {},
     trace = {}
