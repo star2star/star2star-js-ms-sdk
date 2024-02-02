@@ -27,7 +27,8 @@ module.exports = {
     "RESOURCES": "/resourcecms",
     "USAGE": "/usage",
     "NUMBERS": "/sms",
-    "CAMPAIGNS": "/sms"
+    "CAMPAIGNS": "/sms",
+    "PROFILES": "/profiles"
   },
   "msDelay": 1000,
   "pollInterval": 1000,

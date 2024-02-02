@@ -28,6 +28,7 @@ const Resources = require("./resources");
 const Usage = require("./usage");
 const Numbers = require("./numbers");
 const Campaigns = require("./campaigns");
+const Profiles = require("./profiles");
 
 /**
  * 
@@ -97,5 +98,6 @@ module.exports = {
   Resources,
   Usage,
   Numbers,
-  Campaigns
+  Campaigns, 
+  Profiles
 };

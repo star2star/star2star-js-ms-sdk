@@ -346,5 +346,9 @@ toc:
       - replaceStaticValues
       - replaceVariables
       - request
-
+  - name: Profiles
+    children:
+      - createUserProperty
+      - listUserProperties
+      - updateProperty
      
