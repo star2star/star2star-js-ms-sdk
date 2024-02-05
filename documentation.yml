@@ -190,6 +190,7 @@ toc:
       - sendSMS
       - sendSMSMessage
       - snoozeUnsnoozeConversation
+      - archiveUnarchiveConversation
   - name: Metadata
     children:
       - getMetadataSubsystems

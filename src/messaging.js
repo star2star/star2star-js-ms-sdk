@@ -682,7 +682,43 @@ const snoozeUnsnoozeConversation = async (
   } 
 };
 
-
+/**
+ * @async
+ * @description - This function will archive/un-archive conversations
+ * @param {string} [accessToken="null accessToken"] - cpaas access token
+ * @param {string} [conversationUUID="null conversationUUID"] - conversation uuid
+ * @param {boolean} [archived=false] - archived:true OR archived:false to either archived / un-archived
+ * @param {object} [trace={}] - microservice lifecyce headers
+ * @returns {Promise} - Promise resolving to empty because 204 no content 
+ */
+const archiveUnarchiveConversation = async (
+  accessToken = "null accessToken",
+  conversationUUID = "null conversationUUID",
+  archived = false,
+  trace = {}
+) => {
+  try {
+    const MS = util.getEndpoint("messaging");
+    const requestOptions = {
+      method: "POST",
+      uri: `${MS}/conversations/${conversationUUID}/context/modify`,
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+        "x-api-version": `${util.getVersion()}`,
+        "Content-type": "application/json"
+      },
+      body: {
+        "archived": archived
+      },
+      json: true
+    };
+    util.addRequestTrace(requestOptions, trace);
+    const response = await request(requestOptions);
+    return response;
+  } catch (error) {
+    throw util.formatError(error);
+  } 
+};
 
 module.exports = {
   getConversation,
@@ -699,5 +735,6 @@ module.exports = {
   deleteMultipleConversations,
   deleteMessage,
   deleteMultipleMessages,
-  snoozeUnsnoozeConversation
+  snoozeUnsnoozeConversation,
+  archiveUnarchiveConversation
 };
