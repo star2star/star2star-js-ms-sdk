@@ -45,6 +45,49 @@ const getConversation = async (
 
 /**
  * @async
+ * @description This function will retrieve a conversation 
+ * @param {string} [accessToken="null accessToken"] - cpaas application token
+ * @param {string} [conversationUuid ="null userUuid"] - conversation uuid
+ * @param {object} [filters={}] - optional filter object ... status
+ * @param {object} [trace={}] - options microservice lifecycle tracking headers
+ * @returns {Promise<object>} A promise resolving to a conversation metadata object
+ */
+const retrieveConversation = async (
+  accessToken = "null accessToken",
+  conversationUuid = "null conversationUuid",
+  filters={},
+  trace = {}
+) => {
+  try {
+    const MS = util.getEndpoint("Messaging");
+    const requestOptions = {
+      method: "GET",
+      uri: `${MS}/conversations/${conversationUuid}`,
+      qs: {
+      },
+      headers: {
+        "Content-Type": "application/json",
+        "Authorization": `Bearer ${accessToken}`,
+        "x-api-version": `${util.getVersion()}`
+      },
+      json: true
+    };
+    if (filters) {
+      Object.keys(filters).forEach(filter => {
+        requestOptions.qs[filter] = filters[filter];
+      });
+    };
+
+    util.addRequestTrace(requestOptions, trace);
+    const response = await request(requestOptions);
+    return response;
+  } catch (error) {
+    throw util.formatError(error);
+  }
+}; // end function retrieveConversation
+
+/**
+ * @async
  * @description This function deletes (archives for 30 days) a specific conversation
  * @param {string} [accessToken="null accessToken"] - cpaas application token
  * @param {string} [conversation_uuid="null conversation_uuid"] - conversation uuid

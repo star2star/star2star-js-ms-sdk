@@ -183,6 +183,7 @@ toc:
       - getConversationUuid 
       - getSMSNumber
       - markAllConversationMessagesRead
+      - retrieveConversation
       - retrieveConversations
       - retrieveMessages
       - sendMessage
