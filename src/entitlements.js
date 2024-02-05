@@ -233,19 +233,6 @@ const getUserEntitlementsV2 = async (
       }
       return p;
     }, true);
-    if (isFilterKeysValid === false) {
-      throw {
-        code: 400,
-        message:
-          "filters contain an invalid key valid keys are: " + apiKeys.join(","),
-        trace_id:
-          requestOptions.hasOwnProperty("headers") &&
-          requestOptions.headers.hasOwnProperty("trace")
-            ? requestOptions.headers.trace
-            : undefined,
-        details: [{ filters: filters }],
-      };
-    }
 
     const requestOptions = {
       method: "GET",
@@ -261,6 +248,22 @@ const getUserEntitlementsV2 = async (
       },
       json: true,
     };
+
+    if (isFilterKeysValid === false) {
+      throw {
+        code: 400,
+        message:
+          "filters contain an invalid key valid keys are: " + apiKeys.join(","),
+        trace_id:
+          requestOptions.hasOwnProperty("headers") &&
+          requestOptions.headers.hasOwnProperty("trace")
+            ? requestOptions.headers.trace
+            : undefined,
+        details: [{ filters: filters }],
+      };
+    }
+
+
 
     Util.addRequestTrace(requestOptions, trace);
 
