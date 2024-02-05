@@ -229,7 +229,7 @@ const getUserEntitlementsV2 = async (
     // validate filter keys
     const isFilterKeysValid = Object.keys(filters).reduce((p, c) => {
       if (p === true) {
-        return apiKeys.indexOf(c) < 0;
+        return apiKeys.indexOf(c) > -1 ;
       }
       return p;
     }, true);
