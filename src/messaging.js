@@ -769,6 +769,7 @@ module.exports = {
   getConversationUuid,
   getSMSNumber,
   markAllConversationMessagesRead,
+  retrieveConversation,
   retrieveConversations,
   retrieveMessages,
   sendMessage,
