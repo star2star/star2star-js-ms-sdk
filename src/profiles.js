@@ -78,7 +78,7 @@ const listUserProperties = async (
         "Content-type": "application/json",
         "x-api-version": `${util.getVersion()}`
       }, 
-      "JSON": true
+      "json": true
     };
     util.addRequestTrace(requestOptions, trace);
     const response = await request(requestOptions);
