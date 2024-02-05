@@ -108,6 +108,7 @@ toc:
       - getProduct
       - getProducts
       - getUserEntitlements
+      - getUserEntitlementsV2
       - updateProduct
   - name: Forms
     children:
