@@ -25,11 +25,12 @@ const getConversation = async (
       method: "POST",
       uri: `${MS}/users/${userUuid}/conversations`,
       body: {
-        phone_numbers: [toPhoneNumber]
+        "phone_numbers": [toPhoneNumber],
+        "name": toPhoneNumber
       },
       headers: {
         "Content-Type": "application/json",
-        Authorization: `Bearer ${accessToken}`,
+        "Authorization": `Bearer ${accessToken}`,
         "x-api-version": `${util.getVersion()}`
       },
       json: true
