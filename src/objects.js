@@ -3,7 +3,6 @@
 
 const Util = require("./utilities");
 const request = require("./requestPromise");
-const merge = require("@star2star/merge-deep");
 const ResourceGroups = require("./resourceGroups");
 const logger = require("./node-logger").getInstance();
 
@@ -319,7 +318,7 @@ const createUserDataObject = async (
     Util.addRequestTrace(requestOptions, trace);
     //create the object first
     let newObject;
-    let nextTrace = merge({}, trace);
+    let nextTrace = trace;
     try {
       const response = await request(requestOptions);
       newObject = response.body;
@@ -342,7 +341,7 @@ const createUserDataObject = async (
         users && 
         typeof users === "object"
       ) {
-        nextTrace = merge({}, nextTrace, Util.generateNewMetaData(nextTrace));
+        nextTrace = Util.generateNewMetaData(nextTrace);
         await ResourceGroups.createResourceGroups(
           accessToken,
           accountUUID,
@@ -357,11 +356,7 @@ const createUserDataObject = async (
       //delete the object if we have one
       if (newObject && newObject.hasOwnProperty("uuid")) {
         try {
-          nextTrace = merge(
-            {},
-            nextTrace,
-            Util.generateNewMetaData(nextTrace)
-          );
+          nextTrace = Util.generateNewMetaData(nextTrace);
           await deleteDataObject(accessToken, newObject.uuid, nextTrace); //this will clean up the groups created if there are any.
         } catch (cleanupError) {
           throw {
@@ -432,7 +427,7 @@ const createAccountDataObject = async (
     Util.addRequestTrace(requestOptions, trace);
     //create the object first
     let newObject;
-    let nextTrace = merge({}, trace);
+    let nextTrace = trace;
     try {
       const response = await request(requestOptions);
       newObject = response.body;
@@ -470,11 +465,7 @@ const createAccountDataObject = async (
       //delete the object if we have one
       if (newObject && newObject.hasOwnProperty("uuid")) {
         try {
-          nextTrace = merge(
-            {},
-            nextTrace,
-            Util.generateNewMetaData(nextTrace)
-          );
+          nextTrace = Util.generateNewMetaData(nextTrace);
           await deleteDataObject(accessToken, newObject.uuid, nextTrace); //this will clean up the groups created if there are any.
         } catch (cleanupError) {
           throw {
@@ -587,7 +578,7 @@ const deleteDataObject = async (
       resolveWithFullResponse: true
     };
     Util.addRequestTrace(requestOptions, trace);
-    let nextTrace = merge({}, trace, Util.generateNewMetaData(trace));
+    let nextTrace = Util.generateNewMetaData(trace);
     await ResourceGroups.cleanUpResourceGroups(
       accessToken,
       dataUUID,
@@ -648,11 +639,11 @@ const updateDataObject = async (
       json: true
     };
     Util.addRequestTrace(requestOptions, trace);
-    let nextTrace = merge({}, trace);
+    let nextTrace = trace;
     if (
       accountUUID //required to update associated resource groups.
     ) {
-      nextTrace = merge({}, nextTrace, Util.generateNewMetaData(nextTrace));
+      nextTrace = Util.generateNewMetaData(nextTrace);
       await ResourceGroups.updateResourceGroups(
         accessToken,
         dataUUID,

@@ -12,6 +12,8 @@ const Util = require("../src/utilities");
 const logger = require("../src/node-logger").getInstance();
 let trace = Util.generateNewMetaData();
 
+let instanceUUID;
+
 //utility function to simplify test code
 const mochaAsync = (func, name) => {
   return async () => {
@@ -20,7 +22,7 @@ const mochaAsync = (func, name) => {
       logger.debug(name, response);
       return response;
     } catch (error) {
-      console.log("EEEEEE", error)
+      console.log("EEEEEE", error);
       //mocha will log out the error
       throw error;
     }
@@ -84,9 +86,72 @@ describe("Resource CMS Test Suite", function () {
         "appdev_james_2e05::9ex4hXwBwSlR5_nllNG-::a71fef3a-6184-4673-beb5-d1e0694fc3d9", //reference_filter
         trace
       );
+      instanceUUID = response.uuid;
       assert.ok(1 === 1, JSON.stringify(response, null, "\t"));
       return response;
     }, "Get Resource Instance")
+  );
+
+  it(
+    "Get Resource Instance by UUID",
+    mochaAsync(async () => {
+      trace = Util.generateNewMetaData(trace);
+      const response = await s2sMS.Resources.getResourceInstanceByUUID(
+        accessToken,
+        instanceUUID,
+        0, //rows offset
+        100, // rows limit
+        "rows,references", // include
+        "references", // expand
+        "appdev_james_2e05::9ex4hXwBwSlR5_nllNG-::a71fef3a-6184-4673-beb5-d1e0694fc3d9", //reference_filter
+        trace
+      );
+      console.log("response", response);
+      assert.ok(1 === 1, JSON.stringify(response, null, "\t"));
+      return response;
+    }, "Get Resource Instance by UUID")
+  );
+
+  it(
+    "Add Row to Resource Instance",
+    mochaAsync(async () => {
+      trace = Util.generateNewMetaData(trace);
+      const response = await s2sMS.Resources.addRowToInstance(
+        accessToken,
+        instanceUUID,
+        {
+          resource_instance_uuid: instanceUUID,
+          content: {
+            emails: [
+              {
+                email_address: `apiganelli_${Date.now()}@getnada.com`,
+                label: "work",
+              },
+            ],
+            firstname: "avril",
+            form_data: {
+              cancel: false,
+              emails: [
+                {
+                  email_address: `apiganelli_${Date.now()}@getnada.com`,
+                  label: "work",
+                },
+              ],
+              submit1: true,
+              firstname: "avril",
+              phones: [],
+              lastname: "piganelli",
+            },
+            phones: [],
+            lastname: "piganelli",
+          },
+        }, //todo fix this
+        trace
+      );
+      console.log("response", response);
+      assert.ok(1 === 1, JSON.stringify(response, null, "\t"));
+      return response;
+    }, "Add Row to Resource Instance")
   );
 
   it(
@@ -96,14 +161,19 @@ describe("Resource CMS Test Suite", function () {
       const response = await s2sMS.Resources.searchResourceInstance(
         accessToken,
         "IHB23X0B4LoNFLghRM7S",
-        [{
-          column: "firstname",
-          term: "James",
-          operation: "=",
-        }],
+        [
+          {
+            column: "firstname",
+            term: "James",
+            operation: "=",
+          },
+        ],
         trace
       );
-      assert.ok(response.uuid === "IHB23X0B4LoNFLghRM7S", JSON.stringify(response, null, "\t"));
+      assert.ok(
+        response.uuid === "IHB23X0B4LoNFLghRM7S",
+        JSON.stringify(response, null, "\t")
+      );
       return response;
     }, "Search Resource Instance")
   );

@@ -2,7 +2,6 @@
 "use strict";
 
 const config = require("./config");
-const merge = require("@star2star/merge-deep");
 const compareVersions = require("compare-versions");
 const crypto = require("crypto");
 const { v4 } = require("uuid");
@@ -442,7 +441,7 @@ const formatError = (error) => {
           const parsedBody = JSON.parse(error.response.body);
           error.response.body = parsedBody;
         } catch (e) {
-          const body = merge({}, error.response.body);
+          const body = Object.assign({}, error.response.body);
           error.response.body = {
             message: body,
           };
@@ -474,7 +473,7 @@ const formatError = (error) => {
 
       // if we have no message add the body to details since this is a non-standard error message
       if (retObj.message === "unspecified error") {
-        const newBody = merge({}, error.response.body);
+        const newBody = Object.assign({}, error.response.body);
         error.response.body = {
           details: [newBody],
         };

@@ -4,7 +4,6 @@
 const Util = require("./utilities");
 const Auth = require("./auth");
 const Groups = require("./groups");
-const merge = require("@star2star/merge-deep");
 const logger = require("./node-logger").getInstance();
 
 /**
@@ -293,11 +292,7 @@ const updateResourceGroups = async (
     // add any new groups if needed
     // the properties for the groups that were updated or deleted were removed from users object above
     if (Object.keys(users).length > 0) {
-      nextTrace = merge(
-        {},
-        nextTrace,
-        Util.generateNewMetaData(nextTrace)
-      );
+      nextTrace = Util.generateNewMetaData(nextTrace);
       logger.debug(`Updating Resource Groups For ${resourceUUID}: Creating New Groups`, users);
       await createResourceGroups(
         accessToken,

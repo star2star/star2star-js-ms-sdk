@@ -28,7 +28,8 @@ module.exports = {
     "USAGE": "/usage",
     "NUMBERS": "/sms",
     "CAMPAIGNS": "/sms",
-    "PROFILES": "/profiles"
+    "PROFILES": "/profiles",
+    "VOICE": "/voice"
   },
   "msDelay": 1000,
   "pollInterval": 1000,

@@ -3,7 +3,6 @@
 
 const request = require("./requestPromise");
 const util = require("./utilities");
-const merge = require("@star2star/merge-deep");
 
 /**
  * @async
@@ -68,7 +67,7 @@ const createShortUrl = async (accessToken = "null accessToken", options = {}, tr
   try {
     const MS = util.getEndpoint("shorturls");
 
-    const b = merge({}, options);
+    const b = Object.assign({}, options);
     if (!b.hasOwnProperty("url")) {
       return Promise.reject("options object missing url property");
     }

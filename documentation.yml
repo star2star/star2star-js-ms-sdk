@@ -268,8 +268,10 @@ toc:
       - updateSubscriptionExpiresDate
   - name: Resource CMS
     children:
+      - addRowToInstance
       - createInstance
       - getResourceInstance
+      - getResourceInstanceByUUID
       - getResourceInstanceRow
       - listResources
       - registerAccountTemplate
@@ -294,6 +296,9 @@ toc:
       - createShortUrl
       - deleteShortCode
       - listShortUrls
+  - name: Voice
+    children:
+      - getExtensionsByAccount
   - name: Workflow
     children:
       - createWorkflowTemplate
