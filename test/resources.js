@@ -12,7 +12,7 @@ const Util = require("../src/utilities");
 const logger = require("../src/node-logger").getInstance();
 let trace = Util.generateNewMetaData();
 
-let instanceUUID;
+let instanceUUID, resourceRowID;
 
 //utility function to simplify test code
 const mochaAsync = (func, name) => {
@@ -148,7 +148,8 @@ describe("Resource CMS Test Suite", function () {
         }, //todo fix this
         trace
       );
-      console.log("response", response);
+      resourceRowID = response.uuid;
+      //console.log("response", response);
       assert.ok(1 === 1, JSON.stringify(response, null, "\t"));
       return response;
     }, "Add Row to Resource Instance")
@@ -178,19 +179,33 @@ describe("Resource CMS Test Suite", function () {
     }, "Search Resource Instance")
   );
 
-  // it("Get Resource Instance Row", mochaAsync(async () => {
-  //   trace = Util.generateNewMetaData(trace);
-  //   const response = await s2sMS.Resources.getResourceInstanceRow(
-  //     accessToken,
-  //     "nfDtt3wBwSlR5_nlmHoL",
-  //     "nfDtt3wBwSlR5_nlmHoL/row/appdev_ack_template_849a::eFsCmXwB4LoNFLghuAIk::1a036a2d-b1d3-4886-8c5c-0fcf99695a03"
-  //   );
-  //   assert.ok(
-  //     1 === 1,
-  //     JSON.stringify(response, null, "\t")
-  //   );
-  //   return response;
-  // },"Get Resource Instance"));
+  it("Get Resource Instance Row", mochaAsync(async () => {
+    trace = Util.generateNewMetaData(trace);
+    const response = await s2sMS.Resources.getResourceInstanceRow(
+      accessToken,
+      "IHB23X0B4LoNFLghRM7S",
+      resourceRowID
+    );
+    assert.ok(
+      1 === 1,
+      JSON.stringify(response, null, "\t")
+    );
+    return response;
+  },"Get Resource Instance"));
+
+  it("Delete Resource Instance Row", mochaAsync(async () => {
+    trace = Util.generateNewMetaData(trace);
+    const response = await s2sMS.Resources.deleteResourceInstanceRow(
+      accessToken,
+      "IHB23X0B4LoNFLghRM7S",
+      resourceRowID
+    );
+    assert.ok(
+      1 === 1,
+      JSON.stringify(response, null, "\t")
+    );
+    return response;
+  },"Delete Resource Instance Row"));
 
   // template
   // it("change me", mochaAsync(async () => {

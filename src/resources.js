@@ -42,6 +42,44 @@ const addRowToInstance = async (
 };
 
 /**
+ *
+ * @description This function deletes a CMS resource instance row.
+ * @param {string} [accessToken="null accessToken"] - CPaaS access token
+ * @param {string} [instance_uuid="null instance_uuid"] - resource instance uuid
+ * @param {string} [row_id="null row_id"] - resource instance row id
+ * @param {object} [trace={}] - optional microservice lifcycle headers
+ * @returns {Promise<object>} - promise resolving to a CMS instance row object
+ * @returns
+ */
+const deleteResourceInstanceRow = async (
+  accessToken = "null accessToken",
+  instance_uuid = "null instance_uuid",
+  row_id = "null row_id",
+  trace = {}
+) => {
+  try {
+    const nextTrace = util.generateNewMetaData(trace);
+    const MS = util.getEndpoint("resources");
+    const requestOptions = {
+      method: "DELETE",
+      uri: `${MS}/instance/${instance_uuid}/row/${row_id}`,
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+        "Content-type": "application/json",
+        "x-api-version": `${util.getVersion()}`,
+      },
+      json: true,
+    };
+
+    util.addRequestTrace(requestOptions, nextTrace);
+    const response = await request(requestOptions);
+    return response;
+  } catch (error) {
+    throw util.formatError(error);
+  }
+};
+
+/**
  * @async
  * @description This function returns CMS resource instance rows
  * @param {string} [accessToken="null accessToken"] - cpaas access token
@@ -454,6 +492,7 @@ const searchResourceInstance = async (
 module.exports = {
   addRowToInstance,
   createInstance,
+  deleteResourceInstanceRow,
   getResourceInstance,
   getResourceInstanceByUUID,
   getResourceInstanceRow,

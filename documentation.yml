@@ -270,6 +270,7 @@ toc:
     children:
       - addRowToInstance
       - createInstance
+      - deleteResourceInstanceRow
       - getResourceInstance
       - getResourceInstanceByUUID
       - getResourceInstanceRow
