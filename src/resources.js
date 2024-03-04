@@ -5,6 +5,44 @@ const request = require("./requestPromise");
 
 /**
  * @async
+ * @description This function adds a relationship to a CMS resource instance row
+ * @param {string} [accessToken="null accessToken"] - cpaas access token
+ * @param {string} [rowUUID="null rowUUID"] - CMS instance row uuid
+ * @param {array} [relationships=[]] - array off relationship uuids
+ * @param {object} [trace={}] - optional microservice lifcycle headers
+ * @returns {Promise<object>} - promise resolving to instance object
+ */
+const addRelationshipsToRow = async (
+  accessToken = "null accessToken",
+  rowUUID = "null instanceUUID",
+  relationships = [],
+  trace = {}
+) => {
+  try {
+    const nextTrace = util.generateNewMetaData(trace);
+    const MS = util.getEndpoint("resources");
+    const requestOptions = {
+      method: "POST",
+      uri: `${MS}/relation/${rowUUID}/add`,
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+        "Content-type": "application/json",
+        "x-api-version": `${util.getVersion()}`,
+      },
+      body: relationships,
+      json: true,
+    };
+
+    util.addRequestTrace(requestOptions, nextTrace);
+    const response = await request(requestOptions);
+    return response;
+  } catch (error) {
+    throw util.formatError(error);
+  }
+};
+
+/**
+ * @async
  * @description This function adds a row to a CMS resource instance
  * @param {string} [accessToken="null accessToken"] - cpaas access token
  * @param {string} [instanceUUID="null instanceUUID"] - CMS instance uuid
@@ -490,6 +528,7 @@ const searchResourceInstance = async (
 };
 
 module.exports = {
+  addRelationshipsToRow,
   addRowToInstance,
   createInstance,
   deleteResourceInstanceRow,
