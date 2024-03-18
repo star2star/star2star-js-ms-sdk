@@ -49,7 +49,7 @@ const getExtensionsByAccount = async (
       requestOptions.qs.include = include;
     }
 
-    response = await util.aggregate(request, requestOptions, nextTrace);
+    const response = await util.aggregate(request, requestOptions, nextTrace);
     return response;
   } catch (error) {
     throw util.formatError(error);
