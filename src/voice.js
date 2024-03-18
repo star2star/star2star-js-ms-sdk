@@ -16,47 +16,46 @@ const request = require("./requestPromise");
  * @returns {Promise<object>} - promise resolving to instance object
  */
 const getExtensionsByAccount = async (
-    accessToken = "null accessToken",
-    accountUUID = "null accountUUID",
-    accountType = "customer",
-    include = "",
-    offset = 0,
-    limit = 100,
-    trace = {}
-  ) => {
-    try {
-      const nextTrace = util.generateNewMetaData(trace);
-      const MS = util.getEndpoint("voice");
-      const requestOptions = {
-        method: "GET",
-        uri: `${MS}/extension`,
-        headers: {
-          Authorization: `Bearer ${accessToken}`,
-          "Content-type": "application/json",
-          "x-api-version": `${util.getVersion()}`,
-        },
-        qs: {
-          account_type: accountType,
-          account_uuid: accountUUID,
-          limit: limit,
-          offset: offset
-        },
-        json: true,
-      };
-  
-      // add include query param if defined
-      if (typeof include === "string" && include.length > 0) {
-        requestOptions.qs.include = include;
-      }
-  
-      util.addRequestTrace(requestOptions, nextTrace);
-      const response = await request(requestOptions);
-      return response;
-    } catch (error) {
-      throw util.formatError(error);
-    }
-  };
+  accessToken = "null accessToken",
+  accountUUID = "null accountUUID",
+  accountType = "customer",
+  include = "",
+  offset = 0,
+  limit = 100,
+  trace = {}
+) => {
+  try {
+    const nextTrace = util.generateNewMetaData(trace);
+    const MS = util.getEndpoint("voice");
+    const requestOptions = {
+      method: "GET",
+      uri: `${MS}/extension`,
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+        "Content-type": "application/json",
+        "x-api-version": `${util.getVersion()}`,
+      },
+      qs: {
+        account_type: accountType,
+        account_uuid: accountUUID,
+        limit: 100,
+        offset: 0,
+      },
+      json: true,
+    };
 
-  module.exports = {
-    getExtensionsByAccount
-  };
+    // add include query param if defined
+    if (typeof include === "string" && include.length > 0) {
+      requestOptions.qs.include = include;
+    }
+
+    response = await util.aggregate(request, requestOptions, nextTrace);
+    return response;
+  } catch (error) {
+    throw util.formatError(error);
+  }
+};
+
+module.exports = {
+  getExtensionsByAccount,
+};
