@@ -265,4 +265,32 @@ describe("entitlements MS Test Suite", function () {
       }
     }, "update product bad")
   );
+
+  it(
+    "list account entitlements",
+    mochaAsync(async () => {
+      trace = Util.generateNewMetaData(trace);
+      try {
+        const response = await s2sMS.Entitlements.listAccountEntitlements(
+          accessToken,
+          process.env.ACCOUNT_UUID,
+          0, //offset
+          1, // limit
+          { user_uuid: process.env.USER_UUID }, // filters
+          trace
+        );
+        assert.ok(
+          response.hasOwnProperty("items") &&
+            Array.isArray(response.items) &&
+            response.items.length === 1 &&
+            response.items[0].user_uuid === process.env.USER_UUID,
+          JSON.stringify(response, null, "\t")
+        );
+
+        return response;
+      } catch (error) {
+        throw error;
+      }
+    }, "list account entitlements")
+  );
 });

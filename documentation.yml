@@ -109,6 +109,7 @@ toc:
       - getProducts
       - getUserEntitlements
       - getUserEntitlementsV2
+      - listAccountEntitlements
       - updateProduct
   - name: Forms
     children:
@@ -239,6 +240,11 @@ toc:
       - getDataObjectByType
       - getDataObjectByTypeAndName
       - updateDataObject
+  - name: Profiles
+    children:
+      - createUserProperty
+      - listUserProperties
+      - updateProperty
   - name: Providers
     children:
       - authorizeProvider
@@ -331,6 +337,11 @@ toc:
   - name: Usage
     children:
       - createEvent
+      - getAccountBillingCycle
+      - getUsageReport
+      - getUsageTemplate
+      - listUsageTemplates
+      - runUsageReport
   - name: Util
     children:
       - addUrlQueryParams
@@ -356,9 +367,5 @@ toc:
       - replaceStaticValues
       - replaceVariables
       - request
-  - name: Profiles
-    children:
-      - createUserProperty
-      - listUserProperties
-      - updateProperty
+
      

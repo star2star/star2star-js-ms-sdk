@@ -119,6 +119,51 @@ const getProducts = async (
 };
 
 /**
+ * @description This fuction returns a product by application uuid
+ * @async
+ * @param {string} [accessToken="null accessToken"] - CPaaS access token
+ * @param {number} [offset=0] - pagination offset
+ * @param {number} [limit=10] - pagination limit
+ * @param {object} [filters=undefined] - optional filters object {"key": "value"}
+ * @param {object} [trace={}] - optional CPaaS lifecycle headers
+ * @returns {Promise<object>} Promise resolving to a list of products
+ */
+const getProductByApplicationUuid = async (
+  accessToken = "null accessToken",
+  offset = 0,
+  limit = 10,
+  filters = undefined,
+  trace = {}
+) => {
+  try {
+    const MS = Util.getEndpoint("entitlements");
+    const requestOptions = {
+      method: "GET",
+      uri: `${MS}/products`,
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+        "Content-type": "application/json",
+        "x-api-version": `${Util.getVersion()}`,
+      },
+      json: true,
+      qs: {},
+    };
+    Util.addRequestTrace(requestOptions, trace);
+    if (filters) {
+      Object.keys(filters).forEach((filter) => {
+        requestOptions.qs[filter] = filters[filter];
+      });
+    }
+    requestOptions.qs.offset = offset;
+    requestOptions.qs.limit = limit;
+
+    const response = await request(requestOptions);
+    return response;
+  } catch (error) {
+    throw Util.formatError(error);
+  }
+};
+/**
  * @description This fuction returns a list of user entitlements
  * @async
  * @param {string} [accessToken="null accessToken"] - CPaaS access token
@@ -229,7 +274,7 @@ const getUserEntitlementsV2 = async (
     // validate filter keys
     const isFilterKeysValid = Object.keys(filters).reduce((p, c) => {
       if (p === true) {
-        return apiKeys.indexOf(c) > -1 ;
+        return apiKeys.indexOf(c) > -1;
       }
       return p;
     }, true);
@@ -263,8 +308,6 @@ const getUserEntitlementsV2 = async (
       };
     }
 
-
-
     Util.addRequestTrace(requestOptions, trace);
 
     // add filters keys to query string
@@ -272,6 +315,67 @@ const getUserEntitlementsV2 = async (
       requestOptions.qs[filter] = filters[filter];
     });
 
+    const response = await request(requestOptions);
+    return response;
+  } catch (error) {
+    throw Util.formatError(error);
+  }
+};
+
+/**
+ * @description This fuction returns a list of entitlements by account
+ * @async
+ * @param {string} [accessToken="null accessToken"] - CPaaS access token
+ * @param {string} [accountUUID="null"] - account uuid
+ * @param {number} [offset=0] - pagination offset
+ * @param {number} [limit=100] - pagination limit
+ * @param {object} [filters=undefined] - optional filters object {"key": "value"}
+ * @param {object} [trace={}] - optional CPaaS lifecycle headers
+ * @returns {Promise<object>} Promise resolving to a list of user entitlements
+ */
+const listAccountEntitlements = async (
+  accessToken = "null accessToken",
+  accountUUID = "null accountUUID",
+  offset = 0,
+  limit = 100,
+  filters = undefined,
+  trace = {}
+) => {
+  try {
+    const MS = Util.getEndpoint("entitlements");
+    const requestOptions = {
+      method: "GET",
+      uri: `${MS}/accounts/${accountUUID}/entitlements`,
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+        "Content-type": "application/json",
+        "x-api-version": `${Util.getVersion()}`,
+      },
+      qs: {
+        offset: offset,
+        limit: limit,
+      },
+      json: true,
+    };
+    Util.addRequestTrace(requestOptions, trace);
+    if (typeof filters !== "undefined") {
+      if (typeof filters !== "object" || filters === null) {
+        throw {
+          code: 400,
+          message: "filters param not an object",
+          trace_id:
+            requestOptions.hasOwnProperty("headers") &&
+            requestOptions.headers.hasOwnProperty("trace")
+              ? requestOptions.headers.trace
+              : undefined,
+          details: [{ filters: filters }],
+        };
+      } else {
+        Object.keys(filters).forEach((filter) => {
+          requestOptions.qs[filter] = filters[filter];
+        });
+      }
+    }
     const response = await request(requestOptions);
     return response;
   } catch (error) {
@@ -319,7 +423,9 @@ module.exports = {
   activateUserEntitlement,
   getProduct,
   getProducts,
-  updateProduct,
+  getProductByApplicationUuid,
   getUserEntitlements,
   getUserEntitlementsV2,
+  listAccountEntitlements,
+  updateProduct,
 };

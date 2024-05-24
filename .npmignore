@@ -1,4 +1,5 @@
 .env.json
+.env-cmdrc
 .vscode
 babel.config.json
 documentation.yml
