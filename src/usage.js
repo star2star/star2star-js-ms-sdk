@@ -121,13 +121,13 @@ const getUsageReport = async (
  * @async
  * @description This function gets a usage template by uuid.
  * @param {string} [accessToken="null accessToken"] - access token for cpaas systems
- * @param {string} [accountUUID="undefined"] - account UUID
+ * @param {string} [templateUUID="null templateUUID"] - usage template UUID
  * @param {object} [trace = {}] - optional microservice lifecycle trace headers
  * @returns {Promise<object>} - Promise resolving to a usage report template
  */
 const getUsageTemplate = async (
   accessToken = "null accessToken",
-  templateUUID = undefined,
+  templateUUID = "null templateUUID",
   trace = {}
 ) => {
   try {
