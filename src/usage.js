@@ -134,7 +134,7 @@ const getUsageTemplate = async (
     const MS = util.getEndpoint("usage");
     const requestOptions = {
       method: "GET",
-      uri: `${MS}/reports/templates/${templateUUID}}`,
+      uri: `${MS}/reports/templates/${templateUUID}`,
       headers: {
         Authorization: `Bearer ${accessToken}`,
         "Content-type": "application/json",

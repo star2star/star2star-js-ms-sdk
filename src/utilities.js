@@ -607,9 +607,9 @@ const formatFetchError = async (fetchResponse) => {
 
     // set returned code for now. this may get overwritted if there are details in the body
     const parseType =
-      fetchResponse?.headers?.get("Content-Type").split(";")[0] === "text/html"
-        ? "text"
-        : "json";
+      fetchResponse?.headers?.get("Content-Type")?.includes("json") 
+        ? "json"
+        : "text";
     const errorBody = await fetchResponse[parseType]();
 
     if (typeof errorBody === "string") {
