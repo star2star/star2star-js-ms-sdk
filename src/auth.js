@@ -2,7 +2,7 @@
 "use strict";
 const Util = require("./utilities");
 const request = require("./requestPromise");
-const Groups = require("./groups");;
+const Groups = require("./groups");
 
 /**
  * @async
@@ -25,18 +25,19 @@ const activateRole = async (
       headers: {
         Authorization: `Bearer ${accessToken}`,
         "Content-type": "application/json",
-        "x-api-version": `${Util.getVersion()}`
+        "x-api-version": `${Util.getVersion()}`,
       },
       resolveWithFullResponse: true,
-      json: true
+      json: true,
     };
     Util.addRequestTrace(requestOptions, trace);
     const response = await request(requestOptions);
     // create returns a 202....suspend return until the new resource is ready
-    if (response.hasOwnProperty("statusCode") && 
-        response.statusCode === 202 &&
-        response.headers.hasOwnProperty("location"))
-    {    
+    if (
+      response.hasOwnProperty("statusCode") &&
+      response.statusCode === 202 &&
+      response.headers.hasOwnProperty("location")
+    ) {
       await Util.pendingResource(
         response.headers.location,
         request,
@@ -61,7 +62,7 @@ const activateRole = async (
  */
 const addResourcesToGroup = async (
   accessToken = "null accessToken",
-  resourceGroup = "null resourceGroup" ,
+  resourceGroup = "null resourceGroup",
   resources = "null resources",
   trace = {}
 ) => {
@@ -73,20 +74,21 @@ const addResourcesToGroup = async (
       headers: {
         Authorization: `Bearer ${accessToken}`,
         "Content-type": "application/json",
-        "x-api-version": `${Util.getVersion()}`
+        "x-api-version": `${Util.getVersion()}`,
       },
-      body: {resources: resources},
+      body: { resources: resources },
       resolveWithFullResponse: true,
-      json: true
+      json: true,
     };
     Util.addRequestTrace(requestOptions, trace);
     const response = await request(requestOptions);
     // create returns a 202....suspend return until the new resource is ready
-    if (response.hasOwnProperty("statusCode") && 
-        response.statusCode === 202 &&
-        response.headers.hasOwnProperty("location"))
-    {    
-       await Util.pendingResource(
+    if (
+      response.hasOwnProperty("statusCode") &&
+      response.statusCode === 202 &&
+      response.headers.hasOwnProperty("location")
+    ) {
+      await Util.pendingResource(
         response.headers.location,
         request,
         requestOptions, //reusing the request options instead of passing in multiple params
@@ -119,25 +121,26 @@ const addUsersToGroup = async (
       method: "POST",
       uri: `${MS}/user-groups/${userGroupUUID}/users`,
       body: {
-        "users": users
+        users: users,
       },
       headers: {
         "Content-type": "application/json",
         Authorization: `Bearer ${accessToken}`,
-        "x-api-version": `${Util.getVersion()}`
+        "x-api-version": `${Util.getVersion()}`,
       },
       resolveWithFullResponse: true,
-      json: true
+      json: true,
     };
     Util.addRequestTrace(requestOptions, trace);
     const response = await request(requestOptions);
     const group = response.body;
     // create returns a 202....suspend return until the new resource is ready
-    if (response.hasOwnProperty("statusCode") && 
-        response.statusCode === 202 &&
-        response.headers.hasOwnProperty("location"))
-    {    
-       await Util.pendingResource(
+    if (
+      response.hasOwnProperty("statusCode") &&
+      response.statusCode === 202 &&
+      response.headers.hasOwnProperty("location")
+    ) {
+      await Util.pendingResource(
         response.headers.location,
         request,
         requestOptions, //reusing the request options instead of passing in multiple params
@@ -173,11 +176,11 @@ const assignPermissionsToRole = async (
       headers: {
         Authorization: `Bearer ${accessToken}`,
         "Content-type": "application/json",
-        "x-api-version": `${Util.getVersion()}`
+        "x-api-version": `${Util.getVersion()}`,
       },
       body: body,
       resolveWithFullResponse: true,
-      json: true
+      json: true,
     };
     Util.addRequestTrace(requestOptions, trace);
     const response = await request(requestOptions);
@@ -186,14 +189,20 @@ const assignPermissionsToRole = async (
     } else {
       // this is an edge case, but protects against unexpected 2xx or 3xx response codes.
       throw {
-        "code": response.statusCode,
-        "message": typeof response.body === "string" ? response.body : "assign permission to role failed",
-        "trace_id": requestOptions.hasOwnProperty("headers") && requestOptions.headers.hasOwnProperty("trace")
-          ? requestOptions.headers.trace
-          : undefined,
-        "details": typeof response.body === "object" && response.body !== null
-          ? [response.body]
-          : []
+        code: response.statusCode,
+        message:
+          typeof response.body === "string"
+            ? response.body
+            : "assign permission to role failed",
+        trace_id:
+          requestOptions.hasOwnProperty("headers") &&
+          requestOptions.headers.hasOwnProperty("trace")
+            ? requestOptions.headers.trace
+            : undefined,
+        details:
+          typeof response.body === "object" && response.body !== null
+            ? [response.body]
+            : [],
       };
     }
   } catch (error) {
@@ -224,11 +233,11 @@ const assignRolesToUserGroup = async (
       headers: {
         Authorization: `Bearer ${accessToken}`,
         "Content-type": "application/json",
-        "x-api-version": `${Util.getVersion()}`
+        "x-api-version": `${Util.getVersion()}`,
       },
       body: body,
       resolveWithFullResponse: true,
-      json: true
+      json: true,
     };
     Util.addRequestTrace(requestOptions, trace);
     const response = await request(requestOptions);
@@ -237,14 +246,20 @@ const assignRolesToUserGroup = async (
     } else {
       // this is an edge case, but protects against unexpected 2xx or 3xx response codes.
       throw {
-        "code": response.statusCode,
-        "message": typeof response.body === "string" ? response.body : "assign role to user-group failed",
-        "trace_id": requestOptions.hasOwnProperty("headers") && requestOptions.headers.hasOwnProperty("trace")
-          ? requestOptions.headers.trace
-          : undefined,
-        "details": typeof response.body === "object" && response.body !== null
-          ? [response.body]
-          : []
+        code: response.statusCode,
+        message:
+          typeof response.body === "string"
+            ? response.body
+            : "assign role to user-group failed",
+        trace_id:
+          requestOptions.hasOwnProperty("headers") &&
+          requestOptions.headers.hasOwnProperty("trace")
+            ? requestOptions.headers.trace
+            : undefined,
+        details:
+          typeof response.body === "object" && response.body !== null
+            ? [response.body]
+            : [],
       };
     }
   } catch (error) {
@@ -279,35 +294,83 @@ const assignScopedRoleToUserGroup = async (
       headers: {
         Authorization: `Bearer ${accessToken}`,
         "Content-type": "application/json",
-        "x-api-version": `${Util.getVersion()}`
+        "x-api-version": `${Util.getVersion()}`,
       },
       body: {
         role: roleUUID,
         scope: [
           {
-            [type]: data
-          }
-        ]
+            [type]: data,
+          },
+        ],
       },
       resolveWithFullResponse: true,
-      json: true
+      json: true,
     };
     Util.addRequestTrace(requestOptions, trace);
     const response = await request(requestOptions);
-    if (response.hasOwnProperty("statusCode") && 
-        response.statusCode === 202 &&
-        response.headers.hasOwnProperty("location"))
-    {    
-       await Util.pendingResource(
+    if (
+      response.hasOwnProperty("statusCode") &&
+      response.statusCode === 202 &&
+      response.headers.hasOwnProperty("location")
+    ) {
+      await Util.pendingResource(
         response.headers.location,
         request,
         requestOptions, //reusing the request options instead of passing in multiple params
         trace
       );
     }
-    return { "status": "ok" };
+    return { status: "ok" };
   } catch (error) {
     return Promise.reject(Util.formatError(error));
+  }
+};
+
+/**
+ * @async
+ * @description This function will determine if a user has permission to perform a specified action for a given account
+ * @param {string} [accessToken="null access token"] - CPaaS access token
+ * @param {string} [userUUID="null userUUID"] - CPaaS user uuid 
+ * @param {string} [accountUUID="null accountUUID"] - CPaaS account uuid
+ * @param {string} [resourceType="null resourceType"] - resource type
+ * @param {array} [action="null action"] - action to be performed
+ * @param {object} [trace = {}] - optional microservice lifecycle trace headers
+ * @returns {Promise<object>} - Promise resolving to a status data object
+ */
+const authorizeUserByAccount = async (
+  accessToken = "null access token",
+  userUUID = "null userUUID",
+  accountUUID = "null accountUUID",
+  resourceType = "null resourceType",
+  action = "null action",
+  trace = {}
+) => {
+  try {
+    const MS = Util.getEndpoint("auth");
+    const requestOptions = {
+      method: "POST",
+      uri: `${MS}/users/${userUUID}/authorize`,
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+        "Content-type": "application/json",
+        "x-api-version": `${Util.getVersion()}`,
+      },
+      body: {
+        account_uuid: accountUUID,
+        resource_type: resourceType,
+        action: action,
+      },
+      resolveWithFullResponse: true,
+      json: true,
+    };
+    Util.addRequestTrace(requestOptions, trace);
+    const response = await request(requestOptions);
+    if (response.hasOwnProperty("statusCode") && response.statusCode === 204) {
+      return { status: "ok" };
+    }
+  } catch (error) {
+    throw Util.formatError(error);
   }
 };
 
@@ -332,10 +395,10 @@ const createPermission = async (
       headers: {
         Authorization: `Bearer ${accessToken}`,
         "Content-type": "application/json",
-        "x-api-version": `${Util.getVersion()}`
+        "x-api-version": `${Util.getVersion()}`,
       },
       body: body,
-      json: true
+      json: true,
     };
     Util.addRequestTrace(requestOptions, trace);
     const response = await request(requestOptions);
@@ -344,7 +407,6 @@ const createPermission = async (
     return Promise.reject(Util.formatError(error));
   }
 };
-
 
 /**
  * @description This function will create a resource group for an oauth2 application
@@ -373,25 +435,26 @@ const createApplicationResourceGroup = async (
       headers: {
         Authorization: `Bearer ${accessToken}`,
         "Content-type": "application/json",
-        "x-api-version": `${Util.getVersion()}`
+        "x-api-version": `${Util.getVersion()}`,
       },
       body: {
-        "name": name,
-        "description": description,
-        "resources": resources
+        name: name,
+        description: description,
+        resources: resources,
       },
       json: true,
-      resolveWithFullResponse: true
+      resolveWithFullResponse: true,
     };
     Util.addRequestTrace(requestOptions, trace);
     const response = await request(requestOptions);
     const newGroup = response.body;
     // create returns a 202....suspend return until the new resource is ready
-    if (response.hasOwnProperty("statusCode") && 
-        response.statusCode === 202 &&
-        response.headers.hasOwnProperty("location"))
-    {    
-       await Util.pendingResource(
+    if (
+      response.hasOwnProperty("statusCode") &&
+      response.statusCode === 202 &&
+      response.headers.hasOwnProperty("location")
+    ) {
+      await Util.pendingResource(
         response.headers.location,
         request,
         requestOptions, //reusing the request options instead of passing in multiple params
@@ -427,21 +490,22 @@ const createUserGroup = async (
       headers: {
         Authorization: `Bearer ${accessToken}`,
         "Content-type": "application/json",
-        "x-api-version": `${Util.getVersion()}`
+        "x-api-version": `${Util.getVersion()}`,
       },
       body: body,
       json: true,
-      resolveWithFullResponse: true
+      resolveWithFullResponse: true,
     };
     Util.addRequestTrace(requestOptions, trace);
     const response = await request(requestOptions);
     const newGroup = response.body;
     // create returns a 202....suspend return until the new resource is ready
-    if (response.hasOwnProperty("statusCode") && 
-        response.statusCode === 202 &&
-        response.headers.hasOwnProperty("location"))
-    {    
-       await Util.pendingResource(
+    if (
+      response.hasOwnProperty("statusCode") &&
+      response.statusCode === 202 &&
+      response.headers.hasOwnProperty("location")
+    ) {
+      await Util.pendingResource(
         response.headers.location,
         request,
         requestOptions, //reusing the request options instead of passing in multiple params
@@ -477,21 +541,22 @@ const createRole = async (
       headers: {
         Authorization: `Bearer ${accessToken}`,
         "Content-type": "application/json",
-        "x-api-version": `${Util.getVersion()}`
+        "x-api-version": `${Util.getVersion()}`,
       },
       body: body,
       json: true,
-      resolveWithFullResponse: true
+      resolveWithFullResponse: true,
     };
     Util.addRequestTrace(requestOptions, trace);
     const response = await request(requestOptions);
     const newRole = response.body;
     // create returns a 202....suspend return until the new resource is ready
-    if (response.hasOwnProperty("statusCode") && 
-        response.statusCode === 202 &&
-        response.headers.hasOwnProperty("location"))
-    {    
-       await Util.pendingResource(
+    if (
+      response.hasOwnProperty("statusCode") &&
+      response.statusCode === 202 &&
+      response.headers.hasOwnProperty("location")
+    ) {
+      await Util.pendingResource(
         response.headers.location,
         request,
         requestOptions, //reusing the request options instead of passing in multiple params
@@ -525,26 +590,27 @@ const deactivateRole = async (
       headers: {
         Authorization: `Bearer ${accessToken}`,
         "Content-type": "application/json",
-        "x-api-version": `${Util.getVersion()}`
+        "x-api-version": `${Util.getVersion()}`,
       },
       resolveWithFullResponse: true,
-      json: true
+      json: true,
     };
     Util.addRequestTrace(requestOptions, trace);
     const response = await request(requestOptions);
     // create returns a 202....suspend return until the new resource is ready
-    if (response.hasOwnProperty("statusCode") && 
-        response.statusCode === 202 &&
-        response.headers.hasOwnProperty("location"))
-    {    
-       await Util.pendingResource(
+    if (
+      response.hasOwnProperty("statusCode") &&
+      response.statusCode === 202 &&
+      response.headers.hasOwnProperty("location")
+    ) {
+      await Util.pendingResource(
         response.headers.location,
         request,
         requestOptions, //reusing the request options instead of passing in multiple params
         trace
       );
     }
-    return { "status": "ok" };
+    return { status: "ok" };
   } catch (error) {
     return Promise.reject(Util.formatError(error));
   }
@@ -573,10 +639,10 @@ const deletePermissionFromRole = async (
       headers: {
         Authorization: `Bearer ${accessToken}`,
         "Content-type": "application/json",
-        "x-api-version": `${Util.getVersion()}`
+        "x-api-version": `${Util.getVersion()}`,
       },
       resolveWithFullResponse: true,
-      json: true
+      json: true,
     };
     Util.addRequestTrace(requestOptions, trace);
     const response = await request(requestOptions);
@@ -585,14 +651,20 @@ const deletePermissionFromRole = async (
     } else {
       // this is an edge case, but protects against unexpected 2xx or 3xx response codes.
       throw {
-        "code": response.statusCode,
-        "message": typeof response.body === "string" ? response.body : "delete permission from role failed",
-        "trace_id": requestOptions.hasOwnProperty("headers") && requestOptions.headers.hasOwnProperty("trace")
-          ? requestOptions.headers.trace
-          : undefined,
-        "details": typeof response.body === "object" && response.body !== null
-          ? [response.body]
-          : []
+        code: response.statusCode,
+        message:
+          typeof response.body === "string"
+            ? response.body
+            : "delete permission from role failed",
+        trace_id:
+          requestOptions.hasOwnProperty("headers") &&
+          requestOptions.headers.hasOwnProperty("trace")
+            ? requestOptions.headers.trace
+            : undefined,
+        details:
+          typeof response.body === "object" && response.body !== null
+            ? [response.body]
+            : [],
       };
     }
   } catch (error) {
@@ -621,30 +693,30 @@ const deleteRole = async (
       headers: {
         Authorization: `Bearer ${accessToken}`,
         "Content-type": "application/json",
-        "x-api-version": `${Util.getVersion()}`
+        "x-api-version": `${Util.getVersion()}`,
       },
       resolveWithFullResponse: true,
-      json: true
+      json: true,
     };
     Util.addRequestTrace(requestOptions, trace);
     const response = await request(requestOptions);
     // create returns a 202....suspend return until the new resource is ready
-    if (response.hasOwnProperty("statusCode") && 
-        response.statusCode === 202 &&
-        response.headers.hasOwnProperty("location"))
-    {    
-       await Util.pendingResource(
+    if (
+      response.hasOwnProperty("statusCode") &&
+      response.statusCode === 202 &&
+      response.headers.hasOwnProperty("location")
+    ) {
+      await Util.pendingResource(
         response.headers.location,
         request,
         requestOptions, //reusing the request options instead of passing in multiple params
         trace
       );
     }
-    return { "status": "ok" };
+    return { status: "ok" };
   } catch (error) {
     return Promise.reject(Util.formatError(error));
   }
-
 };
 
 /**
@@ -670,10 +742,10 @@ const deleteRoleFromUserGroup = async (
       headers: {
         Authorization: `Bearer ${accessToken}`,
         "Content-type": "application/json",
-        "x-api-version": `${Util.getVersion()}`
+        "x-api-version": `${Util.getVersion()}`,
       },
       resolveWithFullResponse: true,
-      json: true
+      json: true,
     };
     Util.addRequestTrace(requestOptions, trace);
     const response = await request(requestOptions);
@@ -682,14 +754,20 @@ const deleteRoleFromUserGroup = async (
     } else {
       // this is an edge case, but protects against unexpected 2xx or 3xx response codes.
       throw {
-        "code": response.statusCode,
-        "message": typeof response.body === "string" ? response.body : "delete role from user-group failed",
-        "trace_id": requestOptions.hasOwnProperty("headers") && requestOptions.headers.hasOwnProperty("trace")
-          ? requestOptions.headers.trace
-          : undefined,
-        "details": typeof response.body === "object" && response.body !== null
-          ? [response.body]
-          : []
+        code: response.statusCode,
+        message:
+          typeof response.body === "string"
+            ? response.body
+            : "delete role from user-group failed",
+        trace_id:
+          requestOptions.hasOwnProperty("headers") &&
+          requestOptions.headers.hasOwnProperty("trace")
+            ? requestOptions.headers.trace
+            : undefined,
+        details:
+          typeof response.body === "object" && response.body !== null
+            ? [response.body]
+            : [],
       };
     }
   } catch (error) {
@@ -705,7 +783,7 @@ const deleteRoleFromUserGroup = async (
  * @param {object} [trace = {}] - optional microservice lifecycle trace headers
  * @returns {Promise<object>} - Promise resolving to a status data object
  */
- const deleteUserGroup = async (
+const deleteUserGroup = async (
   accessToken = "null accessToken",
   userGroupUUID = "null userGroupUUID",
   trace = {}
@@ -718,10 +796,10 @@ const deleteRoleFromUserGroup = async (
       headers: {
         Authorization: `Bearer ${accessToken}`,
         "Content-type": "application/json",
-        "x-api-version": `${Util.getVersion()}`
+        "x-api-version": `${Util.getVersion()}`,
       },
       resolveWithFullResponse: true,
-      json: true
+      json: true,
     };
     Util.addRequestTrace(requestOptions, trace);
     const response = await request(requestOptions);
@@ -730,14 +808,20 @@ const deleteRoleFromUserGroup = async (
     } else {
       // this is an edge case, but protects against unexpected 2xx or 3xx response codes.
       throw {
-        "code": response.statusCode,
-        "message": typeof response.body === "string" ? response.body : "delete role from user-group failed",
-        "trace_id": requestOptions.hasOwnProperty("headers") && requestOptions.headers.hasOwnProperty("trace")
-          ? requestOptions.headers.trace
-          : undefined,
-        "details": typeof response.body === "object" && response.body !== null
-          ? [response.body]
-          : []
+        code: response.statusCode,
+        message:
+          typeof response.body === "string"
+            ? response.body
+            : "delete role from user-group failed",
+        trace_id:
+          requestOptions.hasOwnProperty("headers") &&
+          requestOptions.headers.hasOwnProperty("trace")
+            ? requestOptions.headers.trace
+            : undefined,
+        details:
+          typeof response.body === "object" && response.body !== null
+            ? [response.body]
+            : [],
       };
     }
   } catch (error) {
@@ -750,7 +834,7 @@ const deleteRoleFromUserGroup = async (
  * @description This function returns an accounts default user-groups
  * @param {string} [accessToken="null access token"] - access token for cpaas systems
  * @param {string} [accountUUID="null account uuid"] - account_uuid for an star2star account (customer)
- * @param {object} [trace = {}] - optional microservice lifecycle trace headers 
+ * @param {object} [trace = {}] - optional microservice lifecycle trace headers
  * @returns {Promise} - promise resolving to object containing default admin and user group uuids.
  */
 const getAccountDefaultGroups = async (
@@ -764,22 +848,22 @@ const getAccountDefaultGroups = async (
       method: "GET",
       uri: `${MS}/accounts/${accountUUID}/user-groups`,
       qs: {
-        default: "true"
+        default: "true",
       },
       headers: {
         Authorization: `Bearer ${accessToken}`,
         "Content-type": "application/json",
-        "x-api-version": `${Util.getVersion()}`
+        "x-api-version": `${Util.getVersion()}`,
       },
-      json: true
+      json: true,
     };
     Util.addRequestTrace(requestOptions, trace);
     const retObj = {
-      "admin": "",
-      "user": ""
+      admin: "",
+      user: "",
     };
     const response = await request(requestOptions);
-    response.items.forEach(item => {
+    response.items.forEach((item) => {
       if (item.hasOwnProperty("type") && item.hasOwnProperty("uuid")) {
         if (item.type === "admin") {
           retObj.admin = item.uuid;
@@ -792,12 +876,14 @@ const getAccountDefaultGroups = async (
     // if we have no admin or user value in retObj, throw an error
     if (retObj.admin.length === 0 || retObj.user.length === 0) {
       throw {
-        "code": 500,
-        "message": "missing admin or user UUID in account default group",
-        "trace_id": requestOptions.hasOwnProperty("headers") && requestOptions.headers.hasOwnProperty("trace")
-          ? requestOptions.headers.trace
-          : undefined,
-        "details": []
+        code: 500,
+        message: "missing admin or user UUID in account default group",
+        trace_id:
+          requestOptions.hasOwnProperty("headers") &&
+          requestOptions.headers.hasOwnProperty("trace")
+            ? requestOptions.headers.trace
+            : undefined,
+        details: [],
       };
     }
 
@@ -812,10 +898,10 @@ const getAccountDefaultGroups = async (
  * @param {string} [accessToken="null accessToken"] - CPaaS access token
  * @param {string} [applicationUUID="null applicationUUID"] - oauth2 client application uuid
  * @param {object} [filters= {}] - optional filters, name, default, etc
- * @param {object} [trace = {}] - optional microservice lifecycle trace headers 
+ * @param {object} [trace = {}] - optional microservice lifecycle trace headers
  * @returns {Promise<object>} - promise resolving to object containing resource groups.
  */
- const getApplicationResourceGroups = async (
+const getApplicationResourceGroups = async (
   accessToken = "null accessToken",
   applicationUUID = "null applicationUUID",
   filters = {},
@@ -829,16 +915,19 @@ const getAccountDefaultGroups = async (
       headers: {
         Authorization: `Bearer ${accessToken}`,
         "Content-type": "application/json",
-        "x-api-version": `${Util.getVersion()}`
+        "x-api-version": `${Util.getVersion()}`,
       },
-      json: true
+      json: true,
     };
-    if(typeof filters === "object" && filters !== null){
-      Object.keys(filters).forEach(filter => {
-        if(requestOptions.qs === undefined){
+    if (typeof filters === "object" && filters !== null) {
+      Object.keys(filters).forEach((filter) => {
+        if (requestOptions.qs === undefined) {
           requestOptions.qs = {};
         }
-        if(typeof filters[filter] === "string" || typeof filters[filter] === "number"){
+        if (
+          typeof filters[filter] === "string" ||
+          typeof filters[filter] === "number"
+        ) {
           requestOptions.qs[filter] = filters[filter];
         }
       });
@@ -856,7 +945,7 @@ const getAccountDefaultGroups = async (
  * @param {string} [accessToken="null accessToken"] - CPaaS access token
  * @param {string} [applicationUUID="null applicationUUID"] - oauth2 client application uuid
  * @param {string} [type="user"] - optional type ["user", "admin", "forbidden"]
- * @param {object} [trace = {}] - optional microservice lifecycle trace headers 
+ * @param {object} [trace = {}] - optional microservice lifecycle trace headers
  * @returns {Promise<object>} - promise resolving to object containing default resource groups.
  */
 const getApplicationDefaultResourceGroups = async (
@@ -873,12 +962,12 @@ const getApplicationDefaultResourceGroups = async (
       headers: {
         Authorization: `Bearer ${accessToken}`,
         "Content-type": "application/json",
-        "x-api-version": `${Util.getVersion()}`
+        "x-api-version": `${Util.getVersion()}`,
       },
-      qs: {"default": "true"},
-      json: true
+      qs: { default: "true" },
+      json: true,
     };
-    if(typeof type === "string"){
+    if (typeof type === "string") {
       requestOptions.qs.type = type;
     }
     Util.addRequestTrace(requestOptions, trace);
@@ -894,7 +983,7 @@ const getApplicationDefaultResourceGroups = async (
  * @param {string} [accessToken="null accessToken"] - CPaaS access token
  * @param {string} [applicationUUID="null applicationUUID"] - oauth2 client application uuid
  * @param {string} [type="user"] - optional type ["user", "admin", "forbidden"]
- * @param {object} [trace = {}] - optional microservice lifecycle trace headers 
+ * @param {object} [trace = {}] - optional microservice lifecycle trace headers
  * @returns {Promise<object>} - promise resolving to object containing default resource groups.
  */
 const getApplicationDefaultUserGroups = async (
@@ -911,14 +1000,14 @@ const getApplicationDefaultUserGroups = async (
       headers: {
         Authorization: `Bearer ${accessToken}`,
         "Content-type": "application/json",
-        "x-api-version": `${Util.getVersion()}`
+        "x-api-version": `${Util.getVersion()}`,
       },
       qs: {
-        "default": "true"
+        default: "true",
       },
-      json: true
+      json: true,
     };
-    if(typeof type === "string"){
+    if (typeof type === "string") {
       requestOptions.qs.type = type;
     }
     Util.addRequestTrace(requestOptions, trace);
@@ -952,18 +1041,18 @@ const getResourceUsers = async (
         groups.items[group].user_group.group_name
       );
       users[groupName] = [];
-      nextTrace = Util.generateNewMetaData(nextTrace)
-     
+      nextTrace = Util.generateNewMetaData(nextTrace);
+
       const groupUsers = await Groups.getGroup(
         accessToken,
         groups.items[group].user_group.uuid,
         {
-          "expand": "members",
-          "members_limit": 999 //hopefully we don't need pagination here. nh
+          expand: "members",
+          members_limit: 999, //hopefully we don't need pagination here. nh
         },
         nextTrace
       );
-      users[groupName] = groupUsers.members.items.map(item => {
+      users[groupName] = groupUsers.members.items.map((item) => {
         return item.uuid;
       });
     }
@@ -987,34 +1076,36 @@ const getResourceGroupRoles = async (
   try {
     const retObj = {};
     const rolePromises = [];
-    Object.keys(Util.config.resourceRoleDescriptions).forEach(resourceType => {
-      rolePromises.push(
-        listRoles(
-          accessToken,
-          0, // offset
-          100, // limit
-          { "description": Util.config.resourceRoleDescriptions[resourceType] },
-          trace
-        )
-      );
-    });
+    Object.keys(Util.config.resourceRoleDescriptions).forEach(
+      (resourceType) => {
+        rolePromises.push(
+          listRoles(
+            accessToken,
+            0, // offset
+            100, // limit
+            { description: Util.config.resourceRoleDescriptions[resourceType] },
+            trace
+          )
+        );
+      }
+    );
     const rawRoles = await Promise.all(rolePromises);
     /*
-    * The following seems weird, convoluted, and brittle because it is.
-    * Awaiting resolution of JIRA CCORE-586 for final implimentation.
-    * The resource group roles will be present in Starpaas->Admin->Roles for all account admins.
-    * Because of this they are written with a human friendly name and description.
-    * As such they are complex strings that need to be parsed into a format that can be used by resource groups utility.
-    */
-    rawRoles.forEach(element => {
-      element.items.forEach(item => {
+     * The following seems weird, convoluted, and brittle because it is.
+     * Awaiting resolution of JIRA CCORE-586 for final implimentation.
+     * The resource group roles will be present in Starpaas->Admin->Roles for all account admins.
+     * Because of this they are written with a human friendly name and description.
+     * As such they are complex strings that need to be parsed into a format that can be used by resource groups utility.
+     */
+    rawRoles.forEach((element) => {
+      element.items.forEach((item) => {
         const permissionType = item.name.split(" ")[1];
         if (!retObj.hasOwnProperty(permissionType)) {
           retObj[permissionType] = {};
         }
         const permissions = item.name.split("-")[1].split(",");
         let propName = "";
-        permissions.forEach(permission => {
+        permissions.forEach((permission) => {
           propName = `${propName}${permission.charAt(1)}`;
         });
         retObj[permissionType][propName] = item.uuid;
@@ -1047,9 +1138,9 @@ const getRole = async (
       headers: {
         Authorization: `Bearer ${accessToken}`,
         "Content-type": "application/json",
-        "x-api-version": `${Util.getVersion()}`
+        "x-api-version": `${Util.getVersion()}`,
       },
-      json: true
+      json: true,
     };
     Util.addRequestTrace(requestOptions, trace);
     const response = await request(requestOptions);
@@ -1058,7 +1149,6 @@ const getRole = async (
     return Promise.reject(Util.formatError(error));
   }
 };
-
 
 /**
  * @async
@@ -1081,9 +1171,9 @@ const listAccessByGroups = async (
       headers: {
         Authorization: `Bearer ${accessToken}`,
         "Content-type": "application/json",
-        "x-api-version": `${Util.getVersion()}`
+        "x-api-version": `${Util.getVersion()}`,
       },
-      json: true
+      json: true,
     };
     Util.addRequestTrace(requestOptions, trace);
     const response = await request(requestOptions);
@@ -1114,9 +1204,9 @@ const listAccessByPermissions = async (
       headers: {
         Authorization: `Bearer ${accessToken}`,
         "Content-type": "application/json",
-        "x-api-version": `${Util.getVersion()}`
+        "x-api-version": `${Util.getVersion()}`,
       },
-      json: true
+      json: true,
     };
     Util.addRequestTrace(requestOptions, trace);
     const response = await request(requestOptions);
@@ -1138,11 +1228,20 @@ const listAccessByPermissions = async (
  * @returns {Promise<object>} - Promise resolving to a data object containing a list of user groups
  */
 const listAccountUserGroups = async function () {
-  let accessToken = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : "null accessToken";
-  let offset = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : "0";
-  let limit = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : "10";
-  let filters = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : undefined;
-  let trace = arguments.length > 4 && arguments[4] !== undefined ? arguments[4] : {};
+  let accessToken =
+    arguments.length > 0 && arguments[0] !== undefined
+      ? arguments[0]
+      : "null accessToken";
+  let offset =
+    arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : "0";
+  let limit =
+    arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : "10";
+  let filters =
+    arguments.length > 3 && arguments[3] !== undefined
+      ? arguments[3]
+      : undefined;
+  let trace =
+    arguments.length > 4 && arguments[4] !== undefined ? arguments[4] : {};
   try {
     const MS = Util.getEndpoint("auth");
     const requestOptions = {
@@ -1151,17 +1250,17 @@ const listAccountUserGroups = async function () {
       headers: {
         Authorization: `Bearer ${accessToken}`,
         "Content-type": "application/json",
-        "x-api-version": `${Util.getVersion()}`
+        "x-api-version": `${Util.getVersion()}`,
       },
       qs: {
         offset: offset,
-        limit: limit
+        limit: limit,
       },
-      json: true
+      json: true,
     };
     Util.addRequestTrace(requestOptions, trace);
     if (typeof filters === "object" && filters !== null) {
-      Object.keys(filters).forEach(filter => {
+      Object.keys(filters).forEach((filter) => {
         requestOptions.qs[filter] = filters[filter];
       });
     }
@@ -1195,14 +1294,14 @@ const listUserGroupRoles = async (
       headers: {
         Authorization: `Bearer ${accessToken}`,
         "Content-type": "application/json",
-        "x-api-version": `${Util.getVersion()}`
+        "x-api-version": `${Util.getVersion()}`,
       },
-      json: true
+      json: true,
     };
     Util.addRequestTrace(requestOptions, trace);
     if (filters) {
       requestOptions.qs = {};
-      Object.keys(filters).forEach(filter => {
+      Object.keys(filters).forEach((filter) => {
         requestOptions.qs[filter] = filters[filter];
       });
     }
@@ -1238,17 +1337,17 @@ const listPermissions = async (
       headers: {
         Authorization: `Bearer ${accessToken}`,
         "Content-type": "application/json",
-        "x-api-version": `${Util.getVersion()}`
+        "x-api-version": `${Util.getVersion()}`,
       },
       qs: {
         offset: offset,
-        limit: limit
+        limit: limit,
       },
-      json: true
+      json: true,
     };
     Util.addRequestTrace(requestOptions, trace);
     if (filters) {
-      Object.keys(filters).forEach(filter => {
+      Object.keys(filters).forEach((filter) => {
         requestOptions.qs[filter] = filters[filter];
       });
     }
@@ -1282,14 +1381,14 @@ const listPermissionRoles = async (
       headers: {
         Authorization: `Bearer ${accessToken}`,
         "Content-type": "application/json",
-        "x-api-version": `${Util.getVersion()}`
+        "x-api-version": `${Util.getVersion()}`,
       },
-      json: true
+      json: true,
     };
     Util.addRequestTrace(requestOptions, trace);
     if (filters) {
       requestOptions.qs = {};
-      Object.keys(filters).forEach(filter => {
+      Object.keys(filters).forEach((filter) => {
         requestOptions.qs[filter] = filters[filter];
       });
     }
@@ -1325,17 +1424,17 @@ const listRoles = async (
       headers: {
         Authorization: `Bearer ${accessToken}`,
         "Content-type": "application/json",
-        "x-api-version": `${Util.getVersion()}`
+        "x-api-version": `${Util.getVersion()}`,
       },
       qs: {
         offset: offset,
-        limit: limit
+        limit: limit,
       },
-      json: true
+      json: true,
     };
     Util.addRequestTrace(requestOptions, trace);
     if (filters) {
-      Object.keys(filters).forEach(filter => {
+      Object.keys(filters).forEach((filter) => {
         requestOptions.qs[filter] = filters[filter];
       });
     }
@@ -1373,17 +1472,17 @@ const listRolesForUser = async (
       headers: {
         Authorization: `Bearer ${accessToken}`,
         "Content-type": "application/json",
-        "x-api-version": `${Util.getVersion()}`
+        "x-api-version": `${Util.getVersion()}`,
       },
       qs: {
         offset: offset,
-        limit: limit
+        limit: limit,
       },
-      json: true
+      json: true,
     };
     Util.addRequestTrace(requestOptions, trace);
     if (filters) {
-      Object.keys(filters).forEach(filter => {
+      Object.keys(filters).forEach((filter) => {
         requestOptions.qs[filter] = filters[filter];
       });
     }
@@ -1417,14 +1516,14 @@ const listRoleUserGroups = async (
       headers: {
         Authorization: `Bearer ${accessToken}`,
         "Content-type": "application/json",
-        "x-api-version": `${Util.getVersion()}`
+        "x-api-version": `${Util.getVersion()}`,
       },
-      json: true
+      json: true,
     };
     Util.addRequestTrace(requestOptions, trace);
     if (filters) {
       requestOptions.qs = {};
-      Object.keys(filters).forEach(filter => {
+      Object.keys(filters).forEach((filter) => {
         requestOptions.qs[filter] = filters[filter];
       });
     }
@@ -1458,14 +1557,14 @@ const listRolePermissions = async (
       headers: {
         Authorization: `Bearer ${accessToken}`,
         "Content-type": "application/json",
-        "x-api-version": `${Util.getVersion()}`
+        "x-api-version": `${Util.getVersion()}`,
       },
-      json: true
+      json: true,
     };
     Util.addRequestTrace(requestOptions, trace);
     if (filters) {
       requestOptions.qs = {};
-      Object.keys(filters).forEach(filter => {
+      Object.keys(filters).forEach((filter) => {
         requestOptions.qs[filter] = filters[filter];
       });
     }
@@ -1501,17 +1600,17 @@ const listUserGroups = async (
       headers: {
         Authorization: `Bearer ${accessToken}`,
         "Content-type": "application/json",
-        "x-api-version": `${Util.getVersion()}`
+        "x-api-version": `${Util.getVersion()}`,
       },
       qs: {
         offset: offset,
-        limit: limit
+        limit: limit,
       },
-      json: true
+      json: true,
     };
     Util.addRequestTrace(requestOptions, trace);
     if (filters) {
-      Object.keys(filters).forEach(filter => {
+      Object.keys(filters).forEach((filter) => {
         requestOptions.qs[filter] = filters[filter];
       });
     }
@@ -1545,21 +1644,22 @@ const modifyRole = async (
       headers: {
         Authorization: `Bearer ${accessToken}`,
         "Content-type": "application/json",
-        "x-api-version": `${Util.getVersion()}`
+        "x-api-version": `${Util.getVersion()}`,
       },
       body: body,
       json: true,
-      resolveWithFullResponse: true
+      resolveWithFullResponse: true,
     };
     Util.addRequestTrace(requestOptions, trace);
     const response = await request(requestOptions);
     const role = response.body;
     // create returns a 202....suspend return until the new resource is ready
-    if (response.hasOwnProperty("statusCode") && 
-        response.statusCode === 202 &&
-        response.headers.hasOwnProperty("location"))
-    {    
-       await Util.pendingResource(
+    if (
+      response.hasOwnProperty("statusCode") &&
+      response.statusCode === 202 &&
+      response.headers.hasOwnProperty("location")
+    ) {
+      await Util.pendingResource(
         response.headers.location,
         request,
         requestOptions, //reusing the request options instead of passing in multiple params
@@ -1595,21 +1695,22 @@ const modifyUserGroup = async (
       headers: {
         Authorization: `Bearer ${accessToken}`,
         "Content-type": "application/json",
-        "x-api-version": `${Util.getVersion()}`
+        "x-api-version": `${Util.getVersion()}`,
       },
       body: body,
       resolveWithFullResponse: true,
-      json: true
+      json: true,
     };
     Util.addRequestTrace(requestOptions, trace);
     const response = await request(requestOptions);
     const userGroup = response.body;
     // create returns a 202....suspend return until the new resource is ready
-    if (response.hasOwnProperty("statusCode") && 
-        response.statusCode === 202 &&
-        response.headers.hasOwnProperty("location"))
-    {    
-       await Util.pendingResource(
+    if (
+      response.hasOwnProperty("statusCode") &&
+      response.statusCode === 202 &&
+      response.headers.hasOwnProperty("location")
+    ) {
+      await Util.pendingResource(
         response.headers.location,
         request,
         requestOptions, //reusing the request options instead of passing in multiple params
@@ -1633,7 +1734,7 @@ const modifyUserGroup = async (
  */
 const removeResourceFromGroup = async (
   accessToken = "null accessToken",
-  resourceGroup = "null resourceGroup" ,
+  resourceGroup = "null resourceGroup",
   resources = "null resources",
   trace = {}
 ) => {
@@ -1645,20 +1746,21 @@ const removeResourceFromGroup = async (
       headers: {
         Authorization: `Bearer ${accessToken}`,
         "Content-type": "application/json",
-        "x-api-version": `${Util.getVersion()}`
+        "x-api-version": `${Util.getVersion()}`,
       },
-      body: {"resources": resources},
+      body: { resources: resources },
       resolveWithFullResponse: true,
-      json: true
+      json: true,
     };
     Util.addRequestTrace(requestOptions, trace);
     const response = await request(requestOptions);
     // create returns a 202....suspend return until the new resource is ready
-    if (response.hasOwnProperty("statusCode") && 
-        response.statusCode === 202 &&
-        response.headers.hasOwnProperty("location"))
-    {    
-       await Util.pendingResource(
+    if (
+      response.hasOwnProperty("statusCode") &&
+      response.statusCode === 202 &&
+      response.headers.hasOwnProperty("location")
+    ) {
+      await Util.pendingResource(
         response.headers.location,
         request,
         requestOptions, //reusing the request options instead of passing in multiple params
@@ -1691,25 +1793,26 @@ const removeUsersFromGroup = async (
       method: "POST",
       uri: `${MS}/user-groups/${userGroupUUID}/users/remove`,
       body: {
-        "users": users
+        users: users,
       },
       headers: {
         "Content-type": "application/json",
         Authorization: `Bearer ${accessToken}`,
-        "x-api-version": `${Util.getVersion()}`
+        "x-api-version": `${Util.getVersion()}`,
       },
       resolveWithFullResponse: true,
-      json: true
+      json: true,
     };
     Util.addRequestTrace(requestOptions, trace);
     const response = await request(requestOptions);
     const group = response.body;
     // create returns a 202....suspend return until the new resource is ready
-    if (response.hasOwnProperty("statusCode") && 
-        response.statusCode === 202 &&
-        response.headers.hasOwnProperty("location"))
-    {    
-       await Util.pendingResource(
+    if (
+      response.hasOwnProperty("statusCode") &&
+      response.statusCode === 202 &&
+      response.headers.hasOwnProperty("location")
+    ) {
+      await Util.pendingResource(
         response.headers.location,
         request,
         requestOptions, //reusing the request options instead of passing in multiple params
@@ -1729,6 +1832,7 @@ module.exports = {
   assignPermissionsToRole,
   assignRolesToUserGroup,
   assignScopedRoleToUserGroup,
+  authorizeUserByAccount,
   createApplicationResourceGroup,
   createPermission,
   createUserGroup,
@@ -1759,5 +1863,5 @@ module.exports = {
   modifyRole,
   modifyUserGroup,
   removeResourceFromGroup,
-  removeUsersFromGroup
+  removeUsersFromGroup,
 };

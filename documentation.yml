@@ -30,6 +30,7 @@ toc:
       - assignPermissionsToRole
       - assignRolesToUserGroup
       - assignScopedRoleToUserGroup
+      - authorizeUserByAccount
       - createApplicationResourceGroup
       - createPermission
       - createUserGroup
