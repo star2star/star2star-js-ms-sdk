@@ -331,7 +331,7 @@ const assignScopedRoleToUserGroup = async (
  * @async
  * @description This function will determine if a user has permission to perform a specified action for a given account
  * @param {string} [accessToken="null access token"] - CPaaS access token
- * @param {string} [userUUID="null userUUID"] - CPaaS user uuid 
+ * @param {string} [userUUID="null userUUID"] - CPaaS user uuid
  * @param {string} [accountUUID="null accountUUID"] - CPaaS account uuid
  * @param {string} [resourceType="null resourceType"] - resource type
  * @param {array} [action="null action"] - action to be performed
@@ -1227,21 +1227,14 @@ const listAccessByPermissions = async (
  * @param {object} [trace = {}] - optional microservice lifecycle trace headers
  * @returns {Promise<object>} - Promise resolving to a data object containing a list of user groups
  */
-const listAccountUserGroups = async function () {
-  let accessToken =
-    arguments.length > 0 && arguments[0] !== undefined
-      ? arguments[0]
-      : "null accessToken";
-  let offset =
-    arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : "0";
-  let limit =
-    arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : "10";
-  let filters =
-    arguments.length > 3 && arguments[3] !== undefined
-      ? arguments[3]
-      : undefined;
-  let trace =
-    arguments.length > 4 && arguments[4] !== undefined ? arguments[4] : {};
+const listAccountUserGroups = async function (
+  accessToken = "null accessToken",
+  accountUUID = "null accountUUID",
+  offset = 0,
+  limit = 10,
+  filters,
+  trace = {}
+) {
   try {
     const MS = Util.getEndpoint("auth");
     const requestOptions = {
