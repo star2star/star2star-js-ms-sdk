@@ -48,6 +48,7 @@ toc:
       - getRole
       - listAccessByGroups
       - listAccessByPermissions
+      - listAccountUserGroups
       - listUserGroupRoles
       - listPermissions
       - listPermissionRoles
@@ -146,6 +147,7 @@ toc:
       - getIdentity
       - getIdentityDetails
       - listIdentitiesByAccount
+      - listIdentitiesByAccountOrFilter
       - login
       - lookupIdentity
       - modifyIdentity

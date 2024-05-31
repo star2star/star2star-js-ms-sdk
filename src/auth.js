@@ -1128,6 +1128,52 @@ const listAccessByPermissions = async (
 
 /**
  * @async
+ * @description This function lists user groups associated with a CPaaS Account.
+ * @param {string} [accessToken="null accessToken"] - CPaaS access token
+ * @param {string} [accountUUID="null accountUUID"] - CPaaS account uuid
+ * @param {string} [offset="0"] - pagination offset
+ * @param {string} [limit="10"] - pagination limit
+ * @param {object} [filters=undefined] - array of filter query string parameters (user_uuid, name, sort)
+ * @param {object} [trace = {}] - optional microservice lifecycle trace headers
+ * @returns {Promise<object>} - Promise resolving to a data object containing a list of user groups
+ */
+const listAccountUserGroups = async function () {
+  let accessToken = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : "null accessToken";
+  let offset = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : "0";
+  let limit = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : "10";
+  let filters = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : undefined;
+  let trace = arguments.length > 4 && arguments[4] !== undefined ? arguments[4] : {};
+  try {
+    const MS = Util.getEndpoint("auth");
+    const requestOptions = {
+      method: "GET",
+      uri: `${MS}/accounts/${accountUUID}/user-groups`,
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+        "Content-type": "application/json",
+        "x-api-version": `${Util.getVersion()}`
+      },
+      qs: {
+        offset: offset,
+        limit: limit
+      },
+      json: true
+    };
+    Util.addRequestTrace(requestOptions, trace);
+    if (typeof filters === "object" && filters !== null) {
+      Object.keys(filters).forEach(filter => {
+        requestOptions.qs[filter] = filters[filter];
+      });
+    }
+    const response = await request(requestOptions);
+    return response;
+  } catch (error) {
+    return Promise.reject(Util.formatError(error));
+  }
+};
+
+/**
+ * @async
  * @description This function lists user groups a role is assigned to.
  * @param {string} [accessToken="null accessToken"] - cpaas access token
  * @param {string} [userGroupUUID="null userGroupUUID"] - user group uuid
@@ -1701,6 +1747,7 @@ module.exports = {
   getRole,
   listAccessByGroups,
   listAccessByPermissions,
+  listAccountUserGroups,
   listUserGroupRoles,
   listPermissions,
   listPermissionRoles,
