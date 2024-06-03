@@ -1152,6 +1152,55 @@ const getRole = async (
 
 /**
  * @async
+ * @description This function returns user group members.
+ * @param {string} [accessToken="null accessToken"] - cpaas access token
+ * @param {string} [groupUUID="null groupUUID"] - user group uuid
+ * @param {string} [offset="0"] - pagination offset
+ * @param {string} [limit="10"] - pagination limit
+ * @param {object} [filters=undefined] - array of filter query string parameters
+ * @param {object} [trace = {}] - optional microservice lifecycle trace headers
+ * @returns {Promise<object>} - Promise resolving to a role object
+ */
+const getUserGroupMembers = async (
+  accessToken = "null accessToken",
+  groupUUID = "null groupUUID",
+  offset = 0,
+  limit = 10,
+  filters,
+  trace = {}
+) => {
+  try {
+    const MS = Util.getEndpoint("auth");
+    const requestOptions = {
+      method: "GET",
+      uri: `${MS}/user-groups/${groupUUID}/users`,
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+        "Content-type": "application/json",
+        "x-api-version": `${Util.getVersion()}`,
+      },
+      qs: {
+        offset: offset,
+        limit: limit,
+      },
+      json: true,
+    };
+    if (typeof filters === "object" && filters !== null) {
+      Object.keys(filters).forEach((filter) => {
+        requestOptions.qs[filter] = filters[filter];
+      });
+    }
+    Util.addRequestTrace(requestOptions, trace);
+    const response = await request(requestOptions);
+    return response;
+  } catch (error) {
+    return Promise.reject(Util.formatError(error));
+  }
+};
+
+
+/**
+ * @async
  * @description This function lists the user groups associated with a resource
  * @param {string} [accessToken="null accessToken"] - cpaas access token
  * @param {string} [resourceUUID="null resourceUUID"] - resource uuid
@@ -1842,6 +1891,7 @@ module.exports = {
   getResourceUsers,
   getResourceGroupRoles,
   getRole,
+  getUserGroupMembers,
   listAccessByGroups,
   listAccessByPermissions,
   listAccountUserGroups,

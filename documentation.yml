@@ -47,6 +47,7 @@ toc:
       - getResourceUsers
       - getResourceGroupRoles
       - getRole
+      - getUserGroupMembers
       - listAccessByGroups
       - listAccessByPermissions
       - listAccountUserGroups
