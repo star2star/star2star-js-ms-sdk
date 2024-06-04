@@ -590,6 +590,7 @@ const listIdentitiesByAccount = async (
  * @param {number} [offset=0] - list offset
  * @param {number} [limit=10] - number of items to return
  * @param {array} [filters=undefined] - optional array of key-value pairs to filter response using or condition on fliters.
+ * @param {boolean} [aggregate=false] - retrieves all results for client side search or pagination
  * @param {object} [trace = {}] - optional microservice lifecycle trace headers
  * @returns {Promise<object>} - Promise resolving to an identity data object
  */
@@ -598,7 +599,8 @@ const listIdentitiesByAccountOrFilter = async (
   accountUUID = "null accountUUID",
   offset = 0,
   limit = 10,
-  filters = undefined,
+  filters = {},
+  aggregate = false,
   trace = {}
 ) => {
   try {
@@ -617,44 +619,21 @@ const listIdentitiesByAccountOrFilter = async (
       },
       json: true,
     };
-    // sort the filters into those the API handles and those handled by the SDK.
-    const apiFilters = [
-      "include",
-      "name",
-      "status",
-      "sort",
-      "type",
-      "username",
-    ];
-    const sdkFilters = {};
-    Object.keys(filters).forEach((filter) => {
-      if (apiFilters.includes(filter)) {
+    if (typeof filters === "object" && filters !== null) {
+      Object.keys(filters).forEach((filter) => {
         requestOptions.qs[filter] = filters[filter];
-      } else {
-        // sdkFilters are "AND" for now.
-        sdkFilters[filter] = filters[filter];
-      }
-    });
-    // if the sdkFilters object is empty, the API can handle everything, otherwise the sdk needs to augment the api.
-    if (Object.keys(sdkFilters).length === 0) {
-      const response = await request(requestOptions);
-      return response;
-    } else {
-      requestOptions.qs.offset = 0;
-      requestOptions.qs.limit = 100;
-      const response = await util.aggregate(request, requestOptions, trace);
-      if (response.hasOwnProperty("items") && response.items.length > 0) {
-        const filteredResponse = util.filterResponse(response, sdkFilters);
-        const paginatedResponse = util.paginate(
-          filteredResponse,
-          offset,
-          limit
-        );
-        return paginatedResponse;
-      } else {
-        return response;
-      }
+      });
     }
+
+    let response;
+    if (aggregate) {
+      const nextTrace = util.generateNewMetaData(trace);
+      response = await util.aggregate(request, requestOptions, nextTrace);
+    } else {
+      util.addRequestTrace(requestOptions, trace);
+      response = await request(requestOptions);
+    }
+    return response;
   } catch (error) {
     throw util.formatError(error);
   }
