@@ -26,20 +26,21 @@ const createIdentity = async (
       headers: {
         Authorization: `Bearer ${accessToken}`,
         "Content-type": "application/json",
-        "x-api-version": `${util.getVersion()}`
+        "x-api-version": `${util.getVersion()}`,
       },
       body: body,
       json: true,
-      resolveWithFullResponse: true
+      resolveWithFullResponse: true,
     };
     util.addRequestTrace(requestOptions, trace);
     const response = await request(requestOptions);
     const identity = response.body;
     // update returns a 202....suspend return until the new resource is ready
-    if (response.hasOwnProperty("statusCode") && 
-        response.statusCode === 202 &&
-        response.headers.hasOwnProperty("location"))
-    {    
+    if (
+      response.hasOwnProperty("statusCode") &&
+      response.statusCode === 202 &&
+      response.headers.hasOwnProperty("location")
+    ) {
       await util.pendingResource(
         response.headers.location,
         request,
@@ -76,10 +77,10 @@ const modifyIdentity = async (
       headers: {
         Authorization: `Bearer ${accessToken}`,
         "Content-type": "application/json",
-        "x-api-version": `${util.getVersion()}`
+        "x-api-version": `${util.getVersion()}`,
       },
       body: body,
-      json: true
+      json: true,
     };
     util.addRequestTrace(requestOptions, trace);
     const response = await request(requestOptions);
@@ -112,10 +113,10 @@ const modifyIdentityProps = async (
       headers: {
         Authorization: `Bearer ${accessToken}`,
         "Content-type": "application/json",
-        "x-api-version": `${util.getVersion()}`
+        "x-api-version": `${util.getVersion()}`,
       },
       body: body,
-      json: true
+      json: true,
     };
     util.addRequestTrace(requestOptions, trace);
     const response = await request(requestOptions);
@@ -146,10 +147,10 @@ const deactivateIdentity = async (
       headers: {
         Authorization: `Bearer ${accessToken}`,
         "Content-type": "application/json",
-        "x-api-version": `${util.getVersion()}`
+        "x-api-version": `${util.getVersion()}`,
       },
       json: true,
-      resolveWithFullResponse: true
+      resolveWithFullResponse: true,
     };
     util.addRequestTrace(requestOptions, trace);
     const response = await request(requestOptions);
@@ -158,14 +159,20 @@ const deactivateIdentity = async (
     } else {
       // this is an edge case, but protects against unexpected 2xx or 3xx response codes.
       throw {
-        "code": response.statusCode,
-        "message": typeof response.body === "string" ? response.body : "deactivate identity failed",
-        "trace_id": requestOptions.hasOwnProperty("headers") && requestOptions.headers.hasOwnProperty("trace")
-          ? requestOptions.headers.trace
-          : undefined,
-        "details": typeof response.body === "object" && response.body !== null
-          ? [response.body]
-          : []
+        code: response.statusCode,
+        message:
+          typeof response.body === "string"
+            ? response.body
+            : "deactivate identity failed",
+        trace_id:
+          requestOptions.hasOwnProperty("headers") &&
+          requestOptions.headers.hasOwnProperty("trace")
+            ? requestOptions.headers.trace
+            : undefined,
+        details:
+          typeof response.body === "object" && response.body !== null
+            ? [response.body]
+            : [],
       };
     }
   } catch (error) {
@@ -194,10 +201,10 @@ const reactivateIdentity = async (
       headers: {
         Authorization: `Bearer ${accessToken}`,
         "Content-type": "application/json",
-        "x-api-version": `${util.getVersion()}`
+        "x-api-version": `${util.getVersion()}`,
       },
       json: true,
-      resolveWithFullResponse: true
+      resolveWithFullResponse: true,
     };
     util.addRequestTrace(requestOptions, trace);
     const response = await request(requestOptions);
@@ -206,14 +213,20 @@ const reactivateIdentity = async (
     } else {
       // this is an edge case, but protects against unexpected 2xx or 3xx response codes.
       throw {
-        "code": response.statusCode,
-        "message": typeof response.body === "string" ? response.body : "reactivate identity failed",
-        "trace_id": requestOptions.hasOwnProperty("headers") && requestOptions.headers.hasOwnProperty("trace")
-          ? requestOptions.headers.trace
-          : undefined,
-        "details": typeof response.body === "object" && response.body !== null
-          ? [response.body]
-          : []
+        code: response.statusCode,
+        message:
+          typeof response.body === "string"
+            ? response.body
+            : "reactivate identity failed",
+        trace_id:
+          requestOptions.hasOwnProperty("headers") &&
+          requestOptions.headers.hasOwnProperty("trace")
+            ? requestOptions.headers.trace
+            : undefined,
+        details:
+          typeof response.body === "object" && response.body !== null
+            ? [response.body]
+            : [],
       };
     }
   } catch (error) {
@@ -244,11 +257,11 @@ const createAlias = async (
       headers: {
         Authorization: `Bearer ${accessToken}`,
         "Content-type": "application/json",
-        "x-api-version": `${util.getVersion()}`
+        "x-api-version": `${util.getVersion()}`,
       },
       body: body,
       json: true,
-      resolveWithFullResponse: true
+      resolveWithFullResponse: true,
     };
     util.addRequestTrace(requestOptions, trace);
     //Returning "ok" here as response object does not contain alias.
@@ -258,14 +271,20 @@ const createAlias = async (
     } else {
       // this is an edge case, but protects against unexpected 2xx or 3xx response codes.
       throw {
-        "code": response.statusCode,
-        "message": typeof response.body === "string" ? response.body : "create alias failed",
-        "trace_id": requestOptions.hasOwnProperty("headers") && requestOptions.headers.hasOwnProperty("trace")
-          ? requestOptions.headers.trace
-          : undefined,
-        "details": typeof response.body === "object" && response.body !== null
-          ? [response.body]
-          : []
+        code: response.statusCode,
+        message:
+          typeof response.body === "string"
+            ? response.body
+            : "create alias failed",
+        trace_id:
+          requestOptions.hasOwnProperty("headers") &&
+          requestOptions.headers.hasOwnProperty("trace")
+            ? requestOptions.headers.trace
+            : undefined,
+        details:
+          typeof response.body === "object" && response.body !== null
+            ? [response.body]
+            : [],
       };
     }
   } catch (error) {
@@ -296,17 +315,18 @@ const updateAliasWithDID = async (
       headers: {
         Authorization: `Bearer ${accessToken}`,
         "Content-type": "application/json",
-        "x-api-version": `${util.getVersion()}`
+        "x-api-version": `${util.getVersion()}`,
       },
       json: true,
-      resolveWithFullResponse: true
+      resolveWithFullResponse: true,
     };
     util.addRequestTrace(requestOptions, trace);
     const response = await request(requestOptions);
-    if (response.hasOwnProperty("statusCode") && 
-        response.statusCode === 202 &&
-        response.headers.hasOwnProperty("location"))
-    {    
+    if (
+      response.hasOwnProperty("statusCode") &&
+      response.statusCode === 202 &&
+      response.headers.hasOwnProperty("location")
+    ) {
       await util.pendingResource(
         response.headers.location,
         request,
@@ -314,7 +334,7 @@ const updateAliasWithDID = async (
         trace
       );
     }
-    return { "status": "ok" };
+    return { status: "ok" };
   } catch (error) {
     throw util.formatError(error);
   }
@@ -342,18 +362,19 @@ const deleteIdentity = async (
       headers: {
         Authorization: `Bearer ${accessToken}`,
         "Content-type": "application/json",
-        "x-api-version": `${util.getVersion()}`
+        "x-api-version": `${util.getVersion()}`,
       },
       json: true,
-      resolveWithFullResponse: true
+      resolveWithFullResponse: true,
     };
     util.addRequestTrace(requestOptions, trace);
     const response = await request(requestOptions);
     // delete returns a 202....suspend return until the new resource is ready if possible
-    if (response.hasOwnProperty("statusCode") && 
-        response.statusCode === 202 &&
-        response.headers.hasOwnProperty("location"))
-    {    
+    if (
+      response.hasOwnProperty("statusCode") &&
+      response.statusCode === 202 &&
+      response.headers.hasOwnProperty("location")
+    ) {
       await util.pendingResource(
         response.headers.location,
         request,
@@ -361,7 +382,7 @@ const deleteIdentity = async (
         trace
       );
     }
-    return { "status": "ok" };
+    return { status: "ok" };
   } catch (error) {
     throw util.formatError(error);
   }
@@ -390,13 +411,13 @@ const getIdentity = async (
       headers: {
         Authorization: `Bearer ${accessToken}`,
         "Content-type": "application/json",
-        "x-api-version": `${util.getVersion()}`
+        "x-api-version": `${util.getVersion()}`,
       },
-      json: true
+      json: true,
     };
     // add include query param if defined
     if (include !== undefined) {
-      requestOptions.qs = { "include": include };
+      requestOptions.qs = { include: include };
     }
     util.addRequestTrace(requestOptions, trace);
     const response = await request(requestOptions);
@@ -430,13 +451,13 @@ const login = async (
       headers: {
         Authorization: `Bearer ${accessToken}`,
         "Content-type": "application/json",
-        "x-api-version": `${util.getVersion()}`
+        "x-api-version": `${util.getVersion()}`,
       },
       body: {
         email: email,
-        password: pwd
+        password: pwd,
       },
-      json: true
+      json: true,
     };
     util.addRequestTrace(requestOptions, trace);
     const response = await request(requestOptions);
@@ -454,7 +475,10 @@ const login = async (
  * @param {object} [trace = {}] - optional microservice lifecycle trace headers
  * @returns {Promise<object>} - Promise resolving to an identity data object
  */
-const getMyIdentityData = async (accessToken = "null access token", trace = {}) => {
+const getMyIdentityData = async (
+  accessToken = "null access token",
+  trace = {}
+) => {
   try {
     const MS = util.getEndpoint("identity");
     const requestOptions = {
@@ -463,9 +487,9 @@ const getMyIdentityData = async (accessToken = "null access token", trace = {}) 
       headers: {
         Authorization: `Bearer ${accessToken}`,
         "Content-type": "application/json",
-        "x-api-version": `${util.getVersion()}`
+        "x-api-version": `${util.getVersion()}`,
       },
-      json: true
+      json: true,
     };
     util.addRequestTrace(requestOptions, trace);
     const response = await request(requestOptions);
@@ -497,9 +521,9 @@ const getIdentityDetails = async (
       headers: {
         Authorization: `Bearer ${accessToken}`,
         "Content-type": "application/json",
-        "x-api-version": `${util.getVersion()}`
+        "x-api-version": `${util.getVersion()}`,
       },
-      json: true
+      json: true,
     };
     util.addRequestTrace(requestOptions, trace);
     const response = await request(requestOptions);
@@ -535,18 +559,18 @@ const listIdentitiesByAccount = async (
       uri: `${MS}/accounts/${accountUUID}/identities`,
       qs: {
         offset: offset,
-        limit: limit
+        limit: limit,
       },
       headers: {
         Authorization: `Bearer ${accessToken}`,
         "Content-type": "application/json",
-        "x-api-version": `${util.getVersion()}`
+        "x-api-version": `${util.getVersion()}`,
       },
-      json: true
+      json: true,
     };
     util.addRequestTrace(requestOptions, trace);
     if (filters) {
-      Object.keys(filters).forEach(filter => {
+      Object.keys(filters).forEach((filter) => {
         requestOptions.qs[filter] = filters[filter];
       });
     }
@@ -584,24 +608,53 @@ const listIdentitiesByAccountOrFilter = async (
       uri: `${MS}/accounts/${accountUUID}/identities/v2`,
       qs: {
         offset: offset,
-        limit: limit
+        limit: limit,
       },
       headers: {
         Authorization: `Bearer ${accessToken}`,
         "Content-type": "application/json",
-        "x-api-version": `${util.getVersion()}`
+        "x-api-version": `${util.getVersion()}`,
       },
-      json: true
+      json: true,
     };
-    util.addRequestTrace(requestOptions, trace);
-    if (filters) {
-      Object.keys(filters).forEach(filter => {
+    // sort the filters into those the API handles and those handled by the SDK.
+    const apiFilters = [
+      "include",
+      "name",
+      "status",
+      "sort",
+      "type",
+      "username",
+    ];
+    const sdkFilters = {};
+    Object.keys(filters).forEach((filter) => {
+      if (apiFilters.includes(filter)) {
         requestOptions.qs[filter] = filters[filter];
-      });
+      } else {
+        // sdkFilters are "AND" for now.
+        sdkFilters[filter] = filters[filter];
+      }
+    });
+    // if the sdkFilters object is empty, the API can handle everything, otherwise the sdk needs to augment the api.
+    if (Object.keys(sdkFilters).length === 0) {
+      const response = await request(requestOptions);
+      return response;
+    } else {
+      requestOptions.qs.offset = 0;
+      requestOptions.qs.limit = 100;
+      const response = await util.aggregate(request, requestOptions, trace);
+      if (response.hasOwnProperty("items") && response.items.length > 0) {
+        const filteredResponse = util.filterResponse(response, sdkFilters);
+        const paginatedResponse = util.paginate(
+          filteredResponse,
+          offset,
+          limit
+        );
+        return paginatedResponse;
+      } else {
+        return response;
+      }
     }
-    //console.log("REQUEST********",requestOptions);
-    const response = await request(requestOptions);
-    return response;
   } catch (error) {
     throw util.formatError(error);
   }
@@ -631,18 +684,18 @@ const lookupIdentity = async (
       uri: `${MS}/identities`,
       qs: {
         offset: offset,
-        limit: limit
+        limit: limit,
       },
       headers: {
         Authorization: `Bearer ${accessToken}`,
         "Content-type": "application/json",
-        "x-api-version": `${util.getVersion()}`
+        "x-api-version": `${util.getVersion()}`,
       },
-      json: true
+      json: true,
     };
     util.addRequestTrace(requestOptions, trace);
     if (filters) {
-      Object.keys(filters).forEach(filter => {
+      Object.keys(filters).forEach((filter) => {
         requestOptions.qs[filter] = filters[filter];
       });
     }
@@ -678,17 +731,18 @@ const resetPassword = async (
       headers: {
         Authorization: `Bearer ${accessToken}`,
         "Content-type": "application/json",
-        "x-api-version": `${util.getVersion()}`
+        "x-api-version": `${util.getVersion()}`,
       },
       resolveWithFullResponse: true,
-      json: true
+      json: true,
     };
     util.addRequestTrace(requestOptions, trace);
     const response = await request(requestOptions);
-    if (response.hasOwnProperty("statusCode") && 
-        response.statusCode === 202 &&
-        response.headers.hasOwnProperty("location"))
-    {    
+    if (
+      response.hasOwnProperty("statusCode") &&
+      response.statusCode === 202 &&
+      response.headers.hasOwnProperty("location")
+    ) {
       await util.pendingResource(
         response.headers.location,
         request,
@@ -696,7 +750,7 @@ const resetPassword = async (
         trace
       );
     }
-    return { "status": "ok" };
+    return { status: "ok" };
   } catch (error) {
     throw util.formatError(error);
   }
@@ -721,22 +775,23 @@ const generatePasswordToken = async (
       method: "POST",
       uri: `${MS}/users/password-tokens`,
       body: {
-        email: emailAddress
+        email: emailAddress,
       },
       headers: {
         Authorization: `Bearer ${accessToken}`,
         "Content-type": "application/json",
-        "x-api-version": `${util.getVersion()}`
+        "x-api-version": `${util.getVersion()}`,
       },
       resolveWithFullResponse: true,
-      json: true
+      json: true,
     };
     util.addRequestTrace(requestOptions, trace);
     const response = await request(requestOptions);
-    if (response.hasOwnProperty("statusCode") && 
-        response.statusCode === 202 &&
-        response.headers.hasOwnProperty("location"))
-    {    
+    if (
+      response.hasOwnProperty("statusCode") &&
+      response.statusCode === 202 &&
+      response.headers.hasOwnProperty("location")
+    ) {
       await util.pendingResource(
         response.headers.location,
         request,
@@ -744,7 +799,7 @@ const generatePasswordToken = async (
         trace
       );
     }
-    return { "status": "ok" };
+    return { status: "ok" };
   } catch (error) {
     throw util.formatError(error);
   }
@@ -771,9 +826,9 @@ const validatePasswordToken = async (
       headers: {
         Authorization: `Bearer ${accessToken}`,
         "Content-type": "application/json",
-        "x-api-version": `${util.getVersion()}`
+        "x-api-version": `${util.getVersion()}`,
       },
-      json: true
+      json: true,
     };
     util.addRequestTrace(requestOptions, trace);
     const response = await request(requestOptions);
@@ -801,5 +856,5 @@ module.exports = {
   getIdentityDetails,
   generatePasswordToken,
   resetPassword,
-  validatePasswordToken
+  validatePasswordToken,
 };
