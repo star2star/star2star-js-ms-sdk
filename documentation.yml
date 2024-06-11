@@ -108,7 +108,10 @@ toc:
   - name: Entitlements
     children:
       - activateUserEntitlement
+      - bulkDeleteEntitlement
+      - bulkUserEntitlement
       - getProduct
+      - getProductByApplicationUuid
       - getProducts
       - getUserEntitlements
       - getUserEntitlementsV2

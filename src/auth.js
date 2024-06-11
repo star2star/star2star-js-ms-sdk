@@ -1196,6 +1196,8 @@ const getUserGroupMembers = async (
     let response;
     if(aggregate){
       const nextTrace = Util.generateNewMetaData(trace);
+      requestOptions.offset = 0,
+      requestOptions.limit = 100,
       response = await Util.aggregate(request, requestOptions, nextTrace);
     } else {
       Util.addRequestTrace(requestOptions, trace);

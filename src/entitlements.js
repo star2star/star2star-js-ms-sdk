@@ -40,6 +40,84 @@ const activateUserEntitlement = async (
 };
 
 /**
+ * @description This fuction will remove multiple entitlements with one request
+ * @async
+ * @param {string} [accessToken="null accessToken"] - CPaaS access token
+ * @param {array} [entitlementUUIDs=[]] - array of entitlement uuids
+ * @param {object} [trace={}] - optional CPaaS lifecycle headers
+ * @returns {Promise<object>} Promise resolving to an acknowledgement of the entitlement being activated
+ */
+
+const bulkDeleteEntitlement = async (
+  accessToken = "null accessToken",
+  entitlementUUIDs = [],
+  trace = {}
+) => {
+  try {
+    const MS = Util.getEndpoint("entitlements");
+    const requestOptions = {
+      method: "DELETE",
+      uri: `${MS}/users/entitlements/bulk`,
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+        "Content-type": "application/json",
+        "x-api-version": `${Util.getVersion()}`,
+      },
+      body: entitlementUUIDs,
+      json: true,
+    };
+    Util.addRequestTrace(requestOptions, trace);
+    const response = await request(requestOptions);
+    return response;
+  } catch (error) {
+    throw Util.formatError(error);
+  }
+};
+
+/**
+ * @typedef {Object} Entitlement
+ * @property {string} account_uuid - CPaaS account uuid to link to.
+ * @property {string} user_uuid - CPaaS user uuid to entitle.
+ * @property {string} product_uuid - Sangoma product uuid.
+ * @property {Object} metadata - Entitlement metadata.
+ */
+
+/**
+ * @description This fuction will entitle multiple users with one request
+ * @async
+ * @param {string} [accessToken="null accessToken"] - CPaaS access token
+ * @param {array<Entitlement>} [bulkEntitlements=[]] - array of user entitlement entitlement objects
+ * @param {object} [trace={}] - optional CPaaS lifecycle headers
+ * @returns {Promise<object>} Promise resolving to an acknowledgement of the entitlement being activated
+ */
+
+const bulkUserEntitlement = async (
+  accessToken = "null accessToken",
+  bulkEntitlements = [],
+  trace = {}
+) => {
+  try {
+    const MS = Util.getEndpoint("entitlements");
+    const requestOptions = {
+      method: "POST",
+      uri: `${MS}/users/entitlements/bulk`,
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+        "Content-type": "application/json",
+        "x-api-version": `${Util.getVersion()}`,
+      },
+      body: bulkEntitlements,
+      json: true,
+    };
+    Util.addRequestTrace(requestOptions, trace);
+    const response = await request(requestOptions);
+    return response;
+  } catch (error) {
+    throw Util.formatError(error);
+  }
+};
+
+/**
  * @description This function returns a single entitlement product
  * @async
  * @param {string} [accessToken="null accessToken"] - CPaaS access token
@@ -330,6 +408,7 @@ const getUserEntitlementsV2 = async (
  * @param {number} [offset=0] - pagination offset
  * @param {number} [limit=100] - pagination limit
  * @param {object} [filters=undefined] - optional filters object {"key": "value"}
+ * @param {boolean} [aggregate=false] - return all matching values for client side pagination 
  * @param {object} [trace={}] - optional CPaaS lifecycle headers
  * @returns {Promise<object>} Promise resolving to a list of user entitlements
  */
@@ -339,6 +418,7 @@ const listAccountEntitlements = async (
   offset = 0,
   limit = 100,
   filters = undefined,
+  aggregate = false,
   trace = {}
 ) => {
   try {
@@ -376,7 +456,15 @@ const listAccountEntitlements = async (
         });
       }
     }
-    const response = await request(requestOptions);
+    if(aggregate){
+      const nextTrace = Util.generateNewMetaData(trace);
+      requestOptions.offset = 0,
+      requestOptions.limit = 100,
+      response = await Util.aggregate(request, requestOptions, nextTrace);
+    } else {
+      Util.addRequestTrace(requestOptions, trace);
+      response = await request(requestOptions);
+    }
     return response;
   } catch (error) {
     throw Util.formatError(error);
@@ -421,6 +509,8 @@ const updateProduct = async (
 
 module.exports = {
   activateUserEntitlement,
+  bulkDeleteEntitlement,
+  bulkUserEntitlement,
   getProduct,
   getProducts,
   getProductByApplicationUuid,
