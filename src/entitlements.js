@@ -456,6 +456,7 @@ const listAccountEntitlements = async (
         });
       }
     }
+    let response;
     if(aggregate){
       const nextTrace = Util.generateNewMetaData(trace);
       requestOptions.offset = 0,
