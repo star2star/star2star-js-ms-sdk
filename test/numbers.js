@@ -240,7 +240,7 @@ describe("Numbers MS Unit Test Suite", function () {
     "Update Numbers Reference ID",
     mochaAsync(async () => {
       trace = Util.generateNewMetaData(trace);
-      const response = await s2sMS.Numbers.provisionNumbersRefId(
+      const response = await s2sMS.Numbers.provisionNumbersReference(
         accessToken,
         numbers,
         "updated_ref_id", // reference id

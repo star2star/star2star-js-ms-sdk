@@ -157,6 +157,8 @@ const getAvailableStates = async (
  * @param {string} [accountUUID="null accountUUID"] - cpaas account_uuid
  * @param {number} [offset=0] - pagination offset
  * @param {number} [limit=10] - pagination limit
+ * @param {object} [filters={}] - optional filters
+ * @param {boolean} [aggregate=false] - aggregate from the api for client side filtering and pagination
  * @param {object} [trace={}] - microservice lifecyce headers
  * @returns {Promise} - Promise resolving to a list of available DIDs
  */
@@ -165,6 +167,8 @@ const getProvisionedNumbersByAccount = async (
   accountUUID = "null accountUUID",
   offset = 0,
   limit = 10,
+  filters = {},
+  aggregate = false,
   trace = {}
 ) => {
   try {
@@ -177,15 +181,44 @@ const getProvisionedNumbersByAccount = async (
         "x-api-version": `${util.getVersion()}`,
         "Content-type": "application/json",
       },
-      qs:{
+      qs: {
         offset: offset,
-        limit: limit
+        limit: limit,
       },
       json: true,
     };
+    if (typeof filters === "object" && filters !== null) {
+      Object.keys(filters).forEach((filter) => {
+        if (filter === "option" && typeof filters[filter] === "string") {
+          requestOptions.uri = `${requestOptions.uri}/${filters.option}`;
+          delete filters.option;
+        }
+      });
+    }
     util.addRequestTrace(requestOptions, trace);
-    const response = await request(requestOptions);
-    return response;
+    let response;
+    if (aggregate) {
+      const nextTrace = util.generateNewMetaData(trace);
+      (requestOptions.offset = 0),
+        (requestOptions.limit = 100),
+        (response = await util.aggregate(request, requestOptions, nextTrace));
+    } else {
+      util.addRequestTrace(requestOptions, trace);
+      response = await request(requestOptions);
+    }
+    if (
+      response.hasOwnProperty("items") &&
+      response.items.length > 0 &&
+      Object.keys(filters).length > 0
+    ) {
+      const filteredResponse = util.filterResponse(response, filters);
+      //logger.debug("******* FILTERED RESPONSE ********",filteredResponse);
+      const paginatedResponse = util.paginate(filteredResponse, offset, limit);
+      //logger.debug("******* PAGINATED RESPONSE ********",paginatedResponse);
+      return paginatedResponse;
+    } else {
+      return response;
+    }
   } catch (error) {
     throw util.formatError(error);
   }
@@ -218,9 +251,9 @@ const getProvisionedNumbersByUser = async (
         "x-api-version": `${util.getVersion()}`,
         "Content-type": "application/json",
       },
-      qs:{
+      qs: {
         offset: offset,
-        limit: limit
+        limit: limit,
       },
       json: true,
     };
@@ -231,7 +264,6 @@ const getProvisionedNumbersByUser = async (
     throw util.formatError(error);
   }
 };
-
 
 /**
  * @async
@@ -268,7 +300,7 @@ const listAvailableNumbers = async (
       },
       qs: {
         qty: quantity,
-        tier: tier
+        tier: tier,
       },
       json: true,
     };
@@ -447,5 +479,5 @@ module.exports = {
   listAvailableNumbers,
   provisionNumbers,
   provisionNumbersHelp,
-  provisionNumbersReference
+  provisionNumbersReference,
 };
