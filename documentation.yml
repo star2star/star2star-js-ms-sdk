@@ -146,13 +146,17 @@ toc:
       - createAlias
       - createIdentity
       - deactivateIdentity
+      - deleteAccountPasswordPolicy
       - deleteIdentity
       - generatePasswordToken
-      - getMyIdentityData
+      - getAccountMFAPolicy
+      - getAccountPasswordPolicy
       - getIdentity
       - getIdentityDetails
+      - getMyIdentityData
       - listIdentitiesByAccount
       - listIdentitiesByAccountOrFilter
+      - listPasswordPolicies
       - login
       - lookupIdentity
       - modifyIdentity
@@ -160,6 +164,8 @@ toc:
       - reactivateIdentity
       - resetPassword
       - updateAliasWithDID
+      - updateAccountMFAPolicy
+      - updateAccountPasswordPolicy
       - validatePasswordToken
   - name: Index
     children:

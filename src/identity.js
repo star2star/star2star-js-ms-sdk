@@ -817,23 +817,243 @@ const validatePasswordToken = async (
   }
 };
 
+/**
+ * @async
+ * @description This function will delete an account password policy.
+ * @param {string} [accessToken="null accessToken"] - access token for cpaas systems
+ * @param {string} [accountUUID="null accountUUID"] - password reset token received via email
+ * @param {object} [trace = {}] - optional microservice lifecycle trace headers
+ * @returns {Promise<object>} - Promise resolving to an object confirming success or failure
+ */
+const deleteAccountPasswordPolicy = async (
+  accessToken = "null access token",
+  accountUUID = "null password token",
+  trace = {}
+) => {
+  try {
+    const MS = util.getEndpoint("identity");
+    const requestOptions = {
+      method: "DELETE",
+      uri: `${MS}/accounts/${accountUUID}/password_policy`,
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+        "Content-type": "application/json",
+        "x-api-version": `${util.getVersion()}`,
+      },
+      json: true,
+    };
+    util.addRequestTrace(requestOptions, trace);
+    await request(requestOptions);
+    return {status: "ok"};
+  } catch (error) {
+    throw util.formatError(error);
+  }
+};
+
+/**
+ * @async
+ * @description This function will get an account's current password policy.
+ * @param {string} [accessToken="null accessToken"] - access token for cpaas systems
+ * @param {string} [accountUUID="null accountUUID"] - password reset token received via email
+ * @param {object} [trace = {}] - optional microservice lifecycle trace headers
+ * @returns {Promise<object>} - Promise resolving to an object containing the current account password policy
+ */
+const getAccountPasswordPolicy = async (
+  accessToken = "null access token",
+  accountUUID = "null password token",
+  trace = {}
+) => {
+  try {
+    const MS = util.getEndpoint("identity");
+    const requestOptions = {
+      method: "GET",
+      uri: `${MS}/accounts/${accountUUID}/password_policy`,
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+        "Content-type": "application/json",
+        "x-api-version": `${util.getVersion()}`,
+      },
+      json: true,
+    };
+    util.addRequestTrace(requestOptions, trace);
+    const response = await request(requestOptions);
+    return response;
+  } catch (error) {
+    throw util.formatError(error);
+  }
+};
+
+/**
+ * @async
+ * @description This function will get an account's current MFA policy.
+ * @param {string} [accessToken="null accessToken"] - access token for cpaas systems
+ * @param {string} [accountUUID="null accountUUID"] - password reset token received via email
+ * @param {object} [trace = {}] - optional microservice lifecycle trace headers
+ * @returns {Promise<object>} - Promise resolving to an object containing the account MFA policy
+ */
+const getAccountMFAPolicy = async (
+  accessToken = "null access token",
+  accountUUID = "null password token",
+  trace = {}
+) => {
+  try {
+    const MS = util.getEndpoint("identity");
+    const requestOptions = {
+      method: "GET",
+      uri: `${MS}/accounts/${accountUUID}/mfa`,
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+        "Content-type": "application/json",
+        "x-api-version": `${util.getVersion()}`,
+      },
+      json: true,
+    };
+    util.addRequestTrace(requestOptions, trace);
+    const response = await request(requestOptions);
+    return response;
+  } catch (error) {
+    throw util.formatError(error);
+  }
+};
+
+/**
+ * @async
+ * @description This function will the available password policies.
+ * @param {string} [accessToken="null accessToken"] - access token for cpaas systems
+ * @param {string} [include] - optional include, include=rules
+ * @param {object} [trace = {}] - optional microservice lifecycle trace headers
+ * @returns {Promise<object>} - Promise resolving to a list of CPaaS IDP password policies
+ */
+const listPasswordPolicies = async (
+  accessToken = "null access token",
+  include,
+  trace = {}
+) => {
+  try {
+    const MS = util.getEndpoint("identity");
+    const requestOptions = {
+      method: "GET",
+      uri: `${MS}/passwords/policies`,
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+        "Content-type": "application/json",
+        "x-api-version": `${util.getVersion()}`,
+      },
+      json: true,
+    };
+    if(typeof include === "string"){
+      requestOptions.qs.include = include;
+    }
+    util.addRequestTrace(requestOptions, trace);
+    const response = await request(requestOptions);
+    return response;
+  } catch (error) {
+    throw util.formatError(error);
+  }
+};
+
+/**
+ * @async
+ * @description This function will update an account's MFA policy.
+ * @param {string} [accessToken="null accessToken"] - access token for cpaas systems
+ * @param {string} [accountUUID="null accountUUID"] - password reset token received via email
+ * @param {array} [mfaOptions] - array of mfa options to enable for the account
+ * @param {object} [trace = {}] - optional microservice lifecycle trace headers
+ * @returns {Promise<object>} - Promise resolving to an object containing the new account MFA policy
+ */
+const updateAccountMFAPolicy = async (
+  accessToken = "null access token",
+  accountUUID = "null password token",
+  mfaOptions = [],
+  trace = {}
+) => {
+  try {
+    const MS = util.getEndpoint("identity");
+    const requestOptions = {
+      method: "PUT",
+      uri: `${MS}/accounts/${accountUUID}/mfa`,
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+        "Content-type": "application/json",
+        "x-api-version": `${util.getVersion()}`,
+      },
+      body:{
+        required: mfaOptions
+      }, 
+      json: true,
+    };
+    util.addRequestTrace(requestOptions, trace);
+    if(!array.isArray(mfaOptions)){
+      throw {code: 400, message: "MFA options not an array"}
+    }
+    const response = await request(requestOptions);
+    return response;
+  } catch (error) {
+    throw util.formatError(error);
+  }
+};
+
+/**
+ * @async
+ * @description This function will update an account's password policy.
+ * @param {string} [accessToken="null accessToken"] - access token for cpaas systems
+ * @param {string} [accountUUID="null accountUUID"] - password reset token received via email
+ * @param {string} [policyUUID="null policy uuid"] - CPaaS password policy uuid
+ * @param {object} [trace = {}] - optional microservice lifecycle trace headers
+ * @returns {Promise<object>} - Promise resolving to an object containing the new account password policy
+ */
+const updateAccountPasswordPolicy = async (
+  accessToken = "null access token",
+  accountUUID = "null password token",
+  policyUUID = "null policy uuid",
+  trace = {}
+) => {
+  try {
+    const MS = util.getEndpoint("identity");
+    const requestOptions = {
+      method: "PUT",
+      uri: `${MS}/accounts/${accountUUID}/password_policy`,
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+        "Content-type": "application/json",
+        "x-api-version": `${util.getVersion()}`,
+      },
+      body:{
+        uuid: policyUUID
+      }, 
+      json: true,
+    };
+    util.addRequestTrace(requestOptions, trace);
+    const response = await request(requestOptions);
+    return response;
+  } catch (error) {
+    throw util.formatError(error);
+  }
+};
+
 module.exports = {
   createAlias,
   createIdentity,
-  modifyIdentity,
-  modifyIdentityProps,
-  reactivateIdentity,
   deactivateIdentity,
-  updateAliasWithDID,
+  deleteAccountPasswordPolicy,
   deleteIdentity,
-  login,
+  generatePasswordToken,
+  getAccountPasswordPolicy,
+  getIdentity,
+  getIdentityDetails,
+  getAccountMFAPolicy,
   getMyIdentityData,
   listIdentitiesByAccount,
   listIdentitiesByAccountOrFilter,
+  listPasswordPolicies,
+  login,
   lookupIdentity,
-  getIdentity,
-  getIdentityDetails,
-  generatePasswordToken,
+  modifyIdentity,
+  modifyIdentityProps,
+  reactivateIdentity,
   resetPassword,
-  validatePasswordToken,
+  updateAliasWithDID,
+  updateAccountMFAPolicy,
+  updateAccountPasswordPolicy,
+  validatePasswordToken
 };
