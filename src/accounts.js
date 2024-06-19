@@ -145,6 +145,7 @@ const createAccount = async (
 const getAccount = async (
   accessToken = "null access token",
   accountUUID = "null account uuid",
+  expand,
   trace = {}
 ) => {
   try {
