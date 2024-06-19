@@ -983,7 +983,7 @@ const updateAccountMFAPolicy = async (
       json: true,
     };
     util.addRequestTrace(requestOptions, trace);
-    if (!array.isArray(mfaOptions)) {
+    if (!Array.isArray(mfaOptions)) {
       throw { code: 400, message: "MFA options not an array" };
     }
     const response = await request(requestOptions);
