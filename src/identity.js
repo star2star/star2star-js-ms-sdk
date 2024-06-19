@@ -844,7 +844,7 @@ const deleteAccountPasswordPolicy = async (
     };
     util.addRequestTrace(requestOptions, trace);
     await request(requestOptions);
-    return {status: "ok"};
+    return { status: "ok" };
   } catch (error) {
     throw util.formatError(error);
   }
@@ -941,8 +941,8 @@ const listPasswordPolicies = async (
       },
       json: true,
     };
-    if(typeof include === "string"){
-      requestOptions.qs.include = include;
+    if (typeof include === "string") {
+      requestOptions.qs = { include: include };
     }
     util.addRequestTrace(requestOptions, trace);
     const response = await request(requestOptions);
@@ -977,14 +977,14 @@ const updateAccountMFAPolicy = async (
         "Content-type": "application/json",
         "x-api-version": `${util.getVersion()}`,
       },
-      body:{
-        required: mfaOptions
-      }, 
+      body: {
+        required: mfaOptions,
+      },
       json: true,
     };
     util.addRequestTrace(requestOptions, trace);
-    if(!array.isArray(mfaOptions)){
-      throw {code: 400, message: "MFA options not an array"}
+    if (!array.isArray(mfaOptions)) {
+      throw { code: 400, message: "MFA options not an array" };
     }
     const response = await request(requestOptions);
     return response;
@@ -1018,9 +1018,9 @@ const updateAccountPasswordPolicy = async (
         "Content-type": "application/json",
         "x-api-version": `${util.getVersion()}`,
       },
-      body:{
-        uuid: policyUUID
-      }, 
+      body: {
+        uuid: policyUUID,
+      },
       json: true,
     };
     util.addRequestTrace(requestOptions, trace);
@@ -1055,5 +1055,5 @@ module.exports = {
   updateAliasWithDID,
   updateAccountMFAPolicy,
   updateAccountPasswordPolicy,
-  validatePasswordToken
+  validatePasswordToken,
 };
