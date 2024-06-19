@@ -138,7 +138,7 @@ const createAccount = async (
  * @description This function will return an account by UUID.
  * @param {string} [accessToken="null access token"] - access token for cpaas systems
  * @param {string} [accountUUID="null account uuid"] - account_uuid for an star2star account (customer)
- * @param {string} [expand = "identities"] - expand data in response; currently "identities" or "relationship"
+ * @param {string} [expand] - expand data in response; currently "identities" or "relationship"
  * @param {object} [trace = {}] - optional microservice lifecycle trace headers 
  * @returns {Promise<object>} - Promise resolving to an identity data object
  */
@@ -152,9 +152,6 @@ const getAccount = async (
     const requestOptions = {
       method: "GET",
       uri: `${MS}/accounts/${accountUUID}`,
-      qs: {
-        expand: "relationships"
-      },
       headers: {
         Authorization: `Bearer ${accessToken}`,
         "Content-type": "application/json",
@@ -162,6 +159,11 @@ const getAccount = async (
       },
       json: true
     };
+    if(typeof expand === "string"){
+      requestOptions.qs = {
+        expand: expand
+      };
+    }
     util.addRequestTrace(requestOptions, trace);
     const response = await request(requestOptions);
     return response;
