@@ -4,9 +4,11 @@ toc:
       - createAccount
       - createRelationship
       - deleteAccount
-      - listAccounts
-      - listAccountRelationships
       - getAccount
+      - listAccountChildren
+      - listAccountRelationships
+      - listAccounts
+      - listUserRootAccounts
       - modifyAccount
       - reinstateAccount
       - suspendAccount

@@ -414,13 +414,114 @@ const deleteAccount = async (
   } 
 };
 
+/**
+ * @async
+ * @description This function returns a list of child accounts for a given CPaaS account uuid.
+ * @param {string} [accessToken="null accessToken"] - access token for cpaas system
+ * @param {string} [userUUID="null user uuid"] - CPaaS user uuid
+ * @param {number} [offset=0] - what page number you want
+ * @param {number} [limit=10] - size of the page or number of records to return
+ * @param {object} [filters={}] - optional filters
+ * @param {object} [trace = {}] - optional microservice lifecycle trace headers 
+ * @returns {Promise<object>} - Promise resolving to a data object containing a list of accounts
+ */
+//TODO add sort order also
+const listAccountChildren = async (
+  accessToken = "null accessToken",
+  accountUUID = "null account uuid",
+  offset = 0,
+  limit = 10,
+  filters = {},
+  trace = {}
+) => {
+  try{
+    const MS = util.getEndpoint("accounts");
+    const requestOptions = {
+      method: "GET",
+      uri: `${MS}/accounts/${accountUUID}/children'`,
+      qs: {
+        offset: offset,
+        limit: limit,
+        type: "Customer" // default to Customer as it is expected this will be 95% of requests
+      },
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+        "Content-type": "application/json",
+        "x-api-version": `${util.getVersion()}`
+      },
+      json: true
+    };
+    if(typeof filters === "object" && filters !== null && !Array.isArray(filters)){
+      Object.keys(filters).forEach(filter => {
+        requestOptions.qs[filter] = filters[filter];
+      });
+    }
+    util.addRequestTrace(requestOptions, trace);
+    const response = await request(requestOptions);
+    return response;
+  } catch (error){
+    throw util.formatError(error);
+  }   
+};
+
+/**
+ * @async
+ * @description This function returns a CPaaS user's highest level accounts.
+ * @param {string} [accessToken="null accessToken"] - access token for cpaas system
+ * @param {string} [userUUID="null user uuid"] - CPaaS user uuid
+ * @param {number} [offset=0] - what page number you want
+ * @param {number} [limit=10] - size of the page or number of records to return
+ * @param {object} [filters={}] - optional filters
+ * @param {object} [trace = {}] - optional microservice lifecycle trace headers 
+ * @returns {Promise<object>} - Promise resolving to a data object containing a list of accounts
+ */
+//TODO add sort order also
+const listUserRootAccounts = async (
+  accessToken = "null accessToken",
+  userUUID = "null user uuid",
+  offset = 0,
+  limit = 10,
+  filters = {},
+  trace = {}
+) => {
+  try{
+    const MS = util.getEndpoint("accounts");
+    const requestOptions = {
+      method: "GET",
+      uri: `${MS}/accounts/users/${userUUID}/root`,
+      qs: {
+        offset: offset,
+        limit: limit
+      },
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+        "Content-type": "application/json",
+        "x-api-version": `${util.getVersion()}`
+      },
+      json: true
+    };
+    if(typeof filters === "object" && filters !== null && !Array.isArray(filters)){
+      Object.keys(filters).forEach(filter => {
+        requestOptions.qs[filter] = filters[filter];
+      });
+    }
+    util.addRequestTrace(requestOptions, trace);
+    const response = await request(requestOptions);
+    return response;
+  } catch (error){
+    throw util.formatError(error);
+  }   
+};
+
 module.exports = {
   createRelationship,
   createAccount,
   deleteAccount,
+  getAccount,
+  listAccountChildren,
   listAccountRelationships,
   listAccounts,
-  getAccount,
+  listUserRootAccounts,
   modifyAccount,
   reinstateAccount,
   suspendAccount
