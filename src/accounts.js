@@ -418,7 +418,7 @@ const deleteAccount = async (
  * @async
  * @description This function returns a list of child accounts for a given CPaaS account uuid.
  * @param {string} [accessToken="null accessToken"] - access token for cpaas system
- * @param {string} [userUUID="null user uuid"] - CPaaS user uuid
+ * @param {string} [accountUUID="null account uuid"] - CPaaS account uuid
  * @param {number} [offset=0] - what page number you want
  * @param {number} [limit=10] - size of the page or number of records to return
  * @param {object} [filters={}] - optional filters
