@@ -438,7 +438,7 @@ const listAccountChildren = async (
     const MS = util.getEndpoint("accounts");
     const requestOptions = {
       method: "GET",
-      uri: `${MS}/${accountUUID}/children`,
+      uri: `${MS}/accounts/${accountUUID}/children`,
       qs: {
         offset: offset,
         limit: limit,
