@@ -146,8 +146,8 @@ const disableAccountProduct = async (
       json: true,
     };
     Util.addRequestTrace(requestOptions, trace);
-    const response = await request(requestOptions);
-    return response;
+    await request(requestOptions);
+    return { status: "accepted" };
   } catch (error) {
     throw Util.formatError(error);
   }
@@ -181,8 +181,8 @@ const enableAccountProduct = async (
       json: true,
     };
     Util.addRequestTrace(requestOptions, trace);
-    const response = await request(requestOptions);
-    return response;
+    await request(requestOptions);
+    return { status: "accepted" };
   } catch (error) {
     throw Util.formatError(error);
   }
@@ -568,7 +568,7 @@ const listAccountDisabledProducts = async (
     const MS = Util.getEndpoint("entitlements");
     const requestOptions = {
       method: "GET",
-      uri: `${MS}/accounts/${accountUUID}/disable/product`,
+      uri: `${MS}/accounts/${accountUUID}/disable/products`,
       headers: {
         Authorization: `Bearer ${accessToken}`,
         "Content-type": "application/json",
