@@ -136,7 +136,7 @@ const disableAccountProduct = async (
     const MS = Util.getEndpoint("entitlements");
     const requestOptions = {
       method: "POST",
-      uri: `${MS}/accounts/${accountUUID}/disable/product`,
+      uri: `${MS}/accounts/${accountUUID}/disable/products`,
       headers: {
         Authorization: `Bearer ${accessToken}`,
         "Content-type": "application/json",
