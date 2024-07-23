@@ -154,6 +154,42 @@ const disableAccountProduct = async (
 };
 
 /**
+ * @description This fuction prevents entitlement of a product type at an account level
+ * @async
+ * @param {string} [accessToken="null accessToken"] - CPaaS access token
+ * @param {string} [accountUUID="null accountUUID"] - account uuid
+ * @param {string} [productType="null productType"] - product type to disable
+ * @param {object} [trace={}] - optional CPaaS lifecycle headers
+ * @returns {Promise<object>} Promise resolving to an object confirming product is disabled
+ */
+const disableAccountProductType = async (
+  accessToken = "null accessToken",
+  accountUUID = "null accountUUID",
+  productType = "null productType",
+  trace = {}
+) => {
+  try {
+    const MS = Util.getEndpoint("entitlements");
+    const requestOptions = {
+      method: "POST",
+      uri: `${MS}/accounts/${accountUUID}/disable/product_types`,
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+        "Content-type": "application/json",
+        "x-api-version": `${Util.getVersion()}`,
+      },
+      body: { name: productType },
+      json: true,
+    };
+    Util.addRequestTrace(requestOptions, trace);
+    await request(requestOptions);
+    return { status: "accepted" };
+  } catch (error) {
+    throw Util.formatError(error);
+  }
+};
+
+/**
  * @description This fuction enables entitlement of a product at an account level
  * @async
  * @param {string} [accessToken="null accessToken"] - CPaaS access token
@@ -173,6 +209,41 @@ const enableAccountProduct = async (
     const requestOptions = {
       method: "DELETE",
       uri: `${MS}/accounts/${accountUUID}/disable/products/${productUUID}`,
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+        "Content-type": "application/json",
+        "x-api-version": `${Util.getVersion()}`,
+      },
+      json: true,
+    };
+    Util.addRequestTrace(requestOptions, trace);
+    await request(requestOptions);
+    return { status: "accepted" };
+  } catch (error) {
+    throw Util.formatError(error);
+  }
+};
+
+/**
+ * @description This fuction enables entitlement of a product type at an account level
+ * @async
+ * @param {string} [accessToken="null accessToken"] - CPaaS access token
+ * @param {string} [accountUUID="null accountUUID"] - account uuid
+ * @param {string} [productType="null productType"] - product type to enable
+ * @param {object} [trace={}] - optional CPaaS lifecycle headers
+ * @returns {Promise<object>} Promise resolving to an object confirming product is disabled
+ */
+const enableAccountProductType = async (
+  accessToken = "null accessToken",
+  accountUUID = "null accountUUID",
+  productType = "null productType",
+  trace = {}
+) => {
+  try {
+    const MS = Util.getEndpoint("entitlements");
+    const requestOptions = {
+      method: "DELETE",
+      uri: `${MS}/accounts/${accountUUID}/disable/product_types/${productType}`,
       headers: {
         Authorization: `Bearer ${accessToken}`,
         "Content-type": "application/json",
@@ -472,7 +543,7 @@ const getUserEntitlementsV2 = async (
 };
 
 /**
- * @description This fuction returns a list of entitlements by account
+ * @description This fuction returns a list of disabled products by account
  * @async
  * @param {string} [accessToken="null accessToken"] - CPaaS access token
  * @param {string} [accountUUID="null"] - account uuid
@@ -616,6 +687,78 @@ const listAccountDisabledProducts = async (
 };
 
 /**
+ * @description This fuction returns a list of disabled product types by account
+ * @async
+ * @param {string} [accessToken="null accessToken"] - CPaaS access token
+ * @param {string} [accountUUID="null"] - account uuid
+ * @param {number} [offset=0] - pagination offset
+ * @param {number} [limit=100] - pagination limit
+ * @param {object} [filters=undefined] - optional filters object {"key": "value"}
+ * @param {boolean} [aggregate=false] - return all matching values for client side pagination 
+ * @param {object} [trace={}] - optional CPaaS lifecycle headers
+ * @returns {Promise<object>} Promise resolving to a list of user entitlements
+ */
+const listAccountDisabledProductTypes = async (
+  accessToken = "null accessToken",
+  accountUUID = "null accountUUID",
+  offset = 0,
+  limit = 100,
+  filters = undefined,
+  aggregate = false,
+  trace = {}
+) => {
+  try {
+    const MS = Util.getEndpoint("entitlements");
+    const requestOptions = {
+      method: "GET",
+      uri: `${MS}/accounts/${accountUUID}/disable/product_types`,
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+        "Content-type": "application/json",
+        "x-api-version": `${Util.getVersion()}`,
+      },
+      qs: {
+        offset: offset,
+        limit: limit,
+      },
+      json: true,
+    };
+    Util.addRequestTrace(requestOptions, trace);
+    if (typeof filters !== "undefined") {
+      if (typeof filters !== "object" || filters === null) {
+        throw {
+          code: 400,
+          message: "filters param not an object",
+          trace_id:
+            requestOptions.hasOwnProperty("headers") &&
+            requestOptions.headers.hasOwnProperty("trace")
+              ? requestOptions.headers.trace
+              : undefined,
+          details: [{ filters: filters }],
+        };
+      } else {
+        Object.keys(filters).forEach((filter) => {
+          requestOptions.qs[filter] = filters[filter];
+        });
+      }
+    }
+    let response;
+    if(aggregate){
+      const nextTrace = Util.generateNewMetaData(trace);
+      requestOptions.offset = 0,
+      requestOptions.limit = 100,
+      response = await Util.aggregate(request, requestOptions, nextTrace);
+    } else {
+      Util.addRequestTrace(requestOptions, trace);
+      response = await request(requestOptions);
+    }
+    return response;
+  } catch (error) {
+    throw Util.formatError(error);
+  }
+};
+
+/**
  * @description This fuction will update a product specified
  * @async
  * @param {string} [accessToken="null accessToken"] - CPaaS access token
@@ -656,7 +799,9 @@ module.exports = {
   bulkDeleteEntitlement,
   bulkUserEntitlement,
   disableAccountProduct,
+  disableAccountProductType,
   enableAccountProduct,
+  enableAccountProductType,
   getProduct,
   getProducts,
   getProductByApplicationUuid,
@@ -664,5 +809,6 @@ module.exports = {
   getUserEntitlementsV2,
   listAccountEntitlements,
   listAccountDisabledProducts,
+  listAccountDisabledProductTypes,
   updateProduct,
 };

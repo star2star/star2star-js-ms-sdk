@@ -113,7 +113,9 @@ toc:
       - bulkDeleteEntitlement
       - bulkUserEntitlement
       - disableAccountProduct
+      - disableAccountProductType
       - enableAccountProduct
+      - enableAccountProductType
       - getProduct
       - getProductByApplicationUuid
       - getProducts
@@ -121,6 +123,7 @@ toc:
       - getUserEntitlementsV2
       - listAccountEntitlements
       - listAccountDisabledProducts
+      - listAccountDisabledProductTypes
       - updateProduct
   - name: Forms
     children:
