@@ -194,11 +194,11 @@ const getAccessToken = async (
 /**
  * @async
  * @description This function will call the oauth microservice with the basic token you passed in.
- * @param {string} [oauthToken="null oauth token"] - token for authentication to cpaas oauth system
+ * @param {string} [basicToken="null basic token"] - token for authentication to cpaas oauth system
  * @param {object} [trace = {}] - optional microservice lifecycle trace headers
  * @returns {Promise<object>} - Promise resolving to an oauth token data object
  */
-const getClientToken = async (oauthToken = "null oauth token", trace = {}) => {
+const getClientToken = async (basicToken = "null basic token", trace = {}, scope = "default") => {
   try {
     const MS = Util.getAuthHost();
     const VERSION = Util.getVersion();
@@ -206,13 +206,13 @@ const getClientToken = async (oauthToken = "null oauth token", trace = {}) => {
       method: "POST",
       uri: `${MS}/oauth/token`,
       headers: {
-        Authorization: `Basic ${oauthToken}`,
+        Authorization: `Basic ${basicToken}`,
         "x-api-version": `${VERSION}`,
         "Content-type": "application/x-www-form-urlencoded"
       },
       form: {
         grant_type: "client_credentials",
-        scope: "default"
+        scope: scope
       },
       json: true
       // resolveWithFullResponse: true
