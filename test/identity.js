@@ -37,7 +37,7 @@ describe("Identity MS Unit Test Suite", function () {
       s2sMS.setMsHost(process.env.CPAAS_URL);
       s2sMS.setMSVersion(process.env.CPAAS_API_VERSION);
       s2sMS.setMsAuthHost(process.env.AUTH_URL);
-      
+
       // get accessToken to use in test cases
       const oauthData = await s2sMS.Oauth.getAccessToken(
         process.env.BASIC_TOKEN,
@@ -198,8 +198,8 @@ describe("Identity MS Unit Test Suite", function () {
       const body = {
         account_uuid: identityData.account_uuid,
         description: "A test group",
-        members: [{uuid: testUUID}],
-        name: "Test"
+        members: [{ uuid: testUUID }],
+        name: "Test",
       };
       const testGroup = await s2sMS.Groups.createGroup(
         accessToken,
@@ -231,9 +231,9 @@ describe("Identity MS Unit Test Suite", function () {
 
       assert.ok(
         testGroup.name === "Test" &&
-        deleteIdentity.status === "ok" &&
-        response.hasOwnProperty("items") &&
-        response.items.length === 0,
+          deleteIdentity.status === "ok" &&
+          response.hasOwnProperty("items") &&
+          response.items.length === 0,
         JSON.stringify(response, null, "\t")
       );
       return response;
@@ -273,6 +273,47 @@ describe("Identity MS Unit Test Suite", function () {
         return error;
       }
     }, "Login with Bad Credentials")
+  );
+
+  it(
+    "Get Identity MultiFactor Auth",
+    mochaAsync(async () => {
+      trace = Util.generateNewMetaData(trace);
+      const idData = await s2sMS.Identity.getMyIdentityData(accessToken);
+      const response = await s2sMS.Identity.getIdentityMFA(
+        accessToken,
+        idData.user_uuid,
+        0,
+        10,
+        trace
+      );
+      assert.ok(
+        response.hasOwnProperty("items"),
+        JSON.stringify(response, null, "\t")
+      );
+      return response;
+    }, "Get Identity Multifactor Auth")
+  );
+
+  it(
+    "Update Identity MultiFactor Auth",
+    mochaAsync(async () => {
+      trace = Util.generateNewMetaData(trace);
+      const idData = await s2sMS.Identity.getMyIdentityData(accessToken);
+      const response = await s2sMS.Identity.updateIdentityMFA(
+        accessToken,
+        idData.user_uuid,
+        "email",
+        false,
+        idData.email,
+        trace
+      );
+      assert.ok(
+        response.hasOwnProperty("active") && response.active === false,
+        JSON.stringify(response, null, "\t")
+      );
+      return response;
+    }, "Update Identity Multifactor Auth")
   );
 
   it(

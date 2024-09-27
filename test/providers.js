@@ -30,18 +30,14 @@ const mochaAsync = (func, name) => {
 
 
 describe("Providers", function() {
-  let accessToken,
-    connection,
-    userUUID;
-  
+  let accessToken, connection, userUUID;
+
   before(async () => {
     try {
-      
-
       // For tests, use the dev msHost
       s2sMS.setMsHost(process.env.CPAAS_URL);
-     s2sMS.setMSVersion(process.env.CPAAS_API_VERSION);
-     s2sMS.setMsAuthHost(process.env.AUTH_URL);
+      s2sMS.setMSVersion(process.env.CPAAS_API_VERSION);
+      s2sMS.setMsAuthHost(process.env.AUTH_URL);
       // get accessToken to use in test cases
       // Return promise so that test cases will not fire until it resolves.
       const oauthData = await s2sMS.Oauth.getAccessToken(
@@ -52,145 +48,180 @@ describe("Providers", function() {
       accessToken = oauthData.access_token;
       const idData = await s2sMS.Identity.getMyIdentityData(accessToken);
       userUUID = idData.user_uuid;
-    } catch (error){
+    } catch (error) {
       throw error;
     }
   });
 
-  // it("Authorize Provider", mochaAsync(async () => {
+  // it(
+  //   "Authorize Provider",
+  //   mochaAsync(async () => {
   //     //   trace = Util.generateNewMetaData(trace);
-  //   const response = await s2sMS.Providers.authorizeProvider(
-  //     //clientID,
-  //     "689129445930-qqdrkf38fu6e37gd84nt758lur5kagq2.apps.googleusercontent.com",
-  //     // providerUUID,
-  //     "57992b0e-ecf3-4105-a291-1ed755719512",
-  //     // redirectURL,
-  //     "https://cpaas-appdev.star2starglobal.net/providers/providers/a6db5f71-3a6b-45cc-90fa-4ba5a64c1fbd/oauth/callback",
-  //     // userUUID,
-  //     "9e11c9a7-b03f-4cb3-b6aa-66f6f060aef3",
-  //     trace
-  //   );
-  //   assert.ok(
-  //     response.hasOwnProperty("items") &&
-  //     response.items.length > 0,
-  //     JSON.stringify(response, null, "\t")
-  //   );
-  //   return response;
-  // },"Authorize Provider"));
+  //     const response = await s2sMS.Providers.authorizeProvider(
+  //       //clientID,
+  //       "689129445930-qqdrkf38fu6e37gd84nt758lur5kagq2.apps.googleusercontent.com",
+  //       // providerUUID,
+  //       "57992b0e-ecf3-4105-a291-1ed755719512",
+  //       // redirectURL,
+  //       "https://cpaas-appdev.star2starglobal.net/providers/providers/a6db5f71-3a6b-45cc-90fa-4ba5a64c1fbd/oauth/callback",
+  //       // userUUID,
+  //       "9e11c9a7-b03f-4cb3-b6aa-66f6f060aef3",
+  //       trace
+  //     );
+  //     assert.ok(
+  //       response.hasOwnProperty("items") && response.items.length > 0,
+  //       JSON.stringify(response, null, "\t")
+  //     );
+  //     return response;
+  //   }, "Authorize Provider")
+  // );
 
-  // it("Get Provider Token", mochaAsync(async () => {
+  // it(
+  //   "Get Provider Token",
+  //   mochaAsync(async () => {
   //     //   trace = Util.generateNewMetaData(trace);
-  //   const response = await s2sMS.Providers.getProviderToken(
-  //     accessToken,
-  //     //clientID,
-  //     "689129445930-qqdrkf38fu6e37gd84nt758lur5kagq2.apps.googleusercontent.com",
-  //     // providerUUID,
-  //     "57992b0e-ecf3-4105-a291-1ed755719512",
-  //     // redirectURL,
-  //     "https://cpaas-appdev.star2starglobal.net/providers/providers/a6db5f71-3a6b-45cc-90fa-4ba5a64c1fbd/oauth/callback",
-  //     // userUUID,
-  //     "9e11c9a7-b03f-4cb3-b6aa-66f6f060aef3",
-  //     trace
-  //   );
-  //   assert.ok(
-  //     response.hasOwnProperty("items") &&
-  //     response.items.length > 0,
-  //     JSON.stringify(response, null, "\t")
-  //   );
-  //   return response;
-  // },"Get Provider Token"));
+  //     const response = await s2sMS.Providers.getProviderToken(
+  //       accessToken,
+  //       //clientID,
+  //       "689129445930-qqdrkf38fu6e37gd84nt758lur5kagq2.apps.googleusercontent.com",
+  //       // providerUUID,
+  //       "57992b0e-ecf3-4105-a291-1ed755719512",
+  //       // redirectURL,
+  //       "https://cpaas-appdev.star2starglobal.net/providers/providers/a6db5f71-3a6b-45cc-90fa-4ba5a64c1fbd/oauth/callback",
+  //       // userUUID,
+  //       "9e11c9a7-b03f-4cb3-b6aa-66f6f060aef3",
+  //       trace
+  //     );
+  //     assert.ok(
+  //       response.hasOwnProperty("items") && response.items.length > 0,
+  //       JSON.stringify(response, null, "\t")
+  //     );
+  //     return response;
+  //   }, "Get Provider Token")
+  // );
 
+  it(
+    "List User Profiles",
+    mochaAsync(async () => {
+      trace = Util.generateNewMetaData(trace);
 
-  it("List all Available Providers", mochaAsync(async () => {
-        trace = Util.generateNewMetaData(trace);
-    const response = await s2sMS.Providers.listAvailableProviders(
-      accessToken,
-      trace
-    );
-    assert.ok(
-      response.hasOwnProperty("items") &&
-      response.items.length > 0,
-      JSON.stringify(response, null, "\t")
-    );
-    return response;
-  },"List all Available Providers"));
+      const response = await s2sMS.Providers.getProviderUserProfiles(
+        accessToken,
+        userUUID,
+        trace
+      );
+      assert.ok(
+        response.hasOwnProperty("items") && response.items.length > 0,
+        JSON.stringify(response, null, "\t")
+      );
+      return response;
+    }, "List all Available Providers")
+  );
 
-  it("List all User Providers", mochaAsync(async () => {
-        trace = Util.generateNewMetaData(trace);
-    const response = await s2sMS.Providers.listUsersProviders(
-      accessToken,
-      userUUID,
-      trace
-    );
-    assert.ok(
-      response.hasOwnProperty("items"),
-      JSON.stringify(response, null, "\t")
-    );
-    return response;
-  },"List all User Providers"));
+  it(
+    "List all Available Providers",
+    mochaAsync(async () => {
+      trace = Util.generateNewMetaData(trace);
+      const response = await s2sMS.Providers.listAvailableProviders(
+        accessToken,
+        trace
+      );
+      assert.ok(
+        response.hasOwnProperty("items") && response.items.length > 0,
+        JSON.stringify(response, null, "\t")
+      );
+      return response;
+    }, "List all Available Providers")
+  );
 
-  it("List A User's Connections", mochaAsync(async () => {
-        trace = Util.generateNewMetaData(trace);
-    const response = await s2sMS.Providers.listUserProviderConnections(
-      accessToken,
-      userUUID,
-      undefined, //policy_uuid filter
-      undefined, // provider uuid filter,
-      undefined, // username filter,
-      trace  
-    );
-    
-    // get a gonnection with a username to use for following tests
-    connection = response.items.reduce((cur, acc) => {
-      if(!acc) {
-        if(cur.hasOwnProperty("user_name") && cur.user_name.length > 0){
-          return cur;
+  it(
+    "List all User Providers",
+    mochaAsync(async () => {
+      trace = Util.generateNewMetaData(trace);
+      const response = await s2sMS.Providers.listUsersProviders(
+        accessToken,
+        userUUID,
+        trace
+      );
+      assert.ok(
+        response.hasOwnProperty("items"),
+        JSON.stringify(response, null, "\t")
+      );
+      return response;
+    }, "List all User Providers")
+  );
+
+  it(
+    "List A User's Connections",
+    mochaAsync(async () => {
+      trace = Util.generateNewMetaData(trace);
+      const response = await s2sMS.Providers.listUserProviderConnections(
+        accessToken,
+        userUUID,
+        undefined, //policy_uuid filter
+        undefined, // provider uuid filter,
+        undefined, // username filter,
+        trace
+      );
+
+      // get a gonnection with a username to use for following tests
+      connection = response.items.reduce((cur, acc) => {
+        if (!acc) {
+          if (cur.hasOwnProperty("user_name") && cur.user_name.length > 0) {
+            return cur;
+          }
         }
-      }
-      return acc;
-    }, undefined);
-    console.log("connection!!!", connection);
-    assert.ok(
-      response.hasOwnProperty("items"),
-      JSON.stringify(response, null, "\t")
-    );
-    return response;
-  },"List A User's Connections"));
-  
-  it("Get Token by Connection", mochaAsync(async () => {
-        trace = Util.generateNewMetaData(trace);
-    const response = await s2sMS.Providers.getProviderTokenByConnection(
-      accessToken,
-      connection.uuid,
-      trace  
-    );
-    assert.ok(
-      response.hasOwnProperty("access_token") &&
-      typeof response.access_token === "string" &&
-      response.access_token.length > 0,
-      JSON.stringify(response, null, "\t")
-    );
-    return response;
-  },"Get Token by Connection"));
+        return acc;
+      }, undefined);
+      console.log("connection!!!", connection);
+      assert.ok(
+        response.hasOwnProperty("items"),
+        JSON.stringify(response, null, "\t")
+      );
+      return response;
+    }, "List A User's Connections")
+  );
 
-  it("Get Token by Policy", mochaAsync(async () => {
-        trace = Util.generateNewMetaData(trace);
-    const response = await s2sMS.Providers.getProviderToken(
-      accessToken,
-      connection.provider_uuid,
-      connection.policy_uuid,
-      undefined, //redirectURI
-      connection.user_name,
-      trace  
-    );
-    assert.ok(
-      response.hasOwnProperty("access_token") &&
-      typeof response.access_token === "string" &&
-      response.access_token.length > 0,
-      JSON.stringify(response, null, "\t")
-    );
-    return response;
-  },"Get Token by Policy"));
+  it(
+    "Get Token by Connection",
+    mochaAsync(async () => {
+      trace = Util.generateNewMetaData(trace);
+      const response = await s2sMS.Providers.getProviderTokenByConnection(
+        accessToken,
+        connection.uuid,
+        trace
+      );
+      assert.ok(
+        response.hasOwnProperty("access_token") &&
+          typeof response.access_token === "string" &&
+          response.access_token.length > 0,
+        JSON.stringify(response, null, "\t")
+      );
+      return response;
+    }, "Get Token by Connection")
+  );
+
+  it(
+    "Get Token by Policy",
+    mochaAsync(async () => {
+      trace = Util.generateNewMetaData(trace);
+      const response = await s2sMS.Providers.getProviderToken(
+        accessToken,
+        connection.provider_uuid,
+        connection.policy_uuid,
+        undefined, //redirectURI
+        connection.user_name,
+        trace
+      );
+      assert.ok(
+        response.hasOwnProperty("access_token") &&
+          typeof response.access_token === "string" &&
+          response.access_token.length > 0,
+        JSON.stringify(response, null, "\t")
+      );
+      return response;
+    }, "Get Token by Policy")
+  );
 
   // template
   // it("change me", mochaAsync(async () => {

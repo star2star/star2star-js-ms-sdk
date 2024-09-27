@@ -429,6 +429,130 @@ const getIdentity = async (
 
 /**
  * @async
+ * @description This function returns array of MFA email/SMS and their active status for use in multifactor auth
+ * @param {string} [accessToken="null accessToken"] - cpaas access token
+ * @param {string} [userUuid="null uuid"] - user uuid
+ * @param {number} [offset=0] - list offset
+ * @param {number} [limit=10] - number of items to return
+ * @returns {Promise} - promise resolving to identity MFA response object containing array of MFA settings
+ */
+const getIdentityMFA = async (
+  accessToken = "null accessToken",
+  userUuid = "null uuid",
+  offset=0,
+  limit=10,
+  trace = {},
+  include = undefined
+) => {
+  try {
+    const MS = util.getEndpoint("identity");
+    const requestOptions = {
+      method: "GET",
+      uri: `${MS}/identities/${userUuid}/mfa`,
+      qs: {
+        offset: offset,
+        limit: limit,
+      },
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+        "Content-type": "application/json",
+        "x-api-version": `${util.getVersion()}`,
+      },
+      json: true,
+    };
+
+    util.addRequestTrace(requestOptions, trace);
+    const response = await request(requestOptions);
+    return response;
+  } catch (error) {
+    throw util.formatError(error);
+  }
+};
+
+/**
+ * @async
+ * @description This function will update a user's MFA settings.
+ * @param {string} [accessToken="null accessToken"] - access token for cpaas systems
+ * @param {string} [userUuid="null uuid"] - user uuid
+ * @param {string} [type=undefined] - "email" or "sms"
+ * @param {boolean} [active=false] - true or false
+ * @param {string} [source=undefined] - email address or SMS number 
+ * @param {object} [trace = {}] - optional microservice lifecycle trace headers
+ * @returns {Promise<object>} - Promise resolving to an object containing the new account MFA policy
+ */
+const updateIdentityMFA = async (
+  accessToken = "null access token",
+  userUUID = "null password token",
+  type="null type",
+  active=false,
+  source="null source",
+  trace = {}
+) => {
+  try {
+    const MS = util.getEndpoint("identity");
+    const requestOptions = {
+      method: "PUT",
+      uri: `${MS}/identities/${userUUID}/mfa/${type}`,
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+        "Content-type": "application/json",
+        "x-api-version": `${util.getVersion()}`,
+      },
+      body: {
+        active: active,
+        source: source
+      },
+      json: true,
+    };
+    util.addRequestTrace(requestOptions, trace);
+
+    const response = await request(requestOptions);
+    return response;
+  } catch (error) {
+    throw util.formatError(error);
+  }
+};
+
+/**
+ * @async
+ * @description This function will delete an SMS number from the identity MFA 
+ * @param {string} [accessToken="null accessToken"] - access token for cpaas systems
+ * @param {string} [userUUID="null userUUID"] - user uuid
+ * @param {string} [source="null source"] - SMS number to be deleted from MFA
+ * @param {object} [trace = {}] - optional microservice lifecycle trace headers
+ * @returns {Promise<object>} - Promise resolving to an object confirming success or failure
+ */
+const deleteIdentityMFASMS = async (
+  accessToken = "null access token",
+  userUUID = "null password token",
+  source="null source",
+  trace = {}
+) => {
+  try {
+    const MS = util.getEndpoint("identity");
+    const requestOptions = {
+      method: "DELETE",
+      uri: `${MS}/identities/${userUUID}/mfa/SMS`,
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+        "Content-type": "application/json",
+        "x-api-version": `${util.getVersion()}`,
+      },
+      body:{
+        source: source
+      },
+      json: true,
+    };
+    util.addRequestTrace(requestOptions, trace);
+    await request(requestOptions);
+    return { status: "ok" };
+  } catch (error) {
+    throw util.formatError(error);
+  }
+};
+
+/**
+ * @async
  * @description This function will call the identity microservice with the credentials and
  * accessToken you passed in.
  * @param {string} [accessToken="null access token"] - access token for cpaas systems
@@ -1037,10 +1161,12 @@ module.exports = {
   deactivateIdentity,
   deleteAccountPasswordPolicy,
   deleteIdentity,
+  deleteIdentityMFASMS,
   generatePasswordToken,
   getAccountPasswordPolicy,
   getIdentity,
   getIdentityDetails,
+  getIdentityMFA,
   getAccountMFAPolicy,
   getMyIdentityData,
   listIdentitiesByAccount,
@@ -1055,5 +1181,6 @@ module.exports = {
   updateAliasWithDID,
   updateAccountMFAPolicy,
   updateAccountPasswordPolicy,
+  updateIdentityMFA,
   validatePasswordToken,
 };

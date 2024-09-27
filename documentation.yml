@@ -156,11 +156,13 @@ toc:
       - deactivateIdentity
       - deleteAccountPasswordPolicy
       - deleteIdentity
+      - deleteIdentityMFASMS
       - generatePasswordToken
       - getAccountMFAPolicy
       - getAccountPasswordPolicy
       - getIdentity
       - getIdentityDetails
+      - getIdentityMFA
       - getMyIdentityData
       - listIdentitiesByAccount
       - listIdentitiesByAccountOrFilter
@@ -174,6 +176,7 @@ toc:
       - updateAliasWithDID
       - updateAccountMFAPolicy
       - updateAccountPasswordPolicy
+      - updateIdentityMFA
       - validatePasswordToken
   - name: Index
     children:
@@ -271,6 +274,7 @@ toc:
       - authorizeProvider
       - getProviderToken
       - getProviderTokenByConnection
+      - getProviderUserProfiles
       - listAvailableProviders
       - listUsersProviders
       - listUserProviderConnections

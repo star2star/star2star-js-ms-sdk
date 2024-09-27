@@ -101,6 +101,43 @@ const getProviderToken = async (
   }
 };
 
+
+/**
+ *
+ * @description This function will return users linked accounts based on their user_uuid
+ * @param {string} [accessToken="null accessToken"] - CPaaS access token
+ * @param {string} userUUID - required cpaas user uuid
+ * @param {object} [trace={}] - optional cpaas lifecycle headers
+ */
+
+const getProviderUserProfiles = async (
+  accessToken = "null accessToken",
+  userUUID = "null userUUID",
+  trace = {}
+) => {
+  try {
+    const MS = util.getEndpoint("providers");
+
+    console.log('$$$$$ userUUID', userUUID);
+
+    const requestOptions = {
+      method: "GET",
+      uri: `${MS}/users/${userUUID}/profiles`,
+      headers: {
+        "Authorization": `Bearer ${accessToken}`,
+        "x-api-version": `${util.getVersion()}`
+      },
+      json: true
+    };
+
+    util.addRequestTrace(requestOptions, trace);
+    const response = await request(requestOptions);
+    return response;
+  } catch (error) {
+    throw util.formatError(error);
+  }
+};
+
 /**
  *
  * @description This function will return a refreshed access token for the associated provider
@@ -260,8 +297,9 @@ module.exports = {
   authorizeProvider,
   getProviderToken,
   getProviderTokenByConnection,
+  getProviderUserProfiles,
   listAvailableProviders,
   listUserProviderConnections,
-  listUsersProviders
+  listUsersProviders,
 };
  
