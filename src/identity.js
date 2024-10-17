@@ -474,7 +474,7 @@ const getIdentityMFA = async (
  * @description This function will update a user's MFA settings.
  * @param {string} [accessToken="null accessToken"] - access token for cpaas systems
  * @param {string} [userUuid="null uuid"] - user uuid
- * @param {string} [type=undefined] - "email" or "sms"
+ * @param {string} [type=undefined] - "EMAIL" or "SMS"
  * @param {boolean} [active=false] - true or false
  * @param {string} [source=undefined] - email address or SMS number 
  * @param {object} [trace = {}] - optional microservice lifecycle trace headers
@@ -546,6 +546,88 @@ const deleteIdentityMFASMS = async (
     util.addRequestTrace(requestOptions, trace);
     await request(requestOptions);
     return { status: "ok" };
+  } catch (error) {
+    throw util.formatError(error);
+  }
+};
+
+/**
+ * @async
+ * @description This function will initiate proces to add a new source to the identity MFA 
+ * @param {string} [accessToken="null accessToken"] - access token for cpaas systems
+ * @param {string} [userUUID="null userUUID"] - user uuid
+ * @param {string} [type="null type"] - "EMAIL" or "SMS"
+ * @param {string} [source="null source"] - SMS number or email to be added to MFA
+ * @param {object} [trace = {}] - optional microservice lifecycle trace headers
+ * @returns {Promise<object>} - Promise resolving to an object including 'token' to use in confirm
+ */
+const initiateIdentityMFASetup = async (
+  accessToken = "null access token",
+  userUUID = "null password token",
+  type="null type",
+  source="null source",
+  trace = {}
+) => {
+  try {
+    const MS = util.getEndpoint("identity");
+    const requestOptions = {
+      method: "POST",
+      uri: `${MS}/identities/${userUUID}/mfa/setup/init`,
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+        "Content-type": "application/json",
+        "x-api-version": `${util.getVersion()}`,
+      },
+      body:{
+        type: type,
+        source: source
+      },
+      json: true,
+    };
+    util.addRequestTrace(requestOptions, trace);
+    const response = await request(requestOptions);
+    return response;
+  } catch (error) {
+    throw util.formatError(error);
+  }
+};
+
+/**
+ * @async
+ * @description This function will complete the process to add a new source to the identity MFA by confirming the token and code
+ * @param {string} [accessToken="null accessToken"] - access token for cpaas systems
+ * @param {string} [userUUID="null userUUID"] - user uuid
+ * @param {string} [token="null token"] - token received from InitiateIdentityMFASetup
+ * @param {string} [code="null code"] - code sent to the source to be added
+ * @param {object} [trace = {}] - optional microservice lifecycle trace headers
+ * @returns {Promise<object>} - Promise resolving to an object including 'token' to use in confirm
+ */
+const confirmIdentityMFASetup = async (
+  accessToken = "null access token",
+  userUUID = "null password token",
+  token="null token",
+  code="null code",
+  trace = {}
+) => {
+  try {
+    const MS = util.getEndpoint("identity");
+    const requestOptions = {
+      method: "POST",
+      uri: `${MS}/identities/${userUUID}/mfa/setup/confirm`,
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+        "Content-type": "application/json",
+        "x-api-version": `${util.getVersion()}`,
+      },
+      body:{
+        type: type,
+        source: source
+      },
+      json: true,
+    };
+    util.addRequestTrace(requestOptions, trace);
+    const response = await request(requestOptions);
+    return response;
   } catch (error) {
     throw util.formatError(error);
   }
@@ -1156,6 +1238,7 @@ const updateAccountPasswordPolicy = async (
 };
 
 module.exports = {
+  confirmIdentityMFASetup,
   createAlias,
   createIdentity,
   deactivateIdentity,
@@ -1169,6 +1252,7 @@ module.exports = {
   getIdentityMFA,
   getAccountMFAPolicy,
   getMyIdentityData,
+  initiateIdentityMFASetup,
   listIdentitiesByAccount,
   listIdentitiesByAccountOrFilter,
   listPasswordPolicies,
