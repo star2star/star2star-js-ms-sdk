@@ -619,9 +619,9 @@ const confirmIdentityMFASetup = async (
         "Content-type": "application/json",
         "x-api-version": `${util.getVersion()}`,
       },
-      body:{
-        type: type,
-        source: source
+      body: {
+        token: token,
+        code: code,
       },
       json: true,
     };
