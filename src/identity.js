@@ -894,7 +894,52 @@ const lookupIdentity = async (
 
 /**
  * @async
- * @description This function will update a user's password.
+ * @description This function will change a user's password. NOTE THAT THIS IS DIFFERENT FROM RESET PASSWORD function!!
+ * @param {string} [accessToken="null access token"] - access token for cpaas systems
+ * @param {string} [email] - user's email address
+ * @param {string} ["old_data"] - user's old password
+ * @param {string} ["new_data"] - user's new password
+ * @param {object} [trace = {}] - optional microservice lifecycle trace headers
+ * @returns {Promise<object>} - Promise resolving to a as status message; "ok" or "failed"
+ */
+const changePassword = async (
+  accessToken = "null access token",
+  email = "null email",
+  old_data = "null old_data",
+  new_data = "null new_data",
+  trace = {}
+) => {
+  try {
+    const MS = util.getEndpoint("identity");
+    const requestOptions = {
+      method: "PUT",
+      uri: `${MS}/users/change_password`,
+      body: {
+        email: email,
+        old_data: old_data,
+        new_data: new_data
+      },
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+        "Content-type": "application/json",
+        "x-api-version": `${util.getVersion()}`,
+      },
+      resolveWithFullResponse: true,
+      json: true,
+    };
+    util.addRequestTrace(requestOptions, trace);
+    await request(requestOptions);
+    
+    return { status: "ok" };
+  } catch (error) {
+    throw util.formatError(error);
+  }
+};
+
+
+/**
+ * @async
+ * @description This function will update a user's password. This is part of the 'forgot password' flow.
  * @param {string} [accessToken="null access token"] - access token for cpaas systems
  * @param {string} [password_token="null passwordToken"] - Reset token received via email
  * @param {object} [body="null body"] - object containing email address and new password
@@ -1238,6 +1283,7 @@ const updateAccountPasswordPolicy = async (
 };
 
 module.exports = {
+  changePassword,
   confirmIdentityMFASetup,
   createAlias,
   createIdentity,
