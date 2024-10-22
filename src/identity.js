@@ -912,12 +912,12 @@ const changePassword = async (
   try {
     const MS = util.getEndpoint("identity");
     const requestOptions = {
-      method: "PUT",
+      method: "POST",
       uri: `${MS}/users/change_password`,
       body: {
         email: email,
         old_data: old_data,
-        new_data: new_data
+        new_data: new_data,
       },
       headers: {
         Authorization: `Bearer ${accessToken}`,
