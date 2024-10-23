@@ -167,7 +167,7 @@ const getNumberDetails = async (
     const MS = util.getEndpoint("sms");
     const requestOptions = {
       method: "GET",
-      uri: `${MS}/nprovision/numbers/number/${phoneNumber}`,
+      uri: `${MS}/provision/numbers/number/${phoneNumber}`,
       headers: {
         Authorization: `Bearer ${accessToken}`,
         "x-api-version": `${util.getVersion()}`,
