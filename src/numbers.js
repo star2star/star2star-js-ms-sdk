@@ -152,6 +152,39 @@ const getAvailableStates = async (
 
 /**
  * @async
+ * @description - This function will get provisioned number detail information including sms enabled provider, origin campaign and help text  
+ * @param {string} [accessToken="null accessToken"] - cpaas access token
+ * @param {number} [phoneNumber] - sms phone number
+ * @param {object} [trace={}] - microservice lifecyce headers
+ * @returns {Promise} - Promise resolving to item details 
+ */
+const getNumberDetails = async (
+  accessToken = "null accessToken",
+  phoneNumber,
+  trace = {}
+) => {
+  try {
+    const MS = util.getEndpoint("sms");
+    const requestOptions = {
+      method: "GET",
+      uri: `${MS}/nprovision/numbers/number/${phoneNumber}`,
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+        "x-api-version": `${util.getVersion()}`,
+        "Content-type": "application/json",
+      },
+      json: true,
+    };
+    util.addRequestTrace(requestOptions, trace);
+    const response = await request(requestOptions);
+    return response;
+  } catch (error) {
+    throw util.formatError(error);
+  }
+};
+
+/**
+ * @async
  * @description - This function will list numbers provisioned to a CPaaS account
  * @param {string} [accessToken="null accessToken"] - cpaas access token
  * @param {string} [accountUUID="null accountUUID"] - cpaas account_uuid
@@ -474,6 +507,7 @@ module.exports = {
   getAvailableAreaCodes,
   getAvailableRateCenters,
   getAvailableStates,
+  getNumberDetails,
   getProvisionedNumbersByAccount,
   getProvisionedNumbersByUser,
   listAvailableNumbers,
