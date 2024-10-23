@@ -925,7 +925,6 @@ const changePassword = async (
         "x-api-version": `${util.getVersion()}`,
       },
       resolveWithFullResponse: true,
-      json: true,
     };
     util.addRequestTrace(requestOptions, trace);
     await request(requestOptions);
