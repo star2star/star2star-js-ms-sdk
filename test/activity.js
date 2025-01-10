@@ -78,7 +78,7 @@ describe("Activity MS Unit Test Suite", function() {
  
     // console.log(JSON.stringify(reportTemplate, null, 2))
     return response;
-  },"List Reports"));
+  },"List Activities"));
 
  
   it("List Reports", mochaAsync(async () => {
