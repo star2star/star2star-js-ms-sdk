@@ -60,6 +60,27 @@ describe("Activity MS Unit Test Suite", function() {
     
   });
 
+  it("List Activities", mochaAsync(async () => {
+    console.log('identityData', identityData);
+    trace = Util.generateNewMetaData(trace);
+    const response = await s2sMS.Activity.listActivities(
+      accessToken,
+      {"activity_type": "voicemail", include: "metadata", "owner_uuid": identityData.uuid }, //filter
+      0, // offset
+      5000,  // limit
+      trace
+    );
+    assert.ok(
+      typeof response.items !== "undefined" &&
+      Array.isArray(response.items) &&
+      JSON.stringify(response, null, "\t")
+    );
+ 
+    // console.log(JSON.stringify(reportTemplate, null, 2))
+    return response;
+  },"List Reports"));
+
+ 
   it("List Reports", mochaAsync(async () => {
     
     trace = Util.generateNewMetaData(trace);
@@ -211,6 +232,7 @@ describe("Activity MS Unit Test Suite", function() {
     return uResponse;
   },"update activity report template"));
 
+
   it("delete activity report template", mochaAsync(async () => {
     
     trace = Util.generateNewMetaData(trace);
@@ -227,21 +249,5 @@ describe("Activity MS Unit Test Suite", function() {
     );
     return dResponse;
   }," delete activity report template"));
-
-/*
-  - registerType
-  - registerSubType
-*/
-
-
-  // template
-  // it("change me", mochaAsync(async () => {
-  //     //   trace = Util.generateNewMetaData(trace);
-  //   const response = await somethingAsync();
-  //   assert.ok(
-  //     1 === 1,
-  //     JSON.stringify(response, null, "\t")
-  //   );
-  //   return response;
-  // },"change me"));
+ 
 });

@@ -7,7 +7,7 @@ const request = require("./requestPromise");
  * @async
  * @description This function will get an already created report.
  * @param {string} [accessToken="null access token"]
- * @param {string} reportUUID
+ * @param {string} reportUUIDlistVoicemails
  * @param {string} templateUUID
  * @param {object} [trace = {}] - optional microservice lifecycle trace headers 
  * @returns {Promise<object>} - Promise resolving to a data object containing new relationship
@@ -440,15 +440,65 @@ const runReport = async (
   }
 };
 
+/**
+ * @async
+ * @description This function will list activites based on parameters .
+ * @param {string} [accessToken="null access token"]
+ * @param {object} [filters={}}] - optional object consisting of key and value to use in url as parameters.
+ * @param {number} [offset = 0] - pagination offset
+ * @param {number} [limit = 10] = pagination limit
+ * @param {object} [trace = {}] - optional microservice lifecycle trace headers 
+ * @returns {Promise<object>} - Promise resolving to a data object of activities
+ */
+const listActivities = async (
+  accessToken = "null access token", 
+  filters = {},
+  offset = 0,
+  limit = 10,
+  trace = {}
+) =>{
+  try{
+    const MS = util.getEndpoint("activity");
+    const requestOptions = {
+      method: "GET",
+      uri: `${MS}/activity`,
+      qs: {
+        offset: offset,
+        limit: limit,
+      },
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+        "Content-type": "application/json",
+        "x-api-version": `${util.getVersion()}`
+      },
+      json: true
+    };
+    util.addRequestTrace(requestOptions, trace);
+    if (filters) {
+      Object.keys(filters).forEach(keyName => {
+        requestOptions.qs[keyName] = filters[keyName];
+      });
+    }
+   
+    const response = await request(requestOptions);
+ 
+    return response;
+  } catch (error) {
+    throw util.formatError(error);
+  }
+
+}
+
 module.exports = {
-  getReport,
-  listReportTemplates,
-  runReport,
-  listRegisteredTypes,
-  listRegisteredSubTypes,
-  registerType,
-  registerSubType,
   createReportTemplate,
   deleteReportTemplate,
+  getReport,
+  listActivities,
+  listRegisteredTypes,
+  listRegisteredSubTypes,
+  listReportTemplates,
+  registerType,
+  registerSubType,
+  runReport,
   updateReportTemplate
 };
