@@ -53,7 +53,7 @@ const getAuthHost = () => {
  * @returns {string} - the configured string value or undefined
  */
 const getVersion = () => {
-  const MS_VERSION = getGlobalThis().MS_VERSION
+  const MS_VERSION = getGlobalThis().MS_VERSION;
   return typeof MS_VERSION === "undefined" ? "v1" : MS_VERSION;
 };
 
@@ -606,20 +606,29 @@ const formatFetchError = async (fetchResponse) => {
     };
 
     // set returned code for now. this may get overwritted if there are details in the body
-    const parseType =
-      fetchResponse?.headers?.get("Content-Type")?.includes("json") 
-        ? "json"
-        : "text";
+    const parseType = fetchResponse?.headers
+      ?.get("Content-Type")
+      ?.includes("json")
+      ? "json"
+      : "text";
     const errorBody = await fetchResponse[parseType]();
 
     if (typeof errorBody === "string") {
       retObj.message = errorBody;
       return retObj;
-    } else {
+    } else if (typeof errorBody === "object" && errorBody !== null) {
       if (typeof errorBody.code === "undefined") {
         errorBody.code = retObj.code;
       }
+      if (
+        !errorBody.hasOwnProperty("message") &&
+        errorBody.hasOwnProperty("error")
+      ) {
+        errorBody.message = errorBody.error;
+      }
       return formatError(errorBody);
+    } else {
+      return retObj;
     }
   } catch (e) {
     // pass this up the call stack in standard format
@@ -668,7 +677,6 @@ const decrypt = (cryptoKey, text, salt = "salt", algorithm = "aes-192-cbc") => {
   decrypted += decipher.final("utf8");
   return decrypted;
 };
-
 
 /**
  * @description This function decrypts an encrypted string into an object
@@ -725,9 +733,12 @@ const encryptObject = (zlib, key, obj, iv, algorithm = "aes-256-cbc") => {
           .toString("base64"),
       };
     }
-  } catch (e){
+  } catch (e) {
     console.error(e);
-    throw new Error("encrypt object failed: ", e.message ? e.message : "unspecified error");
+    throw new Error(
+      "encrypt object failed: ",
+      e.message ? e.message : "unspecified error"
+    );
   }
 };
 
@@ -738,24 +749,33 @@ const encryptObject = (zlib, key, obj, iv, algorithm = "aes-256-cbc") => {
  * @param {string} algorithm - optional encryption algorithm
  * @returns {object} - object containing iv and decrypted object
  */
-const decryptObject = (zlib, key, ciphertext, algorithm = 'aes-256-cbc') => {
+const decryptObject = (zlib, key, ciphertext, algorithm = "aes-256-cbc") => {
   try {
-    const cipherObj = JSON.parse(zlib.gunzipSync(Buffer.from(ciphertext, "base64")));
-    const initializationVector = Buffer.from(cipherObj.iv, 'hex');
+    const cipherObj = JSON.parse(
+      zlib.gunzipSync(Buffer.from(ciphertext, "base64"))
+    );
+    const initializationVector = Buffer.from(cipherObj.iv, "hex");
     const saltedKey = crypto.scryptSync(key, cipherObj.iv, 32);
-    const decipher = crypto.createDecipheriv(algorithm, saltedKey, initializationVector);
-    let decrypted = decipher.update(cipherObj.ciphertext, 'hex', 'utf8');
-    decrypted += decipher.final('utf8');
+    const decipher = crypto.createDecipheriv(
+      algorithm,
+      saltedKey,
+      initializationVector
+    );
+    let decrypted = decipher.update(cipherObj.ciphertext, "hex", "utf8");
+    decrypted += decipher.final("utf8");
     decrypted = zlib.gunzipSync(Buffer.from(decrypted, "base64"));
     return {
-      iv : cipherObj.iv,
-      obj: JSON.parse(decrypted)
-    }
-  } catch (e){
+      iv: cipherObj.iv,
+      obj: JSON.parse(decrypted),
+    };
+  } catch (e) {
     console.error("error decrypting", e);
-    throw new Error("decrypt object failed: ", e.message ? e.message : "unspecified error");
+    throw new Error(
+      "decrypt object failed: ",
+      e.message ? e.message : "unspecified error"
+    );
   }
-}
+};
 
 // adds "debug" header to all requests if not included in trace
 // does not override trace.debug set to "false" explicitly
@@ -912,18 +932,15 @@ const isVersionHigher = (newVersion, oldVersion) => {
 };
 
 /**
-   *
-   *
-   * @param {*} baseUrl
-   * @param {*} [queryParamsObj={}]
-   * @param {*} [filterArray=[]]
-   * @returns
-   */
- const addUrlQueryParams = (baseUrl, queryParamsObj = {}, filterArray = []) => {
-  const filteredParamsObj = extractProps(
-    queryParamsObj,
-    filterArray
-  );
+ *
+ *
+ * @param {*} baseUrl
+ * @param {*} [queryParamsObj={}]
+ * @param {*} [filterArray=[]]
+ * @returns
+ */
+const addUrlQueryParams = (baseUrl, queryParamsObj = {}, filterArray = []) => {
+  const filteredParamsObj = extractProps(queryParamsObj, filterArray);
   const queryParamsString = Object.keys(filteredParamsObj).reduce(
     (acc, curr) => {
       // skip properties with empty values
@@ -933,7 +950,7 @@ const isVersionHigher = (newVersion, oldVersion) => {
       const encodedValue = encodeURIComponent(filteredParamsObj[curr]);
       //first pass starts with a '?'
       if (acc === "") {
-        if(baseUrl === ""){
+        if (baseUrl === "") {
           return `${curr}=${encodedValue}`;
         }
         return `?${curr}=${encodedValue}`;
