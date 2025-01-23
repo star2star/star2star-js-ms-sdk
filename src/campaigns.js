@@ -66,6 +66,7 @@ const assignToSMSCampaign = async (
  * @param {string} stockSymbol public stock symbol
  * @param {string} stockExchange public stock exchange
  * @param {string} emailAddress contact email address
+ * @param {string} business_contact_email business contact email address
  * @param {string} phoneNumber contact phone number
  * @param {string} firstName contact first name
  * @param {string} lastName contact last name
@@ -92,6 +93,7 @@ const createBrand = async (
   stockSymbol,
   stockExchange,
   emailAddress,
+  businessContactEmail,
   phoneNumber,
   firstName,
   lastName,
@@ -125,6 +127,7 @@ const createBrand = async (
         stock_symbol: stockSymbol,
         stock_exchange: stockExchange,
         email_address: emailAddress,
+        business_contact_email: businessContactEmail,
         phone_number: phoneNumber,
         first_name: firstName,
         last_name: lastName,
@@ -161,6 +164,8 @@ const createBrand = async (
  * @param {string} usecaseId usecase id
  * @param {array} subUsecaseIds sub usecase ids (strings)
  * @param {string} [messageFlow="Users may opt-in by sending START to any number associated with the campaign. Users may also sign up to receive messages from this campaign via a website after accepting terms and conditions."] how subscribers are added or opt-in to the campaign
+ * @param {string} termsLink url for viewing terms and conditions
+ * @param {string} privacyLink url for viewing privacy policy
  * @param {boolean} [autoRenewal=true] subscription auto-renews?
  * @param {boolean} [subOptIn=true] provides automated opt-in?
  * @param {string} [optInKeywords="START"] opt-in keywords (comma separated)
@@ -193,16 +198,18 @@ const createCampaign = async (
   usecaseId,
   subUsecaseIds = [],
   messageFlow = "Users may opt-in by sending START to any number associated with the campaign. Users may also sign up to receive messages from this campaign via a website after accepting terms and conditions.",
+  termsLink,
+  privacyLink,
   autoRenewal = true,
   subOptIn = true,
   optInKeywords = "START",
-  optInMessage = "You have replied \"START\" and will begin receiving messages again. Reply \"STOP\" to unsubscribe.",
+  optInMessage = 'You have replied "START" and will begin receiving messages again. Reply "STOP" to unsubscribe.',
   subOptOut = true,
   optOutKeywords = "STOP",
-  optOutMessage = "You have been unsubscribed from the mailing list and will not receive any more messages. Send \"START\" to resubscribe.",
+  optOutMessage = 'You have been unsubscribed from the mailing list and will not receive any more messages. Send "START" to resubscribe.',
   subHelp = true,
   helpKeywords = "HELP",
-  helpMessage = "To unsubscribe, reply \"STOP\" to this number.  Msg&data rates may apply.",
+  helpMessage = 'To unsubscribe, reply "STOP" to this number.  Msg&data rates may apply.',
   trace = {}
 ) => {
   try {
@@ -224,6 +231,8 @@ const createCampaign = async (
         sample_msg3: sampleMsg3,
         sample_msg4: sampleMsg4,
         sample_msg5: sampleMsg5,
+        terms_link: termsLink,
+        privacy_link: privacyLink,
         sub_opt_in: subOptIn,
         sub_opt_out: subOptOut,
         sub_help: subHelp,
@@ -548,6 +557,8 @@ const removeFromSMSCampaign = async (
  * @param {string} usecaseId usecase id
  * @param {array} subUsecaseId sub usecase ids (strings)
  * @param {string} [messageFlow="Users may opt-in by sending START to any number associated with the campaign. Users may also sign up to receive messages from this campaign via a website after accepting terms and conditions."] how subscribers are added or opt-in to the campaign
+ * @param {string} termsLink url for viewing terms and conditions
+ * @param {string} privacyLink url for viewing privacy policy
  * @param {boolean} [autoRenewal=true] subscription auto-renews?
  * @param {boolean} [subOptIn=true] provides automated opt-in?
  * @param {string} [optInKeywords="START"] opt-in keywords (comma separated)
@@ -581,6 +592,8 @@ const updateCampaign = async (
   usecaseId,
   subUsecaseId,
   messageFlow = "Users may opt-in by sending START to any number associated with the campaign. Users may also sign up to receive messages from this campaign via a website after accepting terms and conditions.",
+  termsLink,
+  privacyLink,
   autoRenewal = true,
   subOptIn = true,
   optInKeywords = "START",
@@ -612,6 +625,8 @@ const updateCampaign = async (
         sample_msg3: sampleMsg3,
         sample_msg4: sampleMsg4,
         sample_msg5: sampleMsg5,
+        terms_link: termsLink,
+        privacy_link: privacyLink,
         sub_opt_in: subOptIn,
         sub_opt_out: subOptOut,
         sub_help: subHelp,

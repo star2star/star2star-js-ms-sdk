@@ -149,7 +149,7 @@ describe("Numbers MS Unit Test Suite", function () {
     mochaAsync(async () => {
       trace = Util.generateNewMetaData(trace);
       const response = await s2sMS.Campaigns.createCampaign(
-        accessToken,      
+        accessToken,
         identityData.account_uuid,
         "This is a unit test campaign to confirm end to end functionality", // description,
         "A Unit Test Campaign", // displayName,
@@ -165,8 +165,10 @@ describe("Numbers MS Unit Test Suite", function () {
         undefined, // affMarketing,
         undefined, // ageGated,
         "LOW_VOLUME", // usecaseId,
-        ["ACCOUNT_NOTIFICATION","CUSTOMER_CARE"], // subUsecaseId,
+        ["ACCOUNT_NOTIFICATION", "CUSTOMER_CARE"], // subUsecaseId,
         undefined, // messageFlow = "Users may opt-in by sending START to any number associated with the campaign. Users may also sign up to receive messages from this campaign via a website after accepting terms and conditions.",
+        undefined, // termsLink
+        undefined, // privacyLink
         undefined, // autoRenewal = true,
         undefined, // subOptIn = true,
         undefined, // optInKeywords = "START",
@@ -177,7 +179,7 @@ describe("Numbers MS Unit Test Suite", function () {
         undefined, // subHelp = true,
         undefined, // helpKeywords = "HELP",
         undefined, // helpMessage = "To opt-in and receive messages from this number, reply START.\n\nFor help, reply HELP.\n\nTo opt-out at any time, reply STOP",
-        trace = {}
+        (trace = {})
       );
       campaignId = response.campaign_id;
       assert.ok(typeof response.campaign_id === "string",
@@ -225,7 +227,7 @@ describe("Numbers MS Unit Test Suite", function () {
     mochaAsync(async () => {
       trace = Util.generateNewMetaData(trace);
       const response = await s2sMS.Campaigns.updateCampaign(
-        accessToken,      
+        accessToken,
         identityData.account_uuid,
         campaignId,
         "This is an updated unit test campaign to confirm end to end functionality", // description,
@@ -242,8 +244,10 @@ describe("Numbers MS Unit Test Suite", function () {
         undefined, // affMarketing,
         undefined, // ageGated,
         "LOW_VOLUME", // usecaseId,
-        ["ACCOUNT_NOTIFICATION","CUSTOMER_CARE"], // subUsecaseId,
+        ["ACCOUNT_NOTIFICATION", "CUSTOMER_CARE"], // subUsecaseId,
         undefined, // messageFlow = "Users may opt-in by sending START to any number associated with the campaign. Users may also sign up to receive messages from this campaign via a website after accepting terms and conditions.",
+        undefined, // termsLink
+        undefined, // privacyLink
         undefined, // autoRenewal = true,
         undefined, // subOptIn = true,
         undefined, // optInKeywords = "START",
@@ -254,7 +258,7 @@ describe("Numbers MS Unit Test Suite", function () {
         undefined, // subHelp = true,
         undefined, // helpKeywords = "HELP",
         undefined, // helpMessage = "To opt-in and receive messages from this number, reply START.\n\nFor help, reply HELP.\n\nTo opt-out at any time, reply STOP",
-        trace = {}
+        (trace = {})
       );
 
       // This doesn't work in backoffice.staging so who knows!
