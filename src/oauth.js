@@ -21,7 +21,7 @@ const assignPolicyToClientApp = async (
   trace = {}
 ) => {
   try {
-    const MS = Util.getAuthHost();
+    const MS = Util.getEndpoint("oauth");
     const requestOptions = {
       method: "POST",
       uri: `${MS}/clients/${clientUUID}/policy`,
@@ -76,7 +76,7 @@ const createClientApp = async (
   trace = {}
 ) => {
   try {
-    const MS = Util.getAuthHost();
+    const MS = Util.getEndpoint("oauth");
     const requestOptions = {
       method: "POST",
       uri: `${MS}/oauth/clients`,
@@ -460,10 +460,10 @@ const scopeClientApp = async (
   trace = {}
 ) => {
   try {
-    const MS = Util.getAuthHost();
+    const MS = Util.getEndpoint("oauth");
     const requestOptions = {
       method: "POST",
-      uri: `${MS}/oauth/clients/${clientUUID}/scopes`,
+      uri: `${MS}/clients/${clientUUID}/scopes`,
       body: {
         scope: scope
       },
