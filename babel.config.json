@@ -5,7 +5,7 @@
       {
         "corejs": 3,
         "debug": true,
-        "targets": "> 0.5%, not dead or node 18",
+        "targets": "> 0.5%, not dead or node 22",
         "useBuiltIns": "usage"       
       }
     ]

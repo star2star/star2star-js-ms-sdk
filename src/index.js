@@ -1,35 +1,36 @@
 /*global require process module*/
 "use strict";
 const Accounts = require("./accounts");
-const Lambda = require("./lambda");
-const Identity = require("./identity");
-const Messaging = require("./messaging");
-const Objects = require("./objects");
-const Util = require("./utilities");
-const Groups = require("./groups");
-const ShortUrls = require("./shorturls");
+const Activity = require("./activity");
 const Auth = require("./auth");
+const Campaigns = require("./campaigns");
 const Chat = require("./chat");
 const Contacts = require("./contacts");
-const Oauth = require("./oauth");
-const Media = require("./media");
-const Providers = require("./providers");
-const Pubsub = require("./pubsub");
-const Workflow = require("./workflow");
+const DbSip = require("./dbsip");
 const Email = require("./email");
-const ResourceGroups = require("./resourceGroups");
-const Scheduler = require("./scheduler");
+const Entitlements = require("./entitlements");
+const Forms = require("./forms");
+const Groups = require("./groups");
+const Identity = require("./identity");
+const Lambda = require("./lambda");
+const Media = require("./media");
+const Messaging = require("./messaging");
 const Metadata = require("./metadata");
 const Mobile = require("./mobile");
-const Forms = require("./forms");
-const Entitlements = require("./entitlements");
-const Activity = require("./activity");
-const Resources = require("./resources");
-const Usage = require("./usage");
 const Numbers = require("./numbers");
-const Campaigns = require("./campaigns");
+const Objects = require("./objects");
+const Oauth = require("./oauth");
 const Profiles = require("./profiles");
+const Providers = require("./providers");
+const Pubsub = require("./pubsub");
+const ResourceGroups = require("./resourceGroups");
+const Resources = require("./resources");
+const Scheduler = require("./scheduler");
+const ShortUrls = require("./shorturls");
+const Usage = require("./usage");
+const Util = require("./utilities");
 const Voice = require("./voice");
+const Workflow = require("./workflow");
 
 /**
  * 
@@ -69,37 +70,38 @@ const getMsHost = () => {
 
 module.exports = {
   Accounts,
-  Lambda,
-  Identity,
-  Messaging,
-  Objects,
-  Util,
-  setMsHost,
-  getMsHost,
-  setMsAuthHost,
-  Groups,
-  ShortUrls,
+  Activity,
   Auth,
-  Oauth,
+  Campaigns,
   Chat,
   Contacts,
-  Media,
-  Providers,
-  Pubsub,
-  setMSVersion,
-  Workflow,
+  DbSip,
   Email,
-  ResourceGroups,
-  Scheduler,
+  Entitlements,
+  Forms,
+  getMsHost,
+  Groups,
+  Identity,
+  Lambda,
+  Media,
+  Messaging,
   Metadata,
   Mobile,
-  Forms,
-  Entitlements,
-  Activity,
-  Resources,
-  Usage,
   Numbers,
-  Campaigns, 
+  Objects,
+  Oauth,
   Profiles,
-  Voice
+  Providers,
+  Pubsub,
+  ResourceGroups,
+  Resources,
+  Scheduler,
+  setMsAuthHost,
+  setMsHost,
+  setMSVersion,
+  ShortUrls,
+  Usage,
+  Util,
+  Voice,
+  Workflow
 };

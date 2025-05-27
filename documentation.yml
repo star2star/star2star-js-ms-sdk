@@ -103,6 +103,9 @@ toc:
       - exportContacts
       - listContacts
       - updateContact
+  - name: DbSip
+    children:
+      - getAccountDestinations
   - name: Email
     children:
       - sendEmail
