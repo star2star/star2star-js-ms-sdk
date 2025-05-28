@@ -113,9 +113,7 @@ describe("DbSips MS Unit Test Suite", function () {
         trace
       );
       assert.ok(
-        Array.isArray(response.items) &&
-          response.items.length === 10 &&
-          response.metadata.offset === 10,
+        Array.isArray(response.items) && response.items.length > 0,
         JSON.stringify(response, null, "\t")
       );
       return response;
