@@ -61,6 +61,40 @@ const getAccountDestinations = async (
   }
 };
 
+/**
+ * @async
+ * @description This function will return UCaaS destination by ID.
+ * @param {string} [accessToken="null accessToken"] - access token
+ * @param {string} [destinationId="null destinationId"] - destination id
+ * @param {object} [trace = {}] - optional microservice lifecycle trace headers
+ * @returns {Promise<object>} - Promise resolving to an identity data object
+ */
+const getDestinationById = async (
+  accessToken = "null accessToken",
+  destinationId = "null destinationId",
+  trace = {}
+) => {
+  try {
+    const MS = util.getEndpoint("dbsip");
+    const requestOptions = {
+      method: "GET",
+      uri: `${MS}/destinations/${destinationId}`,
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+        "Content-type": "application/json",
+        "x-api-version": `${util.getVersion()}`,
+      },
+      json: true,
+    };
+    util.addRequestTrace(requestOptions, trace);
+    const response = await request(requestOptions);
+    return response;
+  } catch (error) {
+    throw util.formatError(error);
+  }
+};
+
 module.exports = {
   getAccountDestinations,
+  getDestinationById
 };

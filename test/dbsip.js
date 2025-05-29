@@ -120,6 +120,24 @@ describe("DbSips MS Unit Test Suite", function () {
     }, "List Destinations Aggregate")
   );
 
+  it(
+    "Get Destination By Id",
+    mochaAsync(async () => {
+      trace = Util.generateNewMetaData(trace);
+      const response = await s2sMS.DbSip.getDestinationById(
+        accessToken,
+        1256900,
+        true, // aggregate
+        trace
+      );
+      assert.ok(
+        response?.id === 1256900,
+        JSON.stringify(response, null, "\t")
+      );
+      return response;
+    }, "List Destinations Aggregate")
+  );
+
   // template
   // it("change me", mochaAsync(async () => {
   //

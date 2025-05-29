@@ -106,6 +106,7 @@ toc:
   - name: DbSip
     children:
       - getAccountDestinations
+      - getDestinationById
   - name: Email
     children:
       - sendEmail
