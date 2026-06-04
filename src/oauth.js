@@ -79,7 +79,7 @@ const createClientApp = async (
     const MS = Util.getEndpoint("oauth");
     const requestOptions = {
       method: "POST",
-      uri: `${MS}/oauth/clients`,
+      uri: `${MS}/clients`,
       headers: {
         Authorization: `Bearer ${accessToken}`,
         "Content-type": "application/json",
@@ -339,7 +339,7 @@ const listOauthClients = async (
     const MS = Util.getEndpoint("oauth");
     const requestOptions = {
       method: "GET",
-      uri: `${MS}/oauth/clients`,
+      uri: `${MS}/clients`,
       qs: {
         offset: offset,
         limit: limit
