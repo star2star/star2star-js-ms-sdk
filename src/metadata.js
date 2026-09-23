@@ -21,7 +21,7 @@ const getMetadataSubsystems = async (
 
     const requestOptions = {
       method: "GET",
-      uri: `${MS}/subsystems/`,
+      uri: `${MS}/subsystems`,
       headers: {
         Authorization: `Bearer ${accessToken}`,
         "Content-type": "application/json",

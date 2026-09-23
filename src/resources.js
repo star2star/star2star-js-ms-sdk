@@ -152,7 +152,7 @@ const getResourceInstance = async (
     const MS = util.getEndpoint("resources");
     const requestOptions = {
       method: "GET",
-      uri: `${MS}/instance/${listResponse?.items?.[0]?.uuid}/`,
+      uri: `${MS}/instance/${listResponse?.items?.[0]?.uuid}`,
       headers: {
         Authorization: `Bearer ${accessToken}`,
         "Content-type": "application/json",
@@ -216,7 +216,7 @@ const getResourceInstanceByUUID = async (
     const MS = util.getEndpoint("resources");
     const requestOptions = {
       method: "GET",
-      uri: `${MS}/instance/${instanceUUID}/`,
+      uri: `${MS}/instance/${instanceUUID}`,
       headers: {
         Authorization: `Bearer ${accessToken}`,
         "Content-type": "application/json",
@@ -314,7 +314,7 @@ const listResources = async (
     const MS = util.getEndpoint("resources");
     const requestOptions = {
       method: "GET",
-      uri: `${MS}/instance/`,
+      uri: `${MS}/instance`,
       headers: {
         Authorization: `Bearer ${accessToken}`,
         "Content-type": "application/json",
