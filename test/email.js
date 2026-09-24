@@ -13,24 +13,15 @@ const Util = require("../src/utilities");
 const logger = require("../src/node-logger").getInstance();
 let trace = Util.generateNewMetaData();
 
-//utility function to simplify test code
-const mochaAsync = (func, name) => {
-  return async () => {
-    try {
-      const response = await func();
-      logger.debug(name, response);
-      return response; 
-    } catch (error) {
-      //mocha will log out the error
-      throw error;
-    }
-  };
-};
+const { mochaAsync } = require("./helpers/integration");
 
 
 
 let accessToken, identityData;
-const SENDER = typeof process.env.EMAIL_SENDER === "string" ? process.env.EMAIL_SENDER : process.env.EMAIL;
+const SENDER =
+  process.env.EMAIL_SENDER ||
+  process.env.NO_REPLY_SENDER ||
+  process.env.EMAIL;
 
 describe("Email MS Unit Test Suite", function() {
   before(async () => {

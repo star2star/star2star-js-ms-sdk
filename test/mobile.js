@@ -14,23 +14,11 @@ const logger = require("../src/node-logger").getInstance();
 const { v4 } = require("uuid");
 let trace = Util.generateNewMetaData();
 
-//utility function to simplify test code
-const mochaAsync = (func, name) => {
-  return async () => {
-    try {
-      const response = await func();
-      logger.debug(name, response);
-      return response; 
-    } catch (error) {
-      //mocha will log out the error
-      throw error;
-    }
-  };
-};
+const { mochaAsync } = require("./helpers/integration");
 
 
 
-describe("Pubsub MS Unit Test Suite", function () {
+describe("Mobile MS Unit Test Suite", function () {
 
   let accessToken,
     oauthData,

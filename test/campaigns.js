@@ -12,22 +12,9 @@ const Util = require("../src/utilities");
 const logger = require("../src/node-logger").getInstance();
 let trace = Util.generateNewMetaData();
 
-//utility function to simplify test code
-const mochaAsync = (func, name) => {
+const { mochaAsync } = require("./helpers/integration");
 
-  return async () => {
-    try {
-      const response = await func();
-      logger.debug(name, response);
-      return response;
-    } catch (error) {
-      //mocha will log out the error
-      throw error;
-    }
-  };
-};
-
-describe("Numbers MS Unit Test Suite", function () {
+describe("Campaigns MS Unit Test Suite", function () {
   let accessToken, identityData, campaignId, numbers;
 
   before(async () => {
@@ -179,7 +166,7 @@ describe("Numbers MS Unit Test Suite", function () {
         undefined, // subHelp = true,
         undefined, // helpKeywords = "HELP",
         undefined, // helpMessage = "To opt-in and receive messages from this number, reply START.\n\nFor help, reply HELP.\n\nTo opt-out at any time, reply STOP",
-        (trace = {})
+        trace
       );
       campaignId = response.campaign_id;
       assert.ok(typeof response.campaign_id === "string",
@@ -258,7 +245,7 @@ describe("Numbers MS Unit Test Suite", function () {
         undefined, // subHelp = true,
         undefined, // helpKeywords = "HELP",
         undefined, // helpMessage = "To opt-in and receive messages from this number, reply START.\n\nFor help, reply HELP.\n\nTo opt-out at any time, reply STOP",
-        (trace = {})
+        trace
       );
 
       // This doesn't work in backoffice.staging so who knows!
@@ -300,7 +287,8 @@ describe("Numbers MS Unit Test Suite", function () {
       );
       numbers = numbersResponse.items;
       trace = Util.generateNewMetaData(trace);
-      await new Promise(resolve => setTimeout(resolve, 5000));
+      const assignWaitMs = String(process.env.CPAAS_URL || "").includes("mock-ms") ? 0 : 5000;
+      await new Promise((resolve) => setTimeout(resolve, assignWaitMs));
       const response = await s2sMS.Campaigns.assignToSMSCampaign(
         accessToken,
         identityData.account_uuid,

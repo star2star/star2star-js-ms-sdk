@@ -13,20 +13,9 @@ const Util = require("../src/utilities");
 const logger = require("../src/node-logger").getInstance();
 let trace = Util.generateNewMetaData();
 let file_id;
+let user_file_id;
 
-//utility function to simplify test code
-const mochaAsync = (func, name) => {
-  return async () => {
-    try {
-      const response = await func();
-      logger.debug(name, response);
-      return response;
-    } catch (error) {
-      //mocha will log out the error
-      throw error;
-    }
-  };
-};
+const { mochaAsync } = require("./helpers/integration");
 
 describe("Media MS Unit Test Suite", function () {
   let accessToken, identityData;
@@ -55,7 +44,6 @@ describe("Media MS Unit Test Suite", function () {
       throw error;
     }
   });
-/*
   it(
     "List user Media",
     mochaAsync(async () => {
@@ -72,6 +60,26 @@ describe("Media MS Unit Test Suite", function () {
       return response;
     }, "List user Media")
   );
+
+  it(
+    "Upload user Media",
+    mochaAsync(async () => {
+      trace = Util.generateNewMetaData(trace);
+      const fileName = "user-upload.png";
+      const response = await s2sMS.Media.uploadFile(
+        fileName,
+        fs.createReadStream("./test/media.js"),
+        identityData.uuid,
+        accessToken,
+        trace
+      );
+      user_file_id = response.file_id;
+      assert.ok(response.hasOwnProperty("file_id"), JSON.stringify(response, null, "\t"));
+      return response;
+    }, "Upload user Media")
+  );
+
+/*
 
   it(
     "List global Media",
@@ -177,6 +185,69 @@ describe("Media MS Unit Test Suite", function () {
       );
       return response;
     }, "Upload user Media")
+  );
+
+  it(
+    "List global Media",
+    mochaAsync(async () => {
+      trace = Util.generateNewMetaData(trace);
+      const response = await s2sMS.Media.getGlobalMedia(
+        accessToken,
+        0,
+        10,
+        undefined,
+        undefined,
+        undefined,
+        undefined,
+        undefined,
+        undefined,
+        undefined,
+        trace
+      );
+      assert.ok(
+        response.hasOwnProperty("items") && response.hasOwnProperty("metadata"),
+        JSON.stringify(response, null, "\t")
+      );
+      return response;
+    }, "List global Media")
+  );
+
+  it(
+    "Get Media File URL",
+    mochaAsync(async () => {
+      trace = Util.generateNewMetaData(trace);
+      const response = await s2sMS.Media.getMediaFileUrl(
+        accessToken,
+        file_id,
+        60000,
+        trace
+      );
+      assert.ok(response.url, JSON.stringify(response, null, "\t"));
+      return response;
+    }, "Get Media File URL")
+  );
+
+  it(
+    "Delete global Media",
+    mochaAsync(async () => {
+      trace = Util.generateNewMetaData(trace);
+      const response = await s2sMS.Media.deleteMedia(file_id, accessToken, trace);
+      assert.ok(response.status === "ok", JSON.stringify(response, null, "\t"));
+      return response;
+    }, "Delete global Media")
+  );
+
+  it(
+    "Delete user Media",
+    mochaAsync(async () => {
+      if (!user_file_id) {
+        return;
+      }
+      trace = Util.generateNewMetaData(trace);
+      const response = await s2sMS.Media.deleteMedia(user_file_id, accessToken, trace);
+      assert.ok(response.status === "ok", JSON.stringify(response, null, "\t"));
+      return response;
+    }, "Delete user Media")
   );
 
   // template

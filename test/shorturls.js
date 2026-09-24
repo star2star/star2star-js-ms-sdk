@@ -13,21 +13,9 @@ const Util = require("../src/utilities");
 const logger = require("../src/node-logger").getInstance();
 let trace = Util.generateNewMetaData();
 
-//utility function to simplify test code
-const mochaAsync = (func, name) => {
-  return async () => {
-    try {
-      const response = await func();
-      logger.debug(name, response);
-      return response;
-    } catch (error) {
-      //mocha will log out the error
-      throw error;
-    }
-  };
-};
+const { mochaAsync } = require("./helpers/integration");
 
-describe("Pubsub MS Unit Test Suite", function () {
+describe("ShortUrls MS Unit Test Suite", function () {
   let accessToken, oauthData, identityData, shortCode;
 
   before(async () => {

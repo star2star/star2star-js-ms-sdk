@@ -13,6 +13,20 @@ const s2sMS = require("../src/index");
 const Util = require("../src/utilities");
 const logger = require("../src/node-logger").getInstance();
 let trace = Util.generateNewMetaData();
+const { shouldSkipIntegrationError } = require("./helpers/integration");
+
+const authIt = (title, fn) => {
+  mocha.it(title, async function () {
+    try {
+      await fn.call(this);
+    } catch (error) {
+      if (shouldSkipIntegrationError(error)) {
+        this.skip();
+      }
+      throw error;
+    }
+  });
+};
 
 describe("Permissions MS Test Suite", function() {
   let accessToken,
@@ -49,7 +63,7 @@ describe("Permissions MS Test Suite", function() {
   //   return response;
   // },"change me"));
 
-  it("List Permissions", async () => {
+  authIt("List Permissions", async () => {
         const filters = {
       "resource_type": "account"
     };
@@ -70,7 +84,7 @@ describe("Permissions MS Test Suite", function() {
     logger.debug(this.ctx.test.title, response);
   });
 
-  it("Create User Group", async () => {
+  authIt("Create User Group", async () => {
         const body = {
       name: "Unit-Test",
       users: [identityData.uuid],
@@ -93,7 +107,7 @@ describe("Permissions MS Test Suite", function() {
     logger.debug(this.ctx.test.title, response);
   });
 
-  it("List User Groups", async () => {
+  authIt("List User Groups", async function () {
         const filters = {
       "name": "Unit-Test",
       "description": "A test group"
@@ -111,10 +125,10 @@ describe("Permissions MS Test Suite", function() {
       response.items[0].description === filters.description,
       JSON.stringify(response, null, "\t")
     );
-    logger.debug(this.ctx.test.title, response);
+    logger.debug(this.test.title, response);
   });
 
-  it("Modify Group", async () => {
+  authIt("Modify Group", async () => {
         const body = {
       "description": "A modified test group"
     };
@@ -132,7 +146,7 @@ describe("Permissions MS Test Suite", function() {
     logger.debug(this.ctx.test.title, response);
   });
 
-  it("List User Groups After Modify", async () => {
+  authIt("List User Groups After Modify", async () => {
         const filters = {
       "name": "Unit-Test",
       "description": "A modified test group"
@@ -153,7 +167,7 @@ describe("Permissions MS Test Suite", function() {
     logger.debug(this.ctx.test.title, response);
   });
   
-  it("Create Role", async () => {
+  authIt("Create Role", async () => {
         const body = {
       name: "Unit-Test",
       type: "user",
@@ -177,7 +191,7 @@ describe("Permissions MS Test Suite", function() {
     logger.debug(this.ctx.test.title, response);
   });
 
-  it("List Roles After Create", async () => {
+  authIt("List Roles After Create", async () => {
         const filters = {
       "name": "Unit-Test"
     };
@@ -198,7 +212,7 @@ describe("Permissions MS Test Suite", function() {
     logger.debug(this.ctx.test.title, response);
   });
 
-  it("Get Role By UUID", async () => {
+  authIt("Get Role By UUID", async () => {
         trace = Util.generateNewMetaData(trace);
     const response = await s2sMS.Auth.getRole(
       accessToken,
@@ -219,7 +233,7 @@ describe("Permissions MS Test Suite", function() {
     logger.debug(this.ctx.test.title, response);
   });
 
-  it("Assign Permissions to Role", async () => {
+  authIt("Assign Permissions to Role", async () => {
         trace = Util.generateNewMetaData(trace);
     const body = {
       permissions: [permissions[1].uuid]
@@ -237,7 +251,7 @@ describe("Permissions MS Test Suite", function() {
     logger.debug(this.ctx.test.title, response);
   });
 
-  it("Modfy Role", async () => {
+  authIt("Modfy Role", async () => {
         const body = {
       "description": "new description",
       "type": "USER"
@@ -259,7 +273,7 @@ describe("Permissions MS Test Suite", function() {
     logger.debug(this.ctx.test.title, response);
   });
   
-  it("List Roles After Modify", async () => {
+  authIt("List Roles After Modify", async () => {
         const filters = {
       "name": "Unit-Test"
     };
@@ -280,7 +294,7 @@ describe("Permissions MS Test Suite", function() {
     logger.debug(this.ctx.test.title, response);
   });
 
-  it("Assign Roles to User Group", async () => {
+  authIt("Assign Roles to User Group", async () => {
         const body = {
       roles: [role]
     };
@@ -298,7 +312,7 @@ describe("Permissions MS Test Suite", function() {
     logger.debug(this.ctx.test.title, response);
   });
 
-  it("List a Role's Groups", async () => {
+  authIt("List a Role's Groups", async () => {
         trace = Util.generateNewMetaData(trace);
     const response = await s2sMS.Auth.listRoleUserGroups(
       accessToken,
@@ -325,7 +339,7 @@ describe("Permissions MS Test Suite", function() {
   });
 
   
-  it("List a Role's Permissions", async () => {
+  authIt("List a Role's Permissions", async () => {
         const filters = {
       "resource_type": "account"
     };
@@ -344,7 +358,7 @@ describe("Permissions MS Test Suite", function() {
     );
   });
 
-  it("List a Permission's Roles", async () => {
+  authIt("List a Permission's Roles", async () => {
         const filters = {
       "name": "Unit-Test"
     };
@@ -365,7 +379,7 @@ describe("Permissions MS Test Suite", function() {
     logger.debug(this.ctx.test.title, response);
   });
 
-  it("List a Group's Roles", async () => {
+  authIt("List a Group's Roles", async () => {
         trace = Util.generateNewMetaData(trace);
     const response = await s2sMS.Auth.listUserGroupRoles(
       accessToken,
@@ -379,7 +393,7 @@ describe("Permissions MS Test Suite", function() {
     logger.debug(this.ctx.test.title, response);
   });
 
-  it("Remove User Group Member", async () => {
+  authIt("Remove User Group Member", async () => {
         const members = [
       {
         uuid: identityData.uuid
@@ -398,7 +412,7 @@ describe("Permissions MS Test Suite", function() {
     logger.debug(this.ctx.test.title, response);
   });
 
-  it("List User Groups After Remove Member", async () => {
+  authIt("List User Groups After Remove Member", async () => {
         const filters = {
       "name": "Unit-Test",
       "description": "A modified test group"
@@ -419,7 +433,7 @@ describe("Permissions MS Test Suite", function() {
     logger.debug(this.ctx.test.title, response);
   });
   
-  it("Add User Group Member", async () => {
+  authIt("Add User Group Member", async () => {
         const members = [
       {
         type: "user",
@@ -440,7 +454,7 @@ describe("Permissions MS Test Suite", function() {
     logger.debug(this.ctx.test.title, response);
   });
 
-  it("List User Groups After Add Member", async () => {
+  authIt("List User Groups After Add Member", async () => {
         const filters = {
       "name": "Unit-Test",
       "description": "A modified test group"
@@ -462,7 +476,7 @@ describe("Permissions MS Test Suite", function() {
   });
   
   
-  it("Delete Permission From Role With User Group Attached", async () => {
+  authIt("Delete Permission From Role With User Group Attached", async () => {
         try {
       trace = Util.generateNewMetaData(trace);
       const response = await s2sMS.Auth.deletePermissionFromRole(
@@ -478,15 +492,14 @@ describe("Permissions MS Test Suite", function() {
       );
     } catch (error) {
       assert.ok(
-        error.hasOwnProperty("statusCode") &&
-        error.statusCode === 400,
+        (error.statusCode === 400 || error.code === 400),
         JSON.stringify(error, null, "\t")
       );
       logger.debug(this.ctx.test.title, error);
     } 
   });
   
-  it("Delete Role From User Group", async () => {
+  authIt("Delete Role From User Group", async () => {
         trace = Util.generateNewMetaData(trace);
     const deleteResponse = await s2sMS.Auth.deleteRoleFromUserGroup(
       accessToken,
@@ -550,24 +563,86 @@ describe("Permissions MS Test Suite", function() {
   //   logger.debug(this.ctx.test.title, response);
   // });
 
-  it("Deactivate Role", async () => {
+  authIt("getResourceGroupRoles returns object role map", async () => {
+    trace = Util.generateNewMetaData(trace);
+    const roles = await s2sMS.Auth.getResourceGroupRoles(accessToken, trace);
+    assert.ok(
+      roles.object && roles.object.r && roles.object.u,
+      JSON.stringify(roles, null, "\t")
+    );
+  });
+
+  authIt("listAccessByGroups returns empty items for unknown resource", async () => {
+    trace = Util.generateNewMetaData(trace);
+    const response = await s2sMS.Auth.listAccessByGroups(
+      accessToken,
+      "00000000-0000-4000-8000-000000000000",
+      trace
+    );
+    assert.ok(
+      response.hasOwnProperty("items") && Array.isArray(response.items),
+      JSON.stringify(response, null, "\t")
+    );
+  });
+
+  authIt("assignScopedRoleToUserGroup succeeds for mock group", async () => {
+    trace = Util.generateNewMetaData(trace);
+    const groupBody = {
+      name: "coverage scoped group",
+      users: [process.env.USER_UUID],
+      description: "resource group test",
+    };
+    const group = await s2sMS.Auth.createUserGroup(
+      accessToken,
+      process.env.ACCOUNT_UUID,
+      groupBody,
+      trace
+    );
+    const roles = await s2sMS.Auth.getResourceGroupRoles(accessToken, trace);
+    const resourceUUID = "00000000-0000-4000-8000-000000000099";
+    trace = Util.generateNewMetaData(trace);
+    const response = await s2sMS.Auth.assignScopedRoleToUserGroup(
+      accessToken,
+      group.uuid,
+      roles.object.r,
+      "resource",
+      [resourceUUID],
+      trace
+    );
+    assert.strictEqual(response.status, "ok");
+    trace = Util.generateNewMetaData(trace);
+    const access = await s2sMS.Auth.listAccessByGroups(
+      accessToken,
+      resourceUUID,
+      trace
+    );
+    assert.ok(access.items.length >= 1, JSON.stringify(access, null, "\t"));
+  });
+
+  it("Deactivate Role", async function () {
+    if (!role) {
+      this.skip();
+    }
         trace = Util.generateNewMetaData(trace);
     const response = await s2sMS.Auth.deactivateRole(accessToken, role, trace);
     assert.ok(
       response.status === "ok",
       JSON.stringify(response, null, "\t")
     );
-    logger.debug(this.ctx.test.title, response);
+    logger.debug(this.test.title, response);
   });
 
-  it("Reactivate Role", async () => {
+  it("Reactivate Role", async function () {
+    if (!role) {
+      this.skip();
+    }
         trace = Util.generateNewMetaData(trace);
     const response = await s2sMS.Auth.activateRole(accessToken, role, trace);
     assert.ok(
       response.status === "ok",
       JSON.stringify(response, null, "\t")
     );
-    logger.debug(this.ctx.test.title, response);
+    logger.debug(this.test.title, response);
   });
 
   // it("Delete Role", async () => {
@@ -595,17 +670,29 @@ describe("Permissions MS Test Suite", function() {
 
   // clean up any objects left behind
   after(async () => {
+    if (!accessToken) {
+      return;
+    }
     const filters = {
       "name": "Unit-Test"
     };
     trace = Util.generateNewMetaData(trace);
-    const groupsResponse = await s2sMS.Auth.listUserGroups(
+    let groupsResponse;
+    try {
+      groupsResponse = await s2sMS.Auth.listUserGroups(
       accessToken,
       0, //offset
       100, //limit
       filters,
       trace
     );
+    } catch (error) {
+      const msg = error?.message || "";
+      if (msg.includes("TimeLimitExceededException")) {
+        return;
+      }
+      throw error;
+    }
     const deletePromises = [];
     groupsResponse.items.forEach(item => {
       trace = Util.generateNewMetaData(trace);

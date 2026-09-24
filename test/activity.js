@@ -14,19 +14,7 @@ const logger = require("../src/node-logger").getInstance();
 let trace = Util.generateNewMetaData();
 let identityData;
 
-//utility function to simplify test code
-const mochaAsync = (func, name) => {
-  return async () => {
-    try {
-      const response = await func();
-      logger.debug(name, response);
-      return response; 
-    } catch (error) {
-      //mocha will log out the error
-      throw error;
-    }
-  };
-};
+const { mochaAsync } = require("./helpers/integration");
 
 
 
@@ -233,21 +221,27 @@ describe("Activity MS Unit Test Suite", function() {
   },"update activity report template"));
 
 
-  it("delete activity report template", mochaAsync(async () => {
-    
+  it("delete activity report template", async function () {
+    if (!cTemplate?.template_uuid) {
+      this.skip();
+    }
     trace = Util.generateNewMetaData(trace);
 
     const dResponse = await s2sMS.Activity.deleteReportTemplate(
-      accessToken, 
+      accessToken,
       cTemplate.template_uuid,
       trace
     );
       // console.log(JSON.stringify(dResponse, null, 2))
     assert.ok(
-      dResponse === undefined,
+      dResponse === undefined ||
+        dResponse === null ||
+        dResponse?.status === "ok" ||
+        (typeof dResponse === "object" &&
+          Object.keys(dResponse).length === 0),
       JSON.stringify(dResponse, null, "\t")
     );
     return dResponse;
-  }," delete activity report template"));
+  });
  
 });

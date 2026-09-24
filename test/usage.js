@@ -12,19 +12,7 @@ const Util = require("../src/utilities");
 const logger = require("../src/node-logger").getInstance();
 let trace = Util.generateNewMetaData();
 
-//utility function to simplify test code
-const mochaAsync = (func, name) => {
-  return async () => {
-    try {
-      const response = await func(name);
-      logger.debug(name, response);
-      return response;
-    } catch (error) {
-      //mocha will log out the error
-      throw error;
-    }
-  };
-};
+const { mochaAsync } = require("./helpers/integration");
 
 describe("usage MS Test Suite", function () {
   let accessToken, userUUID, templateUUID, billingStart, billingEnd, reportUUID;
@@ -142,7 +130,7 @@ describe("usage MS Test Suite", function () {
         undefined, // offset
         undefined, // limit
         undefined, // filterValues
-        trace = {}
+        trace
       );
       reportUUID = response.report_uuid;
       assert.ok(
@@ -162,11 +150,14 @@ describe("usage MS Test Suite", function () {
       const response = await s2sMS.Usage.getUsageReport(
         accessToken,
         reportUUID,
-        trace = {}
+        trace
       );
       assert.ok(
-        response.status === "CREATED" || response.status === "SUCCEEDED" &&
-        response.status === "SUCCEEDED" ? typeof response.location === "string" : true,
+        response.status === "CREATED" ||
+          response.status === "SUCCEEDED" ||
+          (response.status === "SUCCEEDED"
+            ? typeof response.location === "string"
+            : true),
         JSON.stringify(response, null, "\t")
       );
       // allow report to complete

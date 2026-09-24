@@ -44,7 +44,7 @@ const setMsHost = (msHost = "https://cpaas-api.star2star.com") => {
 /**
  * 
  * @description This function sets the microservice target authentication host (AUTH_HOST) variable.
- * @param {string} [msHost="https://auth.star2star.com"] - valid url for microservice host server
+ * @param {string} [authHost="https://auth.star2star.com"] - valid url for microservice authentication server
  */
 const setMsAuthHost = (authHost = "https://auth.star2star.com") => {
   Util.getGlobalThis().AUTH_HOST = authHost;

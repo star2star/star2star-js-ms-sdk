@@ -13,20 +13,7 @@ const Util = s2sMS.Util;
 const logger = require("../src/node-logger").getInstance();
 let trace;
 
-//utility function to simplify test code
-const mochaAsync = (func, name) => {
-  return async () => {
-    try {
-      const response = await func();
-      logger.debug(name, response);
-      return response;
-    } catch (error) {
-      logger.debug(name, Util.formatError(error));
-      //mocha will log out the error
-      throw error;
-    }
-  };
-};
+const { mochaAsync } = require("./helpers/integration");
 
 describe("Identity MS Unit Test Suite", function () {
   let accessToken, identityData, testUUID, testGroupUuid;

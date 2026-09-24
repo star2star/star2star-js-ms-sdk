@@ -12,8 +12,14 @@ const Util = require("../src/utilities");
 var config = require("../src/config");
 
 beforeEach(function () {
-  s2sMS.setMsHost(process.env.MS_HOST);
-  s2sMS.setMsAuthHost(process.env.AUTH_HOST);
+  s2sMS.setMsHost(
+    process.env.MS_HOST ||
+      process.env.CPAAS_URL ||
+      "https://cpaas-api.star2star.com"
+  );
+  s2sMS.setMsAuthHost(
+    process.env.AUTH_HOST || "https://auth.star2star.com"
+  );
 });
 
 describe("Util", function () {
@@ -112,7 +118,7 @@ describe("Util", function () {
 
   it("test getEndpoint valid", function (done) {
     const prodEndPoint = Util.getEndpoint("IDENTITY");
-    assert.equal(`${process.env.MS_HOST}/identity`, prodEndPoint);
+    assert.equal(`${s2sMS.getMsHost()}/identity`, prodEndPoint);
     done();
   });
 
@@ -148,13 +154,28 @@ describe("Util", function () {
 
   it("test getEndpoint valid - lowercase ", function (done) {
     const prodEndPoint = Util.getEndpoint("identity");
-    assert.equal(`${process.env.MS_HOST}/identity`, prodEndPoint);
+    assert.equal(`${s2sMS.getMsHost()}/identity`, prodEndPoint);
     done();
   });
 
   it("test getAuthHost valid - lowercase ", function (done) {
     const prodAuthHost = Util.getAuthHost();
-    assert.equal(process.env.AUTH_HOST, prodAuthHost);
+    assert.equal(
+      prodAuthHost,
+      process.env.AUTH_HOST || "https://auth.star2star.com"
+    );
+    done();
+  });
+
+  it("test isValidVersionString", function (done) {
+    assert.equal(Util.isValidVersionString("1.2.3"), true);
+    assert.equal(Util.isValidVersionString("not-a-version"), false);
+    done();
+  });
+
+  it("test isVersionHigher", function (done) {
+    assert.equal(Util.isVersionHigher("2.0.0", "1.9.9"), true);
+    assert.equal(Util.isVersionHigher("1.0.0", "2.0.0"), false);
     done();
   });
 
@@ -205,6 +226,85 @@ describe("Util", function () {
   it("test decrypt", function (done) {
     const decString = Util.decrypt("123456", "052485834a702c703a8a6f96ac4b0e313c0b3f91c7bc86a37d452fd4fff8095a");
     assert.equal(decString, "This is a sample text");
+    done();
+  });
+
+  it("addUrlQueryParams skips undefined values", function (done) {
+    const uri = Util.addUrlQueryParams("https://example.test/path", {
+      keep: "yes",
+      skip: undefined,
+    });
+    assert.ok(uri.includes("keep=yes"));
+    assert.ok(!uri.includes("skip"));
+    done();
+  });
+
+  it("sanitizeObject removes sensitive sdk keys", function (done) {
+    const sanitized = Util.sanitizeObject({
+      _token: "secret",
+      nested: { _basic_token: "abc", name: "visible" },
+    });
+    assert.strictEqual(sanitized._token, undefined);
+    assert.strictEqual(sanitized.nested._basic_token, undefined);
+    assert.strictEqual(sanitized.nested.name, "visible");
+    done();
+  });
+
+  it("arrayDiff returns added and removed entries", function (done) {
+    const diff = Util.arrayDiff(["a", "b"], ["b", "c"]);
+    assert.deepStrictEqual(diff.added, ["c"]);
+    assert.deepStrictEqual(diff.removed, ["a"]);
+    done();
+  });
+
+  it("getUserUuidFromToken decodes jwt payload", function (done) {
+    const payload = Buffer.from(JSON.stringify({ sub: "user-123" })).toString("base64");
+    const token = `header.${payload}.signature`;
+    assert.strictEqual(Util.getUserUuidFromToken(token), "user-123");
+    done();
+  });
+
+  it("getAccountUuidFromToken decodes tid from jwt payload", function (done) {
+    const payload = Buffer.from(JSON.stringify({ tid: "account-456" })).toString("base64");
+    const token = `header.${payload}.signature`;
+    assert.strictEqual(Util.getAccountUuidFromToken(token), "account-456");
+    done();
+  });
+
+  it("paginate slices items with metadata", function (done) {
+    const response = {
+      items: [1, 2, 3, 4, 5],
+      metadata: { total: 5 },
+    };
+    const page = Util.paginate(response, 1, 2);
+    assert.deepStrictEqual(page.items, [2, 3]);
+    assert.strictEqual(page.metadata.offset, 1);
+    assert.strictEqual(page.metadata.limit, 2);
+    done();
+  });
+
+  it("filterResponse matches filter keys on items", function (done) {
+    const response = {
+      items: [
+        { suspended: 0, id: "a" },
+        { suspended: 1, id: "b" },
+      ],
+    };
+    const filtered = Util.filterResponse(response, { suspended: 0 });
+    assert.strictEqual(filtered.items.length, 1);
+    assert.strictEqual(filtered.items[0].id, "a");
+    done();
+  });
+
+  it("extractProps copies only listed keys", function (done) {
+    const picked = Util.extractProps({ a: 1, b: 2, c: 3 }, ["a", "c"]);
+    assert.deepStrictEqual(picked, { a: 1, c: 3 });
+    done();
+  });
+
+  it("findAndReplaceString replaces all occurrences", function (done) {
+    const result = Util.findAndReplaceString("foo-bar-foo", "foo", "baz");
+    assert.strictEqual(result, "baz-bar-baz");
     done();
   });
 

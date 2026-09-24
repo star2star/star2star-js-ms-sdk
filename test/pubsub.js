@@ -14,20 +14,7 @@ const logger = require("../src/node-logger").getInstance();
 const { v4 } = require("uuid");
 let trace = Util.generateNewMetaData();
 
-//utility function to simplify test code
-const mochaAsync = (func, name) => {
-  return async () => {
-    try {
-      const response = await func();
-      logger.debug(name, response);
-      return response;
-    } catch (error) {
-      console.log("!!!!!!", error);
-      //mocha will log out the error
-      throw error;
-    }
-  };
-};
+const { mochaAsync } = require("./helpers/integration");
 
 describe("Pubsub MS Unit Test Suite", function () {
   let accessToken, oauthData, sub_uuid, sub;
@@ -52,25 +39,25 @@ describe("Pubsub MS Unit Test Suite", function () {
     }
   });
 
-  // it(
-  //   "List account subscriptions",
-  //   mochaAsync(async () => {
-  //     trace = Util.generateNewMetaData(trace);
-  //     const response = await s2sMS.Pubsub.listAccountSubscriptions(
-  //       accessToken,
-  //       process.env.ACCOUNT_UUID,
-  //       0,
-  //       1000,
-  //       {"suspended": 0},
-  //       trace
-  //     );
-  //     assert.ok(
-  //       response.hasOwnProperty("items") && response.hasOwnProperty("metadata"),
-  //       JSON.stringify(response, null, "\t")
-  //     );
-  //     return response;
-  //   }, "List account subscriptions")
-  // );
+  it(
+    "List account subscriptions",
+    mochaAsync(async () => {
+      trace = Util.generateNewMetaData(trace);
+      const response = await s2sMS.Pubsub.listAccountSubscriptions(
+        accessToken,
+        process.env.ACCOUNT_UUID,
+        0,
+        100,
+        { account_uuid: process.env.ACCOUNT_UUID },
+        trace
+      );
+      assert.ok(
+        response.hasOwnProperty("items") && response.hasOwnProperty("metadata"),
+        JSON.stringify(response, null, "\t")
+      );
+      return response;
+    }, "List account subscriptions")
+  );
 
   // it(
   //   "List user subscriptions",
@@ -204,6 +191,66 @@ describe("Pubsub MS Unit Test Suite", function () {
   //     return response;
   //   }, "delete subscription")
   // );
+
+  it(
+    "List custom applications",
+    mochaAsync(async () => {
+      trace = Util.generateNewMetaData(trace);
+      const response = await s2sMS.Pubsub.listCustomApplications(
+        accessToken,
+        process.env.ACCOUNT_UUID,
+        trace
+      );
+      assert.ok(response.hasOwnProperty("items"), JSON.stringify(response, null, "\t"));
+      return response;
+    }, "List custom applications")
+  );
+
+  it(
+    "Add and delete standard subscription",
+    mochaAsync(async () => {
+      trace = Util.generateNewMetaData(trace);
+      const subscriptions = { identity: ["identity_property_change"] };
+      const criteria = [{ user_uuid: process.env.USER_UUID }];
+      const expiresDate = new Date(Date.now() + 100000).toISOString();
+      const created = await s2sMS.Pubsub.addSubscription(
+        process.env.USER_UUID,
+        process.env.ACCOUNT_UUID,
+        "http://localhost:8001/foo",
+        [{ "x-foo": "bar" }],
+        criteria,
+        subscriptions,
+        accessToken,
+        expiresDate,
+        trace,
+        true
+      );
+      const listed = await s2sMS.Pubsub.listUserSubscriptions(
+        process.env.USER_UUID,
+        accessToken,
+        trace
+      );
+      const updated = await s2sMS.Pubsub.updateSubscriptionExpiresDate(
+        accessToken,
+        created.subscription_uuid,
+        new Date(Date.now() + 200000).toISOString(),
+        trace
+      );
+      const deleted = await s2sMS.Pubsub.deleteSubscription(
+        created.subscription_uuid,
+        accessToken,
+        trace
+      );
+      assert.ok(
+        created.subscription_uuid &&
+          listed.hasOwnProperty("items") &&
+          updated.expiration_date &&
+          deleted.status === "ok",
+        JSON.stringify({ created, listed, updated, deleted }, null, "\t")
+      );
+      return deleted;
+    }, "Add and delete standard subscription")
+  );
 
   // Custom Pubsub Tests:
    let app_uuid = v4();

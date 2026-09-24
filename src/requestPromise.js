@@ -88,8 +88,17 @@ const request = async function (requestOptions) {
       if(response.redirected === true){
         // the request may have failed due to included bearer token that we have no control over.
         const redirectOptions = {
-          uri: response.url
+          uri: response.url,
+          method: requestOptions.method || "GET",
         };
+        if (requestOptions.headers) {
+          redirectOptions.headers = { ...requestOptions.headers };
+          delete redirectOptions.headers.Authorization;
+          delete redirectOptions.headers.authorization;
+        }
+        if (typeof requestOptions.body !== "undefined") {
+          redirectOptions.body = requestOptions.body;
+        }
         // pass along original options to redirect retry
         if(requestOptions.resolveWithFullResponse === true){
           redirectOptions.resolveWithFullResponse = true;

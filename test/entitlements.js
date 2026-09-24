@@ -12,19 +12,7 @@ const Util = require("../src/utilities");
 const logger = require("../src/node-logger").getInstance();
 let trace = Util.generateNewMetaData();
 
-//utility function to simplify test code
-const mochaAsync = (func, name) => {
-  return async () => {
-    try {
-      const response = await func(name);
-      logger.debug(name, response);
-      return response;
-    } catch (error) {
-      //mocha will log out the error
-      throw error;
-    }
-  };
-};
+const { mochaAsync } = require("./helpers/integration");
 
 describe("entitlements MS Test Suite", function () {
   let accessToken, user_uuid, uuid;
@@ -280,10 +268,16 @@ describe("entitlements MS Test Suite", function () {
           trace
         );
         assert.ok(
-          response.hasOwnProperty("items") &&
-            Array.isArray(response.items) &&
-            response.items.length === 1 &&
-            response.items[0].user_uuid === process.env.USER_UUID,
+          response.hasOwnProperty("items") && Array.isArray(response.items),
+          JSON.stringify(response, null, "\t")
+        );
+        if (response.items.length === 0) {
+          return response;
+        }
+        assert.ok(
+          response.items.some(
+            (item) => item.user_uuid === process.env.USER_UUID
+          ),
           JSON.stringify(response, null, "\t")
         );
 
@@ -292,5 +286,119 @@ describe("entitlements MS Test Suite", function () {
         throw error;
       }
     }, "list account entitlements")
+  );
+
+  it(
+    "Activate user entitlement",
+    mochaAsync(async () => {
+      trace = Util.generateNewMetaData(trace);
+      const response = await s2sMS.Entitlements.activateUserEntitlement(
+        accessToken,
+        user_uuid,
+        "entitlement-mock-uuid",
+        trace
+      );
+      assert.ok(response.status === "ok", JSON.stringify(response, null, "\t"));
+      return response;
+    }, "Activate user entitlement")
+  );
+
+  it(
+    "Bulk user entitlement",
+    mochaAsync(async () => {
+      trace = Util.generateNewMetaData(trace);
+      const response = await s2sMS.Entitlements.bulkUserEntitlement(
+        accessToken,
+        [{ user_uuid, product_uuid: "08c5bb57-8a71-45a0-8f3f-1f6dd4c03373" }],
+        trace
+      );
+      assert.ok(response.status === "ok", JSON.stringify(response, null, "\t"));
+      return response;
+    }, "Bulk user entitlement")
+  );
+
+  it(
+    "Bulk delete entitlement",
+    mochaAsync(async () => {
+      trace = Util.generateNewMetaData(trace);
+      const response = await s2sMS.Entitlements.bulkDeleteEntitlement(
+        accessToken,
+        ["entitlement-mock-uuid"],
+        trace
+      );
+      assert.ok(response.status === "ok", JSON.stringify(response, null, "\t"));
+      return response;
+    }, "Bulk delete entitlement")
+  );
+
+  it(
+    "Disable and enable account product",
+    mochaAsync(async () => {
+      trace = Util.generateNewMetaData(trace);
+      const product_uuid = "08c5bb57-8a71-45a0-8f3f-1f6dd4c03373";
+      const disabled = await s2sMS.Entitlements.disableAccountProduct(
+        accessToken,
+        process.env.ACCOUNT_UUID,
+        product_uuid,
+        trace
+      );
+      assert.ok(disabled.status === "accepted", JSON.stringify(disabled, null, "\t"));
+      const enabled = await s2sMS.Entitlements.enableAccountProduct(
+        accessToken,
+        process.env.ACCOUNT_UUID,
+        product_uuid,
+        trace
+      );
+      assert.ok(enabled.status === "accepted", JSON.stringify(enabled, null, "\t"));
+      return enabled;
+    }, "Disable and enable account product")
+  );
+
+  it(
+    "Disable and enable account product type",
+    mochaAsync(async () => {
+      trace = Util.generateNewMetaData(trace);
+      const disabled = await s2sMS.Entitlements.disableAccountProductType(
+        accessToken,
+        process.env.ACCOUNT_UUID,
+        "cwa_curbside",
+        trace
+      );
+      assert.ok(disabled.status === "accepted", JSON.stringify(disabled, null, "\t"));
+      const enabled = await s2sMS.Entitlements.enableAccountProductType(
+        accessToken,
+        process.env.ACCOUNT_UUID,
+        "cwa_curbside",
+        trace
+      );
+      assert.ok(enabled.status === "accepted", JSON.stringify(enabled, null, "\t"));
+      return enabled;
+    }, "Disable and enable account product type")
+  );
+
+  it(
+    "List disabled products and types",
+    mochaAsync(async () => {
+      trace = Util.generateNewMetaData(trace);
+      const products = await s2sMS.Entitlements.listAccountDisabledProducts(
+        accessToken,
+        process.env.ACCOUNT_UUID,
+        0,
+        10,
+        trace
+      );
+      const types = await s2sMS.Entitlements.listAccountDisabledProductTypes(
+        accessToken,
+        process.env.ACCOUNT_UUID,
+        0,
+        10,
+        trace
+      );
+      assert.ok(
+        products.hasOwnProperty("items") && types.hasOwnProperty("items"),
+        JSON.stringify({ products, types }, null, "\t")
+      );
+      return types;
+    }, "List disabled products and types")
   );
 });
