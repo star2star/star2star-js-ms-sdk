@@ -3,7 +3,7 @@
     [
       "@babel/preset-env",
       {
-        "debug": true,
+        "debug": false,
         "modules": "commonjs",
         "targets": "> 0.5%, not dead or node 22"
       }
