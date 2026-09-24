@@ -14,20 +14,7 @@ const logger = require("../src/node-logger").getInstance();
 const { v4 } = require("uuid");
 let trace = Util.generateNewMetaData();
 
-//utility function to simplify test code
-const mochaAsync = (func, name) => {
-  return async () => {
-    try {
-      const response = await func();
-      logger.debug(name, response);
-      return response;
-    } catch (error) {
-      logger.error(name, error);
-      //mocha will log out the error
-      throw error;
-    }
-  };
-};
+const { mochaAsync } = require("./helpers/integration");
 
 describe("Oauth MS Unit Test Suite", function () {
   let accessToken,
@@ -208,7 +195,12 @@ describe("Oauth MS Unit Test Suite", function () {
         trace
       );
       clientAccessToken = response.access_token;
-      const test = await s2sMS.Lambda.listLambdas(clientAccessToken, trace);
+      const test = await s2sMS.Lambda.listLambdas(
+        clientAccessToken,
+        0,
+        10,
+        trace
+      );
       assert.ok(
         response.hasOwnProperty("access_token") &&
           response.hasOwnProperty("token_type") &&

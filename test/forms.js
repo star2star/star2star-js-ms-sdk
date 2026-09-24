@@ -15,19 +15,7 @@ const logger = Logger.getInstance();
 const newMeta = Util.generateNewMetaData;
 let trace = newMeta();
 
-//utility function to simplify test code
-const mochaAsync = (func, name) => {
-  return async () => {
-    try {
-      const response = await func(name);
-      logger.debug(name, response);
-      return response;
-    } catch (error) {
-      //mocha will log out the error
-      throw error;
-    }
-  };
-};
+const { mochaAsync } = require("./helpers/integration");
 
 describe("Form", function () {
   let accessToken, identityData, formUUID, templateUUID, formTemplate;
@@ -197,6 +185,52 @@ describe("Form", function () {
         throw error;
       }
     }, "update form template")
+  );
+
+  it(
+    "createFormInstance and getFormInstance",
+    mochaAsync(async () => {
+      trace = Util.generateNewMetaData(trace);
+      const created = await s2sMS.Forms.createFormInstance(
+        accessToken,
+        identityData.account_uuid,
+        "active",
+        "mock instance",
+        undefined,
+        undefined,
+        true,
+        true,
+        templateUUID,
+        { source: "test" },
+        trace
+      );
+      assert.ok(created.uuid, JSON.stringify(created, null, "\t"));
+      trace = Util.generateNewMetaData(trace);
+      const fetched = await s2sMS.Forms.getFormInstance(
+        accessToken,
+        created.uuid,
+        "metadata",
+        trace
+      );
+      assert.strictEqual(fetched.uuid, created.uuid);
+      return fetched;
+    }, "createFormInstance and getFormInstance")
+  );
+
+  it(
+    "listFormTemplates for account",
+    mochaAsync(async () => {
+      trace = Util.generateNewMetaData(trace);
+      const response = await s2sMS.Forms.listFormTemplates(
+        accessToken,
+        identityData.account_uuid,
+        0,
+        10,
+        trace
+      );
+      assert.ok(response.hasOwnProperty("items"), JSON.stringify(response, null, "\t"));
+      return response;
+    }, "listFormTemplates for account")
   );
 
   it(

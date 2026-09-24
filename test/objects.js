@@ -13,19 +13,7 @@ const Util = require("../src/utilities");
 const logger = require("../src/node-logger").getInstance();
 let trace = Util.generateNewMetaData();
 
-//utility function to simplify test code
-const mochaAsync = (func, name) => {
-  return async () => {
-    try {
-      const response = await func(name);
-      logger.debug(name, response);
-      return response; 
-    } catch (error) {
-      //mocha will log out the error
-      throw error;
-    }
-  };
-};
+const { mochaAsync } = require("./helpers/integration");
 
 
 
@@ -84,7 +72,7 @@ describe("Objects MS Test Suite", function() {
       identityData.account_uuid, // combined with users creates resource group scoping
       {
         rud: [identityData.uuid],
-        d: [process.env.TEST_IDENTITY] //users read, update, delete permissions
+        d: [identityData.uuid] //users read, update, delete permissions
       },
       trace
     );
@@ -136,7 +124,7 @@ describe("Objects MS Test Suite", function() {
       },
       identityData.account_uuid,
       {
-        rud: [process.env.TEST_IDENTITY],
+        rud: [identityData.uuid],
         rd: [identityData.uuid]
       },
       trace
@@ -421,7 +409,8 @@ describe("Objects MS Test Suite", function() {
       "the description",
       {
         a: 1
-      }
+      },
+      trace
     );
     assert.ok(
       response.type === "global-unit-test" &&
@@ -453,7 +442,7 @@ describe("Objects MS Test Suite", function() {
       objectUUID,
       {
         "name": "Unit-Test",
-        "type": "unit-test",
+        "type": "global-unit-test",
         "description" : "the modified description",
         "content_type": "application/json",
         "content": {a: 2}
@@ -524,6 +513,9 @@ describe("Objects MS Test Suite", function() {
 
   // clean up any objects left behind
   after(async () => {
+    if (!accessToken || !identityData?.uuid) {
+      return;
+    }
     const filters = {
       "type": "unit-test"
     };

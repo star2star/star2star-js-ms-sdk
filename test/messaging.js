@@ -13,24 +13,16 @@ const Util = require("../src/utilities");
 const logger = require("../src/node-logger").getInstance();
 let trace = Util.generateNewMetaData();
 
-//utility function to simplify test code
-const mochaAsync = (func, name) => {
-  return async () => {
-    try {
-      const response = await func();
-      logger.debug(name, response);
-      return response;
-    } catch (error) {
-      //mocha will log out the error
-      throw error;
-    }
-  };
-};
+const { mochaAsync } = require("./helpers/integration");
+const { isMockMode } = require("./helpers/mockMode");
 
 describe("Messaging MS Unit Test Suite", function () {
   let accessToken, identityData, conversationUUID, context, messages;
 
-  before(async () => {
+  before(async function () {
+    if (!isMockMode() && (!process.env.SMS_FROM || !process.env.SMS_TO)) {
+      this.skip();
+    }
     try {
       // For tests, use the dev msHost
       s2sMS.setMsHost(process.env.CPAAS_URL);
@@ -299,6 +291,59 @@ describe("Messaging MS Unit Test Suite", function () {
         assert.ok(error.code === 404, JSON.stringify(error, null, "\t"));
       }
     }, "GetSMS for Invalid USER UUID")
+  );
+
+  it(
+    "Retrieve Conversation",
+    mochaAsync(async () => {
+      trace = Util.generateNewMetaData(trace);
+      const response = await s2sMS.Messaging.retrieveConversation(
+        accessToken,
+        conversationUUID,
+        {},
+        trace
+      );
+      assert.ok(response.uuid, JSON.stringify(response, null, "\t"));
+      return response;
+    }, "Retrieve Conversation")
+  );
+
+  it(
+    "Archive and unarchive conversation",
+    mochaAsync(async () => {
+      trace = Util.generateNewMetaData(trace);
+      const archived = await s2sMS.Messaging.archiveUnarchiveConversation(
+        accessToken,
+        conversationUUID,
+        true,
+        trace
+      );
+      const unarchived = await s2sMS.Messaging.archiveUnarchiveConversation(
+        accessToken,
+        conversationUUID,
+        false,
+        trace
+      );
+      assert.ok(archived.archived === true && unarchived.archived === false);
+      return unarchived;
+    }, "Archive and unarchive conversation")
+  );
+
+  it(
+    "Send SMS Message helper",
+    mochaAsync(async () => {
+      trace = Util.generateNewMetaData(trace);
+      const response = await s2sMS.Messaging.sendSMSMessage(
+        accessToken,
+        context,
+        identityData.uuid,
+        process.env.SMS_FROM,
+        "helper message",
+        trace
+      );
+      assert.ok(response, JSON.stringify(response, null, "\t"));
+      return response;
+    }, "Send SMS Message helper")
   );
 
   // FIXME once CSRVS-155 is figured out

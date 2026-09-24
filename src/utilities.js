@@ -2,8 +2,9 @@
 "use strict";
 
 const config = require("./config");
-const compareVersions = require("compare-versions");
+const { compareVersions, validate } = require("compare-versions");
 const crypto = require("crypto");
+const zlib = require("zlib");
 const { v4 } = require("uuid");
 const Logger = require("./node-logger");
 
@@ -686,7 +687,7 @@ const decrypt = (cryptoKey, text, salt = "salt", algorithm = "aes-192-cbc") => {
  * @param {string} algorithm - optional encryption algorithm
  * @returns {object} object containing iv and encrypted strting
  */
-const encryptObject = (zlib, key, obj, iv, algorithm = "aes-256-cbc") => {
+const encryptObject = (key, obj, iv, algorithm = "aes-256-cbc") => {
   try {
     {
       let objAsString;
@@ -698,6 +699,9 @@ const encryptObject = (zlib, key, obj, iv, algorithm = "aes-256-cbc") => {
         objAsString = zlib.gzipSync(JSON.stringify(obj)).toString("base64");
       } catch (e) {
         console.warn(e);
+        if (e.message === "obj param not object or null") {
+          throw e;
+        }
         throw new Error(
           "unable to process object for encryption. check that input is valid JSON"
         );
@@ -735,10 +739,8 @@ const encryptObject = (zlib, key, obj, iv, algorithm = "aes-256-cbc") => {
     }
   } catch (e) {
     console.error(e);
-    throw new Error(
-      "encrypt object failed: ",
-      e.message ? e.message : "unspecified error"
-    );
+    const detail = e.message ? e.message : "unspecified error";
+    throw new Error(`encrypt object failed: ${detail}`);
   }
 };
 
@@ -749,7 +751,7 @@ const encryptObject = (zlib, key, obj, iv, algorithm = "aes-256-cbc") => {
  * @param {string} algorithm - optional encryption algorithm
  * @returns {object} - object containing iv and decrypted object
  */
-const decryptObject = (zlib, key, ciphertext, algorithm = "aes-256-cbc") => {
+const decryptObject = (key, ciphertext, algorithm = "aes-256-cbc") => {
   try {
     const cipherObj = JSON.parse(
       zlib.gunzipSync(Buffer.from(ciphertext, "base64"))
@@ -770,10 +772,8 @@ const decryptObject = (zlib, key, ciphertext, algorithm = "aes-256-cbc") => {
     };
   } catch (e) {
     console.error("error decrypting", e);
-    throw new Error(
-      "decrypt object failed: ",
-      e.message ? e.message : "unspecified error"
-    );
+    const detail = e.message ? e.message : "unspecified error";
+    throw new Error(`decrypt object failed: ${detail}`);
   }
 };
 
@@ -924,11 +924,11 @@ const findAndReplaceString = (target, oldValue, newValue) => {
 };
 
 const isValidVersionString = (version) => {
-  return compareVersions.validate(version);
+  return validate(version);
 };
 
 const isVersionHigher = (newVersion, oldVersion) => {
-  return compareVersions.compare(newVersion, oldVersion, ">");
+  return compareVersions(newVersion, oldVersion) > 0;
 };
 
 /**

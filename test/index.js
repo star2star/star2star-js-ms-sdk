@@ -10,49 +10,63 @@ const s2sMS = require("../src/index");
 const Config = require("../src/config");
 
 beforeEach(function () {
-  s2sMS.setMsHost(process.env.MS_HOST);
+  s2sMS.setMsHost(
+    process.env.MS_HOST ||
+      process.env.CPAAS_URL ||
+      "https://cpaas-api.star2star.com"
+  );
 });
 
 describe("MS SDK Index", function () {
   it("s2s-ms module exports", function (done) {
-    const msKeys = [ 
+    const msKeys = [
       "Accounts",
-      "Lambda",
-      "Identity",
-      "Messaging",
-      "Objects",
-      "Util",
-      "setMsHost",
-      "getMsHost",
-      "setMsAuthHost",
-      "Groups",
-      "ShortUrls",
+      "Activity",
       "Auth",
-      "Oauth",
+      "Campaigns",
       "Chat",
       "Contacts",
-      "Media",
-      "Providers",
-      "Pubsub",
-      "setMSVersion",
-      "Workflow",
+      "DbSip",
       "Email",
-      "ResourceGroups",
-      "Scheduler",
+      "Entitlements",
+      "Forms",
+      "getMsHost",
+      "Groups",
+      "Identity",
+      "Lambda",
+      "Media",
+      "Messaging",
       "Metadata",
       "Mobile",
-      "Forms",
-      "Entitlements",
-      "Activity",
-      "Resources"
+      "Numbers",
+      "Objects",
+      "Oauth",
+      "Profiles",
+      "Providers",
+      "Pubsub",
+      "ResourceGroups",
+      "Resources",
+      "Scheduler",
+      "setMsAuthHost",
+      "setMsHost",
+      "setMSVersion",
+      "ShortUrls",
+      "Usage",
+      "Util",
+      "Voice",
+      "Workflow",
     ];
     assert.deepEqual(Object.keys(s2sMS), msKeys);
     done();
   });
 
   it("set/get msHost production ", function (done) {
-    s2sMS.setMsHost(process.env.MS_HOST);
-    assert.equal(s2sMS.getMsHost(), process.env.MS_HOST);
+    const host =
+      process.env.MS_HOST ||
+      process.env.CPAAS_URL ||
+      "https://cpaas-api.star2star.com";
+    s2sMS.setMsHost(host);
+    assert.equal(s2sMS.getMsHost(), host);
     done();
   });
  

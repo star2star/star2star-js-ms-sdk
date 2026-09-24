@@ -17,19 +17,7 @@ describe("Chat MS Test Suite", function() {
   let accessToken;
   let identityData;
 
-  //utility function to simplify test code
-  const mochaAsync = (func, name) => {
-    return async () => {
-      try {
-        const response = await func(name);
-        logger.debug(name, response);
-        return response; 
-      } catch (error) {
-        //mocha will log out the error
-        throw error;
-      }
-    };
-  };
+  const { mochaAsync } = require("./helpers/integration");
 
   let test_channel, test_groupUUID;
 

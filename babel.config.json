@@ -3,12 +3,22 @@
     [
       "@babel/preset-env",
       {
-        "corejs": 3,
         "debug": true,
-        "targets": "> 0.5%, not dead or node 22",
-        "useBuiltIns": "usage"       
+        "modules": "commonjs",
+        "targets": "> 0.5%, not dead or node 22"
       }
     ]
   ],
-  "plugins": ["@babel/plugin-proposal-class-properties"]
+  "plugins": [
+    "@babel/plugin-transform-class-properties",
+    [
+      "babel-plugin-polyfill-corejs3",
+      {
+        "method": "usage-pure",
+        "corejs": "corejs",
+        "version": "3.50",
+        "targets": "> 0.5%, not dead or node 22"
+      }
+    ]
+  ]
 }
