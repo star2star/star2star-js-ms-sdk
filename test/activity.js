@@ -48,6 +48,38 @@ describe("Activity MS Unit Test Suite", function() {
     
   });
 
+  it("Get Activity", mochaAsync(async () => {
+    trace = Util.generateNewMetaData(trace);
+    const listed = await s2sMS.Activity.listActivities(
+      accessToken,
+      {},
+      0,
+      1,
+      trace
+    );
+    const activity_uuid =
+      listed.items[0]?.activity_uuid || listed.items[0]?.uuid;
+    assert.ok(activity_uuid, JSON.stringify(listed, null, "\t"));
+    trace = Util.generateNewMetaData(trace);
+    const response = await s2sMS.Activity.getActivity(
+      accessToken,
+      activity_uuid,
+      "metadata",
+      trace
+    );
+    assert.strictEqual(response.activity_uuid || response.uuid, activity_uuid);
+    return response;
+  }, "Get Activity"));
+
+  it("Get Activity rejects invalid include", async () => {
+    try {
+      await s2sMS.Activity.getActivity(accessToken, "00000000-0000-4000-8000-000000000001", "invalid");
+      assert.fail("expected error");
+    } catch (error) {
+      assert.strictEqual(error.code, 400);
+    }
+  });
+
   it("List Activities", mochaAsync(async () => {
     console.log('identityData', identityData);
     trace = Util.generateNewMetaData(trace);
