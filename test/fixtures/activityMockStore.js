@@ -6,6 +6,7 @@ const { buildResponse } = require("../helpers/mockFetch");
 const activityStore = {
   templates: new Map(),
   reports: new Map(),
+  activities: new Map(),
 };
 
 function paginate(items, qs) {
@@ -41,11 +42,19 @@ function seedActivity() {
   });
   activityStore.registerTypes = [{ name: "voicemail", type: "activity" }];
   activityStore.registerSubtypes = [{ name: "cwa_urgent_history", type: "subtype" }];
+  const activityUuid = v4();
+  activityStore.activities.set(activityUuid, {
+    activity_uuid: activityUuid,
+    uuid: activityUuid,
+    activity_type: "voicemail",
+    metadata: { mock: true },
+  });
 }
 
 function resetActivityMockStore() {
   activityStore.templates.clear();
   activityStore.reports.clear();
+  activityStore.activities.clear();
   seedActivity();
 }
 
@@ -121,7 +130,28 @@ function activityMockRouter(method, url, init) {
   }
 
   if (method === "GET" && url.pathname === "/activity/activity") {
-    return Promise.resolve(buildResponse(200, paginate([], qs)));
+    const items = [...activityStore.activities.values()];
+    return Promise.resolve(buildResponse(200, paginate(items, qs)));
+  }
+
+  const activityGet = url.pathname.match(/^\/activity\/activity\/([^/]+)$/);
+  if (activityGet && method === "GET") {
+    const activity =
+      activityStore.activities.get(activityGet[1]) || {
+        activity_uuid: activityGet[1],
+        uuid: activityGet[1],
+      };
+    const include = qs.include || "metadata";
+    const body = { ...activity, include };
+    if (include === "none") {
+      delete body.metadata;
+      delete body.details;
+    } else if (include === "details") {
+      body.details = body.details || { mock: true };
+    } else if (include === "metadata") {
+      body.metadata = body.metadata || { mock: true };
+    }
+    return Promise.resolve(buildResponse(200, body));
   }
 
   return null;

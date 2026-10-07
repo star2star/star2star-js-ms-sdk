@@ -440,6 +440,55 @@ const runReport = async (
   }
 };
 
+const ACTIVITY_INCLUDE_OPTIONS = ["none", "details", "metadata"];
+
+/**
+ * @async
+ * @description This function will get a single activity by uuid.
+ * @param {string} [accessToken="null access token"] - CPaaS access token
+ * @param {string} [activity_uuid="null activity uuid"] - activity uuid
+ * @param {string} [include="metadata"] - optional include; valid values are none, details, metadata
+ * @param {object} [trace = {}] - optional microservice lifecycle trace headers
+ * @returns {Promise<object>} - Promise resolving to an activity object
+ */
+const getActivity = async (
+  accessToken = "null access token",
+  activity_uuid = "null activity uuid",
+  include = "metadata",
+  trace = {}
+) => {
+  try {
+    if (!ACTIVITY_INCLUDE_OPTIONS.includes(include)) {
+      throw {
+        code: 400,
+        message:
+          "include param is invalid; valid values are: " +
+          ACTIVITY_INCLUDE_OPTIONS.join(", "),
+        details: [{ include }],
+      };
+    }
+    const MS = util.getEndpoint("activity");
+    const requestOptions = {
+      method: "GET",
+      uri: `${MS}/activity/${activity_uuid}`,
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+        "Content-type": "application/json",
+        "x-api-version": `${util.getVersion()}`,
+      },
+      qs: {
+        include,
+      },
+      json: true,
+    };
+    util.addRequestTrace(requestOptions, trace);
+    const response = await request(requestOptions);
+    return response;
+  } catch (error) {
+    throw util.formatError(error);
+  }
+};
+
 /**
  * @async
  * @description This function will list activites based on parameters .
@@ -492,6 +541,7 @@ const listActivities = async (
 module.exports = {
   createReportTemplate,
   deleteReportTemplate,
+  getActivity,
   getReport,
   listActivities,
   listRegisteredTypes,
